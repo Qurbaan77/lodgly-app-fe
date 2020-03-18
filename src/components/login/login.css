@@ -1,0 +1,138 @@
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-wrap: wrap;
+}
+
+.login-section {
+    max-width: 550px;
+    width: 100%;
+}
+
+.login-logo {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+.login-logo img {
+    max-width: 70px;
+}
+
+.login-form {
+    background: #fff;
+    padding: 50px;
+    max-width: 600px;
+    margin: 0px auto;
+    border: 1px solid #eaeaea;
+    padding-bottom: 30px;
+}
+
+.login-form h1 {
+    font-size: 22px;
+    margin: 0;
+    padding-bottom: 15px;
+}
+
+.login-form p {
+    color: #999;
+    margin: 0;
+    padding-bottom: 30px;
+    font-size: 14px;
+}
+
+.login-box label {
+    font-size: 14px;
+    text-transform: uppercase;
+    color: #999;
+}
+
+.login-box input {
+    border: 1.5px solid #eaeaea;
+    border-radius: 0;
+    padding: 8px 15px;
+    height: auto;
+}
+
+
+.q-links {
+    max-width: 600px;
+    margin: 0px auto;
+    text-align: center;
+    padding-top: 30px;
+}
+
+.login-btn {
+    width: 100%;
+    border-radius: 0;
+    padding: 8px 10px;
+    background: #fab52c;
+    border-color: #fab52c;
+}
+
+.login-btn:hover, .login-btn:focus {
+    background: #eaa51d;
+    border-color: #eaa51d;
+    outline: none;
+    box-shadow: none;
+}
+
+.login-button {
+    padding-bottom: 30px;
+}
+
+.google-login {
+    text-align: center;
+}
+
+.google-btn {
+    width: 100%;
+    border-radius: 0;
+    padding: 8px 10px;
+    background: transparent;
+    border: 1.5px solid #eaeaea;
+    color: #999;
+}
+
+.google-btn:hover, .google-btn:focus {
+    background: transparent;
+    border: 1.5px solid #e2e2e2;
+    outline: none;
+    box-shadow: none;
+    color: #525252;
+}
+
+.q-links p {
+    color: #b3b3b3;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.google-btn span{
+    position: relative;
+}
+
+.google-btn span:before{
+    content: "";
+    background: url(../../assets/images/google-icon.png);
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    vertical-align: bottom;
+    margin-right: 10px;
+}
+
+.google-btn:hover span:before{
+    content: "";
+    background: url(../../assets/images/google-icon-color.png);
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    vertical-align: bottom;
+    margin-right: 10px;
+}

@@ -1,24 +1,34 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Router, Route } from 'react-router-dom'
+import { createBrowserHistory } from 'history'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Header from './components/header/header';
+import Footer from './components/footer/footer';
+import Login from './components/login/login';
 
-function App() {
+const history = createBrowserHistory();
+
+
+const App=()=> {
+
+
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <div className="main-wrapper">
+            <React.Fragment>
+             <Router history={history}>
+              <Header />
+                <main>
+                  <div className="main_content">                  
+                      <Route exact path="/" render={() => <Login />} />               
+                  </div>
+                </main>
+              <Footer />
+              </Router>
+            </React.Fragment>
+        </div>
     </div>
   );
 }
