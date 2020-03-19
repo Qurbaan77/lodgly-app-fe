@@ -1,0 +1,41 @@
+image: node:latest
+
+variables:
+  DIST_PATH: build/
+
+stages:
+  - build
+  - deploy
+
+cache:
+  key: $CI_COMMIT_REF_SLUG
+  paths:
+    - node_modules/
+
+build:
+  stage: build
+  script:
+    - npm prune
+    - npm install --quiet
+    - npm run build
+  environment:
+    name: staging
+  artifacts:
+    when: on_success
+    paths:
+      - build/
+    expire_in: 20 mins
+
+staging:
+  image: python:latest
+  stage: deploy
+  before_script:
+    - pip install awscli
+  script:
+    - aws s3 sync $DIST_PATH s3://${S3_BUCKET_NAME}/${CI_COMMIT_REF_SLUG} --acl public-read --delete
+    - aws cloudfront create-invalidation --distribution-id ${CF_DISTRIBUTION_ID} --paths /*
+  environment:
+    name: staging
+    url: http://${S3_BUCKET_NAME}.s3-website.${AWS_DEFAULT_REGION}.amazonaws.com/${CI_COMMIT_REF_SLUG}
+  only:
+    - staging
