@@ -32,11 +32,10 @@ staging:
   before_script:
     - pip install awscli
   script:
-    - aws s3 sync $DIST_PATH s3://${S3_BUCKET_NAME}/${CI_COMMIT_REF_SLUG} --acl public-read --delete
-    - echo "aws cloudfront create-invalidation --distribution-id ${CF_DISTRIBUTION_ID} --paths '/*' --query 'Invalidation.Id' --output text"
+    - aws s3 sync $DIST_PATH s3://${S3_BUCKET_NAME}/ --acl public-read --delete
     - id=$(aws cloudfront create-invalidation --distribution-id ${CF_DISTRIBUTION_ID} --paths '/*' --query 'Invalidation.Id' --output text) && aws cloudfront wait invalidation-completed --id ${id} --distribution-id ${CF_DISTRIBUTION_ID}
   environment:
     name: staging
-    url: http://${S3_BUCKET_NAME}.s3-website.${AWS_DEFAULT_REGION}.amazonaws.com/${CI_COMMIT_REF_SLUG}
+    url: https://app.staging.lodgly.com/
   only:
     - staging
