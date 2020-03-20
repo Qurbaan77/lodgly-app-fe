@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./login.css";
-import {Navbar,Nav,NavDropdown,Form,Button,Tabs, Tab} from 'react-bootstrap';
+import { Form, Input, Button, Checkbox } from 'antd';
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/logo.jpg"
 import Toaster from "../toaster/toaster"
@@ -9,9 +9,19 @@ import Toaster from "../toaster/toaster"
 
 
 const Login = () => {
+
+    const onFinish = values => {
+        console.log('Success:', values);
+      };
+    
+      const onFinishFailed = errorInfo => {
+        console.log('Failed:', errorInfo);
+      };
+
+
     return (
         <div className="login">
-          <Toaster />
+          {/* <Toaster /> */}
           <div className="login-section">
             <div className="container">
                 <div classNmae="row">
@@ -23,24 +33,51 @@ const Login = () => {
                             <h1>Sign In</h1>
                             <p>We're happy to have you here again!</p>
                             <div className="login-box">
-                                <Form>
-                                    <Form.Group controlId="formBasicloginone">
-                                        <Form.Label>E-mail address</Form.Label>
-                                            <Form.Control type="email" placeholder="me@janlosert.com" name="email"  />                                      
-                                    </Form.Group>
-                                    <Form.Group controlId="formBasicPassword">
-                                        <Form.Label>Password</Form.Label>
-                                        <Form.Control type="password" placeholder="********" name="password"  />
-                                    </Form.Group>
-                                 
-                                    <div className="login-button">
-                                        <Button className="login-btn" >
-                                            Sign In
-                                        </Button>
-                                    </div>
+
+                            <Form name="basic" 
+                            initialValues={{
+                                remember: true,
+                            }}
+                            onFinish={onFinish}
+                            onFinishFailed={onFinishFailed}
+                            >
+                                <Form.Item
+                                    label="E-mail Address"
+                                    name="email"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Please enter your E-mail Address!',
+                                        },
+                                        ]}
+                                   >
+                                    <Input placeholder="me@janlosert.com"/>
+                                </Form.Item>
+
+                                <Form.Item
+                                    label="Password"
+                                    name="password"
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: 'Please input your password!',
+                                        },
+                                        ]}
+                                    >
+                                    
+                                    <Input.Password  placeholder="******"/>
+                                </Form.Item>
+
+                          
+
+                                <Form.Item>
+                                    <Button className="login-btn" htmlType="submit">
+                                    Sign In
+                                    </Button>
+                                </Form.Item>
 
 
-                                    <div className="google-login">
+                                 <div className="google-login">
 
                                     <p>or connect with</p>
 
@@ -50,7 +87,10 @@ const Login = () => {
 
 
                                     </div>
+
+
                                 </Form>
+
                                                   
                             </div>
                         </div>
@@ -58,7 +98,7 @@ const Login = () => {
 
                         <div className="q-links">
 
-                           <p>Don't have an account yet? <Link to={'/'}>
+                           <p>Don't have an account yet? <Link to={'/register'}>
                                 Register now               
                                 </Link> 
                             </p> 

@@ -1,0 +1,117 @@
+.trigger {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+.trigger:hover {
+    color: #1890ff;
+  }
+  
+  #components-layout-demo-custom-trigger .logo {
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px;
+  }
+  
+  .site-layout .site-layout-background {
+    background: #fff;
+  }
+
+  .site-layout .ant-layout-content.site-layout-background {
+    background: transparent;
+    border-left: none;
+}
+
+.ant-menu-inline{
+  border-right: none!important;
+}
+
+.ant-layout-sider-light {
+  border-right: 1px solid #efefef;
+}
+  .sidenav .ant-layout{
+      min-height: 100vh;
+  }
+
+  .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+    background-color: #fffaf0!important;
+}
+
+.ant-layout{
+  background: transparent!important;
+}
+
+.site-layout .ant-layout-header.site-layout-background {
+  background: #fff;
+  border-bottom: 1px solid #efefef;
+}
+
+.ant-menu-inline .ant-menu-item::after{
+  left: 0;
+  right: inherit!important;
+  border-right: 3px solid #fab52c!important;
+}
+.ant-menu-item-selected {
+  color: #fab52c!important;
+}
+
+.ant-menu-item:hover, .ant-menu-item-active, .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open, .ant-menu-submenu-active, .ant-menu-submenu-title:hover {
+  color: #fab52c!important;
+}
+
+.ant-menu-submenu-inline > .ant-menu-submenu-title:hover .ant-menu-submenu-arrow::before, .ant-menu-submenu-inline > .ant-menu-submenu-title:hover .ant-menu-submenu-arrow::after{
+  background: linear-gradient(to right, #fab52c, #fab52c)!important;
+}
+
+
+.sidebar-logo {
+  text-align: center;
+  padding: 10px 10px;
+  border-bottom: 1px solid #efefef;
+  min-height: 65px;
+}
+
+.sidebar-logo img {
+  width: 50px;
+}
+
+
+.ant-layout-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.header-property .ant-dropdown-link {
+  border: 1px solid #ccc;
+  padding: 10px 100px 10px 15px;
+  color: #555!important;
+  position: relative;
+}
+
+.header-property {
+  padding-right: 24px;
+  max-width: 300px;
+  width: 100%;
+  text-align: right;
+}
+.header-property .ant-dropdown-link span {
+  position: absolute;
+  right: 10px;
+  top: 12px;
+}
+
+.search-box {
+  display: inline-block;
+  padding-right: 24px;
+  vertical-align: middle;
+}
+
+.search-box span {
+  font-size: 20px;
+  color: #999;
+  cursor: pointer;
+}

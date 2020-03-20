@@ -14,7 +14,7 @@ const Toaster = () => {
           </div>
 
 
-          {/* <div className="success">
+          <div className="success">
                 <p>Your have successfully login!</p>
                 <button className="close-btn">Close</button>
           </div>
@@ -23,7 +23,7 @@ const Toaster = () => {
           <div className="warning">
                 <p>Your have one warning!</p>
                 <button className="close-btn">Close</button>
-          </div> */}
+          </div>
           
         </div>
     );

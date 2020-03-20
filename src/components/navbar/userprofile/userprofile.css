@@ -1,0 +1,49 @@
+.user-img {
+    max-width: 100px;
+    margin: 0px auto;
+    position: relative;
+}
+
+.user-img .anticon-setting {
+    position: absolute;
+    bottom: 0;
+    right: 5px;
+    background: #fff;
+    padding: 6px;
+    border-radius: 100px;
+}
+
+
+.user-profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+  }
+  
+  .user-profile {
+    text-align: center;
+    padding: 20px 10px 10px;
+    border-bottom: 1px solid #efefef;
+    margin-bottom: 10px;
+  }
+  
+  .user-profile h3 {font-weight: 700;margin: 0;padding-top: 10px;}
+  
+  .user-profile span {
+      color: #999;
+  }
+
+  .ant-layout-sider-collapsed .user-profile img {
+    width: 100%;
+    max-height: 100px;
+    height: auto;
+}
+
+
+.ant-layout-sider-collapsed .user-profile h3 {
+    font-size: 13px;
+}
+
+.ant-layout-sider-collapsed .user-profile span {
+    font-size: 10px;
+}

@@ -1,0 +1,70 @@
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 40px;
+}
+
+.page-header h1 {
+    font-size: 24px;
+}
+
+.ant-btn {
+    background: #fab52c;
+    border: #fab52c;
+    height: auto;
+    padding: 10px 20px;
+    font-size: 15px;
+}
+
+.ant-btn:hover, .ant-btn:focus {
+    background: #fab52c;
+    border: #fab52c;
+}
+
+.property-info {
+    background: #fff;
+    padding: 20px;
+}
+
+
+.property-info {
+    background: #fff;
+    padding: 20px;
+    position: relative;
+    border: 1px solid #efefef;
+    margin-bottom: 30px;
+}
+
+.property img {
+    width: 100%;
+}
+
+.property-info ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.property-info ul li {
+    padding: 10px 0px;
+}
+
+.property-info span {
+    position: absolute;
+    right: 20px;
+    top: 30px;
+    font-size: 12px;
+}
+.property-info h3 {
+    padding-bottom: 20px;
+}
+
+.property-info ul span {
+    position: relative;
+    top: inherit;
+    right: inherit;
+    font-size: 20px;
+    color: #999;
+    margin-right: 12px;
+    vertical-align: top;
+}
