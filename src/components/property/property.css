@@ -59,6 +59,7 @@
     padding-bottom: 20px;
 }
 
+
 .property-info ul span {
     position: relative;
     top: inherit;
@@ -68,3 +69,80 @@
     margin-right: 12px;
     vertical-align: top;
 }
+
+.page-header span {
+    color: #e1e1e1;
+}
+
+
+.page-header span {
+    color: #e1e1e1;
+}
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 13px;
+    padding-right: 40px;
+    padding-left: 16px;
+}
+
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+    right: 20px;
+    left: inherit;
+}
+
+.ant-input {
+    border: 1.5px solid #eaeaea!important;
+    border-radius: 0;
+    padding: 8px 15px!important;
+    height: auto;
+}
+
+.main-info-form form {
+    max-width: 500px;
+}
+
+
+.main-info-form .ant-btn {
+    background: #7FBD34;
+    color: #fff;
+    border-color: #7FBD34;
+    padding: 10px 50px;
+}
+
+
+.main-info-form p {
+    font-size: 11px;
+    padding-top: 5px;
+}
+
+
+
+
+
+
+.listing-info-form .ant-btn {
+    background: #7FBD34;
+    color: #fff;
+    border-color: #7FBD34;
+    padding: 10px 50px;
+}
+
+
+
+.listing-info-form .ant-checkbox-group-item {
+    display: block;
+    padding: 6px 0px;
+}
+
+.listing-info-form .ant-checkbox-group-item span {
+    font-size: 13px;
+}
+
+.page-header .ant-btn a {
+    color: #fff!important;
+    font-size: 12px;
+}
+
