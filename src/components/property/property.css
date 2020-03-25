@@ -230,3 +230,104 @@
 .our-client {
     padding: 30px 0px;
 }
+
+.ant-btn span {
+    color: #fff;
+}
+
+.group-modal .ant-modal {
+    top: 0;
+    right: 0;
+    transform: inherit!important;
+    margin: 0;
+    position: absolute;
+    bottom: 0;
+    padding: 0;
+}
+
+.group-modal .ant-modal-content {
+    height: auto;
+}
+
+.group-modal .ant-modal-header {
+    padding: 20px 25px;
+    background: #fbfbfb;
+    border-bottom: 2px solid #f0f0f0;
+
+}
+
+.group-modal .ant-modal-title {
+    font-weight: 600;
+    font-size: 20px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.group-modal .ant-modal-footer{
+    display: none;
+}
+
+
+.group-modal .ant-btn, .group-modal .ant-btn:hover, .group-modal .ant-btn:focus {
+    background: #7FBD34;
+    border: #7FBD34;
+
+}
+.user-avatar .ant-avatar {
+    margin-right: 5px;
+}
+
+
+
+
+
+
+.help-modal .ant-modal {
+    top: 0;
+    right: 0;
+    transform: inherit!important;
+    margin: 0;
+    position: absolute;
+    bottom: 0;
+    padding: 0;
+}
+
+.help-modal .ant-modal-content {
+    height: auto;
+}
+
+.help-modal .ant-modal-header {
+    padding: 20px 25px;
+    background: #fbfbfb;
+    border-bottom: 2px solid #f0f0f0;
+
+}
+
+.help-modal .ant-modal-title {
+    font-weight: 600;
+    font-size: 20px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.help-modal .ant-modal-footer{
+    display: none;
+}
+
+
+.help-modal .ant-btn, .help-modal .ant-btn:hover, .help-modal .ant-btn:focus {
+    background: #7FBD34;
+    border: #7FBD34;
+
+}
+
+.modal-body h4 {
+    color: #333;
+    font-size: 16px;
+    margin: 0;
+    padding: 20px 0px;
+}
+
+.modal-body p {
+    font-size: 13px;
+}

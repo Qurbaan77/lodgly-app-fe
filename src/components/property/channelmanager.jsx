@@ -22,12 +22,26 @@ import client14 from  "../../assets/images/item-14.jpg"
 import client15 from  "../../assets/images/item-15.jpg"
 import client16 from  "../../assets/images/item-16.jpg"
 import client17 from  "../../assets/images/item-17.jpg"
-
+import { Modal } from 'antd';
 
 
 const ChannelManager = () => {
 
 
+    const [visible,setVisible]=useState(false)
+
+    const show = () => {
+        setVisible(true);
+    };
+
+
+    const handleOk = () => {
+        setVisible(false);
+    };
+
+    const handleCancel = () => {
+        setVisible(false);
+    };
 
 
     return (
@@ -86,8 +100,8 @@ const ChannelManager = () => {
                         <div className="need-help">
                             <p>Need Help?</p>
                             <p>Click on each step opens a detailed explanation</p>
-                            <Button type="primary">
-                            <a href="/addproperty">Activating Channel Manager</a>
+                            <Button type="primary" onClick={show}>
+                            Activating Channel Manager
                             </Button>
 
                         </div>
@@ -197,6 +211,47 @@ const ChannelManager = () => {
                     </div>
 
                 </div>
+
+
+
+
+
+
+
+                <Modal
+                    title="Help"
+                    visible={visible}
+                    onOk={handleOk}
+                    onCancel={handleCancel}
+                    wrapClassName="help-modal"
+                    
+                    >
+                
+
+
+                <div className="modal-body">
+                    <h4>Property</h4>
+                    <p>Please enter property details - property name, address, telephone number.</p>
+                    <p>Unit types and units Online reservation channels that support two-way connection to Rentlio, group accommodation units to unit types. E.g. if your property has two one-bedroom apartments with same rates you need to create one unit type in Rentlio. Name it "one-bedroom apartment" and assign two units, Apartment 1 and Apartment 2. Booking.com, Expedia and various channels have the same methodology. You already understand this if you work with one of them. Please note that you can create unique names for unit types and units in Rentlio, they don’t have to match the names set on online reservation channels.</p>
+
+                    <p>We offer two-way connection with Airbnb, but this channel has some exceptions. When creating a profile on Airbnb you create a Listing that matches one unit in Rentlio. Because of that, connecting Airbnb and Rentlio is done by connecting the Listing to Unit Type. This means that you will have to create one Unit type and add one Unit to it in Rentlio in order to connect it to Airbnb Listing.</p>
+
+
+                    <h4>Rates and availability</h4>
+
+
+                    <p>Please enter units and rates in Rentlio - Settings - Units and rates - Edit unit type. Please note that units and rates are set on Unit type level. Before connecting to online reservation channels we advise you to load rates and availability for one year in advance; however 90 days is the minimum in order to activate the connection.</p>
+
+                    <h4>Reservations</h4>
+                    <p>Enter all active reservations, except Booking.com reservations* up to today in Rentlio. When you activate the connection, all these periods will be closed automatically on connected online reservation channels. This is a mandatory step in order to avoid overlapped reservations and reopening of closed dates. When the connection is active, everything from Rentlio (rates and availability, reservations) will be sent to the connected online reservation channel.</p>
+                    <p>* Booking.com reservations will be imported automatically when we connect your property</p>
+                </div>
+
+                
+
+                </Modal>
+
+
 
 
         </Wrapper>
