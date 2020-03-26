@@ -12,6 +12,7 @@ import PropertyList from './components/property/propertylist';
 import UnitType from './components/property/unittype';
 import ChannelManager from './components/property/channelmanager';
 import Groups from './components/property/group';
+import CleaningGroup from './components/property/cleaninggroup';
 
 
 const history = createBrowserHistory();
@@ -36,6 +37,7 @@ const App=()=> {
                       <Route exact path="/propertylist" render={() => <PropertyList />} />
                       <Route exact path="/unittype" render={() => <UnitType />} />  
                       <Route exact path="/groups" render={() => <Groups />} /> 
+                      <Route exact path="/cleaninggroup" render={() => <CleaningGroup />} /> 
                       <Route exact path="/channelmanager" render={() => <ChannelManager />} />                
                   </div>
                 </main>

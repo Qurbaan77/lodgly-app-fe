@@ -247,6 +247,7 @@
 
 .group-modal .ant-modal-content {
     height: auto;
+    min-height: 100vh;
 }
 
 .group-modal .ant-modal-header {
@@ -294,6 +295,7 @@
 
 .help-modal .ant-modal-content {
     height: auto;
+    min-height: 100vh;
 }
 
 .help-modal .ant-modal-header {
@@ -330,4 +332,92 @@
 
 .modal-body p {
     font-size: 13px;
+}
+
+
+.cleaning-button {
+    display: flex;
+    align-items: center;
+}
+
+.cleaning-button .user-avatar {
+    padding-right: 20px;
+}
+
+
+.cleaning-group .ant-table tbody > tr > td{
+    padding: 26px 16px;
+}
+
+.cleaning-group .ant-table tbody > tr > td a {
+    color: #333!important;
+}
+
+.ant-tag {
+    border-radius: 30px;
+    min-width: 90px;
+    text-align: center;
+}
+
+.ant-pagination-item-active:focus, .ant-pagination-item-active:hover {
+    border-color: #fab52c!important;
+}
+.ant-pagination-item-active, .ant-pagination-item-active {
+    border-color: #fab52c!important;
+}
+
+
+
+
+
+
+
+
+.task-modal .ant-modal {
+    top: 0;
+    right: 0;
+    transform: inherit!important;
+    margin: 0;
+    position: absolute;
+    bottom: 0;
+    padding: 0;
+}
+
+.task-modal .ant-modal-content {
+    height: auto;
+    min-height: 100vh;
+}
+
+.task-modal .ant-modal-header {
+    padding: 20px 25px;
+    background: #fbfbfb;
+    border-bottom: 2px solid #f0f0f0;
+
+}
+
+.task-modal .ant-modal-title {
+    font-weight: 600;
+    font-size: 20px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.task-modal .ant-modal-footer{
+    display: none;
+}
+
+
+.task-modal .ant-btn, .task-modal .ant-btn:hover, .task-modal .ant-btn:focus {
+    background: #7FBD34;
+    border: #7FBD34;
+
+}
+
+
+.text-center{
+    text-align: center;
+}
+
+.task-modal .ant-btn {
+    margin-top: 150px;
 }
