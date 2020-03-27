@@ -1,0 +1,32 @@
+.admin-header-container {
+    display: flex;
+    justify-content: space-between;
+    background: #fff;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.admin-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.admin-menu li {
+    padding: 0px 20px;
+}
+
+.admin-menu li a {
+    color: #333!important;
+}
+
+.admin-menu {
+    display: flex;
+    align-items: center;
+}
+
+.ant-dropdown-menu-item > a{
+    color: #333!important;
+}

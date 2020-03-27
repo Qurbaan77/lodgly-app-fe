@@ -13,7 +13,8 @@ import UnitType from './components/property/unittype';
 import ChannelManager from './components/property/channelmanager';
 import Groups from './components/property/group';
 import CleaningGroup from './components/property/cleaninggroup';
-
+import AdminLogin from './components/admin-panel/login/login';
+import AdminSetting from './components/admin-panel/setting/setting';
 
 const history = createBrowserHistory();
 
@@ -38,7 +39,9 @@ const App=()=> {
                       <Route exact path="/unittype" render={() => <UnitType />} />  
                       <Route exact path="/groups" render={() => <Groups />} /> 
                       <Route exact path="/cleaninggroup" render={() => <CleaningGroup />} /> 
-                      <Route exact path="/channelmanager" render={() => <ChannelManager />} />                
+                      <Route exact path="/channelmanager" render={() => <ChannelManager />} /> 
+                      <Route exact path="/admin" render={() => <AdminLogin />} />
+                      <Route exact path="/adminsetting" render={() => <AdminSetting />} />                  
                   </div>
                 </main>
               <Footer />
