@@ -15,6 +15,8 @@ import Groups from './components/property/group';
 import CleaningGroup from './components/property/cleaninggroup';
 import AdminLogin from './components/admin-panel/login/login';
 import AdminSetting from './components/admin-panel/setting/setting';
+import CreateBookingPopup from './components/booking/createbookingpopup';
+import GuestPopup from './components/booking/guestpopup';
 
 const history = createBrowserHistory();
 
@@ -41,7 +43,9 @@ const App=()=> {
                       <Route exact path="/cleaninggroup" render={() => <CleaningGroup />} /> 
                       <Route exact path="/channelmanager" render={() => <ChannelManager />} /> 
                       <Route exact path="/admin" render={() => <AdminLogin />} />
-                      <Route exact path="/adminsetting" render={() => <AdminSetting />} />                  
+                      <Route exact path="/adminsetting" render={() => <AdminSetting />} />
+                      <Route exact path="/createbookingpopup" render={() => <CreateBookingPopup />} /> 
+                      <Route exact path="/guestpopup" render={() => <GuestPopup />} />                 
                   </div>
                 </main>
               <Footer />

@@ -1,0 +1,120 @@
+.create-booking-modal .ant-modal {
+    top: 0;
+    right: 0;
+    transform: inherit!important;
+    margin: 0;
+    position: absolute;
+    bottom: 0;
+    padding: 0;
+    width: 700px!important;
+    
+}
+
+.create-booking-modal .ant-modal-content {
+    height: auto;
+    min-height: 100vh;
+}
+
+.create-booking-modal .ant-modal-header {
+    padding: 20px 25px;
+    background: #fbfbfb;
+    border-bottom: 2px solid #f0f0f0;
+
+}
+
+.create-booking-modal .ant-modal-title {
+    font-weight: 600;
+    font-size: 20px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.create-booking-modal .ant-modal-footer{
+    display: none;
+}
+
+
+.create-booking-modal .ant-btn, .create-booking-modal .ant-btn:hover, .create-booking-modal .ant-btn:focus {
+    background: #7FBD34;
+    border: #7FBD34;
+
+}
+
+
+.create-booking-modal .ant-picker-range{
+    border: 1.5px solid #eaeaea;
+    line-height: 2;
+    width: 100%;
+    padding: 6px 11px 6px;
+}
+
+
+
+
+
+
+
+
+
+
+.guest-modal .ant-modal {
+    top: 0;
+    right: 0;
+    transform: inherit!important;
+    margin: 0;
+    position: absolute;
+    bottom: 0;
+    padding: 0;
+}
+
+.guest-modal .ant-modal-content {
+    height: auto;
+    min-height: 100vh;
+}
+
+.guest-modal .ant-modal-header {
+    padding: 20px 25px;
+    background: #fbfbfb;
+    border-bottom: 2px solid #f0f0f0;
+
+}
+
+.guest-modal .ant-modal-title {
+    font-weight: 600;
+    font-size: 20px;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.guest-modal .ant-modal-footer{
+    display: none;
+}
+
+.guest-modal .ant-btn, .guest-modal .ant-btn:hover, .guest-modal .ant-btn:focus {
+    background: transparent;
+    border: 1px solid #d4d4d4;
+   
+
+}
+
+.guest-modal .ant-btn span{
+    color: #999;
+}
+
+.guest-modal .ant-btn-primary, .guest-modal .ant-btn-primary:hover, .guest-modal .ant-btn-primary:focus {
+    background: #7FBD34;
+    border: #7FBD34;
+    border: 1px solid #7FBD34;
+
+}
+
+.guest-modal .ant-picker {
+    border: 1.5px solid #eaeaea;
+    line-height: 2;
+    width: 100%;
+    padding: 6px 11px 6px;
+}
+
+.guest-modal .ant-btn-primary span{
+    color: #fff;
+}
