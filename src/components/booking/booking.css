@@ -49,11 +49,69 @@
 }
 
 
+.booking-list-conatiner {
+    background: #fff;
+    height: 100vh;
+}
 
 
+.booking-list-conatiner {
+    background: #fff;
+    height: 100vh;
+}
 
 
+.booking-list ul {
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    max-width: 150px;
+    margin: 0;
+    font-size: 12px;
+    color: #b5b5b5;
+}
 
+.booking-list p {
+    font-size: 12px;
+    font-weight: 500;
+    margin: 0;
+    padding-bottom: 5px;
+    color: #b5b5b5;
+}
+
+.booking-list h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    padding-bottom: 5px;
+}
+.booking-list {
+    padding: 20px;
+    border-bottom: 1px solid #efefef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.detail-info span {
+    display: block;
+    text-align: center;
+    font-size: 12px;
+}
+
+.booking-list span {
+    color: #b5b5b5;
+}
+
+.detail-info .green-label {
+    border: 1px solid #aef18c;
+    border-radius: 30px;
+    padding: 2px 15px;
+    color: #aef18c;
+    margin-top: 7px;
+    font-size: 14px;
+}
 
 
 
@@ -117,4 +175,24 @@
 
 .guest-modal .ant-btn-primary span{
     color: #fff;
+}
+
+
+.bookin-footer {
+    text-align: center;
+    padding: 30px;
+    background: #fff;
+}
+
+.bookin-footer ul {
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+    justify-content: center;
+}
+
+.bookin-footer ul li {
+    padding: 0px 10px;
+    font-size: 22px;
+    color: #b3b3b3;
 }

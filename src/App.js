@@ -17,6 +17,7 @@ import AdminLogin from './components/admin-panel/login/login';
 import AdminSetting from './components/admin-panel/setting/setting';
 import CreateBookingPopup from './components/booking/createbookingpopup';
 import GuestPopup from './components/booking/guestpopup';
+import Booking from './components/booking/booking';
 
 const history = createBrowserHistory();
 
@@ -45,7 +46,8 @@ const App=()=> {
                       <Route exact path="/admin" render={() => <AdminLogin />} />
                       <Route exact path="/adminsetting" render={() => <AdminSetting />} />
                       <Route exact path="/createbookingpopup" render={() => <CreateBookingPopup />} /> 
-                      <Route exact path="/guestpopup" render={() => <GuestPopup />} />                 
+                      <Route exact path="/guestpopup" render={() => <GuestPopup />} />
+                      <Route exact path="/booking" render={() => <Booking />} />                    
                   </div>
                 </main>
               <Footer />
