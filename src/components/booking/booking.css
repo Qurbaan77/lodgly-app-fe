@@ -390,3 +390,152 @@ ul.filter-list li span span {
 .filter-box .ant-form-item {
     margin-bottom: 15px;
 }
+
+
+
+
+
+
+
+.create-booking-modal .ant-collapse {
+    background: #fff;
+}
+
+
+.create-booking-modal .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    padding: 15px 16px;
+}
+
+
+.create-booking-modal .ant-modal-body {
+    padding: 0;
+}
+
+
+.create-booking-modal .ant-btn, .create-booking-modal .ant-btn:hover, .create-booking-modal .ant-btn:focus {
+    background: transparent;
+    border: 1px solid #d4d4d4;
+   
+
+}
+
+.create-booking-modal .ant-btn span{
+    color: #999;
+}
+
+.create-booking-modal .ant-btn-primary, .create-booking-modal .ant-btn-primary:hover, .create-booking-modal .ant-btn-primary:focus {
+    background: #7FBD34;
+    border: #7FBD34;
+    border: 1px solid #7FBD34;
+
+}
+
+.create-booking-modal .ant-btn-primary span {
+    color: #fff;
+}
+
+
+
+
+
+.accommodation .inline-form label {
+    font-size: 11px;
+    color: #333;
+}
+
+.accommodation .inline-form {
+    text-align: right;
+    margin-bottom: 10px;
+    justify-content: flex-end;
+    margin-top: 25px;
+}
+
+.accommodation .inline-form input {
+    padding: 8px 5px!important;
+    font-size: 11px;
+    width: 60px;
+}
+
+.accommodation p {
+    font-size: 15px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 0;
+}
+
+.accommodation {
+    background: rgba(147, 158, 185, 0.04);
+}
+
+
+.per-night {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.per-night span {
+    text-transform: uppercase;
+}
+
+.per-night span.amnt {
+    font-size: 20px;
+    color: #000;
+    font-weight: 500;
+}
+
+.srvice-amnt {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 20px;
+    border-bottom: 1px dashed #000;
+}
+
+.srvice-amnt .additionl-link {
+    margin: 0;
+    padding: 20px 0px;
+}
+
+.amnt-total h4 {
+    text-align: right;
+    font-size: 22px;
+    margin: 0;
+}
+
+.amnt-total {
+    padding: 20px 20px;
+    padding-bottom: 0;
+}
+
+.deposit {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px;
+}
+
+.deposit .inline-form {
+    margin: 0;
+}
+
+.outstanding {
+    padding: 20px 20px;
+    text-align: right;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.outstanding label {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.outstanding label span {
+    padding-left: 50px;
+}
