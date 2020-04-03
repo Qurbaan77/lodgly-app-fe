@@ -10,6 +10,29 @@ import { Modal } from 'antd';
 
 const { MonthPicker, RangePicker } = DatePicker;
 
+
+function onChange(e) {
+    console.log(`checked = ${e.target.checked}`);
+  }
+
+
+const menu = (
+    <Menu>
+      <Menu.Item key="0">
+         <Checkbox onChange={onChange}>Double Room</Checkbox>
+      </Menu.Item>
+      <Menu.Item key="1">
+        <Checkbox onChange={onChange}>Two Bedroom</Checkbox>
+      </Menu.Item>
+      <Menu.Item key="1">
+      <Checkbox onChange={onChange}>One Bedroom</Checkbox>
+      </Menu.Item>
+        
+    </Menu>
+  );
+
+
+
 const BookingFilter = () => {
 
     function onChange(checked) {
@@ -58,14 +81,15 @@ return (
 
 
                                     <Col span={24}>
-                                        <Form.Item
+                                        <Form.Item className="filter-select"
                                             label="Status"
                                             name="status"
                                             >
-                                                <Select>
-                                                    <Select.Option value="demo">Booked</Select.Option>
-                                                    <Select.Option value="demo">Booked</Select.Option>
-                                                </Select>
+                                             <Dropdown overlay={menu} trigger={['click']}>
+                                                <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
+                                                <DownOutlined />
+                                                </a>
+                                            </Dropdown>
                                         </Form.Item>
                                     </Col>
 

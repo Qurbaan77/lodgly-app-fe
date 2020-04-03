@@ -322,6 +322,7 @@
 }
 .booking-list.orange {
     border-left: 3px solid #fab52c;
+    background: #fbfbfc;
 }
 
 .additionl-link{
@@ -342,7 +343,7 @@
 
 .filter-box h2 {
     padding: 20px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #efefef;
     text-transform: uppercase;
     color: #666;
     font-weight: 500;
@@ -393,7 +394,25 @@ ul.filter-list li span span {
 
 
 
+.booking-filter-box {
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
+.booking-filter-box label {
+    padding-right: 20px;
+    font-size: 15px;
+    color: #333;
+}
+
+.filter-item .ant-tag {
+    border-radius: 2px;
+    min-width: 60px;
+    padding: 5px 10px;
+    margin-bottom: 8px;
+}
 
 
 
@@ -538,4 +557,38 @@ ul.filter-list li span span {
 
 .outstanding label span {
     padding-left: 50px;
+}
+
+.filter-icon span {
+    font-size: 20px;
+    color: #999;
+}
+
+.filter-icon {
+    border: 1px solid #ddd;
+    padding: 8px 10px;
+    line-height: 1;
+}
+
+.filter-select .ant-form-item-control-input-content {
+    position: relative;
+    background-color: #fff;
+    border: 1.5px solid #eaeaea!important;
+    border-radius: 0;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    width: 100%;
+    height: 40px;
+    padding: 0 11px;
+    line-height: 40px;
+}
+
+.filter-select .ant-form-item-control-input-content a {
+    width: 100%;
+    display: block;
+    text-align: right;
+    color: #999;
+}
+
+.filter-select .ant-form-item-control-input-content a span {
+    color: #c7c7c7;
 }

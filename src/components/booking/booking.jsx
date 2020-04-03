@@ -4,10 +4,10 @@ import { Form, Select, Input,  InputNumber, Switch, Radio, Slider, DatePicker, T
 import { MenuUnfoldOutlined, MenuFoldOutlined, FormOutlined, DownloadOutlined, SyncOutlined, UserOutlined, ThunderboltOutlined, HomeOutlined, PlusOutlined, SearchOutlined, VerticalAlignMiddleOutlined, VideoCameraOutlined, UploadOutlined, } from '@ant-design/icons';
 import Wrapper from "../wrapper"
 import { Collapse, Menu, Dropdown } from 'antd';
-import { InboxOutlined, DownOutlined } from '@ant-design/icons';
+import { InboxOutlined, DownOutlined, FilterOutlined } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { Modal } from 'antd';
-
+import { Tag } from 'antd';
 
 const Booking = () => {
 
@@ -40,6 +40,20 @@ return (
                         <Col span={10}>
 
                             <div className="booking-list-conatiner">
+
+                                <div className="booking-filter-box"> 
+                                    <label>Filters:</label>                                  
+                                    <div className="filter-item">                                   
+                                        <Tag color="success">item 1</Tag>
+                                        <Tag color="processing">item 2</Tag>
+                                        <Tag color="error">item 3</Tag>
+                                        <Tag color="default">booked</Tag>
+                                    </div>
+
+                                    <div className="filter-icon">
+                                        <FilterOutlined />
+                                    </div>
+                                </div>
 
 
                                 <div className="booking-list orange">
