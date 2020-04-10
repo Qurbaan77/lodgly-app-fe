@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./property.css";
 import { Form, Select, Input, InputNumber, Switch, Radio, Slider, Button, Upload, Rate, Checkbox, Row, Col, } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined, HomeOutlined, PlusOutlined, SearchOutlined, VerticalAlignMiddleOutlined,UserOutlined, VideoCameraOutlined, UploadOutlined, } from '@ant-design/icons';
+import { MenuUnfoldOutlined, MenuFoldOutlined, HomeOutlined, PlusOutlined, SearchOutlined, VerticalAlignMiddleOutlined,DeleteOutlined, FormOutlined, UserOutlined, VideoCameraOutlined, UploadOutlined, } from '@ant-design/icons';
 import Wrapper from "../wrapper"
 import { Collapse } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
-
-
-const { Panel } = Collapse;
-
-
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
-
+import { Modal } from 'antd';
+import DeletePopup from "./deletepopup";
 
 
 
@@ -23,6 +14,20 @@ const text = `
 
 const UnitType = () => {
 
+    const [visible,setVisible]=useState(false)
+
+    const show = () => {
+        setVisible(true);
+    };
+
+
+    const handleOk = () => {
+        setVisible(false);
+    };
+
+    const handleCancel = () => {
+        setVisible(false);
+    };
 
 
 
@@ -44,44 +49,83 @@ const UnitType = () => {
  
 
 
+                    
                     <div className="panel-container">
 
-                    <Collapse defaultActiveKey={['1']} accordion>
-
-                        <Panel header="Unit Type 1" key="1">
-                           {text}
-                        </Panel>
-
-
-                        <Panel header="Unit Type 2" key="2">
-                            {text}
-                        </Panel>
-
-
-
-                        <Panel header="Unit Type 3" key="3">
-                         {text}
-                        </Panel>
+                      <div className="panel-box units">
+                        <div className="group-name">
+                            <h4>Unit Type</h4>
+                            <span>1 unit are assigned</span>
+                        </div>
+                        <div className="group-action">
+                        <FormOutlined />
+                        <DeleteOutlined  onClick={show} />
+                        </div>
+                      </div>
 
 
-
-                        <Panel header="Unit Type 4" key="4">
-
-                             {text}
-                       
-                        </Panel>
+                      <div className="panel-box units">
+                        <div className="group-name">
+                            <h4>Unit Type</h4>
+                            <span>1 unit are assigned</span>
+                        </div>
+                        <div className="group-action">
+                        <FormOutlined />
+                        <DeleteOutlined  onClick={show} />
+                        </div>
+                      </div>
 
 
 
+                      <div className="panel-box units">
+                        <div className="group-name">
+                            <h4>Unit Type</h4>
+                            <span>1 unit are assigned</span>
+                        </div>
+                        <div className="group-action">
+                        <FormOutlined />
+                        <DeleteOutlined  onClick={show} />
+                        </div>
+                      </div>
 
 
 
-                    </Collapse>
+                      <div className="panel-box units">
+                        <div className="group-name">
+                            <h4>Unit Type</h4>
+                            <span>1 unit are assigned</span>
+                        </div>
+                        <div className="group-action">
+                        <FormOutlined />
+                        <DeleteOutlined  onClick={show} />
+                        </div>
+                      </div>
+
+
+
+                      <div className="panel-box units">
+                        <div className="group-name">
+                            <h4>Unit Type</h4>
+                            <span>1 unit are assigned</span>
+                        </div>
+                        <div className="group-action">
+                        <FormOutlined />
+                        <DeleteOutlined  onClick={show} />
+                        </div>
+                      </div>
+
+
+
+
 
                     </div>
 
-
                 </div>
+
+
+                <Modal visible={visible} onOk={handleOk} onCancel={handleCancel} wrapClassName="delete-modal">
+                    <DeletePopup />
+                </Modal>
 
 
         </Wrapper>

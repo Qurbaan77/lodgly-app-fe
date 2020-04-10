@@ -8,6 +8,7 @@ import { InboxOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
 import { Link } from "react-router-dom";
 import { Avatar } from 'antd';
+import { HelpBlock } from "react-bootstrap";
 
 
 const { Panel } = Collapse;
@@ -140,12 +141,15 @@ const CreateBookingPopup = () => {
                             label="Channel, Commission(%)"
                             name="channel"
                             >
-                            <Select>
+                                <Select 
+                                style={{ width: "70%" , display: "inline-block" }}>
                                      <Select.Option value="demo">Holiday House</Select.Option>
                                     <Select.Option value="demo">Holiday House</Select.Option>
                                 </Select>
 
-                                {/* <Input /> */}
+                                <Input 
+                                 style={{ width: "26%" , display: "inline-block" , verticalAlign: "sub" , marginLeft: "4%" }}
+                                />
                             </Form.Item>
                         </Col>
 

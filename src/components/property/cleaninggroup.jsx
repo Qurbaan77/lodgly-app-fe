@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./property.css";
-import { Form, Select, Input, InputNumber, Switch, Radio, Slider, Button, Upload, Rate, Checkbox, Row, Col, } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined, HomeOutlined, PlusOutlined, SearchOutlined, VerticalAlignMiddleOutlined,UserOutlined, VideoCameraOutlined, UploadOutlined, } from '@ant-design/icons';
+import { Form, Select, Input, InputNumber, Switch, DatePicker, Radio, Slider, Button, Upload, Rate, Checkbox, Row, Col, } from 'antd';
+import { MenuUnfoldOutlined, MenuFoldOutlined, DeleteOutlined, FormOutlined,HomeOutlined, PlusOutlined, SearchOutlined, VerticalAlignMiddleOutlined,UserOutlined, VideoCameraOutlined, UploadOutlined, } from '@ant-design/icons';
 import Wrapper from "../wrapper"
 import { Collapse } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
 import { Table, Tag } from 'antd';
 import { Modal } from 'antd';
-
+import people1 from '../../assets/images/people-1.png'
+import people2 from '../../assets/images/people-2.png'
+import people3 from '../../assets/images/people-3.jpg'
+import people4 from '../../assets/images/people-4.jpg'
 
 
 const { Option } = Select;
@@ -46,9 +49,15 @@ const CleaningGroup = () => {
                     color = 'blue';
                 }
                 return (
+                  <div>
                   <Tag color={color} key={tag}>
                     {tag.toUpperCase()}
                   </Tag>
+                  <span class="group-action">
+                  <FormOutlined />
+                  <DeleteOutlined />
+                  </span>
+                  </div>
                 );
               })}
             </span>
@@ -128,13 +137,13 @@ const CleaningGroup = () => {
 
 
                     <div className="cleaning-button">
-                        <div className="user-avatar">
-                            <Avatar icon={<PlusOutlined />} />
-                            <Avatar>U</Avatar>
-                            <Avatar>S</Avatar>
-                            <Avatar>E</Avatar>
-                            <Avatar>R</Avatar>
-                        </div>
+                    <div className="user-avatar">
+                        <PlusOutlined />
+                        <img src={people1} />
+                        <img src={people2} />
+                        <img src={people3} />
+                        <img src={people4} />
+                    </div>
                         <Button type="primary" icon={<PlusOutlined />} onClick={show}>
                            Add Task
                         </Button>
@@ -146,8 +155,73 @@ const CleaningGroup = () => {
 
                     <div className="panel-container">
 
+                   
                     <Table columns={columns} dataSource={data} />
 
+                    </div>
+
+
+
+
+                    <div className="clean-filter">
+
+                      <Row>
+
+                        <Col span={12}>
+                      <Form.Item label="Check Every" style={{ marginBottom: 0, textAlign: "left" }}>
+                        <Form.Item
+                        name="year"
+                        style={{ display: 'inline-block', width: 'calc(10% - 5px)', marginRight: 8 }}
+                        >
+                        <Input placeholder="" />
+                        </Form.Item>
+                        <Form.Item
+                        name="month"
+                        style={{ display: 'inline-block', width: 'calc(30% - 5px)', marginRight: 8 }}
+                        >
+                        <Select placeholder="Day">
+                            <Option value="Day">Day</Option>
+                            <Option value="Week">Week</Option>
+                            <Option value="Month">Month</Option>
+                        </Select>
+                        </Form.Item>
+
+                        <Form.Item
+                            name="month"
+                            style={{ display: 'inline-block' }}
+                            >
+                            <Checkbox>
+                             Check only on free days
+                            </Checkbox>
+                           
+                        </Form.Item>
+
+                    </Form.Item>
+
+                    </Col>
+
+
+                    <Col span={12}>
+                    <Form.Item>
+                    
+
+                        <Form.Item name="date-picker" label="Previous Checking"
+                        style={{ display: 'inline-block', width: 'calc(40% - 5px)', marginRight: 8 }}
+                        >
+                            <DatePicker />
+                        </Form.Item>
+
+
+                        <Form.Item name="date-picker" label="Next Checking"
+                        style={{ display: 'inline-block', width: 'calc(40% - 5px)'}}
+                        >
+                            <DatePicker />
+                        </Form.Item>
+
+                    </Form.Item>
+
+                    </Col>
+                      </Row>
 
                     </div>
 

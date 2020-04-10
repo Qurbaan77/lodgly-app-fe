@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./property.css";
 import { Form, Select, Input, InputNumber, Switch, Radio, Slider, DatePicker, TimePicker, Button, Upload, Rate, Checkbox, Row, Col, } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined, HomeOutlined, PlusOutlined, SearchOutlined, VerticalAlignMiddleOutlined,UserOutlined, VideoCameraOutlined, UploadOutlined, } from '@ant-design/icons';
+import { MenuUnfoldOutlined, FolderOutlined, DeleteOutlined, FormOutlined, CheckOutlined, BellOutlined, MenuFoldOutlined, HomeOutlined, PlusOutlined, SearchOutlined, VerticalAlignMiddleOutlined,UserOutlined, VideoCameraOutlined, UploadOutlined, } from '@ant-design/icons';
 import Wrapper from "../wrapper"
 import { Collapse } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
 import { Avatar } from 'antd';
+import people1 from '../../assets/images/people-1.png'
+import people2 from '../../assets/images/people-2.png'
+import people3 from '../../assets/images/people-3.jpg'
+import people4 from '../../assets/images/people-4.jpg'
 
 const { Panel } = Collapse;
 
@@ -25,7 +29,22 @@ const { Option } = Select;
 
 const { MonthPicker, RangePicker } = DatePicker;
 
+const genExtra = () => (
+    <FolderOutlined
+      onClick={event => {
+        event.stopPropagation();
+      }}
+    />
+  );
 
+
+  const tExtra = () => (
+    <BellOutlined
+      onClick={event => {
+        event.stopPropagation();
+      }}
+    />
+  );
 
 
 const Groups = () => {
@@ -69,37 +88,136 @@ const Groups = () => {
 
                     <div className="panel-container">
 
-                    <Collapse defaultActiveKey={['1']} accordion>
+                        <div className="panel-box groups">
 
-                        <Panel header="Inventory Check" key="1">
-                           {text}
-                        </Panel>
+                            <div className="group-icon">
+                                <FolderOutlined />
+                            </div>
+
+                            <div className="group-name">
+                                <h4>Inventory Check</h4>
+                                <span>Check every 1 month</span>
+                            </div>
+
+                            <div className="group-people">
+                                <ul>
+                                    <li><img src={people1} /></li>
+                                    <li><img src={people2} /></li>
+                                    <li><img src={people3} /></li>
+                                    <li><img src={people4} /></li>
+                                </ul>
+                            </div>
+
+                            <div className="group-action">
+                               <BellOutlined />
+                               <div className="hover-action">
+                                <FormOutlined />
+                                <DeleteOutlined />
+                               </div>
+                              
+                            </div>
+
+                        </div>
 
 
-                        <Panel header="Inventory Check" key="2">
-                            {text}
-                        </Panel>
+
+                        <div className="panel-box groups">
+                            
+                            <div className="group-icon">
+                                <FolderOutlined />
+                            </div>
+
+                            <div className="group-name">
+                                <h4>Inventory Check</h4>
+                                <span>Check every 1 month</span>
+                            </div>
+
+                            <div className="group-people">
+                                <ul>
+                                    <li><img src={people1} /></li>
+                                    <li><img src={people2} /></li>
+                                    <li><img src={people3} /></li>
+                                    <li><img src={people4} /></li>
+                                </ul>
+                            </div>
+
+                            <div className="group-action">
+                               <CheckOutlined />
+                               <div className="hover-action">
+                                <FormOutlined />
+                                <DeleteOutlined />
+                               </div>
+                            </div>
+
+                        </div>
 
 
 
-                        <Panel header="Inventory Check" key="3">
-                         {text}
-                        </Panel>
+
+                        <div className="panel-box groups">
+                            
+                            <div className="group-icon">
+                                <FolderOutlined />
+                            </div>
+
+                            <div className="group-name">
+                                <h4>Inventory Check</h4>
+                                <span>Check every 1 month</span>
+                            </div>
+
+                            <div className="group-people">
+                                <ul>
+                                    <li><img src={people1} /></li>
+                                    <li><img src={people2} /></li>
+                                    <li><img src={people3} /></li>
+                                    <li><img src={people4} /></li>
+                                </ul>
+                            </div>
+
+                            <div className="group-action">
+                               <CheckOutlined />
+                               <div className="hover-action">
+                                <FormOutlined />
+                                <DeleteOutlined />
+                               </div>
+                            </div>
+
+                        </div>
 
 
 
-                        <Panel header="Inventory Check" key="4">
 
-                             {text}
-                       
-                        </Panel>
+                        <div className="panel-box groups">
+                            
+                            <div className="group-icon">
+                                <FolderOutlined />
+                            </div>
 
+                            <div className="group-name">
+                                <h4>Inventory Check</h4>
+                                <span>Check every 1 month</span>
+                            </div>
 
+                            <div className="group-people">
+                                <ul>
+                                    <li><img src={people1} /></li>
+                                    <li><img src={people2} /></li>
+                                    <li><img src={people3} /></li>
+                                    <li><img src={people4} /></li>
+                                </ul>
+                            </div>
 
+                            <div className="group-action">
+                               <BellOutlined />
+                               <div className="hover-action">
+                                <FormOutlined />
+                                <DeleteOutlined />
+                               </div>
+                            </div>
 
+                        </div>
 
-
-                    </Collapse>
+                   
 
                     </div>
 
@@ -130,11 +248,11 @@ const Groups = () => {
 
                     <Form.Item>
                     <div className="user-avatar">
-                        <Avatar icon={<PlusOutlined />} />
-                        <Avatar>U</Avatar>
-                        <Avatar>S</Avatar>
-                        <Avatar>E</Avatar>
-                        <Avatar>R</Avatar>
+                        <PlusOutlined />
+                        <img src={people1} />
+                        <img src={people2} />
+                        <img src={people3} />
+                        <img src={people4} />
                     </div>
                     </Form.Item>
 
