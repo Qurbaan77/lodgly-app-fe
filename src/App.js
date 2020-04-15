@@ -20,6 +20,7 @@ import GuestPopup from './components/booking/guestpopup';
 import Booking from './components/booking/booking';
 import BookingFilter from './components/booking/filter';
 import DeletePopup from './components/property/deletepopup';
+import Property from './components/property/property';
 
 const history = createBrowserHistory();
 
@@ -51,7 +52,8 @@ const App=()=> {
                       <Route exact path="/guestpopup" render={() => <GuestPopup />} />
                       <Route exact path="/booking" render={() => <Booking />} />
                       <Route exact path="/filter" render={() => <BookingFilter />} />
-                      <Route exact path="/deletepopup" render={() => <DeletePopup />} />                       
+                      <Route exact path="/deletepopup" render={() => <DeletePopup />} /> 
+                      <Route exact path="/property" render={() => <Property />} />                      
                   </div>
                 </main>
               <Footer />
