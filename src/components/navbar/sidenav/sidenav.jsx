@@ -54,7 +54,7 @@ const Sidenav = () => {
                     >
                     <Menu.Item key="1"><a href="/addproperty">Details</a></Menu.Item>
                     <Menu.Item key="2"><a href="/unittype">Unit Types</a></Menu.Item>
-                    <Menu.Item key="3"><a href="/task">Tasks</a></Menu.Item>
+                    <Menu.Item key="3"><a href="/groups">Tasks</a></Menu.Item>
                     <Menu.Item key="4"><a href="/channelmanager">Channel Manager</a></Menu.Item>
                 </SubMenu>
 

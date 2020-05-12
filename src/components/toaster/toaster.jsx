@@ -1,32 +1,34 @@
-import React, { useEffect } from "react";
-import "./toaster.css";
+import React, { useEffect } from 'react';
+import './toaster.css';
 
-
-
-
-const Toaster = () => {
-    return (
-        <div className="toster">
-          
-          <div className="error">
-                <p>Your limit of applications has been reached!</p>
-                <button className="close-btn">Close</button>
-          </div>
-
-
-          <div className="success">
-                <p>Your have successfully login!</p>
-                <button className="close-btn">Close</button>
-          </div>
-
-
-          <div className="warning">
-                <p>Your have one warning!</p>
-                <button className="close-btn">Close</button>
-          </div>
-          
+const Toaster = (props) => {
+  const close = () => {
+    console.log('Function Called')
+  }
+  return (
+    <div className="toster">
+      {props.notifyType === 'error' && (
+        <div className="error">
+          <p>{props.notifyMsg}</p>
+          <button className="close-btn" onClick={close}>Close</button>
         </div>
-    );
-  };
-  
-  export default Toaster;
+      )}
+
+      {props.notifyType === 'success' && (
+        <div className="success">
+          <p>{props.notifyMsg}</p>
+          <button className="close-btn" onClick={close}>Close</button>
+        </div>
+      )}
+
+      {props.notifyType === 'warning' && (
+        <div className="warning">
+          <p>{props.notifyMsg}</p>
+          <button className="close-btn" onClick={close}>Close</button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Toaster;
