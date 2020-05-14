@@ -41,7 +41,7 @@ const UnitType = () => {
                         <h1><HomeOutlined /> Unit Type</h1>
 
                         <Button type="primary" icon={<PlusOutlined />}>
-                            <a href="/">Add Unit Type</a>
+                            <a >Add Unit Type</a>
                         </Button>
 
 

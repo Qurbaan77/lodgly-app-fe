@@ -50,7 +50,7 @@ const CleaningGroup = () => {
   const [tasks, setTasks] = useState([]);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
-  const initialFormState = { name: ''}
+  const initialFormState = { name: '' };
   const [editUser, setEditUser] = useState(initialFormState);
 
   useEffect(() => {
@@ -90,8 +90,8 @@ const CleaningGroup = () => {
               {tags.toUpperCase()}
             </Tag>
             <span class="group-action">
-              <FormOutlined onClick={() => edit(record)}/>
-              <DeleteOutlined onClick={() => remove(record.id)}/>
+              <FormOutlined onClick={() => edit(record)} />
+              <DeleteOutlined onClick={() => remove(record.id)} />
             </span>
           </div>
         );
@@ -99,8 +99,8 @@ const CleaningGroup = () => {
     },
   ];
 
-
   const show = () => {
+    form.resetFields();
     setVisible(true);
   };
 
@@ -112,7 +112,7 @@ const CleaningGroup = () => {
     setVisible(false);
   };
 
-  const getData = async() => {
+  const getData = async () => {
     const response = await userInstance.post('/taskList');
     console.log(response.data.taskDetail);
     if (response.data.code === 200) {
@@ -121,6 +121,10 @@ const CleaningGroup = () => {
   };
 
   const onFinish = async (values) => {
+    saveData(values);
+  };
+
+  const saveData = async (values) => {
     console.log('Received values of form: ', values);
     const response = await userInstance.post('/addTask', values);
     const statusCode = response.data.code;
@@ -134,10 +138,11 @@ const CleaningGroup = () => {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
+    form.resetFields();
   };
 
-  const remove = async(taskId) => {
-    console.log('taskId', taskId)
+  const remove = async (taskId) => {
+    console.log('taskId', taskId);
     const data = {
       id: taskId,
     };
@@ -149,9 +154,14 @@ const CleaningGroup = () => {
     }
   };
 
-  const edit = async(data) => {
-    console.log(data)
-    setEditUser(data);
+  const edit = async (data) => {
+    console.log(data);
+    form.setFieldsValue({
+      id: data.id,
+      name: data.name,
+      address: data.address,
+      tags: data.tags,
+    });
     setVisible(true);
   };
 
@@ -255,6 +265,10 @@ const CleaningGroup = () => {
       >
         <Toaster notifyType={notifyType} notifyMsg={notifyMsg} />
         <Form form={form} name="basic" onFinish={onFinish}>
+          <Form.Item label="ID" name="id" hidden={true}>
+            <Input />
+          </Form.Item>
+
           <Form.Item
             label="Task"
             name="name"
@@ -262,7 +276,7 @@ const CleaningGroup = () => {
               { required: true, message: 'Please input your Task name!' },
             ]}
           >
-            <Input defaultValue = {editUser.name}/>
+            <Input />
           </Form.Item>
 
           <Form.Item
@@ -270,11 +284,11 @@ const CleaningGroup = () => {
             name="address"
             rules={[{ required: true, message: 'Please input your note!' }]}
           >
-            <Input  />
+            <Input />
           </Form.Item>
 
           <Form.Item name="tags">
-            <Select defaultValue="Approved" style={{ width: 120 }}>
+            <Select defaultValue="Select" style={{ width: 120 }}>
               <Option value="Approved">Approved</Option>
               <Option value="Waiting">Waiting</Option>
               <Option value="Decline">Decline</Option>

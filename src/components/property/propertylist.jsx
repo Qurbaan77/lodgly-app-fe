@@ -26,9 +26,9 @@ const PropertyList = () => {
   useEffect(() => {
     async function getData() {
       const response = await userInstance.post('/fetchProperty');
-      console.log(response);
+      const data = response.data.propertiesData;
       if (response.data.code === 200) {
-        setPropertyData(response.data.propertiesData);
+        setPropertyData(data);
       }
     }
 
@@ -42,7 +42,7 @@ const PropertyList = () => {
           <h1>All Properties</h1>
 
           <Button type="primary" icon={<PlusOutlined />}>
-            <a href="/addproperty">Add Property</a>
+            <a href="/addproperty" >Add Property</a>
           </Button>
         </div>
 
@@ -55,7 +55,7 @@ const PropertyList = () => {
                     <img src={property1} />
                     <div className="property-info">
                       <h3>{el.propertyName}</h3>
-                      <span>{el.created_at}</span>
+                      <span>{el.created_at.split('T', 1)}</span>
                       <ul>
                         <li>
                           <HomeOutlined /> 20 Unit Types
@@ -70,60 +70,6 @@ const PropertyList = () => {
               );
             })}
           </Row>
-
-          {/* <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-            <Col className="gutter-row" span={8}>
-              <div className="property">
-                <img src={property1} />
-                <div className="property-info">
-                  <h3>Property Name 1</h3>
-                  <span>08 Nov 2019</span>
-                  <ul>
-                    <li>
-                      <HomeOutlined /> 20 Unit Types
-                    </li>
-                    <li>
-                      <HomeOutlined /> 200 Unit
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </Col>
-            <Col className="gutter-row" span={8}>
-              <div className="property">
-                <img src={property2} />
-                <div className="property-info">
-                  <h3>Property Name 2</h3>
-                  <span>08 Nov 2019</span>
-                  <ul>
-                    <li>
-                      <HomeOutlined /> 20 Unit Types
-                    </li>
-                    <li>
-                      <HomeOutlined /> 200 Unit
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </Col>
-            <Col className="gutter-row" span={8}>
-              <div className="property">
-                <img src={property3} />
-                <div className="property-info">
-                  <h3>Property Name 3</h3>
-                  <span>08 Nov 2019</span>
-                  <ul>
-                    <li>
-                      <HomeOutlined /> 20 Unit Types
-                    </li>
-                    <li>
-                      <HomeOutlined /> 200 Unit
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </Col>
-          </Row> */}
         </div>
       </div>
     </Wrapper>

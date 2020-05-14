@@ -14,6 +14,7 @@ import {
   Checkbox,
   Row,
   Col,
+  message,
 } from 'antd';
 import {
   MenuUnfoldOutlined,
@@ -87,9 +88,21 @@ const featureOptions3 = [
 
 const AddProperty = () => {
   const [form] = Form.useForm();
-  const [No, setNo] = useState(2);
+  const [No, setNo] = useState(0);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
+
+  useEffect(() => {
+    async function getData() {
+      const response = await userInstance.post('/fetchProperty');
+      const data = response.data.propertiesData;
+      if (response.data.code === 200) {
+        setNo(data.length+1);
+      }
+    }
+
+    getData();
+  }, []);
 
   const onFinish = async (values) => {
     values.propertyNo = No;
@@ -103,6 +116,7 @@ const AddProperty = () => {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
+    form.resetFields();
   };
 
   const onChange = async (checkedValues) => {
@@ -136,6 +150,25 @@ const AddProperty = () => {
     }
     const response = await userInstance.post('/listing', listData);
   }
+
+
+
+  const props = {
+    name: 'file',
+    headers: {
+      authorization: 'authorization-text',
+    },
+    onChange(info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
   
   return (
     <Wrapper>
@@ -345,7 +378,7 @@ const AddProperty = () => {
                           getValueFromEvent={normFile}
                           noStyle
                         >
-                          <Upload.Dragger name="files" action="/upload.do">
+                          <Upload.Dragger {...props} >
                             <p className="ant-upload-drag-icon">
                               <InboxOutlined />
                             </p>

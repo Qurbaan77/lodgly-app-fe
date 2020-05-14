@@ -44,6 +44,7 @@ import people2 from '../../assets/images/people-2.png';
 import people3 from '../../assets/images/people-3.jpg';
 import people4 from '../../assets/images/people-4.jpg';
 import { userInstance } from '../../axios/axiosconfig';
+import { Redirect } from 'react-router-dom';
 
 const { Panel } = Collapse;
 
@@ -86,6 +87,7 @@ const Groups = () => {
   }, []);
 
   const show = () => {
+    form.resetFields();
     setVisible(true);
   };
 
@@ -98,6 +100,7 @@ const Groups = () => {
   };
 
   const onFinish = async (values) => {
+    console.log(values)
     const response = await userInstance.post('/addGroup', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
@@ -109,6 +112,7 @@ const Groups = () => {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
+    form.resetFields();
   };
 
   const getData = async () => {
@@ -119,8 +123,16 @@ const Groups = () => {
     }
   };
 
-  const edit = async (currentUser) => {
-    console.log(currentUser);
+  const edit = async (data) => {
+    console.log(data);
+    form.setFieldsValue({
+      id: data.id,
+      groupname: data.groupName,
+      count: data.checkCount,
+      interval: data.checkInterval,
+      month: data.month,
+      
+    })
     setVisible(true);
   };
 
@@ -185,7 +197,7 @@ const Groups = () => {
                 <div className="group-action">
                   <BellOutlined />
                   <div className="hover-action">
-                    <FormOutlined />
+                    <FormOutlined onClick={() => edit(el)} />
                     <DeleteOutlined onClick={() => remove(el.id)} />
                   </div>
                 </div>
@@ -204,6 +216,9 @@ const Groups = () => {
       >
         <Toaster notifyType={notifyType} notifyMsg={notifyMsg} />
         <Form form={form} name="basic" onFinish={onFinish}>
+          <Form.Item label="Id" name="id" hidden={true}>
+            <Input />
+          </Form.Item>
           <Form.Item
             label="Group Name"
             name="groupname"
@@ -257,7 +272,7 @@ const Groups = () => {
 
           <Form.Item>
             <Form.Item
-              name="date-picker"
+              name="prevCheck"
               label="Previous Checking"
               style={{
                 display: 'inline-block',
@@ -269,7 +284,7 @@ const Groups = () => {
             </Form.Item>
 
             <Form.Item
-              name="date-picker"
+              name="nextCheck"
               label="Next Checking"
               style={{ display: 'inline-block', width: 'calc(40% - 5px)' }}
             >

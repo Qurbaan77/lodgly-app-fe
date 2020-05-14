@@ -7,6 +7,7 @@ import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 
 const Login = () => {
+  const [form] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
 
@@ -14,7 +15,7 @@ const Login = () => {
     const response = await userInstance.post('/login', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
-    console.log(msg);
+    
     if (statusCode == 200) {
       localStorage.setItem('token', response.data.token);
       let payload = tokenparser(response.data.token);
@@ -25,6 +26,7 @@ const Login = () => {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
+    form.resetFields();
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -77,7 +79,7 @@ const Login = () => {
                         },
                       ]}
                     >
-                      <Input placeholder="me@janlosert.com" />
+                      <Input />
                     </Form.Item>
 
                     <Form.Item
@@ -90,7 +92,7 @@ const Login = () => {
                         },
                       ]}
                     >
-                      <Input.Password placeholder="******" />
+                      <Input.Password />
                     </Form.Item>
 
                     <Form.Item>

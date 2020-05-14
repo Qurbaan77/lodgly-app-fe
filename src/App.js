@@ -28,7 +28,6 @@ const history = createBrowserHistory();
 const App=()=> {
  
 
-
   return (
     <div className="App">
         <div className="main-wrapper">

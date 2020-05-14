@@ -26,6 +26,7 @@ const Register = () => {
   const [notifyMsg, setNotifyMsg] = useState();
 
   const onFinish = async (values) => {
+    var element = '';
     const response = await userInstance.post('/signup', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
@@ -36,6 +37,7 @@ const Register = () => {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
+    form.resetFields();
   };
 
   const prefixSelector = (
