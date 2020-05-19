@@ -3,18 +3,13 @@ import './toaster.css';
 import { useState } from 'react';
 
 const Toaster = (props) => {
-  const [show , setShow] = useState(false);
-
-  useEffect(() => {
-    setShow(false);
-  }, props);
 
   const close = () => {
-    setShow(true);
+    //props.setShow(true);
   };
 
   return (
-    <div className="toster" hidden={show}>
+    <div className="toster" hidden={props.show}>
       {props.notifyType === 'error' && (
         <div className="error">
           <p>{props.notifyMsg}</p>

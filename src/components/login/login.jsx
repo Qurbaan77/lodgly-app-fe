@@ -10,8 +10,10 @@ const Login = () => {
   const [form] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
+  const [show , setShow] = useState(false);
 
   const onFinish = async (values) => {
+    console.log(show)
     const response = await userInstance.post('/login', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
@@ -49,7 +51,7 @@ const Login = () => {
 
   return (
     <div className="login">
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} />
+      {show ? null : <Toaster notifyType={notifyType} notifyMsg={notifyMsg} show={show} setShow={setShow}/>}
       <div className="login-section">
         <div className="container">
           <div classNmae="row">

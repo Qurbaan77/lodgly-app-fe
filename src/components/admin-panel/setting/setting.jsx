@@ -7,14 +7,47 @@ import logo from "../../../assets/images/admin-logo.jpg"
 import AdminHeader from "../header/header";
 import user from "../../../assets/images/profile_user.jpg"
 import { SettingOutlined } from '@ant-design/icons';
+import Toaster from '../../toaster/toaster';
+import { adminInstance } from '../../../axios/axiosconfig';
 
 const AdminSetting = () => {
 
-
     const [form] = Form.useForm();
+    const [form2] = Form.useForm();
+    const [notifyType, setNotifyType] = useState();
+    const [notifyMsg, setNotifyMsg] = useState();
 
-    const onFinish = values => {
+    const onFinish = async (values) => {
       console.log('Received values of form: ', values);
+      const response = await adminInstance.post('/completeProfile', values);
+      const statusCode = response.data.code;
+      const msg = response.data.msg;
+
+    if (statusCode == 200) {
+      setNotifyType('success');
+      setNotifyMsg(msg);
+    } else {
+      setNotifyType('error');
+      setNotifyMsg(msg);
+    }
+    form.resetFields();
+  };
+
+    const onFinish2 = async (values) => {
+        console.log('Received values of form: ', values);
+        const response = await adminInstance.post('/changePassword', values);
+      const statusCode = response.data.code;
+      const msg = response.data.msg;
+
+    if (statusCode == 200) {
+      setNotifyType('success');
+      setNotifyMsg(msg);
+    } else {
+      setNotifyType('error');
+      setNotifyMsg(msg);
+    }
+    form2.resetFields();
+
     };
 
     return (
@@ -47,6 +80,7 @@ const AdminSetting = () => {
                 </div>
 
                 <div className="setting-form">
+                <Toaster notifyType={notifyType} notifyMsg={notifyMsg} />
 
                 <div className="register-form">
                             <div className="register-box">
@@ -186,9 +220,9 @@ const AdminSetting = () => {
                     <div className="register-form">
                     <Form
                             
-                            form={form}
+                            form={form2}
                             name="change"
-                            onFinish={onFinish}
+                            onFinish={onFinish2}
                             scrollToFirstError
                             >
 
