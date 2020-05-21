@@ -24,6 +24,7 @@ const Login = () => {
       localStorage.setItem('userId', payload.userid);
       setNotifyType('success');
       setNotifyMsg(msg);
+      window.location.href = '/propertylist'
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
@@ -63,7 +64,7 @@ const Login = () => {
                 <h1>Sign In</h1>
                 <p>We're happy to have you here again!</p>
                 <div className="login-box">
-                  <Form
+                  <Form form={form}
                     name="basic"
                     initialValues={{
                       remember: true,

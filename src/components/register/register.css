@@ -1,13 +1,12 @@
 .register {
     display: flex;
     justify-content: center;
-    align-items: center;
     min-height: 100vh;
     flex-wrap: wrap;
 }
 
 .register-section {
-    max-width: 750px;
+    max-width: 650px;
     width: 100%;
 }
 
@@ -49,7 +48,7 @@
 }
 
 .register-box input {
-    border: 1.5px solid #eaeaea!important;
+    border: 1px solid #eaeaea;
     border-radius: 0;
     padding: 8px 15px!important;
     height: auto;
@@ -94,14 +93,14 @@
     border-radius: 0;
     padding: 8px 10px;
     background: transparent;
-    border: 1.5px solid #eaeaea;
+    border: 1px solid #eaeaea;
     color: #999;
     height: auto;
 }
 
 .ant-btn.google-btn:hover, .ant-btn.google-btn:focus {
     background: transparent;
-    border: 1.5px solid #e2e2e2;
+    border: 1px solid #e2e2e2;
     outline: none;
     box-shadow: none;
     color: #525252;
@@ -150,7 +149,7 @@
 
 .ant-form .ant-input-affix-wrapper {
     padding: 0;
-    border: none;
+
 }
 
 .ant-row.ant-form-item {
@@ -167,7 +166,7 @@
 .ant-form .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
     position: relative;
     background-color: #fff;
-    border: 1.5px solid #eaeaea!important;
+    border: 1px solid #eaeaea;
     border-radius: 0;
     -webkit-transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -181,4 +180,9 @@
 
 .ant-form .ant-input-group-addon:first-child .ant-select .ant-select-selector {
     border: none!important;
+}
+
+
+.register-form .ant-form-item-explain, .register-form .ant-form-item-extra{
+    font-size: 10px!important;
 }

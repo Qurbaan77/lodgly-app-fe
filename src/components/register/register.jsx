@@ -24,9 +24,11 @@ const Register = () => {
   const [form] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
+  const [userName, setUserName] = useState();
 
   const onFinish = async (values) => {
     var element = '';
+    console.log(values)
     const response = await userInstance.post('/signup', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
@@ -39,6 +41,12 @@ const Register = () => {
     }
     form.resetFields();
   };
+
+  const addOn = () => {
+    form.setFieldsValue({
+      username: userName,
+    })
+  }
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -102,6 +110,8 @@ const Register = () => {
                         <Form.Item
                           name="username"
                           label="Username"
+                          onChange={(e)=> setUserName(`${e.target.value}.lodgly.com`)}
+                          onBlur={addOn}
                           rules={[
                             {
                               required: true,
@@ -166,7 +176,7 @@ const Register = () => {
 
                     <Row>
                       <Col span={24}>
-                        <Form.Item label="Select Package">
+                        <Form.Item label="Select Package" hidden={true}>
                           <Select>
                             <Select.Option value="demo">Demo</Select.Option>
                           </Select>

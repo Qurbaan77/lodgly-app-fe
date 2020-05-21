@@ -155,6 +155,7 @@ const AddProperty = () => {
 
   const props = {
     name: 'file',
+    action: 'http://localhost:3001/users/photo',
     headers: {
       authorization: 'authorization-text',
     },

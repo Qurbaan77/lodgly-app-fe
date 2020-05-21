@@ -1,7 +1,6 @@
 .login {
     display: flex;
     justify-content: center;
-    align-items: center;
     min-height: 100vh;
     flex-wrap: wrap;
 }
@@ -49,7 +48,7 @@
 }
 
 .login-box input {
-    border: 1.5px solid #eaeaea!important;
+    border: 1px solid #eaeaea;
     border-radius: 0;
     padding: 8px 15px!important;
     height: auto;
@@ -92,14 +91,14 @@
     border-radius: 0;
     padding: 8px 10px;
     background: transparent;
-    border: 1.5px solid #eaeaea;
+    border: 1px solid #eaeaea;
     color: #999;
     height: auto;
 }
 
 .ant-btn.google-btn:hover, .ant-btn.google-btn:focus {
     background: transparent;
-    border: 1.5px solid #e2e2e2;
+    border: 1px solid #e2e2e2;
     outline: none;
     box-shadow: none;
     color: #525252;
@@ -148,7 +147,7 @@
 
 .ant-form .ant-input-affix-wrapper {
     padding: 0;
-    border: none;
+
 }
 
 .ant-row.ant-form-item {
@@ -161,3 +160,24 @@
 .ant-form-horizontal .ant-form-item-label {
     text-align: left;
 }
+
+.ant-btn.google-btn span {
+    color: #999;
+}
+
+.ant-input:focus{
+    box-shadow: none;
+    outline: none;
+}
+
+.ant-form-item-has-error .ant-input:focus{
+    box-shadow: none;
+    outline: none;
+    border: 1px solid red!important;
+
+}
+
+.login-form .ant-form-item-has-error .ant-form-item-explain, .login-form .ant-form-item-has-error .ant-form-item-split {
+   visibility: hidden;
+}
+
