@@ -35,6 +35,7 @@ const Register = () => {
     if (statusCode == 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
+      window.location.href= '/thankyou'
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);

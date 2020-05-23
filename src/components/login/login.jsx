@@ -122,7 +122,7 @@ const Login = () => {
                 </p>
 
                 <p>
-                  Forget your password? <Link to={'/'}>Get a new password</Link>
+                  Forget your password? <Link to={'/forget'}>Get a new password</Link>
                 </p>
               </div>
             </div>

@@ -20,21 +20,23 @@ import { userInstance } from '../../../axios/axiosconfig';
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
-const Sidenav = () => {
+const Sidenav = ({history}) => {
   const [collapsed, setCollapsed] = useState(false);
   const [propertyData, setPropertyData] = useState([]);
+  const [currProperty, setCurrProperty] = useState(0);
 
   const toggle = () => {
     setCollapsed(!collapsed);
   };
 
   const [menu, setMenu] = useState(false);
-  const handleMenu = (e) => {
+  const handleMenu = (e, propertyNo) => {
     if (e === `open`) {
       setMenu(true);
     } else if (e === `close`) {
       setMenu(false);
     } else if (e === `toggle`) {
+      setCurrProperty(propertyNo);
       setMenu(!menu);
     }
   };
@@ -45,6 +47,7 @@ const Sidenav = () => {
   };
 
   useEffect(() => {
+    console.log(history)
     async function getData() {
       const response = await userInstance.post('/fetchProperty');
       const data = response.data.propertiesData;
@@ -55,6 +58,13 @@ const Sidenav = () => {
     }
 
     getData();
+
+    // if(window.location.pathname = '/property'){
+    //   if(!menu){
+    //     setMenu(true);
+    //   }
+    // }
+    
   }, []);
 
   return (
@@ -74,7 +84,7 @@ const Sidenav = () => {
       >
         <Menu.Item key="0">
           <UserOutlined />
-          <span>Booking</span>
+          <Link to={'/booking'} >Booking</Link>
         </Menu.Item>
 
         <Menu.Item>
@@ -94,9 +104,9 @@ const Sidenav = () => {
             return (
               <Menu.Item
                 key={el.propertyNo}
-                onClick={() => handleMenu(`toggle`)}
+                onClick={() => handleMenu(`toggle`, el.propertyNo)}
               >
-                <Link to={'/property?propertyNo=' + el.propertyNo} render={()=> handleMenu(`toggle`)}>Property No {el.propertyNo}</Link>
+                <Link to={'/property?propertyNo=' + el.propertyNo} >Property No {el.propertyNo} </Link>
               </Menu.Item>
             );
           })}
@@ -161,7 +171,7 @@ const Sidenav = () => {
       >
         <span className="submenu-heading" onClick={() => handleMenu(`close`)}>
           <ArrowLeftOutlined /> 
-          <Link to={'/propertylist'} >Property 1</Link>
+        <Link to={'/propertylist'} >Property {currProperty}</Link>
         </span>
         <Menu.Item key="1">
           <UserOutlined />
@@ -169,7 +179,7 @@ const Sidenav = () => {
         </Menu.Item>
         <Menu.Item>
           <VideoCameraOutlined />
-          <span>Unit Types</span>
+          <Link to={'/unittype?propertyNo=' + currProperty} >Unit Type</Link>
         </Menu.Item>
         <Menu.Item>
           <UserOutlined />

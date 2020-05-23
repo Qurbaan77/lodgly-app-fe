@@ -1,136 +1,120 @@
-import React, { useEffect, useState } from "react";
-import "./property.css";
-import { Form, Select, Input, InputNumber, Switch, Radio, Slider, Button, Upload, Rate, Checkbox, Row, Col, } from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined, HomeOutlined, PlusOutlined, SearchOutlined, VerticalAlignMiddleOutlined,DeleteOutlined, FormOutlined, UserOutlined, VideoCameraOutlined, UploadOutlined, } from '@ant-design/icons';
-import Wrapper from "../wrapper"
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import './property.css';
+import {
+  Form,
+  Select,
+  Input,
+  InputNumber,
+  Switch,
+  Radio,
+  Slider,
+  Button,
+  Upload,
+  Rate,
+  Checkbox,
+  Row,
+  Col,
+} from 'antd';
+import {
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  HomeOutlined,
+  PlusOutlined,
+  SearchOutlined,
+  VerticalAlignMiddleOutlined,
+  DeleteOutlined,
+  FormOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+  UploadOutlined,
+} from '@ant-design/icons';
+import Wrapper from '../wrapper';
 import { Collapse } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
-import DeletePopup from "./deletepopup";
-
-
-
-
+import { userInstance } from '../../axios/axiosconfig';
+import DeletePopup from './deletepopup';
+import queryString from 'query-string';
 
 const UnitType = () => {
+  const [visible, setVisible] = useState(false);
+  const [unittypeData, setUnittypeData] = useState([]);
+  const [currProperty, setCurrProperty] = useState(0);
 
-    const [visible,setVisible]=useState(false)
-
-    const show = () => {
-        setVisible(true);
-    };
-
-
-    const handleOk = () => {
-        setVisible(false);
-    };
-
-    const handleCancel = () => {
-        setVisible(false);
-    };
-
-
-
-    return (
-        <Wrapper>
-            
-                <div className="unit-type">
-
-                    <div className="page-header">
-
-                        <h1><HomeOutlined /> Unit Type</h1>
-
-                        <Button type="primary" icon={<PlusOutlined />}>
-                            <a >Add Unit Type</a>
-                        </Button>
-
-
-                    </div>
- 
-
-
-                    
-                    <div className="panel-container">
-
-                      <div className="panel-box units">
-                        <div className="group-name">
-                            <h4>Unit Type</h4>
-                            <span>1 unit are assigned</span>
-                        </div>
-                        <div className="group-action">
-                        <FormOutlined />
-                        <DeleteOutlined  onClick={show} />
-                        </div>
-                      </div>
-
-
-                      <div className="panel-box units">
-                        <div className="group-name">
-                            <h4>Unit Type</h4>
-                            <span>1 unit are assigned</span>
-                        </div>
-                        <div className="group-action">
-                        <FormOutlined />
-                        <DeleteOutlined  onClick={show} />
-                        </div>
-                      </div>
-
-
-
-                      <div className="panel-box units">
-                        <div className="group-name">
-                            <h4>Unit Type</h4>
-                            <span>1 unit are assigned</span>
-                        </div>
-                        <div className="group-action">
-                        <FormOutlined />
-                        <DeleteOutlined  onClick={show} />
-                        </div>
-                      </div>
-
-
-
-                      <div className="panel-box units">
-                        <div className="group-name">
-                            <h4>Unit Type</h4>
-                            <span>1 unit are assigned</span>
-                        </div>
-                        <div className="group-action">
-                        <FormOutlined />
-                        <DeleteOutlined  onClick={show} />
-                        </div>
-                      </div>
-
-
-
-                      <div className="panel-box units">
-                        <div className="group-name">
-                            <h4>Unit Type</h4>
-                            <span>1 unit are assigned</span>
-                        </div>
-                        <div className="group-action">
-                        <FormOutlined />
-                        <DeleteOutlined  onClick={show} />
-                        </div>
-                      </div>
-
-
-
-
-
-                    </div>
-
-                </div>
-
-
-                <Modal visible={visible} onOk={handleOk} onCancel={handleCancel} wrapClassName="delete-modal">
-                    <DeletePopup />
-                </Modal>
-
-
-        </Wrapper>
-        
-    );
+  const show = () => {
+    setVisible(true);
   };
-  
-  export default UnitType;
+
+  const handleOk = () => {
+    setVisible(false);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
+  useEffect(() => {
+    async function getData() {
+      const parsed = queryString.parse(window.location.search);
+      const values = {
+        propertyNo: parsed.propertyNo,
+      };
+      setCurrProperty(parsed.propertyNo);
+      const response = await userInstance.post('/getUnittype', values);
+      const data = response.data.unittypeData;
+      console.log('response', response.data.unittypeData);
+      if (response.data.code === 200) {
+        setUnittypeData(data);
+      }
+    }
+
+    getData();
+  }, []);
+
+  return (
+    <Wrapper>
+      <div className="unit-type">
+        <div className="page-header">
+          <h1>
+            <HomeOutlined /> Unit Type
+          </h1>
+
+          <Button type="primary" icon={<PlusOutlined />}>
+            <Link to={'/addunittype?propertyNo=' + currProperty}>
+              Add Unit Type
+            </Link>
+          </Button>
+        </div>
+
+        <div className="panel-container">
+          {unittypeData.map((el, i) => {
+            return (
+              <div className="panel-box units">
+                <div className="group-name">
+                  <h4>Unit Type</h4>
+                  <span>1 unit are assigned</span>
+                </div>
+                <div className="group-action">
+                  <FormOutlined />
+                  <DeleteOutlined onClick={show} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <Modal
+        visible={visible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        wrapClassName="delete-modal"
+      >
+        <DeletePopup />
+      </Modal>
+    </Wrapper>
+  );
+};
+
+export default UnitType;

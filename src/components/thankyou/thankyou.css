@@ -1,0 +1,44 @@
+.thank-you {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-wrap: wrap;
+}
+
+.thank-you-box {
+    max-width: 550px;
+    width: 100%;
+}
+
+.thank-you-logo {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+.thank-you-logo img {
+    max-width: 70px;
+}
+
+.thank-you-box {
+    background: #fff;
+    padding: 50px;
+    max-width: 600px;
+    margin: 0px auto;
+    border: 1px solid #eaeaea;
+    padding-bottom: 30px;
+    text-align: center;
+}
+
+.thank-you-box h1 {
+    font-size: 22px;
+    margin: 0;
+    padding-bottom: 15px;
+}
+
+.thank-you-box p {
+    color: #999;
+    margin: 0;
+    padding-bottom: 24px;
+    font-size: 14px;
+}
