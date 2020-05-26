@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import './login.css';
 import { Form, Input, Button, Checkbox } from 'antd';
-import { Link } from 'react-router-dom';
 import logo from '../../assets/images/logo.jpg';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
@@ -10,10 +10,9 @@ const Login = () => {
   const [form] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
-  const [show , setShow] = useState(false);
+  const history = useHistory();  
 
   const onFinish = async (values) => {
-    console.log(show)
     const response = await userInstance.post('/login', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
@@ -24,7 +23,7 @@ const Login = () => {
       localStorage.setItem('userId', payload.userid);
       setNotifyType('success');
       setNotifyMsg(msg);
-      window.location.href = '/propertylist'
+      history.push('/propertylist');
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
@@ -34,6 +33,10 @@ const Login = () => {
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
+  };
+
+  const close = () => {
+    setNotifyType('');
   };
 
   const tokenparser = (token) => {
@@ -52,7 +55,7 @@ const Login = () => {
 
   return (
     <div className="login">
-      {show ? null : <Toaster notifyType={notifyType} notifyMsg={notifyMsg} show={show} setShow={setShow}/>}
+      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <div className="login-section">
         <div className="container">
           <div classNmae="row">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import './property.css';
 import {
   Form,
@@ -41,9 +41,12 @@ const UnitType = () => {
   const [visible, setVisible] = useState(false);
   const [unittypeData, setUnittypeData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
+  const [currUnittype, setCurrUnittype] = useState(0);
+  const history = useHistory();
 
-  const show = () => {
+  const show = (unittypeId) => {
     setVisible(true);
+    setCurrUnittype(unittypeId);
   };
 
   const handleOk = () => {
@@ -54,6 +57,21 @@ const UnitType = () => {
     setVisible(false);
   };
 
+  const edit = (unittypeId) => {
+    console.log('unittypeId', unittypeId)
+    history.push('/addunittype');
+  }
+
+  const remove = async () => {
+    const values = {
+      id: currUnittype,
+    }
+    const response = await userInstance.post('/deleteUnitType', values);
+    if(response.data.code === 200) {
+      setVisible(false);
+    }
+  }
+
   useEffect(() => {
     async function getData() {
       const parsed = queryString.parse(window.location.search);
@@ -63,14 +81,13 @@ const UnitType = () => {
       setCurrProperty(parsed.propertyNo);
       const response = await userInstance.post('/getUnittype', values);
       const data = response.data.unittypeData;
-      console.log('response', response.data.unittypeData);
       if (response.data.code === 200) {
         setUnittypeData(data);
       }
     }
 
     getData();
-  }, []);
+  }, [unittypeData]);
 
   return (
     <Wrapper>
@@ -96,8 +113,8 @@ const UnitType = () => {
                   <span>1 unit are assigned</span>
                 </div>
                 <div className="group-action">
-                  <FormOutlined />
-                  <DeleteOutlined onClick={show} />
+                  <FormOutlined onClick={() => edit(el.id)}/>
+                  <DeleteOutlined onClick={() => show(el.id)} />
                 </div>
               </div>
             );
@@ -111,7 +128,7 @@ const UnitType = () => {
         onCancel={handleCancel}
         wrapClassName="delete-modal"
       >
-        <DeletePopup />
+        <DeletePopup dataObject={() => remove()} cancel={() => handleCancel()}/>
       </Modal>
     </Wrapper>
   );

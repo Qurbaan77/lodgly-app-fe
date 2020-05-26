@@ -104,6 +104,10 @@ const AddProperty = () => {
     getData();
   }, []);
 
+  const close = () => {
+    setNotifyType('');
+  };
+
   const onFinish = async (values) => {
     values.propertyNo = No;
     const response = await userInstance.post('/addProperty', values);
@@ -151,8 +155,6 @@ const AddProperty = () => {
     const response = await userInstance.post('/listing', listData);
   }
 
-
-
   const props = {
     name: 'file',
     action: 'http://localhost:3001/users/photo',
@@ -174,7 +176,7 @@ const AddProperty = () => {
   return (
     <Wrapper>
       <div className="add-property">
-        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} />
+      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         <div className="page-header">
           <h1>
             <HomeOutlined /> Property {No}

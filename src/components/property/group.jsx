@@ -99,6 +99,10 @@ const Groups = () => {
     setVisible(false);
   };
 
+  const close = () => {
+    setNotifyType('');
+  }
+
   const onFinish = async (values) => {
     console.log(values)
     const response = await userInstance.post('/addGroup', values);
@@ -148,6 +152,7 @@ const Groups = () => {
       getData();
     }
   };
+
 
   return (
     <Wrapper>
@@ -214,7 +219,7 @@ const Groups = () => {
         onCancel={handleCancel}
         wrapClassName="group-modal"
       >
-        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} />
+        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         <Form form={form} name="basic" onFinish={onFinish}>
           <Form.Item label="Id" name="id" hidden={true}>
             <Input />

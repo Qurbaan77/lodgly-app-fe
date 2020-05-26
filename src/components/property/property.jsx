@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import './property.css';
 import {
   Form,
@@ -31,6 +31,8 @@ import property1 from '../../assets/images/property-1.png';
 import property2 from '../../assets/images/property-2.png';
 import property3 from '../../assets/images/property-3.png';
 import { Collapse } from 'antd';
+import Toaster from '../toaster/toaster';
+import { isEqual } from 'lodash';
 import { InboxOutlined } from '@ant-design/icons';
 import { userInstance } from '../../axios/axiosconfig';
 import queryString from 'query-string';
@@ -90,27 +92,57 @@ const featureOptions3 = [
 const Property = () => {
   const [form] = Form.useForm();
   const [currentProperty, setCurrentProperty] = useState([]);
-
+  const [notifyType, setNotifyType] = useState();
+  const [notifyMsg, setNotifyMsg] = useState();
+  const [petPolicy, setPetPolicy] = useState([]);
+  const [feature1, setFeature1] = useState([]);
+  const [feature2, setFeature2] = useState([]);
+  const [feature3, setFeature3] = useState([]);
+  
   useEffect(() => {
-    async function getData() {
-      const response = await userInstance.post('/fetchProperty');
-      const data = response.data.propertiesData;
-      if (response.data.code === 200) {
-        const parsed = queryString.parse(window.location.search);
-        const curProperty = data.filter(
-          (el) => el.propertyNo == parsed.propertyNo,
-        );
-        console.log(curProperty)
-        setCurrentProperty(curProperty);
-      }
-    }
-
-    getData();
+      getData();
   }, []);
+
+  const close = () => {
+    setNotifyType('');
+  };
+
+  const getData = async () => {
+    const response = await userInstance.post('/fetchProperty');
+    const data = response.data.propertiesData;
+    if (response.data.code === 200) {
+      const parsed = queryString.parse(window.location.search);
+      const curProperty = data.filter(
+        (el) => el.propertyNo == parsed.propertyNo,
+      );
+      console.log(curProperty);
+      setCurrentProperty(curProperty);
+      setPetPolicy(curProperty[0].petPolicy);
+      setFeature1(curProperty[0].feature1);
+      setFeature2(curProperty[0].feature2);
+      setFeature3(curProperty[0].feature3);
+    }
+  }
+
+  const onFinish = async (values) => {
+    values.propertyNo = currentProperty[0].propertyNo;
+    const response = await userInstance.post('/addProperty', values);
+    const statusCode = response.data.code;
+    const msg = response.data.msg;
+    if (statusCode == 200) {
+      setNotifyType('success');
+      setNotifyMsg(msg);
+    } else {
+      setNotifyType('error');
+      setNotifyMsg(msg);
+    }
+    form.resetFields();
+  }
 
   return (
     <Wrapper>
       <div className="add-property">
+      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         {currentProperty.map((el, i) => {
             form.setFieldsValue({
               propertyName: el.propertyName,
@@ -127,7 +159,6 @@ const Property = () => {
               halfBathroom: el.halfBathroom,
               sqfoot: el.sqfoot,
               description: el.description,
-
             })  
           return (
             <div className="page-header">
@@ -142,7 +173,7 @@ const Property = () => {
           <Collapse defaultActiveKey={['1']} accordion>
             <Panel header="Main Information" key="1">
               <div className="main-info-form">
-                <Form form={form}>
+                <Form form={form} onFinish={onFinish}>
                   <Row gutter={[16, 0]}>
                     <Col span={24}>
                       <Form.Item name="propertyName" label="Name">
@@ -206,7 +237,7 @@ const Property = () => {
 
                     <Col span={24}>
                       <Form.Item>
-                        <Button>Save</Button>
+                      <Button htmlType="submit">Update</Button>
                       </Form.Item>
                     </Col>
                   </Row>
@@ -216,7 +247,7 @@ const Property = () => {
 
             <Panel header="Details" key="2">
               <div className="main-info-form">
-                <Form>
+                <Form form={form} onFinish={onFinish}>
                   <Row gutter={[16, 0]}>
                     <Col span={24}>
                       <Form.Item name="propertyType" label="Property Type">
@@ -268,7 +299,7 @@ const Property = () => {
 
                     <Col span={24}>
                       <Form.Item>
-                        <Button>Save</Button>
+                      <Button htmlType="submit">Update</Button>
                       </Form.Item>
                     </Col>
                   </Row>
@@ -278,13 +309,13 @@ const Property = () => {
 
             <Panel header="Listing" key="3">
               <div className="listing-info-form">
-                <Form>
+                <Form form={form}>
                   <Row gutter={[16, 0]}>
                     <Col span={6}>
                       <Form.Item label="Pet Policy">
                         <Checkbox.Group
                           options={petOptions}
-                          defaultValue={['Pets Negotiable']}
+                          defaultValue={petPolicy}
                           onChange={onChange}
                         />
                       </Form.Item>
@@ -294,7 +325,7 @@ const Property = () => {
                       <Form.Item label="Features and Amenities">
                         <Checkbox.Group
                           options={featureOptions}
-                          defaultValue={['Furnished or available furnished']}
+                          defaultValue={feature1}
                           onChange={onChange}
                         />
                       </Form.Item>
@@ -304,7 +335,7 @@ const Property = () => {
                       <Form.Item label="Features and Amenities">
                         <Checkbox.Group
                           options={featureOptions2}
-                          defaultValue={['Gym/Fitness Center']}
+                          defaultValue={feature2}
                           onChange={onChange}
                         />
                       </Form.Item>
@@ -314,7 +345,7 @@ const Property = () => {
                       <Form.Item label="Features and Amenities">
                         <Checkbox.Group
                           options={featureOptions3}
-                          defaultValue={['Outdoor Space']}
+                          defaultValue={feature3}
                           onChange={onChange}
                         />
                       </Form.Item>

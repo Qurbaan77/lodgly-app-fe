@@ -44,7 +44,9 @@ const { MonthPicker, RangePicker } = DatePicker;
 const AddUnitType = () => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
-  const [unitNo, setUnitNo] = useState(0);
+  const [unittypeNo, setUnittypeNo] = useState(0);
+  const [unitData, setUnitData] = useState([]);
+  const parsed = queryString.parse(window.location.search);
 
   const show = () => {
     setVisible(true);
@@ -59,29 +61,45 @@ const AddUnitType = () => {
   };
 
   const onFinish = async (values) => {
-    const parsed = queryString.parse(window.location.search);
-    values.propertyNo = parsed.propertyNo
+    values.propertyNo = parsed.propertyNo;
     console.log('Form Values', values);
     const response = await userInstance.post('/addUnitType', values);
-    window.location.href='/unittype?propertyNo='+parsed.propertyNo;
-    console.log(response)
+    window.location.href = '/unittype?propertyNo=' + parsed.propertyNo;
+    console.log(response);
     form.resetFields();
   };
 
   const getData = async () => {
-    const parsed = queryString.parse(window.location.search);
     const values = {
       propertyNo: parsed.propertyNo,
     };
-    // setCurrProperty(parsed.propertyNo);
     const response = await userInstance.post('/getUnittype', values);
     const data = response.data.unittypeData;
-    console.log('data', data)
+    console.log('data', data);
     if (response.data.code === 200) {
-      setUnitNo(data.length+1);
+      setUnittypeNo(data.length + 1);
     }
-  }
-  
+  };
+
+  const addUnit = async () => {
+    const values = {
+      unittypeNo: unittypeNo,
+    };
+    const response = await userInstance.post('/addUnit', values);
+  };
+
+  const getUnitData = async () => {
+    const values = {
+      unittypeNo: unittypeNo,
+    };
+    const response = await userInstance.post('/getUnit', values);
+    const data = response.data.unitData;
+    if (response.data.code === 200) {
+      setUnitData(data);
+    }
+  };
+
+
   const config = {
     height: 300,
     list: {
@@ -197,12 +215,19 @@ const AddUnitType = () => {
     }; 
   });
 
+  useEffect(() => {
+    getData();
+    if (unittypeNo != 0) {
+      getUnitData();
+    }
+  }, [unitData, unittypeNo])
+
   return (
     <Wrapper>
       <div className="unit-type">
         <div className="page-header">
           <h1>
-            <HomeOutlined /> Unit Type {unitNo}
+            <HomeOutlined /> Unit Type {unittypeNo}
           </h1>
         </div>
 
@@ -252,30 +277,34 @@ const AddUnitType = () => {
               </Row>
 
               <div className="unittype-calendar">
-              <GSTC config={config} onState={onState} />
-            </div>
-            <Form.Item>
-              <Button htmlType="submit">Save</Button>
-            </Form.Item>
+                <GSTC config={config} onState={onState} />
+              </div>
+              <Form.Item>
+                <Button htmlType="submit">Save</Button>
+              </Form.Item>
             </Form>
 
             <div className="assign-unit">
               <p>Assign Your Units</p>
               <span>Now add unit to unit type</span>
               <div className="panel-container">
-                <div className="panel-box units">
-                  <div className="group-name">
-                    <h4>Unit Type</h4>
-                    <span>1 unit are assigned</span>
-                  </div>
-                  <div className="group-action">
-                    <FormOutlined />
-                    <DeleteOutlined onClick={show} />
-                  </div>
-                </div>
+                {unitData.map((el, i) => {
+                  return (
+                    <div className="panel-box units">
+                      <div className="group-name">
+                        <h4>Unit Type</h4>
+                        <span>1 unit are assigned</span>
+                      </div>
+                      <div className="group-action">
+                        <FormOutlined />
+                        <DeleteOutlined onClick={show} />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
               <div>
-                <button>Add unit</button>
+                <Button onClick={() => addUnit()}>Add unit</Button>
               </div>
               <Modal
                 visible={visible}

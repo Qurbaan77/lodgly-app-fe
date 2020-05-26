@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import './register.css';
 import {
   Form,
@@ -12,7 +13,6 @@ import {
   Button,
   AutoComplete,
 } from 'antd';
-import { Link } from 'react-router-dom';
 import logo from '../../assets/images/logo.jpg';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
@@ -25,17 +25,16 @@ const Register = () => {
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const [userName, setUserName] = useState();
+  const history = useHistory();
 
   const onFinish = async (values) => {
-    var element = '';
-    console.log(values)
     const response = await userInstance.post('/signup', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
     if (statusCode == 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
-      window.location.href= '/thankyou'
+      history.push('/thankyou');
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
@@ -47,6 +46,10 @@ const Register = () => {
     form.setFieldsValue({
       username: userName,
     })
+  }
+
+  const close = () => {
+    setNotifyType('');
   }
 
   const prefixSelector = (
@@ -65,7 +68,7 @@ const Register = () => {
 
   return (
     <div className="register">
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} />
+      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <div className="register-section">
         <div className="container">
           <div classNmae="row">

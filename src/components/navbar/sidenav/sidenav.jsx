@@ -20,16 +20,16 @@ import { userInstance } from '../../../axios/axiosconfig';
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
-const Sidenav = ({history}) => {
+const Sidenav = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [propertyData, setPropertyData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
+  const [menu, setMenu] = useState(false);
 
   const toggle = () => {
     setCollapsed(!collapsed);
   };
 
-  const [menu, setMenu] = useState(false);
   const handleMenu = (e, propertyNo) => {
     if (e === `open`) {
       setMenu(true);
@@ -47,7 +47,6 @@ const Sidenav = ({history}) => {
   };
 
   useEffect(() => {
-    console.log(history)
     async function getData() {
       const response = await userInstance.post('/fetchProperty');
       const data = response.data.propertiesData;
@@ -56,15 +55,7 @@ const Sidenav = ({history}) => {
         setPropertyData(data);
       }
     }
-
-    getData();
-
-    // if(window.location.pathname = '/property'){
-    //   if(!menu){
-    //     setMenu(true);
-    //   }
-    // }
-    
+    getData();    
   }, []);
 
   return (
@@ -96,7 +87,7 @@ const Sidenav = ({history}) => {
           title={
             <div>
               <UserOutlined />
-              <span>Properties</span>
+              <Link to={'/propertylist'} >Properties</Link>
             </div>
           }
         >

@@ -4,16 +4,12 @@ import { useState } from 'react';
 
 const Toaster = (props) => {
 
-  const close = () => {
-    //props.setShow(true);
-  };
-
   return (
     <div className="toster" hidden={props.show}>
       {props.notifyType === 'error' && (
         <div className="error">
           <p>{props.notifyMsg}</p>
-          <button className="close-btn" onClick={close}>
+          <button className="close-btn" onClick={props.close}>
             Close
           </button>
         </div>
@@ -22,7 +18,7 @@ const Toaster = (props) => {
       {props.notifyType === 'success' && (
         <div className="success" visiblity="hide">
           <p>{props.notifyMsg}</p>
-          <button className="close-btn" onClick={close}>
+          <button className="close-btn" onClick={props.close}>
             Close
           </button>
         </div>
@@ -31,7 +27,7 @@ const Toaster = (props) => {
       {props.notifyType === 'warning' && (
         <div className="warning">
           <p>{props.notifyMsg}</p>
-          <button className="close-btn" onChange={close}>
+          <button className="close-btn" onChange={props.close}>
             Close
           </button>
         </div>
