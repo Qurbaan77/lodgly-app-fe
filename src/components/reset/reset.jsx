@@ -32,10 +32,14 @@ const Reset = () => {
     console.log('Failed:', errorInfo);
   };
 
+  const close = () => {
+    setNotifyType('');
+  };
+
   return (
     <div className="forget">
       <div className="forget-section">
-        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} />
+      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         <div className="container">
           <div classNmae="row">
             <div className="col-md-12">
