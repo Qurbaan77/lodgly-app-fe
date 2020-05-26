@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
   Form,
@@ -47,6 +48,7 @@ const AddUnitType = () => {
   const [unittypeNo, setUnittypeNo] = useState(0);
   const [unitData, setUnitData] = useState([]);
   const parsed = queryString.parse(window.location.search);
+  const history = useHistory();
 
   const show = () => {
     setVisible(true);
@@ -64,8 +66,7 @@ const AddUnitType = () => {
     values.propertyNo = parsed.propertyNo;
     console.log('Form Values', values);
     const response = await userInstance.post('/addUnitType', values);
-    window.location.href = '/unittype?propertyNo=' + parsed.propertyNo;
-    console.log(response);
+    history.push('/unittype?propertyNo=' + parsed.propertyNo);
     form.resetFields();
   };
 

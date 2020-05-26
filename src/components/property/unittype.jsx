@@ -59,7 +59,7 @@ const UnitType = () => {
 
   const edit = (unittypeId) => {
     console.log('unittypeId', unittypeId)
-    history.push('/addunittype');
+    history.push('/addunittype?uniitypeId=' + unittypeId);
   }
 
   const remove = async () => {

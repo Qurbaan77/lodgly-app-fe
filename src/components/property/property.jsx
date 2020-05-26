@@ -132,12 +132,17 @@ const Property = () => {
     if (statusCode == 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
+      getData();
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
     form.resetFields();
   }
+
+  const onChange = async (checkedValues) => {
+    console.log(checkedValues);
+  };
 
   return (
     <Wrapper>

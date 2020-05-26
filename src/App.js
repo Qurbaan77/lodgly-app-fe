@@ -29,7 +29,6 @@ import Reset from './components/reset/reset';
 
 const history = createBrowserHistory();
 
-
 const App=()=> {
  
 
@@ -43,7 +42,7 @@ const App=()=> {
                   <div className="main_content">                  
                       <Route exact path="/" render={() => <Login />} />
                       <Route exact path="/register" render={() => <Register />} />
-                      <Route exact path="/sidenav" render={() => <Sidenav />} />
+                      <Route exact path="/sidenav" render={() => <Sidenav />}/>
                       <Route exact path="/addproperty" render={() => <AddProperty />} />
                       <Route exact path="/propertylist" render={() => <PropertyList />} />
                       <Route exact path="/unittype" render={() => <UnitType />} />  

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createBrowserHistory } from 'history'
 import { Link } from 'react-router-dom';
 import './sidenav.css';
 import { Layout, Menu, Dropdown } from 'antd';
@@ -16,11 +17,13 @@ import {
 import logo from '../../../assets/images/logo.png';
 import UserProfile from '../userprofile/userprofile';
 import { userInstance } from '../../../axios/axiosconfig';
+import queryString from 'query-string';
 
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
+const history = createBrowserHistory();
 
-const Sidenav = () => {
+const Sidenav = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   const [propertyData, setPropertyData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
@@ -36,7 +39,6 @@ const Sidenav = () => {
     } else if (e === `close`) {
       setMenu(false);
     } else if (e === `toggle`) {
-      setCurrProperty(propertyNo);
       setMenu(!menu);
     }
   };
@@ -46,16 +48,26 @@ const Sidenav = () => {
     window.location.href='/';
   };
 
-  useEffect(() => {
-    async function getData() {
-      const response = await userInstance.post('/fetchProperty');
+  const getData = async() => {
+    const response = await userInstance.post('/fetchProperty');
       const data = response.data.propertiesData;
       console.log(data);
       if (response.data.code === 200) {
         setPropertyData(data);
       }
+  };
+
+  useEffect(() => {
+    getData();
+    const pathname = window.location.pathname;
+    const parsed = queryString.parse(window.location.search);
+    console.log('pathname', pathname)
+    console.log('parsed', parsed.propertyNo)
+    if(pathname == '/property' || pathname == '/unittype' || pathname == '/addunittype' || pathname == '/channelmanager' ){
+      console.log(menu)
+      setMenu(!menu);
+      setCurrProperty(parsed.propertyNo);
     }
-    getData();    
   }, []);
 
   return (
@@ -95,7 +107,6 @@ const Sidenav = () => {
             return (
               <Menu.Item
                 key={el.propertyNo}
-                onClick={() => handleMenu(`toggle`, el.propertyNo)}
               >
                 <Link to={'/property?propertyNo=' + el.propertyNo} >Property No {el.propertyNo} </Link>
               </Menu.Item>
@@ -178,7 +189,7 @@ const Sidenav = () => {
         </Menu.Item>
         <Menu.Item>
           <VideoCameraOutlined />
-          <span>Channel Manager</span>
+          <Link to={'/channelmanager'} >Channel Manager</Link>
         </Menu.Item>
       </Menu>
     </Sider>
