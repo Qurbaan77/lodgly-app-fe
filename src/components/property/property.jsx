@@ -141,8 +141,37 @@ const Property = () => {
   }
 
   const onChange = async (checkedValues) => {
-    console.log(checkedValues);
+    const listData = {
+      checkedValues,
+      No: currentProperty[0].propertyNo,
+    }
+    const response = await userInstance.post('/listing', listData);
   };
+
+  const onChange1 = async (checkedValues1) => {
+    const listData = {
+      checkedValues1,
+      No: currentProperty[0].propertyNo,
+    }
+    const response = await userInstance.post('/listing', listData);
+  };
+
+  const onChange2 = async (checkedValues2) => {
+    const listData = {
+      checkedValues2,
+      No: currentProperty[0].propertyNo,
+    }
+    const response = await userInstance.post('/listing', listData);
+  };
+
+  const onChange3 = async (checkedValues3) => {
+    const listData = {
+      checkedValues3,
+      No: currentProperty[0].propertyNo,
+    }
+    const response = await userInstance.post('/listing', listData);
+  };
+
 
   return (
     <Wrapper>
@@ -266,8 +295,12 @@ const Property = () => {
 
                     <Col span={8}>
                       <Form.Item name="bedrooms" label="Bedrooms">
-                        <Select>
-                          <Select.Option value="demo">Croatia</Select.Option>
+                      <Select>
+                          <Select.Option value="1">1</Select.Option>
+                          <Select.Option value="2">2</Select.Option>
+                          <Select.Option value="3">3</Select.Option>
+                          <Select.Option value="4">4</Select.Option>
+                          <Select.Option value="5">5</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
@@ -275,7 +308,9 @@ const Property = () => {
                     <Col span={8}>
                       <Form.Item name="fullBathroom" label="Full Bathrooms">
                         <Select>
-                          <Select.Option value="demo">Choose</Select.Option>
+                        <Select.Option value="1">1</Select.Option>
+                          <Select.Option value="2">2</Select.Option>
+                          <Select.Option value="3">3</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
@@ -283,7 +318,9 @@ const Property = () => {
                     <Col span={8}>
                       <Form.Item name="halfBathroom" label="Half Bathrooms">
                         <Select>
-                          <Select.Option value="demo">Choose</Select.Option>
+                          <Select.Option value="1">1</Select.Option>
+                          <Select.Option value="2">2</Select.Option>
+                          <Select.Option value="3">3</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
@@ -314,7 +351,7 @@ const Property = () => {
 
             <Panel header="Listing" key="3">
               <div className="listing-info-form">
-                <Form form={form}>
+                <Form >
                   <Row gutter={[16, 0]}>
                     <Col span={6}>
                       <Form.Item label="Pet Policy">
@@ -331,7 +368,7 @@ const Property = () => {
                         <Checkbox.Group
                           options={featureOptions}
                           defaultValue={feature1}
-                          onChange={onChange}
+                          onChange={onChange1}
                         />
                       </Form.Item>
                     </Col>
@@ -341,7 +378,7 @@ const Property = () => {
                         <Checkbox.Group
                           options={featureOptions2}
                           defaultValue={feature2}
-                          onChange={onChange}
+                          onChange={onChange2}
                         />
                       </Form.Item>
                     </Col>
@@ -351,7 +388,7 @@ const Property = () => {
                         <Checkbox.Group
                           options={featureOptions3}
                           defaultValue={feature3}
-                          onChange={onChange}
+                          onChange={onChange3}
                         />
                       </Form.Item>
                     </Col>

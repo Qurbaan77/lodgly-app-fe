@@ -39,7 +39,7 @@ const { Option } = Select;
 
 const { MonthPicker, RangePicker } = DatePicker;
 
-const GuestPopup = () => {
+const GuestPopup = (props) => {
   const [form] = Form.useForm();
 
   const [visible, setVisible] = useState(false);
@@ -48,11 +48,7 @@ const GuestPopup = () => {
     setVisible(true);
   };
 
-  const handleOk = () => {
-    setVisible(false);
-  };
-
-  const handleCancel = () => {
+  const cancel = () => {
     setVisible(false);
   };
 
@@ -62,23 +58,11 @@ const GuestPopup = () => {
   };
 
   return (
-    <Wrapper>
-      <div className="page-header">
-        <h1>
-          <HomeOutlined /> Guest
-        </h1>
-
-        <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-          {' '}
-          Add Guest
-        </Button>
-      </div>
-
       <Modal
         title="Guest"
-        visible={visible}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        visible={props.visible}
+        onOk={props.handleOk}
+        onCancel={props.handleCancel}
         wrapClassName="guest-modal"
       >
         <Form form={form} name="basic" onFinish={onFinish}>
@@ -195,7 +179,7 @@ const GuestPopup = () => {
           <Row style={{ alignItems: 'center', textAlign: 'right' }}>
             <Col span={24}>
               <Form.Item>
-                <Button style={{ marginRight: 10 }}>Cancel</Button>
+                <Button style={{ marginRight: 10 }} onClick={props.close}>Cancel</Button>
                 <Button type="primary" htmlType="submit">
                   Update
                 </Button>
@@ -204,7 +188,6 @@ const GuestPopup = () => {
           </Row>
         </Form>
       </Modal>
-    </Wrapper>
   );
 };
 

@@ -592,3 +592,57 @@ ul.filter-list li span span {
 .filter-select .ant-form-item-control-input-content a span {
     color: #c7c7c7;
 }
+
+
+.ant-form-item .add-notes textarea {
+    height: 120px;
+}
+
+.additional-guest .ant-form-item-label > label {
+    height: auto;
+    text-transform: uppercase;
+}
+
+.addi-box {
+    background: #f9f9f9;
+    padding: 20px;
+    margin-bottom: 10px;
+    padding-left: 50px;
+    position: relative;
+}
+
+.additional-guest .ant-row.ant-form-item {
+    margin-bottom: 10px;
+}
+
+.additional-edit {
+    text-align: right;
+    padding: 0px 20px;
+}
+
+.additional-edit a {
+    color: #636363!important;
+}
+
+.additional-edit a span {
+    color: #1890ff;
+}
+
+.delete-data {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 20px;
+}
+
+.additional-add a {
+    color: #636363!important;
+}
+
+.additional-add a span {
+    color: #1890ff;
+}
+
+.additional-add {
+    padding: 15px 0px;
+}

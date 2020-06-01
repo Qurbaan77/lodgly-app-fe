@@ -64,10 +64,11 @@ const AddUnitType = () => {
 
   const onFinish = async (values) => {
     values.propertyNo = parsed.propertyNo;
-    console.log('Form Values', values);
     const response = await userInstance.post('/addUnitType', values);
-    history.push('/unittype?propertyNo=' + parsed.propertyNo);
-    form.resetFields();
+    if (response.data.code == 200) {
+      window.location.href = '/unittype?propertyNo=' + parsed.propertyNo;
+      // history.push('/unittype?propertyNo=' + parsed.propertyNo);
+    }
   };
 
   const getData = async () => {
@@ -76,7 +77,6 @@ const AddUnitType = () => {
     };
     const response = await userInstance.post('/getUnittype', values);
     const data = response.data.unittypeData;
-    console.log('data', data);
     if (response.data.code === 200) {
       setUnittypeNo(data.length + 1);
     }
@@ -99,7 +99,6 @@ const AddUnitType = () => {
       setUnitData(data);
     }
   };
-
 
   const config = {
     height: 300,
@@ -211,17 +210,17 @@ const AddUnitType = () => {
   }
 
   useEffect(() => {
-    return () => {
-      subs.forEach((unsub) => unsub());
-    }; 
-  });
-
-  useEffect(() => {
-    getData();
-    if (unittypeNo != 0) {
+      //subs.forEach((unsub) => unsub());
+      getData();
       getUnitData();
-    }
-  }, [unitData, unittypeNo])
+  }, []);
+
+  // useEffect(() => {
+  //   getData();
+  //   if (unittypeNo != 0) {
+  //     getUnitData();
+  //   }
+  // }, [unitData, unittypeNo])
 
   return (
     <Wrapper>

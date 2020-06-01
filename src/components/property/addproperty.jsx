@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
   Form,
@@ -91,6 +92,7 @@ const AddProperty = () => {
   const [No, setNo] = useState(0);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
+  const history = useHistory();
 
   useEffect(() => {
     async function getData() {
@@ -116,6 +118,7 @@ const AddProperty = () => {
     if (statusCode == 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
+      history.push('/propertylist');
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
@@ -276,7 +279,11 @@ const AddProperty = () => {
                     <Col span={8}>
                       <Form.Item name="bedrooms" label="Bedrooms">
                         <Select>
-                          <Select.Option value="demo">Croatia</Select.Option>
+                          <Select.Option value="1">1</Select.Option>
+                          <Select.Option value="2">2</Select.Option>
+                          <Select.Option value="3">3</Select.Option>
+                          <Select.Option value="4">4</Select.Option>
+                          <Select.Option value="5">5</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
@@ -284,7 +291,9 @@ const AddProperty = () => {
                     <Col span={8}>
                       <Form.Item name="fullBathroom" label="Full Bathrooms">
                         <Select>
-                          <Select.Option value="demo">Choose</Select.Option>
+                          <Select.Option value="1">1</Select.Option>
+                          <Select.Option value="2">2</Select.Option>
+                          <Select.Option value="3">3</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
@@ -292,7 +301,9 @@ const AddProperty = () => {
                     <Col span={8}>
                       <Form.Item name="halfBathroom" label="Half Bathrooms">
                         <Select>
-                          <Select.Option value="demo">Choose</Select.Option>
+                          <Select.Option value="1">1</Select.Option>
+                          <Select.Option value="2">2</Select.Option>
+                          <Select.Option value="3">3</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>

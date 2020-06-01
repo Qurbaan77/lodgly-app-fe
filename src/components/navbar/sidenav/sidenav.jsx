@@ -51,7 +51,7 @@ const Sidenav = (props) => {
   const getData = async() => {
     const response = await userInstance.post('/fetchProperty');
       const data = response.data.propertiesData;
-      console.log(data);
+      console.log('Property Data', data);
       if (response.data.code === 200) {
         setPropertyData(data);
       }
@@ -171,15 +171,15 @@ const Sidenav = (props) => {
         defaultSelectedKeys={['1']}
         style={{ height: '100%' }}
       >
-        <span className="submenu-heading" onClick={() => handleMenu(`close`)}>
+        <span className="submenu-heading" >
           <ArrowLeftOutlined /> 
         <Link to={'/propertylist'} >Property {currProperty}</Link>
         </span>
         <Menu.Item key="1">
           <UserOutlined />
-          <span>Details</span>
+          <Link to={'/property?propertyNo=' + currProperty} >Details</Link>
         </Menu.Item>
-        <Menu.Item>
+        <Menu.Item >
           <VideoCameraOutlined />
           <Link to={'/unittype?propertyNo=' + currProperty} >Unit Type</Link>
         </Menu.Item>
