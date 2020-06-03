@@ -13,6 +13,7 @@ import {
   VideoCameraOutlined,
   UploadOutlined,
   PoweroffOutlined,
+  ApartmentOutlined
 } from '@ant-design/icons';
 import logo from '../../../assets/images/logo.png';
 import UserProfile from '../userprofile/userprofile';
@@ -61,9 +62,7 @@ const Sidenav = (props) => {
     getData();
     const pathname = window.location.pathname;
     const parsed = queryString.parse(window.location.search);
-    console.log('pathname', pathname)
-    console.log('parsed', parsed.propertyNo)
-    if(pathname == '/property' || pathname == '/unittype' || pathname == '/addunittype' || pathname == '/channelmanager' ){
+    if(pathname == '/property' || pathname == '/unittype' || pathname == '/addunittype' || pathname == '/channelmanager' || pathname == '/services' ){
       console.log(menu)
       setMenu(!menu);
       setCurrProperty(parsed.propertyNo);
@@ -190,6 +189,11 @@ const Sidenav = (props) => {
         <Menu.Item>
           <VideoCameraOutlined />
           <Link to={'/channelmanager'} >Channel Manager</Link>
+        </Menu.Item>
+
+        <Menu.Item>
+        <ApartmentOutlined />
+          <Link to={'/services?propertyNo=' + currProperty} >Services</Link>
         </Menu.Item>
       </Menu>
     </Sider>

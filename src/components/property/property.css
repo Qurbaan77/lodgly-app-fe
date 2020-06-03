@@ -728,6 +728,68 @@ body {
   padding-bottom: 2px;
 }
 
+
+.services-list {
+  background: #fff;
+  padding: 20px;
+}
+
+.accommodation .service-form .ant-form-item {
+  margin: 0;
+}
+
+.accommodation .service-form label {
+  height: auto;
+  margin: 0;
+}
+
+.accommodation .service-form .inline-form * {
+  margin: 0;
+}
+
+.accommodation .service-form .inline-form {
+  margin: 0;
+  justify-content: space-between;
+}
+
+.accommodation .service-form .delete-data {
+  position: relative;
+  transform: inherit;
+  left: inherit;
+  top: 10px;
+  cursor: pointer;
+}
+
+.service-form {
+  padding: 10px;
+}
+
+.accommodation .service-form .inline-form label {
+  position: relative;
+  top: 10px;
+}
+
+.accommodation .service-form .inline-form .ant-form-item-label label {
+  padding: 0;
+  position: inherit;
+  top: 0;
+}
+
+.accommodation .service-form .inline-form .ant-select-arrow {
+  margin-top: -6px;
+}
+
+.service-panel .ant-collapse-content {
+  border: none;
+}
+
+
+
+
+
+
+
+
 @media screen and (min-width: 1367px) {
   .unittype-calendar {
     max-width: 1400px;
