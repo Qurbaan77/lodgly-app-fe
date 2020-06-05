@@ -34,11 +34,14 @@ import Wrapper from '../wrapper';
 import { Collapse } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
-import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
+// import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
+// import GSTC from 'react-gantt-schedule-timeline-calendar';
+// import 'gantt-schedule-timeline-calendar/dist/style.css';
 import DeletePopup from './deletepopup';
 import queryString from 'query-string';
 import { userInstance } from '../../axios/axiosconfig';
 import { dbAdress } from '../../config/keys';
+import GSTC from './GSTC';
 
 const { MonthPicker, RangePicker } = DatePicker;
 
@@ -47,8 +50,16 @@ const AddUnitType = () => {
   const [visible, setVisible] = useState(false);
   const [unittypeNo, setUnittypeNo] = useState(0);
   const [unitData, setUnitData] = useState([]);
+  // const [unittypeData, setUnittypeData] = useState([]);
   const parsed = queryString.parse(window.location.search);
   const history = useHistory();
+
+  // const handleChange = (e) => {
+  //   console.log(e);
+  // };
+  // // const onClickUpdate = (values) => {
+  // //   console.log(values);
+  // // };
 
   const show = () => {
     setVisible(true);
@@ -63,9 +74,11 @@ const AddUnitType = () => {
   };
 
   const onFinish = async (values) => {
+    console.log(values);
     values.propertyNo = parsed.propertyNo;
     const response = await userInstance.post('/addUnitType', values);
-    if (response.data.code == 200) {
+    console.log(response.data);
+    if (response.data.code === 200) {
       window.location.href = '/unittype?propertyNo=' + parsed.propertyNo;
       // history.push('/unittype?propertyNo=' + parsed.propertyNo);
     }
@@ -76,7 +89,9 @@ const AddUnitType = () => {
       propertyNo: parsed.propertyNo,
     };
     const response = await userInstance.post('/getUnittype', values);
+    console.log(response);
     const data = response.data.unittypeData;
+    console.log(data);
     if (response.data.code === 200) {
       setUnittypeNo(data.length + 1);
     }
@@ -192,6 +207,7 @@ const AddUnitType = () => {
   let subs = [];
 
   function onState(state) {
+    console.log(config.chart.items);
     state.update('config.chart.items.1', (item1) => {
       item1.label = 'Gantt schedule timeline calendar';
       item1.time.end = item1.time.end + 2 * 24 * 60 * 60 * 1000;
@@ -200,19 +216,24 @@ const AddUnitType = () => {
     subs.push(
       state.subscribe('config.chart.items', (items) => {
         console.log('items changed', items);
-      }),
+      })
     );
     subs.push(
       state.subscribe('config.list.rows', (rows) => {
         console.log('rows changed', rows);
-      }),
+      })
     );
   }
 
   useEffect(() => {
-      //subs.forEach((unsub) => unsub());
-      getData();
-      getUnitData();
+    return () => {
+      subs.forEach((unsub) => unsub());
+    };
+  });
+
+  useEffect(() => {
+    getData();
+    getUnitData();
   }, []);
 
   // useEffect(() => {
@@ -224,78 +245,77 @@ const AddUnitType = () => {
 
   return (
     <Wrapper>
-      <div className="unit-type">
-        <div className="page-header">
+      <div className='unit-type'>
+        <div className='page-header'>
           <h1>
             <HomeOutlined /> Unit Type {unittypeNo}
           </h1>
         </div>
 
-        <div className="panel-container">
-          <div className="unit-filter">
+        <div className='panel-container'>
+          <div className='unit-filter'>
             <Form form={form} onFinish={onFinish}>
               <Row style={{ alignItems: 'center' }}>
                 <Col span={7}>
-                  <Form.Item label="Date" name="groupname">
+                  <Form.Item label='Date' name='groupname'>
                     <RangePicker />
                   </Form.Item>
                 </Col>
 
-                <Col span={9} className="d-flex">
+                <Col span={9} className='d-flex'>
                   <Form.Item
-                    label="Price per Night"
-                    name="perNight"
+                    label='Price per Night'
+                    name='perNight'
                     style={{ padding: '0px 10px' }}
                   >
                     <Input />
                   </Form.Item>
 
                   <Form.Item
-                    label="Rooms to Sell"
-                    name="roomsToSell"
+                    label='Rooms to Sell'
+                    name='roomsToSell'
                     style={{ padding: '0px 10px' }}
                   >
                     <Input />
                   </Form.Item>
 
                   <Form.Item
-                    label="Minimum Stay"
-                    name="minimumStay"
+                    label='Minimum Stay'
+                    name='minimumStay'
                     style={{ padding: '0px 10px' }}
                   >
                     <Input />
                   </Form.Item>
                 </Col>
 
-                <Col span={8} className="d-flex update-cal">
-                  <Form.Item name="date-picker" label="DatePicker">
+                <Col span={8} className='d-flex update-cal'>
+                  <Form.Item name='date-picker' label='DatePicker'>
                     <DatePicker />
                   </Form.Item>
-
-                  <Button type="primary">Update Calendar</Button>
+                  <Button type='primary'>Update Calendar</Button>
                 </Col>
               </Row>
 
-              <div className="unittype-calendar">
+              <div className='unittype-calendar'>
                 <GSTC config={config} onState={onState} />
               </div>
               <Form.Item>
-                <Button htmlType="submit">Save</Button>
+                <Button htmlType='submit'>Save</Button>
               </Form.Item>
             </Form>
 
-            <div className="assign-unit">
+            <div className='assign-unit'>
               <p>Assign Your Units</p>
               <span>Now add unit to unit type</span>
-              <div className="panel-container">
+              <div className='panel-container'>
                 {unitData.map((el, i) => {
                   return (
-                    <div className="panel-box units">
-                      <div className="group-name">
+                    <div className='panel-box units'>
+                      <div className='group-name'>
                         <h4>Unit Type</h4>
                         <span>1 unit are assigned</span>
                       </div>
-                      <div className="group-action">
+                      <div className='group-action'>
                         <FormOutlined />
                         <DeleteOutlined onClick={show} />
                       </div>
@@ -310,7 +330,7 @@ const AddUnitType = () => {
                 visible={visible}
                 onOk={handleOk}
                 onCancel={handleCancel}
-                wrapClassName="delete-modal"
+                wrapClassName='delete-modal'
               >
                 <DeletePopup />
               </Modal>
