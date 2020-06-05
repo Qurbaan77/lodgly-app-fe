@@ -29,9 +29,11 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
+import Toaster from '../toaster/toaster';
 import { Collapse } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
+import { userInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
 
@@ -43,6 +45,8 @@ const GuestPopup = (props) => {
   const [form] = Form.useForm();
 
   const [visible, setVisible] = useState(false);
+  const [notifyType, setNotifyType] = useState();
+  const [notifyMsg, setNotifyMsg] = useState();
 
   const show = () => {
     setVisible(true);
@@ -52,10 +56,28 @@ const GuestPopup = (props) => {
     setVisible(false);
   };
 
+  const close = () => {
+    setNotifyType('');
+  }
+
   const onFinish = async (values) => {
+    values.bookingId = localStorage.getItem('bookingId');
     console.log('Received values of form: ', values);
-    // const response = await userInstance.post('/addBooking', values);
+    const response = await userInstance.post('/addGuest', values);
+    const statusCode = response.data.code;
+    const msg = response.data.msg;
+    if (statusCode == 200) {
+      setNotifyType('success');
+      setNotifyMsg(msg);
+      window.location = '/booking'
+    } else {
+      setNotifyType('error');
+      setNotifyMsg(msg);
+    }
+    form.resetFields();
   };
+
+
 
   return (
       <Modal
@@ -65,6 +87,7 @@ const GuestPopup = (props) => {
         onCancel={props.handleCancel}
         wrapClassName="guest-modal"
       >
+        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         <Form form={form} name="basic" onFinish={onFinish}>
           <Row style={{ alignItems: 'center' }}>
             <Col span={12}>
@@ -181,7 +204,7 @@ const GuestPopup = (props) => {
               <Form.Item>
                 <Button style={{ marginRight: 10 }} onClick={props.close}>Cancel</Button>
                 <Button type="primary" htmlType="submit">
-                  Update
+                  Save
                 </Button>
               </Form.Item>
             </Col>
