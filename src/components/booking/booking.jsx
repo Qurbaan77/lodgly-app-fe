@@ -56,8 +56,8 @@ const Booking = () => {
   const [form] = Form.useForm();
 
   const [visible, setVisible] = useState(false);
-  const [visibleBooking, setVisibleBooking] = useState(false);
-  
+  const [visibleGuest, setVisibleGuest] = useState(false);
+
   const [guest, setGuest] = useState(false);
   const [booked, setBooked] = useState(true);
   const [bookingData, setBookingData] = useState([]);
@@ -88,6 +88,7 @@ const Booking = () => {
   const getData = async () => {
     const response = await userInstance.post('/getBooking');
     const data = response.data.bookingData;
+    console.log('booking Data', data);
     if (response.data.code === 200) {
       setBookingData(data);
     }
@@ -121,16 +122,15 @@ const Booking = () => {
   };
 
   const editBooking = (values) => {
-    console.log('editBooking', values)
+    console.log('editBooking', values);
     setVisible(true);
     form.setFieldsValue({
       property: values.property,
-    })
+    });
   };
 
   useEffect(() => {
     getData();
-    console.log('visible', visible);
   }, []);
 
   const menu = (
@@ -145,11 +145,7 @@ const Booking = () => {
   const onClick = () => {
     setVisible(true);
   };
-  
-  const onBookingClick = () => {
-    setVisibleBooking(true);
-  };
-  
+
   const closeGuest = () => {
     setVisible(false);
   };
@@ -196,7 +192,7 @@ const Booking = () => {
                       </div>
                       <div className="detail-info">
                         <span>8:42 PM</span>
-                        <span className="green-label">$1000</span>
+                        <span className="green-label">${el.totalAmount}</span>
                       </div>
                     </div>
                   );
@@ -215,7 +211,11 @@ const Booking = () => {
                     </li>
                   </ul>
 
-                  <Button type="primary" icon={<PlusOutlined />} onClick={onClick}>
+                  <Button
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={() => setVisible(true)}
+                  >
                     Create Booking
                   </Button>
                 </div>
@@ -238,7 +238,9 @@ const Booking = () => {
                     </div>
 
                     <div className="box-editing">
-                      <FormOutlined onClick={() => editBooking(currentBooking)}/>
+                      <FormOutlined
+                        onClick={() => editBooking(currentBooking)}
+                      />
                       <Dropdown overlay={menu}>
                         <Button>
                           Booked <DownOutlined />
@@ -324,7 +326,10 @@ const Booking = () => {
                   </div>
                 </div>
 
-                <Link className="additionl-link" onClick={onClick}>
+                <Link
+                  className="additionl-link"
+                  onClick={() => setVisibleGuest(true)}
+                >
                   <PlusOutlined />
                   Add Additional Guest
                 </Link>
@@ -334,8 +339,18 @@ const Booking = () => {
         </div>
       </div>
 
-      <GuestPopup visible={visible} handleCancel={handleCancel} handleOk={handleOk} close={closeGuest}></GuestPopup>
-      <CreateBookingPopup visible={visible} handleCancel={handleCancel} handleOk={handleOk} close={closeGuest}></CreateBookingPopup>
+      <GuestPopup
+        visible={visibleGuest}
+        handleCancel={handleCancel}
+        handleOk={handleOk}
+        close={closeGuest}
+      ></GuestPopup>
+      <CreateBookingPopup
+        visible={visible}
+        handleCancel={handleCancel}
+        handleOk={handleOk}
+        close={closeGuest}
+      ></CreateBookingPopup>
     </Wrapper>
   );
 };

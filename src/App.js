@@ -25,7 +25,7 @@ import AddUnitType from './components/property/addunittype';
 import Forget from './components/forget/forget';
 import Thankyou from './components/thankyou/thankyou';
 import Reset from './components/reset/reset';
-
+import Services from './components/property/services';
 
 const history = createBrowserHistory();
 
@@ -60,7 +60,8 @@ const App=()=> {
                       <Route exact path="/addunittype" render={() => <AddUnitType />} />
                       <Route exact path="/forget" render={() => <Forget />} />
                       <Route exact path="/reset" render={() => <Reset   />} />
-                      <Route exact path="/thankyou" render={() => <Thankyou />} />                       
+                      <Route exact path="/thankyou" render={() => <Thankyou />} />
+                      <Route exact path="/services" render={() => <Services />} />                         
                   </div>
                 </main>
               <Footer />
