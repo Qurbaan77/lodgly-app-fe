@@ -34,11 +34,12 @@ import Wrapper from '../wrapper';
 import { Collapse } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
-import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
+// import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
 import DeletePopup from './deletepopup';
 import queryString from 'query-string';
 import { userInstance } from '../../axios/axiosconfig';
 import { dbAdress } from '../../config/keys';
+import GSTC from './GSTC';
 
 const { MonthPicker, RangePicker } = DatePicker;
 
@@ -47,6 +48,8 @@ const AddUnitType = () => {
   const [visible, setVisible] = useState(false);
   const [unittypeNo, setUnittypeNo] = useState(0);
   const [unitData, setUnitData] = useState([]);
+  const [currentUnittype, setCurrentUnittype] = useState([]);
+
   const parsed = queryString.parse(window.location.search);
   const history = useHistory();
 
@@ -63,7 +66,8 @@ const AddUnitType = () => {
   };
 
   const onFinish = async (values) => {
-    values.propertyNo = parsed.propertyNo;
+    values.propertyId = localStorage.getItem('propertyId');
+    values.unitTypeName = "Unit Type " + unittypeNo;
     const response = await userInstance.post('/addUnitType', values);
     if (response.data.code == 200) {
       window.location.href = '/unittype?propertyNo=' + parsed.propertyNo;
@@ -72,26 +76,38 @@ const AddUnitType = () => {
   };
 
   const getData = async () => {
-    const values = {
-      propertyNo: parsed.propertyNo,
-    };
-    const response = await userInstance.post('/getUnittype', values);
-    const data = response.data.unittypeData;
-    if (response.data.code === 200) {
-      setUnittypeNo(data.length + 1);
-    }
+    const unittypeId = localStorage.getItem('unittypeId');
+      const values = {
+        propertyId : localStorage.getItem('propertyId')
+      };
+      const response = await userInstance.post('/getUnittype', values);
+      const data = response.data.unittypeData;
+      if (response.data.code === 200) {
+        if(unittypeId) {
+          data.filter(el => el.id == unittypeId).map(filterUnittype => (
+            setCurrentUnittype(filterUnittype)
+          ))
+        } else {
+          setUnittypeNo(data.length + 1);
+        }
+      }
   };
 
   const addUnit = async () => {
     const values = {
-      unittypeNo: unittypeNo,
+      propertyId : localStorage.getItem('propertyId'),
+      unittypeId : localStorage.getItem('unittypeId'),
+      unitName : currentUnittype.unitTypeName,
     };
     const response = await userInstance.post('/addUnit', values);
+    if (response.data.code === 200) {
+      getUnitData();
+    }
   };
 
   const getUnitData = async () => {
     const values = {
-      unittypeNo: unittypeNo,
+      propertyId : localStorage.getItem('propertyId'),
     };
     const response = await userInstance.post('/getUnit', values);
     const data = response.data.unitData;
@@ -210,24 +226,22 @@ const AddUnitType = () => {
   }
 
   useEffect(() => {
-      //subs.forEach((unsub) => unsub());
-      getData();
-      getUnitData();
-  }, []);
+    return () => {
+      subs.forEach((unsub) => unsub());
+    };
+  });
 
-  // useEffect(() => {
-  //   getData();
-  //   if (unittypeNo != 0) {
-  //     getUnitData();
-  //   }
-  // }, [unitData, unittypeNo])
+  useEffect(() => {
+    getData();
+    getUnitData();
+  }, []);
 
   return (
     <Wrapper>
       <div className="unit-type">
         <div className="page-header">
           <h1>
-            <HomeOutlined /> Unit Type {unittypeNo}
+            <HomeOutlined /> { currentUnittype.id ? currentUnittype.unitTypeName : "Unit type "+ unittypeNo}
           </h1>
         </div>
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { createBrowserHistory } from 'history'
+import { createBrowserHistory } from 'history';
 import { Link } from 'react-router-dom';
 import './sidenav.css';
 import { Layout, Menu, Dropdown } from 'antd';
@@ -13,7 +13,7 @@ import {
   VideoCameraOutlined,
   UploadOutlined,
   PoweroffOutlined,
-  ApartmentOutlined
+  ApartmentOutlined,
 } from '@ant-design/icons';
 import logo from '../../../assets/images/logo.png';
 import UserProfile from '../userprofile/userprofile';
@@ -44,26 +44,32 @@ const Sidenav = (props) => {
     }
   };
 
-  const exit = async() => {
+  const exit = async () => {
     const response = await userInstance.post('/logout');
-    window.location.href='/';
+    window.location.href = '/';
   };
 
-  const getData = async() => {
+  const getData = async () => {
     const response = await userInstance.post('/fetchProperty');
-      const data = response.data.propertiesData;
-      console.log('Property Data', data);
-      if (response.data.code === 200) {
-        setPropertyData(data);
-      }
+    const data = response.data.propertiesData;
+    console.log('Property Data', data);
+    if (response.data.code === 200) {
+      setPropertyData(data);
+    }
   };
 
   useEffect(() => {
     getData();
     const pathname = window.location.pathname;
     const parsed = queryString.parse(window.location.search);
-    if(pathname == '/property' || pathname == '/unittype' || pathname == '/addunittype' || pathname == '/channelmanager' || pathname == '/services' ){
-      console.log(menu)
+    if (
+      pathname == '/property' ||
+      pathname == '/unittype' ||
+      pathname == '/addunittype' ||
+      pathname == '/channelmanager' ||
+      pathname == '/services'
+    ) {
+      console.log(menu);
       setMenu(!menu);
       setCurrProperty(parsed.propertyNo);
     }
@@ -86,7 +92,7 @@ const Sidenav = (props) => {
       >
         <Menu.Item key="0">
           <UserOutlined />
-          <Link to={'/booking'} >Booking</Link>
+          <Link to={'/booking'}>Booking</Link>
         </Menu.Item>
 
         <Menu.Item>
@@ -98,16 +104,19 @@ const Sidenav = (props) => {
           title={
             <div>
               <UserOutlined />
-              <Link to={'/propertylist'} >Properties</Link>
+              <Link to={'/propertylist'}>Properties</Link>
             </div>
           }
         >
           {propertyData.map((el, i) => {
             return (
-              <Menu.Item
-                key={el.propertyNo}
-              >
-                <Link to={'/property?propertyNo=' + el.propertyNo} >Property No {el.propertyNo} </Link>
+              <Menu.Item key={el.propertyNo}>
+                <Link
+                  to={'/property?propertyNo=' + el.propertyNo}
+                  onClick={() => localStorage.setItem('propertyId', el.id)}
+                >
+                  Property No {el.propertyNo}{' '}
+                </Link>
               </Menu.Item>
             );
           })}
@@ -170,17 +179,22 @@ const Sidenav = (props) => {
         defaultSelectedKeys={['1']}
         style={{ height: '100%' }}
       >
-        <span className="submenu-heading" >
-          <ArrowLeftOutlined /> 
-        <Link to={'/propertylist'} >Property {currProperty}</Link>
+        <span className="submenu-heading">
+          <ArrowLeftOutlined />
+          <Link
+            to={'/propertylist'}
+            onClick={() => localStorage.removeItem('propertyId')}
+          >
+            Property {currProperty}
+          </Link>
         </span>
         <Menu.Item key="1">
           <UserOutlined />
-          <Link to={'/property?propertyNo=' + currProperty} >Details</Link>
+          <Link to={'/property?propertyNo=' + currProperty}>Details</Link>
         </Menu.Item>
-        <Menu.Item >
+        <Menu.Item>
           <VideoCameraOutlined />
-          <Link to={'/unittype?propertyNo=' + currProperty} >Unit Type</Link>
+          <Link to={'/unittype?propertyNo=' + currProperty}>Unit Type</Link>
         </Menu.Item>
         <Menu.Item>
           <UserOutlined />
@@ -188,12 +202,12 @@ const Sidenav = (props) => {
         </Menu.Item>
         <Menu.Item>
           <VideoCameraOutlined />
-          <Link to={'/channelmanager'} >Channel Manager</Link>
+          <Link to={'/channelmanager'}>Channel Manager</Link>
         </Menu.Item>
 
         <Menu.Item>
-        <ApartmentOutlined />
-          <Link to={'/services?propertyNo=' + currProperty} >Services</Link>
+          <ApartmentOutlined />
+          <Link to={'/services?propertyNo=' + currProperty}>Services</Link>
         </Menu.Item>
       </Menu>
     </Sider>

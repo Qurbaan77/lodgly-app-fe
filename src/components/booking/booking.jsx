@@ -61,7 +61,9 @@ const Booking = () => {
   const [guest, setGuest] = useState(false);
   const [booked, setBooked] = useState(true);
   const [bookingData, setBookingData] = useState([]);
+  const [guestData ,setGuestData] = useState([]);
   const [currentBooking, setCurrentBooking] = useState({});
+  const [currentGuest, setCurrentGuest] = useState([]);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const [price, setPrice] = useState(0);
@@ -87,10 +89,13 @@ const Booking = () => {
 
   const getData = async () => {
     const response = await userInstance.post('/getBooking');
-    const data = response.data.bookingData;
-    console.log('booking Data', data);
+    const bookingdata = response.data.bookingData;
+    const guestdata = response.data.guestData;
+    console.log(bookingdata)
+    console.log(guestdata)
     if (response.data.code === 200) {
-      setBookingData(data);
+      setBookingData(bookingdata);
+      setGuestData(guestdata);
     }
   };
 
@@ -116,8 +121,13 @@ const Booking = () => {
   };
 
   const selectBooking = (values) => {
-    console.log('selectBooking', values);
+    const arr = [];
+    guestData.filter(el => el.filter(ele => ele.bookingId == values.id).map(filterGuest => (
+      arr.push(filterGuest)
+    )))
     setCurrentBooking(values);
+    setCurrentGuest(arr);
+    console.log('currentGuest', arr[0].fullname)
     setBooked(false);
   };
 
@@ -224,7 +234,7 @@ const Booking = () => {
 
             <Col span={14}>
               <div className="booking-details" hidden={booked}>
-                <h3>Emily Byrd</h3>
+                <h3>{currentGuest.length > 0 ? currentGuest[0].fullname : null}</h3>
                 <ul>
                   <li>5 Night - 1 room,</li>
                   <li>2 Guests,</li>
@@ -283,48 +293,53 @@ const Booking = () => {
                   </div>
                 </div>
 
-                <div className="booking-box">
-                  <div className="booking-head">
-                    <div className="box-heading">
-                      <h3>Guests</h3>
+                {currentGuest.map((el, i) => {
+                  return(
+                    <div className="booking-box">
+                    <div className="booking-head">
+                      <div className="box-heading">
+                        <h3>Guests</h3>
+                      </div>
+  
+                      <div className="box-editing">
+                        <FormOutlined />
+                      </div>
                     </div>
-
-                    <div className="box-editing">
-                      <FormOutlined />
+  
+                    <div className="booking-item">
+                      <div className="prorety-box">
+                        <span>Full Name</span>
+                        <p>{el.fullname}</p>
+                      </div>
+  
+                      <div className="prorety-box">
+                        <span>Country</span>
+                        <p>{el.country} </p>
+                      </div>
+                    </div>
+  
+                    <div className="booking-item">
+                      <div className="prorety-box">
+                        <span>Email</span>
+                        <p>{el.email}</p>
+                      </div>
+  
+                      <div className="prorety-box">
+                        <span>Phone</span>
+                        <p>{el.phone}</p>
+                      </div>
+                    </div>
+  
+                    <div className="booking-item-one">
+                      <div className="prorety-box">
+                        <span>Notes</span>
+                        <p>{el.notes}</p>
+                      </div>
                     </div>
                   </div>
-
-                  <div className="booking-item">
-                    <div className="prorety-box">
-                      <span>Full Name</span>
-                      <p>Emily Byrd</p>
-                    </div>
-
-                    <div className="prorety-box">
-                      <span>Country</span>
-                      <p>France </p>
-                    </div>
-                  </div>
-
-                  <div className="booking-item">
-                    <div className="prorety-box">
-                      <span>Email</span>
-                      <p>mymail@gmail.com</p>
-                    </div>
-
-                    <div className="prorety-box">
-                      <span>Phone</span>
-                      <p>+123456789</p>
-                    </div>
-                  </div>
-
-                  <div className="booking-item-one">
-                    <div className="prorety-box">
-                      <span>Notes</span>
-                      <p>Hello This is test</p>
-                    </div>
-                  </div>
-                </div>
+  
+                  )
+                })}
 
                 <Link
                   className="additionl-link"

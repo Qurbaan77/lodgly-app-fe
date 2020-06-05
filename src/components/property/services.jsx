@@ -31,7 +31,6 @@ import property3 from '../../assets/images/property-3.png';
 import { Row, Col } from 'antd';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
-import queryString from 'query-string';
 
 const Services = () => {
   const [form] = Form.useForm();
@@ -39,6 +38,7 @@ const Services = () => {
   const [group, setGroup] = useState([]);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
+  const [serviceData, setServiceData] = useState([]);
 
   const columns = [
     {
@@ -56,16 +56,6 @@ const Services = () => {
       dataIndex: 'quantity',
     },
   ];
-
-  const data = [];
-  for (let i = 0; i < 100; i++) {
-    data.push({
-      key: i,
-      serviceName: `Edward King ${i}`,
-      servicePrice: 32,
-      quantity: `London, Park Lane no. ${i}`,
-    });
-  }
 
   const show = () => {
     form.resetFields();
@@ -85,21 +75,35 @@ const Services = () => {
   };
 
   const onFinish = async (values) => {
-    console.log(values);
-    const parsed = queryString.parse(window.location.search);
-    values.propertyNo = parsed.propertyNo; // Change propertyNo to prpertyId after testing
+    values.propertyNo = localStorage.getItem('propertyId');
     const response = await userInstance.post('/addService', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
     if (statusCode == 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
+      getData();
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
     form.resetFields();
   };
+
+  const getData = async () => {
+    const values = {
+      propertyId: localStorage.getItem('propertyId'),
+    };
+    const response = await userInstance.post('/getService', values);
+    const data = response.data.servicData;
+    if (response.data.code === 200) {
+      setServiceData(data);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <Wrapper>
@@ -113,7 +117,12 @@ const Services = () => {
         </div>
 
         <div className="services-list">
-        <Table columns={columns} dataSource={data} pagination={{ pageSize: 50 }} scroll={{ y: 500 }} />
+          <Table
+            columns={columns}
+            dataSource={serviceData}
+            pagination={{ pageSize: 50 }}
+            scroll={{ y: 500 }}
+          />
         </div>
       </div>
 

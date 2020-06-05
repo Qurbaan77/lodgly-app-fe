@@ -58,9 +58,9 @@ const UnitType = () => {
   };
 
   const edit = (unittypeId) => {
-    console.log('unittypeId', unittypeId)
-    window.location.href = '/addunittype?uniitypeId=' + unittypeId;
-    // history.push('/addunittype?uniitypeId=' + unittypeId);
+    localStorage.setItem('unittypeId', unittypeId);
+    // window.location.href = '/addunittype?uniitypeId=' + unittypeId;
+    history.push('/addunittype');
   }
 
   const remove = async () => {
@@ -77,7 +77,7 @@ const UnitType = () => {
     async function getData() {
       const parsed = queryString.parse(window.location.search);
       const values = {
-        propertyNo: parsed.propertyNo,
+        propertyId : localStorage.getItem('propertyId')
       };
       setCurrProperty(parsed.propertyNo);
       const response = await userInstance.post('/getUnittype', values);
@@ -99,7 +99,7 @@ const UnitType = () => {
           </h1>
 
           <Button type="primary" icon={<PlusOutlined />}>
-            <Link to={'/addunittype?propertyNo=' + currProperty}>
+            <Link to={'/addunittype?propertyNo=' + currProperty} onClick={() => localStorage.removeItem('unittypeId')}>
               Add Unit Type
             </Link>
           </Button>
