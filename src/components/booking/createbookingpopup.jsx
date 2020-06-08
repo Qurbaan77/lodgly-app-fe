@@ -531,6 +531,7 @@ const CreateBookingPopup = (props) => {
             </Col>
 
             <Col span={24}>
+            <Form.Item style={{ marginBottom: '0' }}>
               <Collapse
                 defaultActiveKey={['1']}
                 className="service-panel"
@@ -544,6 +545,7 @@ const CreateBookingPopup = (props) => {
                           <div className="delete-data">
                             <DeleteOutlined onClick={removeServicePanel}/>
                           </div>
+                          <Form.Item></Form.Item>
 
                           <Select style={{ width: "100px" }}
                             onSelect={(value, event) => fun2(value, event)}
@@ -594,6 +596,7 @@ const CreateBookingPopup = (props) => {
                   </div>
                 </Panel>
               </Collapse>
+              </Form.Item>
             </Col>
 
             <Col span={24}>

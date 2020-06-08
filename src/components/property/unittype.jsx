@@ -61,26 +61,27 @@ const UnitType = () => {
     localStorage.setItem('unittypeId', unittypeId);
     // window.location.href = '/addunittype?uniitypeId=' + unittypeId;
     history.push('/addunittype');
-  }
+  };
 
   const remove = async () => {
     const values = {
       id: currUnittype,
-    }
+    };
     const response = await userInstance.post('/deleteUnitType', values);
-    if(response.data.code === 200) {
+    if (response.data.code === 200) {
       setVisible(false);
     }
-  }
+  };
 
   useEffect(() => {
     async function getData() {
       const parsed = queryString.parse(window.location.search);
       const values = {
-        propertyId : localStorage.getItem('propertyId')
+        propertyId: localStorage.getItem('propertyId'),
       };
       setCurrProperty(parsed.propertyNo);
       const response = await userInstance.post('/getUnittype', values);
+      console.log(response.data);
       const data = response.data.unittypeData;
       if (response.data.code === 200) {
         setUnittypeData(data);
@@ -88,33 +89,36 @@ const UnitType = () => {
     }
 
     getData();
-  }, [unittypeData]);
+  }, []);
 
   return (
     <Wrapper>
-      <div className="unit-type">
-        <div className="page-header">
+      <div className='unit-type'>
+        <div className='page-header'>
           <h1>
             <HomeOutlined /> Unit Type
           </h1>
 
-          <Button type="primary" icon={<PlusOutlined />}>
-            <Link to={'/addunittype?propertyNo=' + currProperty} onClick={() => localStorage.removeItem('unittypeId')}>
+          <Button type='primary' icon={<PlusOutlined />}>
+            <Link
+              to={'/addunittype?propertyNo=' + currProperty}
+              onClick={() => localStorage.removeItem('unittypeId')}
+            >
               Add Unit Type
             </Link>
           </Button>
         </div>
 
-        <div className="panel-container">
+        <div className='panel-container'>
           {unittypeData.map((el, i) => {
             return (
-              <div className="panel-box units">
-                <div className="group-name">
-                  <h4>Unit Type</h4>
+              <div className='panel-box units'>
+                <div className='group-name'>
+                  <h4>{el.unitTypeName}</h4>
                   <span>1 unit are assigned</span>
                 </div>
-                <div className="group-action">
-                  <FormOutlined onClick={() => edit(el.id)}/>
+                <div className='group-action'>
+                  <FormOutlined onClick={() => edit(el.id)} />
                   <DeleteOutlined onClick={() => show(el.id)} />
                 </div>
               </div>
@@ -127,9 +131,12 @@ const UnitType = () => {
         visible={visible}
         onOk={handleOk}
         onCancel={handleCancel}
-        wrapClassName="delete-modal"
+        wrapClassName='delete-modal'
       >
-        <DeletePopup dataObject={() => remove()} cancel={() => handleCancel()}/>
+        <DeletePopup
+          dataObject={() => remove()}
+          cancel={() => handleCancel()}
+        />
       </Modal>
     </Wrapper>
   );
