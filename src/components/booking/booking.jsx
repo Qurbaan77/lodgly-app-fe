@@ -69,6 +69,8 @@ const Booking = () => {
   const [price, setPrice] = useState(0);
   const [night, setNight] = useState(0);
 
+  const [editValues, setEditValues] = useState({});
+
   const show = () => {
     setVisible(true);
   };
@@ -133,15 +135,20 @@ const Booking = () => {
   };
 
   const editBooking = (values) => {
-    console.log('editBooking', values);
     setVisible(true);
     form.setFieldsValue({
       property: values.property,
     });
   };
 
+  const openGuest = () => {
+    setEditValues('')
+    setVisibleGuest(true)
+  }
+
   const editGuest = (values) => {
-    console.log(values)
+    console.log(values.fullname)
+    setEditValues(values)
     setVisibleGuest(true);
   }
 
@@ -350,7 +357,7 @@ const Booking = () => {
 
                 <Link
                   className="additionl-link"
-                  onClick={() => setVisibleGuest(true)}
+                  onClick={openGuest}
                 >
                   <PlusOutlined />
                   Add Additional Guest
@@ -366,6 +373,7 @@ const Booking = () => {
         handleCancel={handleCancel}
         handleOk={handleOk}
         close={closeGuest}
+        editValues={editValues}
       ></GuestPopup>
       <CreateBookingPopup
         visible={visible}

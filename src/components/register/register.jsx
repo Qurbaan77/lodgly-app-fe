@@ -45,12 +45,12 @@ const Register = () => {
   const addOn = () => {
     form.setFieldsValue({
       username: userName,
-    })
-  }
+    });
+  };
 
   const close = () => {
     setNotifyType('');
-  }
+  };
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
@@ -114,7 +114,9 @@ const Register = () => {
                         <Form.Item
                           name="username"
                           label="Username"
-                          onChange={(e)=> setUserName(`${e.target.value}.lodgly.com`)}
+                          onChange={(e) =>
+                            setUserName(`${e.target.value}.lodgly.com`)
+                          }
                           onBlur={addOn}
                           rules={[
                             {
@@ -198,6 +200,22 @@ const Register = () => {
                               required: true,
                               message: 'Please input your phone number!',
                             },
+                            ({ getFieldValue }) => ({
+                              validator(rule, value) {
+                                const reg = /^-?\d*(\.\d*)?$/;
+                                if (
+                                  (!isNaN(value) && reg.test(value)) ||
+                                  value === '' ||
+                                  value === '-'
+                                ) {
+                                  return Promise.resolve();
+                                }
+
+                                return Promise.reject(
+                                  'The value should be numeric!',
+                                );
+                              },
+                            }),
                           ]}
                         >
                           <Input
@@ -212,7 +230,16 @@ const Register = () => {
 
                     <Row>
                       <Col span={24}>
-                        <Form.Item name="agreement" valuePropName="checked">
+                        <Form.Item
+                          name="agreement"
+                          valuePropName="checked"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Please checked the agreement!',
+                            },
+                          ]}
+                        >
                           <Checkbox>
                             I have read the <Link to={'/'}>agreement</Link>
                           </Checkbox>

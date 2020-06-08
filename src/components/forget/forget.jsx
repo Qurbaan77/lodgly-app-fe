@@ -62,6 +62,10 @@ const Forget = () => {
                         name="email"
                         rules={[
                           {
+                            type: 'email',
+                            message: 'The input is not valid E-mail!',
+                          },
+                          {
                             required: true,
                             message: 'Please enter your E-mail Address!',
                           },

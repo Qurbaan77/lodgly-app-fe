@@ -61,22 +61,25 @@ const GuestPopup = (props) => {
   }
 
   const onFinish = async (values) => {
-    values.bookingId = localStorage.getItem('bookingId');
+    form.setFieldsValue({
+      fullName : props.editValues.fullname,
+    })
+    console.log('props', props.editValues.fullname)
+    // values.bookingId = localStorage.getItem('bookingId');
     console.log('Received values of form: ', values);
-    const response = await userInstance.post('/addGuest', values);
-    const statusCode = response.data.code;
-    const msg = response.data.msg;
-    if (statusCode == 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
-      window.location = '/booking'
-    } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
-    }
-    form.resetFields();
+    // const response = await userInstance.post('/addGuest', values);
+    // const statusCode = response.data.code;
+    // const msg = response.data.msg;
+    // if (statusCode == 200) {
+    //   setNotifyType('success');
+    //   setNotifyMsg(msg);
+    //   window.location = '/booking'
+    // } else {
+    //   setNotifyType('error');
+    //   setNotifyMsg(msg);
+    // }
+    // form.resetFields();
   };
-
 
 
   return (
@@ -93,7 +96,7 @@ const GuestPopup = (props) => {
             <Col span={12}>
               <Form.Item
                 label="Full Name"
-                name="firstname"
+                name="fullName"
                 style={{ paddingRight: 20 }}
               >
                 <Input placeholder="Full Name" />
@@ -101,7 +104,7 @@ const GuestPopup = (props) => {
             </Col>
 
             <Col span={12}>
-              <Form.Item label="Country of Residence" name="lastname">
+              <Form.Item label="Country of Residence" name="country">
                 <Select>
                   <Select.Option value="demo">Holiday House</Select.Option>
                   <Select.Option value="demo">Holiday House</Select.Option>
