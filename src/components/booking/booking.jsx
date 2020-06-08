@@ -79,20 +79,20 @@ const Booking = () => {
 
   const handleOk = () => {
     setVisible(false);
-    setGuest(false);
+    setVisibleGuest(false);
   };
 
   const handleCancel = () => {
     setVisible(false);
-    setGuest(false);
+    setVisibleGuest(false);
   };
 
   const getData = async () => {
     const response = await userInstance.post('/getBooking');
     const bookingdata = response.data.bookingData;
     const guestdata = response.data.guestData;
-    console.log(bookingdata)
-    console.log(guestdata)
+    console.log('bookingdata', bookingdata)
+    console.log('guestdata', guestdata)
     if (response.data.code === 200) {
       setBookingData(bookingdata);
       setGuestData(guestdata);
@@ -121,13 +121,14 @@ const Booking = () => {
   };
 
   const selectBooking = (values) => {
+    console.log('values', values)
+    localStorage.setItem('bookingId', values.id);
     const arr = [];
     guestData.filter(el => el.filter(ele => ele.bookingId == values.id).map(filterGuest => (
       arr.push(filterGuest)
     )))
     setCurrentBooking(values);
     setCurrentGuest(arr);
-    console.log('currentGuest', arr[0].fullname)
     setBooked(false);
   };
 
@@ -138,6 +139,11 @@ const Booking = () => {
       property: values.property,
     });
   };
+
+  const editGuest = (values) => {
+    console.log(values)
+    setVisibleGuest(true);
+  }
 
   useEffect(() => {
     getData();
@@ -158,6 +164,7 @@ const Booking = () => {
 
   const closeGuest = () => {
     setVisible(false);
+    setVisibleGuest(false);
   };
 
   return (
@@ -188,7 +195,7 @@ const Booking = () => {
                       onClick={() => selectBooking(el)}
                     >
                       <div className="detail">
-                        <h3>Emily Byrd</h3>
+                        <h3>{el.guest}</h3>
                         <p>Rental Type - Property Name_1</p>
                         <ul>
                           <li>Aug 5 2019</li>
@@ -302,7 +309,7 @@ const Booking = () => {
                       </div>
   
                       <div className="box-editing">
-                        <FormOutlined />
+                        <FormOutlined onClick={() => editGuest(el)}/>
                       </div>
                     </div>
   

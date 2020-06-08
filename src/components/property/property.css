@@ -750,13 +750,14 @@ body {
 .accommodation .service-form .inline-form {
   margin: 0;
   justify-content: space-between;
+  margin-bottom: 5px;
 }
 
 .accommodation .service-form .delete-data {
   position: relative;
   transform: inherit;
   left: inherit;
-  top: 10px;
+  top: 0px;
   cursor: pointer;
 }
 
@@ -766,7 +767,7 @@ body {
 
 .accommodation .service-form .inline-form label {
   position: relative;
-  top: 10px;
+  top: 0px;
 }
 
 .accommodation .service-form .inline-form .ant-form-item-label label {
@@ -783,7 +784,12 @@ body {
   border: none;
 }
 
-
+.srvice-heading {
+  padding: 12px 20px;
+  text-align: right;
+  color: #ffbe10;
+  cursor: pointer;
+}
 
 
 
