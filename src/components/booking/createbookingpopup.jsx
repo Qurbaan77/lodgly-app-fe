@@ -77,6 +77,8 @@ const CreateBookingPopup = (props) => {
   const [email, setEmail] = useState({});
   const [phone, setPhone] = useState({});
   const [country, setCountry] = useState({});
+  const [serviceData, setServiceData] = useState([]);
+  const [currentService, setCurrentService] = useState({});
 
   const [propertyData, setPropertyData] = useState([]);
   const history = useHistory();
@@ -140,17 +142,36 @@ const CreateBookingPopup = (props) => {
   }, []);
 
   const calculateTotal = () => {
-    const calculate =
-      servicePrice * serviceAmt +
-      servicePrice * serviceAmt * (serviceTax / 100);
-    const total = parseInt(accomodation) + parseInt(calculate);
-    setServiceAmount(calculate);
-    setTotal(total);
-    form.setFieldsValue({
-      serviceTotal: calculate,
-    });
+    console.log(servicePrice)
+    console.log(serviceAmt)
+    console.log(serviceTax)
+    // const calculate =
+    //   servicePrice * serviceAmt +
+    //   servicePrice * serviceAmt * (serviceTax / 100);
+    // const total = parseInt(accomodation) + parseInt(calculate);
+    // setServiceAmount(calculate);
+    // setTotal(total);
+    // form.setFieldsValue({
+    //   serviceTotal: calculate,
+    // });
   };
 
+  const fun1 = async (value, event) => {
+    const payload = {
+      propertyId: value,
+    }
+    const response = await userInstance.post('/getService', payload);
+    const data = response.data.servicData;
+    if (response.data.code === 200) {
+      setServiceData(data);
+    }
+  };
+
+  const fun2 = (value, event) => {
+    serviceData.filter(el => el.id == value).map(filterService => (
+      setCurrentService(filterService)
+    ))
+  }
 
   return (
     <Modal
@@ -191,7 +212,7 @@ const CreateBookingPopup = (props) => {
               name="property"
               style={{ paddingRight: 20 }}
             >
-              <Select>
+              <Select onSelect={(value, event) => fun1(value, event)}>
                 {propertyData.map((el, i) => {
                   return (
                     <Select.Option value={el.id}>
@@ -469,48 +490,43 @@ const CreateBookingPopup = (props) => {
                         <DeleteOutlined />
                       </div>
 
-                      <Form.Item
-                        label="Select"
-                        name="service"
-                        style={{ maxWidth: '200px', width: '100%' }}
-                      >
-                        <Select>
-                          <Select.Option value="1">1</Select.Option>
-                          <Select.Option value="2">2</Select.Option>
-                          <Select.Option value="3">3</Select.Option>
-                          <Select.Option value="4">4</Select.Option>
-                          <Select.Option value="5">5</Select.Option>
+                      
+                        <Select onSelect={(value, event) => fun2(value, event)}>
+                          {serviceData.map((el, i) => {
+                            return(
+                              <Select.Option value={el.id}>{el.serviceName}</Select.Option>
+                            );
+                          })}
                         </Select>
-                      </Form.Item>
 
-                      <Form.Item label="Price" name="price">
+                      
                         <Input
                           type="text"
-                          placeholder="20"
-                          onChange={(e) => setServicePrice(e.target.value)}
+                          value={currentService.servicePrice}
+                          onBlur={(e) => setServicePrice(e.target.value)}
                         />
-                      </Form.Item>
+                      
 
                       <label>X</label>
-                      <Form.Item label="Amount" name="amount">
+                      
                         <Input
                           type="text"
                           placeholder="1"
                           onChange={(e) => setServiceAmt(e.target.value)}
                         />
-                      </Form.Item>
+                      
                       <label>+</label>
-                      <Form.Item label="Tax" name="tax">
+
                         <Input
                           type="text"
                           placeholder="%"
                           onChange={(e) => setServiceTax(e.target.value)}
                         />
-                      </Form.Item>
+                      
                       <label>=</label>
-                      <Form.Item label="Total" name="serviceTotal">
-                        <Input type="text" onBlur={calculateTotal} />
-                      </Form.Item>
+
+                        <Input type="text" value={servicePrice * serviceAmt + servicePrice * serviceAmt * (serviceTax / 100)} onBlur={calculateTotal}/>
+                      
                       <label>EUR</label>
                     </div>
                   </div>

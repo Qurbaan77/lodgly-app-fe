@@ -34,9 +34,6 @@ import Wrapper from '../wrapper';
 import { Collapse } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
-// import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
-// import GSTC from 'react-gantt-schedule-timeline-calendar';
-// import 'gantt-schedule-timeline-calendar/dist/style.css';
 import DeletePopup from './deletepopup';
 import queryString from 'query-string';
 import { userInstance } from '../../axios/axiosconfig';
@@ -50,16 +47,10 @@ const AddUnitType = () => {
   const [visible, setVisible] = useState(false);
   const [unittypeNo, setUnittypeNo] = useState(0);
   const [unitData, setUnitData] = useState([]);
-  // const [unittypeData, setUnittypeData] = useState([]);
+  const [currentUnittype, setCurrentUnittype] = useState([]);
+
   const parsed = queryString.parse(window.location.search);
   const history = useHistory();
-
-  // const handleChange = (e) => {
-  //   console.log(e);
-  // };
-  // // const onClickUpdate = (values) => {
-  // //   console.log(values);
-  // // };
 
   const show = () => {
     setVisible(true);
@@ -74,10 +65,9 @@ const AddUnitType = () => {
   };
 
   const onFinish = async (values) => {
-    console.log(values);
-    values.propertyNo = parsed.propertyNo;
+    values.propertyId = localStorage.getItem('propertyId');
+    values.unitTypeName = 'Unit Type ' + unittypeNo;
     const response = await userInstance.post('/addUnitType', values);
-    console.log(response.data);
     if (response.data.code === 200) {
       window.location.href = '/unittype?propertyNo=' + parsed.propertyNo;
       // history.push('/unittype?propertyNo=' + parsed.propertyNo);
@@ -85,28 +75,39 @@ const AddUnitType = () => {
   };
 
   const getData = async () => {
+    const unittypeId = localStorage.getItem('unittypeId');
     const values = {
-      propertyNo: parsed.propertyNo,
+      propertyId: localStorage.getItem('propertyId'),
     };
     const response = await userInstance.post('/getUnittype', values);
-    console.log(response);
     const data = response.data.unittypeData;
-    console.log(data);
+
     if (response.data.code === 200) {
-      setUnittypeNo(data.length + 1);
+      if (unittypeId) {
+        data
+          .filter((el) => el.id == unittypeId)
+          .map((filterUnittype) => setCurrentUnittype(filterUnittype));
+      } else {
+        setUnittypeNo(data.length + 1);
+      }
     }
   };
 
   const addUnit = async () => {
     const values = {
-      unittypeNo: unittypeNo,
+      propertyId: localStorage.getItem('propertyId'),
+      unittypeId: localStorage.getItem('unittypeId'),
+      unitName: currentUnittype.unitTypeName,
     };
     const response = await userInstance.post('/addUnit', values);
+    if (response.data.code === 200) {
+      getUnitData();
+    }
   };
 
   const getUnitData = async () => {
     const values = {
-      unittypeNo: unittypeNo,
+      propertyId: localStorage.getItem('propertyId'),
     };
     const response = await userInstance.post('/getUnit', values);
     const data = response.data.unitData;
@@ -161,7 +162,7 @@ const AddUnitType = () => {
           label: 'Item 1',
           time: {
             start: new Date().getTime(),
-            end: new Date().getTime() + 24 * 60 * 60 * 1000,
+            end: new Date().getTime(),
           },
         },
         '2': {
@@ -169,22 +170,22 @@ const AddUnitType = () => {
           rowId: '2',
           label: 'Item 2',
           time: {
-            start: new Date().getTime() + 4 * 24 * 60 * 60 * 1000,
-            end: new Date().getTime() + 5 * 24 * 60 * 60 * 1000,
+            start: new Date().getTime(),
+            end: new Date().getTime(),
           },
         },
         '3': {
           id: '3',
-          rowId: '2',
+          rowId: '3',
           label: 'Item 3',
           time: {
-            start: new Date().getTime() + 6 * 24 * 60 * 60 * 1000,
-            end: new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
+            start: new Date().getTime(),
+            end: new Date().getTime(),
           },
         },
         '4': {
           id: '4',
-          rowId: '3',
+          rowId: '4',
           label: 'Item 4',
           time: {
             start: new Date().getTime() + 10 * 24 * 60 * 60 * 1000,
@@ -206,12 +207,42 @@ const AddUnitType = () => {
 
   let subs = [];
 
-  function onState(state) {
-    console.log(config.chart.items);
+  async function onState(state) {
+    const unittypeId = localStorage.getItem('unittypeId');
+    const values = {
+      propertyId: localStorage.getItem('propertyId'),
+    };
+    const response = await userInstance.post('/getUnittype', values);
+    const data = response.data.unittypeData;
+
+    const [filterData] = data.filter((el) => el.id == unittypeId);
+    const {
+      startDay,
+      endDay,
+      minimumStay,
+      noOfUnits,
+      perNight,
+      roomsToSell,
+      unitTypeName,
+    } = filterData;
+    //
     state.update('config.chart.items.1', (item1) => {
-      item1.label = 'Gantt schedule timeline calendar';
-      item1.time.end = item1.time.end + 2 * 24 * 60 * 60 * 1000;
+      item1.label = roomsToSell;
+      item1.time.start = new Date(startDay).getTime();
+      item1.time.end = new Date(endDay).getTime();
       return item1;
+    });
+    state.update('config.chart.items.2', (item2) => {
+      item2.label = perNight;
+      item2.time.start = new Date(startDay).getTime();
+      item2.time.end = new Date(endDay).getTime();
+      return item2;
+    });
+    state.update('config.chart.items.3', (item3) => {
+      item3.label = minimumStay;
+      item3.time.start = new Date(startDay).getTime();
+      item3.time.end = new Date(endDay).getTime();
+      return item3;
     });
     subs.push(
       state.subscribe('config.chart.items', (items) => {
@@ -236,19 +267,15 @@ const AddUnitType = () => {
     getUnitData();
   }, []);
 
-  // useEffect(() => {
-  //   getData();
-  //   if (unittypeNo != 0) {
-  //     getUnitData();
-  //   }
-  // }, [unitData, unittypeNo])
-
   return (
     <Wrapper>
       <div className='unit-type'>
         <div className='page-header'>
           <h1>
-            <HomeOutlined /> Unit Type {unittypeNo}
+            <HomeOutlined />{' '}
+            {currentUnittype.id
+              ? currentUnittype.unitTypeName
+              : 'Unit type ' + unittypeNo}
           </h1>
         </div>
 
@@ -297,7 +324,9 @@ const AddUnitType = () => {
               </Row>
 
               <div className='unittype-calendar'>
-                <GSTC config={config} onState={onState} />
+                {currentUnittype.id ? (
+                  <GSTC config={config} onState={onState} />
+                ) : null}
               </div>
               <Form.Item>
                 <Button htmlType='submit'>Save</Button>
