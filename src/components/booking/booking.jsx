@@ -90,14 +90,15 @@ const Booking = () => {
   };
 
   const getData = async () => {
+    console.log('get Function is Called!');
     const response = await userInstance.post('/getBooking');
     const bookingdata = response.data.bookingData;
     const guestdata = response.data.guestData;
     console.log('bookingdata', bookingdata)
     console.log('guestdata', guestdata)
     if (response.data.code === 200) {
-      setBookingData(bookingdata);
-      setGuestData(guestdata);
+    setBookingData([...bookingdata]);
+    setGuestData([...guestdata]);
     }
   };
 
@@ -153,8 +154,8 @@ const Booking = () => {
   }
 
   useEffect(() => {
-    getData();
-  }, []);
+      getData();
+  },[]);
 
   const menu = (
     <Menu>
@@ -374,12 +375,14 @@ const Booking = () => {
         handleOk={handleOk}
         close={closeGuest}
         editValues={editValues}
+        getData={getData}
       ></GuestPopup>
       <CreateBookingPopup
         visible={visible}
         handleCancel={handleCancel}
         handleOk={handleOk}
         close={closeGuest}
+        getData={getData}
       ></CreateBookingPopup>
     </Wrapper>
   );

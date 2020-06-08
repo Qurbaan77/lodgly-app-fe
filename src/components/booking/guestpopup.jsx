@@ -43,11 +43,10 @@ const { MonthPicker, RangePicker } = DatePicker;
 
 const GuestPopup = (props) => {
   const [form] = Form.useForm();
-
   const [visible, setVisible] = useState(false);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
-
+  const guestData = props.editValues;
   const show = () => {
     setVisible(true);
   };
@@ -60,25 +59,35 @@ const GuestPopup = (props) => {
     setNotifyType('');
   }
 
+  form.setFieldsValue({
+    id: guestData.id,
+    fullName: guestData.fullname,
+    country: guestData.country,
+    email: guestData.email,
+    phone: guestData.phone,
+    dob: guestData.dob,
+    gender: guestData.gender,
+    typeOfDoc: guestData.typeOfDoc,
+    docNo: guestData.docNo,
+    citizenShip: guestData.citizenShip,
+    place: guestData.place,
+    notes: guestData.notes,
+  });
+
   const onFinish = async (values) => {
-    form.setFieldsValue({
-      fullName : props.editValues.fullname,
-    })
-    console.log('props', props.editValues.fullname)
-    // values.bookingId = localStorage.getItem('bookingId');
-    console.log('Received values of form: ', values);
-    // const response = await userInstance.post('/addGuest', values);
-    // const statusCode = response.data.code;
-    // const msg = response.data.msg;
-    // if (statusCode == 200) {
-    //   setNotifyType('success');
-    //   setNotifyMsg(msg);
-    //   window.location = '/booking'
-    // } else {
-    //   setNotifyType('error');
-    //   setNotifyMsg(msg);
-    // }
-    // form.resetFields();
+    values.bookingId = localStorage.getItem('bookingId');
+    const response = await userInstance.post('/addGuest', values);
+    const statusCode = response.data.code;
+    const msg = response.data.msg;
+    if (statusCode == 200) {
+      setNotifyType('success');
+      setNotifyMsg(msg);
+      props.getData();
+    } else {
+      setNotifyType('error');
+      setNotifyMsg(msg);
+    }
+    form.resetFields();
   };
 
 
@@ -93,6 +102,9 @@ const GuestPopup = (props) => {
         <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         <Form form={form} name="basic" onFinish={onFinish}>
           <Row style={{ alignItems: 'center' }}>
+            <Form.Item name="id">
+              <Input hidden={true}/>
+            </Form.Item>
             <Col span={12}>
               <Form.Item
                 label="Full Name"
@@ -156,7 +168,7 @@ const GuestPopup = (props) => {
             <Col span={12}>
               <Form.Item
                 label="Type of Document"
-                name="document"
+                name="typeOfDoc"
                 style={{ paddingRight: 20 }}
               >
                 <Select>
@@ -167,7 +179,7 @@ const GuestPopup = (props) => {
             </Col>
 
             <Col span={12}>
-              <Form.Item label="Document Number" name="documentnumber">
+              <Form.Item label="Document Number" name="docNo">
                 <Input />
               </Form.Item>
             </Col>
@@ -177,7 +189,7 @@ const GuestPopup = (props) => {
             <Col span={12}>
               <Form.Item
                 label="Citizenship"
-                name="citizenship"
+                name="citizenShip"
                 style={{ paddingRight: 20 }}
               >
                 <Select>
@@ -188,7 +200,7 @@ const GuestPopup = (props) => {
             </Col>
 
             <Col span={12}>
-              <Form.Item label="PLace of Residence" name="documentnumber">
+              <Form.Item label="PLace of Residence" name="place">
                 <Input />
               </Form.Item>
             </Col>

@@ -1,0 +1,140 @@
+.calendar-calendar {
+    max-width: 1069px;
+    border: 1px solid #efefef;
+    background: #fff;
+}
+
+.calendar-btn {
+    margin-bottom: 50px;
+}
+
+.calendar-btn .border-btn {
+    background: none!important;
+    border: 1px solid #d9d9d9!important;
+    padding: 9px 20px;
+    color: #555;
+}
+
+.calendar-btn .border-btn span{
+    color: #555;
+}
+
+
+.calendar-btn .ant-btn {
+    border-radius: 0;
+}
+
+
+
+
+
+.create-booking-modal.group-reservation .ant-modal {
+    width: 400px!important;
+}
+
+.availability {
+    padding: 15px 0px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+}
+
+.availability p {
+    margin: 0;
+    font-size: 12px;
+    color: #999;
+}
+
+
+.add-edit-data a{
+color: orange;
+}
+
+
+.add-edit-data {
+    padding-bottom: 20px;
+}
+
+
+.reservation-booker h4 {
+    text-transform: uppercase;
+    color: #444;
+    padding-bottom: 15px;
+}
+
+.reservation-booker label {
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #999;
+}
+
+.reservation-booker p {
+    margin-bottom: 20px;
+}
+
+
+
+
+
+.create-booking-modal.calendar-setting .ant-modal {
+    width: 400px!important;
+}
+
+
+.calendar-setting .filter-box h4 {
+    text-transform: uppercase;
+    padding: 20px 0px;
+}
+
+.calendar-setting .filter-box .filter-list {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0px;
+}
+
+
+.uppercase{
+    text-transform: uppercase;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media screen and (min-width:1367px){
+    .calendar-calendar {
+        max-width: 1400px;
+    }
+    
+    
+}

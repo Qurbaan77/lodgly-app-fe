@@ -326,7 +326,7 @@ const AddUnitType = () => {
               <div className='unittype-calendar'>
                 {currentUnittype.id ? (
                   <GSTC config={config} onState={onState} />
-                ) : null}
+                ) : <GSTC config={config} onState={onState}/>}
               </div>
               <Form.Item>
                 <Button htmlType='submit'>Save</Button>

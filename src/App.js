@@ -26,6 +26,8 @@ import Forget from './components/forget/forget';
 import Thankyou from './components/thankyou/thankyou';
 import Reset from './components/reset/reset';
 import Services from './components/property/services';
+import Calendar from './components/calendar/calendar';
+import Popup from './components/calendar/popup';
 
 const history = createBrowserHistory();
 
@@ -105,6 +107,8 @@ const App = () => {
                 <PrivateRoute exact path="/reset" component={Reset} />
                 <PrivateRoute exact path="/thankyou" component={Thankyou} />
                 <PrivateRoute exact path="/services" component={Services} />
+                <PrivateRoute exact path="/calendar" component={Calendar} /> 
+                <PrivateRoute exact path="/popup" component={Popup} /> 
               </div>
             </main>
             <Footer />
