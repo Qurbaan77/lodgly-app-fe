@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Router, Route, Redirect } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import React,{useState} from 'react';
+import { Router, Route } from 'react-router-dom'
+import { createBrowserHistory } from 'history'
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
 import Login from './components/login/login';
@@ -31,92 +31,49 @@ import Popup from './components/calendar/popup';
 
 const history = createBrowserHistory();
 
-const Route = ({ component: Component, ...rest }) => (
-  <PrivateRoute
-    {...rest}
-    render={(props) =>
-      /token/.test(document.cookie) ? (
-        <Component {...props} {...rest} />
-      ) : (
-        <Redirect to="/" />
-      )
-    }
-  />
-);
+const App=()=> {
+ 
 
-const App = () => {
   return (
     <div className="App">
-      <div className="main-wrapper">
-        <React.Fragment>
-          <Router history={history}>
-            <Header />
-            <main>
-              <div className="main_content">
-                <Route exact path="/" render={() => <Login />} />
-                <Route exact path="/register" render={() => <Register />} />
-                <Route exact path="/sidenav" component={Sidenav} />
-                <Route
-                  exact
-                  path="/addproperty"
-                  component={AddProperty}
-                />
-                <Route
-                  exact
-                  path="/propertylist"
-                  component={PropertyList}
-                />
-                <Route exact path="/unittype" component={UnitType} />
-                <Route exact path="/groups" component={Groups} />
-                <Route
-                  exact
-                  path="/cleaninggroup"
-                  component={CleaningGroup}
-                />
-                <Route
-                  exact
-                  path="/channelmanager"
-                  component={ChannelManager}
-                />
-                <Route exact path="/admin" component={AdminLogin} />
-                <Route
-                  exact
-                  path="/adminsetting"
-                  component={AdminSetting}
-                />
-                <Route
-                  exact
-                  path="/createbookingpopup"
-                  component={CreateBookingPopup}
-                />
-                <Route exact path="/guestpopup" component={GuestPopup} />
-                <Route exact path="/booking" component={Booking} />
-                <Route exact path="/filter" component={BookingFilter} />
-                <Route
-                  exact
-                  path="/deletepopup"
-                  component={DeletePopup}
-                />
-                <Route exact path="/property" component={Property} />
-                <Route
-                  exact
-                  path="/addunittype"
-                  component={AddUnitType}
-                />
-                <Route exact path="/forget" component={Forget} />
-                <Route exact path="/reset" component={Reset} />
-                <Route exact path="/thankyou" component={Thankyou} />
-                <Route exact path="/services" component={Services} />
-                <Route exact path="/calendar" component={Calendar} /> 
-                <Route exact path="/popup" component={Popup} /> 
-              </div>
-            </main>
-            <Footer />
-          </Router>
-        </React.Fragment>
-      </div>
+        <div className="main-wrapper">
+            <React.Fragment>
+             <Router history={history}>
+              <Header />
+                <main>
+                  <div className="main_content">                  
+                      <Route exact path="/" render={() => <Login />} />
+                      <Route exact path="/register" render={() => <Register />} />
+                      <Route exact path="/sidenav" render={() => <Sidenav />}/>
+                      <Route exact path="/addproperty" render={() => <AddProperty />} />
+                      <Route exact path="/propertylist" render={() => <PropertyList />} />
+                      <Route exact path="/unittype" render={() => <UnitType />} />  
+                      <Route exact path="/groups" render={() => <Groups />} /> 
+                      <Route exact path="/cleaninggroup" render={() => <CleaningGroup />} /> 
+                      <Route exact path="/channelmanager" render={() => <ChannelManager />} /> 
+                      <Route exact path="/admin" render={() => <AdminLogin />} />
+                      <Route exact path="/adminsetting" render={() => <AdminSetting />} />
+                      <Route exact path="/createbookingpopup" render={() => <CreateBookingPopup />} /> 
+                      <Route exact path="/guestpopup" render={() => <GuestPopup />} />
+                      <Route exact path="/booking" render={() => <Booking />} />
+                      <Route exact path="/filter" render={() => <BookingFilter />} />
+                      <Route exact path="/deletepopup" render={() => <DeletePopup />} /> 
+                      <Route exact path="/property" render={() => <Property />} />
+                      <Route exact path="/addunittype" render={() => <AddUnitType />} />
+                      <Route exact path="/forget" render={() => <Forget />} />
+                      <Route exact path="/reset" render={() => <Reset   />} />
+                      <Route exact path="/thankyou" render={() => <Thankyou />} />
+                      <Route exact path="/services" render={() => <Services />} /> 
+                      <Route exact path="/calendar" render={() => <Calendar />} /> 
+                      <Route exact path="/popup" render={() => <Popup />} />                        
+                  </div>
+                </main>
+              <Footer />
+              </Router>
+            </React.Fragment>
+        </div>
     </div>
   );
-};
+}
 
 export default App;
