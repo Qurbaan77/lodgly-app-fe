@@ -31,8 +31,8 @@ import Popup from './components/calendar/popup';
 
 const history = createBrowserHistory();
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route
+const Route = ({ component: Component, ...rest }) => (
+  <PrivateRoute
     {...rest}
     render={(props) =>
       /token/.test(document.cookie) ? (
@@ -55,50 +55,50 @@ const App = () => {
               <div className="main_content">
                 <Route exact path="/" render={() => <Login />} />
                 <Route exact path="/register" render={() => <Register />} />
-                <PrivateRoute exact path="/sidenav" component={Sidenav} />
-                <PrivateRoute
+                <Route exact path="/sidenav" component={Sidenav} />
+                <Route
                   exact
                   path="/addproperty"
                   component={AddProperty}
                 />
-                <PrivateRoute
+                <Route
                   exact
                   path="/propertylist"
                   component={PropertyList}
                 />
-                <PrivateRoute exact path="/unittype" component={UnitType} />
-                <PrivateRoute exact path="/groups" component={Groups} />
-                <PrivateRoute
+                <Route exact path="/unittype" component={UnitType} />
+                <Route exact path="/groups" component={Groups} />
+                <Route
                   exact
                   path="/cleaninggroup"
                   component={CleaningGroup}
                 />
-                <PrivateRoute
+                <Route
                   exact
                   path="/channelmanager"
                   component={ChannelManager}
                 />
-                <PrivateRoute exact path="/admin" component={AdminLogin} />
-                <PrivateRoute
+                <Route exact path="/admin" component={AdminLogin} />
+                <Route
                   exact
                   path="/adminsetting"
                   component={AdminSetting}
                 />
-                <PrivateRoute
+                <Route
                   exact
                   path="/createbookingpopup"
                   component={CreateBookingPopup}
                 />
-                <PrivateRoute exact path="/guestpopup" component={GuestPopup} />
-                <PrivateRoute exact path="/booking" component={Booking} />
-                <PrivateRoute exact path="/filter" component={BookingFilter} />
-                <PrivateRoute
+                <Route exact path="/guestpopup" component={GuestPopup} />
+                <Route exact path="/booking" component={Booking} />
+                <Route exact path="/filter" component={BookingFilter} />
+                <Route
                   exact
                   path="/deletepopup"
                   component={DeletePopup}
                 />
-                <PrivateRoute exact path="/property" component={Property} />
-                <PrivateRoute
+                <Route exact path="/property" component={Property} />
+                <Route
                   exact
                   path="/addunittype"
                   component={AddUnitType}
@@ -106,9 +106,9 @@ const App = () => {
                 <Route exact path="/forget" component={Forget} />
                 <Route exact path="/reset" component={Reset} />
                 <Route exact path="/thankyou" component={Thankyou} />
-                <PrivateRoute exact path="/services" component={Services} />
-                <PrivateRoute exact path="/calendar" component={Calendar} /> 
-                <PrivateRoute exact path="/popup" component={Popup} /> 
+                <Route exact path="/services" component={Services} />
+                <Route exact path="/calendar" component={Calendar} /> 
+                <Route exact path="/popup" component={Popup} /> 
               </div>
             </main>
             <Footer />

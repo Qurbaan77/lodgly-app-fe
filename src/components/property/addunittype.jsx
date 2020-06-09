@@ -108,6 +108,7 @@ const AddUnitType = () => {
   const getUnitData = async () => {
     const values = {
       propertyId: localStorage.getItem('propertyId'),
+      unittypeId: localStorage.getItem('unittypeId'),
     };
     const response = await userInstance.post('/getUnit', values);
     const data = response.data.unitData;
