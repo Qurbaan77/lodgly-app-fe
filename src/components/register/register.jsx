@@ -28,6 +28,7 @@ const Register = () => {
   const history = useHistory();
 
   const onFinish = async (values) => {
+    console.log('Form is Good');
     const response = await userInstance.post('/signup', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
@@ -234,10 +235,7 @@ const Register = () => {
                           name="agreement"
                           valuePropName="checked"
                           rules={[
-                            {
-                              required: true,
-                              message: 'Please checked the agreement!',
-                            },
+                            { validator:(_, value) => value ? Promise.resolve() : Promise.reject('Should accept agreement') },
                           ]}
                         >
                           <Checkbox>

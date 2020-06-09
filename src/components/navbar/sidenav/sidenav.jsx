@@ -97,7 +97,7 @@ const Sidenav = (props) => {
 
         <Menu.Item>
           <VideoCameraOutlined />
-          <span>Calendar</span>
+          <Link to={'/calendar'}>Calendar</Link>
         </Menu.Item>
 
         <SubMenu

@@ -103,9 +103,9 @@ const App = () => {
                   path="/addunittype"
                   component={AddUnitType}
                 />
-                <PrivateRoute exact path="/forget" component={Forget} />
-                <PrivateRoute exact path="/reset" component={Reset} />
-                <PrivateRoute exact path="/thankyou" component={Thankyou} />
+                <Route exact path="/forget" component={Forget} />
+                <Route exact path="/reset" component={Reset} />
+                <Route exact path="/thankyou" component={Thankyou} />
                 <PrivateRoute exact path="/services" component={Services} />
                 <PrivateRoute exact path="/calendar" component={Calendar} /> 
                 <PrivateRoute exact path="/popup" component={Popup} /> 

@@ -16,6 +16,7 @@ import {
   Checkbox,
   Row,
   Col,
+  Avatar,
 } from 'antd';
 import {
   MenuUnfoldOutlined,
@@ -28,6 +29,7 @@ import {
   VideoCameraOutlined,
   PlusSquareOutlined,
   UploadOutlined,
+  BellOutlined,
   DeleteOutlined, RedEnvelopeOutlined,ReconciliationOutlined, MailOutlined,
   FormOutlined,
 } from '@ant-design/icons';
@@ -112,6 +114,18 @@ const Popup = () => {
 
 
 
+  const [visible3, setVisible3] = useState(false);
+
+  const show3 = () => {
+    setVisible3(true);
+  };
+
+  const cancel3 = () => {
+    setVisible3(false);
+  };
+
+
+
 
   return (
     <Wrapper>
@@ -129,6 +143,12 @@ const Popup = () => {
 
         <Button type="primary" icon={<PlusOutlined />}  onClick={show2} style={{ marginRight: 20 }}>
            Calendar Setting
+        </Button>
+
+
+        
+        <Button type="primary" icon={<PlusOutlined />}  onClick={show3} style={{ marginRight: 20 }}>
+           Reservation
         </Button>
 
 
@@ -167,6 +187,23 @@ const Popup = () => {
             <CalendarSetting />
 
         </Modal>
+
+
+
+
+
+
+        <Modal
+        title="Reservation"
+        visible={visible3}
+        onCancel={cancel3}
+        wrapClassName="create-booking-modal reservation-setting"
+        >
+            <Reservation />
+        </Modal>
+
+
+
 
 
       </Wrapper>
@@ -605,6 +642,197 @@ const CalendarSetting = () => {
 
 
  
+ 
+  );
+ 
+ };
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ const Reservation = () => {
+  function onChange(checked) {
+    console.log(`switch to ${checked}`);
+  }
+
+  return(
+ 
+    <Form name="basic" >
+
+    <Row className="reservation-info" style={{ alignItems: "center", padding: "20px 20px" }}>
+  
+        <Col span={12}>
+          <span className="reserv-id">ID 1235378</span>
+          <span className="reserv-tag">AirBnB</span>
+        </Col>
+
+        <Col span={12}>
+          <div className="paid">
+            <span>Paid</span>
+            <Switch  onChange={onChange} />
+            </div>
+        </Col>
+
+
+        <Col span={12}>
+          <h4>20.06 - 30.06.19</h4>
+        </Col>
+
+        <Col span={12}>
+          <h4>Total: 1000,00 EUR</h4>
+        </Col>
+
+
+
+    </Row>
+
+
+
+
+
+    <Row className="reservation-info" style={{ alignItems: "center", padding: "5px 20px" }}>
+        <Col span={8}>
+          <span>Total nights:</span>
+        </Col>
+
+        <Col span={6}>
+           <span>10 Nights</span>
+        </Col>
+
+        <Col span={10}>
+            <span>Service Cost: 0,00 EUR</span>
+        </Col>
+
+    </Row>
+
+
+    <Row className="reservation-info" style={{ alignItems: "center", padding: "5px 20px" }}>
+        <Col span={8}>
+           <span>Price per nights:</span>
+        </Col>
+
+        <Col span={6}>
+            <span>100,00 EUR</span>
+        </Col>
+
+        <Col span={10}>
+            <span>Standard Rate</span>
+        </Col>
+    </Row>
+
+    <Row className="reservation-info" style={{ alignItems: "center", padding: "5px 20px" }}>
+        <Col span={8}>
+           <span>Adults:</span>
+        </Col>
+
+        <Col span={6}>
+            <span>1</span>
+        </Col>
+
+        <Col span={10}>
+            <span></span>
+        </Col>
+    </Row>
+
+    <Row className="reservation-info" style={{ alignItems: "center", padding: "5px 20px" }}>
+        <Col span={8}>
+           <span>Children:</span>
+        </Col>
+
+        <Col span={6}>
+            <span>0</span>
+        </Col>
+
+        <Col span={10}>
+            <span></span>
+        </Col>
+    </Row>
+  
+  
+    <Row style={{ alignItems: "center", padding: "0px 20px" }}>
+      <Col span={24}>
+        <div className="add-edit-data">
+          <a href=""><FormOutlined /> Add Note</a>
+          <Form.Item style={{ display: "none"}}>
+            <Input.TextArea placeholder="Internal Note" />
+          </Form.Item>
+        </div>
+
+        <div className="add-edit-data">
+          <a href=""><BellOutlined /> Add Task</a>
+          <Form.Item style={{ display: "none"}}> 
+            <Input.TextArea placeholder="Add New Task" />
+          </Form.Item>
+        </div>
+
+      </Col>
+    </Row>
+
+
+
+
+
+
+
+    <Row className="reservation-user" style={{ alignItems: "center", padding: "0px 20px" }}>
+        <div className="user-box">
+            <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>KB</Avatar>
+            <p>Kurtis Baraccano</p>
+        </div>
+        <div className="user-box">
+            <Avatar icon={<PlusOutlined />} />
+            <p>Add Guest</p>
+        </div>
+    </Row>
+  
+   
+  
+  
+  
+    <Row style={{ alignItems: "center", background: "#fbfbfc", padding: "0px 20px", paddingTop:"20px"}}>
+        <Col span={24}>
+            <Form.Item style={{textAlign:"center"}}>
+             <Button style={{ marginRight: 10 }}>Edit Reservation</Button>
+                <Button type="primary" htmlType="submit" icon={<PlusOutlined />}>
+                    Check In
+                </Button>
+            </Form.Item>
+
+            <Form.Item style={{textAlign:"center"}}>
+                <a href="" className="delete-reserv"><DeleteOutlined /> Delete this reservation</a>
+            </Form.Item>
+        </Col>
+    </Row>
+  
+  
+  
+  
+  
+  
+  
+    </Form>
+   
  
   );
  

@@ -69,8 +69,8 @@ const AddUnitType = () => {
     values.unitTypeName = 'Unit Type ' + unittypeNo;
     const response = await userInstance.post('/addUnitType', values);
     if (response.data.code === 200) {
-      window.location.href = '/unittype?propertyNo=' + parsed.propertyNo;
-      // history.push('/unittype?propertyNo=' + parsed.propertyNo);
+      // window.location.href = '/unittype?propertyNo=' + parsed.propertyNo;
+      history.push('/unittype?propertyNo=' + parsed.propertyNo);
     }
   };
 
@@ -326,7 +326,7 @@ const AddUnitType = () => {
               <div className='unittype-calendar'>
                 {currentUnittype.id ? (
                   <GSTC config={config} onState={onState} />
-                ) : <GSTC config={config} onState={onState}/>}
+                ) : null}
               </div>
               <Form.Item>
                 <Button htmlType='submit'>Save</Button>

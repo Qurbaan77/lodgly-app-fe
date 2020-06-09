@@ -148,7 +148,7 @@ const Booking = () => {
   }
 
   const editGuest = (values) => {
-    console.log(values.fullname)
+    setBooked(true);
     setEditValues(values)
     setVisibleGuest(true);
   }

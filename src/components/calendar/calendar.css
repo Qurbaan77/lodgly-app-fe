@@ -111,21 +111,100 @@ color: orange;
 
 
 
+.create-booking-modal.reservation-setting .ant-modal {
+    width: 400px!important;
+}
+
+.create-booking-modal.reservation-setting .add-edit-data {
+    text-align: right;
+    font-size: 12px;
+}
+
+.create-booking-modal.reservation-setting .add-edit-data .ant-row.ant-form-item {
+    margin: 0;
+}
+
+.create-booking-modal.reservation-setting .ant-btn, .create-booking-modal.reservation-setting .ant-btn:hover, .create-booking-modal.reservation-setting .ant-btn:focus {
+    background: #fab52c;
+    border: #fab52c;
+}
+
+.create-booking-modal.reservation-setting .ant-btn span {
+    color: #fff;
+}
+
+.create-booking-modal.reservation-setting .ant-btn-primary, .create-booking-modal.reservation-setting .ant-btn-primary:hover, .create-booking-modal.reservation-setting .ant-btn-primary:focus {
+    background: #7FBD34;
+    border: #7FBD34;
+    border: 1px solid #7FBD34;
+}
 
 
 
 
+.reserv-id {
+    background: #f1f1f1;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.reservation-info {
+    padding: 20px 0px;
+}
+
+.reserv-tag {
+    border: 1px solid #ddd;
+    font-size: 12px;
+    padding: 2px 5px;
+    border-radius: 2px;
+}
+
+.paid {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.paid span {
+    padding-right: 10px;
+}
+
+.reservation-info h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.reservation-info span {
+    font-size: 12px;
+}
 
 
+.user-box {
+    text-align: center;
+    margin-right: 20px;
+}
+
+.user-box p {
+    font-size: 12px;
+    padding-top: 10px;
+}
+.reservation-user {
+    border-bottom: 1px solid #ddd;
+}
+
+.delete-reserv {
+    color: red!important;
+    font-size: 12px;
+}
 
 
-
-
-
-
-
-
-
+.reservation-info .ant-col:first-child span {
+    color: #000;
+}
 
 
 
