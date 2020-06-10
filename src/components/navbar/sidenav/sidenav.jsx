@@ -52,7 +52,6 @@ const Sidenav = (props) => {
   const getData = async () => {
     const response = await userInstance.post('/fetchProperty');
     const data = response.data.propertiesData;
-    console.log('Property Data', data);
     if (response.data.code === 200) {
       setPropertyData(data);
     }

@@ -106,14 +106,17 @@ const AddUnitType = () => {
   };
 
   const getUnitData = async () => {
+    const arr = [];
     const values = {
       propertyId: localStorage.getItem('propertyId'),
-      unittypeId: localStorage.getItem('unittypeId'),
     };
     const response = await userInstance.post('/getUnit', values);
     const data = response.data.unitData;
     if (response.data.code === 200) {
-      setUnitData(data);
+      data.filter(el => el.unittypeId == localStorage.getItem('unittypeId')).map(filterUnit => (
+        arr.push(filterUnit)
+      ))
+      setUnitData(arr);
     }
   };
 

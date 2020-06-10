@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './calendar.css';
 import Wrapper from '../wrapper';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
-import GSTC from 'react-gantt-schedule-timeline-calendar';
+import GSTC from './GSTC';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
 import {
   Form,
@@ -22,10 +22,14 @@ import {
   Row,
   Col,
 } from 'antd';
-
+import { userInstance } from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
 
 const Calendar = () => {
+  const [propertyData, setPropertyData] = useState([]);
+  const [reservationData, setReservationData] = useState([]);
+  const [guestData, setGuestData] = useState([]);
+  const [visible, setVisible] = useState(false);
   const config = {
     height: 500,
     list: {
@@ -168,9 +172,37 @@ const Calendar = () => {
     return () => {
       subs.forEach((unsub) => unsub());
     };
-  });
+  }, []);
 
-  const [visible, setVisible] = useState(false);
+  const getProperty = async () => {
+    const response = await userInstance.post('/fetchProperty');
+    const data = response.data.propertiesData;
+    console.log('jshfuy', data)
+    if (response.data.code === 200) {
+      setPropertyData(data);
+    }
+  };
+
+  const getData = async () => {
+    const response = await userInstance.post('/getReservation');
+    const reservationData = response.data.reservationData;
+    const guestdata = response.data.guestData;
+    if (response.data.code === 200) {
+      setReservationData([...reservationData]);
+      setGuestData([...guestdata]);
+    }
+  };
+
+  const getCalendarData = async () => {
+    const res = await userInstance.post('/getReservationCalendarData');
+    console.log('res', res)
+  }
+
+  useEffect(() => {
+    getData();
+    getProperty();
+    getCalendarData();
+  }, []);
 
   const show = () => {
     setVisible(true);
@@ -204,10 +236,18 @@ const Calendar = () => {
           title='Add New Reservation'
           visible={visible}
           onOk={handleOk}
-          onCancel={handleCancel}
+          close={handleCancel}
           wrapClassName='create-booking-modal'
+          getData={getData}
         >
-          <AddReservation />
+          <AddReservation
+            title='Add New Reservation'
+            visible={visible}
+            onOk={handleOk}
+            close={handleCancel}
+            wrapClassName='create-booking-modal'
+            getData={getData}
+          />
         </Modal>
       </div>
     </Wrapper>

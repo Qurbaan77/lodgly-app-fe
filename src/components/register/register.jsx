@@ -158,7 +158,9 @@ const Register = () => {
                           rules={[
                             {
                               required: true,
-                              message: 'Please confirm your password!',
+                              Min: 6,
+                              Max: 15, 
+                              message: 'Please confirm your password Minimum 6 and Maximum 15 character!',
                             },
                             ({ getFieldValue }) => ({
                               validator(rule, value) {
@@ -199,7 +201,9 @@ const Register = () => {
                           rules={[
                             {
                               required: true,
-                              message: 'Please input your phone number!',
+                              max: 15,
+                              min: 9,
+                              message: 'Please input your phone number Max 15 digit Min 9!',
                             },
                             ({ getFieldValue }) => ({
                               validator(rule, value) {

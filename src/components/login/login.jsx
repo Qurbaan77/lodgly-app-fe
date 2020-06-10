@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import './login.css';
-import { Form, Input, Button, Checkbox } from 'antd';
+import {
+  Form,
+  Input,
+  Tooltip,
+  Cascader,
+  Select,
+  Row,
+  Col,
+  Checkbox,
+  Button,
+  AutoComplete,
+} from 'antd';
 import logo from '../../assets/images/logo.jpg';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
@@ -97,6 +108,7 @@ const Login = () => {
                           message: 'Please input your password!',
                         },
                       ]}
+                      hasFeedback
                     >
                       <Input.Password />
                     </Form.Item>

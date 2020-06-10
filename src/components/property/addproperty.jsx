@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from 'react-places-autocomplete';
 import './property.css';
 import {
   Form,
@@ -92,6 +96,7 @@ const AddProperty = () => {
   const [No, setNo] = useState(0);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
+  const [address, setAddress] = useState('');
   const history = useHistory();
 
   useEffect(() => {
@@ -99,7 +104,7 @@ const AddProperty = () => {
       const response = await userInstance.post('/fetchProperty');
       const data = response.data.propertiesData;
       if (response.data.code === 200) {
-        setNo(data.length+1);
+        setNo(data.length + 1);
       }
     }
 
@@ -130,33 +135,33 @@ const AddProperty = () => {
     const listData = {
       checkedValues,
       No,
-    }
+    };
     const response = await userInstance.post('/listing', listData);
   };
 
-  const onChange1 = async(checkedValues1) => {
+  const onChange1 = async (checkedValues1) => {
     const listData = {
       checkedValues1,
       No,
-    }
+    };
     const response = await userInstance.post('/listing', listData);
-  }
-  
-  const onChange2 = async(checkedValues2) => {
+  };
+
+  const onChange2 = async (checkedValues2) => {
     const listData = {
       checkedValues2,
       No,
-    }
+    };
     const response = await userInstance.post('/listing', listData);
-  }
-  
-  const onChange3 = async(checkedValues3) => {
+  };
+
+  const onChange3 = async (checkedValues3) => {
     const listData = {
       checkedValues3,
       No,
-    }
+    };
     const response = await userInstance.post('/listing', listData);
-  }
+  };
 
   const props = {
     name: 'file',
@@ -175,33 +180,44 @@ const AddProperty = () => {
       }
     },
   };
-  
+
+  const handleAddressChange = (address) => {
+    setAddress(...address);
+  };
+
+  const handleAddressSelect = (address) => {
+    geocodeByAddress(address)
+      .then((results) => getLatLng(results[0]))
+      .then((latLng) => console.log('Success', latLng))
+      .catch((error) => console.error('Error', error));
+  };
+
   return (
     <Wrapper>
-      <div className="add-property">
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
-        <div className="page-header">
+      <div className='add-property'>
+        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
+        <div className='page-header'>
           <h1>
             <HomeOutlined /> Property {No}
           </h1>
         </div>
 
-        <div className="panel-container">
+        <div className='panel-container'>
           <Collapse defaultActiveKey={['1']} accordion>
-            <Panel header="Main Information" key="1">
-              <div className="main-info-form">
+            <Panel header='Main Information' key='1'>
+              <div className='main-info-form'>
                 <Form form={form} onFinish={onFinish}>
                   <Row gutter={[16, 0]}>
                     <Col span={24}>
-                      <Form.Item name="propertyName" label="Name">
-                        <Input placeholder="My Demo Property" />
+                      <Form.Item name='propertyName' label='Name'>
+                        <Input placeholder='My Demo Property' />
                       </Form.Item>
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item name="propertyType" label="Property Type">
+                      <Form.Item name='propertyType' label='Property Type'>
                         <Select>
-                          <Select.Option value="demo">
+                          <Select.Option value='demo'>
                             Holiday House
                           </Select.Option>
                         </Select>
@@ -209,52 +225,101 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item name="address" label="Address">
-                        <Input placeholder="4901 St Anthony Eye" />
+                      <Form.Item name='address' label='Address'>
+                        {/* <Input placeholder='4901 St Anthony Eye' /> */}
+                        <PlacesAutocomplete
+                          value={address}
+                          onChange={handleAddressChange}
+                          onSelect={handleAddressSelect}
+                        >
+                          {({
+                            getInputProps,
+                            suggestions,
+                            getSuggestionItemProps,
+                            loading,
+                          }) => (
+                            <div>
+                              <input
+                                {...getInputProps({
+                                  placeholder: 'Search Places ...',
+                                  className: 'location-search-input',
+                                })}
+                              />
+                              <div className='autocomplete-dropdown-container'>
+                                {loading && <div>Loading...</div>}
+                                {suggestions.map((suggestion) => {
+                                  const className = suggestion.active
+                                    ? 'suggestion-item--active'
+                                    : 'suggestion-item';
+                                  // inline style for demonstration purpose
+                                  const style = suggestion.active
+                                    ? {
+                                        backgroundColor: '#fafafa',
+                                        cursor: 'pointer',
+                                      }
+                                    : {
+                                        backgroundColor: '#ffffff',
+                                        cursor: 'pointer',
+                                      };
+                                  return (
+                                    <div
+                                      {...getSuggestionItemProps(suggestion, {
+                                        className,
+                                        style,
+                                      })}
+                                    >
+                                      <span>{suggestion.description}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+                        </PlacesAutocomplete>
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
-                      <Form.Item name="country" label="Country">
+                      <Form.Item name='country' label='Country'>
                         <Select>
-                          <Select.Option value="demo">Croatia</Select.Option>
+                          <Select.Option value='demo'>Croatia</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
-                      <Form.Item name="state" label="State">
+                      <Form.Item name='state' label='State'>
                         <Select>
-                          <Select.Option value="demo">Choose</Select.Option>
+                          <Select.Option value='demo'>Choose</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
-                      <Form.Item name="city" label="City">
+                      <Form.Item name='city' label='City'>
                         <Select>
-                          <Select.Option value="demo">Zadar</Select.Option>
+                          <Select.Option value='demo'>Zadar</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
-                      <Form.Item name="zip" label="Zip">
+                      <Form.Item name='zip' label='Zip'>
                         <Select>
-                          <Select.Option value="demo">Choose</Select.Option>
+                          <Select.Option value='demo'>Choose</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item name="website" label="Website">
-                        <Input placeholder="www.mywebsite.com" />
+                      <Form.Item name='website' label='Website'>
+                        <Input placeholder='www.mywebsite.com' />
                       </Form.Item>
                     </Col>
 
                     <Col span={24}>
                       <Form.Item>
-                        <Button htmlType="submit">Save</Button>
+                        <Button htmlType='submit'>Save</Button>
                       </Form.Item>
                     </Col>
                   </Row>
@@ -262,14 +327,14 @@ const AddProperty = () => {
               </div>
             </Panel>
 
-            <Panel header="Details" key="2">
-              <div className="main-info-form">
-                <Form form={form} name="property" onFinish={onFinish}>
+            <Panel header='Details' key='2'>
+              <div className='main-info-form'>
+                <Form form={form} name='property' onFinish={onFinish}>
                   <Row gutter={[16, 0]}>
                     <Col span={24}>
-                      <Form.Item label="Property Type">
+                      <Form.Item label='Property Type'>
                         <Select>
-                          <Select.Option value="demo">
+                          <Select.Option value='demo'>
                             Holiday House
                           </Select.Option>
                         </Select>
@@ -277,54 +342,54 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={8}>
-                      <Form.Item name="bedrooms" label="Bedrooms">
+                      <Form.Item name='bedrooms' label='Bedrooms'>
                         <Select>
-                          <Select.Option value="1">1</Select.Option>
-                          <Select.Option value="2">2</Select.Option>
-                          <Select.Option value="3">3</Select.Option>
-                          <Select.Option value="4">4</Select.Option>
-                          <Select.Option value="5">5</Select.Option>
+                          <Select.Option value='1'>1</Select.Option>
+                          <Select.Option value='2'>2</Select.Option>
+                          <Select.Option value='3'>3</Select.Option>
+                          <Select.Option value='4'>4</Select.Option>
+                          <Select.Option value='5'>5</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
 
                     <Col span={8}>
-                      <Form.Item name="fullBathroom" label="Full Bathrooms">
+                      <Form.Item name='fullBathroom' label='Full Bathrooms'>
                         <Select>
-                          <Select.Option value="1">1</Select.Option>
-                          <Select.Option value="2">2</Select.Option>
-                          <Select.Option value="3">3</Select.Option>
+                          <Select.Option value='1'>1</Select.Option>
+                          <Select.Option value='2'>2</Select.Option>
+                          <Select.Option value='3'>3</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
 
                     <Col span={8}>
-                      <Form.Item name="halfBathroom" label="Half Bathrooms">
+                      <Form.Item name='halfBathroom' label='Half Bathrooms'>
                         <Select>
-                          <Select.Option value="1">1</Select.Option>
-                          <Select.Option value="2">2</Select.Option>
-                          <Select.Option value="3">3</Select.Option>
+                          <Select.Option value='1'>1</Select.Option>
+                          <Select.Option value='2'>2</Select.Option>
+                          <Select.Option value='3'>3</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
 
                     <Col span={8}>
-                      <Form.Item name="sqfoot" label="SQ Footage">
+                      <Form.Item name='sqfoot' label='SQ Footage'>
                         <Select>
-                          <Select.Option value="demo">Zadar</Select.Option>
+                          <Select.Option value='demo'>Zadar</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item name="description" label="Description">
+                      <Form.Item name='description' label='Description'>
                         <Input.TextArea />
                       </Form.Item>
                     </Col>
 
                     <Col span={24}>
                       <Form.Item>
-                        <Button htmlType="submit">Save</Button>
+                        <Button htmlType='submit'>Save</Button>
                       </Form.Item>
                     </Col>
                   </Row>
@@ -332,12 +397,12 @@ const AddProperty = () => {
               </div>
             </Panel>
 
-            <Panel header="Listing" key="3">
-              <div className="listing-info-form">
+            <Panel header='Listing' key='3'>
+              <div className='listing-info-form'>
                 <Form>
                   <Row gutter={[16, 0]}>
                     <Col span={6}>
-                      <Form.Item label="Pet Policy">
+                      <Form.Item label='Pet Policy'>
                         <Checkbox.Group
                           options={petOptions}
                           // defaultValue={['Pets Negotiable']}
@@ -347,7 +412,7 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={6}>
-                      <Form.Item label="Features and Amenities">
+                      <Form.Item label='Features and Amenities'>
                         <Checkbox.Group
                           options={featureOptions}
                           // defaultValue={['Furnished or available furnished']}
@@ -357,7 +422,7 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={6}>
-                      <Form.Item label="Features and Amenities">
+                      <Form.Item label='Features and Amenities'>
                         <Checkbox.Group
                           options={featureOptions2}
                           // defaultValue={['Gym/Fitness Center']}
@@ -367,7 +432,7 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={6}>
-                      <Form.Item label="Features and Amenities">
+                      <Form.Item label='Features and Amenities'>
                         <Checkbox.Group
                           options={featureOptions3}
                           // defaultValue={['Outdoor Space']}
@@ -380,26 +445,26 @@ const AddProperty = () => {
               </div>
             </Panel>
 
-            <Panel header="Photo" key="4">
-              <div className="main-info-form">
+            <Panel header='Photo' key='4'>
+              <div className='main-info-form'>
                 <Form>
                   <Row gutter={[16, 0]}>
                     <Col span={24}>
-                      <Form.Item label="Show off your place">
+                      <Form.Item label='Show off your place'>
                         <Form.Item
-                          name="dragger"
-                          valuePropName="fileList"
+                          name='dragger'
+                          valuePropName='fileList'
                           getValueFromEvent={normFile}
                           noStyle
                         >
-                          <Upload.Dragger {...props} >
-                            <p className="ant-upload-drag-icon">
+                          <Upload.Dragger {...props}>
+                            <p className='ant-upload-drag-icon'>
                               <InboxOutlined />
                             </p>
-                            <p className="ant-upload-text">
+                            <p className='ant-upload-text'>
                               Drop photos here or
                             </p>
-                            <p className="ant-upload-hint">CHOOSE FILE</p>
+                            <p className='ant-upload-hint'>CHOOSE FILE</p>
                           </Upload.Dragger>
                           <p>
                             At least 1 photo is required. Max file size is 30MB
@@ -410,7 +475,7 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item label="Video Tour (Optional)">
+                      <Form.Item label='Video Tour (Optional)'>
                         <Input />
                         <p>YouTube videos only. Paste your link here</p>
                       </Form.Item>
