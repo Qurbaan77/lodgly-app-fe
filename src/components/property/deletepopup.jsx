@@ -36,9 +36,10 @@ import { InboxOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
 
 const DeletePopup = ({ dataObject, cancel }) => {
-  
+  console.log(dataObject);
+
   return (
-    <div class="delete-popup-box">
+    <div class='delete-popup-box'>
       <WarningOutlined />
       <h5>Delete this object?</h5>
 
@@ -47,7 +48,7 @@ const DeletePopup = ({ dataObject, cancel }) => {
       <Button style={{ marginRight: 50 }} onClick={cancel}>
         Cancel
       </Button>
-      <Button icon={<DeleteOutlined />} type="primary" onClick={dataObject}>
+      <Button icon={<DeleteOutlined />} type='primary' onClick={dataObject}>
         Delete Item
       </Button>
     </div>

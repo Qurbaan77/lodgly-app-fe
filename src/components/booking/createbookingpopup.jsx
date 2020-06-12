@@ -38,7 +38,8 @@ import { Link } from 'react-router-dom';
 import { Avatar } from 'antd';
 import { HelpBlock } from 'react-bootstrap';
 import { userInstance } from '../../axios/axiosconfig';
-
+import Toaster from '../toaster/toaster';
+import countryList from 'react-select-country-list';
 const { Panel } = Collapse;
 
 const text = `
@@ -54,6 +55,8 @@ let i = 1;
 let j = 1;
 
 const CreateBookingPopup = (props) => {
+  console.log(props);
+  const { editBookingValues } = props;
   let arr = [];
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
@@ -83,6 +86,8 @@ const CreateBookingPopup = (props) => {
   const [currentUnit, setCurrentUnit] = useState({});
   const [unitTypeData, setUnitTypeData] = useState([]);
   const [currentUnittype, setCurrentUnittype] = useState({});
+  const [notifyType, setNotifyType] = useState();
+  const [notifyMsg, setNotifyMsg] = useState();
 
   const [propertyData, setPropertyData] = useState([]);
   const history = useHistory();
@@ -91,13 +96,18 @@ const CreateBookingPopup = (props) => {
     setVisible(true);
   };
 
-  const handleOk = () => {
-    setVisible(false);
+  const close = () => {
+    setNotifyType('');
   };
 
-  const handleCancel = () => {
-    setVisible(false);
-  };
+  // const Ok = () => {
+  //   setVisible(false);
+  //   console.log('working');
+  // };
+
+  // const Cancel = () => {
+  //   setVisible(false);
+  // };
 
   const addMore = () => {
     i = i + 1;
@@ -116,13 +126,31 @@ const CreateBookingPopup = (props) => {
   };
 
   const removeServicePanel = (value) => {
+    if (serviceAmount !== 0) {
+      const sum = parseInt(total) - parseInt(serviceAmount);
+      setServiceAmount(0);
+      setServicePrice(0);
+      setServiceTax(0);
+      setServiceAmt(0);
+      setTotal(sum);
+    }
+    console.log(value);
     const oldarray = [...servicePanel];
     oldarray.pop();
     setServicePanel([...oldarray]);
   };
 
+  form.setFieldsValue({
+    id: editBookingValues.id,
+    adult: editBookingValues.adult,
+    children1: editBookingValues.children1,
+    children2: editBookingValues.children2,
+    fullName: editBookingValues.guest,
+  });
+
   const onFinish = async (values) => {
-    console.log('servicePanel', servicePanel)
+    console.log('values', values);
+    console.log('servicePanel', servicePanel);
     console.log('Panel', panel);
     const guestData = [];
     const serviceData = [];
@@ -133,16 +161,21 @@ const CreateBookingPopup = (props) => {
       guestData.push(values[el]);
     });
     values.guestData = guestData;
-    values.guest = guestData[0].fullName;
+    // values.guest = guestData[0].fullName;
     servicePanel.map((ele, i) => {
       serviceData.push(values[ele]);
-    })
+    });
     values.serviceData = serviceData;
     console.log('Received values of form: ', values);
     const response = await userInstance.post('/addBooking', values);
     console.log('response', response.data.code);
+    const msg = response.data.msg;
     if (response.data.code === 200) {
       props.getData();
+      // props.visible = false;
+    } else {
+      setNotifyType('error');
+      setNotifyMsg(msg);
     }
     form.resetFields();
   };
@@ -170,9 +203,11 @@ const CreateBookingPopup = (props) => {
     const sum = parseInt(total) + parseInt(calculate);
     setServiceAmount(calculate);
     setTotal(sum);
-    // form.setFieldsValue({
-    //   serviceTotal: calculate,
-    // });
+    console.log('Calculate', calculate);
+    console.log('service amount', serviceAmount);
+    form.setFieldsValue({
+      serviceAmount: calculate,
+    });
   };
 
   const fun1 = async (value, event) => {
@@ -184,6 +219,7 @@ const CreateBookingPopup = (props) => {
     const response2 = await userInstance.post('/getUnit', payload);
     const data2 = response2.data.unitData;
     const response3 = await userInstance.post('/getUnittype', payload);
+    console.log(response3);
     const data3 = response3.data.unitData;
     if (response.data.code === 200) {
       setServiceData(data);
@@ -216,25 +252,34 @@ const CreateBookingPopup = (props) => {
 
   const fun4 = (value) => {
     console.log('Value', value);
+    form.setFieldsValue({});
   };
+  console.log(servicePrice, serviceTax, serviceAmt, serviceAmount);
 
   return (
     <Modal
-      title="Create Booking"
-      name="modal1"
+      title='Create Booking'
+      name='modal1'
       visible={props.visible}
       onOk={props.handleOk}
       onCancel={props.handleCancel}
-      wrapClassName="create-booking-modal"
+      wrapClassName='create-booking-modal'
     >
-      <Form form={form} name="basic" onFinish={onFinish}>
+      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
+      <Form form={form} name='basic' onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={12}>
             <Form.Item
-              label="Reservation Date"
-              name="groupname"
+              label='Reservation Date'
+              name='groupname'
               style={{ paddingRight: 20 }}
               onChange={fun4}
+              rules={[
+                {
+                  required: true,
+                  message: 'Reservation date is required',
+                },
+              ]}
             >
               <RangePicker onChange={fun4} />
             </Form.Item>
@@ -242,7 +287,7 @@ const CreateBookingPopup = (props) => {
 
           <Col span={12}>
             <Radio.Group
-              name="radiogroup"
+              name='radiogroup'
               defaultValue={1}
               onChange={(e) => setRadio(e.target.value)}
             >
@@ -255,9 +300,15 @@ const CreateBookingPopup = (props) => {
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={8}>
             <Form.Item
-              label="Property"
-              name="property"
+              label='Property'
+              name='property'
               style={{ paddingRight: 20 }}
+              rules={[
+                {
+                  required: true,
+                  message: 'Property name is required',
+                },
+              ]}
             >
               <Select onSelect={(value, event) => fun1(value, event)}>
                 {propertyData.map((el, i) => {
@@ -272,7 +323,17 @@ const CreateBookingPopup = (props) => {
           </Col>
 
           <Col span={8}>
-            <Form.Item label="Unit" name="unit" style={{ paddingRight: 20 }}>
+            <Form.Item
+              label='Unit'
+              name='unit'
+              style={{ paddingRight: 20 }}
+              rules={[
+                {
+                  required: true,
+                  message: 'Unit is required',
+                },
+              ]}
+            >
               <Select onSelect={(value) => fun3(value)}>
                 {unitData.map((el, i) => {
                   return (
@@ -285,13 +346,19 @@ const CreateBookingPopup = (props) => {
 
           <Col span={8}>
             <Form.Item
-              className="comision"
-              label="Channel, Commission(%)"
-              name="channel"
+              className='comision'
+              label='Channel, Commission(%)'
+              name='channel'
+              rules={[
+                {
+                  required: true,
+                  message: 'Commission is required',
+                },
+              ]}
             >
               <Select style={{ width: '70%', display: 'inline-block' }}>
-                <Select.Option value="Airbnb">Airbnb</Select.Option>
-                <Select.Option value="Booking">Booking</Select.Option>
+                <Select.Option value='Airbnb'>Airbnb</Select.Option>
+                <Select.Option value='Booking'>Booking</Select.Option>
               </Select>
 
               <Input
@@ -309,44 +376,65 @@ const CreateBookingPopup = (props) => {
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={8}>
             <Form.Item
-              label="Adults"
-              name="adults"
+              label='Adults'
+              name='adults'
               style={{ paddingRight: 20 }}
+              rules={[
+                {
+                  required: true,
+                  message: 'Required Field',
+                },
+              ]}
             >
               <Select>
-                <Select.Option value="1">1</Select.Option>
-                <Select.Option value="2">2</Select.Option>
-                <Select.Option value="3">3</Select.Option>
-                <Select.Option value="4">4</Select.Option>
-                <Select.Option value="5">5</Select.Option>
+                <Select.Option value='1'>1</Select.Option>
+                <Select.Option value='2'>2</Select.Option>
+                <Select.Option value='3'>3</Select.Option>
+                <Select.Option value='4'>4</Select.Option>
+                <Select.Option value='5'>5</Select.Option>
               </Select>
             </Form.Item>
           </Col>
 
           <Col span={8}>
             <Form.Item
-              label="Childrens(0-12yrs)"
-              name="children1"
+              label='Childrens(0-12yrs)'
+              name='children1'
               style={{ paddingRight: 20 }}
+              rules={[
+                {
+                  required: true,
+                  message: 'required field',
+                },
+              ]}
             >
               <Select>
-                <Select.Option value="1">1</Select.Option>
-                <Select.Option value="2">2</Select.Option>
-                <Select.Option value="3">3</Select.Option>
-                <Select.Option value="4">4</Select.Option>
-                <Select.Option value="5">5</Select.Option>
+                <Select.Option value='1'>1</Select.Option>
+                <Select.Option value='2'>2</Select.Option>
+                <Select.Option value='3'>3</Select.Option>
+                <Select.Option value='4'>4</Select.Option>
+                <Select.Option value='5'>5</Select.Option>
               </Select>
             </Form.Item>
           </Col>
 
           <Col span={8}>
-            <Form.Item label="Childrens(12+ yrs)" name="children2">
+            <Form.Item
+              label='Childrens(12+ yrs)'
+              name='children2'
+              rules={[
+                {
+                  required: true,
+                  message: 'required field',
+                },
+              ]}
+            >
               <Select>
-                <Select.Option value="1">1</Select.Option>
-                <Select.Option value="2">2</Select.Option>
-                <Select.Option value="3">3</Select.Option>
-                <Select.Option value="4">4</Select.Option>
-                <Select.Option value="5">5</Select.Option>
+                <Select.Option value='1'>1</Select.Option>
+                <Select.Option value='2'>2</Select.Option>
+                <Select.Option value='3'>3</Select.Option>
+                <Select.Option value='4'>4</Select.Option>
+                <Select.Option value='5'>5</Select.Option>
               </Select>
             </Form.Item>
           </Col>
@@ -358,18 +446,18 @@ const CreateBookingPopup = (props) => {
               <Collapse accordion>
                 <Panel
                   icon={<PlusSquareOutlined />}
-                  header="Add Guest Details (Optional)"
-                  key="1"
+                  header='Add Guest Details (Optional)'
+                  key='1'
                 >
-                  <div className="additional-guest">
+                  <div className='additional-guest'>
                     {panel.map((el, i) => {
                       return (
-                        <div className="addi-box">
+                        <div className='addi-box'>
                           <Row style={{ alignItems: 'center' }}>
-                            <Form.Item name="panel"></Form.Item>
+                            <Form.Item name='panel'></Form.Item>
                             <Col span={6}>
                               <Form.Item
-                                label="Full Name"
+                                label='Full Name'
                                 name={[el, 'fullName']}
                                 style={{ paddingRight: 20 }}
                               >
@@ -381,7 +469,7 @@ const CreateBookingPopup = (props) => {
 
                             <Col span={6}>
                               <Form.Item
-                                label="Email"
+                                label='Email'
                                 name={[el, 'email']}
                                 style={{ paddingRight: 20 }}
                               >
@@ -393,19 +481,29 @@ const CreateBookingPopup = (props) => {
 
                             <Col span={6}>
                               <Form.Item
-                                label="Country"
+                                label='Country'
                                 name={[el, 'country']}
                                 style={{ paddingRight: 20 }}
                               >
-                                <Input
+                                <Select>
+                                {countryList().getData().map((ele, i) => {
+                                  return (
+                                    <Select.Option value={ele.value}>
+                                      {ele.label}
+                                    </Select.Option>
+                                  )
+                                })}
+
+                                </Select>
+                                {/* <Input
                                   onChange={(e) => setCountry(e.target.value)}
-                                />
+                                /> */}
                               </Form.Item>
                             </Col>
 
                             <Col span={6}>
                               <Form.Item
-                                label="Phone"
+                                label='Phone'
                                 name={[el, 'phone']}
                                 style={{ paddingRight: 20 }}
                               >
@@ -416,15 +514,15 @@ const CreateBookingPopup = (props) => {
                             </Col>
 
                             <Col span={24}>
-                              <div className="additional-edit">
-                                <a href="">
+                              <div className='additional-edit'>
+                                <a href=''>
                                   <EditOutlined /> Edit/Additional Data
                                 </a>
                               </div>
                             </Col>
                           </Row>
 
-                          <div className="delete-data">
+                          <div className='delete-data'>
                             <DeleteOutlined onClick={removePanel} />
                           </div>
                         </div>
@@ -432,7 +530,7 @@ const CreateBookingPopup = (props) => {
                     })}
                     <Row>
                       <Col span={24}>
-                        <div className="additional-add" onClick={addMore}>
+                        <div className='additional-add' onClick={addMore}>
                           <PlusOutlined /> Add additional guest
                         </div>
                       </Col>
@@ -442,11 +540,11 @@ const CreateBookingPopup = (props) => {
 
                 <Panel
                   icon={<PlusSquareOutlined />}
-                  header="Add Notes (Optional)"
-                  key="2"
+                  header='Add Notes (Optional)'
+                  key='2'
                 >
-                  <div className="add-notes">
-                    <Form.Item name="notes1">
+                  <div className='add-notes'>
+                    <Form.Item name='notes1'>
                       <Input.TextArea />
                     </Form.Item>
                   </div>
@@ -454,12 +552,12 @@ const CreateBookingPopup = (props) => {
 
                 <Panel
                   icon={<PlusSquareOutlined />}
-                  header="Add Internal Notes (Optional)"
-                  key="3"
-                  name="notes"
+                  header='Add Internal Notes (Optional)'
+                  key='3'
+                  name='notes'
                 >
-                  <div className="add-notes">
-                    <Form.Item name="notes2">
+                  <div className='add-notes'>
+                    <Form.Item name='notes2'>
                       <Input.TextArea />
                     </Form.Item>
                   </div>
@@ -469,7 +567,7 @@ const CreateBookingPopup = (props) => {
           </Col>
         </Row>
 
-        <div className="accommodation">
+        <div className='accommodation'>
           <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
             <Col span={8}>
               <Form.Item>
@@ -479,40 +577,41 @@ const CreateBookingPopup = (props) => {
 
             <Col span={16}>
               <Form.Item>
-                <div className="inline-form">
+                <div className='inline-form'>
                   <label>Average price per night</label>
                   <Input
-                    type="text"
-                    placeholder="0,00"
+                    type='number'
+                    placeholder='0,00'
                     onChange={(e) => setPrice(e.target.value)}
                   />
                   <label>X</label>
                   <Input
-                    type="text"
-                    placeholder="0 nights"
+                    type='number'
+                    placeholder='0 nights'
+                    name='totalAmount'
                     onChange={(e) => setNight(e.target.value)}
                   />
                   <label>=</label>
                   <Input
-                    type="text"
+                    type='number'
                     value={night * price}
                     onBlur={(e) => setAmt(e.target.value)}
                   />
                   <label>EUR</label>
                 </div>
 
-                <div className="inline-form">
+                <div className='inline-form'>
                   <label>Discount</label>
                   <Input
-                    type="text"
-                    placeholder="0,00"
+                    type='number'
+                    placeholder='0,00'
                     onChange={(e) => setDiscount(e.target.value)}
                   />
                   <label>X</label>
-                  <Input type="text" defaultValue="%" />
+                  <Input type='number' defaultValue='%' />
                   <label>=</label>
                   <Input
-                    type="text"
+                    type='number'
                     value={amt - amt * (discount / 100)}
                     onBlur={(e) => setAccomodation(e.target.value)}
                   />
@@ -524,15 +623,15 @@ const CreateBookingPopup = (props) => {
 
           <Row style={{ alignItems: 'center' }}>
             <Col span={24}>
-              <div className="per-night">
+              <div className='per-night'>
                 <label>Per Night</label>
                 <span>Accommondation cost:</span>
-                <span className="amnt">{accomodation} €</span>
+                <span className='amnt'>{accomodation} €</span>
               </div>
             </Col>
 
             <Col span={24}>
-              <div className="srvice-heading" onClick={addMoreService}>
+              <div className='srvice-heading' onClick={addMoreService}>
                 <PlusOutlined /> Add Services
               </div>
             </Col>
@@ -541,27 +640,28 @@ const CreateBookingPopup = (props) => {
               <Form.Item style={{ marginBottom: '0' }}>
                 <Collapse
                   defaultActiveKey={['1']}
-                  className="service-panel"
+                  className='service-panel'
                   accordion
                 >
                   <Panel
                     icon={<PlusSquareOutlined />}
-                    header="Services"
-                    key="1"
+                    header='Services'
+                    key='1'
                   >
-                    <div className="service-form">
+                    <div className='service-form'>
                       {servicePanel.map((ele, i) => {
                         return (
-                          <div className="inline-form">
-                            <div className="delete-data">
-                              <DeleteOutlined onClick={() => removeServicePanel(ele)} />
+                          <div className='inline-form'>
+                            <div className='delete-data'>
+                              <DeleteOutlined
+                                onClick={() => removeServicePanel(ele)}
+                              />
                             </div>
                             <Col span={4}>
-                              <Form.Item
-                                name={[ele, 'serviceName']}
-                              >
+                              <Form.Item name={[ele, 'serviceName']}>
                                 <Select
                                   style={{ width: '100px' }}
+                                  placeholder='Select Service'
                                   onSelect={(value, event) =>
                                     fun2(value, event)
                                   }
@@ -577,10 +677,9 @@ const CreateBookingPopup = (props) => {
                               </Form.Item>
                             </Col>
                             <Col span={4}>
-                              <Form.Item
-                                name={[ele, 'servicePrice']}
-                              >
+                              <Form.Item name={[ele, 'servicePrice']}>
                                 <Select
+                                  placeholder='Rate'
                                   onSelect={(value) => setServicePrice(value)}
                                 >
                                   <Select.Option
@@ -594,12 +693,10 @@ const CreateBookingPopup = (props) => {
 
                             <label>X</label>
                             <Col span={4}>
-                              <Form.Item
-                                name={[ele, 'serviceQunatity']}
-                              >
+                              <Form.Item name={[ele, 'serviceQunatity']}>
                                 <Input
-                                  type="text"
-                                  placeholder="1"
+                                  type='number'
+                                  placeholder='Quantity'
                                   onChange={(e) =>
                                     setServiceAmt(e.target.value)
                                   }
@@ -609,24 +706,21 @@ const CreateBookingPopup = (props) => {
 
                             <label>+</label>
                             <Col span={4}>
-                              <Form.Item
-                              >
-
-                            <Input
-                              type="text"
-                              placeholder="%"
-                              onChange={(e) => setServiceTax(e.target.value)}
-                            />
-                            </Form.Item>
+                              <Form.Item>
+                                <Input
+                                  type='number'
+                                  placeholder='%'
+                                  onChange={(e) =>
+                                    setServiceTax(e.target.value)
+                                  }
+                                />
+                              </Form.Item>
                             </Col>
 
                             <label>=</label>
                             <Col span={4}>
-                              <Form.Item
-                                name={[ele, 'serviceAmount']}
-                              >
+                              <Form.Item name={[ele, 'serviceAmount']}>
                                 <Input
-                                  type="text"
                                   value={serviceAmount}
                                   onBlur={calculateTotal}
                                 />
@@ -644,32 +738,36 @@ const CreateBookingPopup = (props) => {
             </Col>
 
             <Col span={24}>
-              <div className="amnt-total">
+              <div className='amnt-total'>
                 <h4>Total: {parseInt(total) + parseInt(accomodation)} €</h4>
               </div>
 
-              <div className="deposit">
+              <div className='deposit'>
                 <label>Deposit</label>
 
-                <div className="inline-form">
+                <div className='inline-form'>
                   <label>Accommodation deposit</label>
                   <Input
-                    type="text"
-                    placeholder="0,00"
+                    type='number'
+                    placeholder='0,00'
                     onChange={(e) => setDeposit(e.target.value)}
                   />
-                  <Input type="text" placeholder="%" />
+                  <Input type='number' placeholder='%' />
                 </div>
               </div>
             </Col>
 
             <Col span={24}>
-              <div className="outstanding">
+              <div className='outstanding'>
                 <label>
                   Accommodation deposit: <span>{deposit}€ (0,00 %)</span>
                 </label>
                 <label>
-                  Outstanding amount: <span>{parseInt(total) + parseInt(accomodation) - deposit}€ (0,00 %)</span>
+                  Outstanding amount:{' '}
+                  <span>
+                    {parseInt(total) + parseInt(accomodation) - deposit}€ (0,00
+                    %)
+                  </span>
                 </label>
               </div>
             </Col>
@@ -686,8 +784,10 @@ const CreateBookingPopup = (props) => {
         >
           <Col span={24}>
             <Form.Item style={{ textAlign: 'right' }}>
-              <Button style={{ marginRight: 10 }} onClick={props.close}>Cancel</Button>
-              <Button type="primary" htmlType="submit">
+              <Button style={{ marginRight: 10 }} onClick={props.close}>
+                Cancel
+              </Button>
+              <Button type='primary' htmlType='submit'>
                 Save Reservation
               </Button>
             </Form.Item>

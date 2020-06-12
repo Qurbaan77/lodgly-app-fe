@@ -61,7 +61,7 @@ const Booking = () => {
   const [guest, setGuest] = useState(false);
   const [booked, setBooked] = useState(true);
   const [bookingData, setBookingData] = useState([]);
-  const [guestData ,setGuestData] = useState([]);
+  const [guestData, setGuestData] = useState([]);
   const [currentBooking, setCurrentBooking] = useState({});
   const [currentGuest, setCurrentGuest] = useState([]);
   const [notifyType, setNotifyType] = useState();
@@ -70,6 +70,7 @@ const Booking = () => {
   const [night, setNight] = useState(0);
 
   const [editValues, setEditValues] = useState({});
+  const [editBookingValues, setEditBookingValues] = useState({});
 
   const show = () => {
     setVisible(true);
@@ -94,11 +95,11 @@ const Booking = () => {
     const response = await userInstance.post('/getBooking');
     const bookingdata = response.data.bookingData;
     const guestdata = response.data.guestData;
-    console.log('bookingdata', bookingdata)
-    console.log('guestdata', guestdata)
+    console.log('bookingdata', bookingdata);
+    console.log('guestdata', guestdata);
     if (response.data.code === 200) {
-    setBookingData([...bookingdata]);
-    setGuestData([...guestdata]);
+      setBookingData([...bookingdata]);
+      setGuestData([...guestdata]);
     }
   };
 
@@ -124,12 +125,22 @@ const Booking = () => {
   };
 
   const selectBooking = (values) => {
-    console.log('values', values)
+    console.log('values', values);
+    values.startDate = values.startDate.slice(0, 10);
+    values.endDate = values.endDate.slice(0, 10);
+    let d1 = new Date(values.startDate);
+    let d2 = new Date(values.endDate);
+    let diff = Math.abs(d1 - d2);
+    let day = Math.floor(diff / (24 * 60 * 60 * 1000));
+    values.night = day;
+    console.log(values);
     localStorage.setItem('bookingId', values.id);
     const arr = [];
-    guestData.filter(el => el.filter(ele => ele.bookingId == values.id).map(filterGuest => (
-      arr.push(filterGuest)
-    )))
+    guestData.filter((el) =>
+      el
+        .filter((ele) => ele.bookingId == values.id)
+        .map((filterGuest) => arr.push(filterGuest))
+    );
     setCurrentBooking(values);
     setCurrentGuest(arr);
     setBooked(false);
@@ -137,32 +148,33 @@ const Booking = () => {
 
   const editBooking = (values) => {
     setVisible(true);
+    setEditBookingValues(values);
     form.setFieldsValue({
       property: values.property,
     });
   };
 
   const openGuest = () => {
-    setEditValues('')
-    setVisibleGuest(true)
-  }
+    setEditValues('');
+    setVisibleGuest(true);
+  };
 
   const editGuest = (values) => {
     setBooked(true);
-    setEditValues(values)
+    setEditValues(values);
     setVisibleGuest(true);
-  }
+  };
 
   useEffect(() => {
-      getData();
-  },[]);
+    getData();
+  }, []);
 
   const menu = (
     <Menu>
-      <Menu.Item key="1">Booked</Menu.Item>
-      <Menu.Item key="2">Open</Menu.Item>
-      <Menu.Item key="3">Set as Tentative</Menu.Item>
-      <Menu.Item key="4">Decline</Menu.Item>
+      <Menu.Item key='1'>Booked</Menu.Item>
+      <Menu.Item key='2'>Open</Menu.Item>
+      <Menu.Item key='3'>Set as Tentative</Menu.Item>
+      <Menu.Item key='4'>Decline</Menu.Item>
     </Menu>
   );
 
@@ -177,21 +189,21 @@ const Booking = () => {
 
   return (
     <Wrapper>
-      <div className="booking">
-        <div className="container">
+      <div className='booking'>
+        <div className='container'>
           <Row>
             <Col span={10}>
-              <div className="booking-list-conatiner">
-                <div className="booking-filter-box">
+              <div className='booking-list-conatiner'>
+                <div className='booking-filter-box'>
                   <label>Filters:</label>
-                  <div className="filter-item">
-                    <Tag color="success">item 1</Tag>
-                    <Tag color="processing">item 2</Tag>
-                    <Tag color="error">item 3</Tag>
-                    <Tag color="default">booked</Tag>
+                  <div className='filter-item'>
+                    <Tag color='success'>item 1</Tag>
+                    <Tag color='processing'>item 2</Tag>
+                    <Tag color='error'>item 3</Tag>
+                    <Tag color='default'>booked</Tag>
                   </div>
 
-                  <div className="filter-icon">
+                  <div className='filter-icon'>
                     <FilterOutlined />
                   </div>
                 </div>
@@ -199,10 +211,10 @@ const Booking = () => {
                 {bookingData.map((el, i) => {
                   return (
                     <div
-                      className="booking-list"
+                      className='booking-list'
                       onClick={() => selectBooking(el)}
                     >
-                      <div className="detail">
+                      <div className='detail'>
                         <h3>{el.guest}</h3>
                         <p>Rental Type - Property Name_1</p>
                         <ul>
@@ -215,15 +227,15 @@ const Booking = () => {
                           </li>
                         </ul>
                       </div>
-                      <div className="detail-info">
+                      <div className='detail-info'>
                         <span>8:42 PM</span>
-                        <span className="green-label">${el.totalAmount}</span>
+                        <span className='green-label'>${el.totalAmount}</span>
                       </div>
                     </div>
                   );
                 })}
 
-                <div className="bookin-footer">
+                <div className='bookin-footer'>
                   <ul>
                     <li>
                       <FormOutlined />
@@ -237,7 +249,7 @@ const Booking = () => {
                   </ul>
 
                   <Button
-                    type="primary"
+                    type='primary'
                     icon={<PlusOutlined />}
                     onClick={() => setVisible(true)}
                   >
@@ -248,21 +260,23 @@ const Booking = () => {
             </Col>
 
             <Col span={14}>
-              <div className="booking-details" hidden={booked}>
-                <h3>{currentGuest.length > 0 ? currentGuest[0].fullname : null}</h3>
+              <div className='booking-details' hidden={booked}>
+                <h3>
+                  {currentGuest.length > 0 ? currentGuest[0].fullname : null}
+                </h3>
                 <ul>
-                  <li>5 Night - 1 room,</li>
-                  <li>2 Guests,</li>
+                  <li>{currentBooking.night} Night - 1 room,</li>
+                  <li>{currentBooking.noOfGuest} Guests,</li>
                   <li>ID: {currentBooking.id}</li>
                 </ul>
 
-                <div className="booking-box">
-                  <div className="booking-head">
-                    <div className="box-heading">
+                <div className='booking-box'>
+                  <div className='booking-head'>
+                    <div className='box-heading'>
                       <h3>Booking</h3>
                     </div>
 
-                    <div className="box-editing">
+                    <div className='box-editing'>
                       <FormOutlined
                         onClick={() => editBooking(currentBooking)}
                       />
@@ -274,92 +288,90 @@ const Booking = () => {
                     </div>
                   </div>
 
-                  <div className="booking-item">
-                    <div className="prorety-box">
+                  <div className='booking-item'>
+                    <div className='prorety-box'>
                       <span>Property</span>
                       <p>{currentBooking.property}</p>
                     </div>
 
-                    <div className="prorety-box">
+                    <div className='prorety-box'>
                       <span>Unit</span>
                       <p>{currentBooking.unit}</p>
                     </div>
                   </div>
 
-                  <div className="booking-item-one">
-                    <div className="prorety-box">
+                  <div className='booking-item-one'>
+                    <div className='prorety-box'>
                       <span>channel, commission(%)</span>
                       <p>AirBnB (10%)</p>
                     </div>
                   </div>
 
-                  <div className="booking-item">
-                    <div className="prorety-box">
+                  <div className='booking-item'>
+                    <div className='prorety-box'>
                       <span>Guests</span>
                       <p>{currentBooking.adult} Adults</p>
                       <p>{currentBooking.children1} Children (0-12 yrs)</p>
                     </div>
 
-                    <div className="prorety-box">
+                    <div className='prorety-box'>
                       <span>Date</span>
-                      <p>1 Aug'19 - 6 Aug'19 </p>
-                      <p>5 Nights</p>
+                      <p>
+                        {currentBooking.startDate}/{currentBooking.endDate}
+                      </p>
+                      <p>{currentBooking.night} Nights</p>
                     </div>
                   </div>
                 </div>
 
                 {currentGuest.map((el, i) => {
-                  return(
-                    <div className="booking-box">
-                    <div className="booking-head">
-                      <div className="box-heading">
-                        <h3>Guests</h3>
+                  return (
+                    <div className='booking-box'>
+                      <div className='booking-head'>
+                        <div className='box-heading'>
+                          <h3>Guests</h3>
+                        </div>
+
+                        <div className='box-editing'>
+                          <FormOutlined onClick={() => editGuest(el)} />
+                        </div>
                       </div>
-  
-                      <div className="box-editing">
-                        <FormOutlined onClick={() => editGuest(el)}/>
+
+                      <div className='booking-item'>
+                        <div className='prorety-box'>
+                          <span>Full Name</span>
+                          <p>{el.fullname}</p>
+                        </div>
+
+                        <div className='prorety-box'>
+                          <span>Country</span>
+                          <p>{el.country} </p>
+                        </div>
+                      </div>
+
+                      <div className='booking-item'>
+                        <div className='prorety-box'>
+                          <span>Email</span>
+                          <p>{el.email}</p>
+                        </div>
+
+                        <div className='prorety-box'>
+                          <span>Phone</span>
+                          <p>{el.phone}</p>
+                        </div>
+                      </div>
+
+                      <div className='booking-item-one'>
+                        <div className='prorety-box'>
+                          <span>Notes</span>
+                          <p>{el.notes}</p>
+                        </div>
                       </div>
                     </div>
-  
-                    <div className="booking-item">
-                      <div className="prorety-box">
-                        <span>Full Name</span>
-                        <p>{el.fullname}</p>
-                      </div>
-  
-                      <div className="prorety-box">
-                        <span>Country</span>
-                        <p>{el.country} </p>
-                      </div>
-                    </div>
-  
-                    <div className="booking-item">
-                      <div className="prorety-box">
-                        <span>Email</span>
-                        <p>{el.email}</p>
-                      </div>
-  
-                      <div className="prorety-box">
-                        <span>Phone</span>
-                        <p>{el.phone}</p>
-                      </div>
-                    </div>
-  
-                    <div className="booking-item-one">
-                      <div className="prorety-box">
-                        <span>Notes</span>
-                        <p>{el.notes}</p>
-                      </div>
-                    </div>
-                  </div>
-  
-                  )
+                  );
                 })}
 
-                <Link
-                  className="additionl-link"
-                  onClick={openGuest}
-                >
+                <Link className='additionl-link' onClick={openGuest}>
                   <PlusOutlined />
                   Add Additional Guest
                 </Link>
@@ -382,7 +394,9 @@ const Booking = () => {
         handleCancel={handleCancel}
         handleOk={handleOk}
         close={closeGuest}
+        editBookingValues={editBookingValues}
         getData={getData}
+        currentBooking={currentBooking}
       ></CreateBookingPopup>
     </Wrapper>
   );

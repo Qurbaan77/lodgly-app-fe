@@ -70,24 +70,27 @@ const UnitType = () => {
     const response = await userInstance.post('/deleteUnitType', values);
     if (response.data.code === 200) {
       setVisible(false);
+      getData();
+      console.log('ok');
+      console.log(visible);
     }
   };
 
-  useEffect(() => {
-    async function getData() {
-      const parsed = queryString.parse(window.location.search);
-      const values = {
-        propertyId: localStorage.getItem('propertyId'),
-      };
-      setCurrProperty(parsed.propertyNo);
-      const response = await userInstance.post('/getUnittype', values);
-      console.log(response.data);
-      const data = response.data.unittypeData;
-      if (response.data.code === 200) {
-        setUnittypeData(data);
-      }
+  async function getData() {
+    const parsed = queryString.parse(window.location.search);
+    const values = {
+      propertyId: localStorage.getItem('propertyId'),
+    };
+    setCurrProperty(parsed.propertyNo);
+    const response = await userInstance.post('/getUnittype', values);
+    console.log(response.data);
+    const data = response.data.unittypeData;
+    if (response.data.code === 200) {
+      setUnittypeData(data);
     }
+  }
 
+  useEffect(() => {
     getData();
   }, []);
 

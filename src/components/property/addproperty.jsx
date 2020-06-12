@@ -116,19 +116,20 @@ const AddProperty = () => {
   };
 
   const onFinish = async (values) => {
-    values.propertyNo = No;
-    const response = await userInstance.post('/addProperty', values);
-    const statusCode = response.data.code;
-    const msg = response.data.msg;
-    if (statusCode == 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
-      history.push('/propertylist');
-    } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
-    }
-    form.resetFields();
+    console.log('Values', values)
+    // values.propertyNo = No;
+    // const response = await userInstance.post('/addProperty', values);
+    // const statusCode = response.data.code;
+    // const msg = response.data.msg;
+    // if (statusCode == 200) {
+    //   setNotifyType('success');
+    //   setNotifyMsg(msg);
+    //   history.push('/propertylist');
+    // } else {
+    //   setNotifyType('error');
+    //   setNotifyMsg(msg);
+    // }
+    // form.resetFields();
   };
 
   const onChange = async (checkedValues) => {
@@ -186,6 +187,10 @@ const AddProperty = () => {
   };
 
   const handleAddressSelect = (address) => {
+    console.log('handleAddressSelect', address)
+    form.setFieldsValue({
+      address: address
+    })
     geocodeByAddress(address)
       .then((results) => getLatLng(results[0]))
       .then((latLng) => console.log('Success', latLng))
@@ -239,7 +244,7 @@ const AddProperty = () => {
                             loading,
                           }) => (
                             <div>
-                              <input
+                              <Input
                                 {...getInputProps({
                                   placeholder: 'Search Places ...',
                                   className: 'location-search-input',
