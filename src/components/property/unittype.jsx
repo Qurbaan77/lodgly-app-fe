@@ -59,7 +59,6 @@ const UnitType = () => {
 
   const edit = (unittypeId) => {
     localStorage.setItem('unittypeId', unittypeId);
-    // window.location.href = '/addunittype?uniitypeId=' + unittypeId;
     history.push('/addunittype');
   };
 
@@ -104,7 +103,7 @@ const UnitType = () => {
 
           <Button type='primary' icon={<PlusOutlined />}>
             <Link
-              to={'/addunittype?propertyNo=' + currProperty}
+              to={'/addunittype'}
               onClick={() => localStorage.removeItem('unittypeId')}
             >
               Add Unit Type

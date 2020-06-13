@@ -113,9 +113,8 @@ const Property = () => {
     if (response.data.code === 200) {
       const parsed = queryString.parse(window.location.search);
       const curProperty = data.filter(
-        (el) => el.propertyNo == parsed.propertyNo,
+        (el) => el.id == localStorage.getItem('propertyId'),
       );
-      console.log(curProperty);
       setCurrentProperty(curProperty);
       setPetPolicy(curProperty[0].petPolicy);
       setFeature1(curProperty[0].feature1);

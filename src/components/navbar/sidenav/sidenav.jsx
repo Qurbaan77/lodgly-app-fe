@@ -50,15 +50,22 @@ const Sidenav = (props) => {
   };
 
   const getData = async () => {
+    const pathname = window.location.pathname;
+    const Id = localStorage.getItem('propertyId');
     const response = await userInstance.post('/fetchProperty');
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
       setPropertyData(data);
+      if (Id) {
+        const curProperty = data.filter(
+          (el) => el.id == Id,
+        );
+        setCurrProperty(curProperty[0].propertyNo);
+      }
     }
   };
 
-  useEffect(() => {
-    getData();
+  const changeMenu = () => {
     const pathname = window.location.pathname;
     const parsed = queryString.parse(window.location.search);
     if (
@@ -67,11 +74,13 @@ const Sidenav = (props) => {
       pathname == '/addunittype' ||
       pathname == '/channelmanager' ||
       pathname == '/services'
-    ) {
-      console.log(menu);
+    )
       setMenu(!menu);
-      setCurrProperty(parsed.propertyNo);
-    }
+  };
+
+  useEffect(() => {
+    getData();
+    changeMenu();
   }, []);
 
   return (
@@ -111,7 +120,7 @@ const Sidenav = (props) => {
             return (
               <Menu.Item key={el.propertyNo}>
                 <Link
-                  to={'/property?propertyNo=' + el.propertyNo}
+                  to={'/property'}
                   onClick={() => localStorage.setItem('propertyId', el.id)}
                 >
                   Property No {el.propertyNo}{' '}
@@ -189,11 +198,11 @@ const Sidenav = (props) => {
         </span>
         <Menu.Item key="1">
           <UserOutlined />
-          <Link to={'/property?propertyNo=' + currProperty}>Details</Link>
+          <Link to={'/property'}>Details</Link>
         </Menu.Item>
         <Menu.Item>
           <VideoCameraOutlined />
-          <Link to={'/unittype?propertyNo=' + currProperty}>Unit Type</Link>
+          <Link to={'/unittype'}>Unit Type</Link>
         </Menu.Item>
         <Menu.Item>
           <UserOutlined />
@@ -206,7 +215,7 @@ const Sidenav = (props) => {
 
         <Menu.Item>
           <ApartmentOutlined />
-          <Link to={'/services?propertyNo=' + currProperty}>Services</Link>
+          <Link to={'/services'}>Services</Link>
         </Menu.Item>
       </Menu>
     </Sider>

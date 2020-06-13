@@ -48,12 +48,15 @@ const AddUnitType = () => {
   const [unittypeNo, setUnittypeNo] = useState(0);
   const [unitData, setUnitData] = useState([]);
   const [currentUnittype, setCurrentUnittype] = useState([]);
+  const [curUnit, setCurUnit] = useState(0);
 
   const parsed = queryString.parse(window.location.search);
   const history = useHistory();
 
-  const show = () => {
+  const show = (unitId) => {
+    console.log('unitId', unitId)
     setVisible(true);
+    setCurUnit(unitId);
   };
 
   const handleOk = () => {
@@ -69,8 +72,7 @@ const AddUnitType = () => {
     values.unitTypeName = 'Unit Type ' + unittypeNo;
     const response = await userInstance.post('/addUnitType', values);
     if (response.data.code === 200) {
-      // window.location.href = '/unittype?propertyNo=' + parsed.propertyNo;
-      history.push('/unittype?propertyNo=' + parsed.propertyNo);
+      history.push('/unittype');
     }
   };
 
@@ -117,6 +119,17 @@ const AddUnitType = () => {
         arr.push(filterUnit)
       ))
       setUnitData(arr);
+    }
+  };
+
+  const remove = async () => {
+    const values = {
+      id: curUnit,
+    };
+    const response = await userInstance.post('/deleteUnit', values);
+    if (response.data.code === 200) {
+      setVisible(false);
+      getUnitData();
     }
   };
 
@@ -350,7 +363,7 @@ const AddUnitType = () => {
                       </div>
                       <div className='group-action'>
                         <FormOutlined />
-                        <DeleteOutlined onClick={show} />
+                        <DeleteOutlined onClick={() => show(el.id)} />
                       </div>
                     </div>
                   );
@@ -365,7 +378,10 @@ const AddUnitType = () => {
                 onCancel={handleCancel}
                 wrapClassName='delete-modal'
               >
-                <DeletePopup />
+                <DeletePopup
+          dataObject={() => remove()}
+          cancel={() => handleCancel()}
+        />
               </Modal>
             </div>
           </div>
