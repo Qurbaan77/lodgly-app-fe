@@ -117,19 +117,19 @@ const AddProperty = () => {
 
   const onFinish = async (values) => {
     console.log('Values', values)
-    // values.propertyNo = No;
-    // const response = await userInstance.post('/addProperty', values);
-    // const statusCode = response.data.code;
-    // const msg = response.data.msg;
-    // if (statusCode == 200) {
-    //   setNotifyType('success');
-    //   setNotifyMsg(msg);
-    //   history.push('/propertylist');
-    // } else {
-    //   setNotifyType('error');
-    //   setNotifyMsg(msg);
-    // }
-    // form.resetFields();
+    values.propertyNo = No;
+    const response = await userInstance.post('/addProperty', values);
+    const statusCode = response.data.code;
+    const msg = response.data.msg;
+    if (statusCode == 200) {
+      setNotifyType('success');
+      setNotifyMsg(msg);
+      history.push('/propertylist');
+    } else {
+      setNotifyType('error');
+      setNotifyMsg(msg);
+    }
+    form.resetFields();
   };
 
   const onChange = async (checkedValues) => {
