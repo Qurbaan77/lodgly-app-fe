@@ -53,62 +53,62 @@ const App = () => {
             <Header />
             <main>
               <div className="main_content">
-                <Route exact path="/" render={() => <Login />} />
-                <Route exact path="/register" render={() => <Register />} />
-                <PrivateRoute exact path="/sidenav" render={() => <Sidenav />} />
+                <Route exact path="/" component={() => <Login />} />
+                <Route exact path="/register" component={() => <Register />} />
+                <PrivateRoute exact path="/sidenav" component={() => <Sidenav />} />
                 <PrivateRoute
                   exact
                   path="/addproperty"
-                  render={() => <AddProperty />}
+                  component={() => <AddProperty />}
                 />
                 <PrivateRoute
                   exact
                   path="/propertylist"
                   component={() => <PropertyList />}
                 />
-                <PrivateRoute exact path="/unittype" render={() => <UnitType />} />
-                <PrivateRoute exact path="/groups" render={() => <Groups />} />
+                <PrivateRoute exact path="/unittype" component={() => <UnitType />} />
+                <PrivateRoute exact path="/groups" component={() => <Groups />} />
                 <PrivateRoute
                   exact
                   path="/cleaninggroup"
-                  render={() => <CleaningGroup />}
+                  component={() => <CleaningGroup />}
                 />
                 <PrivateRoute
                   exact
                   path="/channelmanager"
-                  render={() => <ChannelManager />}
+                  component={() => <ChannelManager />}
                 />
-                <Route exact path="/admin" render={() => <AdminLogin />} />
+                <Route exact path="/admin" component={() => <AdminLogin />} />
                 <Route
                   exact
                   path="/adminsetting"
-                  render={() => <AdminSetting />}
+                  component={() => <AdminSetting />}
                 />
                 <PrivateRoute
                   exact
                   path="/createbookingpopup"
-                  render={() => <CreateBookingPopup />}
+                  component={() => <CreateBookingPopup />}
                 />
-                <PrivateRoute exact path="/guestpopup" render={() => <GuestPopup />} />
-                <PrivateRoute exact path="/booking" render={() => <Booking />} />
-                <PrivateRoute exact path="/filter" render={() => <BookingFilter />} />
+                <PrivateRoute exact path="/guestpopup" component={() => <GuestPopup />} />
+                <PrivateRoute exact path="/booking" component={() => <Booking />} />
+                <PrivateRoute exact path="/filter" component={() => <BookingFilter />} />
                 <PrivateRoute
                   exact
                   path="/deletepopup"
-                  render={() => <DeletePopup />}
+                  component={() => <DeletePopup />}
                 />
-                <PrivateRoute exact path="/property" render={() => <Property />} />
+                <PrivateRoute exact path="/property" component={() => <Property />} />
                 <PrivateRoute
                   exact
                   path="/addunittype"
-                  render={() => <AddUnitType />}
+                  component={() => <AddUnitType />}
                 />
-                <Route exact path="/forget" render={() => <Forget />} />
-                <Route exact path="/reset" render={() => <Reset />} />
-                <Route exact path="/thankyou" render={() => <Thankyou />} />
-                <Route exact path="/services" render={() => <Services />} />
-                <PrivateRoute exact path="/calendar" render={() => <Calendar />} />
-                <PrivateRoute exact path="/popup" render={() => <Popup />} />
+                <Route exact path="/forget" component={() => <Forget />} />
+                <Route exact path="/reset" component={() => <Reset />} />
+                <Route exact path="/thankyou" component={() => <Thankyou />} />
+                <Route exact path="/services" component={() => <Services />} />
+                <PrivateRoute exact path="/calendar" component={() => <Calendar />} />
+                <PrivateRoute exact path="/popup" component={() => <Popup />} />
               </div>
             </main>
             <Footer />

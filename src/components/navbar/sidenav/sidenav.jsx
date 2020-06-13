@@ -46,7 +46,12 @@ const Sidenav = (props) => {
 
   const exit = async () => {
     const response = await userInstance.post('/logout');
-    window.location.href = '/';
+    console.log('response', response)
+    if(response.status === 200) {
+      console.log('isugzbkh')
+      localStorage.clear();
+      history.push('/');
+    }
   };
 
   const getData = async () => {
