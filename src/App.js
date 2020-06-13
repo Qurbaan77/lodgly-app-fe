@@ -55,8 +55,8 @@ const App = () => {
               <div className="main_content">
                 <Route exact path="/" render={() => <Login />} />
                 <Route exact path="/register" render={() => <Register />} />
-                <Route exact path="/sidenav" render={() => <Sidenav />} />
-                <Route
+                <PrivateRoute exact path="/sidenav" render={() => <Sidenav />} />
+                <PrivateRoute
                   exact
                   path="/addproperty"
                   render={() => <AddProperty />}
@@ -66,14 +66,14 @@ const App = () => {
                   path="/propertylist"
                   component={() => <PropertyList />}
                 />
-                <Route exact path="/unittype" render={() => <UnitType />} />
-                <Route exact path="/groups" render={() => <Groups />} />
-                <Route
+                <PrivateRoute exact path="/unittype" render={() => <UnitType />} />
+                <PrivateRoute exact path="/groups" render={() => <Groups />} />
+                <PrivateRoute
                   exact
                   path="/cleaninggroup"
                   render={() => <CleaningGroup />}
                 />
-                <Route
+                <PrivateRoute
                   exact
                   path="/channelmanager"
                   render={() => <ChannelManager />}
@@ -84,21 +84,21 @@ const App = () => {
                   path="/adminsetting"
                   render={() => <AdminSetting />}
                 />
-                <Route
+                <PrivateRoute
                   exact
                   path="/createbookingpopup"
                   render={() => <CreateBookingPopup />}
                 />
-                <Route exact path="/guestpopup" render={() => <GuestPopup />} />
-                <Route exact path="/booking" render={() => <Booking />} />
-                <Route exact path="/filter" render={() => <BookingFilter />} />
-                <Route
+                <PrivateRoute exact path="/guestpopup" render={() => <GuestPopup />} />
+                <PrivateRoute exact path="/booking" render={() => <Booking />} />
+                <PrivateRoute exact path="/filter" render={() => <BookingFilter />} />
+                <PrivateRoute
                   exact
                   path="/deletepopup"
                   render={() => <DeletePopup />}
                 />
-                <Route exact path="/property" render={() => <Property />} />
-                <Route
+                <PrivateRoute exact path="/property" render={() => <Property />} />
+                <PrivateRoute
                   exact
                   path="/addunittype"
                   render={() => <AddUnitType />}
@@ -107,8 +107,8 @@ const App = () => {
                 <Route exact path="/reset" render={() => <Reset />} />
                 <Route exact path="/thankyou" render={() => <Thankyou />} />
                 <Route exact path="/services" render={() => <Services />} />
-                <Route exact path="/calendar" render={() => <Calendar />} />
-                <Route exact path="/popup" render={() => <Popup />} />
+                <PrivateRoute exact path="/calendar" render={() => <Calendar />} />
+                <PrivateRoute exact path="/popup" render={() => <Popup />} />
               </div>
             </main>
             <Footer />
