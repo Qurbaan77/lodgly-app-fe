@@ -52,7 +52,7 @@ const Services = () => {
       width: 400,
     },
     {
-      title: 'Standar Quanity',
+      title: 'Standard Quanity',
       dataIndex: 'quantity',
     },
   ];
@@ -79,7 +79,7 @@ const Services = () => {
     const response = await userInstance.post('/addService', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
-    if (statusCode == 200) {
+    if (statusCode === 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
       getData();
@@ -107,16 +107,16 @@ const Services = () => {
 
   return (
     <Wrapper>
-      <div className="property-listing">
-        <div className="page-header">
+      <div className='property-listing'>
+        <div className='page-header'>
           <h1>Services</h1>
 
-          <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-            <Link to="/services">Add Services</Link>
+          <Button type='primary' icon={<PlusOutlined />} onClick={show}>
+            <Link to='/services'>Add Services</Link>
           </Button>
         </div>
 
-        <div className="services-list">
+        <div className='services-list'>
           <Table
             columns={columns}
             dataSource={serviceData}
@@ -127,38 +127,53 @@ const Services = () => {
       </div>
 
       <Modal
-        title="Add Services"
+        title='Add Services'
         visible={visible}
         onOk={handleOk}
         onCancel={handleCancel}
-        wrapClassName="group-modal"
+        wrapClassName='group-modal'
       >
         <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
-        <Form form={form} name="basic" onFinish={onFinish}>
+        <Form form={form} name='basic' onFinish={onFinish}>
           <Form.Item
-            label="Service Name"
-            name="servicename"
+            label='Service Name'
+            name='servicename'
             style={{ padding: '0px 10px' }}
+            rules={[
+              {
+                required: true,
+                message: 'please enter service name',
+              },
+            ]}
           >
             <Input />
           </Form.Item>
 
           <Form.Item
-            label="Service Price"
-            name="serviceprice"
+            label='Service Price'
+            name='serviceprice'
             style={{ padding: '0px 10px' }}
+            rules={[
+              {
+                required: true,
+                message: 'Please enter price',
+              },
+            ]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            label="Standard Quantity"
-            name="servicequantity"
+            label='Standard Quantity'
+            name='servicequantity'
             style={{ padding: '0px 10px' }}
           >
             <Input />
           </Form.Item>
           <Form.Item style={{ padding: '0px 10px' }}>
-            <Button htmlType="submit">Save</Button>
+            <Button style={{ marginRight: 10 }} onClick={handleCancel}>
+              Cancel
+            </Button>
+            <Button htmlType='submit'>Save</Button>
           </Form.Item>
         </Form>
       </Modal>

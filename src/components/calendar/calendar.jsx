@@ -34,12 +34,41 @@ const Calendar = () => {
   const [visible, setVisible] = useState(false);
 
   const rows = {};
-  for (let i = 0; i < unittypeData.length; i++) {
-    const id = unittypeData[i].id.toString();
-    rows[id] = {
-      id,
-      label: unittypeData[i].unitTypeName,
+  for (let i = 0; i < propertyData.length; i++) {
+    const pt_id = propertyData[i].id.toString();
+    rows[pt_id] = {
+      id: pt_id,
+      label: propertyData[i].propertyName,
+      progress: 50,
+      expanded: false,
     };
+    for (let j = 0; j < unittypeData.length; j++) {
+      const utt_id = unittypeData[j].id.toString();
+      if (unittypeData[j].propertyId == propertyData[i].id) {
+        rows[utt_id] = {
+          id: utt_id,
+          label: unittypeData[j].unitTypeName,
+          progress: 50,
+          parentId: propertyData[i].id.toString(),
+          expanded: false,
+        };
+      }
+      for (let k = 0; k < unitData.length; k++) {
+        console.log('i', i)
+        console.log('j', j)
+        console.log('k', k)
+        const ut_id = unitData[k].id.toString();
+        if (unitData[k].unittypeId == unittypeData[j].id) {
+          rows[ut_id] = {
+            id: ut_id,
+            label: unitData[k].unitName,
+            progress: 50,
+            parentId: unittypeData[j].id.toString(),
+            expanded: false,
+          };
+        }
+      }
+    }
   }
 
   const columns = {
@@ -95,7 +124,7 @@ const Calendar = () => {
   const getProperty = async () => {
     const response = await userInstance.post('/fetchProperty');
     const data = response.data.propertiesData;
-    console.log('jshfuy', data);
+    console.log('Property', data);
     if (response.data.code === 200) {
       setPropertyData(data);
     }
@@ -113,27 +142,20 @@ const Calendar = () => {
 
   const getCalendarData = async () => {
     const response = await userInstance.post('/getReservationCalendarData');
-    console.log('Response', response);
     const unittypeData = response.data.unittypeData;
     const unitData = response.data.unitData;
+    console.log('unittypeData', unittypeData);
+    console.log('unitData', unitData);
     if (response.data.code === 200) {
       setUnittypeData(unittypeData);
       setUnitData(unitData);
-      // unittypeData.map((el,i) => {
-      //   console.log('elemengt', el.unitTypeName)
-      //   const id = el.id.toString();
-      //   rows[id] = {
-      //     id,
-      //     label: el.unitTypeName,
-      //   };
-      //})
     }
   };
 
   useEffect(() => {
-    getCalendarData();
     getData();
     getProperty();
+    getCalendarData();
   }, []);
 
   useEffect(() => {
@@ -166,7 +188,6 @@ const Calendar = () => {
       }),
     );
   }
-  
 
   return (
     <Wrapper>

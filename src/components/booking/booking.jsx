@@ -68,6 +68,7 @@ const Booking = () => {
   const [notifyMsg, setNotifyMsg] = useState();
   const [price, setPrice] = useState(0);
   const [night, setNight] = useState(0);
+  const [guestName, setGuestName] = useState([]);
 
   const [editValues, setEditValues] = useState({});
   const [editBookingValues, setEditBookingValues] = useState({});
@@ -186,6 +187,13 @@ const Booking = () => {
     setVisible(false);
     setVisibleGuest(false);
   };
+  const guestNameData = [];
+  guestData.map((el) =>
+    el.map((el) => {
+      guestNameData.push(el.fullname);
+    })
+  );
+  console.log(guestNameData);
 
   return (
     <Wrapper>
@@ -215,7 +223,7 @@ const Booking = () => {
                       onClick={() => selectBooking(el)}
                     >
                       <div className='detail'>
-                        <h3>{el.guest}</h3>
+                        <h3>{guestNameData[i]}</h3>
                         <p>Rental Type - Property Name_1</p>
                         <ul>
                           <li>Aug 5 2019</li>

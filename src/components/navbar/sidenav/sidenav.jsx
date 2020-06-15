@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import { Link } from 'react-router-dom';
 import './sidenav.css';
@@ -22,13 +23,14 @@ import queryString from 'query-string';
 
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
-const history = createBrowserHistory();
+
 
 const Sidenav = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   const [propertyData, setPropertyData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
   const [menu, setMenu] = useState(false);
+  const history = useHistory();
 
   const toggle = () => {
     setCollapsed(!collapsed);
@@ -46,9 +48,7 @@ const Sidenav = (props) => {
 
   const exit = async () => {
     const response = await userInstance.post('/logout');
-    console.log('response', response)
     if(response.status === 200) {
-      console.log('isugzbkh')
       localStorage.clear();
       history.push('/');
     }

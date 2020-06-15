@@ -38,6 +38,7 @@ import { Link } from 'react-router-dom';
 import { Avatar } from 'antd';
 import { HelpBlock } from 'react-bootstrap';
 import { userInstance } from '../../axios/axiosconfig';
+import Toaster from '../toaster/toaster';
 
 const { Panel } = Collapse;
 
@@ -83,6 +84,8 @@ const CreateBookingPopup = (props) => {
   const [currentUnit, setCurrentUnit] = useState({});
   const [unitTypeData, setUnitTypeData] = useState([]);
   const [currentUnittype, setCurrentUnittype] = useState({});
+  const [notifyType, setNotifyType] = useState();
+  const [notifyMsg, setNotifyMsg] = useState();
 
   const [propertyData, setPropertyData] = useState([]);
   const history = useHistory();
@@ -93,6 +96,9 @@ const CreateBookingPopup = (props) => {
 
   const handleOk = () => {
     setVisible(false);
+  };
+  const close = () => {
+    setNotifyType('');
   };
 
   const handleCancel = () => {
@@ -116,6 +122,15 @@ const CreateBookingPopup = (props) => {
   };
 
   const removeServicePanel = (value) => {
+    if (serviceAmount !== 0) {
+      const sum = parseInt(total) - parseInt(serviceAmount);
+      setServiceAmount(0);
+      setServicePrice(0);
+      setServiceTax(0);
+      setServiceAmt(0);
+      setTotal(sum);
+    }
+    console.log(value);
     const oldarray = [...servicePanel];
     oldarray.pop();
     setServicePanel([...oldarray]);
@@ -137,9 +152,13 @@ const CreateBookingPopup = (props) => {
     });
     values.serviceData = serviceData;
     const response = await userInstance.post('/addReservation', values);
+    const msg = response.data.msg;
     if (response.data.code === 200) {
       props.getData();
-        props.close();
+      props.close();
+    } else {
+      setNotifyType('error');
+      setNotifyMsg(msg);
     }
     form.resetFields();
   };
@@ -224,6 +243,7 @@ const CreateBookingPopup = (props) => {
       onCancel={props.handleCancel}
       wrapClassName='create-booking-modal'
     >
+      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <Form form={form} name='basic' onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={12}>
@@ -232,6 +252,12 @@ const CreateBookingPopup = (props) => {
               name='groupname'
               style={{ paddingRight: 20 }}
               onChange={fun4}
+              rules={[
+                {
+                  required: true,
+                  message: 'Date is required',
+                },
+              ]}
             >
               <RangePicker onChange={fun4} />
             </Form.Item>
@@ -255,6 +281,12 @@ const CreateBookingPopup = (props) => {
               label='Property'
               name='property'
               style={{ paddingRight: 20 }}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please Select Property',
+                },
+              ]}
             >
               <Select onSelect={(value, event) => fun1(value, event)}>
                 {propertyData.map((el, i) => {
@@ -269,7 +301,17 @@ const CreateBookingPopup = (props) => {
           </Col>
 
           <Col span={8}>
-            <Form.Item label='Unit' name='unit' style={{ paddingRight: 20 }}>
+            <Form.Item
+              label='Unit'
+              name='unit'
+              style={{ paddingRight: 20 }}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please Select Unit Type',
+                },
+              ]}
+            >
               <Select onSelect={(value) => fun3(value)}>
                 {unitData.map((el, i) => {
                   return (
@@ -285,6 +327,12 @@ const CreateBookingPopup = (props) => {
               className='comision'
               label='Channel, Commission(%)'
               name='channel'
+              rules={[
+                {
+                  required: true,
+                  message: 'Please Select Channel',
+                },
+              ]}
             >
               <Select style={{ width: '70%', display: 'inline-block' }}>
                 <Select.Option value='Airbnb'>Airbnb</Select.Option>
@@ -309,6 +357,12 @@ const CreateBookingPopup = (props) => {
               label='Adults'
               name='adults'
               style={{ paddingRight: 20 }}
+              rules={[
+                {
+                  required: true,
+                  message: 'Please Select number of adults',
+                },
+              ]}
             >
               <Select>
                 <Select.Option value='1'>1</Select.Option>
@@ -408,6 +462,7 @@ const CreateBookingPopup = (props) => {
                               >
                                 <Input
                                   onChange={(e) => setPhone(e.target.value)}
+                                  type='number'
                                 />
                               </Form.Item>
                             </Col>
@@ -479,19 +534,19 @@ const CreateBookingPopup = (props) => {
                 <div className='inline-form'>
                   <label>Average price per night</label>
                   <Input
-                    type='text'
+                    type='number'
                     placeholder='0,00'
                     onChange={(e) => setPrice(e.target.value)}
                   />
                   <label>X</label>
                   <Input
-                    type='text'
+                    type='number'
                     placeholder='0 nights'
                     onChange={(e) => setNight(e.target.value)}
                   />
                   <label>=</label>
                   <Input
-                    type='text'
+                    type='number'
                     value={night * price}
                     onBlur={(e) => setAmt(e.target.value)}
                   />
@@ -501,15 +556,15 @@ const CreateBookingPopup = (props) => {
                 <div className='inline-form'>
                   <label>Discount</label>
                   <Input
-                    type='text'
+                    type='number'
                     placeholder='0,00'
                     onChange={(e) => setDiscount(e.target.value)}
                   />
                   <label>X</label>
-                  <Input type='text' defaultValue='%' />
+                  <Input type='number' defaultValue='%' />
                   <label>=</label>
                   <Input
-                    type='text'
+                    type='number'
                     value={amt - amt * (discount / 100)}
                     onBlur={(e) => setAccomodation(e.target.value)}
                   />
@@ -591,7 +646,7 @@ const CreateBookingPopup = (props) => {
                             <Col span={4}>
                               <Form.Item name={[ele, 'serviceQunatity']}>
                                 <Input
-                                  type='text'
+                                  type='number'
                                   placeholder='1'
                                   onChange={(e) =>
                                     setServiceAmt(e.target.value)
@@ -604,7 +659,7 @@ const CreateBookingPopup = (props) => {
                             <Col span={4}>
                               <Form.Item>
                                 <Input
-                                  type='text'
+                                  type='number'
                                   placeholder='%'
                                   onChange={(e) =>
                                     setServiceTax(e.target.value)
@@ -617,7 +672,7 @@ const CreateBookingPopup = (props) => {
                             <Col span={4}>
                               <Form.Item name={[ele, 'serviceAmount']}>
                                 <Input
-                                  type='text'
+                                  type='number'
                                   value={serviceAmount}
                                   onBlur={calculateTotal}
                                 />
@@ -645,11 +700,11 @@ const CreateBookingPopup = (props) => {
                 <div className='inline-form'>
                   <label>Accommodation deposit</label>
                   <Input
-                    type='text'
+                    type='number'
                     placeholder='0,00'
                     onChange={(e) => setDeposit(e.target.value)}
                   />
-                  <Input type='text' placeholder='%' />
+                  <Input type='input' placeholder='%' />
                 </div>
               </div>
             </Col>

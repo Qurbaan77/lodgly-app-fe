@@ -40,6 +40,7 @@ import { HelpBlock } from 'react-bootstrap';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import countryList from 'react-select-country-list';
+
 const { Panel } = Collapse;
 
 const text = `
@@ -61,6 +62,10 @@ const CreateBookingPopup = (props) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [radio, setRadio] = useState(1);
+  const [channel, setChannel] = useState('');
+  const [children1, setChildren1] = useState(0);
+  const [children2, setChildren2] = useState(0);
+  const [channelCommission, setChannelCommission] = useState(0);
   const [panel, setPanel] = useState([1]);
   const [servicePanel, setServicePanel] = useState([100]);
   const [arrValue, setArrValue] = useState(2);
@@ -155,7 +160,7 @@ const CreateBookingPopup = (props) => {
     const guestData = [];
     const serviceData = [];
     values.acknowledge = radio;
-    values.totalAmount = total;
+    values.total = total;
     values.deposit = deposit;
     panel.map((el, i) => {
       guestData.push(values[el]);
@@ -349,16 +354,13 @@ const CreateBookingPopup = (props) => {
               className='comision'
               label='Channel, Commission(%)'
               name='channel'
-              rules={[
-                {
-                  required: true,
-                  message: 'Commission is required',
-                },
-              ]}
             >
-              <Select style={{ width: '70%', display: 'inline-block' }}>
-                <Select.Option value='Airbnb'>Airbnb</Select.Option>
-                <Select.Option value='Booking'>Booking</Select.Option>
+              <Select
+                style={{ width: '70%', display: 'inline-block' }}
+                onSelect={(value) => setChannel(value)}
+              >
+                <Select.Option value={channel}>Airbnb</Select.Option>
+                <Select.Option value={channel}>Booking</Select.Option>
               </Select>
 
               <Input
@@ -368,6 +370,14 @@ const CreateBookingPopup = (props) => {
                   verticalAlign: 'sub',
                   marginLeft: '4%',
                 }}
+                value={channelCommission}
+                onChange={(e) => setChannelCommission(e.target.value)}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Commission is required',
+                  },
+                ]}
               />
             </Form.Item>
           </Col>
@@ -401,40 +411,25 @@ const CreateBookingPopup = (props) => {
               label='Childrens(0-12yrs)'
               name='children1'
               style={{ paddingRight: 20 }}
-              rules={[
-                {
-                  required: true,
-                  message: 'required field',
-                },
-              ]}
             >
-              <Select>
-                <Select.Option value='1'>1</Select.Option>
-                <Select.Option value='2'>2</Select.Option>
-                <Select.Option value='3'>3</Select.Option>
-                <Select.Option value='4'>4</Select.Option>
-                <Select.Option value='5'>5</Select.Option>
+              <Select onSelect={(value) => setChildren1(value)}>
+                <Select.Option value={children1}>1</Select.Option>
+                <Select.Option value={children1}>2</Select.Option>
+                <Select.Option value={children1}>3</Select.Option>
+                <Select.Option value={children1}>4</Select.Option>
+                <Select.Option value={children1}>5</Select.Option>
               </Select>
             </Form.Item>
           </Col>
 
           <Col span={8}>
-            <Form.Item
-              label='Childrens(12+ yrs)'
-              name='children2'
-              rules={[
-                {
-                  required: true,
-                  message: 'required field',
-                },
-              ]}
-            >
-              <Select>
-                <Select.Option value='1'>1</Select.Option>
-                <Select.Option value='2'>2</Select.Option>
-                <Select.Option value='3'>3</Select.Option>
-                <Select.Option value='4'>4</Select.Option>
-                <Select.Option value='5'>5</Select.Option>
+            <Form.Item label='Childrens(12+ yrs)' name='children2'>
+              <Select onSelect={(value) => setChildren2(value)}>
+                <Select.Option value={children2}>1</Select.Option>
+                <Select.Option value={children2}>2</Select.Option>
+                <Select.Option value={children2}>3</Select.Option>
+                <Select.Option value={children2}>4</Select.Option>
+                <Select.Option value={children2}>5</Select.Option>
               </Select>
             </Form.Item>
           </Col>
@@ -493,11 +488,7 @@ const CreateBookingPopup = (props) => {
                                     </Select.Option>
                                   )
                                 })}
-
                                 </Select>
-                                {/* <Input
-                                  onChange={(e) => setCountry(e.target.value)}
-                                /> */}
                               </Form.Item>
                             </Col>
 
@@ -506,6 +497,30 @@ const CreateBookingPopup = (props) => {
                                 label='Phone'
                                 name={[el, 'phone']}
                                 style={{ paddingRight: 20 }}
+                                rules={[
+                                  {
+                                    // required: true,
+                                    max: 15,
+                                    min: 9,
+                                    message: 'Min 9 and max 15!',
+                                  },
+                                  ({ getFieldValue }) => ({
+                                    validator(rule, value) {
+                                      const reg = /^-?\d*(\.\d*)?$/;
+                                      if (
+                                        (!isNaN(value) && reg.test(value)) ||
+                                        value === '' ||
+                                        value === '-'
+                                      ) {
+                                        return Promise.resolve();
+                                      }
+
+                                      return Promise.reject(
+                                        'The value should be numeric!'
+                                      );
+                                    },
+                                  }),
+                                ]}
                               >
                                 <Input
                                   onChange={(e) => setPhone(e.target.value)}

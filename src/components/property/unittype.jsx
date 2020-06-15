@@ -33,12 +33,14 @@ import Wrapper from '../wrapper';
 import { Collapse } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import { Modal } from 'antd';
+import { Empty } from 'antd';
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 import queryString from 'query-string';
 
 const UnitType = () => {
   const [visible, setVisible] = useState(false);
+  const [empty, setEmpty] = useState(true)
   const [unittypeData, setUnittypeData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
   const [currUnittype, setCurrUnittype] = useState(0);
@@ -85,6 +87,7 @@ const UnitType = () => {
     console.log(response.data);
     const data = response.data.unittypeData;
     if (response.data.code === 200) {
+      setEmpty(false);
       setUnittypeData(data);
     }
   }
@@ -128,7 +131,7 @@ const UnitType = () => {
           })}
         </div>
       </div>
-
+      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} hidden={empty} />
       <Modal
         visible={visible}
         onOk={handleOk}
