@@ -43,6 +43,8 @@ const Calendar = () => {
       expanded: false,
     };
     for (let j = 0; j < unittypeData.length; j++) {
+      console.log('i', i)
+        console.log('j', j)
       const utt_id = unittypeData[j].id.toString();
       if (unittypeData[j].propertyId == propertyData[i].id) {
         rows[utt_id] = {
@@ -115,7 +117,53 @@ const Calendar = () => {
     },
 
     chart: {
-      items,
+      items : {
+        '1': {
+          id: '1',
+          rowId: '1',
+          label: 'Item 1',
+          time: {
+            start: new Date().getTime(),
+            end: new Date().getTime(),
+          },
+        },
+        '2': {
+          id: '2',
+          rowId: '2',
+          label: 'Item 2',
+          time: {
+            start: new Date().getTime(),
+            end: new Date().getTime(),
+          },
+        },
+        '3': {
+          id: '3',
+          rowId: '3',
+          label: 'Item 3',
+          time: {
+            start: new Date().getTime(),
+            end: new Date().getTime(),
+          },
+        },
+        '4': {
+          id: '4',
+          rowId: '4',
+          label: 'Item 4',
+          time: {
+            start: new Date().getTime() + 10 * 24 * 60 * 60 * 1000,
+            end: new Date().getTime() + 12 * 24 * 60 * 60 * 1000,
+          },
+        },
+        '5': {
+          id: '5',
+          rowId: '4',
+          label: 'Item 5',
+          time: {
+            start: new Date().getTime() + 12 * 24 * 60 * 60 * 1000,
+            end: new Date().getTime() + 14 * 24 * 60 * 60 * 1000,
+          },
+        },
+      },
     },
   };
 

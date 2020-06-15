@@ -56,7 +56,6 @@ let i = 1;
 let j = 1;
 
 const CreateBookingPopup = (props) => {
-  console.log(props);
   const { editBookingValues } = props;
   let arr = [];
   const [form] = Form.useForm();
@@ -139,7 +138,6 @@ const CreateBookingPopup = (props) => {
       setServiceAmt(0);
       setTotal(sum);
     }
-    console.log(value);
     const oldarray = [...servicePanel];
     oldarray.pop();
     setServicePanel([...oldarray]);
@@ -155,12 +153,10 @@ const CreateBookingPopup = (props) => {
 
   const onFinish = async (values) => {
     console.log('values', values);
-    console.log('servicePanel', servicePanel);
-    console.log('Panel', panel);
     const guestData = [];
     const serviceData = [];
     values.acknowledge = radio;
-    values.total = total;
+    values.total = parseInt(total) + parseInt(accomodation);
     values.deposit = deposit;
     panel.map((el, i) => {
       guestData.push(values[el]);
@@ -256,10 +252,8 @@ const CreateBookingPopup = (props) => {
   };
 
   const fun4 = (value) => {
-    console.log('Value', value);
     form.setFieldsValue({});
   };
-  console.log(servicePrice, serviceTax, serviceAmt, serviceAmount);
 
   return (
     <Modal
@@ -411,25 +405,30 @@ const CreateBookingPopup = (props) => {
               label='Childrens(0-12yrs)'
               name='children1'
               style={{ paddingRight: 20 }}
+              rules={[]}
             >
-              <Select onSelect={(value) => setChildren1(value)}>
-                <Select.Option value={children1}>1</Select.Option>
-                <Select.Option value={children1}>2</Select.Option>
-                <Select.Option value={children1}>3</Select.Option>
-                <Select.Option value={children1}>4</Select.Option>
-                <Select.Option value={children1}>5</Select.Option>
+              <Select>
+                <Select.Option value='1'>1</Select.Option>
+                <Select.Option value='2'>2</Select.Option>
+                <Select.Option value='3'>3</Select.Option>
+                <Select.Option value='4'>4</Select.Option>
+                <Select.Option value='5'>5</Select.Option>
               </Select>
             </Form.Item>
           </Col>
 
           <Col span={8}>
-            <Form.Item label='Childrens(12+ yrs)' name='children2'>
-              <Select onSelect={(value) => setChildren2(value)}>
-                <Select.Option value={children2}>1</Select.Option>
-                <Select.Option value={children2}>2</Select.Option>
-                <Select.Option value={children2}>3</Select.Option>
-                <Select.Option value={children2}>4</Select.Option>
-                <Select.Option value={children2}>5</Select.Option>
+            <Form.Item 
+              label='Childrens(12+ yrs)' 
+              name='children2'
+              rules={[]}
+              >
+              <Select>
+                <Select.Option value='1'>1</Select.Option>
+                <Select.Option value='2'>2</Select.Option>
+                <Select.Option value='3'>3</Select.Option>
+                <Select.Option value='4'>4</Select.Option>
+                <Select.Option value='5'>5</Select.Option>
               </Select>
             </Form.Item>
           </Col>
@@ -449,7 +448,6 @@ const CreateBookingPopup = (props) => {
                       return (
                         <div className='addi-box'>
                           <Row style={{ alignItems: 'center' }}>
-                            <Form.Item name='panel'></Form.Item>
                             <Col span={6}>
                               <Form.Item
                                 label='Full Name'

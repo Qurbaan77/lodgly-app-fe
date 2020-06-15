@@ -39,8 +39,10 @@ import DeletePopup from './deletepopup';
 import queryString from 'query-string';
 
 const UnitType = () => {
+  const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
-  const [empty, setEmpty] = useState(true)
+  const [showPanel, setShowPanel] = useState(true);
+  const [empty, setEmpty] = useState(true);
   const [unittypeData, setUnittypeData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
   const [currUnittype, setCurrUnittype] = useState(0);
@@ -59,10 +61,23 @@ const UnitType = () => {
     setVisible(false);
   };
 
+  const onFinish = async (values) => {
+    values.propertyId = localStorage.getItem('propertyId');
+    const response = await userInstance.post('/addUnitType', values);
+    if (response.data.code === 200) {
+      setShowPanel(true);
+      getData();
+    }
+  }
   const edit = (unittypeId) => {
     localStorage.setItem('unittypeId', unittypeId);
     history.push('/addunittype');
   };
+
+  const editName = (unittypeId) => {
+    console.log('unittypeId', unittypeId)
+    setShowPanel(false);
+  }
 
   const remove = async () => {
     const values = {
@@ -98,32 +113,46 @@ const UnitType = () => {
 
   return (
     <Wrapper>
-      <div className='unit-type'>
-        <div className='page-header'>
+      <div className="unit-type">
+        <div className="page-header">
           <h1>
             <HomeOutlined /> Unit Type
           </h1>
 
-          <Button type='primary' icon={<PlusOutlined />}>
-            <Link
-              to={'/addunittype'}
-              onClick={() => localStorage.removeItem('unittypeId')}
-            >
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => setShowPanel(false)}>
+            {/* <Link onClick={() => localStorage.removeItem('unittypeId')}> */}
               Add Unit Type
-            </Link>
           </Button>
         </div>
 
-        <div className='panel-container'>
+        <div className="panel-container" hidden={showPanel}>
+          <Form form={form} onFinish={onFinish}>
+            <div className="panel-box units">
+              <div className="group-name">
+                <Form.Item name="name" style={{ padding: '0px 10px' }}>
+                  <Input placeholder="Unit type Name" />
+                </Form.Item>
+              </div>
+              <div>
+              <Button onClick={() => setShowPanel(true)}>Cancel</Button>
+              <Form.Item>
+                <Button htmlType='submit'>Save</Button>
+              </Form.Item>
+              </div>
+            </div>
+          </Form>
+        </div>
+
+        <div className="panel-container">
           {unittypeData.map((el, i) => {
             return (
-              <div className='panel-box units'>
-                <div className='group-name'>
-                  <h4>{el.unitTypeName}</h4>
+              <div className="panel-box units">
+                <div className="group-name">
+                  <h4 onClick={() => edit(el.id)}>{el.unitTypeName}</h4>
                   <span>1 unit are assigned</span>
                 </div>
-                <div className='group-action'>
-                  <FormOutlined onClick={() => edit(el.id)} />
+                <div className="group-action">
+                  <FormOutlined onClick={() => editName(el.id)} />
                   <DeleteOutlined onClick={() => show(el.id)} />
                 </div>
               </div>
@@ -131,12 +160,12 @@ const UnitType = () => {
           })}
         </div>
       </div>
-      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} hidden={empty} />
+      {/* <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} hidden={empty} /> */}
       <Modal
         visible={visible}
         onOk={handleOk}
         onCancel={handleCancel}
-        wrapClassName='delete-modal'
+        wrapClassName="delete-modal"
       >
         <DeletePopup
           dataObject={() => remove()}

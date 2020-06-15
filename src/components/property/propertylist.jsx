@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import './property.css';
 import { Layout, Menu, Button, Tooltip, Dropdown } from 'antd';
@@ -23,6 +24,7 @@ import Toaster from '../toaster/toaster';
 
 const PropertyList = () => {
   const [propertyData, setPropertyData] = useState([]);
+  const history = useHistory();
 
   useEffect(() => {
     async function getData() {
@@ -42,8 +44,8 @@ const PropertyList = () => {
         <div className="page-header">
           <h1>All Properties</h1>
 
-          <Button type="primary" icon={<PlusOutlined />}>
-            <Link to='/addproperty'>Add Property</Link>
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => history.push('/addproperty')}>
+            Add Property
           </Button>
         </div>
 

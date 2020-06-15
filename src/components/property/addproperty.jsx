@@ -215,7 +215,16 @@ const AddProperty = () => {
                   <Row gutter={[16, 0]}>
                     <Col span={24}>
                       <Form.Item name='propertyName' label='Name'>
-                        <Input placeholder='My Demo Property' />
+                        <Input 
+                        placeholder='My Demo Property'
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Please enter property name',
+                            whitespace: true,
+                          },
+                        ]}
+                        />
                       </Form.Item>
                     </Col>
 
