@@ -24,7 +24,6 @@ const Register = () => {
   const [form] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
-  const [userName, setUserName] = useState();
   const history = useHistory();
 
   const onFinish = async (values) => {
@@ -43,47 +42,41 @@ const Register = () => {
     form.resetFields();
   };
 
-  const addOn = () => {
-    form.setFieldsValue({
-      username: userName,
-    });
-  };
-
   const close = () => {
     setNotifyType('');
   };
 
   const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
+    <Form.Item name='prefix' noStyle>
       <Select
         style={{
           width: 70,
         }}
       >
-        <Option value="86">+86</Option>
-        <Option value="87">+87</Option>
+        <Option value='86'>+86</Option>
+        <Option value='87'>+87</Option>
       </Select>
     </Form.Item>
   );
   const [autoCompleteResult, setAutoCompleteResult] = useState([]);
 
   return (
-    <div className="register">
+    <div className='register'>
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
-      <div className="register-section">
-        <div className="container">
-          <div classNmae="row">
-            <div className="col-md-12">
-              <div className="register-logo">
-                <img src={logo} alt="Logo" />
+      <div className='register-section'>
+        <div className='container'>
+          <div classNmae='row'>
+            <div className='col-md-12'>
+              <div className='register-logo'>
+                <img src={logo} alt='Logo' />
               </div>
-              <div className="register-form">
+              <div className='register-form'>
                 <h1>Register</h1>
                 <p>We're happy to have you here!</p>
-                <div className="register-box">
+                <div className='register-box'>
                   <Form
                     form={form}
-                    name="register"
+                    name='register'
                     onFinish={onFinish}
                     initialValues={{
                       residence: ['zhejiang', 'hangzhou', 'xihu'],
@@ -94,8 +87,8 @@ const Register = () => {
                     <Row gutter={[16, 0]}>
                       <Col span={12}>
                         <Form.Item
-                          name="email"
-                          label="E-mail"
+                          name='email'
+                          label='E-mail'
                           rules={[
                             {
                               type: 'email',
@@ -113,12 +106,8 @@ const Register = () => {
 
                       <Col span={12}>
                         <Form.Item
-                          name="username"
-                          label="Username"
-                          onChange={(e) =>
-                            setUserName(`${e.target.value}.lodgly.com`)
-                          }
-                          onBlur={addOn}
+                          name='username'
+                          label='Username'
                           rules={[
                             {
                               required: true,
@@ -135,12 +124,15 @@ const Register = () => {
                     <Row gutter={[16, 0]}>
                       <Col span={12}>
                         <Form.Item
-                          name="password"
-                          label="Password"
+                          name='password'
+                          label='Password'
                           rules={[
                             {
                               required: true,
-                              message: 'Please input your password!',
+                              min: 6,
+                              max: 15,
+                              message:
+                                'Password should be between 6 to 15 characters long!',
                             },
                           ]}
                           hasFeedback
@@ -151,16 +143,16 @@ const Register = () => {
 
                       <Col span={12}>
                         <Form.Item
-                          name="confirm"
-                          label="Confirm Password"
+                          name='confirm'
+                          label='Confirm Password'
                           dependencies={['password']}
                           hasFeedback
                           rules={[
                             {
                               required: true,
                               Min: 6,
-                              Max: 15, 
-                              message: 'Please confirm your password Minimum 6 and Maximum 15 character!',
+                              Max: 15,
+                              message: 'Please confirm your password!',
                             },
                             ({ getFieldValue }) => ({
                               validator(rule, value) {
@@ -172,7 +164,7 @@ const Register = () => {
                                 }
 
                                 return Promise.reject(
-                                  'The two passwords that you entered do not match!',
+                                  'The two passwords that you entered do not match!'
                                 );
                               },
                             }),
@@ -185,9 +177,9 @@ const Register = () => {
 
                     <Row>
                       <Col span={24}>
-                        <Form.Item label="Select Package" hidden={true}>
+                        <Form.Item label='Select Package' hidden={true}>
                           <Select>
-                            <Select.Option value="demo">Demo</Select.Option>
+                            <Select.Option value='demo'>Demo</Select.Option>
                           </Select>
                         </Form.Item>
                       </Col>
@@ -196,14 +188,15 @@ const Register = () => {
                     <Row>
                       <Col span={24}>
                         <Form.Item
-                          name="phone"
-                          label="Phone Number"
+                          name='phone'
+                          label='Phone Number'
                           rules={[
                             {
                               required: true,
                               max: 15,
                               min: 9,
-                              message: 'Please input your phone number Max 15 digit Min 9!',
+                              message:
+                                'Please input your phone number between range 9 - 15!',
                             },
                             ({ getFieldValue }) => ({
                               validator(rule, value) {
@@ -217,7 +210,7 @@ const Register = () => {
                                 }
 
                                 return Promise.reject(
-                                  'The value should be numeric!',
+                                  'The value should be numeric!'
                                 );
                               },
                             }),
@@ -236,10 +229,15 @@ const Register = () => {
                     <Row>
                       <Col span={24}>
                         <Form.Item
-                          name="agreement"
-                          valuePropName="checked"
+                          name='agreement'
+                          valuePropName='checked'
                           rules={[
-                            { validator:(_, value) => value ? Promise.resolve() : Promise.reject('Should accept agreement') },
+                            {
+                              validator: (_, value) =>
+                                value
+                                  ? Promise.resolve()
+                                  : Promise.reject('Should accept agreement'),
+                            },
                           ]}
                         >
                           <Checkbox>
@@ -253,9 +251,9 @@ const Register = () => {
                       <Col span={24}>
                         <Form.Item>
                           <Button
-                            type="primary"
-                            className="register-btn"
-                            htmlType="submit"
+                            type='primary'
+                            className='register-btn'
+                            htmlType='submit'
                           >
                             Register
                           </Button>
@@ -266,7 +264,7 @@ const Register = () => {
                 </div>
               </div>
 
-              <div className="q-links">
+              <div className='q-links'>
                 <p>
                   Already have an account? <Link to={'/'}>Login now</Link>
                 </p>

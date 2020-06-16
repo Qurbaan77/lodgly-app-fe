@@ -68,7 +68,7 @@ const Booking = () => {
   const [notifyMsg, setNotifyMsg] = useState();
   const [price, setPrice] = useState(0);
   const [night, setNight] = useState(0);
-  const [guestName, setGuestName] = useState([]);
+  // const [guestNum, setGuestNum] = useState(0);
 
   const [editValues, setEditValues] = useState({});
   const [editBookingValues, setEditBookingValues] = useState({});
@@ -95,7 +95,18 @@ const Booking = () => {
     console.log('get Function is Called!');
     const response = await userInstance.post('/getBooking');
     const bookingdata = response.data.bookingData;
+    bookingdata.map((el) => {
+      let d1 = new Date(el.startDate);
+      let d2 = new Date(el.endDate);
+      let diff = Math.abs(d1 - d2);
+      let day = Math.floor(diff / (24 * 60 * 60 * 1000));
+      el.nights = day + 1;
+      el.created_at = el.created_at.split('T', 1);
+    });
     const guestdata = response.data.guestData;
+    // const l = guestdata.length;
+    // setGuestNum(l);
+
     console.log('bookingdata', bookingdata);
     console.log('guestdata', guestdata);
     if (response.data.code === 200) {
@@ -133,7 +144,7 @@ const Booking = () => {
     let d2 = new Date(values.endDate);
     let diff = Math.abs(d1 - d2);
     let day = Math.floor(diff / (24 * 60 * 60 * 1000));
-    values.night = day;
+    values.night = day + 1;
     console.log(values);
     localStorage.setItem('bookingId', values.id);
     const arr = [];
@@ -188,13 +199,13 @@ const Booking = () => {
     setVisibleGuest(false);
   };
   const guestNameData = [];
-  guestData.map((el) =>
-    el.map((el) => {
-      guestNameData.push(el.fullname);
-    })
-  );
-  console.log(guestNameData);
-
+  const guestNum = [];
+  guestData.map((el) => {
+    guestNum.push(el.length);
+    const data = el.find((el) => el.id);
+    guestNameData.push(data.fullname);
+  });
+  
   return (
     <Wrapper>
       <div className='booking'>
@@ -226,12 +237,12 @@ const Booking = () => {
                         <h3>{guestNameData[i]}</h3>
                         <p>Rental Type - Property Name_1</p>
                         <ul>
-                          <li>Aug 5 2019</li>
+                          <li>{el.created_at}</li>
                           <li>
-                            10 <ThunderboltOutlined />
+                            {el.nights} <ThunderboltOutlined />
                           </li>
                           <li>
-                            2 <UserOutlined />
+                            {guestNum[i]} <UserOutlined />
                           </li>
                         </ul>
                       </div>

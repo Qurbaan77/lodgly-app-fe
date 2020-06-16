@@ -589,6 +589,47 @@ body {
   background: #f7f7f7;
 }
 
+
+.panel-box.units.editunit input {
+  border: none;
+  transition: all 0.5s;
+}
+
+.panel-box.units.editunit:hover input {
+  background: #f7f7f7;
+}
+
+
+.panel-box.units.editunit input:focus {
+  border: none;
+  outline: none;
+}
+
+
+.panel-box.units.editunit .group-action span {
+  padding: 0;
+  font-size: 16px;
+}
+
+.panel-box.units.editunit .group-action {
+  width: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.editunit .can-btn {
+  color: #8ea7f1;
+}
+
+.editunit .sav-btn {
+  color: #5fc35e;
+}
+
+.panel-box.units.editunit .group-action {
+  opacity: 1;
+}
+
 .panel-box.groups:hover .group-action span {
   display: none;
 }

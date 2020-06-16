@@ -82,6 +82,7 @@ const Services = () => {
     if (statusCode === 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
+      setVisible(false);
       getData();
     } else {
       setNotifyType('error');

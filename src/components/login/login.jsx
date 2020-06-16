@@ -31,12 +31,6 @@ const Login = () => {
     form.resetFields();
   };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-    setNotifyType('error');
-    setNotifyMsg('Please Enter Valid Credentials');
-  };
-
   const close = () => {
     setNotifyType('');
   };
@@ -50,41 +44,40 @@ const Login = () => {
         .map(function (c) {
           return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
         })
-        .join('')
+        .join(''),
     );
     return JSON.parse(jsonPayload);
   };
 
   return (
-    <div className='login'>
-      <div className='login-section'>
-        <div className='container'>
-          <div classNmae='row'>
-            <div className='col-md-12'>
-              <div className='login-logo'>
-                <img src={logo} alt='Logo' />
+    <div className="login">
+      <div className="login-section">
+        <div className="container">
+          <div classNmae="row">
+            <div className="col-md-12">
+              <div className="login-logo">
+                <img src={logo} alt="Logo" />
               </div>
               <Toaster
                 notifyType={notifyType}
                 notifyMsg={notifyMsg}
                 close={close}
               />
-              <div className='login-form'>
+              <div className="login-form">
                 <h1>Sign In</h1>
                 <p>We're happy to have you here again!</p>
-                <div className='login-box'>
+                <div className="login-box">
                   <Form
                     form={form}
-                    name='basic'
+                    name="basic"
                     initialValues={{
                       remember: true,
                     }}
                     onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
                   >
                     <Form.Item
-                      label='E-mail Address'
-                      name='email'
+                      label="E-mail Address"
+                      name="email"
                       rules={[
                         {
                           required: true,
@@ -96,8 +89,8 @@ const Login = () => {
                     </Form.Item>
 
                     <Form.Item
-                      label='Password'
-                      name='password'
+                      label="Password"
+                      name="password"
                       rules={[
                         {
                           required: true,
@@ -109,15 +102,15 @@ const Login = () => {
                     </Form.Item>
 
                     <Form.Item>
-                      <Button className='login-btn' htmlType='submit'>
+                      <Button className="login-btn" htmlType="submit">
                         Sign In
                       </Button>
                     </Form.Item>
 
-                    <div className='google-login'>
+                    <div className="google-login">
                       <p>or connect with</p>
 
-                      <Button className='google-btn'>
+                      <Button className="google-btn">
                         <span>Google</span>
                       </Button>
                     </div>
@@ -125,7 +118,7 @@ const Login = () => {
                 </div>
               </div>
 
-              <div className='q-links'>
+              <div className="q-links">
                 <p>
                   Don't have an account yet?{' '}
                   <Link to={'/register'}>Register now</Link>

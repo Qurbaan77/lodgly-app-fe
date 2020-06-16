@@ -177,7 +177,12 @@
 
 }
 
-.login-form .ant-form-item-has-error .ant-form-item-explain, .login-form .ant-form-item-has-error .ant-form-item-split {
-   visibility: hidden;
+.login-form .ant-form-item-explain {
+    font-size: 10px!important;
 }
+
+
+/* .login-form .ant-form-item-has-error .ant-form-item-explain, .login-form .ant-form-item-has-error .ant-form-item-split {
+   visibility: hidden;
+} */
 

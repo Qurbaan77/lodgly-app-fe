@@ -28,6 +28,8 @@ import {
   UserOutlined,
   VideoCameraOutlined,
   UploadOutlined,
+  CloseCircleOutlined,
+  CheckCircleOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import { Collapse } from 'antd';
@@ -158,6 +160,24 @@ const UnitType = () => {
               </div>
             );
           })}
+
+
+         <div className="panel-box units editunit">
+                <div className="group-name">
+                  <input type="text" placeholder="Edit Unit"/>                
+                </div>
+                <div className="group-action">
+                  <div className="can-btn">
+                    <CloseCircleOutlined /> Cancel
+                  </div>
+                  <div className="sav-btn">
+                    <CheckCircleOutlined /> Save
+                  </div>
+                </div>
+              </div>
+
+
+
         </div>
       </div>
       {/* <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} hidden={empty} /> */}
