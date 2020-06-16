@@ -29,6 +29,8 @@ import {
   UserOutlined,
   VideoCameraOutlined,
   UploadOutlined,
+  CloseCircleOutlined,
+  CheckCircleOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import { Collapse } from 'antd';
@@ -49,12 +51,16 @@ const AddUnitType = () => {
   const [unitData, setUnitData] = useState([]);
   const [currentUnittype, setCurrentUnittype] = useState([]);
   const [curUnit, setCurUnit] = useState(0);
+  const [showPanel, setShowPanel] = useState(true);
+  const [name, setName] = useState();
+  const [editId, setEditId] = useState(null);
+  const [showEdit, setShowEdit] = useState(true);
 
   const parsed = queryString.parse(window.location.search);
   const history = useHistory();
 
   const show = (unitId) => {
-    console.log('unitId', unitId)
+    console.log('unitId', unitId);
     setVisible(true);
     setCurUnit(unitId);
   };
@@ -67,12 +73,31 @@ const AddUnitType = () => {
     setVisible(false);
   };
 
+  const onChange = (e) => {
+    setName(e.target.value);
+  };
+
   const onFinish = async (values) => {
     values.propertyId = localStorage.getItem('propertyId');
     values.unitTypeName = 'Unit Type ' + unittypeNo;
     const response = await userInstance.post('/addUnitType', values);
     if (response.data.code === 200) {
       history.push('/unittype');
+    }
+  };
+
+  const onUnitSave = async (id) => {
+    const values = {
+      unitName: name,
+      propertyId: localStorage.getItem('propertyId'),
+      unittypeId: localStorage.getItem('unittypeId'),
+      id: id,
+    };
+    const response = await userInstance.post('/addUnit', values);
+    if (response.data.code === 200) {
+      setEditId(null);
+      setShowPanel(true);
+      getUnitData();
     }
   };
 
@@ -107,6 +132,12 @@ const AddUnitType = () => {
     }
   };
 
+  const editName = (unitId) => {
+    console.log('unitId', unitId);
+    setEditId(unitId);
+    setShowEdit(false);
+  };
+
   const getUnitData = async () => {
     const arr = [];
     const values = {
@@ -115,9 +146,9 @@ const AddUnitType = () => {
     const response = await userInstance.post('/getUnit', values);
     const data = response.data.unitData;
     if (response.data.code === 200) {
-      data.filter(el => el.unittypeId == localStorage.getItem('unittypeId')).map(filterUnit => (
-        arr.push(filterUnit)
-      ))
+      data
+        .filter((el) => el.unittypeId == localStorage.getItem('unittypeId'))
+        .map((filterUnit) => arr.push(filterUnit));
       setUnitData(arr);
     }
   };
@@ -264,12 +295,12 @@ const AddUnitType = () => {
     subs.push(
       state.subscribe('config.chart.items', (items) => {
         console.log('items changed', items);
-      })
+      }),
     );
     subs.push(
       state.subscribe('config.list.rows', (rows) => {
         console.log('rows changed', rows);
-      })
+      }),
     );
   }
 
@@ -286,8 +317,8 @@ const AddUnitType = () => {
 
   return (
     <Wrapper>
-      <div className='unit-type'>
-        <div className='page-header'>
+      <div className="unit-type">
+        <div className="page-header">
           <h1>
             <HomeOutlined />{' '}
             {currentUnittype.id
@@ -296,92 +327,137 @@ const AddUnitType = () => {
           </h1>
         </div>
 
-        <div className='panel-container'>
-          <div className='unit-filter'>
+        <div className="panel-container">
+          <div className="unit-filter">
             <Form form={form} onFinish={onFinish}>
               <Row style={{ alignItems: 'center' }}>
                 <Col span={7}>
-                  <Form.Item label='Date' name='groupname'>
+                  <Form.Item label="Date" name="groupname">
                     <RangePicker />
                   </Form.Item>
                 </Col>
 
-                <Col span={9} className='d-flex'>
+                <Col span={9} className="d-flex">
                   <Form.Item
-                    label='Price per Night'
-                    name='perNight'
+                    label="Price per Night"
+                    name="perNight"
                     style={{ padding: '0px 10px' }}
                   >
                     <Input />
                   </Form.Item>
 
                   <Form.Item
-                    label='Rooms to Sell'
-                    name='roomsToSell'
+                    label="Rooms to Sell"
+                    name="roomsToSell"
                     style={{ padding: '0px 10px' }}
                   >
                     <Input />
                   </Form.Item>
 
                   <Form.Item
-                    label='Minimum Stay'
-                    name='minimumStay'
+                    label="Minimum Stay"
+                    name="minimumStay"
                     style={{ padding: '0px 10px' }}
                   >
                     <Input />
                   </Form.Item>
                 </Col>
 
-                <Col span={8} className='d-flex update-cal'>
-                  <Form.Item name='date-picker' label='DatePicker'>
+                <Col span={8} className="d-flex update-cal">
+                  <Form.Item name="date-picker" label="DatePicker">
                     <DatePicker />
                   </Form.Item>
-                  <Button type='primary'>Update Calendar</Button>
+                  <Button type="primary">Update Calendar</Button>
                 </Col>
               </Row>
 
-              <div className='unittype-calendar'>
+              <div className="unittype-calendar">
                 {currentUnittype.id ? (
                   <GSTC config={config} onState={onState} />
                 ) : null}
               </div>
               <Form.Item>
-                <Button htmlType='submit'>Save</Button>
+                <Button htmlType="submit">Save</Button>
               </Form.Item>
             </Form>
+            <div className="panel-box units editunit" hidden={showPanel}>
+              <div className="group-name">
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Edit Unit"
+                  onChange={onChange}
+                />
+              </div>
+              <div className="group-action">
+                <div className="can-btn" onClick={() => setShowPanel(true)}>
+                  <CloseCircleOutlined /> Cancel
+                </div>
+                <div className="sav-btn" onClick={() => onUnitSave()}>
+                  <CheckCircleOutlined /> Save
+                </div>
+              </div>
+            </div>
 
-            <div className='assign-unit'>
+            <div className="assign-unit">
               <p>Assign Your Units</p>
               <span>Now add unit to unit type</span>
-              <div className='panel-container'>
+              <div className="panel-container">
                 {unitData.map((el, i) => {
                   return (
-                    <div className='panel-box units'>
-                      <div className='group-name'>
-                        <h4>Unit Type</h4>
+                    <div className={editId === i ? "panel-box units editunitname" : "panel-box units"}>
+                      <div className="group-name">
+                        <h4 hidden={editId === i ? true : false}>
+                          {el.unitName}
+                        </h4>
+                        <input
+                          type="text"
+                          name="name"
+                          placeholder="Edit Unit"
+                          onChange={onChange}
+                          hidden={editId === i ? false : true}
+                        ></input>
                         <span>1 unit are assigned</span>
                       </div>
-                      <div className='group-action'>
-                        <FormOutlined />
-                        <DeleteOutlined onClick={() => show(el.id)} />
-                      </div>
+
+                      {editId === i ? (
+                        <div className="group-action">
+                          <div
+                            className="can-btn"
+                            onClick={() => setEditId(null)}
+                          >
+                            <CloseCircleOutlined /> Cancel
+                          </div>
+                          <div
+                            className="sav-btn"
+                            onClick={() => onUnitSave(el.id)}
+                          >
+                            <CheckCircleOutlined /> Save
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="group-action">
+                          <FormOutlined onClick={() => editName(i)} />
+                          <DeleteOutlined onClick={() => show(el.id)} />
+                        </div>
+                      )}
                     </div>
                   );
                 })}
               </div>
               <div>
-                <Button onClick={() => addUnit()}>Add unit</Button>
+                <Button onClick={() => setShowPanel(false)}>Add unit</Button>
               </div>
               <Modal
                 visible={visible}
                 onOk={handleOk}
                 onCancel={handleCancel}
-                wrapClassName='delete-modal'
+                wrapClassName="delete-modal"
               >
                 <DeletePopup
-          dataObject={() => remove()}
-          cancel={() => handleCancel()}
-        />
+                  dataObject={() => remove()}
+                  cancel={() => handleCancel()}
+                />
               </Modal>
             </div>
           </div>

@@ -16,6 +16,8 @@ import {
   MenuFoldOutlined,
   HomeOutlined,
   PlusOutlined,
+  DeleteOutlined,
+  FormOutlined,
   SearchOutlined,
   VerticalAlignMiddleOutlined,
   UserOutlined,
@@ -31,14 +33,17 @@ import property3 from '../../assets/images/property-3.png';
 import { Row, Col } from 'antd';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
+import DeletePopup from './deletepopup';
 
 const Services = () => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
+  const [visible1, setVisible1] = useState(false);
   const [group, setGroup] = useState([]);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const [serviceData, setServiceData] = useState([]);
+  const [curRowId, setCurRowId] = useState(0);
 
   const columns = [
     {
@@ -55,23 +60,70 @@ const Services = () => {
       title: 'Standard Quanity',
       dataIndex: 'quantity',
     },
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      key: 'x',
+      render: (text, record) => (
+        <div className="service-margin">
+          <a onClick={() => edit(record.id)}>Edit</a>
+          <a onClick={() => delRow(record.id)}>Delete</a>
+        </div>
+      ),
+    },
   ];
 
+  const delRow = (id) => {
+    setVisible1(true);
+    setCurRowId(id);
+  };
+
   const show = () => {
+    setNotifyType('');
     form.resetFields();
     setVisible(true);
   };
 
   const handleOk = () => {
     setVisible(false);
+    setVisible1(false);
   };
 
   const handleCancel = () => {
     setVisible(false);
+    setVisible1(false);
   };
 
   const close = () => {
     setNotifyType('');
+  };
+
+  const edit = (id) => {
+    serviceData
+     .filter(ele => ele.id == id)
+     .map(filterService => showInform(filterService))
+  };
+
+  const showInform = (data) => {
+    setNotifyType('');
+    setVisible(true);
+    form.setFieldsValue({
+      serviceId: data.id,
+      servicename: data.serviceName,
+      serviceprice: data.servicePrice,
+      servicequantity: data.quantity,
+    })
+  }
+
+  const remove = async () => {
+    const values = {
+      id: curRowId,
+    };
+    const response = await userInstance.post('/deleteService', values);
+    if (response.data.code === 200) {
+      setVisible1(false);
+      getData();
+    }
   };
 
   const onFinish = async (values) => {
@@ -108,16 +160,16 @@ const Services = () => {
 
   return (
     <Wrapper>
-      <div className='property-listing'>
-        <div className='page-header'>
+      <div className="property-listing">
+        <div className="page-header">
           <h1>Services</h1>
 
-          <Button type='primary' icon={<PlusOutlined />} onClick={show}>
-            <Link to='/services'>Add Services</Link>
+          <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+            <Link to="/services">Add Services</Link>
           </Button>
         </div>
 
-        <div className='services-list'>
+        <div className="services-list">
           <Table
             columns={columns}
             dataSource={serviceData}
@@ -128,17 +180,18 @@ const Services = () => {
       </div>
 
       <Modal
-        title='Add Services'
+        title="Add Services"
         visible={visible}
         onOk={handleOk}
         onCancel={handleCancel}
-        wrapClassName='group-modal'
+        wrapClassName="group-modal"
       >
         <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
-        <Form form={form} name='basic' onFinish={onFinish}>
+        <Form form={form} name="basic" onFinish={onFinish}>
+          <Form.Item name="serviceId"><Input hidden={true}/></Form.Item>
           <Form.Item
-            label='Service Name'
-            name='servicename'
+            label="Service Name"
+            name="servicename"
             style={{ padding: '0px 10px' }}
             rules={[
               {
@@ -151,8 +204,8 @@ const Services = () => {
           </Form.Item>
 
           <Form.Item
-            label='Service Price'
-            name='serviceprice'
+            label="Service Price"
+            name="serviceprice"
             style={{ padding: '0px 10px' }}
             rules={[
               {
@@ -164,19 +217,29 @@ const Services = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            label='Standard Quantity'
-            name='servicequantity'
+            label="Standard Quantity"
+            name="servicequantity"
             style={{ padding: '0px 10px' }}
           >
             <Input />
           </Form.Item>
-          <Form.Item style={{ padding: '0px 10px' }}>
-            <Button style={{ marginRight: 10 }} onClick={handleCancel}>
-              Cancel
+          <Form.Item className="text-center">
+            <Button type="primary" htmlType="submit">
+              Save
             </Button>
-            <Button htmlType='submit'>Save</Button>
           </Form.Item>
         </Form>
+      </Modal>
+      <Modal
+        visible={visible1}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        wrapClassName="delete-modal"
+      >
+        <DeletePopup
+          dataObject={() => remove()}
+          cancel={() => handleCancel()}
+        />
       </Modal>
     </Wrapper>
   );

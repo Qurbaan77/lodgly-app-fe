@@ -13,6 +13,9 @@ import {
   Button,
   AutoComplete,
 } from 'antd';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
+import CountryCode from './CountryCode';
 import logo from '../../assets/images/logo.jpg';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
@@ -24,40 +27,45 @@ const Register = () => {
   const [form] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
+  const [phone, setPhone] = useState(null);
   const history = useHistory();
 
   const onFinish = async (values) => {
-    console.log('Form is Good');
-    const response = await userInstance.post('/signup', values);
-    const statusCode = response.data.code;
-    const msg = response.data.msg;
-    if (statusCode == 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
-      history.push('/thankyou');
-    } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
-    }
-    form.resetFields();
+    console.log('Form is Good', values);
+    // const response = await userInstance.post('/signup', values);
+    // const statusCode = response.data.code;
+    // const msg = response.data.msg;
+    // if (statusCode == 200) {
+    //   setNotifyType('success');
+    //   setNotifyMsg(msg);
+    //   history.push('/thankyou');
+    // } else {
+    //   setNotifyType('error');
+    //   setNotifyMsg(msg);
+    // }
+    // form.resetFields();
   };
 
   const close = () => {
     setNotifyType('');
   };
 
-  const prefixSelector = (
-    <Form.Item name='prefix' noStyle>
-      <Select
-        style={{
-          width: 70,
-        }}
-      >
-        <Option value='86'>+86</Option>
-        <Option value='87'>+87</Option>
-      </Select>
-    </Form.Item>
-  );
+  const handleChange = (value) => {
+    console.log(value);
+    setPhone(value);
+  };
+  // const prefixSelector = (
+  //   <Form.Item name='prefix' noStyle>
+  //     <Select
+  //       style={{
+  //         width: 70,
+  //       }}
+  //     >
+  //       <Option value='86'>+86</Option>
+  //       <Option value='87'>+87</Option>
+  //     </Select>
+  //   </Form.Item>
+  // );
   const [autoCompleteResult, setAutoCompleteResult] = useState([]);
 
   return (
@@ -198,30 +206,37 @@ const Register = () => {
                               message:
                                 'Please input your phone number between range 9 - 15!',
                             },
-                            ({ getFieldValue }) => ({
-                              validator(rule, value) {
-                                const reg = /^-?\d*(\.\d*)?$/;
-                                if (
-                                  (!isNaN(value) && reg.test(value)) ||
-                                  value === '' ||
-                                  value === '-'
-                                ) {
-                                  return Promise.resolve();
-                                }
+                            // ({ getFieldValue }) => ({
+                            //   validator(rule, value) {
+                            //     const reg = /^-?\d*(\.\d*)?$/;
+                            //     if (
+                            //       (!isNaN(value) && reg.test(value)) ||
+                            //       value === '' ||
+                            //       value === '-'
+                            //     ) {
+                            //       return Promise.resolve();
+                            //     }
 
-                                return Promise.reject(
-                                  'The value should be numeric!'
-                                );
-                              },
-                            }),
+                            //     return Promise.reject(
+                            //       'The value should be numeric!'
+                            //     );
+                            //   },
+                            // }),
                           ]}
                         >
-                          <Input
+                          {/* <Input
                             addonBefore={prefixSelector}
                             style={{
                               width: '100%',
                             }}
+                          /> */}
+                          <PhoneInput
+                            country={'us'}
+                            value={phone}
+                            onChange={(value) => handleChange(value)}
                           />
+                          {/* <CountryCode />
+                          <input type='number' /> */}
                         </Form.Item>
                       </Col>
                     </Row>

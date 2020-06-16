@@ -775,6 +775,11 @@ body {
   padding: 20px;
 }
 
+.service-margin a{
+  display:inline-block;
+  margin-right:10px;
+  }
+
 .accommodation .service-form .ant-form-item {
   margin: 0;
 }
@@ -833,9 +838,47 @@ body {
 }
 
 
+.panel-box.units input {
+  border: none;
+}
+
+.panel-box.units input + span {
+  display: block;
+}
+
+.panel-box.units input:focus {
+  border: none;
+  box-shadow: none;
+  outline: none;
+}
 
 
 
+
+
+.panel-box.units.editunitname .group-action span {
+  padding: 0;
+  font-size: 16px;
+}
+
+.panel-box.units.editunitname .group-action {
+  width: 15%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.editunitname .can-btn {
+  color: #8ea7f1;
+}
+
+.editunitname .sav-btn {
+  color: #5fc35e;
+}
+
+.panel-box.units.editunitname .group-action {
+  opacity: 1;
+}
 
 @media screen and (min-width: 1367px) {
   .unittype-calendar {

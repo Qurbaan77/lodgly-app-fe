@@ -44,10 +44,13 @@ const UnitType = () => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [showPanel, setShowPanel] = useState(true);
+  const [showEdit, setShowEdit] = useState(true);
   const [empty, setEmpty] = useState(true);
   const [unittypeData, setUnittypeData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
   const [currUnittype, setCurrUnittype] = useState(0);
+  const [name, setName] = useState();
+  const [editId, setEditId] = useState(null);
   const history = useHistory();
 
   const show = (unittypeId) => {
@@ -63,23 +66,34 @@ const UnitType = () => {
     setVisible(false);
   };
 
-  const onFinish = async (values) => {
-    values.propertyId = localStorage.getItem('propertyId');
+  const onChange = (e) => {
+    setName(e.target.value);
+  };
+
+  const onFinish = async (id) => {
+    const values = {
+      name: name,
+      propertyId: localStorage.getItem('propertyId'),
+      id: id,
+    };
     const response = await userInstance.post('/addUnitType', values);
     if (response.data.code === 200) {
+      setEditId(null);
       setShowPanel(true);
       getData();
     }
-  }
+  };
+
   const edit = (unittypeId) => {
     localStorage.setItem('unittypeId', unittypeId);
     history.push('/addunittype');
   };
 
   const editName = (unittypeId) => {
-    console.log('unittypeId', unittypeId)
-    setShowPanel(false);
-  }
+    console.log('unittypeId', unittypeId);
+    setEditId(unittypeId);
+    setShowEdit(false);
+  };
 
   const remove = async () => {
     const values = {
@@ -121,64 +135,82 @@ const UnitType = () => {
             <HomeOutlined /> Unit Type
           </h1>
 
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => setShowPanel(false)}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setShowPanel(false)}
+          >
             {/* <Link onClick={() => localStorage.removeItem('unittypeId')}> */}
-              Add Unit Type
+            Add Unit Type
           </Button>
         </div>
-
-        <div className="panel-container" hidden={showPanel}>
-          <Form form={form} onFinish={onFinish}>
-            <div className="panel-box units">
-              <div className="group-name">
-                <Form.Item name="name" style={{ padding: '0px 10px' }}>
-                  <Input placeholder="Unit type Name" />
-                </Form.Item>
-              </div>
-              <div>
-              <Button onClick={() => setShowPanel(true)}>Cancel</Button>
-              <Form.Item>
-                <Button htmlType='submit'>Save</Button>
-              </Form.Item>
-              </div>
+        <div className="panel-box units editunit" hidden={showPanel}>
+          <div className="group-name">
+            <input
+              type="text"
+              name="name"
+              placeholder="Edit Unit"
+              onChange={onChange}
+            />
+          </div>
+          <div className="group-action">
+            <div className="can-btn" onClick={() => setShowPanel(true)}>
+              <CloseCircleOutlined /> Cancel
             </div>
-          </Form>
+            <div className="sav-btn" onClick={() => onFinish()}>
+              <CheckCircleOutlined /> Save
+            </div>
+          </div>
         </div>
-
-        <div className="panel-container">
-          {unittypeData.map((el, i) => {
-            return (
-              <div className="panel-box units">
-                <div className="group-name">
-                  <h4 onClick={() => edit(el.id)}>{el.unitTypeName}</h4>
-                  <span>1 unit are assigned</span>
-                </div>
-                <div className="group-action">
-                  <FormOutlined onClick={() => editName(el.id)} />
-                  <DeleteOutlined onClick={() => show(el.id)} />
-                </div>
-              </div>
-            );
-          })}
-
-
-         <div className="panel-box units editunit">
-                <div className="group-name">
-                  <input type="text" placeholder="Edit Unit"/>                
-                </div>
-                <div className="group-action">
-                  <div className="can-btn">
-                    <CloseCircleOutlined /> Cancel
+        {unittypeData.length ? (
+          <div className="panel-container">
+            {unittypeData.map((el, i) => {
+              return (
+                <div
+                  className={
+                    editId === i
+                      ? 'panel-box units editunitname'
+                      : 'panel-box units'
+                  }
+                >
+                  <div className="group-name">
+                    <h4
+                      onClick={() => edit(el.id)}
+                      hidden={editId === i ? true : false}
+                    >
+                      {el.unitTypeName}
+                    </h4>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Edit Unit"
+                      onChange={onChange}
+                      hidden={editId === i ? false : true}
+                    ></input>
+                    <span>1 unit are assigned</span>
                   </div>
-                  <div className="sav-btn">
-                    <CheckCircleOutlined /> Save
-                  </div>
+                  {editId === i ? (
+                    <div className="group-action">
+                      <div className="can-btn" onClick={() => setEditId(null)}>
+                        <CloseCircleOutlined /> Cancel
+                      </div>
+                      <div className="sav-btn" onClick={() => onFinish(el.id)}>
+                        <CheckCircleOutlined /> Save
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="group-action">
+                      <FormOutlined onClick={() => editName(i)} />
+                      <DeleteOutlined onClick={() => show(el.id)} />
+                    </div>
+                  )}
                 </div>
-              </div>
-
-
-
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} hidden={empty} />
+        )}
       </div>
       {/* <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} hidden={empty} /> */}
       <Modal

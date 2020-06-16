@@ -95,15 +95,25 @@ const Booking = () => {
     console.log('get Function is Called!');
     const response = await userInstance.post('/getBooking');
     const bookingdata = response.data.bookingData;
-    bookingdata.map((el) => {
+    const guestdata = response.data.guestData;
+    const guestnum = guestdata.map((el) => el.length);
+    const guestname = [];
+    const data = guestdata.map((el) => el.find((el) => el.id));
+    data.map((el) => guestname.push(el.fullname));
+    console.log(guestname);
+    guestname.push(data.fullname);
+    bookingdata.map((el, i) => {
       let d1 = new Date(el.startDate);
       let d2 = new Date(el.endDate);
       let diff = Math.abs(d1 - d2);
       let day = Math.floor(diff / (24 * 60 * 60 * 1000));
       el.nights = day + 1;
-      el.created_at = el.created_at.split('T', 1);
+      el.created_date = el.created_at.split('T', 1);
+      el.created_time = el.created_at.split('T').pop().substring(0, 5);
+      el.noOfGuest = guestnum[i];
+      el.guest = guestname[i];
     });
-    const guestdata = response.data.guestData;
+
     // const l = guestdata.length;
     // setGuestNum(l);
 
@@ -153,16 +163,19 @@ const Booking = () => {
         .filter((ele) => ele.bookingId == values.id)
         .map((filterGuest) => arr.push(filterGuest))
     );
+    console.log(arr);
     setCurrentBooking(values);
     setCurrentGuest(arr);
     setBooked(false);
   };
 
   const editBooking = (values) => {
+    console.log(values);
     setVisible(true);
     setEditBookingValues(values);
     form.setFieldsValue({
       property: values.property,
+      // commission: values.commission,
     });
   };
 
@@ -198,14 +211,7 @@ const Booking = () => {
     setVisible(false);
     setVisibleGuest(false);
   };
-  const guestNameData = [];
-  const guestNum = [];
-  guestData.map((el) => {
-    guestNum.push(el.length);
-    const data = el.find((el) => el.id);
-    guestNameData.push(data.fullname);
-  });
-  
+
   return (
     <Wrapper>
       <div className='booking'>
@@ -231,23 +237,23 @@ const Booking = () => {
                   return (
                     <div
                       className='booking-list'
-                      onClick={() => selectBooking(el)}
+                      onClick={() => selectBooking(el, i)}
                     >
                       <div className='detail'>
-                        <h3>{guestNameData[i]}</h3>
-                        <p>Rental Type - Property Name_1</p>
+                        <h3>{el.guest}</h3>
+                        <p>{el.propertyName}</p>
                         <ul>
-                          <li>{el.created_at}</li>
+                          <li>{el.created_date}</li>
                           <li>
                             {el.nights} <ThunderboltOutlined />
                           </li>
                           <li>
-                            {guestNum[i]} <UserOutlined />
+                            {el.noOfGuest} <UserOutlined />
                           </li>
                         </ul>
                       </div>
                       <div className='detail-info'>
-                        <span>8:42 PM</span>
+                        <span>{el.created_time}</span>
                         <span className='green-label'>${el.totalAmount}</span>
                       </div>
                     </div>
@@ -310,19 +316,21 @@ const Booking = () => {
                   <div className='booking-item'>
                     <div className='prorety-box'>
                       <span>Property</span>
-                      <p>{currentBooking.property}</p>
+                      <p>{currentBooking.propertyName}</p>
                     </div>
 
                     <div className='prorety-box'>
                       <span>Unit</span>
-                      <p>{currentBooking.unit}</p>
+                      <p>{currentBooking.unitName}</p>
                     </div>
                   </div>
 
                   <div className='booking-item-one'>
                     <div className='prorety-box'>
                       <span>channel, commission(%)</span>
-                      <p>AirBnB (10%)</p>
+                      <p>
+                        {currentBooking.channel} ({currentBooking.commission})
+                      </p>
                     </div>
                   </div>
 
@@ -416,6 +424,7 @@ const Booking = () => {
         editBookingValues={editBookingValues}
         getData={getData}
         currentBooking={currentBooking}
+        currentGuest={currentGuest}
       ></CreateBookingPopup>
     </Wrapper>
   );

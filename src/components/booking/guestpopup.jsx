@@ -42,7 +42,6 @@ const { Option } = Select;
 const { MonthPicker, RangePicker } = DatePicker;
 
 const GuestPopup = (props) => {
-  console.log(props.getData);
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [notifyType, setNotifyType] = useState();
