@@ -32,18 +32,18 @@ const Register = () => {
 
   const onFinish = async (values) => {
     console.log('Form is Good', values);
-    // const response = await userInstance.post('/signup', values);
-    // const statusCode = response.data.code;
-    // const msg = response.data.msg;
-    // if (statusCode == 200) {
-    //   setNotifyType('success');
-    //   setNotifyMsg(msg);
-    //   history.push('/thankyou');
-    // } else {
-    //   setNotifyType('error');
-    //   setNotifyMsg(msg);
-    // }
-    // form.resetFields();
+    const response = await userInstance.post('/signup', values);
+    const statusCode = response.data.code;
+    const msg = response.data.msg;
+    if (statusCode == 200) {
+      setNotifyType('success');
+      setNotifyMsg(msg);
+      history.push('/thankyou');
+    } else {
+      setNotifyType('error');
+      setNotifyMsg(msg);
+    }
+    form.resetFields();
   };
 
   const close = () => {
