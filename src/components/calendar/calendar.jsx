@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import './calendar.css';
 import Wrapper from '../wrapper';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
@@ -26,6 +27,9 @@ import { userInstance } from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
 
 const Calendar = () => {
+  const today = new Date();
+  const weekFromToday = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+
   const [propertyData, setPropertyData] = useState([]);
   const [reservationData, setReservationData] = useState([]);
   const [guestData, setGuestData] = useState([]);
@@ -35,7 +39,7 @@ const Calendar = () => {
 
   const rows = {};
   for (let i = 0; i < propertyData.length; i++) {
-    const pt_id = propertyData[i].id.toString();
+    const pt_id = 'pt' + propertyData[i].id.toString();
     rows[pt_id] = {
       id: pt_id,
       label: propertyData[i].propertyName,
@@ -43,29 +47,38 @@ const Calendar = () => {
       expanded: false,
     };
     for (let j = 0; j < unittypeData.length; j++) {
-      console.log('i', i)
-        console.log('j', j)
-      const utt_id = unittypeData[j].id.toString();
+      const utt_id = 'utt' + unittypeData[j].id.toString();
       if (unittypeData[j].propertyId == propertyData[i].id) {
         rows[utt_id] = {
           id: utt_id,
           label: unittypeData[j].unitTypeName,
           progress: 50,
-          parentId: propertyData[i].id.toString(),
+          parentId: 'pt' + propertyData[i].id.toString(),
           expanded: false,
         };
       }
       for (let k = 0; k < unitData.length; k++) {
-        console.log('i', i)
-        console.log('j', j)
-        console.log('k', k)
-        const ut_id = unitData[k].id.toString();
+        const ut_id = 'ut' + unitData[k].id.toString();
+        const a = 'mt_1' + unittypeData[j].id.toString();
+        const b = 'mt_2' + unittypeData[j].id.toString();
+        rows[a] = {
+          id: a,
+          label: 'Price per night',
+          parentId: 'utt' + unittypeData[j].id.toString(),
+          progress: 50,
+        };
+        rows[b] = {
+          id: b,
+          label: 'Minimum stay',
+          progress: 50,
+          parentId: 'utt' + unittypeData[j].id.toString(),
+        };
         if (unitData[k].unittypeId == unittypeData[j].id) {
           rows[ut_id] = {
             id: ut_id,
             label: unitData[k].unitName,
             progress: 50,
-            parentId: unittypeData[j].id.toString(),
+            parentId: 'utt' + unittypeData[j].id.toString(),
             expanded: false,
           };
         }
@@ -74,15 +87,13 @@ const Calendar = () => {
   }
 
   const columns = {
+    percent: 100,
     data: {
       id: {
         id: 'id',
-        data: 'id',
         width: 100,
         expander: true,
-        header: {
-          content: 'ID',
-        },
+        header: {},
       },
       label: {
         id: 'label',
@@ -96,18 +107,21 @@ const Calendar = () => {
   };
 
   const items = {};
-  for (let i = 0; i < unittypeData.length; i++) {
-    const id = unittypeData[i].id.toString();
-    items[id] = {
-      id,
-      rowId: id,
-      label: unittypeData[i].unitTypeName,
-      time: {
-        start: unittypeData[i].startDay,
-        end: unittypeData[i].endDay,
-      },
-    };
-  }
+  // for (let i = 0; i < reservationData.length; i++) {
+  //   const id = reservationData[i].id.toString();
+  //   items[id] = {
+  //     id,
+  //     rowId: 'ut' + reservationData[i].unitId.toString(),
+  //     label: reservationData[i].unitTypeName,
+  //     time: {
+  //       start: reservationData[i].startDate,
+  //       end: reservationData[i].endDate,
+  //     },
+  //     style : {
+  //       background: 'blue'
+  //     }
+  //   };
+  // }
 
   const config = {
     height: 500,
@@ -117,52 +131,11 @@ const Calendar = () => {
     },
 
     chart: {
-      items : {
-        '1': {
-          id: '1',
-          rowId: '1',
-          label: 'Item 1',
-          time: {
-            start: new Date().getTime(),
-            end: new Date().getTime(),
-          },
-        },
-        '2': {
-          id: '2',
-          rowId: '2',
-          label: 'Item 2',
-          time: {
-            start: new Date().getTime(),
-            end: new Date().getTime(),
-          },
-        },
-        '3': {
-          id: '3',
-          rowId: '3',
-          label: 'Item 3',
-          time: {
-            start: new Date().getTime(),
-            end: new Date().getTime(),
-          },
-        },
-        '4': {
-          id: '4',
-          rowId: '4',
-          label: 'Item 4',
-          time: {
-            start: new Date().getTime() + 10 * 24 * 60 * 60 * 1000,
-            end: new Date().getTime() + 12 * 24 * 60 * 60 * 1000,
-          },
-        },
-        '5': {
-          id: '5',
-          rowId: '4',
-          label: 'Item 5',
-          time: {
-            start: new Date().getTime() + 12 * 24 * 60 * 60 * 1000,
-            end: new Date().getTime() + 14 * 24 * 60 * 60 * 1000,
-          },
-        },
+      items,
+      time: {
+        from: today.getTime(),
+        period: 'hour',
+        to: weekFromToday.getTime(),
       },
     },
   };
@@ -183,8 +156,8 @@ const Calendar = () => {
     const reservationData = response.data.reservationData;
     const guestdata = response.data.guestData;
     if (response.data.code === 200) {
-      setReservationData([...reservationData]);
-      setGuestData([...guestdata]);
+      setReservationData(reservationData);
+      setGuestData(guestdata);
     }
   };
 
@@ -253,23 +226,14 @@ const Calendar = () => {
           <GSTC config={config} onState={onState} />
         </div>
 
-        <Modal
+        <AddReservation
           title="Add New Reservation"
           visible={visible}
           onOk={handleOk}
           close={handleCancel}
           wrapClassName="create-booking-modal"
           getData={getData}
-        >
-          <AddReservation
-            title="Add New Reservation"
-            visible={visible}
-            onOk={handleOk}
-            close={handleCancel}
-            wrapClassName="create-booking-modal"
-            getData={getData}
-          />
-        </Modal>
+        />
       </div>
     </Wrapper>
   );

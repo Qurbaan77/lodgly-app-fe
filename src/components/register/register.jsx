@@ -256,7 +256,7 @@ const Register = () => {
                           ]}
                         >
                           <Checkbox>
-                            I have read the <Link to={'/'}>agreement</Link>
+                            I have read the <Link to={'/register'}>agreement</Link>
                           </Checkbox>
                         </Form.Item>
                       </Col>

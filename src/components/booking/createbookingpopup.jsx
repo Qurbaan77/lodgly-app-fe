@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { useHistory } from 'react-router-dom';
 import './booking.css';
 import {
@@ -57,8 +57,10 @@ let j = 1;
 
 const CreateBookingPopup = (props) => {
   const editBookingData = props.editBookingValues;
+  const editGuestData = props.editCurrentGuest;
   console.log(editBookingData);
-  console.log('props',props);
+  console.log(editGuestData);
+  console.log('props', props);
   let arr = [];
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
@@ -101,6 +103,22 @@ const CreateBookingPopup = (props) => {
   const [propertyData, setPropertyData] = useState([]);
   const history = useHistory();
 
+  console.log(editGuestData.length);
+  if (editGuestData.length !== undefined) {
+    editGuestData.map((el) => {
+      console.log(el.fullname);
+      console.log(el.email);
+      console.log(el.country);
+      console.log(el.phone);
+      form.setFieldsValue({
+        fullName: el.fullname,
+        email: el.email,
+        country: el.country,
+        phone: el.phone,
+      });
+    });
+  }
+
   if (editBookingData.id) {
     form.setFieldsValue({
       id: editBookingData.id,
@@ -111,6 +129,13 @@ const CreateBookingPopup = (props) => {
       adult: editBookingData.adult,
       children1: editBookingData.children1,
       children2: editBookingData.children2,
+      perNight: editBookingData.perNight,
+      nights: editBookingData.nights,
+      totalAmount: editBookingData.amt,
+      discount: editBookingData.discount,
+      discountType: editBookingData.discountType,
+      accomodation: editBookingData.accomodation,
+      deposit: editBookingData.deposit,
     });
   }
 
@@ -162,14 +187,13 @@ const CreateBookingPopup = (props) => {
   };
 
   const onFinish = async (values) => {
-
     values.perNight = price;
     values.nights = night;
     values.amt = amt;
     values.discountType = discountType;
     values.discount = discount;
     values.accomodation = accomodation;
-    
+
     const guestData = [];
     const serviceData = [];
     // values.acknowledge = radio;
@@ -297,8 +321,184 @@ const CreateBookingPopup = (props) => {
   };
 
   const fun4 = (value) => {
-    form.setFieldsValue({});
+    console.log(value[0]._d);
+    let d1 = new Date(value[0]._d);
+    let d2 = new Date(value[1]._d);
+    let diff = Math.abs(d1 - d2);
+    let day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+    console.log(day);
+    setNight(day);
+    // form.setFieldsValue({});
   };
+
+  const createGuestDetails = (
+    <Fragment>
+      {panel.map((el, i) => {
+        return (
+          <div className='addi-box'>
+            <Row style={{ alignItems: 'center' }}>
+              <Col span={6}>
+                <Form.Item
+                  label='Full Name'
+                  name={[el, 'fullName']}
+                  style={{ paddingRight: 20 }}
+                >
+                  <Input onChange={(e) => setFullname(e.target.value)} />
+                </Form.Item>
+              </Col>
+
+              <Col span={6}>
+                <Form.Item
+                  label='Email'
+                  name={[el, 'email']}
+                  style={{ paddingRight: 20 }}
+                >
+                  <Input onChange={(e) => setEmail(e.target.value)} />
+                </Form.Item>
+              </Col>
+
+              <Col span={6}>
+                <Form.Item
+                  label='Country'
+                  name={[el, 'country']}
+                  style={{ paddingRight: 20 }}
+                >
+                  <Select showSearch>
+                    {countryList()
+                      .getData()
+                      .map((ele, i) => {
+                        return (
+                          <Select.Option value={ele.label}>
+                            {ele.label}
+                          </Select.Option>
+                        );
+                      })}
+                  </Select>
+                </Form.Item>
+              </Col>
+
+              <Col span={6}>
+                <Form.Item
+                  label='Phone'
+                  name={[el, 'phone']}
+                  style={{ paddingRight: 20 }}
+                >
+                  <Input
+                    onChange={(e) => setPhone(e.target.value)}
+                    type='number'
+                    minLength='9'
+                    maxLength='15'
+                  />
+                </Form.Item>
+              </Col>
+
+              <Col span={24}>
+                <div className='additional-edit'>
+                  <a href=''>
+                    <EditOutlined /> Edit/Additional Data
+                  </a>
+                </div>
+              </Col>
+            </Row>
+
+            <div className='delete-data'>
+              <DeleteOutlined onClick={removePanel} />
+            </div>
+          </div>
+        );
+      })}
+    </Fragment>
+  );
+
+  const editGuestDetails = (
+    <Fragment>
+      {editGuestData.length !== undefined ? (
+        <Fragment>
+          {editGuestData.map((el, i) => {
+            console.log(el);
+            form.setFieldsValue({
+              [`fullName${i}`]: el.fullname,
+              [`email${i}`]: el.email,
+              [`country${i}`]: el.country,
+              [`phone${i}`]: el.phone,
+            });
+            return (
+              <div className='addi-box' key={i}>
+                <Row style={{ alignItems: 'center' }}>
+                  <Col span={6}>
+                    <Form.Item
+                      label='Full Name'
+                      name={`fullName${i}`}
+                      style={{ paddingRight: 20 }}
+                    >
+                      <Input onChange={(e) => setFullname(e.target.value)} />
+                    </Form.Item>
+                  </Col>
+
+                  <Col span={6}>
+                    <Form.Item
+                      label='Email'
+                      name={`email${i}`}
+                      style={{ paddingRight: 20 }}
+                    >
+                      <Input onChange={(e) => setEmail(e.target.value)} />
+                    </Form.Item>
+                  </Col>
+
+                  <Col span={6}>
+                    <Form.Item
+                      label='Country'
+                      name={`country${i}`}
+                      style={{ paddingRight: 20 }}
+                    >
+                      <Select showSearch>
+                        {countryList()
+                          .getData()
+                          .map((ele, i) => {
+                            return (
+                              <Select.Option value={ele.label}>
+                                {ele.label}
+                              </Select.Option>
+                            );
+                          })}
+                      </Select>
+                    </Form.Item>
+                  </Col>
+
+                  <Col span={6}>
+                    <Form.Item
+                      label='Phone'
+                      name={`phone${i}`}
+                      style={{ paddingRight: 20 }}
+                    >
+                      <Input
+                        onChange={(e) => setPhone(e.target.value)}
+                        type='number'
+                        minLength='9'
+                        maxLength='15'
+                      />
+                    </Form.Item>
+                  </Col>
+
+                  <Col span={24}>
+                    <div className='additional-edit'>
+                      <a href=''>
+                        <EditOutlined /> Edit/Additional Data
+                      </a>
+                    </div>
+                  </Col>
+                </Row>
+
+                <div className='delete-data'>
+                  <DeleteOutlined onClick={removePanel} />
+                </div>
+              </div>
+            );
+          })}
+        </Fragment>
+      ) : null}
+    </Fragment>
+  );
 
   return (
     <Modal
@@ -395,38 +595,81 @@ const CreateBookingPopup = (props) => {
           </Col>
 
           <Col span={8}>
-            <Form.Item
-              className='comision'
-              label='Channel, Commission(%)'
-              name='channel'
-            >
-              <Select
-                placeholder='Select'
-                onSelect={(value, event) => fun5(value, event)}
-                style={{ width: '70%', display: 'inline-block' }}
-              >
-                <Select.Option value='Airbnb'>Airbnb</Select.Option>
-                <Select.Option value='Booking'>Booking</Select.Option>
-              </Select>
+            {editBookingData.id ? (
+              //edit booking popup
+              <Fragment>
+                <Form.Item
+                  className='comision'
+                  label='Channel, Commission(%)'
+                  name='channel'
+                >
+                  <Select
+                    placeholder='Select'
+                    onSelect={(value, event) => fun5(value, event)}
+                    style={{ width: '70%', display: 'inline-block' }}
+                  >
+                    <Select.Option value='Airbnb'>Airbnb</Select.Option>
+                    <Select.Option value='Booking'>Booking</Select.Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item
+                  name='commission'
+                  style={{
+                    width: '26%',
+                    display: 'inline-block',
+                    verticalAlign: 'top',
+                    marginLeft: '4%',
+                  }}
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Commission is required',
+                    },
+                  ]}
+                >
+                  <Input
+                    value={channelCommission}
+                    onChange={(e) => handleCommissionChange(e)}
+                  />
+                </Form.Item>
+              </Fragment>
+            ) : (
+              //create booking popup
+              <Fragment>
+                <Form.Item
+                  className='comision'
+                  label='Channel, Commission(%)'
+                  name='channel'
+                >
+                  <Select
+                    placeholder='Select'
+                    onSelect={(value, event) => fun5(value, event)}
+                    style={{ width: '70%', display: 'inline-block' }}
+                  >
+                    <Select.Option value='Airbnb'>Airbnb</Select.Option>
+                    <Select.Option value='Booking'>Booking</Select.Option>
+                  </Select>
 
-              <Input
-                name='commission'
-                style={{
-                  width: '26%',
-                  display: 'inline-block',
-                  verticalAlign: 'top',
-                  marginLeft: '4%',
-                }}
-                value={channelCommission}
-                onChange={(e) => handleCommissionChange(e)}
-                rules={[
-                  {
-                    required: true,
-                    message: 'Commission is required',
-                  },
-                ]}
-              />
-            </Form.Item>
+                  <Input
+                    name='commission'
+                    style={{
+                      width: '26%',
+                      display: 'inline-block',
+                      verticalAlign: 'top',
+                      marginLeft: '4%',
+                    }}
+                    value={channelCommission}
+                    onChange={(e) => handleCommissionChange(e)}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Commission is required',
+                      },
+                    ]}
+                  />
+                </Form.Item>
+              </Fragment>
+            )}
           </Col>
         </Row>
 
@@ -492,7 +735,10 @@ const CreateBookingPopup = (props) => {
                   key='1'
                 >
                   <div className='additional-guest'>
-                    {panel.map((el, i) => {
+                    {editGuestData.length === undefined
+                      ? createGuestDetails
+                      : editGuestDetails}
+                    {/* {panel.map((el, i) => {
                       return (
                         <div className='addi-box'>
                           <Row style={{ alignItems: 'center' }}>
@@ -501,12 +747,6 @@ const CreateBookingPopup = (props) => {
                                 label='Full Name'
                                 name={[el, 'fullName']}
                                 style={{ paddingRight: 20 }}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: 'Required Field',
-                                  },
-                                ]}
                               >
                                 <Input
                                   onChange={(e) => setFullname(e.target.value)}
@@ -519,12 +759,6 @@ const CreateBookingPopup = (props) => {
                                 label='Email'
                                 name={[el, 'email']}
                                 style={{ paddingRight: 20 }}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: 'Required Field',
-                                  },
-                                ]}
                               >
                                 <Input
                                   onChange={(e) => setEmail(e.target.value)}
@@ -537,12 +771,6 @@ const CreateBookingPopup = (props) => {
                                 label='Country'
                                 name={[el, 'country']}
                                 style={{ paddingRight: 20 }}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: 'Required Field',
-                                  },
-                                ]}
                               >
                                 <Select showSearch>
                                   {countryList()
@@ -587,7 +815,7 @@ const CreateBookingPopup = (props) => {
                           </div>
                         </div>
                       );
-                    })}
+                    })} */}
                     <Row>
                       <Col span={24}>
                         <div className='additional-add' onClick={addMore}>
@@ -636,57 +864,120 @@ const CreateBookingPopup = (props) => {
             </Col>
 
             <Col span={16}>
-              <Form.Item name='perNight'>
-                <div className='inline-form'>
-                  <label>Average price per night</label>
-                  <Input
-                    type='number'
-                    placeholder='0,00'
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Required Field',
-                      },
-                    ]}
-                    onChange={(e) => setPrice(e.target.value)}
-                  />
-                  <label>X</label>
-                  <Input
-                    type='number'
-                    placeholder='0 nights'
-                    name='totalAmount'
-                    onChange={(e) => setNight(e.target.value)}
-                  />
-                  <label>=</label>
-                  <Input
-                    type='number'
-                    value={night * price}
-                    onBlur={(e) => setAmt(e.target.value)}
-                  />
-                  <label>EUR</label>
-                </div>
+              {editBookingData.id ? (
+                //edit booking popup
+                <Fragment>
+                  <div className='inline-form'>
+                    <Form.Item
+                      label='Average price per night'
+                      name='perNight'
+                      rules={[{ required: true, message: 'Required field' }]}
+                    >
+                      <Input
+                        type='number'
+                        onChange={(e) => setPrice(e.target.value)}
+                      />
+                    </Form.Item>
+                    <Form.Item label='X' name='nights'>
+                      <Input
+                        type='number'
+                        value={night}
+                        onChange={(e) => setNight(e.target.value)}
+                      />
+                    </Form.Item>
+                    <Form.Item label='=' name='totalAmount'>
+                      <Input
+                        type='number'
+                        value={night * price}
+                        onBlur={(e) => setAmt(e.target.value)}
+                      />
+                    </Form.Item>
+                  </div>
+                  <div className='inline-form'>
+                    <Form.Item name='discount' label='Discount'>
+                      <Input
+                        type='number'
+                        placeholder='0,00'
+                        onChange={(e) => setDiscount(e.target.value)}
+                      />
+                    </Form.Item>
+                    <Form.Item name='discountType' label='X'>
+                      <Input
+                        type='number'
+                        defaultValue='%'
+                        onChange={(e) => setDiscountType(e.target.value)}
+                      />
+                    </Form.Item>
+                    <Form.Item label='=' name='accomodation'>
+                      <Input
+                        type='number'
+                        value={amt - amt * (discount / 100)}
+                        onFocus={(e) => setAccomodation(e.target.value)}
+                        autoFocus='true'
+                      />
+                    </Form.Item>
+                  </div>
+                </Fragment>
+              ) : (
+                //create booking popup
+                <Fragment>
+                  <Form.Item name='perNight'>
+                    <div className='inline-form'>
+                      <label>Average price per night</label>
+                      <Input
+                        name='perNight'
+                        type='number'
+                        placeholder='0,00'
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Required Field',
+                          },
+                        ]}
+                        onChange={(e) => setPrice(e.target.value)}
+                      />
+                      <label>X</label>
+                      <Input
+                        type='number'
+                        placeholder='0 nights'
+                        name='nights'
+                        value={night}
+                        onChange={(e) => setNight(e.target.value)}
+                      />
+                      <label>=</label>
+                      <Input
+                        name='totalAAmount'
+                        type='number'
+                        value={night * price}
+                        onBlur={(e) => setAmt(e.target.value)}
+                      />
+                      <label>EUR</label>
+                    </div>
 
-                <div className='inline-form'>
-                  <label>Discount</label>
-                  <Input
-                    type='number'
-                    placeholder='0,00'
-                    onChange={(e) => setDiscount(e.target.value)}
-                  />
-                  <label>X</label>
-                  <Input 
-                    type='number' 
-                    defaultValue='%' 
-                    onChnge={(e) => setDiscountType(e.target.value)}/>
-                  <label>=</label>
-                  <Input
-                    type='number'
-                    value={amt - amt * (discount / 100)}
-                    onBlur={(e) => setAccomodation(e.target.value)}
-                  />
-                  <label>EUR</label>
-                </div>
-              </Form.Item>
+                    <div className='inline-form'>
+                      <label>Discount</label>
+                      <Input
+                        type='number'
+                        placeholder='0,00'
+                        onChange={(e) => setDiscount(e.target.value)}
+                      />
+                      <label>X</label>
+                      <Input
+                        type='number'
+                        defaultValue='%'
+                        onChnge={(e) => setDiscountType(e.target.value)}
+                      />
+                      <label>=</label>
+                      <Input
+                        type='number'
+                        value={amt - amt * (discount / 100)}
+                        onBlur={(e) => setAccomodation(e.target.value)}
+                      />
+                      <label>EUR</label>
+                    </div>
+                  </Form.Item>
+                </Fragment>
+              )}
             </Col>
           </Row>
 
@@ -816,13 +1107,33 @@ const CreateBookingPopup = (props) => {
 
                 <div className='inline-form'>
                   <label>Accommodation deposit</label>
-                  <Input
-                    type='number'
-                    placeholder='0,00'
-                    name='deposit'
-                    onChange={(e) => setDeposit(e.target.value)}
-                  />
-                  <Input type='number' placeholder='%' />
+                  {editBookingData.id ? (
+                    //edit booking popup
+                    <Fragment>
+                      <Form.Item name='deposit'>
+                        <Input
+                          type='number'
+                          placeholder='0,00'
+                          onFocus={(e) => setDeposit(e.target.value)}
+                          autoFocus='true'
+                        />
+                      </Form.Item>
+                      <Form.Item>
+                        <Input type='number' placeholder='%' />
+                      </Form.Item>
+                    </Fragment>
+                  ) : (
+                    //create booking popup
+                    <Fragment>
+                      <Input
+                        name='deposit'
+                        type='number'
+                        placeholder='0,00'
+                        onChange={(e) => setDeposit(e.target.value)}
+                      />
+                      <Input type='number' placeholder='%' />
+                    </Fragment>
+                  )}
                 </div>
               </div>
             </Col>
@@ -854,10 +1165,28 @@ const CreateBookingPopup = (props) => {
         >
           <Col span={24}>
             <Form.Item style={{ textAlign: 'right' }}>
-              <Button style={{ marginRight: 10 }} onClick={props.close}>
+              <Button
+                style={{ marginRight: 10 }}
+                onClick={() => {
+                  props.close();
+                  props.setEditBookingValues({});
+                  props.setEditCurrentGuest({});
+                  setAccomodation(0);
+                  setDeposit(0);
+                  form.resetFields();
+                }}
+              >
                 Cancel
               </Button>
-              <Button type='primary' htmlType='submit'>
+              <Button
+                type='primary'
+                htmlType='submit'
+                onClick={() => {
+                  props.close();
+                  props.setEditBookingValues({});
+                  props.setEditCurrentGuest({});
+                }}
+              >
                 Save Reservation
               </Button>
             </Form.Item>

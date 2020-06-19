@@ -146,7 +146,6 @@ const CreateBookingPopup = (props) => {
       guestData.push(values[el]);
     });
     values.guestData = guestData;
-    values.guest = guestData[0].fullName;
     servicePanel.map((ele, i) => {
       serviceData.push(values[ele]);
     });
@@ -327,12 +326,6 @@ const CreateBookingPopup = (props) => {
               className='comision'
               label='Channel, Commission(%)'
               name='channel'
-              rules={[
-                {
-                  required: true,
-                  message: 'Please Select Channel',
-                },
-              ]}
             >
               <Select style={{ width: '70%', display: 'inline-block' }}>
                 <Select.Option value='Airbnb'>Airbnb</Select.Option>

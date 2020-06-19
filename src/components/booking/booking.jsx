@@ -64,6 +64,7 @@ const Booking = () => {
   const [guestData, setGuestData] = useState([]);
   const [currentBooking, setCurrentBooking] = useState({});
   const [currentGuest, setCurrentGuest] = useState([]);
+  const [editCurrentGuest, setEditCurrentGuest] = useState([]);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const [price, setPrice] = useState(0);
@@ -94,12 +95,20 @@ const Booking = () => {
   const getData = async () => {
     console.log('get Function is Called!');
     const response = await userInstance.post('/getBooking');
+    console.log(response);
     const bookingdata = response.data.bookingData;
     const guestdata = response.data.guestData;
     const guestnum = guestdata.map((el) => el.length);
     const guestname = [];
     const data = guestdata.map((el) => el.find((el) => el.id));
-    data.map((el) => guestname.push(el.fullname));
+    console.log(data);
+    data.map((el) => {
+      if (el !== undefined) {
+        guestname.push(el.fullname);
+      } else {
+        guestname.push('Unknown Guest');
+      }
+    });
     console.log(guestname);
     guestname.push(data.fullname);
     bookingdata.map((el, i) => {
@@ -164,6 +173,7 @@ const Booking = () => {
         .map((filterGuest) => arr.push(filterGuest))
     );
     console.log(arr);
+    setEditCurrentGuest(arr);
     setCurrentBooking(values);
     setCurrentGuest(arr);
     setBooked(false);
@@ -208,8 +218,11 @@ const Booking = () => {
   };
 
   const closeGuest = () => {
-    setVisible(false);
     setVisibleGuest(false);
+  };
+
+  const closeBooking = () => {
+    setVisible(false);
   };
 
   return (
@@ -254,7 +267,7 @@ const Booking = () => {
                       </div>
                       <div className='detail-info'>
                         <span>{el.created_time}</span>
-                        <span className='green-label'>${el.totalAmount}</span>
+                        <span className='green-label'> €{el.totalAmount}</span>
                       </div>
                     </div>
                   );
@@ -276,7 +289,12 @@ const Booking = () => {
                   <Button
                     type='primary'
                     icon={<PlusOutlined />}
-                    onClick={() => setVisible(true)}
+                    onClick={() => {
+                      setVisible(true);
+                      setEditBookingValues({});
+                      setEditCurrentGuest({});
+                      form.resetFields();
+                    }}
                   >
                     Create Booking
                   </Button>
@@ -420,11 +438,13 @@ const Booking = () => {
         visible={visible}
         handleCancel={handleCancel}
         handleOk={handleOk}
-        close={closeGuest}
+        close={closeBooking}
         editBookingValues={editBookingValues}
+        setEditBookingValues={setEditBookingValues}
         getData={getData}
         currentBooking={currentBooking}
-        currentGuest={currentGuest}
+        editCurrentGuest={editCurrentGuest}
+        setEditCurrentGuest={setEditCurrentGuest}
       ></CreateBookingPopup>
     </Wrapper>
   );
