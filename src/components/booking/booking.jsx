@@ -41,8 +41,14 @@ import { Modal } from 'antd';
 import { Tag } from 'antd';
 import GuestPopup from './guestpopup';
 import CreateBookingPopup from './createbookingpopup';
+import EditBookingPopup from './editbookingpopup';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
+import filter_icon from '../../assets/images/menu/filter-icon.png';
+
+import edit_icon from '../../assets/images/menu/pencil-icon.png';
+import download_icon from '../../assets/images/menu/download-icon.png';
+import refresh_icon from '../../assets/images/menu/refresh-icon.png';
 
 const { Panel } = Collapse;
 const { MonthPicker, RangePicker } = DatePicker;
@@ -52,23 +58,29 @@ const text = `
   it can be found as a welcome guest in many households across the world.
 `;
 
+const useForceUpdate = () => useState()[1];
 const Booking = () => {
+  const forceUpdate = useForceUpdate();
   const [form] = Form.useForm();
 
   const [visible, setVisible] = useState(false);
   const [visibleGuest, setVisibleGuest] = useState(false);
+  const [visibleEditBooking, setVisibleEditBooking] = useState(false);
 
   const [guest, setGuest] = useState(false);
   const [booked, setBooked] = useState(true);
   const [bookingData, setBookingData] = useState([]);
   const [guestData, setGuestData] = useState([]);
+  const [serviceData, setServiceData] = useState([]);
   const [currentBooking, setCurrentBooking] = useState({});
   const [currentGuest, setCurrentGuest] = useState([]);
+  const [currentService, setCurrentService] = useState([]);
   const [editCurrentGuest, setEditCurrentGuest] = useState([]);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const [price, setPrice] = useState(0);
   const [night, setNight] = useState(0);
+
   // const [guestNum, setGuestNum] = useState(0);
 
   const [editValues, setEditValues] = useState({});
@@ -98,16 +110,15 @@ const Booking = () => {
     console.log(response);
     const bookingdata = response.data.bookingData;
     const guestdata = response.data.guestData;
+    const servicedata = response.data.serviceData;
     const guestnum = guestdata.map((el) => el.length);
     const guestname = [];
     const data = guestdata.map((el) => el.find((el) => el.id));
     console.log(data);
     data.map((el) => {
-      if (el !== undefined) {
-        guestname.push(el.fullname);
-      } else {
-        guestname.push('Unknown Guest');
-      }
+      el.fullname
+        ? guestname.push(el.fullname)
+        : guestname.push('Unknown Guest');
     });
     console.log(guestname);
     guestname.push(data.fullname);
@@ -123,14 +134,13 @@ const Booking = () => {
       el.guest = guestname[i];
     });
 
-    // const l = guestdata.length;
-    // setGuestNum(l);
-
     console.log('bookingdata', bookingdata);
     console.log('guestdata', guestdata);
+    console.log('servicedata', servicedata);
     if (response.data.code === 200) {
       setBookingData([...bookingdata]);
       setGuestData([...guestdata]);
+      setServiceData([...servicedata]);
     }
   };
 
@@ -166,6 +176,7 @@ const Booking = () => {
     values.night = day + 1;
     console.log(values);
     localStorage.setItem('bookingId', values.id);
+    localStorage.setItem('propertyId', values.propertyId);
     const arr = [];
     guestData.filter((el) =>
       el
@@ -173,6 +184,13 @@ const Booking = () => {
         .map((filterGuest) => arr.push(filterGuest))
     );
     console.log(arr);
+
+    const data = [];
+    serviceData.map((el) =>
+      el.map((el) => (el.bookingId === values.id ? data.push(el) : null))
+    );
+    console.log(data);
+    setCurrentService(data);
     setEditCurrentGuest(arr);
     setCurrentBooking(values);
     setCurrentGuest(arr);
@@ -181,7 +199,7 @@ const Booking = () => {
 
   const editBooking = (values) => {
     console.log(values);
-    setVisible(true);
+    setVisibleEditBooking(true);
     setEditBookingValues(values);
     form.setFieldsValue({
       property: values.property,
@@ -222,6 +240,7 @@ const Booking = () => {
   };
 
   const closeBooking = () => {
+    setVisibleEditBooking(false);
     setVisible(false);
   };
 
@@ -233,16 +252,19 @@ const Booking = () => {
             <Col span={10}>
               <div className='booking-list-conatiner'>
                 <div className='booking-filter-box'>
-                  <label>Filters:</label>
-                  <div className='filter-item'>
-                    <Tag color='success'>item 1</Tag>
-                    <Tag color='processing'>item 2</Tag>
-                    <Tag color='error'>item 3</Tag>
-                    <Tag color='default'>booked</Tag>
+
+                  <div className="filter-section">
+                    <label>Filters:</label>
+                    <div className='filter-item'>
+                      <Tag color='default'>item 1</Tag>
+                      <Tag color='success'>item 2</Tag>                     
+                      <Tag color='default'>item 3</Tag>
+                      <Tag color='error'>booked</Tag>
+                    </div>
                   </div>
 
                   <div className='filter-icon'>
-                    <FilterOutlined />
+                    <img src={filter_icon} />
                   </div>
                 </div>
 
@@ -276,13 +298,13 @@ const Booking = () => {
                 <div className='bookin-footer'>
                   <ul>
                     <li>
-                      <FormOutlined />
+                      <img src={edit_icon} />
                     </li>
                     <li>
-                      <DownloadOutlined />
+                      <img src={download_icon} />
                     </li>
                     <li>
-                      <SyncOutlined />
+                      <img src={refresh_icon} />
                     </li>
                   </ul>
 
@@ -319,7 +341,7 @@ const Booking = () => {
                       <h3>Booking</h3>
                     </div>
 
-                    <div className='box-editing'>
+                    <div className='box-editing' onClick={forceUpdate}>
                       <FormOutlined
                         onClick={() => editBooking(currentBooking)}
                       />
@@ -433,9 +455,18 @@ const Booking = () => {
         close={closeGuest}
         editValues={editValues}
         getData={getData}
+        setBooked={setBooked}
       ></GuestPopup>
       <CreateBookingPopup
         visible={visible}
+        handleCancel={handleCancel}
+        handleOk={handleOk}
+        close={closeBooking}
+        getData={getData}
+      ></CreateBookingPopup>
+
+      <EditBookingPopup
+        visible={visibleEditBooking}
         handleCancel={handleCancel}
         handleOk={handleOk}
         close={closeBooking}
@@ -445,7 +476,10 @@ const Booking = () => {
         currentBooking={currentBooking}
         editCurrentGuest={editCurrentGuest}
         setEditCurrentGuest={setEditCurrentGuest}
-      ></CreateBookingPopup>
+        currentService={currentService}
+        setCurrentService={setCurrentService}
+        setBooked={setBooked}
+      ></EditBookingPopup>
     </Wrapper>
   );
 };

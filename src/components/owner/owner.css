@@ -1,0 +1,113 @@
+.custom-table table {
+    width: 100%;
+}
+
+.custom-table table {
+    background: #fff;
+}
+
+.custom-table table td {
+    padding: 20px 20px;
+    border-top: 1px solid #efecec;
+    border-bottom: 1px solid #efecec;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.custom-table table tr:hover td {
+    background: #fbfbfc;
+}
+
+.custom-table table tr {
+border-left: 1px solid #efecec;
+border-right: 1px solid #efecec;
+}
+
+.custom-table table thead tr {
+    border: none;
+}
+
+/* .custom-table table tr:last-child td {
+    border-bottom: none;
+} */
+
+
+.custom-table table th {
+    padding: 10px 20px;
+}
+
+.custom-table table thead {
+    background: #fbfbfc;
+}
+
+.owner-pic img {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+}
+
+.owner-property img {
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    margin-left: -5px;
+    border: 2px solid #fff;
+}
+
+.owner-info {
+    display: flex;
+    align-items: center;
+}
+
+.owner-pic {
+    padding-right: 25px;
+}
+
+.owner-title h5 {
+    font-size: 15px;
+    margin: 0;
+    font-weight: 500;
+}
+
+.owner-title span {
+    font-size: 12px;
+    color: #999;
+}
+
+.custom-table table tr:hover .owner-action{
+    opacity: 1;
+}
+
+
+.owner-action{
+    opacity: 0;
+    transition: all 0.5s;
+}
+
+.owner-action span {
+    padding: 0px 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.owner-action span.anticon-form {
+    color: #807e7e;
+}
+
+.owner-action span.anticon-delete {
+    color: #f93b3b;
+}
+
+
+select#basic_country, select#basic_citizenship {
+    border: 1.5px solid #eaeaea !important;
+    border-radius: 0;
+    padding: 8px 15px !important;
+    height: auto;
+    width: 100%;
+    color: #bbb;
+}
+
+select#basic_country:focus, select#basic_citizenship:focus {
+    outline: none;
+}

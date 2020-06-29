@@ -103,8 +103,6 @@ const UnitType = () => {
     if (response.data.code === 200) {
       setVisible(false);
       getData();
-      console.log('ok');
-      console.log(visible);
     }
   };
 

@@ -64,7 +64,7 @@ left: 0;
 right: inherit!important;
 border-right: 3px solid #fab52c!important;
 }
-.ant-menu-item-selected {
+.main-menu .ant-menu-item-selected a, .main-menu .ant-menu-item-selected span{
 color: #fab52c!important;
 }
 
@@ -96,17 +96,17 @@ align-items: center;
 }
 
 .header-property .ant-dropdown-link {
-border: 1px solid #ccc;
-padding: 10px 100px 10px 15px;
-color: #555!important;
-position: relative;
+  border: 1px solid #e6e6e6;
+  padding: 10px 150px 10px 15px;
+  color: #a5a5a5!important;
+  position: relative;
 }
 
 .header-property {
-padding-right: 24px;
-max-width: 300px;
-width: 100%;
-text-align: right;
+  padding-right: 30px;
+  max-width: 400px;
+  width: 100%;
+  text-align: right;
 }
 .header-property .ant-dropdown-link span {
 position: absolute;
@@ -116,14 +116,14 @@ top: 12px;
 
 .search-box {
 display: inline-block;
-padding-right: 24px;
+padding-right: 30px;
 vertical-align: middle;
 }
 
 .search-box span {
-font-size: 20px;
-color: #999;
-cursor: pointer;
+  font-size: 18px;
+  color: #d6d6d6;
+  cursor: pointer;
 }
 
 .ant-menu.main-menu-mbl {
@@ -151,4 +151,21 @@ color: #999;
 
 .submenu-heading .anticon {
 margin-right: 10px;
+}
+
+.main-menu li img {
+  width: 18px;
+  margin-right: 10px;
+}
+
+.main-menu .ant-menu-item .anticon {
+  color: #cacaca;
+}
+
+.main-menu li a, .main-menu li span {
+  color: #999!important;
+}
+
+.main-menu li a:hover, .main-menu li span:hover {
+  color: #fab52c!important;
 }

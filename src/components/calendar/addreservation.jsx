@@ -140,7 +140,7 @@ const CreateBookingPopup = (props) => {
     const guestData = [];
     const serviceData = [];
     values.acknowledge = radio;
-    values.totalAmount = total;
+    values.totalAmount = parseInt(total) + parseInt(accomodation);
     values.deposit = deposit;
     panel.map((el, i) => {
       guestData.push(values[el]);

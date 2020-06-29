@@ -15,13 +15,17 @@ import Sidenav from '../navbar/sidenav/sidenav';
 const { Content } = Layout;
 
 const Wrapper = (props) => {
+  const handleChange = (newValue) => {
+    props.onChange(newValue);
+  };
+
   return (
     <div className="wrapper">
       <Layout>
         <Sidenav />
 
         <Layout className="site-layout">
-          <TopHeader />
+          <TopHeader onChange={handleChange} fun={props.fun}/>
 
           <Content
             className="site-layout-background"

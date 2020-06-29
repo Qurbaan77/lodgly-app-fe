@@ -29,6 +29,14 @@ import Services from './components/property/services';
 import Calendar from './components/calendar/calendar';
 import Popup from './components/calendar/popup';
 
+import Owner from './components/owner/owner';
+import TeamListing from './components/team/teamlist';
+import Team from './components/team/team';
+import Profile from './components/profile/profile';
+import BillingInformation from './components/profile/billinginformation';
+
+import './responsive.css';
+
 const history = createBrowserHistory();
 
 const App = () => {
@@ -55,7 +63,11 @@ const App = () => {
               <div className="main_content">
                 <Route exact path="/" component={() => <Login />} />
                 <Route exact path="/register" component={() => <Register />} />
-                <PrivateRoute exact path="/sidenav" component={() => <Sidenav />} />
+                <PrivateRoute
+                  exact
+                  path="/sidenav"
+                  component={() => <Sidenav />}
+                />
                 <PrivateRoute
                   exact
                   path="/addproperty"
@@ -66,8 +78,16 @@ const App = () => {
                   path="/propertylist"
                   component={() => <PropertyList />}
                 />
-                <PrivateRoute exact path="/unittype" component={() => <UnitType />} />
-                <PrivateRoute exact path="/groups" component={() => <Groups />} />
+                <PrivateRoute
+                  exact
+                  path="/unittype"
+                  component={() => <UnitType />}
+                />
+                <PrivateRoute
+                  exact
+                  path="/groups"
+                  component={() => <Groups />}
+                />
                 <PrivateRoute
                   exact
                   path="/cleaninggroup"
@@ -89,15 +109,31 @@ const App = () => {
                   path="/createbookingpopup"
                   component={() => <CreateBookingPopup />}
                 />
-                <PrivateRoute exact path="/guestpopup" component={() => <GuestPopup />} />
-                <PrivateRoute exact path="/booking" component={() => <Booking />} />
-                <PrivateRoute exact path="/filter" component={() => <BookingFilter />} />
+                <PrivateRoute
+                  exact
+                  path="/guestpopup"
+                  component={() => <GuestPopup />}
+                />
+                <PrivateRoute
+                  exact
+                  path="/booking"
+                  component={() => <Booking />}
+                />
+                <PrivateRoute
+                  exact
+                  path="/filter"
+                  component={() => <BookingFilter />}
+                />
                 <PrivateRoute
                   exact
                   path="/deletepopup"
                   component={() => <DeletePopup />}
                 />
-                <PrivateRoute exact path="/property" component={() => <Property />} />
+                <PrivateRoute
+                  exact
+                  path="/property"
+                  component={() => <Property />}
+                />
                 <PrivateRoute
                   exact
                   path="/addunittype"
@@ -107,8 +143,29 @@ const App = () => {
                 <Route exact path="/reset" component={() => <Reset />} />
                 <Route exact path="/thankyou" component={() => <Thankyou />} />
                 <Route exact path="/services" component={() => <Services />} />
-                <PrivateRoute exact path="/calendar" component={() => <Calendar />} />
+                <PrivateRoute
+                  exact
+                  path="/calendar"
+                  component={() => <Calendar />}
+                />
                 <PrivateRoute exact path="/popup" component={() => <Popup />} />
+
+                <PrivateRoute exact path="/owner" component={() => <Owner />} />
+
+                {/* Additional Work */}
+
+                <Route exact path="/team" component={() => <Team />} />
+                <Route
+                  exact
+                  path="/teamlist"
+                  component={() => <TeamListing />}
+                />
+                <Route exact path="/profile" component={() => <Profile />} />
+                <Route
+                  exact
+                  path="/billinginformation"
+                  component={() => <BillingInformation />}
+                />
               </div>
             </main>
             <Footer />

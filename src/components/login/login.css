@@ -138,11 +138,11 @@
     margin-right: 10px;
 }
 
-.ant-input-suffix {
+.login-box .ant-input-suffix {
     margin-left: 4px;
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 14px;
+    top: 14px;
 }
 
 .ant-form .ant-input-affix-wrapper {

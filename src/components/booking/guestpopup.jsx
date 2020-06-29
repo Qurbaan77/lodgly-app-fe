@@ -75,6 +75,7 @@ const GuestPopup = (props) => {
   });
 
   const onFinish = async (values) => {
+    console.log(values);
     values.bookingId = localStorage.getItem('bookingId');
     const response = await userInstance.post('/addGuest', values);
     const statusCode = response.data.code;
@@ -83,6 +84,8 @@ const GuestPopup = (props) => {
       setNotifyType('success');
       setNotifyMsg(msg);
       props.getData();
+      props.close();
+      props.setBooked(true);
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);

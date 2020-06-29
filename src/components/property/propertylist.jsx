@@ -24,27 +24,40 @@ import Toaster from '../toaster/toaster';
 
 const PropertyList = () => {
   const [propertyData, setPropertyData] = useState([]);
+  const [topNavId, setTopNavId] = useState();
   const history = useHistory();
 
   useEffect(() => {
+    setTopNavId(localStorage.getItem('topNavId'));
+    console.log('Function is called')
     async function getData() {
       const response = await userInstance.post('/fetchProperty');
+      const data2 = [];
       const data = response.data.propertiesData;
+      data
+        .filter((el) => el.id == topNavId)
+        .map((filterData) => {
+          data2.push(filterData);
+        });
       if (response.data.code === 200) {
-        setPropertyData(data);
+        setPropertyData(data2.length > 0 ? data2 : data);
       }
     }
 
     getData();
-  }, []);
+  }, [topNavId]);
 
   return (
-    <Wrapper>
+    <Wrapper fun={setTopNavId}>
       <div className="property-listing">
         <div className="page-header">
           <h1>All Properties</h1>
 
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => history.push('/addproperty')}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => history.push('/addproperty')}
+          >
             Add Property
           </Button>
         </div>

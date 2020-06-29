@@ -32,28 +32,32 @@ const Calendar = () => {
 
   const [propertyData, setPropertyData] = useState([]);
   const [reservationData, setReservationData] = useState([]);
-  const [guestData, setGuestData] = useState([]);
+  const [guestName, setGuestName] = useState('');
   const [unittypeData, setUnittypeData] = useState([]);
   const [unitData, setUnitData] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [pId, setPId] = useState();
+  const handleChange = (newValue) => {
+    setPId(newValue);
+  };
 
   const rows = {};
   for (let i = 0; i < propertyData.length; i++) {
-    const pt_id = 'pt' + propertyData[i].id.toString();
-    rows[pt_id] = {
-      id: pt_id,
-      label: propertyData[i].propertyName,
-      progress: 50,
-      expanded: false,
-    };
+    // const pt_id = 'pt' + propertyData[i].id.toString();
+    // rows[pt_id] = {
+    //   id: pt_id,
+    //   label: propertyData[i].propertyName,
+    //   progress: 50,
+    //   expanded: false,
+    // };
     for (let j = 0; j < unittypeData.length; j++) {
       const utt_id = 'utt' + unittypeData[j].id.toString();
-      if (unittypeData[j].propertyId == propertyData[i].id) {
+      if (unittypeData[j].propertyId == pId) {
         rows[utt_id] = {
           id: utt_id,
           label: unittypeData[j].unitTypeName,
           progress: 50,
-          parentId: 'pt' + propertyData[i].id.toString(),
+          //parentId: 'pt' + propertyData[i].id.toString(),
           expanded: false,
         };
       }
@@ -107,24 +111,28 @@ const Calendar = () => {
   };
 
   const items = {};
-  // for (let i = 0; i < reservationData.length; i++) {
-  //   const id = reservationData[i].id.toString();
-  //   items[id] = {
-  //     id,
-  //     rowId: 'ut' + reservationData[i].unitId.toString(),
-  //     label: reservationData[i].unitTypeName,
-  //     time: {
-  //       start: reservationData[i].startDate,
-  //       end: reservationData[i].endDate,
-  //     },
-  //     style : {
-  //       background: 'blue'
-  //     }
-  //   };
-  // }
+  for (let i = 0; i < reservationData.length; i++) {
+    const id = reservationData[i].id.toString();
+    items[id] = {
+      id,
+      rowId: 'ut' + reservationData[i].unitId.toString(),
+      label: guestName + ' / ' + reservationData[i].totalAmount + ' EUR',
+      time: {
+        start: reservationData[i].startDate,
+        end: reservationData[i].endDate,
+      },
+      // time: {
+      //   start: new Date('2020-06-20').getTime(),
+      //   end: new Date('2020-06-30').getTime()
+      // },
+      style: {
+        background: 'blue',
+      },
+    };
+  }
 
   const config = {
-    height: 500,
+    height: 650,
     list: {
       rows,
       columns,
@@ -132,11 +140,6 @@ const Calendar = () => {
 
     chart: {
       items,
-      time: {
-        from: today.getTime(),
-        period: 'hour',
-        to: weekFromToday.getTime(),
-      },
     },
   };
 
@@ -154,10 +157,12 @@ const Calendar = () => {
   const getData = async () => {
     const response = await userInstance.post('/getReservation');
     const reservationData = response.data.reservationData;
-    const guestdata = response.data.guestData;
+    console.log('response', response.data.guestData.length)
     if (response.data.code === 200) {
       setReservationData(reservationData);
-      setGuestData(guestdata);
+      if (response.data.guestData.length !== 0) {
+        setGuestName(response.data.guestData[0][0].fullname);
+      }
     }
   };
 
@@ -165,8 +170,6 @@ const Calendar = () => {
     const response = await userInstance.post('/getReservationCalendarData');
     const unittypeData = response.data.unittypeData;
     const unitData = response.data.unitData;
-    console.log('unittypeData', unittypeData);
-    console.log('unitData', unitData);
     if (response.data.code === 200) {
       setUnittypeData(unittypeData);
       setUnitData(unitData);
@@ -180,10 +183,11 @@ const Calendar = () => {
   }, []);
 
   useEffect(() => {
+    console.log('pId', pId);
     return () => {
       subs.forEach((unsub) => unsub());
     };
-  }, []);
+  }, [pId]);
 
   const show = () => {
     setVisible(true);
@@ -198,6 +202,10 @@ const Calendar = () => {
   };
 
   function onState(state) {
+    // state.update("config.chart.items", items => {
+    //   items.time.end = today.getTime() + 2 * 24 * 60 * 60 * 1000;
+    //   return items;
+    // });
     subs.push(
       state.subscribe('config.chart.items', (items) => {
         // console.log('items changed', items);
@@ -211,7 +219,7 @@ const Calendar = () => {
   }
 
   return (
-    <Wrapper>
+    <Wrapper onChange={handleChange}>
       <div className="calendar">
         <div className="calendar-btn">
           <Button type="primary" icon={<PlusOutlined />} onClick={show}>

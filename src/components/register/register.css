@@ -140,11 +140,11 @@
     margin-right: 10px;
 }
 
-.ant-input-suffix {
+.register-box .ant-input-suffix {
     margin-left: 4px;
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 14px;
+    top: 14px;
 }
 
 .ant-form .ant-input-affix-wrapper {
@@ -193,4 +193,12 @@ input[type='number']::-webkit-outer-spin-button {
 -moz-appearance: none;
 appearance: none;
 margin: 0;
+}
+
+.react-tel-input input.form-control {
+    border: 1.5px solid #eaeaea;
+    border-radius: 0;
+    padding: 8px 15px!important;
+    height: auto;
+    width: 100%;
 }

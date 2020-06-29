@@ -21,6 +21,22 @@ import UserProfile from '../userprofile/userprofile';
 import { userInstance } from '../../../axios/axiosconfig';
 import queryString from 'query-string';
 
+import booking_icon from '../../../assets/images/menu/booking-icon.png';
+import calender_icon from '../../../assets/images/menu/calendar-icon.png';
+import property_icon from '../../../assets/images/menu/property-icon.png';
+import guest_icon from '../../../assets/images/menu/guest-icon.png';
+import team_icon from '../../../assets/images/menu/team-icon.png';
+import invoice_icon from '../../../assets/images/menu/invoice-icon.png';
+import stats_icon from '../../../assets/images/menu/stats-icon.png';
+import integration_icon from '../../../assets/images/menu/integration-icon.png';
+import owner_icon from '../../../assets/images/menu/owner-icon.png';
+import property_detail_icon from '../../../assets/images/menu/property-detail-icon.png';
+import unit_icon from '../../../assets/images/menu/unit-type-icon.png';
+import task_icon from '../../../assets/images/menu/task-icon.png';
+import channel_icon from '../../../assets/images/menu/channel-icon.png';
+
+
+
 const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
 
@@ -104,19 +120,19 @@ const Sidenav = (props) => {
         style={{ height: '100%' }}
       >
         <Menu.Item key="0">
-          <UserOutlined />
+          <img src={booking_icon} />
           <Link to={'/booking'}>Booking</Link>
         </Menu.Item>
 
         <Menu.Item>
-          <VideoCameraOutlined />
+          <img src={calender_icon} />
           <Link to={'/calendar'}>Calendar</Link>
         </Menu.Item>
 
         <SubMenu
           title={
             <div>
-              <UserOutlined />
+              <img src={property_icon} />
               <Link to={'/propertylist'}>Properties</Link>
             </div>
           }
@@ -138,7 +154,7 @@ const Sidenav = (props) => {
         <SubMenu
           title={
             <div>
-              <VideoCameraOutlined />
+              <img src={guest_icon} />
               <span>Guests</span>
             </div>
           }
@@ -148,24 +164,24 @@ const Sidenav = (props) => {
         </SubMenu>
 
         <Menu.Item>
-          <UserOutlined />
-          <span>Team</span>
+        <img src={team_icon} />
+          <Link to={'/team'}>Team</Link>
         </Menu.Item>
 
         <Menu.Item>
-          <VideoCameraOutlined />
+          <img src={invoice_icon} />
           <span>Invoices</span>
         </Menu.Item>
 
         <Menu.Item>
-          <UserOutlined />
+          <img src={stats_icon} />
           <span>Stats</span>
         </Menu.Item>
 
         <SubMenu
           title={
             <div>
-              <VideoCameraOutlined />
+              <img src={integration_icon} />
               <span>Integrations</span>
             </div>
           }
@@ -175,8 +191,8 @@ const Sidenav = (props) => {
         </SubMenu>
 
         <Menu.Item>
-          <UserOutlined />
-          <span>Owner</span>
+          <img src={owner_icon} />
+          <Link to={'/owner'}>Owner</Link>
         </Menu.Item>
 
         <Menu.Item onClick={() => exit()}>
@@ -202,19 +218,19 @@ const Sidenav = (props) => {
           </Link>
         </span>
         <Menu.Item key="1">
-          <UserOutlined />
+          <img src={property_detail_icon} />
           <Link to={'/property'}>Details</Link>
         </Menu.Item>
         <Menu.Item>
-          <VideoCameraOutlined />
+          <img src={unit_icon} />
           <Link to={'/unittype'}>Unit Type</Link>
         </Menu.Item>
         <Menu.Item>
-          <UserOutlined />
+          <img src={task_icon} />
           <span>Tasks</span>
         </Menu.Item>
         <Menu.Item>
-          <VideoCameraOutlined />
+          <img src={channel_icon} />
           <Link to={'/channelmanager'}>Channel Manager</Link>
         </Menu.Item>
 

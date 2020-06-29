@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Dropdown } from 'antd';
+import { Dropdown, Input } from 'antd';
 import { Layout, Menu } from 'antd';
 import {
   MenuUnfoldOutlined,
@@ -11,19 +11,14 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 import { userInstance } from '../../../axios/axiosconfig';
+import Form from 'antd/lib/form/Form';
 
 const { Header } = Layout;
 
-const TopHeader = () => {
+const TopHeader = (props) => {
   const [propertyData, setPropertyData] = useState([]);
+  const [propertyName, setPropertyName] = useState();
   const [menu, setMenu] = useState();
-  //   const menu = (
-  //     <Menu>
-  //       <Menu.Item key="0">Property 1</Menu.Item>
-  //       <Menu.Item key="1">Property 2</Menu.Item>
-  //       <Menu.Item key="3">Property 3</Menu.Item>
-  //     </Menu>
-  //   );
 
   useEffect(() => {
     async function getData() {
@@ -37,14 +32,36 @@ const TopHeader = () => {
     getData();
   }, []);
 
+  const onChange = (value, name) => {
+    localStorage.setItem('topNavId', value);
+    console.log('Name', name);
+    setPropertyName(name);
+    props.fun(value)
+    // props.onChange(value)
+  };
+
+  const fun = () => {
+    props.fun();
+    localStorage.removeItem('topNavId');
+    setPropertyName()
+  }
+
   const fun1 = (e) => {
     let menu = '';
     e.preventDefault();
     menu = (
       <Menu>
         {propertyData.map((el, i) => {
-          return <Menu.Item key={el.id} >{el.propertyName}</Menu.Item>;
+          return (
+            <Menu.Item
+              key={el.id}
+              onClick={() => onChange(el.id, el.propertyName)}
+            >
+              {el.propertyName}
+            </Menu.Item>
+          );
         })}
+        <Menu.Item onClick={() =>fun()}>All Properties</Menu.Item>
       </Menu>
     );
 
@@ -68,7 +85,8 @@ const TopHeader = () => {
         </div>
         <Dropdown overlay={menu} trigger={['click']}>
           <a className="ant-dropdown-link" onClick={(e) => fun1(e)}>
-            All Properties <VerticalAlignMiddleOutlined />
+            {propertyName ? propertyName : 'Select Property'}{' '}
+            <VerticalAlignMiddleOutlined />
           </a>
         </Dropdown>
       </div>

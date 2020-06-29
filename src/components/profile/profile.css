@@ -1,0 +1,134 @@
+.profile-container .ant-collapse-header {
+    display: none;
+}
+
+.profile-container .ant-collapse-content {
+    border-top: none;
+}
+
+.profile-container .ant-form-item-label > label {
+    font-size: 12px;
+    height: auto;
+    padding-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.profile-container .main-info-form h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.profile-container .main-info-form p {
+    font-size: 14px;
+    color: #999;
+    padding: 0;
+    padding-bottom: 15px;
+}
+
+.profile-container .ant-collapse-content > .ant-collapse-content-box {
+    padding: 15px 30px;
+}
+
+
+.profile-container .ant-collapse {
+    margin-bottom: 25px;
+}
+
+.profile-container .ant-form-item .ant-upload.ant-upload-drag {
+    background: #ffffff;
+    border: 2px dashed #d9d9d9;
+}
+
+.profile-container .ant-upload.ant-upload-drag p.ant-upload-text {
+    margin: 0 0 4px;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+    padding-bottom: 0;
+}
+
+.profile-container .ant-upload.ant-upload-drag p.ant-upload-hint {
+    color: rgb(250, 181, 44);
+    font-size: 12px;
+    padding-bottom: 10px;
+}
+
+
+.profile-container .ant-upload.ant-upload-drag p.ant-upload-drag-icon {
+    margin-bottom: 0;
+}
+
+
+
+.profile-container  .ant-upload-drag .anticon svg {
+    display: inline-block;
+    color: #e0e0e0;
+}
+
+
+.personal-information .page-header h1 {
+    font-size: 22px;
+}
+
+
+.personal-information .page-header {
+    padding-bottom: 20px;
+}
+
+
+.billing-list .custom-table table td span {
+    display: block;
+}
+
+.billing-information .ant-form-item-label > label {
+    font-size: 12px;
+    height: auto;
+    padding-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.billing-information .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+    background: #fff;
+}
+
+.billing-container .main-info-form p {
+    margin-bottom: 25px;
+}
+
+.subscription-plan-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.subscription-plan-list ul li {
+    color: #999;
+    padding: 4px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+.subscription-plan-list ul li span {
+    min-width: 150px;
+}
+
+.subscription-plan-list p {
+    font-size: 12px;
+    text-align: right;
+    margin: 0;
+    color: #999;
+}
+
+.billing-page .page-header {
+    padding-bottom: 0;
+}
+
+.billing-page {
+    padding-top: 50px;
+}
+
+.billing-container .ant-collapse-item:last-child > .ant-collapse-content {
+    min-height: 225px;
+}

@@ -1,0 +1,14 @@
+@media screen and (max-width:767px){
+    .ant-col-12 {
+        display: block;
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    } 
+    
+    .profile-container .ant-collapse-header {
+        display: block;
+    }
+
+    
+}
