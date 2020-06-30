@@ -40,6 +40,8 @@ import { userInstance } from '../../axios/axiosconfig';
 const SubUserPopup = () => {
   const [form] = Form.useForm();
   const { Option } = Select;
+  const [bookingRead, setBookingRead] = useState(false);
+  const [bookingWrite, setBookingWrite] = useState(false);
   const [serviceRead, setServiceRead] = useState(false);
   const [serviceWrite, setServiceWrite] = useState(false);
 
@@ -48,8 +50,9 @@ const SubUserPopup = () => {
   }
 
   const onFinish = async (values) => {
-    values.serviceRead = serviceRead;
-    values.serviceWrite = serviceWrite;
+    values.bookingRead = bookingRead;
+    values.bookingWrite = bookingWrite;
+    console.log(values)
     const response = await userInstance.post('/addTeam', values);
   };
 
@@ -57,7 +60,21 @@ const SubUserPopup = () => {
     <Form name="basic" form={form} onFinish={onFinish}>
       <Row style={{ alignItems: 'center' }}>
         <Col span={8}>
-          <Form.Item label="E-mail" name="email" style={{ paddingRight: 20 }}>
+          <Form.Item
+            label="E-mail"
+            name="email"
+            style={{ paddingRight: 20 }}
+            rules={[
+              {
+                type: 'email',
+                message: 'The input is not valid E-mail!',
+              },
+              {
+                required: true,
+                message: 'Please input your E-mail!',
+              },
+            ]}
+          >
             <Input placeholder="Email" />
           </Form.Item>
         </Col>
@@ -72,6 +89,27 @@ const SubUserPopup = () => {
         </Col>
 
         <Col span={8}></Col>
+      </Row>
+
+      <Row>
+        <div className="custom-table subuser-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Booking</th>
+                <th>
+                  <Checkbox onClick={() => setBookingRead(true)}></Checkbox>
+                </th>
+                <th>
+                  <Checkbox onClick={() => setBookingWrite(true)}></Checkbox>
+                </th>
+                <th>
+                  Prices and availability that are syncing with connected OTAs
+                </th>
+              </tr>
+            </thead>
+          </table>
+        </div>
       </Row>
 
       <Row>

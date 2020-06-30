@@ -46,6 +46,7 @@ const Sidenav = (props) => {
   const [propertyData, setPropertyData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
   const [menu, setMenu] = useState(false);
+  const [showBooking, setShowBooking] = useState(false)
   const history = useHistory();
 
   const toggle = () => {
@@ -69,6 +70,15 @@ const Sidenav = (props) => {
       history.push('/');
     }
   };
+
+  const getSubUser = async () => {
+    const response = await userInstance.post('/getSubuser');
+    const data = response.data.subUser;
+    console.log('Response Sub User', data)
+    if (data[0].bookingRead == 0 && data[0].bookingWrite == 0) {
+      setShowBooking(true)
+    }
+  }
 
   const getData = async () => {
     const pathname = window.location.pathname;
@@ -100,6 +110,7 @@ const Sidenav = (props) => {
   };
 
   useEffect(() => {
+    getSubUser();
     getData();
     changeMenu();
   }, []);
@@ -119,7 +130,7 @@ const Sidenav = (props) => {
         defaultSelectedKeys={['0']}
         style={{ height: '100%' }}
       >
-        <Menu.Item key="0">
+        <Menu.Item key="0" hidden={showBooking}>
           <img src={booking_icon} />
           <Link to={'/booking'}>Booking</Link>
         </Menu.Item>
