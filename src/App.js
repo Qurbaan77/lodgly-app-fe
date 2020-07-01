@@ -41,7 +41,6 @@ import './responsive.css';
 const history = createBrowserHistory();
 
 const App = () => {
-  const [restricted,setRestricted] = useState(false);
   const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route
       {...rest}
@@ -60,7 +59,7 @@ const App = () => {
     <Route
       {...rest}
       render={(props) =>
-        !restricted ? (
+        parseInt(localStorage.getItem('bookingRead')) && parseInt(localStorage.getItem('bookingWrite')) ? (
           <Component {...props} {...rest} />
         ) : (
           <Redirect to="/" />
@@ -130,11 +129,23 @@ const App = () => {
                   path="/guestpopup"
                   component={() => <GuestPopup />}
                 />
+                {
+                  localStorage.getItem('isSubUser') ? <SecureRoute
+                  exact
+                  path="/booking"
+                  component={() => <Booking />}
+                /> : 
                 <PrivateRoute
                   exact
                   path="/booking"
                   component={() => <Booking />}
                 />
+                }
+                {/* <PrivateRoute
+                  exact
+                  path="/booking"
+                  component={() => <Booking />}
+                /> */}
                 <PrivateRoute
                   exact
                   path="/filter"

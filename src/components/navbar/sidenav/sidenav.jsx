@@ -72,13 +72,14 @@ const Sidenav = (props) => {
   };
 
   const getSubUser = async () => {
-    const response = await userInstance.post('/getSubuser');
-    const data = response.data.subUser;
-    console.log('Response Sub User', data)
-  //   if (data[0].bookingRead == 0 && data[0].bookingWrite == 0) {
-  //     setShowBooking(true)
-  //   }
+  const bookingRead = localStorage.getItem('bookingRead');
+  const bookingWrite = localStorage.getItem('bookingWrite');
+  console.log(bookingRead,bookingWrite);
+  if(bookingRead && bookingWrite) {
+      console.log('ok')
+       setShowBooking(true);
    }
+  }
 
   const getData = async () => {
     const pathname = window.location.pathname;
@@ -112,6 +113,7 @@ const Sidenav = (props) => {
   useEffect(() => {
     getData();
     changeMenu();
+    getSubUser();
   }, []);
 
   return (

@@ -14,10 +14,18 @@ const Login = () => {
 
   const onFinish = async (values) => {
     const response = await userInstance.post('/login', values);
+    console.log(response);
     const statusCode = response.data.code;
     const msg = response.data.msg;
 
     if (statusCode === 200) {
+       if(response.data.subUser.length) {
+        response.data.subUser.map((el)=>{
+          localStorage.setItem('isSubUser', true);
+          localStorage.setItem('bookingRead',el.bookingRead);
+          localStorage.setItem('bookingWrite',el.bookingWrite);
+        })
+       }
       localStorage.setItem('token', response.data.token);
       let payload = tokenparser(response.data.token);
       localStorage.setItem('userId', payload.userid);

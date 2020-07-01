@@ -114,13 +114,15 @@ const Calendar = () => {
   const items = {};
   for (let i = 0; i < reservationData.length; i++) {
     const id = reservationData[i].id.toString();
+    const startDate = new Date(reservationData[i].startDate.split('T', 1).toString()).getTime();
+    const endDate = new Date(reservationData[i].endDate.split('T', 1).toString()).getTime();
     items[id] = {
       id,
       rowId: 'ut' + reservationData[i].unitId.toString(),
       label: guestName + ' / ' + reservationData[i].totalAmount + ' EUR',
       time: {
-        start: reservationData[i].startDate,
-        end: reservationData[i].endDate,
+        start: startDate,
+        end: endDate,
       },
       // time: {
       //   start: new Date('2020-06-20').getTime(),
@@ -158,7 +160,8 @@ const Calendar = () => {
   const getData = async () => {
     const response = await userInstance.post('/getReservation');
     const reservationData = response.data.reservationData;
-    console.log('response', response.data.guestData.length)
+    console.log('get reservations', response.data.guestData.length)
+    console.log('data', reservationData)
     if (response.data.code === 200) {
       setReservationData(reservationData);
       if (response.data.guestData.length !== 0) {
