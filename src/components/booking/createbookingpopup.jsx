@@ -171,8 +171,7 @@ const CreateBookingPopup = (props) => {
       guestData.push(values[el]);
     });
     values.guestData = guestData;
-    console.log(guestData[0].fullName);
-    values.guest = guestData[0].fullName;
+    guestData.length > 1 ? values.guest = guestData[0].fullName : values.guest = 'No Guest';
     servicePanel.map((ele, i) => {
       const data =
         values[ele].servicePrice * values[ele].serviceQuantity +

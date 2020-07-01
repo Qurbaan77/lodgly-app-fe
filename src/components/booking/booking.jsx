@@ -133,7 +133,7 @@ const Booking = () => {
       el.created_date = el.created_at.split('T', 1);
       el.created_time = el.created_at.split('T').pop().substring(0, 5);
       el.noOfGuest = guestnum[i];
-      el.guest = guestname[i];
+      el.guest = guestname[i] || 'Unknown Guest';
     });
 
     console.log('bookingdata', bookingdata);

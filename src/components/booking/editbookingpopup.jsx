@@ -365,11 +365,13 @@ const editbookingpopup = (props) => {
 
   const fun3 = (event) => {
     console.log(event);
-    setUnitId(event);
+    const [data] = unitData.filter((el)=>el.unitName !== event).map((el)=>el.id);
+    console.log(data);
+    setUnitId(data)
     const unitname = event.children || event;
     console.log(unitname);
     const [unit] = unitData
-      .filter((el) => el.id === unitname)
+      .filter((el) => el.unitName === unitname)
       .map((el) => el.unittypeId);
     console.log(unitData);
     console.log(unit);
@@ -441,7 +443,7 @@ const editbookingpopup = (props) => {
       }
     });
 
-    const data0 = editCurrentGuest.filter((el, i) => i === parseInt(id));
+    const data0 = editCurrentGuest.filter((el, i) => i !== parseInt(id));
     console.log(data0);
 
     setEditCurrentGuest([...data0]);
@@ -538,7 +540,7 @@ const editbookingpopup = (props) => {
               >
                 {unitData.map((el, i) => {
                   return (
-                    <Select.Option value={el.id}>{el.unitName}</Select.Option>
+                    <Select.Option value={el.unitName}>{el.unitName}</Select.Option>
                   );
                 })}
               </Select>
@@ -838,6 +840,7 @@ const editbookingpopup = (props) => {
                   <label>Discount</label>
                   <Form.Item name='discount'>
                     <Input
+                    value={discount}
                       type='number'
                       placeholder='0,00'
                       onChange={(e) => {
@@ -871,8 +874,9 @@ const editbookingpopup = (props) => {
                       }
                       onBlur={(e) => setAccomodation(e.target.value)}
                     />
-                    <label>EUR</label>
+                    
                   </Form.Item>
+                  <label>EUR</label>
                 </div>
               </Form.Item>
             </Col>
