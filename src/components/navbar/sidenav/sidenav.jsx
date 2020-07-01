@@ -110,7 +110,6 @@ const Sidenav = (props) => {
   };
 
   useEffect(() => {
-    getSubUser();
     getData();
     changeMenu();
   }, []);
