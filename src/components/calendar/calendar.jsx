@@ -36,10 +36,11 @@ const Calendar = () => {
   const [unittypeData, setUnittypeData] = useState([]);
   const [unitData, setUnitData] = useState([]);
   const [visible, setVisible] = useState(false);
-  const [pId, setPId] = useState();
-  const handleChange = (newValue) => {
-    setPId(newValue);
-  };
+  const [topNavId, setTopNavId] = useState();
+  // const [topNavId, setPId] = useState();
+  // const handleChange = (newValue) => {
+  //   setPId(newValue);
+  // };
 
   const rows = {};
   for (let i = 0; i < propertyData.length; i++) {
@@ -52,7 +53,7 @@ const Calendar = () => {
     // };
     for (let j = 0; j < unittypeData.length; j++) {
       const utt_id = 'utt' + unittypeData[j].id.toString();
-      if (unittypeData[j].propertyId == pId) {
+      if (unittypeData[j].propertyId == topNavId) {
         rows[utt_id] = {
           id: utt_id,
           label: unittypeData[j].unitTypeName,
@@ -183,11 +184,11 @@ const Calendar = () => {
   }, []);
 
   useEffect(() => {
-    console.log('pId', pId);
+    console.log('topNavId', topNavId);
     return () => {
       subs.forEach((unsub) => unsub());
     };
-  }, [pId]);
+  }, [topNavId]);
 
   const show = () => {
     setVisible(true);
@@ -219,7 +220,8 @@ const Calendar = () => {
   }
 
   return (
-    <Wrapper onChange={handleChange}>
+    // <Wrapper onChange={handleChange}>
+    <Wrapper fun={setTopNavId}>
       <div className="calendar">
         <div className="calendar-btn">
           <Button type="primary" icon={<PlusOutlined />} onClick={show}>

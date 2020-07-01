@@ -34,7 +34,6 @@ const TopHeader = (props) => {
 
   const onChange = (value, name) => {
     localStorage.setItem('topNavId', value);
-    console.log('Name', name);
     setPropertyName(name);
     props.fun(value)
     // props.onChange(value)

@@ -33,6 +33,7 @@ const Register = () => {
   const onFinish = async (values) => {
     console.log('Form is Good', values);
     const response = await userInstance.post('/signup', values);
+    console.log('response', response)
     const statusCode = response.data.code;
     const msg = response.data.msg;
     if (statusCode == 200) {
