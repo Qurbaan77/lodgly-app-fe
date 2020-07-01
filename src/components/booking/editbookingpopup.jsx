@@ -75,7 +75,7 @@ const editbookingpopup = (props) => {
   const [children2, setChildren2] = useState(0);
   const [channelCommission, setChannelCommission] = useState(5);
   const [panel, setPanel] = useState([1]);
-  const [servicePanel, setServicePanel] = useState([100]);
+  const [serviceState, setServiceState] = useState([]);
   const [arrValue, setArrValue] = useState(2);
   const [price, setPrice] = useState(0);
   const [night, setNight] = useState(0);
@@ -95,7 +95,8 @@ const editbookingpopup = (props) => {
   const [depositAmount, setDepositAmount] = useState(null);
   const [discountAmount, setdiscountAmount] = useState(null);
   const [editServicePanel, setEditServicePanel] = useState([]);
-
+  const [deleteGuestId, setDeleteGuestId] = useState(null);
+  const [deleteServiceId, setDeleteServiceId] = useState(null);
   const [fullName, setFullName] = useState({});
   const [email, setEmail] = useState({});
   const [phone, setPhone] = useState({});
@@ -105,7 +106,7 @@ const editbookingpopup = (props) => {
   const [unitData, setUnitData] = useState([]);
   const [currentUnit, setCurrentUnit] = useState({});
   const [unitTypeData, setUnitTypeData] = useState([]);
-  const [teststate, setTestState] = useState(0);
+  const [unitId, setUnitId] = useState(null);
 
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
@@ -141,14 +142,16 @@ const editbookingpopup = (props) => {
         depositType: editBookingValues.depositType,
       });
       setGuest(editCurrentGuest);
-      editCurrentGuest.map((el, i) => {
-        form.setFieldsValue({
-          [`fullName${i}`]: el.fullname,
-          [`email${i}`]: el.email,
-          [`country${i}`]: el.country,
-          [`phone${i}`]: el.phone,
+      if (editCurrentGuest.length) {
+        editCurrentGuest.map((el, i) => {
+          form.setFieldsValue({
+            [`fullName${i}`]: el.fullname,
+            [`email${i}`]: el.email,
+            [`country${i}`]: el.country,
+            [`phone${i}`]: el.phone,
+          });
         });
-      });
+      }
 
       currentService.map((el, i) => {
         form.setFieldsValue({
@@ -158,8 +161,10 @@ const editbookingpopup = (props) => {
           [`serviceTax${i}`]: el.serviceTax,
         });
       });
+      setServiceState(currentService);
       setPropertyName(editBookingValues.propertyName);
       setUnitName(editBookingValues.unitName);
+      setUnitId(editBookingValues.unitId);
       setChannel(editBookingValues.channel);
       setChannelCommission(editBookingValues.commission);
       setAdult(editBookingValues.adult);
@@ -225,6 +230,7 @@ const editbookingpopup = (props) => {
 
   const onFinish = async (values) => {
     console.log('raw values', values);
+    values.id = localStorage.getItem('bookingId');
     values.perNight = price;
     values.nights = night;
     values.amt = amt;
@@ -275,39 +281,52 @@ const editbookingpopup = (props) => {
     }
 
     values.serviceData = currentService;
-
+    values.noOfservices = currentService.length;
     values.propertyName = currentPropertyName;
     values.channel = channel;
     values.commission = channelCommission;
     values.unitName = unitName;
-    console.log(values.fullName0);
-    console.log(values.email0);
+    values.unit = unitId;
+    values.deleteGuestId = deleteGuestId;
+    values.deleteServiceId = deleteServiceId;
     console.log('Received values of edit form: ', values);
-    // const response = await userInstance.post('/addBooking', values);
-    // console.log('response', response.data.code);
-    // const msg = response.data.msg;
-    // if (response.data.code === 200) {
-    //   props.getData();
-    //   props.close();
-    // } else {
-    //   setNotifyType('error');
-    //   setNotifyMsg(msg);
-    // }
+    const response = await userInstance.post('/changeBooking', values);
+    console.log('response', response.data.code);
+    const msg = response.data.msg;
+    if (response.data.code === 200) {
+      props.getData();
+      props.setBooked(true);
+      props.close();
+    } else {
+      setNotifyType('error');
+      setNotifyMsg(msg);
+    }
 
-    // form.resetFields();
+    form.resetFields();
   };
 
-  const calculateTotal = () => {
+  const calculateTotal = (el) => {
+    console.log(el.id);
     const calculate =
       servicePrice * serviceAmt +
       servicePrice * serviceAmt * (serviceTax / 100);
-    const sum = parseInt(total) + parseInt(calculate);
-    setServiceAmount(calculate);
-    setTotal(sum);
-    console.log('Calculate', calculate);
+    console.log('calculate', calculate);
+    if (el.id) {
+      currentService.map((ele) => {
+        if (ele.id === el.id) {
+          el.serviceAmount = calculate;
+        }
+      });
+      setServiceState(currentService);
+      console.log(currentService);
+    } else {
+      const sum = parseFloat(total) + calculate;
+      setServiceAmount(calculate);
+      setTotal(sum);
+    }
     console.log('service amount', serviceAmount);
+    setTest(true);
   };
-
   const fun1 = async (value) => {
     console.log(value);
     const payload = {
@@ -336,7 +355,7 @@ const editbookingpopup = (props) => {
 
   const fun2 = (value, event) => {
     serviceData
-      .filter((el) => el.id === value)
+      .filter((el) => el.serviceName === value)
       .map((filterService) => setEditServicePanel(filterService));
 
     unitData
@@ -346,6 +365,7 @@ const editbookingpopup = (props) => {
 
   const fun3 = (event) => {
     console.log(event);
+    setUnitId(event);
     const unitname = event.children || event;
     console.log(unitname);
     const [unit] = unitData
@@ -412,14 +432,25 @@ const editbookingpopup = (props) => {
 
   const removePanel = (e) => {
     const id = e.currentTarget.parentNode.getAttribute('data-key');
-    const data0 = editCurrentGuest.filter((el, i) => i === id);
+    console.log(typeof id);
+
+    editCurrentGuest.map((el, i) => {
+      if (parseInt(id) === i) {
+        console.log(el.id);
+        setDeleteGuestId(el.id);
+      }
+    });
+
+    const data0 = editCurrentGuest.filter((el, i) => i === parseInt(id));
     console.log(data0);
+
     setEditCurrentGuest([...data0]);
     console.log(editCurrentGuest);
   };
 
   const handleRemoveEditServicePanel = (ele) => {
     console.log(ele);
+    setDeleteServiceId(ele.id);
     const data = currentService.filter((el) => el.id !== ele.id);
     console.log(data);
     setCurrentService([...data]);
@@ -898,7 +929,9 @@ const editbookingpopup = (props) => {
                                     >
                                       {serviceData.map((ele, i) => {
                                         return (
-                                          <Select.Option value={ele.id}>
+                                          <Select.Option 
+                                          value={ele.serviceName}
+                                          >
                                             {ele.serviceName}
                                           </Select.Option>
                                         );
@@ -973,7 +1006,7 @@ const editbookingpopup = (props) => {
             <Col span={24}>
               <div className='amnt-total'>
                 <h4>
-                  {currentService.length === 0 ? (
+                  {serviceState.length === 0 ? (
                     <Fragment>
                       Total:{' '}
                       {Math.round(total * 100) / 100 +
@@ -985,7 +1018,7 @@ const editbookingpopup = (props) => {
                       Total:{' '}
                       {Math.round(total * 100) / 100 +
                         Math.round(accomodation * 100) / 100 +
-                        currentService
+                        serviceState
                           .map((el) => el.serviceAmount)
                           .reduce((a, b) => a + (b || 0), 0)}{' '}
                       €

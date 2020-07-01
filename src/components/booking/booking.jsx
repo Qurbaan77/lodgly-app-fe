@@ -115,11 +115,13 @@ const Booking = () => {
     const guestname = [];
     const data = guestdata.map((el) => el.find((el) => el.id));
     console.log(data);
-    data.map((el) => {
-      el.fullname
-        ? guestname.push(el.fullname)
-        : guestname.push('Unknown Guest');
-    });
+    data.length
+      ? data.map((el) => {
+          el.fullname
+            ? guestname.push(el.fullname)
+            : guestname.push('Unknown Guest');
+        })
+      : guestname.push('Unknown Guest');
     console.log(guestname);
     guestname.push(data.fullname);
     bookingdata.map((el, i) => {
@@ -140,7 +142,10 @@ const Booking = () => {
     if (response.data.code === 200) {
       setBookingData([...bookingdata]);
       setGuestData([...guestdata]);
-      setServiceData([...servicedata]);
+      if(servicedata.length) {
+        setServiceData([...servicedata]);
+      }
+      
     }
   };
 

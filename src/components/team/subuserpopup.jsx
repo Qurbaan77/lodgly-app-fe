@@ -48,6 +48,7 @@ const SubUserPopup = () => {
   function onChange(e) {
     console.log(`checked = ${e.target.checked}`);
   }
+  console.log(bookingRead,bookingWrite);
 
   const onFinish = async (values) => {
     values.bookingRead = bookingRead;
@@ -56,6 +57,12 @@ const SubUserPopup = () => {
     const response = await userInstance.post('/addTeam', values);
   };
 
+  const handleRead = (e) => {
+    e.target.value ? setBookingRead(false) : setBookingRead(true)
+  }
+  const handleWrite = (e) => {
+    e.target.value ? setBookingWrite(false) : setBookingWrite(true)
+  }
   return (
     <Form name="basic" form={form} onFinish={onFinish}>
       <Row style={{ alignItems: 'center' }}>
@@ -98,10 +105,10 @@ const SubUserPopup = () => {
               <tr>
                 <th>Booking</th>
                 <th>
-                  <Checkbox onClick={() => setBookingRead(true)}></Checkbox>
+                  <Checkbox value={bookingRead} onChange={(e) => handleRead(e)}></Checkbox>
                 </th>
                 <th>
-                  <Checkbox onClick={() => setBookingWrite(true)}></Checkbox>
+                  <Checkbox value={bookingWrite} onChange={(e) => handleWrite(e)}></Checkbox>
                 </th>
                 <th>
                   Prices and availability that are syncing with connected OTAs

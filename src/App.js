@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Router, Route, Redirect } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import Header from './components/header/header';
@@ -34,17 +34,33 @@ import TeamListing from './components/team/teamlist';
 import Team from './components/team/team';
 import Profile from './components/profile/profile';
 import BillingInformation from './components/profile/billinginformation';
+import { userInstance } from './axios/axiosconfig';
 
 import './responsive.css';
 
 const history = createBrowserHistory();
 
 const App = () => {
+  const [restricted,setRestricted] = useState(false);
   const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route
       {...rest}
       render={(props) =>
         localStorage.getItem('token') ? (
+          <Component {...props} {...rest} />
+        ) : (
+          <Redirect to="/" />
+        )
+      }
+    />
+  );
+
+
+  const SecureRoute = ({ component: Component, ...rest }) => (
+    <Route
+      {...rest}
+      render={(props) =>
+        !restricted ? (
           <Component {...props} {...rest} />
         ) : (
           <Redirect to="/" />

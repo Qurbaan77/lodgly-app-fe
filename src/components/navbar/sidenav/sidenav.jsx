@@ -75,10 +75,10 @@ const Sidenav = (props) => {
     const response = await userInstance.post('/getSubuser');
     const data = response.data.subUser;
     console.log('Response Sub User', data)
-    if (data[0].bookingRead == 0 && data[0].bookingWrite == 0) {
-      setShowBooking(true)
-    }
-  }
+  //   if (data[0].bookingRead == 0 && data[0].bookingWrite == 0) {
+  //     setShowBooking(true)
+  //   }
+   }
 
   const getData = async () => {
     const pathname = window.location.pathname;

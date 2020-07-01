@@ -235,6 +235,7 @@ const CreateBookingPopup = (props) => {
   };
 
   const fun1 = async (value, event) => {
+    console.log(value);
     console.log(event.children);
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
