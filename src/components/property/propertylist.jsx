@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import './property.css';
-import { Layout, Menu, Button, Tooltip, Dropdown } from 'antd';
+import { Layout, Menu, Button, Tooltip, Dropdown} from 'antd';
 import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
@@ -26,6 +26,11 @@ const PropertyList = () => {
   const [propertyData, setPropertyData] = useState([]);
   const [topNavId, setTopNavId] = useState();
   const history = useHistory();
+  const isSubUser = localStorage.getItem('isSubUser');
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  console.log(userCred);
+  const  [{ propertiesWrite }] = userCred ? userCred : [{}];
+  const canWrite = propertiesWrite;
 
   useEffect(() => {
     setTopNavId(localStorage.getItem('topNavId'));
@@ -52,14 +57,34 @@ const PropertyList = () => {
       <div className="property-listing">
         <div className="page-header">
           <h1>All Properties</h1>
-
+          {
+            isSubUser ? canWrite ? 
+            <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => history.push('/addproperty')}
+          >
+            Add Property
+          </Button> :
+          <Tooltip title='You are not authorize to create new property' color='gold'>
           <Button
+            disabled='true'
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => history.push('/addproperty')}
           >
             Add Property
           </Button>
+          </Tooltip> :
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => history.push('/addproperty')}
+          >
+            Add Property
+          </Button> 
+          }
+         
         </div>
 
         <div className="property-list">
@@ -68,7 +93,7 @@ const PropertyList = () => {
               return (
                 <Col className="gutter-row" span={8}>
                   <div className="property">
-                    <img src={property1} />
+                    <img src={property1} alt='property'/>
                     <div className="property-info">
                       <h3>{el.propertyName}</h3>
                       <span>{el.created_at.split('T', 1)}</span>

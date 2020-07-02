@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import './calendar.css';
 import Wrapper from '../wrapper';
@@ -22,6 +22,7 @@ import {
   Checkbox,
   Row,
   Col,
+  Tooltip,
 } from 'antd';
 import { userInstance } from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
@@ -41,7 +42,11 @@ const Calendar = () => {
   // const handleChange = (newValue) => {
   //   setPId(newValue);
   // };
-
+  const isSubUser = localStorage.getItem('isSubUser');
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  console.log(userCred);
+  const  [{ calendarWrite }] = userCred ? userCred : [{}];
+  const canWrite = calendarWrite;
   const rows = {};
   for (let i = 0; i < propertyData.length; i++) {
     // const pt_id = 'pt' + propertyData[i].id.toString();
@@ -227,12 +232,38 @@ const Calendar = () => {
     <Wrapper fun={setTopNavId}>
       <div className="calendar">
         <div className="calendar-btn">
+        {
+          isSubUser ? canWrite ? 
+          <Fragment>
           <Button type="primary" icon={<PlusOutlined />} onClick={show}>
             Add Reservation
           </Button>
           <Button className="border-btn" icon={<TeamOutlined />}>
             Group Reservation
+          </Button> 
+          </Fragment> :
+          <Fragment>
+          <Tooltip title='You are not authorize for adding reservation' color='gold'>
+          <Button type="primary" icon={<PlusOutlined />} onClick={show} disabled='true'>
+            Add Reservation
           </Button>
+          </Tooltip>
+          <Tooltip title='You are not authorize for adding reservation' color='gold'>
+          <Button className="border-btn" icon={<TeamOutlined />}>
+            Group Reservation
+          </Button>
+          </Tooltip>
+          </Fragment> :
+          <Fragment>
+          <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+            Add Reservation
+          </Button>
+          <Button className="border-btn" icon={<TeamOutlined />}>
+            Group Reservation
+          </Button> 
+          </Fragment>
+        }
+          
         </div>
 
         <div className="calendar-calendar">

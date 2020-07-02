@@ -10,6 +10,7 @@ const Login = () => {
   const [form] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
+  const [subUserPerm, setSubUserPerm] = useState([]);
   const history = useHistory();
 
   const onFinish = async (values) => {
@@ -20,11 +21,8 @@ const Login = () => {
 
     if (statusCode === 200) {
        if(response.data.subUser.length) {
-        response.data.subUser.map((el)=>{
-          localStorage.setItem('isSubUser', true);
-          localStorage.setItem('bookingRead',el.bookingRead);
-          localStorage.setItem('bookingWrite',el.bookingWrite);
-        })
+         localStorage.setItem('isSubUser',true);
+        localStorage.setItem('subUserCred', JSON.stringify(response.data.subUser));
        }
       localStorage.setItem('token', response.data.token);
       let payload = tokenparser(response.data.token);

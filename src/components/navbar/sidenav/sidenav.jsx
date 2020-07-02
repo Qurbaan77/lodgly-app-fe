@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
 import { Link } from 'react-router-dom';
 import './sidenav.css';
-import { Layout, Menu, Dropdown } from 'antd';
+import { Layout, Menu } from 'antd';
 import {
-  MenuUnfoldOutlined,
   ArrowLeftOutlined,
-  MenuFoldOutlined,
-  SearchOutlined,
-  VerticalAlignMiddleOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
   PoweroffOutlined,
   ApartmentOutlined,
 } from '@ant-design/icons';
@@ -37,16 +29,23 @@ import channel_icon from '../../../assets/images/menu/channel-icon.png';
 
 
 
-const { Header, Sider, Content } = Layout;
+const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 
-const Sidenav = (props) => {
+const Sidenav = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [propertyData, setPropertyData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
   const [menu, setMenu] = useState(false);
-  const [showBooking, setShowBooking] = useState(false)
+  const [hideBooking, setHideBooking] = useState(false);
+  const [hideCalendar, setHidecalendar] = useState(false);
+  const [hideInvoice, setHideInvoice] = useState(false);
+  const [hideTeam, setHideTeam] = useState(false);
+  const [hideStats, setHideStats] = useState(false);
+  const [hideService, setHideService] = useState(false);
+  const [disableProperties, setDisableProperties] = useState(false);
+  const [disableGuests, setDisableGuests] = useState(false);
   const history = useHistory();
 
   const toggle = () => {
@@ -72,13 +71,20 @@ const Sidenav = (props) => {
   };
 
   const getSubUser = async () => {
-  const bookingRead = localStorage.getItem('bookingRead');
-  const bookingWrite = localStorage.getItem('bookingWrite');
-  console.log(bookingRead,bookingWrite);
-  if(bookingRead && bookingWrite) {
-      console.log('ok')
-       setShowBooking(true);
-   }
+  const isSubUser = localStorage.getItem('isSubUser');
+  const subUserCred = JSON.parse(localStorage.getItem('subUserCred'));
+  console.log(subUserCred);
+  const [{ bookingRead, reservationRead, guestsRead, invoicesRead, 
+    propertiesRead, serviceRead, statsRead, teamRead
+  }] = subUserCred;
+    isSubUser ? bookingRead ? setHideBooking(false) : setHideBooking(true) : setHideBooking(false);
+    isSubUser ? reservationRead ? setHidecalendar(false) : setHidecalendar(true) : setHidecalendar(false);
+    isSubUser ? teamRead ? setHideTeam(false) : setHideTeam(true) : setHideTeam(false);
+    isSubUser ? invoicesRead ? setHideInvoice(false) : setHideInvoice(true) : setHideInvoice(false);
+    isSubUser ? statsRead ? setHideStats(false) : setHideStats(true) : setHideStats(false);
+    isSubUser ? propertiesRead ? setDisableProperties(false) : setDisableProperties(true) : setDisableProperties(false);
+    isSubUser ? guestsRead ? setDisableGuests(false) : setDisableGuests(true) : setDisableGuests(false);
+    isSubUser ? serviceRead ? setHideService(false) : setHideService(true) : setHideService(false);
   }
 
   const getData = async () => {
@@ -113,13 +119,16 @@ const Sidenav = (props) => {
   useEffect(() => {
     getData();
     changeMenu();
-    getSubUser();
+    if(localStorage.getItem('isSubUser')) {
+      getSubUser();
+    }
+   
   }, []);
 
   return (
     <Sider theme="light" trigger={null} collapsible collapsed={collapsed}>
       <div className="sidebar-logo">
-        <img src={logo} />
+        <img src={logo} alt='logo'/>
       </div>
 
       <UserProfile />
@@ -131,27 +140,28 @@ const Sidenav = (props) => {
         defaultSelectedKeys={['0']}
         style={{ height: '100%' }}
       >
-        <Menu.Item key="0" hidden={showBooking}>
-          <img src={booking_icon} />
+        <Menu.Item key="0" hidden={hideBooking}>
+          <img src={booking_icon} alt='booking-icon'/>
           <Link to={'/booking'}>Booking</Link>
         </Menu.Item>
 
-        <Menu.Item>
-          <img src={calender_icon} />
+        <Menu.Item hidden={hideCalendar}>
+          <img src={calender_icon} alt='calendar-icon'/>
           <Link to={'/calendar'}>Calendar</Link>
         </Menu.Item>
 
         <SubMenu
+        disabled={disableProperties}
           title={
             <div>
-              <img src={property_icon} />
+              <img src={property_icon} alt='property-icon'/>
               <Link to={'/propertylist'}>Properties</Link>
             </div>
           }
         >
           {propertyData.map((el, i) => {
             return (
-              <Menu.Item key={el.propertyNo}>
+              <Menu.Item key={el.propertyNo} >
                 <Link
                   to={'/property'}
                   onClick={() => localStorage.setItem('propertyId', el.id)}
@@ -164,36 +174,37 @@ const Sidenav = (props) => {
         </SubMenu>
 
         <SubMenu
+        disabled={disableGuests}
           title={
             <div>
-              <img src={guest_icon} />
+              <img src={guest_icon} alt='guest-icon'/>
               <span>Guests</span>
             </div>
           }
         >
-          <Menu.Item key="3">Option 3</Menu.Item>
+          <Menu.Item key="3"  hidden='true'>Option 3</Menu.Item>
           <Menu.Item key="4">Option 4</Menu.Item>
         </SubMenu>
 
-        <Menu.Item>
-        <img src={team_icon} />
+        <Menu.Item hidden={hideTeam}>
+        <img src={team_icon} alt='team'/>
           <Link to={'/team'}>Team</Link>
         </Menu.Item>
 
-        <Menu.Item>
-          <img src={invoice_icon} />
+        <Menu.Item hidden={hideInvoice}>
+          <img src={invoice_icon} alt='invoice-icon'/>
           <span>Invoices</span>
         </Menu.Item>
 
-        <Menu.Item>
-          <img src={stats_icon} />
+        <Menu.Item hidden={hideStats}>
+          <img src={stats_icon} alt='stats=icon'/>
           <span>Stats</span>
         </Menu.Item>
 
         <SubMenu
           title={
             <div>
-              <img src={integration_icon} />
+              <img src={integration_icon} alt='integration-icon'/>
               <span>Integrations</span>
             </div>
           }
@@ -203,7 +214,7 @@ const Sidenav = (props) => {
         </SubMenu>
 
         <Menu.Item>
-          <img src={owner_icon} />
+          <img src={owner_icon} alt='owner-icon'/>
           <Link to={'/owner'}>Owner</Link>
         </Menu.Item>
 
@@ -230,23 +241,23 @@ const Sidenav = (props) => {
           </Link>
         </span>
         <Menu.Item key="1">
-          <img src={property_detail_icon} />
+          <img src={property_detail_icon} alt='property'/>
           <Link to={'/property'}>Details</Link>
         </Menu.Item>
         <Menu.Item>
-          <img src={unit_icon} />
+          <img src={unit_icon} alt='unit'/>
           <Link to={'/unittype'}>Unit Type</Link>
         </Menu.Item>
         <Menu.Item>
-          <img src={task_icon} />
+          <img src={task_icon} alt='task'/>
           <span>Tasks</span>
         </Menu.Item>
         <Menu.Item>
-          <img src={channel_icon} />
+          <img src={channel_icon} alt='channel'/>
           <Link to={'/channelmanager'}>Channel Manager</Link>
         </Menu.Item>
 
-        <Menu.Item>
+        <Menu.Item hidden={hideService}>
           <ApartmentOutlined />
           <Link to={'/services'}>Services</Link>
         </Menu.Item>

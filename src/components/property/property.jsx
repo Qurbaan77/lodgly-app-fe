@@ -14,6 +14,7 @@ import {
   Checkbox,
   Row,
   Col,
+  Tooltip
 } from 'antd';
 import {
   MenuUnfoldOutlined,
@@ -99,6 +100,12 @@ const Property = () => {
   const [feature2, setFeature2] = useState([]);
   const [feature3, setFeature3] = useState([]);
   
+  const isSubUser = localStorage.getItem('isSubUser');
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  console.log(userCred);
+  const  [{ propertiesWrite }] = userCred ? userCred : [{}];
+  const canWrite = propertiesWrite;
+
   useEffect(() => {
       getData();
   }, []);
@@ -434,7 +441,15 @@ const Property = () => {
 
                     <Col span={24}>
                       <Form.Item>
+                      {
+                        isSubUser ? canWrite ? 
+                        <Button>Save</Button> : 
+                        <Tooltip title='You are not authorize to save New Property' color='gold'>
+                        <Button disabled='true'>Save</Button> 
+                        </Tooltip> : 
                         <Button>Save</Button>
+                      }
+                        
                       </Form.Item>
                     </Col>
                   </Row>

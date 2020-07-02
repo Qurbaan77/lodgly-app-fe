@@ -16,6 +16,7 @@ import {
   Checkbox,
   Row,
   Col,
+  Tooltip 
 } from 'antd';
 import {
   MenuUnfoldOutlined,
@@ -52,11 +53,6 @@ import refresh_icon from '../../assets/images/menu/refresh-icon.png';
 
 const { Panel } = Collapse;
 const { MonthPicker, RangePicker } = DatePicker;
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
 
 const useForceUpdate = () => useState()[1];
 const Booking = () => {
@@ -78,14 +74,14 @@ const Booking = () => {
   const [editCurrentGuest, setEditCurrentGuest] = useState([]);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
-  const [price, setPrice] = useState(0);
-  const [night, setNight] = useState(0);
-
-  // const [guestNum, setGuestNum] = useState(0);
 
   const [editValues, setEditValues] = useState({});
   const [editBookingValues, setEditBookingValues] = useState({});
-
+  const isSubUser = localStorage.getItem('isSubUser');
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  console.log(userCred);
+  const  [{ bookingWrite }] = userCred ? userCred : [{}];
+  const canWrite = bookingWrite;
   const show = () => {
     setVisible(true);
   };
@@ -147,23 +143,6 @@ const Booking = () => {
       }
       
     }
-  };
-
-  const onFinish = async (values) => {
-    console.log('Received values of form: ', values);
-    form.resetFields();
-    const response = await userInstance.post('/addBooking', values);
-    const statusCode = response.data.code;
-    const msg = response.data.msg;
-    if (statusCode == 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
-      getData();
-    } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
-    }
-    form.resetFields();
   };
 
   const close = () => {
@@ -269,7 +248,7 @@ const Booking = () => {
                   </div>
 
                   <div className='filter-icon'>
-                    <img src={filter_icon} />
+                    <img src={filter_icon} alt='filter-icon'/>
                   </div>
                 </div>
 
@@ -303,16 +282,44 @@ const Booking = () => {
                 <div className='bookin-footer'>
                   <ul>
                     <li>
-                      <img src={edit_icon} />
+                      <img src={edit_icon} alt='edit-icon'/>
                     </li>
                     <li>
-                      <img src={download_icon} />
+                      <img src={download_icon} alt='download=icon'/>
                     </li>
                     <li>
-                      <img src={refresh_icon} />
+                      <img src={refresh_icon} alt='refresh-icon'/>
                     </li>
                   </ul>
-
+                  {
+                   isSubUser ? canWrite ? 
+                   <Button
+                    type='primary'
+                    icon={<PlusOutlined />}
+                    onClick={() => {
+                      setVisible(true);
+                      setEditBookingValues({});
+                      setEditCurrentGuest({});
+                      form.resetFields();
+                    }}
+                  >
+                    Create Booking
+                  </Button> : 
+                  <Tooltip title='You are not authorize to create booking' color='gold'>
+                  <Button
+                  disabled='true'
+                    type='primary'
+                    icon={<PlusOutlined />}
+                    onClick={() => {
+                      setVisible(true);
+                      setEditBookingValues({});
+                      setEditCurrentGuest({});
+                      form.resetFields();
+                    }}
+                  >
+                    Create Booking
+                  </Button>
+                  </Tooltip> :
                   <Button
                     type='primary'
                     icon={<PlusOutlined />}
@@ -325,6 +332,7 @@ const Booking = () => {
                   >
                     Create Booking
                   </Button>
+                  }
                 </div>
               </div>
             </Col>
@@ -347,9 +355,20 @@ const Booking = () => {
                     </div>
 
                     <div className='box-editing' onClick={forceUpdate}>
+                    {
+                     isSubUser ?  canWrite ? <FormOutlined
+                        onClick={() => editBooking(currentBooking)}
+                      /> : 
+                      <Tooltip title='You are not authorize to edit booking' color='gold'>
+                      <FormOutlined
+                      disabled='true'
+                        onClick={() => editBooking(currentBooking)}
+                      />
+                      </Tooltip> : 
                       <FormOutlined
                         onClick={() => editBooking(currentBooking)}
                       />
+                    }
                       <Dropdown overlay={menu}>
                         <Button>
                           Booked <DownOutlined />

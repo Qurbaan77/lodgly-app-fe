@@ -20,6 +20,7 @@ import {
   Row,
   Col,
   message,
+  Tooltip
 } from 'antd';
 import {
   MenuUnfoldOutlined,
@@ -98,6 +99,12 @@ const AddProperty = () => {
   const [notifyMsg, setNotifyMsg] = useState();
   const [address, setAddress] = useState('');
   const history = useHistory();
+
+  const isSubUser = localStorage.getItem('isSubUser');
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  console.log(userCred);
+  const  [{ propertiesWrite }] = userCred ? userCred : [{}];
+  const canWrite = propertiesWrite;
 
   useEffect(() => {
     async function getData() {
@@ -498,7 +505,14 @@ const AddProperty = () => {
 
                     <Col span={24}>
                       <Form.Item>
+                        {
+                        isSubUser ? canWrite ? 
+                        <Button>Save</Button> : 
+                        <Tooltip title='You are not authorize to save New Property' color='gold'>
+                        <Button disabled='true'>Save</Button> 
+                        </Tooltip> : 
                         <Button>Save</Button>
+                      }
                       </Form.Item>
                     </Col>
                   </Row>

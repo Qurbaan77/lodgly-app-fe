@@ -45,6 +45,12 @@ const Services = () => {
   const [serviceData, setServiceData] = useState([]);
   const [curRowId, setCurRowId] = useState(0);
 
+  const isSubUser = localStorage.getItem('isSubUser');
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  console.log(userCred);
+  const  [{ propertiesWrite }] = userCred ? userCred : [{}];
+  const canWrite = propertiesWrite;
+
   const columns = [
     {
       title: 'Service Name',
@@ -164,9 +170,21 @@ const Services = () => {
         <div className="page-header">
           <h1>Services</h1>
 
+          {
+            isSubUser ? canWrite ? 
+            <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+            <Link to="/services">Add Services</Link>
+          </Button> :
+          <Tooltip title='You are not authorize to create create new service' color='gold'>
+          <Button type="primary" icon={<PlusOutlined />} onClick={show} disabled='true'>
+            <Link to="/services">Add Services</Link>
+          </Button>
+          </Tooltip> :
           <Button type="primary" icon={<PlusOutlined />} onClick={show}>
             <Link to="/services">Add Services</Link>
           </Button>
+          }
+          
         </div>
 
         <div className="services-list">

@@ -15,6 +15,7 @@ import {
   Checkbox,
   Row,
   Col,
+  Tooltip,
 } from 'antd';
 import {
   MenuUnfoldOutlined,
@@ -53,6 +54,11 @@ const UnitType = () => {
   const [editId, setEditId] = useState(null);
   const history = useHistory();
 
+  const isSubUser = localStorage.getItem('isSubUser');
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  console.log(userCred);
+  const  [{ propertiesWrite }] = userCred ? userCred : [{}];
+  const canWrite = propertiesWrite;
   const show = (unittypeId) => {
     setVisible(true);
     setCurrUnittype(unittypeId);
@@ -132,15 +138,34 @@ const UnitType = () => {
           <h1>
             <HomeOutlined /> Unit Type
           </h1>
-
+          {
+            isSubUser ? canWrite ?
+            <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setShowPanel(false)}
+          >
+            Add Unit Type
+          </Button> :
+          <Tooltip title='You are not authorize to create new unit types' color='gold'>
+          <Button
+            disabled='true'
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setShowPanel(false)}
+          >
+            Add Unit Type
+          </Button>
+          </Tooltip> :
           <Button
             type="primary"
             icon={<PlusOutlined />}
             onClick={() => setShowPanel(false)}
           >
-            {/* <Link onClick={() => localStorage.removeItem('unittypeId')}> */}
             Add Unit Type
           </Button>
+          }
+          
         </div>
         <div className="panel-box units editunit" hidden={showPanel}>
           <div className="group-name">
