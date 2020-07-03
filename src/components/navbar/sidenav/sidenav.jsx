@@ -69,16 +69,16 @@ const Sidenav = () => {
       history.push('/');
     }
   };
-
-  const getSubUser = async () => {
   const isSubUser = localStorage.getItem('isSubUser');
   const subUserCred = JSON.parse(localStorage.getItem('subUserCred'));
   console.log(subUserCred);
-  const [{ bookingRead, reservationRead, guestsRead, invoicesRead, 
-    propertiesRead, serviceRead, statsRead, teamRead
-  }] = subUserCred;
+  const [{ bookingRead, calendarRead, guestsRead, invoicesRead, 
+    propertiesRead, serviceRead, statsRead, teamRead, userId
+  }] = subUserCred ? subUserCred : [{}];
+
+  const getSubUser = async () => {
     isSubUser ? bookingRead ? setHideBooking(false) : setHideBooking(true) : setHideBooking(false);
-    isSubUser ? reservationRead ? setHidecalendar(false) : setHidecalendar(true) : setHidecalendar(false);
+    isSubUser ? calendarRead ? setHidecalendar(false) : setHidecalendar(true) : setHidecalendar(false);
     isSubUser ? teamRead ? setHideTeam(false) : setHideTeam(true) : setHideTeam(false);
     isSubUser ? invoicesRead ? setHideInvoice(false) : setHideInvoice(true) : setHideInvoice(false);
     isSubUser ? statsRead ? setHideStats(false) : setHideStats(true) : setHideStats(false);
@@ -90,7 +90,7 @@ const Sidenav = () => {
   const getData = async () => {
     const pathname = window.location.pathname;
     const Id = localStorage.getItem('propertyId');
-    const response = await userInstance.post('/fetchProperty');
+    const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
       setPropertyData(data);
@@ -122,7 +122,6 @@ const Sidenav = () => {
     if(localStorage.getItem('isSubUser')) {
       getSubUser();
     }
-   
   }, []);
 
   return (

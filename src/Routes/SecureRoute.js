@@ -4,7 +4,7 @@ import {Redirect, Route } from 'react-router-dom';
   const subUserCred = JSON.parse(localStorage.getItem('subUserCred'));
   console.log(subUserCred);
   
-   const [{ bookingRead, reservationRead, guestsRead, invoicesRead, 
+   const [{ bookingRead, calendarRead, guestsRead, invoicesRead, 
     propertiesRead, serviceRead, statsRead, teamRead
   }] = subUserCred ? subUserCred : [{}];
 
@@ -22,11 +22,11 @@ import {Redirect, Route } from 'react-router-dom';
     />
   );
 
-  export const SecureReservation = ({ component: Component, ...rest }) => (
+  export const SecureCalendar = ({ component: Component, ...rest }) => (
     <Route
       {...rest}
       render={(props) =>
-        reservationRead ? (
+        calendarRead ? (
           <Component {...props} {...rest} />
         ) : (
           <Redirect to="/" />

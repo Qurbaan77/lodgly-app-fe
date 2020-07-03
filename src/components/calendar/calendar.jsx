@@ -42,7 +42,7 @@ const Calendar = () => {
   // const handleChange = (newValue) => {
   //   setPId(newValue);
   // };
-  const isSubUser = localStorage.getItem('isSubUser');
+  const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   console.log(userCred);
   const  [{ calendarWrite }] = userCred ? userCred : [{}];

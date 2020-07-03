@@ -26,21 +26,22 @@ const PropertyList = () => {
   const [propertyData, setPropertyData] = useState([]);
   const [topNavId, setTopNavId] = useState();
   const history = useHistory();
-  const isSubUser = localStorage.getItem('isSubUser');
+  const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   console.log(userCred);
-  const  [{ propertiesWrite }] = userCred ? userCred : [{}];
+  const  [{ propertiesWrite, userId }] = userCred ? userCred : [{}];
   const canWrite = propertiesWrite;
 
   useEffect(() => {
     setTopNavId(localStorage.getItem('topNavId'));
     console.log('Function is called')
     async function getData() {
-      const response = await userInstance.post('/fetchProperty');
+      const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
       const data2 = [];
       const data = response.data.propertiesData;
+      console.log(data);
       data
-        .filter((el) => el.id == topNavId)
+        .filter((el) => el.id === topNavId)
         .map((filterData) => {
           data2.push(filterData);
         });

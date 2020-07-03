@@ -189,6 +189,8 @@ const CreateBookingPopup = (props) => {
     values.channel = channel;
     values.commission = channelCommission;
     values.unitName = unitName;
+    const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
+    values.affiliateId = userId;
     console.log('Received values of edit form: ', values);
     const response = await userInstance.post('/addBooking', values);
     console.log('response', response.data.code);

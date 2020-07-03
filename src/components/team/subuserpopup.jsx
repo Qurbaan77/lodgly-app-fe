@@ -5,39 +5,15 @@ import {
   Form,
   Select,
   Input,
-  Layout,
-  Menu,
   Button,
-  Radio,
-  Slider,
-  DatePicker,
-  Tooltip,
-  Dropdown,
   Checkbox,
 } from 'antd';
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  HomeOutlined,
-  PlusOutlined,
-  DeleteOutlined,
-  FormOutlined,
-  SearchOutlined,
-  VerticalAlignMiddleOutlined,
-  PartitionOutlined,
-  UserOutlined,
-  DownOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-} from '@ant-design/icons';
-import Wrapper from '../wrapper';
-import { Modal } from 'antd';
-import { Table } from 'antd';
 import team from '../../assets/images/profile_user.jpg';
 import { Row, Col } from 'antd';
 import { userInstance } from '../../axios/axiosconfig';
 
-const SubUserPopup = () => {
+const SubUserPopup = (props) => {
+  console.log(props);
   const [form] = Form.useForm();
   const { Option } = Select;
   const [bookingRead, setBookingRead] = useState(false);
@@ -58,18 +34,41 @@ const SubUserPopup = () => {
   const [statsWrite, setStatsWrite] = useState(false);
   const [serviceRead, setServiceRead] = useState(false);
   const [serviceWrite, setServiceWrite] = useState(false);
+  const [checked, setChecked] = useState(false);
 
   function onChange(e) {
     console.log(`checked = ${e.target.checked}`);
   }
+  const handleSelect = (value) => {
+    console.log(value);
+    if(value === 'fullaccess') {
+      setChecked(true);
+      setBookingRead(true);
+      setBookingWrite(true);
+      setPropertiesRead(true);
+      setPropertiesWrite(true);
+      setCalendarRead(true);
+      setCalendarWrite(true);
+      setGuestsRead(true);
+      setGuestsWrite(true);
+      setTeamRead(true);
+      setTeamWrite(true);
+      setInvoicesRead(true);
+      setInvoicesWrite(true);
+      setStatsRead(true);
+      setStatsWrite(true);
+      setServiceRead(true);
+      setServiceWrite(true);
+      
+    }
+  }
+
   console.log(calendarRead,calendarWrite);
 
   const onFinish = async (values) => {
     console.log('Raw values',values);
     values.bookingRead = bookingRead;
     values.bookingWrite = bookingWrite;
-    values.reservationRead = reservationRead;
-    values.reservationWrite = reservationWrite;
     values.propertiesRead = propertiesRead;
     values.propertiesWrite = propertiesWrite;
     values.calendarRead = calendarRead;
@@ -83,15 +82,17 @@ const SubUserPopup = () => {
     values.statsRead = statsRead;
     values.statsWrite = statsWrite;
     values.serviceRead = serviceRead;
-    values.serviceWrite = serviceWrite
-    console.log(values)
-    await userInstance.post('/addTeam', values);
+    values.serviceWrite = serviceWrite;
+    console.log(values);
+   const response = await userInstance.post('/addTeam', values);
+   console.log(response);
+   if(response.status === 200) {
+     props.close();
+   }
   };
-
-  const handleBookingRead = e =>  e.target.value ? setBookingRead(false) : setBookingRead(true);
-  const handleBookingWrite = e => e.target.value ? setBookingWrite(false) : setBookingWrite(true);
-  const handleReservationRead = e => e.target.value ? setReservationRead(false) : setReservationRead(true);
-  const handleReservationWrite = e => e.target.value ? setReservationWrite(false) : setReservationWrite(true);
+  
+  const handleBookingRead = e =>  e.target.checked ? setBookingRead(false) : setBookingRead(true);
+  const handleBookingWrite = e => e.target.checked ? setBookingWrite(false) : setBookingWrite(true);
   const handlePropertiesRead = e => e.target.value ? setPropertiesRead(false) : setPropertiesRead(true);
   const handlePropertiesWrite = e => e.target.value ? setPropertiesWrite(false) : setPropertiesWrite(true);
   const handleCalendarRead = e => e.target.value ? setCalendarRead(false) : setCalendarRead(true);
@@ -131,7 +132,7 @@ const SubUserPopup = () => {
 
         <Col span={8}>
           <Form.Item label="Role" name="role">
-            <Select>
+            <Select onSelect={(value)=>handleSelect(value)}>
               <Select.Option value="subuser">Sub-User</Select.Option>
               <Select.Option value="fullaccess">Full Access</Select.Option>
             </Select>
@@ -148,10 +149,10 @@ const SubUserPopup = () => {
               <tr>
                 <th>Booking</th>
                 <th>
-                  <Checkbox value={bookingRead} onChange={(e) => handleBookingRead(e)}></Checkbox>
+                  <Checkbox value={bookingRead} onChange={(e) => handleBookingRead(e)} checked={checked}></Checkbox>
                 </th>
                 <th>
-                  <Checkbox value={bookingWrite} onChange={(e) => handleBookingWrite(e)}></Checkbox>
+                  <Checkbox value={bookingWrite} onChange={(e) => handleBookingWrite(e)} checked={checked}></Checkbox>
                 </th>
                 <th>
                   Prices and availability that are syncing with connected OTAs
@@ -167,12 +168,12 @@ const SubUserPopup = () => {
           <table>
             <thead>
               <tr>
-                <th>Reservation</th>
+                <th>Calendar</th>
                 <th>
-                  <Checkbox value={reservationRead} onChange={(e) => handleReservationRead(e)}></Checkbox>
+                  <Checkbox value={calendarRead} onChange={(e) => handleCalendarRead(e)} checked={checked}></Checkbox>
                 </th>
                 <th>
-                  <Checkbox value={reservationWrite} onChange={(e) => handleReservationWrite(e)}></Checkbox>
+                  <Checkbox value={calendarWrite} onChange={(e) => handleCalendarWrite(e)} checked={checked}></Checkbox>
                 </th>
                 <th>Access Description</th>
               </tr>
@@ -182,32 +183,21 @@ const SubUserPopup = () => {
               <tr>
                 <td>Properties</td>
                 <td>
-                  <Checkbox value={propertiesRead} onChange={(e)=>handlePropertiesRead(e)}></Checkbox>
+                  <Checkbox value={propertiesRead} onChange={(e)=>handlePropertiesRead(e)} checked={checked}></Checkbox>
                 </td>
                 <td>
-                  <Checkbox value={propertiesWrite} onChange={(e)=>handlePropertiesWrite(e)}></Checkbox>
+                  <Checkbox value={propertiesWrite} onChange={(e)=>handlePropertiesWrite(e)} checked={checked}></Checkbox>
                 </td>
                 <td>Booked dates on calendar</td>
               </tr>
 
               <tr>
-                <td>calendar</td>
-                <td>
-                  <Checkbox value={calendarRead} onChange={(e)=>handleCalendarRead(e)}></Checkbox>
-                </td>
-                <td>
-                  <Checkbox value={calendarWrite} onChange={(e)=>handleCalendarWrite(e)}></Checkbox>
-                </td>
-                <td>Reservation prices</td>
-              </tr>
-
-              <tr>
                 <td>Guests</td>
                 <td>
-                  <Checkbox value={guestsRead} onChange={(e)=>handleGuestsRead(e)}></Checkbox>
+                  <Checkbox value={guestsRead} onChange={(e)=>handleGuestsRead(e)} checked={checked}></Checkbox>
                 </td>
                 <td>
-                  <Checkbox value={guestsWrite} onChange={(e)=>handleGuestsWrite(e)}></Checkbox>
+                  <Checkbox value={guestsWrite} onChange={(e)=>handleGuestsWrite(e)} checked={checked}></Checkbox>
                 </td>
                 <td>
                   Guest check-in and checkout-out on Dashboard, sales channels.
@@ -219,10 +209,10 @@ const SubUserPopup = () => {
               <tr>
                 <td>Team</td>
                 <td>
-                  <Checkbox value={teamRead} onClick={(e) => handleTeamRead(e)}></Checkbox>
+                  <Checkbox value={teamRead} onClick={(e) => handleTeamRead(e)} checked={checked}></Checkbox>
                 </td>
                 <td>
-                  <Checkbox value={teamWrite} onClick={(e) => handleTeamWrite(e)}></Checkbox>
+                  <Checkbox value={teamWrite} onClick={(e) => handleTeamWrite(e)} checked={checked}></Checkbox>
                 </td>
                 <td>Additional services and their settings</td>
               </tr>
@@ -247,24 +237,15 @@ const SubUserPopup = () => {
               <tr>
                 <td>Invoices</td>
                 <td>
-                  <Checkbox value={invoicesRead} onChange={(e)=>handleInvoicesRead(e)}></Checkbox>
+                  <Checkbox value={invoicesRead} onChange={(e)=>handleInvoicesRead(e)} checked={checked}></Checkbox>
                 </td>
                 <td>
-                  <Checkbox value={invoicesWrite} onChange={(e)=>handleInvoicesWrite(e)}></Checkbox>
+                  <Checkbox value={invoicesWrite} onChange={(e)=>handleInvoicesWrite(e)} checked={checked}></Checkbox>
                 </td>
                 <td>Invoices, offers and invoice setting</td>
               </tr>
 
-              <tr>
-                <td>Cash Register</td>
-                <td>
-                  <Checkbox onChange={onChange}></Checkbox>
-                </td>
-                <td>
-                  <Checkbox onChange={onChange}></Checkbox>
-                </td>
-                <td>Cash Register (if Cash Register if enabled)</td>
-              </tr>
+             
             </tbody>
           </table>
         </div>
@@ -277,10 +258,10 @@ const SubUserPopup = () => {
               <tr>
                 <th>Stats</th>
                 <th>
-                  <Checkbox value={statsRead} onChange={(e)=>handleStatsRead(e)}></Checkbox>
+                  <Checkbox value={statsRead} onChange={(e)=>handleStatsRead(e)} checked={checked}></Checkbox>
                 </th>
                 <th>
-                  <Checkbox value={statsWrite} onChange={(e)=>handleStatsWrite(e)}></Checkbox>
+                  <Checkbox value={statsWrite} onChange={(e)=>handleStatsWrite(e)} checked={checked}></Checkbox>
                 </th>
                 <th>Stats screen</th>
               </tr>
@@ -296,10 +277,10 @@ const SubUserPopup = () => {
               <tr>
                 <th>Services</th>
                 <th>
-                  <Checkbox value={serviceRead} onChange={(e)=>handleServiceRead(e)}></Checkbox>
+                  <Checkbox value={serviceRead} onChange={(e)=>handleServiceRead(e)} checked={checked}></Checkbox>
                 </th>
                 <th>
-                  <Checkbox value={serviceWrite} onChange={(e)=>handleServiceWrite(e)}></Checkbox>
+                  <Checkbox value={serviceWrite} onChange={(e)=>handleServiceWrite(e)} checked={checked}></Checkbox>
                 </th>
                 <th>
                   Property settings, invoice settings and channel manager
@@ -316,7 +297,7 @@ const SubUserPopup = () => {
       >
         <Col span={24}>
           <Form.Item>
-            <Button style={{ marginRight: 10 }}>Cancel</Button>
+            <Button style={{ marginRight: 10 }} onClick={props.close}>Cancel</Button>
             <Button type="primary" htmlType="submit">
               Save
             </Button>

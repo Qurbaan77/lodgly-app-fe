@@ -28,8 +28,8 @@ import Reset from './components/reset/reset';
 import Services from './components/property/services';
 import Calendar from './components/calendar/calendar';
 import Popup from './components/calendar/popup';
-import PrivateRoute from './Routes/PrivateRoute';
-import { SecureBooking, SecureReservation, SecureProperty, SecureTeam } from './Routes/SecureRoute';
+import { PrivateRoute, LoginRoute} from './Routes/PrivateRoute';
+import { SecureBooking, SecureCalendar, SecureProperty, SecureTeam } from './Routes/SecureRoute';
 
 import Owner from './components/owner/owner';
 import TeamListing from './components/team/teamlist';
@@ -42,7 +42,7 @@ import './responsive.css';
 const history = createBrowserHistory();
 
 const App = () => {
-  const isSubUser = localStorage.getItem('isSubUser');
+  const isSubUser = localStorage.getItem('isSubUser') || false;
   return (
     <div className="App">
       <div className="main-wrapper">
@@ -51,7 +51,7 @@ const App = () => {
             <Header />
             <main>
               <div className="main_content">
-                <Route exact path="/" component={() => <Login />} />
+                <LoginRoute exact path="/" component={() => <Login />} />
                 <Route exact path="/register" component={() => <Register />} />
                 <PrivateRoute
                   exact
@@ -194,7 +194,7 @@ const App = () => {
                 <Route exact path="/thankyou" component={() => <Thankyou />} />
                 <Route exact path="/services" component={() => <Services />} />
                 {
-                  isSubUser ?  <SecureReservation exact path="/calendar" component={() => <Calendar />} /> :  <PrivateRoute exact path="/calendar" component={() => <Calendar />}
+                  isSubUser ?  <SecureCalendar exact path="/calendar" component={() => <Calendar />} /> :  <PrivateRoute exact path="/calendar" component={() => <Calendar />}
                 />
                 }
                
@@ -205,7 +205,7 @@ const App = () => {
                 {/* Additional Work */}
 
                 {
-                  isSubUser ? <SecureTeam exact path="/team" component={() => <Team />}/> : <Route exact path="/team" component={() => <Team />} />
+                  isSubUser ? <SecureTeam exact path="/team" component={() => <Team />}/> : <PrivateRoute exact path="/team" component={() => <Team />} />
                 }
                 {
                   isSubUser ?  <SecureTeam exact path="/teamlist" component={() => <TeamListing />}/> : <PrivateRoute exact path="/teamlist" component={() => <TeamListing />}/>

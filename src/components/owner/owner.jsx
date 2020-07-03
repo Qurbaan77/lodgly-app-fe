@@ -147,7 +147,7 @@ const Owner = () => {
     const data = response.data.propertiesData;
     let arr = [];
     data
-      .filter((el) => el.ownerId == 0)
+      .filter((el) => el.ownerId === 0)
       .map((filterData) => {
         arr.push(filterData);
       });
@@ -166,7 +166,7 @@ const Owner = () => {
   useEffect(() => {
     getPropertyData();
     getSubUserData();
-  }, [propertyData]);
+  }, []);
 
   return (
     <Wrapper>

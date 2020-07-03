@@ -54,7 +54,7 @@ const UnitType = () => {
   const [editId, setEditId] = useState(null);
   const history = useHistory();
 
-  const isSubUser = localStorage.getItem('isSubUser');
+  const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   console.log(userCred);
   const  [{ propertiesWrite }] = userCred ? userCred : [{}];

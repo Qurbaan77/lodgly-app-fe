@@ -100,12 +100,11 @@ const Property = () => {
   const [feature2, setFeature2] = useState([]);
   const [feature3, setFeature3] = useState([]);
   
-  const isSubUser = localStorage.getItem('isSubUser');
+  const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   console.log(userCred);
-  const  [{ propertiesWrite }] = userCred ? userCred : [{}];
+  const  [{ propertiesWrite, userId }] = userCred ? userCred : [{}];
   const canWrite = propertiesWrite;
-
   useEffect(() => {
       getData();
   }, []);
@@ -115,7 +114,7 @@ const Property = () => {
   };
 
   const getData = async () => {
-    const response = await userInstance.post('/fetchProperty');
+    const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
       const parsed = queryString.parse(window.location.search);

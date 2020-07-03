@@ -58,7 +58,7 @@ const Team = () => {
     <Wrapper>
       <div className="add-team-page">
         <div className="add-subuser">
-          <img src={subuser} />
+          <img src={subuser} alt='subuser'/>
           <h4>Sub Users</h4>
           <p>Currently there are no Sub users created</p>
           <Button type="primary" icon={<PlusOutlined />} onClick={show}>
@@ -74,7 +74,7 @@ const Team = () => {
         onCancel={handleCancel}
         wrapClassName="guest-modal sub-user"
       >
-        <SubUserPopup />
+        <SubUserPopup close={handleCancel}/>
       </Modal>
     </Wrapper>
   );

@@ -77,10 +77,11 @@ const Booking = () => {
 
   const [editValues, setEditValues] = useState({});
   const [editBookingValues, setEditBookingValues] = useState({});
-  const isSubUser = localStorage.getItem('isSubUser');
+
+  const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   console.log(userCred);
-  const  [{ bookingWrite }] = userCred ? userCred : [{}];
+  const  [{ bookingWrite, userId }] = userCred ? userCred : [{}];
   const canWrite = bookingWrite;
   const show = () => {
     setVisible(true);
@@ -102,7 +103,7 @@ const Booking = () => {
 
   const getData = async () => {
     console.log('get Function is Called!');
-    const response = await userInstance.post('/getBooking');
+    const response = await userInstance.post('/getBooking', { affiliateId: userId });
     console.log(response);
     const bookingdata = response.data.bookingData;
     const guestdata = response.data.guestData;
