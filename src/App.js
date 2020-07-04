@@ -12,7 +12,7 @@ import PropertyList from './components/property/propertylist';
 import UnitType from './components/property/unittype';
 import ChannelManager from './components/property/channelmanager';
 import Groups from './components/property/group';
-import CleaningGroup from './components/property/cleaninggroup';
+import Task from './components/property/task';
 import AdminLogin from './components/admin-panel/login/login';
 import AdminSetting from './components/admin-panel/setting/setting';
 import CreateBookingPopup from './components/booking/createbookingpopup';
@@ -97,8 +97,8 @@ const App = () => {
                 />
                 <PrivateRoute
                   exact
-                  path="/cleaninggroup"
-                  component={() => <CleaningGroup />}
+                  path="/task"
+                  component={() => <Task />}
                 />
                 <PrivateRoute
                   exact
