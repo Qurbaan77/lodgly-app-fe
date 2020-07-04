@@ -41,33 +41,42 @@ import people3 from '../../assets/images/people-3.jpg';
 import people4 from '../../assets/images/people-4.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
+import DeletePopup from './deletepopup';
 
 const { Option } = Select;
 
-const CleaningGroup = () => {
+const Task = () => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
+  const [visible2, setVisible2] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const initialFormState = { name: '' };
   const [editUser, setEditUser] = useState(initialFormState);
+  const [group, setGroup] = useState([]);
+  const [currTaskId, setCurrTaskId] = useState(0);
+  const [isGroup, sertIsGroup] = useState(true);
 
   useEffect(() => {
+    if (localStorage.getItem('groupId')){
+      sertIsGroup(false)
+    }
     getData();
+    getGroupData();
   }, []);
 
   const columns = [
     {
       title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'taskName',
+      key: 'taskName',
       render: (text) => <a>{text}</a>,
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'Notes',
+      dataIndex: 'note',
+      key: 'note',
     },
     {
       title: 'Tags',
@@ -91,7 +100,7 @@ const CleaningGroup = () => {
             </Tag>
             <span class="group-action">
               <FormOutlined onClick={() => edit(record)} />
-              <DeleteOutlined onClick={() => remove(record.id)} />
+              <DeleteOutlined onClick={() => showDeletePopup(record.id)} />
             </span>
           </div>
         );
@@ -106,17 +115,33 @@ const CleaningGroup = () => {
 
   const handleOk = () => {
     setVisible(false);
+    setVisible2(false);
   };
 
   const handleCancel = () => {
     setVisible(false);
+    setVisible2(false);
   };
 
   const getData = async () => {
-    const response = await userInstance.post('/taskList');
-    console.log(response.data.taskDetail);
+    const values = {
+      groupId : localStorage.getItem('groupId')
+    }
+    const response = await userInstance.post('/taskList', values);
     if (response.data.code === 200) {
       setTasks(response.data.taskDetail);
+    }
+  };
+
+  const getGroupData = async () => {
+    const groupId = localStorage.getItem('groupId')
+    const response = await userInstance.post('/groupList');
+    if (response.data.code === 200) {
+      response.data.groupDetail
+        .filter((el) => el.id == localStorage.getItem('groupId'))
+        .map((filter) => {
+          setGroup(filter);
+        });
     }
   };
 
@@ -125,7 +150,7 @@ const CleaningGroup = () => {
   };
 
   const saveData = async (values) => {
-    console.log('Received values of form: ', values);
+    values.groupId = localStorage.getItem('groupId');
     const response = await userInstance.post('/addTask', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
@@ -133,6 +158,7 @@ const CleaningGroup = () => {
       setEditUser(initialFormState);
       setNotifyType('success');
       setNotifyMsg(msg);
+      setVisible(false);
       getData();
     } else {
       setNotifyType('error');
@@ -141,15 +167,20 @@ const CleaningGroup = () => {
     form.resetFields();
   };
 
-  const remove = async (taskId) => {
-    console.log('taskId', taskId);
+  const showDeletePopup = (taskId) => {
+    setCurrTaskId(taskId)
+    setVisible2(true)
+  };
+
+  const remove = async () => {
     const data = {
-      id: taskId,
+      id: currTaskId,
     };
     const response = await userInstance.post('/deleteTask', data);
     const statusCode = response.data.code;
     const msg = response.data.msg;
     if (statusCode == 200) {
+      setVisible2(false);
       getData();
     }
   };
@@ -158,11 +189,15 @@ const CleaningGroup = () => {
     console.log(data);
     form.setFieldsValue({
       id: data.id,
-      name: data.name,
-      address: data.address,
+      taskName: data.taskName,
+      note: data.note,
       tags: data.tags,
     });
     setVisible(true);
+  };
+
+  const close = () => {
+    setNotifyType('');
   };
 
   return (
@@ -170,7 +205,7 @@ const CleaningGroup = () => {
       <div className="cleaning-group">
         <div className="page-header">
           <h1>
-            <HomeOutlined /> Cleaning Group
+            <HomeOutlined /> {localStorage.getItem('groupId') ? group.groupName : 'No group is Selected'}
           </h1>
 
           <div className="cleaning-button">
@@ -181,7 +216,7 @@ const CleaningGroup = () => {
               <img src={people3} />
               <img src={people4} />
             </div>
-            <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+            <Button type="primary" icon={<PlusOutlined />} onClick={show} disabled={isGroup}>
               Add Task
             </Button>
           </div>
@@ -263,7 +298,7 @@ const CleaningGroup = () => {
         onCancel={handleCancel}
         wrapClassName="task-modal"
       >
-        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} />
+        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         <Form form={form} name="basic" onFinish={onFinish}>
           <Form.Item label="ID" name="id" hidden={true}>
             <Input />
@@ -271,7 +306,7 @@ const CleaningGroup = () => {
 
           <Form.Item
             label="Task"
-            name="name"
+            name="taskName"
             rules={[
               { required: true, message: 'Please input your Task name!' },
             ]}
@@ -281,7 +316,7 @@ const CleaningGroup = () => {
 
           <Form.Item
             label="Note"
-            name="address"
+            name="note"
             rules={[{ required: true, message: 'Please input your note!' }]}
           >
             <Input />
@@ -297,14 +332,33 @@ const CleaningGroup = () => {
           </Form.Item>
 
           <Form.Item className="text-center">
+            <Button
+              style={{ marginRight: 10 }}
+              onClick={() => {
+                setVisible(false);
+              }}
+            >
+              Cancel
+            </Button>
             <Button type="primary" htmlType="submit">
               Save
             </Button>
           </Form.Item>
         </Form>
       </Modal>
+      <Modal
+        visible={visible2}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        wrapClassName="delete-modal"
+      >
+        <DeletePopup
+          dataObject={() => remove()}
+          cancel={() => handleCancel()}
+        />
+      </Modal>
     </Wrapper>
   );
 };
 
-export default CleaningGroup;
+export default Task;

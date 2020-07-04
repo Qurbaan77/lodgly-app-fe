@@ -48,7 +48,7 @@ const Services = () => {
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   console.log(userCred);
-  const  [{ propertiesWrite, userId }] = userCred ? userCred : [{}];
+  const [{ propertiesWrite, userId }] = userCred ? userCred : [{}];
   const canWrite = propertiesWrite;
 
   const columns = [
@@ -106,8 +106,8 @@ const Services = () => {
 
   const edit = (id) => {
     serviceData
-     .filter(ele => ele.id == id)
-     .map(filterService => showInform(filterService))
+      .filter((ele) => ele.id == id)
+      .map((filterService) => showInform(filterService));
   };
 
   const showInform = (data) => {
@@ -118,8 +118,8 @@ const Services = () => {
       servicename: data.serviceName,
       serviceprice: data.servicePrice,
       servicequantity: data.quantity,
-    })
-  }
+    });
+  };
 
   const remove = async () => {
     const values = {
@@ -170,21 +170,31 @@ const Services = () => {
         <div className="page-header">
           <h1>Services</h1>
 
-          {
-            isSubUser ? canWrite ? 
+          {isSubUser ? (
+            canWrite ? (
+              <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+                <Link to="/services">Add Services</Link>
+              </Button>
+            ) : (
+              <Tooltip
+                title="You are not authorize to create create new service"
+                color="gold"
+              >
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={show}
+                  disabled="true"
+                >
+                  <Link to="/services">Add Services</Link>
+                </Button>
+              </Tooltip>
+            )
+          ) : (
             <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-            <Link to="/services">Add Services</Link>
-          </Button> :
-          <Tooltip title='You are not authorize to create create new service' color='gold'>
-          <Button type="primary" icon={<PlusOutlined />} onClick={show} disabled='true'>
-            <Link to="/services">Add Services</Link>
-          </Button>
-          </Tooltip> :
-          <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-            <Link to="/services">Add Services</Link>
-          </Button>
-          }
-          
+              <Link to="/services">Add Services</Link>
+            </Button>
+          )}
         </div>
 
         <div className="services-list">
@@ -206,7 +216,9 @@ const Services = () => {
       >
         <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         <Form form={form} name="basic" onFinish={onFinish}>
-          <Form.Item name="serviceId"><Input hidden={true}/></Form.Item>
+          <Form.Item name="serviceId">
+            <Input hidden={true} />
+          </Form.Item>
           <Form.Item
             label="Service Name"
             name="servicename"
@@ -242,6 +254,14 @@ const Services = () => {
             <Input />
           </Form.Item>
           <Form.Item className="text-center">
+            <Button
+              style={{ marginRight: 10 }}
+              onClick={() => {
+                setVisible(false)
+              }}
+            >
+              Cancel
+            </Button>
             <Button type="primary" htmlType="submit">
               Save
             </Button>

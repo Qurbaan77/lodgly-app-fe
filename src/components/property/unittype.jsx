@@ -120,7 +120,6 @@ const UnitType = () => {
     };
     setCurrProperty(parsed.propertyNo);
     const response = await userInstance.post('/getUnittype', values);
-    console.log(response.data);
     const data = response.data.unittypeData;
     if (response.data.code === 200) {
       setEmpty(false);

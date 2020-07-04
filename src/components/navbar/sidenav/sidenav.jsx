@@ -111,7 +111,9 @@ const Sidenav = () => {
       pathname == '/unittype' ||
       pathname == '/addunittype' ||
       pathname == '/channelmanager' ||
-      pathname == '/services'
+      pathname == '/services' ||
+      pathname == '/groups' ||
+      pathname == '/task'
     )
       setMenu(!menu);
   };
@@ -249,7 +251,7 @@ const Sidenav = () => {
         </Menu.Item>
         <Menu.Item>
           <img src={task_icon} alt='task'/>
-          <span>Tasks</span>
+          <Link to={'/groups'}>Tasks</Link>
         </Menu.Item>
         <Menu.Item>
           <img src={channel_icon} alt='channel'/>

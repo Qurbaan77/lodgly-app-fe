@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
   Form,
@@ -45,6 +46,7 @@ import people3 from '../../assets/images/people-3.jpg';
 import people4 from '../../assets/images/people-4.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import { Redirect } from 'react-router-dom';
+import DeletePopup from './deletepopup';
 
 const { Panel } = Collapse;
 
@@ -74,43 +76,53 @@ const tExtra = () => (
   />
 );
 
-const Groups = () => {
+const Groups = (props) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
+  const [visible2, setVisible2] = useState(false);
   const [group, setGroup] = useState([]);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
-  const [user, setUser] = useState({});
+  const [currGroupId ,setCurrGroupId] = useState(0);
+  const history = useHistory();
 
   useEffect(() => {
     getData();
   }, []);
 
   const show = () => {
+    setNotifyType('');
     form.resetFields();
     setVisible(true);
   };
 
+  const showDeletePopup = (groupId) => {
+    setCurrGroupId(groupId)
+    setVisible2(true);
+  };
+
   const handleOk = () => {
     setVisible(false);
+    setVisible2(false);
   };
 
   const handleCancel = () => {
     setVisible(false);
+    setVisible2(false);
   };
 
   const close = () => {
     setNotifyType('');
-  }
+  };
 
   const onFinish = async (values) => {
-    console.log(values)
     const response = await userInstance.post('/addGroup', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
     if (statusCode == 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
+      setVisible(false);
       getData();
     } else {
       setNotifyType('error');
@@ -121,36 +133,38 @@ const Groups = () => {
 
   const getData = async () => {
     const response = await userInstance.post('/groupList');
-    console.log(response);
     if (response.data.code === 200) {
       setGroup(response.data.groupDetail);
     }
   };
 
   const edit = async (data) => {
-    console.log(data);
     form.setFieldsValue({
       id: data.id,
       groupname: data.groupName,
       count: data.checkCount,
       interval: data.checkInterval,
       month: data.month,
-      
     })
     setVisible(true);
   };
 
-  const remove = async (groupId) => {
-    console.log(groupId);
+  const remove = async () => {
     const data = {
-      id: groupId,
+      id: currGroupId,
     };
     const response = await userInstance.post('/deleteGroup', data);
     const statusCode = response.data.code;
     const msg = response.data.msg;
     if (statusCode == 200) {
       getData();
+      setVisible2(false);
     }
+  };
+
+  const addTask = (groupId) => {
+    localStorage.setItem('groupId', groupId)
+    history.push('/task');
   };
 
 
@@ -176,7 +190,7 @@ const Groups = () => {
                 </div>
 
                 <div className="group-name">
-                  <h4>{el.groupName}</h4>
+                  <h4 onClick={() => addTask(el.id)}>{el.groupName}</h4>
                   <span>
                     Check every {el.checkCount} {el.checkInterval}
                   </span>
@@ -203,7 +217,7 @@ const Groups = () => {
                   <BellOutlined />
                   <div className="hover-action">
                     <FormOutlined onClick={() => edit(el)} />
-                    <DeleteOutlined onClick={() => remove(el.id)} />
+                    <DeleteOutlined onClick={() => showDeletePopup(el.id)} />
                   </div>
                 </div>
               </div>
@@ -298,11 +312,30 @@ const Groups = () => {
           </Form.Item>
 
           <Form.Item>
+          <Button
+            style={{ marginRight: 10 }}
+            onClick={() => {
+              setVisible(false)
+            }}
+            >
+              Cancel
+            </Button>
             <Button type="primary" htmlType="submit">
               Save
             </Button>
           </Form.Item>
         </Form>
+      </Modal>
+      <Modal
+        visible={visible2}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        wrapClassName="delete-modal"
+      >
+        <DeletePopup
+          dataObject={() => remove()}
+          cancel={() => handleCancel()}
+        />
       </Modal>
     </Wrapper>
   );
