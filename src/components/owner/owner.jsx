@@ -59,6 +59,10 @@ const Owner = () => {
   const [notifyMsg, setNotifyMsg] = useState();
   const [curOwner, setCurOwner] = useState();
 
+  const isSubUser = localStorage.getItem('isSubUser') || false;
+
+  const [{ userId, ownerWrite: canWrite}] = JSON.parse(localStorage.getItem('userCred')) || [{}];
+
   const show = () => {
     form.resetFields();
     setVisible(true);
@@ -87,7 +91,7 @@ const Owner = () => {
   const edit = async(data) => {
     console.log('Edit Values', data)
     const m1 = moment(data.dob)
-    const response = await userInstance.post('/fetchProperty');
+    const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
     const data2 = response.data.propertiesData;
     setVisible(true);
     setNotifyType('');
@@ -116,6 +120,7 @@ const Owner = () => {
 
   const onFinish = async (values) => {
     console.log('Form is Good', values);
+    values.affiliateId = userId;
     const response = await userInstance.post('/addOwner', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
@@ -143,7 +148,7 @@ const Owner = () => {
   };
 
   const getPropertyData = async () => {
-    const response = await userInstance.post('/fetchProperty');
+    const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
     const data = response.data.propertiesData;
     let arr = [];
     data
@@ -157,7 +162,7 @@ const Owner = () => {
   };
 
   const getSubUserData = async () => {
-    const response = await userInstance.post('/getOwner');
+    const response = await userInstance.post('/getOwner', { affiliateId: userId });
     if (response.data.code === 200) {
       setSubUserData(response.data.data);
     }
@@ -173,10 +178,21 @@ const Owner = () => {
       <div className="owner-page">
         <div className="page-header">
           <h1>Owner</h1>
-
+          {
+            isSubUser ? canWrite ?
+            <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+            Add New Owner
+          </Button> :
+          <Tooltip title='You are not authorize to create new owner' color='gold' >
+          <Button type="primary" icon={<PlusOutlined />} onClick={show} disabled='true'>
+            Add New Owner
+          </Button>
+          </Tooltip> :
           <Button type="primary" icon={<PlusOutlined />} onClick={show}>
             Add New Owner
           </Button>
+          }
+      
         </div>
 
         <div className="owner-list">

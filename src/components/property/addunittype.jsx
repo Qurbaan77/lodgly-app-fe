@@ -59,6 +59,8 @@ const AddUnitType = () => {
   const parsed = queryString.parse(window.location.search);
   const history = useHistory();
 
+  const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
+
   const show = (unitId) => {
     console.log('unitId', unitId);
     setVisible(true);
@@ -81,6 +83,7 @@ const AddUnitType = () => {
     values.id = localStorage.getItem('unittypeId');
     values.propertyId = localStorage.getItem('propertyId');
     values.unitTypeName = 'Unit Type ' + unittypeNo;
+    values.affiliateId = userId;
     const response = await userInstance.post('/addUnitType', values);
     if (response.data.code === 200) {
       history.push('/unittype');
@@ -93,6 +96,7 @@ const AddUnitType = () => {
       propertyId: localStorage.getItem('propertyId'),
       unittypeId: localStorage.getItem('unittypeId'),
       id: id,
+      affiliateId: userId,
     };
     const response = await userInstance.post('/addUnit', values);
     if (response.data.code === 200) {
@@ -126,6 +130,7 @@ const AddUnitType = () => {
       propertyId: localStorage.getItem('propertyId'),
       unittypeId: localStorage.getItem('unittypeId'),
       unitName: currentUnittype.unitTypeName,
+      affiliateID: userId,
     };
     const response = await userInstance.post('/addUnit', values);
     if (response.data.code === 200) {

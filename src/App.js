@@ -29,13 +29,14 @@ import Services from './components/property/services';
 import Calendar from './components/calendar/calendar';
 import Popup from './components/calendar/popup';
 import { PrivateRoute, LoginRoute} from './Routes/PrivateRoute';
-import { SecureBooking, SecureCalendar, SecureProperty, SecureTeam } from './Routes/SecureRoute';
+import { SecureBooking, SecureCalendar, SecureProperty, SecureTeam, SecureOwner } from './Routes/SecureRoute';
 
 import Owner from './components/owner/owner';
-import TeamListing from './components/team/teamlist';
 import Team from './components/team/team';
 import Profile from './components/profile/profile';
 import BillingInformation from './components/profile/billinginformation';
+import Invoice from './components/invoice/invoice';
+import InvoiceList from './components/invoice/invoicelist';
 
 import './responsive.css';
 
@@ -200,15 +201,16 @@ const App = () => {
                
                 <PrivateRoute exact path="/popup" component={() => <Popup />} />
 
-                <PrivateRoute exact path="/owner" component={() => <Owner />} />
+                {
+                  isSubUser ? <SecureOwner exact path="/owner" component={() => <Owner />} /> : <PrivateRoute exact path="/owner" component={() => <Owner />} />
+                }
+
+                
 
                 {/* Additional Work */}
 
                 {
                   isSubUser ? <SecureTeam exact path="/team" component={() => <Team />}/> : <PrivateRoute exact path="/team" component={() => <Team />} />
-                }
-                {
-                  isSubUser ?  <SecureTeam exact path="/teamlist" component={() => <TeamListing />}/> : <PrivateRoute exact path="/teamlist" component={() => <TeamListing />}/>
                 }
                
                 <Route exact path="/profile" component={() => <Profile />} />
@@ -217,6 +219,8 @@ const App = () => {
                   path="/billinginformation"
                   component={() => <BillingInformation />}
                 />
+                 <Route exact path="/invoice" component={() => <Invoice />} />
+              <Route exact path="/invoicelist" component={() => <InvoiceList />} />
               </div>
             </main>
             <Footer />

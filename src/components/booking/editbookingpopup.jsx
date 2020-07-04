@@ -289,6 +289,8 @@ const editbookingpopup = (props) => {
     values.unit = unitId;
     values.deleteGuestId = deleteGuestId;
     values.deleteServiceId = deleteServiceId;
+    const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
+    values.affiliateId = userId;
     console.log('Received values of edit form: ', values);
     const response = await userInstance.post('/changeBooking', values);
     console.log('response', response.data.code);

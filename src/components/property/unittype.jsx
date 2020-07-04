@@ -57,7 +57,7 @@ const UnitType = () => {
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   console.log(userCred);
-  const  [{ propertiesWrite }] = userCred ? userCred : [{}];
+  const  [{ propertiesWrite, userId }] = userCred ? userCred : [{}];
   const canWrite = propertiesWrite;
   const show = (unittypeId) => {
     setVisible(true);
@@ -81,6 +81,7 @@ const UnitType = () => {
       name: name,
       propertyId: localStorage.getItem('propertyId'),
       id: id,
+      affiliateId: userId,
     };
     const response = await userInstance.post('/addUnitType', values);
     if (response.data.code === 200) {

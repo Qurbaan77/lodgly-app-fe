@@ -129,7 +129,7 @@ const CleaningGroup = () => {
     const response = await userInstance.post('/addTask', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
-    if (statusCode == 200) {
+    if (statusCode === 200) {
       setEditUser(initialFormState);
       setNotifyType('success');
       setNotifyMsg(msg);

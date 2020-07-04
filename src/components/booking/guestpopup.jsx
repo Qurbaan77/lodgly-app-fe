@@ -77,10 +77,12 @@ const GuestPopup = (props) => {
   const onFinish = async (values) => {
     console.log(values);
     values.bookingId = localStorage.getItem('bookingId');
+    const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
+    values.affiliateId = userId;
     const response = await userInstance.post('/addGuest', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
-    if (statusCode == 200) {
+    if (statusCode === 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
       props.getData();

@@ -1,0 +1,322 @@
+
+.add-invoice-page {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.add-invoice {
+    text-align: center;
+}
+
+.add-invoice h4 {
+    text-transform: uppercase;
+    color: #afb3cc;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+    padding-top: 10px;
+}
+
+.add-invoice p {
+    color: #c6c7ce;
+    font-weight: 100;
+    font-size: 12px;
+    margin-bottom: 25px;
+}
+
+
+.custom-table table tr:hover .invoice-action{
+    opacity: 1;
+}
+
+
+.invoice-action{
+    opacity: 0;
+    transition: all 0.5s;
+}
+
+.invoice-action span {
+    padding: 0px 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.invoice-action span.anticon-form {
+    color: #807e7e;
+}
+
+.invoice-action span.anticon-delete {
+    color: #f93b3b;
+}
+
+
+.invoice-list .custom-table table td span.inv {
+    display: block;
+    font-size: 10px;
+}
+
+.invoice-list .custom-table table th:nth-last-child(2) {
+    width: 30%;
+}
+
+.page-header h1 img {
+    margin-right: 10px;
+}
+
+
+.add-invoice-popup .ant-modal {
+    width: 800px !important;
+  }
+
+  .add-invoice-popup .ant-btn-secondry, .add-invoice-popup .ant-btn-secondry:hover, .add-invoice-popup .ant-btn-secondry:focus {
+    background: #fab52c;
+    border: 1px solid #fab52c;
+    color: #fff;
+}
+
+.add-invoice-popup .ant-btn-secondry span {
+    color: #fff;
+}
+
+.add-invoice-popup .ant-btn-primary {
+    max-width: 150px;
+    width: 100%;
+}
+
+.note p {
+    font-size: 11px;
+    text-align: left;
+}
+
+.invoice-property-info h4 {
+    color: #fab52c;
+    text-transform: uppercase;
+    font-size: 16px;
+}
+
+.invoice-property-info h4 img {
+    margin-right: 5px;
+    margin-top: -4px;
+}
+
+.invoice-property-info p {
+    font-size: 13px;
+    color: rgba(62, 63, 66, 0.5);
+    max-width: 220px;
+    line-height: 1.9;
+    margin: 0;
+}
+
+.invoice-owner-info p {
+    font-size: 13px;
+    color: rgba(62, 63, 66, 0.5);
+    line-height: 1.9;
+    text-align: right;
+    margin: 0;
+}
+
+
+.client-info h4 {
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 0;
+    padding-bottom: 15px;
+}
+
+.invoice-date h4 {
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 0;
+    padding-bottom: 15px;
+}
+
+.invoice-border{
+    padding: 20px 0px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    margin-top: 20px;
+}
+
+
+.add-invoice-popup .ant-form-item-label label {
+    font-size: 13px;
+    text-transform: uppercase;
+    height: auto;
+    padding-bottom: 5px;
+}
+
+.add-invoice-popup .ant-picker-input > input {
+    font-size: 12px;
+}
+
+.add-invoice-popup .ant-select-single .ant-select-selector .ant-select-selection-item, .add-invoice-popup .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+    padding: 0;
+    line-height: 35px;
+}
+
+
+.additional-add-guest span {
+    color: #fab52c;
+}
+
+.additional-add-guest {
+    color: #fab52c;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.m-top-30{
+    margin-top: 30px;
+}
+
+.total-add h3{
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.total-add {
+    text-align: right;
+}
+
+.total-add span {
+    margin-left: 25px;
+}
+
+.web-info {
+    text-align: center;
+    font-size: 12px;
+    padding-bottom:30px;
+    border-bottom:1px solid #ddd
+}
+
+
+.additional-fields {
+    padding-top: 10px;
+}
+
+.additional-fields .ant-row.ant-form-item {
+    margin-right: 10px;
+}
+
+.additional-fields  .ant-input {
+    font-size: 12px;
+}
+
+.invoice-date .ant-picker-suffix {
+    color: rgb(250, 181, 44);
+}
+
+.invoice-date .ant-picker:hover, .ant-picker-focused {
+    border-right-width: 1.5px !important;
+}
+
+
+
+.label-hidden label {
+    visibility: hidden;
+}
+
+.deleteicon img {
+    margin-top: 20px;
+}
+
+.deleteicon {
+    text-align: center;
+}
+
+
+.filter-invoice ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    margin: 0;
+}
+
+.filter-invoice ul li {
+    background: #fff;
+    margin: 20px 10px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border: 1px solid #ddd;
+}
+
+.pagination {
+    text-align: right;
+    margin: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.setting-icon {
+    padding-top: 4px;
+    padding-left: 10px;
+}
+
+
+.invoice-filter-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filter-icons ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    margin: 0;
+}
+
+
+.filter-icons li {
+    background: #fff;
+    margin: 0px 5px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border: 1px solid #ddd;
+}
+
+.cancel-icon img {
+    vertical-align: sub;
+    margin-right: 5px;
+}
+
+.cancel-icon {
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+.invoice-filter-box span {
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+.invoice-list .ant-checkbox-wrapper:hover .ant-checkbox-inner, .invoice-list .ant-checkbox:hover .ant-checkbox-inner, .invoice-list .ant-checkbox-input:focus + .ant-checkbox-inner {
+    border-color: #fab52c;
+}
+
+.invoice-list .ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #fab52c;
+    border-color: #fab52c;
+}
+
+.invoice-listing-page .ant-pagination-item a {
+    color: #666!important;
+}
+
+.custom-table table td .ant-checkbox-wrapper {
+    margin-right: 5px;
+}
+
+.invoice-listing-page .ant-pagination-item:focus, .invoice-listing-page .ant-pagination-item:hover {
+    border-color: #fab52c;
+}

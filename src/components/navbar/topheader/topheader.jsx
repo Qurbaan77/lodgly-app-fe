@@ -20,9 +20,11 @@ const TopHeader = (props) => {
   const [propertyName, setPropertyName] = useState();
   const [menu, setMenu] = useState();
 
+  const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
+
   useEffect(() => {
     async function getData() {
-      const response = await userInstance.post('/fetchProperty');
+      const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
       const data = response.data.propertiesData;
       if (response.data.code === 200) {
         setPropertyData(data);

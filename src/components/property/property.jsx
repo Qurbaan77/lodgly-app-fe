@@ -40,12 +40,6 @@ import queryString from 'query-string';
 
 const { Panel } = Collapse;
 
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
-
 const normFile = (e) => {
   console.log('Upload event:', e);
   if (Array.isArray(e)) {
@@ -131,10 +125,11 @@ const Property = () => {
 
   const onFinish = async (values) => {
     values.propertyNo = currentProperty[0].propertyNo;
+    values.affiliateId = userId;
     const response = await userInstance.post('/addProperty', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
-    if (statusCode == 200) {
+    if (statusCode === 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
       getData();

@@ -104,6 +104,9 @@ const CreateBookingPopup = (props) => {
   const [currentPropertyId, setCurrentPropertyId] = useState(null);
   const history = useHistory();
 
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  const  [{ userId }] = userCred ? userCred : [{}];
+
   const show = () => {
     setVisible(true);
   };
@@ -189,7 +192,6 @@ const CreateBookingPopup = (props) => {
     values.channel = channel;
     values.commission = channelCommission;
     values.unitName = unitName;
-    const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
     values.affiliateId = userId;
     console.log('Received values of edit form: ', values);
     const response = await userInstance.post('/addBooking', values);
@@ -211,7 +213,7 @@ const CreateBookingPopup = (props) => {
   };
 
   const getPropertyData = async () => {
-    const response = await userInstance.post('/fetchProperty');
+    const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
       setPropertyData(data);

@@ -103,12 +103,12 @@ const AddProperty = () => {
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   console.log(userCred);
-  const  [{ propertiesWrite }] = userCred ? userCred : [{}];
+  const  [{ propertiesWrite, userId }] = userCred ? userCred : [{}];
   const canWrite = propertiesWrite;
 
   useEffect(() => {
     async function getData() {
-      const response = await userInstance.post('/fetchProperty');
+      const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
       const data = response.data.propertiesData;
       if (response.data.code === 200) {
         setNo(data.length + 1);
@@ -125,10 +125,11 @@ const AddProperty = () => {
   const onFinish = async (values) => {
     console.log('Values', values)
     values.propertyNo = No;
+    values.affiliateId = userId;
     const response = await userInstance.post('/addProperty', values);
     const statusCode = response.data.code;
     const msg = response.data.msg;
-    if (statusCode == 200) {
+    if (statusCode === 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
       history.push('/propertylist');

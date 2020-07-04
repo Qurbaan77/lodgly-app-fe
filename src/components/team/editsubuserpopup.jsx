@@ -14,6 +14,7 @@ import { Row, Col } from 'antd';
 import { userInstance } from '../../axios/axiosconfig';
 
 const SubUserPopup = (props) => {
+    const { subUserData } = props;
   console.log(props);
   const [form] = Form.useForm();
   const { Option } = Select;
@@ -36,10 +37,32 @@ const SubUserPopup = (props) => {
   const [ownerRead, setOwnerRead] = useState(false);
   const [ownerWrite, setOwnerWrite] = useState(false);
 
-  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  console.log(userCred);
-  const  [{ userId }] = userCred ? userCred : [{}];
-  
+
+  useEffect(()=>{
+        form.setFieldsValue({
+            email: subUserData.email,
+            role: subUserData.role,
+        })
+    setBookingRead(subUserData.bookingRead);
+    setBookingWrite(subUserData.bookingWrite);
+    setPropertiesRead(subUserData.propertiesRead);
+    setPropertiesWrite(subUserData.propertiesWrite);
+    setCalendarRead(subUserData.calendarRead);
+    setCalendarWrite(subUserData.calendarWrite);
+    setGuestsRead(subUserData.guestsRead);
+    setGuestsWrite(subUserData.guestsWrite);
+    setTeamRead(subUserData.teamRead);
+    setTeamWrite(subUserData.teamWrite);
+    setInvoicesRead(subUserData.invoicesRead);
+    setInvoicesWrite(subUserData.invoicesWrite);
+    setStatsRead(subUserData.statsRead);
+    setStatsWrite(subUserData.statsWrite);
+    setServiceRead(subUserData.serviceRead);
+    setServiceWrite(subUserData.serviceWrite);
+    setOwnerRead(subUserData.ownerRead);
+    setOwnerWrite(subUserData.ownerWrite);
+  },[props.visible]);
+
   const handleSelect = (value) => {
     console.log(value);
     if(value === 'fullaccess') {
@@ -62,29 +85,30 @@ const SubUserPopup = (props) => {
       setOwnerRead(true);
       setOwnerWrite(true);
     } else {
-      setBookingRead(false);
-      setBookingWrite(false);
-      setPropertiesRead(false);
-      setPropertiesWrite(false);
-      setCalendarRead(false);
-      setCalendarWrite(false);
-      setGuestsRead(false);
-      setGuestsWrite(false);
-      setTeamRead(false);
-      setTeamWrite(false);
-      setInvoicesRead(false);
-      setInvoicesWrite(false);
-      setStatsRead(false);
-      setStatsWrite(false);
-      setServiceRead(false);
-      setServiceWrite(false);
-      setOwnerRead(false);
-      setOwnerWrite(false);
+        setBookingRead(subUserData.bookingRead);
+        setBookingWrite(subUserData.bookingWrite);
+        setPropertiesRead(subUserData.propertiesRead);
+        setPropertiesWrite(subUserData.propertiesWrite);
+        setCalendarRead(subUserData.calendarRead);
+        setCalendarWrite(subUserData.calendarWrite);
+        setGuestsRead(subUserData.guestsRead);
+        setGuestsWrite(subUserData.guestsWrite);
+        setTeamRead(subUserData.teamRead);
+        setTeamWrite(subUserData.teamWrite);
+        setInvoicesRead(subUserData.invoicesRead);
+        setInvoicesWrite(subUserData.invoicesWrite);
+        setStatsRead(subUserData.statsRead);
+        setStatsWrite(subUserData.statsWrite);
+        setServiceRead(subUserData.serviceRead);
+        setServiceWrite(subUserData.serviceWrite);
+        setOwnerRead(subUserData.ownerRead);
+        setOwnerWrite(subUserData.ownerWrite);
     }
   }
 
   const onFinish = async (values) => {
     console.log('Raw values',values);
+    values.id = subUserData.id;
     values.bookingRead = bookingRead;
     values.bookingWrite = bookingWrite;
     values.propertiesRead = propertiesRead;
@@ -103,16 +127,15 @@ const SubUserPopup = (props) => {
     values.serviceWrite = serviceWrite;
     values.ownerRead = ownerRead;
     values.ownerWrite = ownerWrite;
-    values.affiliateId = userId;
+    values.affiliateId = subUserData.userId;
     console.log(values);
-   const response = await userInstance.post('/addTeam', values);
+   const response = await userInstance.post('/updateSubUser', values);
    console.log(response);
    if(response.status === 200) {
-     props.getData();
-     props.close();
+    props.getData();
+    props.close();
    }
   };
- 
   const handleBookingRead = e =>  e.target.value ? setBookingRead(false) : setBookingRead(true);
   const handleBookingWrite = e => e.target.value ? setBookingWrite(false) : setBookingWrite(true);
   const handlePropertiesRead = e => e.target.value ? setPropertiesRead(false) : setPropertiesRead(true);
@@ -131,14 +154,15 @@ const SubUserPopup = (props) => {
   const handleServiceWrite = e => e.target.value ? setServiceWrite(false) : setServiceWrite(true);
   const handleOwnerRead = e => e.target.value ? setOwnerRead(false) : setOwnerRead(true);
   const handleOwnerWrite = e => e.target.value ? setOwnerWrite(false) : setOwnerWrite(true);
+
   return (
-    <Modal
-    title="Add New Sub-User"
+      <Modal
+    title="Edit Sub-User"
     visible={props.visible}
     onOk={props.handleOk}
     onCancel={props.handleCancel}
     wrapClassName="guest-modal sub-user"
-  >
+      >
     <Form name="basic" form={form} onFinish={onFinish}>
       <Row style={{ alignItems: 'center' }}>
         <Col span={8}>

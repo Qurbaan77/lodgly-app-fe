@@ -4,8 +4,8 @@ import {Redirect, Route } from 'react-router-dom';
   const subUserCred = JSON.parse(localStorage.getItem('subUserCred'));
   console.log(subUserCred);
   
-   const [{ bookingRead, calendarRead, guestsRead, invoicesRead, 
-    propertiesRead, serviceRead, statsRead, teamRead
+   const [{ bookingRead, bookingWrite, calendarRead, calendarWrite, guestsRead, invoicesRead, 
+    propertiesRead, propertiesWrite, serviceRead, statsRead, teamRead, teamWrite, ownerRead, ownerWrite
   }] = subUserCred ? subUserCred : [{}];
 
 
@@ -13,7 +13,7 @@ import {Redirect, Route } from 'react-router-dom';
     <Route
       {...rest}
       render={(props) =>
-        bookingRead ? (
+        bookingRead || bookingWrite? (
           <Component {...props} {...rest} />
         ) : (
           <Redirect to="/" />
@@ -26,7 +26,7 @@ import {Redirect, Route } from 'react-router-dom';
     <Route
       {...rest}
       render={(props) =>
-        calendarRead ? (
+        calendarRead || calendarWrite ? (
           <Component {...props} {...rest} />
         ) : (
           <Redirect to="/" />
@@ -39,7 +39,7 @@ import {Redirect, Route } from 'react-router-dom';
     <Route
       {...rest}
       render={(props) =>
-        propertiesRead ? (
+        propertiesRead || propertiesWrite ? (
           <Component {...props} {...rest} />
         ) : (
           <Redirect to="/" />
@@ -52,7 +52,20 @@ import {Redirect, Route } from 'react-router-dom';
     <Route
       {...rest}
       render={(props) =>
-        teamRead ? (
+        teamRead || teamWrite ? (
+          <Component {...props} {...rest} />
+        ) : (
+          <Redirect to="/" />
+        )
+      }
+    />
+  );
+  
+  export const SecureOwner = ({ component: Component, ...rest }) => (
+    <Route
+      {...rest}
+      render={(props) =>
+        ownerRead || ownerWrite ? (
           <Component {...props} {...rest} />
         ) : (
           <Redirect to="/" />

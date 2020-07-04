@@ -192,7 +192,7 @@ const Sidenav = () => {
 
         <Menu.Item hidden={hideInvoice}>
           <img src={invoice_icon} alt='invoice-icon'/>
-          <span>Invoices</span>
+          <Link to={'/invoice'}>Invoices</Link>
         </Menu.Item>
 
         <Menu.Item hidden={hideStats}>

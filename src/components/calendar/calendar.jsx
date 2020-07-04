@@ -45,7 +45,7 @@ const Calendar = () => {
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   console.log(userCred);
-  const  [{ calendarWrite }] = userCred ? userCred : [{}];
+  const  [{ calendarWrite, userId }] = userCred ? userCred : [{}];
   const canWrite = calendarWrite;
   const rows = {};
   for (let i = 0; i < propertyData.length; i++) {
@@ -154,7 +154,7 @@ const Calendar = () => {
   let subs = [];
 
   const getProperty = async () => {
-    const response = await userInstance.post('/fetchProperty');
+    const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
     const data = response.data.propertiesData;
     console.log('Property', data);
     if (response.data.code === 200) {
@@ -162,8 +162,8 @@ const Calendar = () => {
     }
   };
 
-  const getData = async () => {
-    const response = await userInstance.post('/getReservation');
+  const getData = async () => {  
+    const response = await userInstance.post('/getReservation', { affiliateId: userId });
     const reservationData = response.data.reservationData;
     console.log('get reservations', response.data.guestData.length)
     console.log('data', reservationData)
@@ -176,7 +176,7 @@ const Calendar = () => {
   };
 
   const getCalendarData = async () => {
-    const response = await userInstance.post('/getReservationCalendarData');
+    const response = await userInstance.post('/getReservationCalendarData', { affiliateId: userId });
     const unittypeData = response.data.unittypeData;
     const unitData = response.data.unitData;
     if (response.data.code === 200) {
