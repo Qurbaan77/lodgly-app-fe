@@ -110,6 +110,25 @@ const SubUserPopup = (props) => {
    if(response.status === 200) {
      props.getData();
      props.close();
+     form.resetFields();
+     setBookingRead(false);
+      setBookingWrite(false);
+      setPropertiesRead(false);
+      setPropertiesWrite(false);
+      setCalendarRead(false);
+      setCalendarWrite(false);
+      setGuestsRead(false);
+      setGuestsWrite(false);
+      setTeamRead(false);
+      setTeamWrite(false);
+      setInvoicesRead(false);
+      setInvoicesWrite(false);
+      setStatsRead(false);
+      setStatsWrite(false);
+      setServiceRead(false);
+      setServiceWrite(false);
+      setOwnerRead(false);
+      setOwnerWrite(false);
    }
   };
  

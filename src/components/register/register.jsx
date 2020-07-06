@@ -31,9 +31,7 @@ const Register = () => {
   const history = useHistory();
 
   const onFinish = async (values) => {
-    console.log('Form is Good', values);
     const response = await userInstance.post('/signup', values);
-    console.log('response', response)
     const statusCode = response.data.code;
     const msg = response.data.msg;
     if (statusCode == 200) {
@@ -52,40 +50,28 @@ const Register = () => {
   };
 
   const handleChange = (value) => {
-    console.log(value);
     setPhone(value);
   };
-  // const prefixSelector = (
-  //   <Form.Item name='prefix' noStyle>
-  //     <Select
-  //       style={{
-  //         width: 70,
-  //       }}
-  //     >
-  //       <Option value='86'>+86</Option>
-  //       <Option value='87'>+87</Option>
-  //     </Select>
-  //   </Form.Item>
-  // );
+
   const [autoCompleteResult, setAutoCompleteResult] = useState([]);
 
   return (
-    <div className='register'>
+    <div className="register">
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
-      <div className='register-section'>
-        <div className='container'>
-          <div classNmae='row'>
-            <div className='col-md-12'>
-              <div className='register-logo'>
-                <img src={logo} alt='Logo' />
+      <div className="register-section">
+        <div className="container">
+          <div classNmae="row">
+            <div className="col-md-12">
+              <div className="register-logo">
+                <img src={logo} alt="Logo" />
               </div>
-              <div className='register-form'>
+              <div className="register-form">
                 <h1>Register</h1>
                 <p>We're happy to have you here!</p>
-                <div className='register-box'>
+                <div className="register-box">
                   <Form
                     form={form}
-                    name='register'
+                    name="register"
                     onFinish={onFinish}
                     initialValues={{
                       residence: ['zhejiang', 'hangzhou', 'xihu'],
@@ -96,8 +82,8 @@ const Register = () => {
                     <Row gutter={[16, 0]}>
                       <Col span={12}>
                         <Form.Item
-                          name='email'
-                          label='E-mail'
+                          name="email"
+                          label="E-mail"
                           rules={[
                             {
                               type: 'email',
@@ -115,8 +101,8 @@ const Register = () => {
 
                       <Col span={12}>
                         <Form.Item
-                          name='username'
-                          label='Username'
+                          name="username"
+                          label="Username"
                           rules={[
                             {
                               required: true,
@@ -133,8 +119,8 @@ const Register = () => {
                     <Row gutter={[16, 0]}>
                       <Col span={12}>
                         <Form.Item
-                          name='password'
-                          label='Password'
+                          name="password"
+                          label="Password"
                           rules={[
                             {
                               required: true,
@@ -152,8 +138,8 @@ const Register = () => {
 
                       <Col span={12}>
                         <Form.Item
-                          name='confirm'
-                          label='Confirm Password'
+                          name="confirm"
+                          label="Confirm Password"
                           dependencies={['password']}
                           hasFeedback
                           rules={[
@@ -173,7 +159,7 @@ const Register = () => {
                                 }
 
                                 return Promise.reject(
-                                  'The two passwords that you entered do not match!'
+                                  'The two passwords that you entered do not match!',
                                 );
                               },
                             }),
@@ -186,9 +172,9 @@ const Register = () => {
 
                     <Row>
                       <Col span={24}>
-                        <Form.Item label='Select Package' hidden={true}>
+                        <Form.Item label="Select Package" hidden={true}>
                           <Select>
-                            <Select.Option value='demo'>Demo</Select.Option>
+                            <Select.Option value="demo">Demo</Select.Option>
                           </Select>
                         </Form.Item>
                       </Col>
@@ -197,8 +183,8 @@ const Register = () => {
                     <Row>
                       <Col span={24}>
                         <Form.Item
-                          name='phone'
-                          label='Phone Number'
+                          name="phone"
+                          label="Phone Number"
                           rules={[
                             {
                               required: true,
@@ -207,37 +193,13 @@ const Register = () => {
                               message:
                                 'Please input your phone number between range 9 - 15!',
                             },
-                            // ({ getFieldValue }) => ({
-                            //   validator(rule, value) {
-                            //     const reg = /^-?\d*(\.\d*)?$/;
-                            //     if (
-                            //       (!isNaN(value) && reg.test(value)) ||
-                            //       value === '' ||
-                            //       value === '-'
-                            //     ) {
-                            //       return Promise.resolve();
-                            //     }
-
-                            //     return Promise.reject(
-                            //       'The value should be numeric!'
-                            //     );
-                            //   },
-                            // }),
                           ]}
                         >
-                          {/* <Input
-                            addonBefore={prefixSelector}
-                            style={{
-                              width: '100%',
-                            }}
-                          /> */}
                           <PhoneInput
                             country={'us'}
                             value={phone}
                             onChange={(value) => handleChange(value)}
                           />
-                          {/* <CountryCode />
-                          <input type='number' /> */}
                         </Form.Item>
                       </Col>
                     </Row>
@@ -245,8 +207,8 @@ const Register = () => {
                     <Row>
                       <Col span={24}>
                         <Form.Item
-                          name='agreement'
-                          valuePropName='checked'
+                          name="agreement"
+                          valuePropName="checked"
                           rules={[
                             {
                               validator: (_, value) =>
@@ -257,7 +219,8 @@ const Register = () => {
                           ]}
                         >
                           <Checkbox>
-                            I have read the <Link to={'/register'}>agreement</Link>
+                            I have read the{' '}
+                            <Link to={'/register'}>agreement</Link>
                           </Checkbox>
                         </Form.Item>
                       </Col>
@@ -267,9 +230,9 @@ const Register = () => {
                       <Col span={24}>
                         <Form.Item>
                           <Button
-                            type='primary'
-                            className='register-btn'
-                            htmlType='submit'
+                            type="primary"
+                            className="register-btn"
+                            htmlType="submit"
                           >
                             Register
                           </Button>
@@ -280,7 +243,7 @@ const Register = () => {
                 </div>
               </div>
 
-              <div className='q-links'>
+              <div className="q-links">
                 <p>
                   Already have an account? <Link to={'/'}>Login now</Link>
                 </p>

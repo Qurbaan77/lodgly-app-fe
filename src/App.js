@@ -53,7 +53,7 @@ const App = () => {
             <main>
               <div className="main_content">
                 <LoginRoute exact path="/" component={() => <Login />} />
-                <Route exact path="/register" component={() => <Register />} />
+                <LoginRoute exact path="/register" component={() => <Register />} />
                 <PrivateRoute
                   exact
                   path="/sidenav"
@@ -190,9 +190,9 @@ const App = () => {
                 />
                }
                
-                <Route exact path="/forget" component={() => <Forget />} />
-                <Route exact path="/reset" component={() => <Reset />} />
-                <Route exact path="/thankyou" component={() => <Thankyou />} />
+                <LoginRoute exact path="/forget" component={() => <Forget />} />
+                <LoginRoute exact path="/reset" component={() => <Reset />} />
+                <LoginRoute exact path="/thankyou" component={() => <Thankyou />} />
                 <Route exact path="/services" component={() => <Services />} />
                 {
                   isSubUser ?  <SecureCalendar exact path="/calendar" component={() => <Calendar />} /> :  <PrivateRoute exact path="/calendar" component={() => <Calendar />}
