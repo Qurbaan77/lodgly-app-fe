@@ -22,7 +22,7 @@ const Wrapper = (props) => {
   return (
     <div className="wrapper">
       <Layout>
-        <Sidenav />
+        <Sidenav img={props.img} getUserInfo={props.getUserInfo}/>
 
         <Layout className="site-layout">
           <TopHeader onChange={handleChange} fun={props.fun}/>
