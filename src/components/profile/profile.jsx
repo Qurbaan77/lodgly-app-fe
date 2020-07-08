@@ -14,6 +14,7 @@ import {
   Checkbox,
   Row,
   Col,
+  message,
 } from 'antd';
 import {
   MenuUnfoldOutlined,
@@ -88,19 +89,30 @@ const featureOptions3 = [
   'Wheelchair accessible',
 ];
 
-const Profile = () => {
+const Profile = (prop) => {
+  console.log('props', prop)
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
   const [form3] = Form.useForm();
   const [form4] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
+  const userId = localStorage.getItem('userId');
+  const [img, setImg] = useState('');
 
   const props = {
     name: 'file',
-    action: 'http://localhost:3001/users/uploadPhoto',
-    headers: {
-      authorization: 'authorization-text',
+    multiple: false,
+    action: `http://localhost:3001/users/photo/${userId}`,
+    onChange(info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
     },
   };
 
@@ -141,6 +153,7 @@ const Profile = () => {
     if (statusCode == 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
+      getCompanyInfo();
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
@@ -155,6 +168,7 @@ const Profile = () => {
   const getUserInfo = async () => {
     const response = await userInstance.post('/getuserData');
     const body = response.data.userData;
+    setImg(body[0].image)
     if (body.length > 0) {
       form1.setFieldsValue({
         fname: body[0].fname,
@@ -189,7 +203,7 @@ const Profile = () => {
   }, []);
 
   return (
-    <Wrapper>
+    <Wrapper img={img} getUserInfo={getUserInfo}>
       <div className="personal-information">
         <div className="page-header">
           <h1>

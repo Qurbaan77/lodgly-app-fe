@@ -33,7 +33,7 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 
-const Sidenav = () => {
+const Sidenav = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   const [propertyData, setPropertyData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
@@ -132,7 +132,7 @@ const Sidenav = () => {
         <img src={logo} alt='logo'/>
       </div>
 
-      <UserProfile />
+      <UserProfile img={props.img} getUserInfo={props.getUserInfo}/>
 
       <Menu
         className={`main-menu ${menu ? `hide` : ``}`}
