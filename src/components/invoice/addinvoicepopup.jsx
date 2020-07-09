@@ -1,51 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import './invoice.css';
 import {
   Form,
   Select,
   Input,
-  Layout,
-  Menu,
   Button,
-  Radio,
-  Slider,
   DatePicker,
-  Tooltip,
-  Dropdown,
-  Checkbox,
   TimePicker,
 } from 'antd';
 import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  HomeOutlined,
   PlusOutlined,
-  PlusSquareOutlined,
-  DeleteOutlined,
-  FormOutlined,
-  SearchOutlined,
-  VerticalAlignMiddleOutlined,
-  PartitionOutlined,
-  UserOutlined,
-  DownOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
 } from '@ant-design/icons';
-import Wrapper from '../wrapper';
-import { Modal } from 'antd';
-import { Table } from 'antd';
+
 import property_icon from '../../assets/images/menu/property-icon-orange.png';
 import { Row, Col } from 'antd';
-import { Collapse } from 'antd';
 import delete_icon from '../../assets/images/menu/delete-icon-red.png';
 import moment from 'moment';
 import { userInstance } from '../../axios/axiosconfig';
 
-const { Panel } = Collapse;
 
-const AdInvoicePopup = () => {
-  const [form] = Form.useForm();
+
+const AdInvoicePopup = ({ userData }) => {
+  console.log(userData);
+  const [{ phone: userPhone, email: userEmail }] = userData || [{ phone: null, email: null }];
+  console.log(userPhone, userEmail);
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState(null);
@@ -66,25 +44,39 @@ const AdInvoicePopup = () => {
   const [amountCopy, setAmountCopy] = useState([]);
   const [discountCopy, setDiscountCopy] = useState([]);
   const [itemTotalCopy, setItemTotalCopy] = useState([]);
-  const [one, setOne] = useState(false);
-  const [two, setTwo] = useState(false);
-  const [three, setThree] = useState(false);
-  const [grandTotal, setGrandToal] = useState(null);
-  const { Option } = Select;
 
-  const { MonthPicker, RangePicker } = DatePicker;
+  console.log(date, deliveryDate, dueDate);
 
   const handleFinish = async (values) => {
-    values.date = date;
-    values.deliveryDate = deliveryDate;
-    values.dueDate = dueDate;
-    values.time = time;
+    const valuesCopy = values;
+    valuesCopy.date = moment(valuesCopy.date._d).format('DD/MM/YYYY');
+    valuesCopy.deliveryDate = moment(valuesCopy.deliveryDate._d).format('DD/MM/YYYY');
+    valuesCopy.dueDate = moment(valuesCopy.dueDate._d).format('DD/MM/YYYY');
+    valuesCopy.time = time.slice(0, 5);
+    const itemData = [];
     pricePanel.map((el) => {
-      console.log(values[el])
-    })
-    console.log(values);
-
-    const res = await userInstance.post('/createInvoice', values);
+      console.log(valuesCopy[el]);
+      console.log(valuesCopy[el].price, valuesCopy[el].quantity);
+      valuesCopy[el].amount = valuesCopy[el].price * valuesCopy[el].quantity;
+      valuesCopy[el].itemTotal = valuesCopy[el].price * valuesCopy[el].quantity - valuesCopy[el].price * valuesCopy[el].quantity * valuesCopy[el].discount / 100;
+      itemData.push(valuesCopy[el]);
+    });
+    valuesCopy.itemData = itemData;
+    valuesCopy.userPhone = userPhone;
+    valuesCopy.userEmail = userEmail;
+    const { clientName } = valuesCopy;
+    valuesCopy.total = itemTotalCopy.reduce((a, b) => a + (b || 0), 0);
+    console.log(valuesCopy);
+    const res = await userInstance.post('/createInvoice', valuesCopy);
+    console.log('pdf post response', res);
+    if (res.status === 200) {
+      const element = document.createElement('a');
+      element.setAttribute('href', `${res.data}`);
+      element.setAttribute('download', `${clientName}.pdf`);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+    }
   };
 
 
@@ -148,7 +140,6 @@ const AdInvoicePopup = () => {
   let i = 1;
 
   const addMorePanel = () => {
-    setOne(false);
     console.log('gsfg');
     i++;
     setPricePanel([...pricePanel, i]);
@@ -174,8 +165,8 @@ const AdInvoicePopup = () => {
 
         <Col span={12}>
           <div className='invoice-owner-info'>
-            <p>t: +385 01 123 456</p>
-            <p>owner@gmail.com</p>
+            <p>{userPhone}</p>
+            <p>{userEmail}</p>
             <p>www.mywebsite.com </p>
           </div>
         </Col>
@@ -189,11 +180,6 @@ const AdInvoicePopup = () => {
               <Col span={12} style={{ marginRight: 10 }}>
                 <Form.Item name='date' label='Date'>
                   <DatePicker
-                    value={date}
-                    onChange={(e) => {
-                      const d = moment().format(e._id);
-                      setDate(d.slice(0, 10));
-                    }}
                   />
                 </Form.Item>
               </Col>
@@ -218,8 +204,8 @@ const AdInvoicePopup = () => {
                   <DatePicker
                     value={deliveryDate}
                     onChange={(e) => {
-                      const d = moment().format(e._id);
-                      setDeliveryDate(d.slice(0, 10));
+                      const d1 = moment(e._id).format('MM/DD/YYYY');
+                      setDeliveryDate(d1);
                     }}
                   />
                 </Form.Item>
@@ -232,8 +218,8 @@ const AdInvoicePopup = () => {
                   <DatePicker
                     value={dueDate}
                     onChange={(e) => {
-                      const d = moment().format(e._id);
-                      setDueDate(d.slice(0, 10));
+                      const d2 = moment(e._id).format('MM/DD/YYYY');
+                      setDueDate(d2);
                     }}
                   />
                 </Form.Item>
@@ -263,7 +249,7 @@ const AdInvoicePopup = () => {
           <div className='client-info'>
             <h4>Client:</h4>
 
-            <Form.Item label='Full Name' name='fname'>
+            <Form.Item label='Full Name' name='clientName'>
               <Input value={fName} onChange={(e) => setFName(e.target.value)} />
             </Form.Item>
 
@@ -286,22 +272,7 @@ const AdInvoicePopup = () => {
       </Row>
 
       {pricePanel.map((ele, i) => {
-        let d;
-        switch (i) {
-          case 1:
-            d = one;
-            break;
-          case 2:
-            d = two;
-            break;
-          case 3:
-            d = three;
-            break;
-          default:
-            d = false;
-        }
-        {/* d.replace(/^"(.*)"$/, '$1'); */ }
-        console.log(d);
+
         return (
           <div className='additional-fields'>
             <Row style={{ alignItems: 'center' }}>
@@ -385,19 +356,19 @@ const AdInvoicePopup = () => {
           <div className='total-add'>
             <h3>
               {/* TODO: change this to grandTotal */}
-              TOTAL: <span>{itemTotal} €</span>
+              TOTAL: <span>{itemTotalCopy.reduce((a, b) => a + (b || 0), 0)} €</span>
             </h3>
           </div>
         </Col>
 
         <Col span={24} className='m-top-30'>
-          <Form.Item name='notes1' label='Impression'>
+          <Form.Item name='impression' label='Impression'>
             <Input.TextArea />
           </Form.Item>
 
           <p className='web-info'>
-            United Kingdom | 4915 St Anthony Ave | t: +385 01 123 456 |
-            owner@gmail.com | www.mywebsite.com{' '}
+            United Kingdom | 4915 St Anthony Ave |{' '} {userPhone} |{' '}
+            {userEmail} | www.mywebsite.com{' '}
           </p>
         </Col>
       </Row>

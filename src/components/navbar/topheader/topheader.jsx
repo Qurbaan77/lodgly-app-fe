@@ -16,6 +16,7 @@ import Form from 'antd/lib/form/Form';
 const { Header } = Layout;
 
 const TopHeader = (props) => {
+  console.log(props);
   const [propertyData, setPropertyData] = useState([]);
   const [propertyName, setPropertyName] = useState();
   const [menu, setMenu] = useState();
@@ -62,7 +63,7 @@ const TopHeader = (props) => {
             </Menu.Item>
           );
         })}
-        <Menu.Item onClick={() =>fun()}>All Properties</Menu.Item>
+        <Menu.Item onClick={() => fun()}>All Properties</Menu.Item>
       </Menu>
     );
 

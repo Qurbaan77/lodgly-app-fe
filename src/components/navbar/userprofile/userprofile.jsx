@@ -26,13 +26,15 @@ const UserProfile = (props) => {
   const getUserInfo = async () => {
     const response = await userInstance.post('/getuserData');
     const body = response.data.userData;
+    console.log(response);
     setImg(body[0].image)
-    setName(body[0].fname + ' '+ body[0].lname)
+    setName(body[0].fname + ' ' + body[0].lname)
   };
 
   useEffect(() => {
-    props.getUserInfo();
-  },[])
+    //props change
+    getUserInfo();
+  }, [])
 
 
   const menu = (
