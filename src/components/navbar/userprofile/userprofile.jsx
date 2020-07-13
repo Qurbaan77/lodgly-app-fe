@@ -26,9 +26,12 @@ const UserProfile = (props) => {
   const getUserInfo = async () => {
     const response = await userInstance.post('/getuserData');
     const body = response.data.userData;
+    console.log(response)
     console.log(response);
-    setImg(body[0].image)
-    setName(body[0].fname + ' ' + body[0].lname)
+    if (body.length > 0) {
+      setImg(body[0].image);
+      setName(body[0].fname + ' ' + body[0].lname);
+    }
   };
 
   useEffect(() => {

@@ -74,17 +74,13 @@ const InvoiceList = () => {
       <div className="invoice-listing-page">
         <div className="page-header">
           <h1><img src={invoice_icon} /> Invoice</h1>
-
           <Button type="primary" icon={<PlusOutlined />} onClick={show}>
             Add Invoice
           </Button>
         </div>
-
         <div className="invoice-list">
-
           <div className="custom-table">
             <table>
-
               <thead>
                 <tr>
                   <th>Date</th>
@@ -96,9 +92,7 @@ const InvoiceList = () => {
                   <th>Action</th>
                 </tr>
               </thead>
-
               <tbody>
-
                 <tr>
                   <td><Checkbox></Checkbox> 19.07.2020</td>
                   <td>1-2020</td>
@@ -113,7 +107,6 @@ const InvoiceList = () => {
                     </div>
                   </td>
                 </tr>
-
                 <tr>
                   <td><Checkbox></Checkbox> 19.07.2020</td>
                   <td>1-2020</td>
@@ -128,8 +121,6 @@ const InvoiceList = () => {
                     </div>
                   </td>
                 </tr>
-
-
                 <tr>
                   <td><Checkbox></Checkbox> 19.07.2020</td>
                   <td>1-2020</td>
@@ -144,8 +135,6 @@ const InvoiceList = () => {
                     </div>
                   </td>
                 </tr>
-
-
                 <tr>
                   <td><Checkbox></Checkbox> 19.07.2020</td>
                   <td>1-2020</td>
@@ -160,8 +149,6 @@ const InvoiceList = () => {
                     </div>
                   </td>
                 </tr>
-
-
                 <tr>
                   <td><Checkbox></Checkbox> 19.07.2020</td>
                   <td>1-2020</td>
@@ -176,19 +163,9 @@ const InvoiceList = () => {
                     </div>
                   </td>
                 </tr>
-
-
-
-
               </tbody>
-
             </table>
-
           </div>
-
-
-
-
           <Row>
             <Col span={12}>
               <div className="filter-invoice">
@@ -204,7 +181,6 @@ const InvoiceList = () => {
                   </li>
                 </ul>
               </div>
-
               <div className="invoice-filter-box">
                 <Checkbox>Select all</Checkbox>
                 <div className="cancel-icon">
@@ -220,9 +196,7 @@ const InvoiceList = () => {
                 </div>
               </div>
             </Col>
-
             <Col span={12}>
-
               <div className="pagination">
                 <Pagination
                   total={10}
@@ -238,17 +212,8 @@ const InvoiceList = () => {
 
             </Col>
           </Row>
-
-
         </div>
       </div>
-
-
-
-
-
-
-
       <Modal
         title="Create new invoice"
         visible={visible}
@@ -256,15 +221,8 @@ const InvoiceList = () => {
         onCancel={handleCancel}
         wrapClassName="guest-modal add-invoice-popup"
       >
-
-
-
         <AdInvoicePopup />
-
-
       </Modal>
-
-
     </Wrapper>
 
   );

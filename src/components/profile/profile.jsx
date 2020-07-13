@@ -168,8 +168,9 @@ const Profile = (prop) => {
   const getUserInfo = async () => {
     const response = await userInstance.post('/getuserData');
     const body = response.data.userData;
-    setImg(body[0].image)
+
     if (body.length > 0) {
+      setImg(body[0].image);
       form1.setFieldsValue({
         fname: body[0].fname,
         lname: body[0].lname,
