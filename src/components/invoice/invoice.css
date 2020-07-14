@@ -356,3 +356,30 @@
 .loader img {
   max-width: 100px;
 }
+
+.print-btn, .pdf-btn {
+  min-width: 120px!important;
+  max-width: 120px!important;
+}
+
+.pdf-btn {
+  background: transparent!important;
+  border: 1px solid #d2d2d2!important;
+}
+
+.pdf-btn span {
+  color: #333!important;
+}
+
+.print-btn img, .pdf-btn img {
+  margin-right: 10px;
+}
+
+.delete-btn {
+  background: transparent!important;
+  border: 1px solid #FB4B56!important;
+}
+
+.delete-btn span {
+  color: #FB4B56!important;
+}

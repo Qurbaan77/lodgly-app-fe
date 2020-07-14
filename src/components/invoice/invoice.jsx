@@ -12,17 +12,17 @@ import {
 } from 'antd';
 import { PlusOutlined, DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-import { Modal } from 'antd';
+
 // import { Table } from 'antd';
 import invoice from '../../assets/images/invoice.jpg';
-import invoice_icon from '../../assets/images/menu/invoice-icon.png';
-import filter_icon from '../../assets/images/menu/filter-icon.png';
-import edit_icon from '../../assets/images/menu/pencil-icon.png';
-import download_icon from '../../assets/images/menu/download-icon.png';
-import refresh_icon from '../../assets/images/menu/refresh-icon.png';
-import setting_icon from '../../assets/images/menu/setting-icon.png';
-import print_icon from '../../assets/images/menu/print-icon.png';
-import cancel_icon from '../../assets/images/menu/cancel-icon.png';
+import invoiceIcon from '../../assets/images/menu/invoice-icon.png';
+import filterIcon from '../../assets/images/menu/filter-icon.png';
+import editIcon from '../../assets/images/menu/pencil-icon.png';
+import downloadIcon from '../../assets/images/menu/download-icon.png';
+import refreshIcon from '../../assets/images/menu/refresh-icon.png';
+import settingIcon from '../../assets/images/menu/setting-icon.png';
+import printIcon from '../../assets/images/menu/print-icon.png';
+import cancelIcon from '../../assets/images/menu/cancel-icon.png';
 import loader from '../../assets/images/loader.svg';
 import AdInvoicePopup from './addinvoicepopup';
 import EditInvoicePopup from './editInvoicePopup';
@@ -79,23 +79,20 @@ const Invoice = () => {
   };
 
   let label;
-  invoiceData.map((el) => (label = el.id));
+  invoiceData.map((el) => { (label = el.id); return label; });
 
-  const showpopup = (ele, i) => {
+  const showpopup = (ele) => {
     setVisibleDeletePopup(true);
     setDeleteId(ele.id);
   };
-  const handleDeleteInvoice = async (value, i) => {
-    console.log(value);
+  const handleDeleteInvoice = async () => {
     const deleteId = removeId;
-    //deleting sub user from databse
+    // deleting sub user from databse
     const res = await userInstance.post('/deleteInvoice', { deleteId });
-    console.log(res);
     if (res.status === 200) {
       setVisibleDeletePopup(false);
-      //deleting sub user from state
+      // deleting sub user from state
       const data = invoiceData.filter((el) => el.id !== deleteId);
-      console.log(data);
       setInvoiceData([...data]);
       setNotifyType('success');
       setNotifyMsg('Invoice Deleted Successfully');
@@ -105,8 +102,12 @@ const Invoice = () => {
     }
   };
 
+  const toasterMessage = (msg) => {
+    setNotifyType('success');
+    setNotifyMsg(msg);
+  };
+
   const handlePagination = (value) => {
-    console.log(value);
     if (value <= 1) {
       setPagination({ minValue: 0, maxValue: 7 });
     } else {
@@ -115,36 +116,28 @@ const Invoice = () => {
   };
 
   const showEditInvoice = (value) => {
-    console.log(value);
-    const data0 = invoiceItems.map((el) =>
-      el.filter((el) => el.invoiceId === value.id)
-    );
+    const data0 = invoiceItems.map((el) => el.filter((ele) => ele.invoiceId === value.id));
     const data1 = data0.filter((e) => e.length);
     const [data2] = data1;
-    console.log(propertyInfo);
     const data = propertyInfo.filter(
-      (property) => property.id === value.propertyId
+      (property) => property.id === value.propertyId,
     );
-    console.log(data);
     setInvoicePropertyInfo(data);
     setVisibleEditInvoice(true);
     setCurrentInvoice(value);
     setCurrentInvoiceItems(data2);
   };
 
-  console.log(propertyInfo);
-  console.log(userInfo);
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  console.log(userCred);
-  const [{ invoiceWrite, userId }] = userCred ? userCred : [{}];
+
+  const [{ invoiceWrite, userId }] = userCred || [{}];
   const canWrite = invoiceWrite;
 
   const getData = async () => {
     const inb = await userInstance.post('getInvoice');
-    console.log('get invoice', inb);
+
     if (inb.data.code === 200) {
-      console.log(inb.data.code);
       setInvoiceData(inb.data.invoiceData);
       setInvoiceItems(inb.data.invoiceItems);
       setPage(false);
@@ -152,58 +145,47 @@ const Invoice = () => {
     const res = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
-    console.log(res);
     if (res.data.code === 200) {
-      console.log(res.data.propertiesdata);
       setPropertyInfo(res.data.propertiesData);
     }
     const response = await userInstance.post('/getInfo', {
       affiliateId: userId,
     });
-    console.log(response);
     if (response.data.code === 200) {
-      console.log(response.data.userInfo);
       setUserInfo(response.data.userInfo);
     }
   };
-  const handleCheck = (el, i) => {
-    console.log(checkedInvoice);
-    let filterFromArray = checkedInvoice.filter((ele) => ele.id === el.id);
+  const handleCheck = (el) => {
+    const filterFromArray = checkedInvoice.filter((ele) => ele.id === el.id);
     if (filterFromArray.length === 0) {
       setCheckedInvoice([...checkedInvoice, el]);
     } else {
       const [{ id }] = filterFromArray;
-      setCheckedInvoice(checkedInvoice.filter((el) => el.id !== id));
+      setCheckedInvoice(checkedInvoice.filter((ele) => ele.id !== id));
     }
   };
-
-  useEffect(() => {
-    setTopNavId(localStorage.getItem('topNavId'));
-    getData();
-  }, []);
-  
   useEffect(() => {
     const data = propertyInfo.filter((property) => property.id === topNavId);
-    console.log(data);
     setCurrentPropertyInfo(data);
   }, [topNavId]);
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   const handleDownload = () => {
     setShowLoader(false);
     const urls = [];
-    checkedInvoice.map((invoice) =>
-      invoice.pdfurl ? urls.push(invoice.pdfurl) : ''
-    );
-    console.log(urls);
+    checkedInvoice.map((el) => (el.pdfurl ? urls.push(el.pdfurl) : ''));
 
-    const download = (urls) => {
-      const url = urls.pop();
+    const download = (pdfurls) => {
+      const url = pdfurls.pop();
       console.log(url);
       const a = document.createElement('a');
       a.setAttribute('href', url);
       a.setAttribute('download', '');
       a.click();
-      if (urls.length === 0) {
+      if (pdfurls.length === 0) {
         clearInterval(interval);
       }
     };
@@ -212,35 +194,34 @@ const Invoice = () => {
   };
 
   const handlePrint = () => {
-    const [url] = checkedInvoice.map((invoice) => invoice.pdfurl);
-    console.log(url);
+    const [url] = checkedInvoice.map((el) => el.pdfurl);
     window.open(url);
   };
 
   const enableButton = (
-    <Button type='primary' icon={<PlusOutlined />} onClick={show}>
+    <Button type="primary" icon={<PlusOutlined />} onClick={show}>
       Add Invoice
     </Button>
   );
   const disabledButton = (
-    <Tooltip title='You are not authorize to create Invoice' color='gold'>
+    <Tooltip title="You are not authorize to create Invoice" color="gold">
       <Button
-        type='primary'
+        type="primary"
         icon={<PlusOutlined />}
         onClick={show}
-        disabled={true}
+        disabled
       >
         Add Invoice
       </Button>
     </Tooltip>
   );
   const propertySelectButton = (
-    <Tooltip title='please select property from top navbar' color='gold'>
+    <Tooltip title="please select property from top navbar" color="gold">
       <Button
-        type='primary'
+        type="primary"
         icon={<PlusOutlined />}
         onClick={show}
-        disabled={true}
+        disabled
       >
         Add Invoice
       </Button>
@@ -250,7 +231,7 @@ const Invoice = () => {
   const btn = isSubUser && canWrite ? enableButton : disabledButton;
   const perm = isSubUser ? btn : enableButton;
   return (
-    <Fragment>
+    <>
       <Toaster
         notifyType={notifyType}
         notifyMsg={notifyMsg}
@@ -258,75 +239,86 @@ const Invoice = () => {
       />
       {page ? (
         <Wrapper fun={setTopNavId}>
-          <div className='add-invoice-page'>
-            <div className='add-invoice'>
-              <img src={invoice} alt='invoice' />
+          <div className="add-invoice-page">
+            <div className="add-invoice">
+              <img src={invoice} alt="invoice" />
               <h4>Invoices</h4>
               <p>Currently there are no Sub users created</p>
               {topNavId ? perm : propertySelectButton}
             </div>
           </div>
-  
-           
+          {/* <Modal
+            title="Create new invoice"
+            visible={visible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            wrapClassName="guest-modal add-invoice-popup"
+          > */}
           <AdInvoicePopup
+            handleOk={handleOk}
             visible={visible}
             getData={getData}
             userData={userInfo}
             property={currentPropertyInfo}
-            label={label}
+            label={1}
             close={close}
           />
-        
+          {/* </Modal> */}
         </Wrapper>
       ) : (
-        <Wrapper fun={setTopNavId}>
-          <div className='invoice-listing-page'>
-            <div className='page-header'>
-              <h1>
-                <img src={invoice_icon} alt='' /> Invoice
+          <Wrapper fun={setTopNavId}>
+            <div className="invoice-listing-page">
+              <div className="page-header">
+                <h1>
+                  <img src={invoiceIcon} alt="" />
+                  {' '}
+                Invoice
               </h1>
-              {topNavId ? perm : propertySelectButton}
-            </div>
-            <div className='invoice-list'>
-              <div className='custom-table'>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Label</th>
-                      <th>Type</th>
-                      <th>Client</th>
-                      <th>Amount</th>
-                      <th>Status</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {invoiceData
-                      .slice(0)
-                      .reverse()
-                      .slice(pagination.minValue, pagination.maxValue)
-                      .map((el, i) => {
-                        return (
+                {topNavId ? perm : propertySelectButton}
+              </div>
+              <div className="invoice-list">
+                <div className="custom-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Label</th>
+                        <th>Type</th>
+                        <th>Client</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {invoiceData
+                        .slice(0)
+                        .reverse()
+                        .slice(pagination.minValue, pagination.maxValue)
+                        .map((el, i) => (
                           <tr key={i}>
                             <td>
                               <Checkbox
                                 onClick={() => handleCheck(el, i)}
-                              ></Checkbox>
+                              />
                               {el.date.slice(0, 10)}
                             </td>
                             <td>
-                              {el.label ||
-                                `INVOICE ${
-                                  el.id
+                              {el.label
+                                || `INVOICE ${
+                                el.id
                                 } - ${new Date().getFullYear()}`}
                             </td>
-                            <td>Invoice</td>
+                            <td>{el.type || 'Invoice'}</td>
                             <td>{el.clientName}</td>
-                            <td>{el.total} EUR</td>
+                            <td>
+                              {el.total}
+                              {' '}
+                            EUR
+                          </td>
                             <td>{el.status}</td>
                             <td>
-                              <div className='invoice-action'>
+                              <div className="invoice-action">
                                 <FormOutlined
                                   onClick={() => showEditInvoice(el, i)}
                                 />
@@ -336,34 +328,34 @@ const Invoice = () => {
                               </div>
                             </td>
                           </tr>
-                        );
-                      })}
-                  </tbody>
-                </table>
-              </div>
-              <Row>
-                <Col span={12}>
-                  <div className='filter-invoice'>
-                    <ul>
-                      <li>
-                        <img src={edit_icon} alt='' />
-                      </li>
-                      <li>
-                        <img
-                          className='download-img'
-                          src={refresh_icon}
-                          alt=''
-                          onClick={getData}
-                        />
-                      </li>
-                      <li>
-                        <img src={filter_icon} alt='' />
-                      </li>
-                    </ul>
-                  </div>
-                  <div className='invoice-filter-box'>
-                    {/* <Checkbox hidden={true}>Select all</Checkbox> */}
-                    {/* {checkedInvoice.length ? (
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+                <Row>
+                  <Col span={12}>
+                    <div className="filter-invoice">
+                      <ul>
+                        <li>
+                          <img src={editIcon} alt="" />
+                        </li>
+                        <li>
+                          <img
+                            role="presentation"
+                            className="download-img"
+                            src={refreshIcon}
+                            alt=""
+                            onClick={getData}
+                          />
+                        </li>
+                        <li>
+                          <img src={filterIcon} alt="" />
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="invoice-filter-box">
+                      {/* <Checkbox hidden={true}>Select all</Checkbox> */}
+                      {/* {checkedInvoice.length ? (
                       <div className='cancel-icon' onClick={setCheckedInvoice}>
                         <img src={cancel_icon} alt=''/>
                         Cancel
@@ -375,87 +367,95 @@ const Invoice = () => {
                       </div>
                     )} */}
 
-                    {checkedInvoice.length ? (
-                      <Tag color='#FB4B56'>
-                        {checkedInvoice.length} selected
-                      </Tag>
-                    ) : (
-                      <Tag color='#FB4B56' hidden={true}>
-                        3 selected
-                      </Tag>
-                    )}
-                    <div className='loader' hidden={showLoader}>
-                      <div className='loader-box'>
-                        <img src={loader} alt='loader' />
+                      {checkedInvoice.length ? (
+                        <Tag color="#FB4B56">
+                          {checkedInvoice.length}
+                          {' '}
+                        selected
+                        </Tag>
+                      ) : (
+                          <Tag color="#FB4B56" hidden>
+                            3 selected
+                          </Tag>
+                        )}
+                      <div className="loader" hidden={showLoader}>
+                        <div className="loader-box">
+                          <img src={loader} alt="loader" />
+                        </div>
+                      </div>
+                      <div className="filter-icons">
+                        <ul>
+                          <li>
+                            <img
+                              role="presentation"
+                              className="download-img"
+                              src={downloadIcon}
+                              alt=""
+                              onClick={handleDownload}
+                            />
+                          </li>
+                          <li hidden={checkedInvoice.length !== 1}>
+                            <img
+                              role="presentation"
+                              className="download-img"
+                              src={printIcon}
+                              alt=""
+                              onClick={handlePrint}
+                            />
+                          </li>
+                        </ul>
                       </div>
                     </div>
-                    <div className='filter-icons'>
-                      <ul>
-                        <li>
-                          <img
-                            className='download-img'
-                            src={download_icon}
-                            alt=''
-                            onClick={handleDownload}
-                          />
-                        </li>
-                        <li hidden={checkedInvoice.length === 1 ? false : true}>
-                          <img
-                            className='download-img'
-                            src={print_icon}
-                            alt=''
-                            onClick={handlePrint}
-                          />
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </Col>
-                <Col span={12}>
-                  <div className='pagination'>
-                    <Pagination
-                      total={invoiceData.length}
-                      onChange={handlePagination}
-                      defaultPageSize={7}
-                      defaultCurrent={1}
-                    />
+                  </Col>
+                  <Col span={12}>
+                    <div className="pagination">
+                      <Pagination
+                        total={invoiceData.length}
+                        onChange={handlePagination}
+                        defaultPageSize={7}
+                        defaultCurrent={1}
+                      />
 
-                    <div className='setting-icon'>
-                      <img src={setting_icon} alt='' />
+                      <div className="setting-icon">
+                        <img src={settingIcon} alt="" />
+                      </div>
                     </div>
-                  </div>
-                </Col>
-              </Row>
+                  </Col>
+                </Row>
+              </div>
             </div>
-          </div>
 
-          <AdInvoicePopup
-            visible={visible}
-            getData={getData}
-            userData={userInfo}
-            property={currentPropertyInfo}
-            label={label}
-            close={close}
-          />
+            <AdInvoicePopup
+              visible={visible}
+              getData={getData}
+              userData={userInfo}
+              property={currentPropertyInfo}
+              label={label}
+              close={close}
+              toasterMessage={toasterMessage}
+            />
 
-          <EditInvoicePopup
-            visible={visibleEditInvoice}
-            userData={userInfo}
-            property={invoiceCurrentPropertyInfo}
-            getData={getData}
-            close={closeEditInvoice}
-            invoiceData={currentInvoice}
-            invoiceItems={currentInvoiceItems}
-          />
+            <EditInvoicePopup
+              visible={visibleEditInvoice}
+              userData={userInfo}
+              property={invoiceCurrentPropertyInfo}
+              getData={getData}
+              close={closeEditInvoice}
+              invoiceData={currentInvoice}
+              invoiceItems={currentInvoiceItems}
+              setInvoiceItems={setCurrentInvoiceItems}
+              showDeleteWarning={showpopup}
+              toasterMessage={toasterMessage}
+            />
 
-          <DeletePopup
-            visible={visibleDeletePopup}
-            dataObject={handleDeleteInvoice}
-            cancel={() => handleCancel()}
-          />
-        </Wrapper>
-      )}
-    </Fragment>
+            <DeletePopup
+              visible={visibleDeletePopup}
+              dataObject={handleDeleteInvoice}
+              cancel={() => handleCancel()}
+            />
+          </Wrapper>
+        )}
+    </>
   );
 };
 

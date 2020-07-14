@@ -1,4 +1,8 @@
+// Doing this because we have no other option the date coming from date picker
+// is in the moment object and inside object object value is defined as _d so we can't change that
+/* eslint-disable no-underscore-dangle */
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import './invoice.css';
 import {
   Form,
@@ -8,19 +12,21 @@ import {
   DatePicker,
   TimePicker,
   Modal,
+  Row, Col,
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 
-import property_icon from '../../assets/images/menu/property-icon-orange.png';
-import { Row, Col } from 'antd';
-import delete_icon from '../../assets/images/menu/delete-icon-red.png';
-import loader from '../../assets/images/loader.svg';
 import moment from 'moment';
+import propertyIcon from '../../assets/images/menu/property-icon-orange.png';
+
+import deleteIcon from '../../assets/images/menu/delete-icon-red.png';
+import loader from '../../assets/images/loader.svg';
 import { userInstance } from '../../axios/axiosconfig';
 
+let i = 1;
 const AdInvoicePopup = (props) => {
   console.log(props);
-  const { userData, property } = props;
+  const { userData, property, label, visible, handleCancel, handleOk } = props;
   // const [{ phone: userPhone, email: userEmail }] = userData || [
   //   { phone: null, email: null },
   // ];
@@ -59,36 +65,36 @@ const AdInvoicePopup = (props) => {
     const valuesCopy = values;
     valuesCopy.date = moment(valuesCopy.date._d).format('YYYY/MM/DD');
     valuesCopy.deliveryDate = moment(valuesCopy.deliveryDate._d).format(
-      'YYYY/MM/DD'
+      'YYYY/MM/DD',
     );
     valuesCopy.dueDate = moment(valuesCopy.dueDate._d).format('YYYY/MM/DD');
     valuesCopy.time = time.slice(0, 5);
     const itemData = [];
-    pricePanel.map((el) => {
-      console.log(valuesCopy[el]);
-      console.log(valuesCopy[el].price, valuesCopy[el].quantity);
+    pricePanel.forEach((el) => {
       valuesCopy[el].amount = valuesCopy[el].price * valuesCopy[el].quantity;
-      valuesCopy[el].itemTotal =
-        valuesCopy[el].price * valuesCopy[el].quantity -
-        (valuesCopy[el].price *
-          valuesCopy[el].quantity *
-          valuesCopy[el].discount) /
-          100;
+      valuesCopy[el].itemTotal = valuesCopy[el].price * valuesCopy[el].quantity
+        - (valuesCopy[el].price
+          * valuesCopy[el].quantity
+          * valuesCopy[el].discount)
+        / 100;
+      valuesCopy[el].discountPer = valuesCopy[el].discount;
+      valuesCopy[el].discount = ((valuesCopy[el].amount) * (valuesCopy[el].discount / 100));
       itemData.push(valuesCopy[el]);
+
     });
     valuesCopy.itemData = itemData;
     valuesCopy.phone = userData[0].phone;
     valuesCopy.email = userData[0].email;
-    const { clientName } = valuesCopy;
     valuesCopy.total = itemTotalCopy.reduce((a, b) => a + (b || 0), 0);
     valuesCopy.propertyName = property[0].propertyName;
     valuesCopy.propertyAddress = property[0].address;
     valuesCopy.website = property[0].website;
     valuesCopy.propertyId = property[0].id;
+    const { clientName } = valuesCopy;
     valuesCopy.impression = impression;
     valuesCopy.label = `INVOICE ${
-      props.label + 1
-    } - ${new Date().getFullYear()}`;
+      label ? label + 1 : 1
+      } - ${new Date().getFullYear()}`;
     console.log(valuesCopy);
     if (!draftBtn) {
       valuesCopy.status = 'Issued';
@@ -102,24 +108,27 @@ const AdInvoicePopup = (props) => {
         element.style.display = 'none';
         document.body.appendChild(element);
         element.click();
-
         props.getData();
         props.close();
+        props.toasterMessage(res.data.msg);
       } else {
         setShowLoader(true);
       }
     } else {
       valuesCopy.status = 'Draft';
       const response = await userInstance.post('/invoicedraft', valuesCopy);
+      setShowLoader(true);
       console.log('draft response', response);
       if (response.data.code === 200) {
         setShowLoader(true);
         props.getData();
         props.close();
+        props.toasterMessage(response.data.msg);
       } else {
         setShowLoader(true);
       }
     }
+    setShowLoader(true);
   };
 
   const handleQuantity = (e, ele) => {
@@ -170,14 +179,14 @@ const AdInvoicePopup = (props) => {
       if (value === '%') {
         console.log('b');
         console.log(
-          amountCopy[ele - 1] -
-            (amountCopy[ele - 1] * discountCopy[ele - 1]) / 100
+          amountCopy[ele - 1]
+          - (amountCopy[ele - 1] * discountCopy[ele - 1]) / 100,
         );
         setItemTotal(amount - (amount * discount) / 100);
         setItemTotalCopy((itemTotalCopy) => [
           ...itemTotalCopy,
-          amountCopy[ele - 1] -
-            (amountCopy[ele - 1] * discountCopy[ele - 1]) / 100,
+          amountCopy[ele - 1]
+          - (amountCopy[ele - 1] * discountCopy[ele - 1]) / 100,
         ]);
       } else {
         setItemTotal(amount - discount);
@@ -191,12 +200,12 @@ const AdInvoicePopup = (props) => {
     }
   };
 
-  console.log(itemTotalCopy);
-  let i = 1;
+  console.log(pricePanel);
+
 
   const addMorePanel = () => {
     console.log('gsfg');
-    i++;
+    i += 1;
     setPricePanel([...pricePanel, i]);
   };
 
@@ -212,56 +221,62 @@ const AdInvoicePopup = (props) => {
 
   return (
     <Modal
-      title='Create new invoice'
-      visible={props.visible}
-      onOk={props.handleOk}
-      onCancel={props.handleCancel}
-      wrapClassName='guest-modal add-invoice-popup'
+      title="Create new invoice"
+      visible={visible}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      wrapClassName="guest-modal add-invoice-popup"
     >
-      <Form name='basic' onFinish={handleFinish}>
+      <Form name="basic" onFinish={handleFinish}>
         <Row style={{ alignItems: 'center' }}>
           <Col span={12}>
-            <div className='invoice-property-info'>
+            <div className="invoice-property-info">
               <h4>
-                <img src={property_icon} alt='property' />{' '}
+                <img src={propertyIcon} alt="property" />
+                {' '}
                 {property.length ? property[0].propertyName : ''}
               </h4>
               <p>{property.length ? property[0].address : ''}</p>
             </div>
           </Col>
-          <div className='loader' hidden={showLoader}>
-            <div className='loader-box'>
-              <img src={loader} alt='loader' />
+          <div className="loader" hidden={showLoader}>
+            <div className="loader-box">
+              <img src={loader} alt="loader" />
             </div>
           </div>
 
           <Col span={12}>
-            <div className='invoice-owner-info'>
+            <div className="invoice-owner-info">
               <p>{userData.length ? userData[0].phone : ''}</p>
               <p>{userData.length ? userData[0].email : ''}</p>
               <p>{property.length ? property[0].website : ''}</p>
             </div>
           </Col>
         </Row>
-        <Row className='invoice-border'>
+        <Row className="invoice-border">
           <Col span={10}>
-            <div className='invoice-date'>
+            <div className="invoice-date">
               <h4>
-                Invoice {props.label ? props.label + 1 : 1} -{' '}
+                Invoice
+                {' '}
+                {label ? label + 1 : 1}
+                {' '}
+                -
+                {' '}
                 {new Date().getFullYear()}
               </h4>
 
               <Row>
                 <Col span={12} style={{ marginRight: 10 }}>
-                  <Form.Item name='date' label='Date'>
+                  <Form.Item name="date" label="Date">
                     <DatePicker />
                   </Form.Item>
                 </Col>
 
                 <Col span={9}>
-                  <Form.Item name='time' label='Time'>
+                  <Form.Item name="time" label="Time">
                     <TimePicker
-                      format='HH:mm:ss'
+                      format="HH:mm:ss"
                       value={time}
                       onChange={(e) => {
                         const d = moment(e).format('HH:mm:ss');
@@ -274,7 +289,7 @@ const AdInvoicePopup = (props) => {
 
               <Row>
                 <Col span={12}>
-                  <Form.Item name='deliveryDate' label='Delivery Date'>
+                  <Form.Item name="deliveryDate" label="Delivery Date">
                     <DatePicker
                       value={deliveryDate}
                       onChange={(e) => {
@@ -288,7 +303,7 @@ const AdInvoicePopup = (props) => {
 
               <Row>
                 <Col span={12}>
-                  <Form.Item name='dueDate' label='Due Date'>
+                  <Form.Item name="dueDate" label="Due Date">
                     <DatePicker
                       value={dueDate}
                       onChange={(e) => {
@@ -302,14 +317,14 @@ const AdInvoicePopup = (props) => {
 
               <Row>
                 <Col span={18}>
-                  <Form.Item name='paymentType' label='Payment Type'>
-                    <Select placeholder='Select'>
-                      <Select.Option value='bank notes'>
+                  <Form.Item name="paymentType" label="Payment Type">
+                    <Select placeholder="Select">
+                      <Select.Option value="bank notes">
                         BANK NOTES
                       </Select.Option>
-                      <Select.Option value='card'>CARD</Select.Option>
-                      <Select.Option value='check'>CHECK</Select.Option>
-                      <Select.Option value='bank transfer'>
+                      <Select.Option value="card">CARD</Select.Option>
+                      <Select.Option value="check">CHECK</Select.Option>
+                      <Select.Option value="bank transfer">
                         BANKTRANSFER
                       </Select.Option>
                     </Select>
@@ -319,34 +334,34 @@ const AdInvoicePopup = (props) => {
             </div>
           </Col>
 
-          <Col span={4}></Col>
+          <Col span={4} />
 
           <Col span={10}>
-            <div className='client-info'>
+            <div className="client-info">
               <h4>Client:</h4>
 
-              <Form.Item label='Full Name' name='clientName'>
+              <Form.Item label="Full Name" name="clientName">
                 <Input
                   value={fName}
                   onChange={(e) => setFName(e.target.value)}
                 />
               </Form.Item>
 
-              <Form.Item label='Email' name='email'>
+              <Form.Item label="Email" name="email">
                 <Input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </Form.Item>
 
-              <Form.Item label='Address' name='address'>
+              <Form.Item label="Address" name="address">
                 <Input
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                 />
               </Form.Item>
 
-              <Form.Item label='Vat ID' name='vat'>
+              <Form.Item label="Vat ID" name="vat">
                 <Input
                   value={vatId}
                   onChange={(e) => setVatId(e.target.value)}
@@ -356,114 +371,129 @@ const AdInvoicePopup = (props) => {
           </Col>
         </Row>
 
-        {pricePanel.map((ele, i) => {
-          return (
-            <div className='additional-fields' key={i}>
-              <Row style={{ alignItems: 'center' }}>
-                <Col span={6}>
-                  <Form.Item
-                    name={[ele, 'itemDescription']}
-                    label='Item Description'
+        {pricePanel.map((ele) => (
+          <div className="additional-fields" key={ele}>
+            <Row style={{ alignItems: 'center' }}>
+              <Col span={6}>
+                <Form.Item
+                  name={[ele, 'itemDescription']}
+                  label="Item Description"
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+
+              <Col span={2}>
+                <Form.Item name={[ele, 'quantity']} label="Qty.">
+                  <Input
+                    // value={quantity}
+                    onBlur={(e) => handleQuantity(e, ele)}
+                  />
+                </Form.Item>
+              </Col>
+
+              <Col span={3}>
+                <Form.Item name={[ele, 'price']} label="Price">
+                  <Input
+                    // value={price}
+                    onBlur={(e) => handlePrice(e, ele)}
+                  />
+                </Form.Item>
+              </Col>
+
+              <Col span={3}>
+                <div className="amount-field">
+                  <p>{amountCopy[ele - 1]}</p>
+                </div>
+              </Col>
+
+              <Col span={2} className="label-hidden">
+                <Form.Item name={[ele, 'discountType']} label="Discount Type">
+                  <Select
+                    placeholder="Discount type"
+                    onSelect={(value) => handleDiscountType(value, ele)}
+                    defaultValue="%"
                   >
-                    <Input />
-                  </Form.Item>
-                </Col>
+                    <Select.Option value="%">%</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
 
-                <Col span={2}>
-                  <Form.Item name={[ele, 'quantity']} label='Qty.'>
-                    <Input
-                      // value={quantity}
-                      onBlur={(e) => handleQuantity(e, ele)}
-                    />
-                  </Form.Item>
-                </Col>
+              <Col span={3}>
+                <Form.Item name={[ele, 'discount']} label="Discount">
+                  <Input
+                    // value={discount}
+                    onBlur={(e) => handleDiscount(e, ele)}
+                  />
+                </Form.Item>
+              </Col>
 
-                <Col span={3}>
-                  <Form.Item name={[ele, 'price']} label='Price'>
-                    <Input
-                      // value={price}
-                      onBlur={(e) => handlePrice(e, ele)}
-                    />
-                  </Form.Item>
-                </Col>
+              <Col span={3}>
+                <div className="amount-field" key={ele}>
+                  <p>{itemTotalCopy[ele - 1]}</p>
+                </div>
+              </Col>
 
-                <Col span={3}>
-                  <div className='amount-field'>
-                    <p>{amountCopy[ele - 1]}</p>
-                  </div>
-                </Col>
-
-                <Col span={2} className='label-hidden'>
-                  <Form.Item name={[ele, 'discountType']} label='Discount Type'>
-                    <Select
-                      placeholder='Discount type'
-                      onSelect={(value) => handleDiscountType(value, ele)}
-                      defaultValue='%'
-                    >
-                      <Select.Option value='€'>€</Select.Option>
-                      <Select.Option value='%'>%</Select.Option>
-                    </Select>
-                  </Form.Item>
-                </Col>
-
-                <Col span={3}>
-                  <Form.Item name={[ele, 'discount']} label='Discount'>
-                    <Input
-                      // value={discount}
-                      onBlur={(e) => handleDiscount(e, ele)}
-                    />
-                  </Form.Item>
-                </Col>
-
-                <Col span={3}>
-                  <div className='amount-field' key={i}>
-                    <p>{itemTotalCopy[ele - 1]}</p>
-                  </div>
-                </Col>
-
-                <Col span={2} className='deleteicon'>
-                  <Form.Item>
-                    <img
-                      src={delete_icon}
-                      alt='delete'
-                      onClick={() => removePanel(ele)}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-            </div>
-          );
-        })}
+              <Col span={2} className="deleteicon">
+                <Form.Item>
+                  <img
+                    role="presentation"
+                    src={deleteIcon}
+                    alt="delete"
+                    onClick={() => removePanel(ele)}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+          </div>
+        ))}
 
         <Row style={{ alignItems: 'center' }}>
           <Col span={12}>
-            <div className='additional-add-guest' onClick={addMorePanel}>
-              <PlusOutlined /> Add additional guest
+            <div role="presentation" className="additional-add-guest" onClick={addMorePanel}>
+              <PlusOutlined />
+              {' '}
+              Add additional guest
             </div>
           </Col>
 
           <Col span={12}>
-            <div className='total-add'>
+            <div className="total-add">
               <h3>
-                TOTAL:{' '}
-                <span>{itemTotalCopy.reduce((a, b) => a + (b || 0), 0)} €</span>
+                TOTAL:
+                {' '}
+                <span>
+                  {itemTotalCopy.reduce((a, b) => a + (b || 0), 0)}
+                  {' '}
+                  €
+                </span>
               </h3>
             </div>
           </Col>
 
-          <Col span={24} className='m-top-30'>
-            <Form.Item name='impression' label='Impression'>
+          <Col span={24} className="m-top-30">
+            <Form.Item name="impression" label="Impression">
               <Input.TextArea
                 value={impression}
                 onChange={(e) => setImpression(e.target.value)}
               />
             </Form.Item>
 
-            <p className='web-info'>
-              {property.length ? property[0].address : ''} |{' '}
-              {userData.length ? userData[0].phone : ''} |{' '}
-              {userData.length ? userData[0].email : ''} |{' '}
-              {property.length ? property[0].website : ''}{' '}
+            <p className="web-info">
+              {property.length ? property[0].address : ''}
+              {' '}
+              |
+              {' '}
+              {userData.length ? userData[0].phone : ''}
+              {' '}
+              |
+              {' '}
+              {userData.length ? userData[0].email : ''}
+              {' '}
+              |
+              {' '}
+              {property.length ? property[0].website : ''}
+              {' '}
             </p>
           </Col>
         </Row>
@@ -479,20 +509,20 @@ const AdInvoicePopup = (props) => {
           <Col span={24}>
             <Form.Item>
               <Button
-                type='secondry'
+                type="secondry"
                 style={{ marginRight: 10 }}
-                htmlType='submit'
+                htmlType="submit"
                 onClick={handleDraft}
               >
                 Save Draft
               </Button>
-              <Button type='primary' htmlType='submit'>
+              <Button type="primary" htmlType="submit">
                 Issue
               </Button>
             </Form.Item>
           </Col>
           <Col span={24}>
-            <div className='note'>
+            <div className="note">
               <p>
                 NOTE: Issued invoice has an ordinal number assigned to it, and
                 it cannot be changed. Invoice that is saved as draft can be
@@ -504,6 +534,18 @@ const AdInvoicePopup = (props) => {
       </Form>
     </Modal>
   );
+};
+
+AdInvoicePopup.propTypes = {
+  userData: PropTypes.objectOf(PropTypes.object).isRequired,
+  property: PropTypes.objectOf(PropTypes.object).isRequired,
+  close: PropTypes.objectOf(PropTypes.Function).isRequired,
+  visible: PropTypes.objectOf(PropTypes.Boolean).isRequired,
+  handleOk: PropTypes.objectOf(PropTypes.Function).isRequired,
+  handleCancel: PropTypes.objectOf(PropTypes.Function).isRequired,
+  toasterMessage: PropTypes.objectOf(PropTypes.Function).isRequired,
+  getData: PropTypes.objectOf(PropTypes.Function).isRequired,
+  label: PropTypes.objectOf(PropTypes.number).isRequired,
 };
 
 export default AdInvoicePopup;

@@ -41,7 +41,6 @@ import Invoice from './components/invoice/invoice';
 import InvoiceList from './components/invoice/invoicelist';
 import Stats from './components/stats/stats';
 
-
 import './responsive.css';
 
 const history = createBrowserHistory();
@@ -75,8 +74,7 @@ const App = () => {
                         path="/propertylist"
                         component={() => <PropertyList />}
                       />
-                    )
-                    : (
+                    ) : (
                       <PrivateRoute
                         exact
                         path="/propertylist"
@@ -86,22 +84,21 @@ const App = () => {
                 }
 
                 {
-                 isSubUser
-                   ? (
-                     <SecureProperty
-                       exact
-                       path="/unittype"
-                       component={() => <UnitType />}
-                     />
-                   )
-                   : (
-                     <PrivateRoute
-                       exact
-                       path="/unittype"
-                       component={() => <UnitType />}
-                     />
-                   )
-               }
+                  isSubUser
+                    ? (
+                      <SecureProperty
+                        exact
+                        path="/unittype"
+                        component={() => <UnitType />}
+                      />
+                    ) : (
+                      <PrivateRoute
+                        exact
+                        path="/unittype"
+                        component={() => <UnitType />}
+                      />
+                    )
+                }
 
                 <PrivateRoute
                   exact

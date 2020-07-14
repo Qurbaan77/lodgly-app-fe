@@ -309,7 +309,7 @@ const editbookingpopup = (props) => {
       + servicePrice * serviceAmt * (serviceTax / 100);
     console.log('calculate', calculate);
     if (el.id) {
-      currentService.map((ele) => {
+      currentService.forEach((ele) => {
         if (ele.id === el.id) {
           el.serviceAmount = calculate;
         }
@@ -432,7 +432,7 @@ const editbookingpopup = (props) => {
     const id = e.currentTarget.parentNode.getAttribute('data-key');
     console.log(typeof id);
 
-    editCurrentGuest.map((el, i) => {
+    editCurrentGuest.forEach((el, i) => {
       if (parseInt(id) === i) {
         console.log(el.id);
         setDeleteGuestId(el.id);
@@ -743,7 +743,7 @@ const editbookingpopup = (props) => {
 
                     <Row>
                       <Col span={24}>
-                        <div className="additional-add" onClick={addMore}>
+                        <div role="presentation" className="additional-add" onClick={addMore}>
                           <PlusOutlined />
                           {' '}
                           Add additional guest
@@ -890,7 +890,7 @@ const editbookingpopup = (props) => {
             </Col>
 
             <Col span={24}>
-              <div className="srvice-heading" onClick={addMoreService}>
+              <div role="presentation" className="srvice-heading" onClick={addMoreService}>
                 <PlusOutlined />
                 {' '}
                 Add Services

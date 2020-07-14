@@ -1,4 +1,8 @@
+// Doing this because we have no other option the date coming from date picker
+// is in the moment object and inside object object value is defined as _d so we can't change that
+/* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import './invoice.css';
 import {
   Form,
@@ -8,21 +12,26 @@ import {
   DatePicker,
   TimePicker,
   Modal,
+  Row, Col,
 } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import property_icon from '../../assets/images/menu/property-icon-orange.png';
-import { Row, Col } from 'antd';
-import delete_icon from '../../assets/images/menu/delete-icon-red.png';
+import propertyIcon from '../../assets/images/menu/property-icon-orange.png';
+import printIcon from '../../assets/images/menu/print-white.png';
+import pdfIcon from '../../assets/images/menu/pdf-white.png';
+import deleteIcon from '../../assets/images/menu/delete-icon-red.png';
 import loader from '../../assets/images/loader.svg';
 
 import { userInstance } from '../../axios/axiosconfig';
 
-const AdInvoicePopup = (props) => {
+const EditInvoicePopup = (props) => {
   console.log(props);
-  const { userData, property, invoiceData, invoiceItems } = props;
+  const {
+    userData, property, invoiceData, invoiceItems, setInvoiceItems, close, visible, handleOk,
+    handleCancel,
+  } = props;
   const [form] = Form.useForm();
-  const [draftBtn, setDraftBtn] = useState(false);
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState(null);
@@ -31,11 +40,9 @@ const AdInvoicePopup = (props) => {
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [vatId, setVatId] = useState(null);
-  const [pricePanel, setPricePanel] = useState([1]);
   const [quantity, setQuantity] = useState(null);
   const [price, setPrice] = useState(null);
   const [amount, setAmount] = useState(null);
-  const [discountType, setDiscountType] = useState('%');
   const [discount, setDiscount] = useState(null);
   const [itemTotal, setItemTotal] = useState(null);
   const [quantityCopy, setQuantityCopy] = useState([]);
@@ -44,67 +51,92 @@ const AdInvoicePopup = (props) => {
   const [discountCopy, setDiscountCopy] = useState([]);
   const [itemTotalCopy, setItemTotalCopy] = useState([]);
   const [showLoader, setShowLoader] = useState(true);
+  const [cancellation, setCancellation] = useState(false);
+  const [discountPer, setDiscountPer] = useState(null);
+  const [deleteInvoiceItemId, setDeleteInvoiecItemId] = useState(null);
+  const [itemState, setItemState] = useState([]);
 
   useEffect(() => {
     if (props.visible) {
-      const date = moment(invoiceData.date);
-
-      const deliveryDate = moment(invoiceData.deliveryDate);
-      const dueDate = moment(invoiceData.dueDate);
+      const date0 = moment(invoiceData.date);
+      const deliveryDate0 = moment(invoiceData.deliveryDate);
+      const dueDate0 = moment(invoiceData.dueDate);
+      setDate(date0);
+      setDueDate(dueDate0);
+      setDeliveryDate(deliveryDate0);
       form.setFieldsValue({
         clientName: invoiceData.clientName,
         email: invoiceData.email,
         address: invoiceData.address,
         vat: invoiceData.vat,
-        date,
-        deliveryDate,
-        dueDate,
+        date: date0,
+        deliveryDate: deliveryDate0,
+        dueDate: dueDate0,
         paymentType: invoiceData.paymentType,
+        impression: invoiceData.impression,
       });
+      setFName(invoiceData.clientName);
+      setEmail(invoiceData.email);
+      setVatId(invoiceData.vat);
+      setAddress(invoiceData.address);
+      setItemState(invoiceItems);
       if (invoiceItems.length) {
-        invoiceItems.map((el, i) => {
+        invoiceItems.forEach((el, i) => {
           form.setFieldsValue({
+            [`itemDescription${i}`]: el.itemDescription,
             [`quantity${i}`]: el.quantity,
             [`price${i}`]: el.price,
+            [`amount${i}`]: el.amount,
             [`discount${i}`]: el.discount,
+            [`discountPer${i}`]: el.discountPer,
+            [`itemTotal${i}`]: el.itemTotal,
           });
         });
       }
     }
-  }, [props.visible]);
+  }, [visible]);
 
-  console.log(amountCopy);
   const handleFinish = async (values) => {
-    setShowLoader(false);
+    // TODO implement extra buttons function
+    // setShowLoader(false);
     const valuesCopy = values;
     valuesCopy.date = moment(valuesCopy.date._d).format('YYYY/MM/DD');
     valuesCopy.deliveryDate = moment(valuesCopy.deliveryDate._d).format(
-      'YYYY/MM/DD'
+      'YYYY/MM/DD',
     );
     valuesCopy.dueDate = moment(valuesCopy.dueDate._d).format('YYYY/MM/DD');
-    valuesCopy.time = time.slice(0, 5);
+    console.log(valuesCopy);
+    // valuesCopy.time = time.slice(0, 5);
     const itemData = [];
-    pricePanel.map((el) => {
-      console.log(valuesCopy[el]);
-      console.log(valuesCopy[el].price, valuesCopy[el].quantity);
-      valuesCopy[el].amount = valuesCopy[el].price * valuesCopy[el].quantity;
-      valuesCopy[el].itemTotal =
-        valuesCopy[el].price * valuesCopy[el].quantity -
-        (valuesCopy[el].price *
-          valuesCopy[el].quantity *
-          valuesCopy[el].discount) /
-          100;
-      itemData.push(valuesCopy[el]);
-    });
+    if (invoiceItems.length) {
+      invoiceItems.forEach((el, i) => {
+        const ele = el;
+        const q = 'quantity';
+        const p = 'price';
+        const a = 'amount';
+        const d0 = 'discountPer';
+        const d1 = 'discount';
+        const it = 'itemTotal';
+        ele.id = el.id || null;
+        ele.quantity = valuesCopy[q + i];
+        ele.price = valuesCopy[p + i];
+        ele.amount = valuesCopy[a + i];
+        ele.discountPer = valuesCopy[d0 + i];
+        ele.discount = valuesCopy[d1 + i];
+        ele.itemTotal = valuesCopy[it + i];
+        console.log(ele);
+        itemData.push(ele);
+      });
+    }
     valuesCopy.itemData = itemData;
-    valuesCopy.userPhone = userData.userPhone;
-    valuesCopy.userEmail = userData.userEmail;
-    const { clientName } = valuesCopy;
-    valuesCopy.total = itemTotalCopy.reduce((a, b) => a + (b || 0), 0);
-    valuesCopy.propertyName = property.propertyName;
-    valuesCopy.propertyAddress = property.propertyAddress;
-    valuesCopy.website = property.website;
-    valuesCopy.propertyId = property.propertyId;
+    // valuesCopy.userPhone = userData.userPhone;
+    // valuesCopy.userEmail = userData.userEmail;
+    // const { clientName } = valuesCopy;
+    // valuesCopy.total = itemTotalCopy.reduce((a, b) => a + (b || 0), 0);
+    // valuesCopy.propertyName = property.propertyName;
+    // valuesCopy.propertyAddress = property.propertyAddress;
+    // valuesCopy.website = property.website;
+    // valuesCopy.propertyId = property.propertyId;
     console.log(valuesCopy);
     // if (!draftBtn) {
     //   const res = await userInstance.post('/createInvoice', valuesCopy);
@@ -130,121 +162,132 @@ const AdInvoicePopup = (props) => {
   };
 
   const handleQuantity = (e, ele, i) => {
-    console.log(i);
-    console.log(ele);
-    const d = e.target.value;
-    ele.quantity = d;
-    setQuantity({ quantityCopy: [...quantityCopy, ele.quantity] });
-    // quantityCopy[i] = d;
-    // setQuantityCopy((quantityCopy) => [...quantityCopy, d]);
-  };
-  console.log(quantityCopy);
-  console.log(amountCopy);
-  console.log(itemTotalCopy);
-  const handlePrice = (e, ele, i) => {
-    console.log(e.target.value);
-    const d = e.target.value;
-    ele.price = d;
-    // priceCopy[i] = d;
-    // amountCopy[i] = quantityCopy[i] * d;
-    // setPriceCopy((priceCopy) => [...priceCopy, d]);
-    // setAmountCopy((amountCopy) => [...amountCopy, quantityCopy[ele - 1] * d]);
+    console.log(ele)
+    const { price: paisa, discountPer: perDiscount } = ele;
+    console.log(paisa, perDiscount)
+    setQuantity(e.target.value);
+    if (ele.price) {
+      form.setFieldsValue({
+        [`amount${i}`]: e.target.value * paisa,
+        [`discount${i}`]: (e.target.value * paisa) * (perDiscount / 100),
+        [`itemTotal${i}`]: e.target.value * paisa - (e.target.value * paisa) * (perDiscount / 100),
+      });
+    }
   };
 
-  const handleDiscount = (e, ele) => {
-    console.log(ele);
-    const d = e.target.value;
-    // setDiscount(d);
-    // setDiscountCopy((discountCopy) => [...discountCopy, d]);
+  const handlePrice = (e, i, ele) => {
+    const { discountPer: perDiscount } = ele;
+    setPriceCopy(e.target.value);
+    form.setFieldsValue({
+      [`amount${i}`]: quantity * e.target.value,
+      [`itemTotal${i}`]: quantity * e.target.value,
 
-    // setItemTotalCopy((itemTotalCopy) => [
-    //   ...itemTotalCopy,
-    //   amountCopy[ele - 1] - (amountCopy[ele - 1] * d) / 100,
-    // ]);
-    // if (discountType === '%') {
-    //   console.log(amountCopy[ele - 1]);
-    //   setItemTotal(amount - (amount * d) / 100);
-    //   setItemTotalCopy((itemTotalCopy) => [
-    //     ...itemTotalCopy,
-    //     amountCopy[ele - 1] - (amountCopy[ele - 1] * d) / 100,
-    //   ]);
-    // } else {
-    //   setItemTotal(amount - d);
-    //   setItemTotalCopy((itemTotalCopy) => [
-    //     ...itemTotalCopy,
-    //     amountCopy[ele - 1] - d,
-    //   ]);
-    // }
+    });
+    if (ele.discountPer) {
+      form.setFieldsValue({
+        [`discount${i}`]: (quantity * e.target.value) * (perDiscount / 100),
+      });
+    }
+    setAmount(quantity * e.target.value);
   };
 
-  let i = 1;
+  const handleDiscount = (e, i) => {
+    setDiscountPer(e.target.value);
+    setDiscount(amount - (amount) * (e.target.value / 100));
+    form.setFieldsValue({
+      [`discount${i}`]: (amount) * (e.target.value / 100),
+      [`itemTotal${i}`]: amount - (amount) * (e.target.value / 100),
+    });
+  };
 
   const addMorePanel = () => {
-    console.log('gsfg');
-    i++;
-    setPricePanel([...pricePanel, i]);
+    if (invoiceItems.length) {
+      setInvoiceItems(invoiceItems.concat([{}]));
+    }
   };
 
   const removePanel = (ele) => {
-    const oldarray = [...pricePanel];
-    oldarray.pop();
-    setPricePanel([...oldarray]);
+    setDeleteInvoiecItemId(ele.id);
+    const data = invoiceItems.filter((el) => el.id !== ele.id);
+    setInvoiceItems([...data]);
   };
 
-  const handleDraft = () => {
-    setDraftBtn(true);
+  const handleCancelllation = async () => {
+    setCancellation(true);
+    if (cancellation) {
+      const payload = {
+        id: invoiceData.id,
+        type: 'Cancellation',
+      };
+      const cancel = await userInstance.post('/cancelInvoice', payload);
+      if (cancel.data.code === 200) {
+        props.close();
+        props.getData();
+        props.toasterMessage(cancel.data.msg);
+      }
+    }
   };
-  console.log(invoiceData);
+
+  const handleDelete = () => {
+    props.close();
+    props.showDeleteWarning(invoiceData);
+  };
   return (
     <Modal
-      title='Edit invoice'
-      visible={props.visible}
-      onOk={props.handleOk}
-      onCancel={props.handleCancel}
-      wrapClassName='guest-modal add-invoice-popup'
+      title="Edit invoice"
+      visible={visible}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      wrapClassName="guest-modal add-invoice-popup"
     >
-      <Form name='basic' form={form} onFinish={handleFinish}>
+      <Form name="basic" form={form} onFinish={handleFinish}>
         <Row style={{ alignItems: 'center' }}>
           <Col span={12}>
-            <div className='invoice-property-info'>
+            <div className="invoice-property-info">
               <h4>
-                <img src={property_icon} alt='property' />{' '}
+                <img src={propertyIcon} alt="property" />
+                {' '}
                 {property.length ? property[0].propertyName : ''}
               </h4>
               <p>{property.length ? property[0].address : ''}</p>
             </div>
           </Col>
-          <div className='loader' hidden={showLoader}>
-            <div className='loader-box'>
-              <img src={loader} alt='loader' />
+          <div className="loader" hidden={showLoader}>
+            <div className="loader-box">
+              <img src={loader} alt="loader" />
             </div>
           </div>
 
           <Col span={12}>
-            <div className='invoice-owner-info'>
+            <div className="invoice-owner-info">
               <p>{userData.length ? userData[0].phone : ''}</p>
               <p>{userData.length ? userData[0].email : ''}</p>
               <p>{property.length ? property[0].website : ''}</p>
             </div>
           </Col>
         </Row>
-        <Row className='invoice-border'>
+        <Row className="invoice-border">
           <Col span={10}>
-            <div className='invoice-date'>
+            <div className="invoice-date">
               <h4>
-                Invoice {invoiceData.id}- {new Date().getFullYear()}
+                Invoice
+                {' '}
+                {invoiceData.id}
+                -
+                {' '}
+                {new Date().getFullYear()}
               </h4>
               <Row>
                 <Col span={12} style={{ marginRight: 10 }}>
-                  <Form.Item name='date' label='Date'>
+                  <Form.Item name="date" label="Date">
                     <DatePicker />
                   </Form.Item>
                 </Col>
 
                 <Col span={9}>
-                  <Form.Item name='time' label='Time'>
+                  <Form.Item name="time" label="Time">
                     <TimePicker
-                      format='HH:mm:ss'
+                      format="HH:mm:ss"
                       value={time}
                       onChange={(e) => {
                         const d = moment(e).format('HH:mm:ss');
@@ -257,7 +300,7 @@ const AdInvoicePopup = (props) => {
 
               <Row>
                 <Col span={12}>
-                  <Form.Item name='deliveryDate' label='Delivery Date'>
+                  <Form.Item name="deliveryDate" label="Delivery Date">
                     <DatePicker
                       value={deliveryDate}
                       onChange={(e) => {
@@ -271,7 +314,7 @@ const AdInvoicePopup = (props) => {
 
               <Row>
                 <Col span={12}>
-                  <Form.Item name='dueDate' label='Due Date'>
+                  <Form.Item name="dueDate" label="Due Date">
                     <DatePicker
                       value={dueDate}
                       onChange={(e) => {
@@ -285,14 +328,14 @@ const AdInvoicePopup = (props) => {
 
               <Row>
                 <Col span={18}>
-                  <Form.Item name='paymentType' label='Payment Type'>
-                    <Select placeholder='Select'>
-                      <Select.Option value='bank notes'>
+                  <Form.Item name="paymentType" label="Payment Type">
+                    <Select placeholder="Select">
+                      <Select.Option value="bank notes">
                         BANK NOTES
                       </Select.Option>
-                      <Select.Option value='card'>CARD</Select.Option>
-                      <Select.Option value='check'>CHECK</Select.Option>
-                      <Select.Option value='bank transfer'>
+                      <Select.Option value="card">CARD</Select.Option>
+                      <Select.Option value="check">CHECK</Select.Option>
+                      <Select.Option value="bank transfer">
                         BANKTRANSFER
                       </Select.Option>
                     </Select>
@@ -302,33 +345,33 @@ const AdInvoicePopup = (props) => {
             </div>
           </Col>
 
-          <Col span={4}></Col>
+          <Col span={4} />
 
           <Col span={10}>
-            <div className='client-info'>
+            <div className="client-info">
               <h4>Client:</h4>
-              <Form.Item label='Full Name' name='clientName'>
+              <Form.Item label="Full Name" name="clientName">
                 <Input
                   value={fName}
                   onChange={(e) => setFName(e.target.value)}
                 />
               </Form.Item>
 
-              <Form.Item label='Email' name='email'>
+              <Form.Item label="Email" name="email">
                 <Input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </Form.Item>
 
-              <Form.Item label='Address' name='address'>
+              <Form.Item label="Address" name="address">
                 <Input
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                 />
               </Form.Item>
 
-              <Form.Item label='Vat ID' name='vat'>
+              <Form.Item label="Vat ID" name="vat">
                 <Input
                   value={vatId}
                   onChange={(e) => setVatId(e.target.value)}
@@ -339,111 +382,128 @@ const AdInvoicePopup = (props) => {
         </Row>
 
         {invoiceItems.length
-          ? invoiceItems.map((ele, i) => {
-              return (
-                <div className='additional-fields'>
-                  <Row style={{ alignItems: 'center' }}>
-                    <Col span={6}>
-                      <Form.Item
-                        name={[ele, 'itemDescription']}
-                        label='Item Description'
-                      >
-                        <Input />
-                      </Form.Item>
-                    </Col>
+          ? invoiceItems.map((ele, j) => (
+            <div className="additional-fields">
+              <Row style={{ alignItems: 'center' }}>
+                <Col span={6}>
+                  <Form.Item
+                    name={`itemDescription${j}`}
+                    label="Item Description"
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
 
-                    <Col span={2}>
-                      <Form.Item name={`quantity${i}`} label='Qty.'>
-                        <Input
-                          // value={quantity}
-                          onBlur={(e) => handleQuantity(e, ele, i)}
-                        />
-                      </Form.Item>
-                    </Col>
+                <Col span={2}>
+                  <Form.Item name={`quantity${j}`} label="Qty.">
+                    <Input
+                      // value={quantity}
+                      onChange={(e) => handleQuantity(e, ele, j)}
+                    />
+                  </Form.Item>
+                </Col>
 
-                    <Col span={3}>
-                      <Form.Item name={`price${i}`} label='Price'>
-                        <Input
-                          // value={price}
-                          onBlur={(e) => handlePrice(e, ele, i)}
-                        />
-                      </Form.Item>
-                    </Col>
+                <Col span={3}>
+                  <Form.Item name={`price${j}`} label="Price">
+                    <Input
+                      value={price}
+                      onChange={(e) => handlePrice(e, j, ele)}
+                    />
+                  </Form.Item>
+                </Col>
 
-                    <Col span={3}>
-                      <div className='amount-field'>
-                        <p>{ele.quantity * ele.price}</p>
-                      </div>
-                    </Col>
+                <Col span={3}>
+                  {/* <div className="amount-field">
+                    <p>{ele.amount}</p>
+                  </div> */}
+                  <Form.Item name={`amount${j}`} label="Price">
+                    <Input disabled onChange={(e) => setAmount(e.target.value)} />
+                  </Form.Item>
+                </Col>
 
-                    <Col span={2} className='label-hidden'>
-                      <Form.Item
-                        name={[ele, 'discountType']}
-                        label='Discount Type'
-                      >
-                        <Select placeholder='Discount type' defaultValue='%'>
-                          <Select.Option value='€'>€</Select.Option>
-                          <Select.Option value='%'>%</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
+                <Col span={2} className="label-hidden">
+                  <Form.Item
+                    name={`discountPer${j}`}
+                  >
+                    <Input placeholder="%" onChange={(e) => handleDiscount(e, j)} />
+                  </Form.Item>
+                </Col>
 
-                    <Col span={3}>
-                      <Form.Item name={`discount${i}`} label='Discount'>
-                        <Input
-                          // value={discount}
-                          onBlur={(e) => handleDiscount(e, ele, i)}
-                        />
-                      </Form.Item>
-                    </Col>
+                <Col span={3}>
+                  <Form.Item name={`discount${j}`} label="Discount">
+                    <Input disabled />
+                  </Form.Item>
+                </Col>
 
-                    <Col span={3}>
-                      <div className='amount-field' key={i}>
-                        <p>{itemTotalCopy[i]}</p>
-                      </div>
-                    </Col>
+                <Col span={3}>
+                  {/* <div className="amount-field" key={ele.id}>
+                    <p>{itemTotalCopy[j]}</p>
+                  </div> */}
+                  <Form.Item name={`itemTotal${j}`} label="Total">
+                    <Input disabled />
+                  </Form.Item>
+                </Col>
 
-                    <Col span={2} className='deleteicon'>
-                      <Form.Item>
-                        <img
-                          src={delete_icon}
-                          alt='delete'
-                          onClick={() => removePanel(ele)}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </div>
-              );
-            })
+                <Col span={2} className="deleteicon">
+                  <Form.Item>
+                    <img
+                      role="presentation"
+                      src={deleteIcon}
+                      alt="delete"
+                      onClick={() => removePanel(ele)}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </div>
+          ))
           : ''}
 
         <Row style={{ alignItems: 'center' }}>
           <Col span={12}>
-            <div className='additional-add-guest' onClick={addMorePanel}>
-              <PlusOutlined /> Add additional guest
+            <div role="presentation" className="additional-add-guest" onClick={addMorePanel}>
+              <PlusOutlined />
+              {' '}
+              Add additional guest
             </div>
           </Col>
 
           <Col span={12}>
-            <div className='total-add'>
+            <div className="total-add">
               <h3>
-                TOTAL:{' '}
-                <span>{itemTotalCopy.reduce((a, b) => a + (b || 0), 0)} €</span>
+                TOTAL:
+                {' '}
+                <span>
+                  {invoiceItems
+                    .map((el) => el.itemTotal)
+                    .reduce((a, b) => a + (b || 0), 0)}
+                  {' '}
+                  €
+                </span>
               </h3>
             </div>
           </Col>
 
-          <Col span={24} className='m-top-30'>
-            <Form.Item name='impression' label='Impression'>
+          <Col span={24} className="m-top-30">
+            <Form.Item name="impression" label="Impression">
               <Input.TextArea />
             </Form.Item>
 
-            <p className='web-info'>
-              {property.length ? property[0].address : ''} |{' '}
-              {userData.length ? userData[0].phone : ''} |{' '}
-              {userData.length ? userData[0].email : ''} |{' '}
-              {property.length ? property[0].website : ''}{' '}
+            <p className="web-info">
+              {property.length ? property[0].address : ''}
+              {' '}
+              |
+              {' '}
+              {userData.length ? userData[0].phone : ''}
+              {' '}
+              |
+              {' '}
+              {userData.length ? userData[0].email : ''}
+              {' '}
+              |
+              {' '}
+              {property.length ? property[0].website : ''}
+              {' '}
             </p>
           </Col>
         </Row>
@@ -456,23 +516,55 @@ const AdInvoicePopup = (props) => {
             marginBottom: '20px',
           }}
         >
-          <Col span={24}>
+
+          <Col
+            span={12}
+            style={{
+              textAlign: 'left',
+            }}
+          >
             <Form.Item>
-              <Button
-                type='secondry'
-                style={{ marginRight: 10 }}
-                htmlType='submit'
-                onClick={handleDraft}
-              >
-                Save Draft
+              <Button className="print-btn" type="secondry" htmlType="submit">
+                <img src={printIcon} alt="" />
+                {' '}
+                Print
               </Button>
-              <Button type='primary' htmlType='submit'>
-                Issue
+              <Button className="pdf-btn" type="primary" htmlType="submit">
+                <img src={pdfIcon} alt="" />
+                {' '}
+                PDF
               </Button>
             </Form.Item>
           </Col>
+          <Col span={12}>
+            <Form.Item>
+              {
+                invoiceData.status === 'Draft'
+                  ? (
+                    <>
+                      <Button className="delete-btn" icon={<DeleteOutlined />} style={{ marginRight: 10 }} onClick={handleDelete}>
+                        Delete
+                      </Button>
+                      <Button type="primary" htmlType="submit">
+                        Issue
+                      </Button>
+                    </>
+                  )
+                  : (
+                    <>
+                      <Button type="primary" onClick={close} style={{ marginRight: 10 }}>
+                        close
+                      </Button>
+                      <Button className="delete-btn" icon={<DeleteOutlined />} style={{ marginRight: 10 }} onClick={handleCancelllation}>
+                        Cancellation
+                      </Button>
+                    </>
+                  )
+              }
+            </Form.Item>
+          </Col>
           <Col span={24}>
-            <div className='note'>
+            <div className="note">
               <p>
                 NOTE: Issued invoice has an ordinal number assigned to it, and
                 it cannot be changed. Invoice that is saved as draft can be
@@ -486,4 +578,20 @@ const AdInvoicePopup = (props) => {
   );
 };
 
-export default AdInvoicePopup;
+EditInvoicePopup.propTypes = {
+  userData: PropTypes.objectOf(PropTypes.object).isRequired,
+  property: PropTypes.objectOf(PropTypes.object).isRequired,
+  invoiceData: PropTypes.objectOf(PropTypes.object).isRequired,
+  invoiceItems: PropTypes.objectOf(PropTypes.object).isRequired,
+  setInvoiceItems: PropTypes.objectOf(PropTypes.Function).isRequired,
+  close: PropTypes.objectOf(PropTypes.Function).isRequired,
+  status: PropTypes.objectOf(PropTypes.String).isRequired,
+  visible: PropTypes.objectOf(PropTypes.Boolean).isRequired,
+  handleOk: PropTypes.objectOf(PropTypes.Function).isRequired,
+  handleCancel: PropTypes.objectOf(PropTypes.Function).isRequired,
+  showDeleteWarning: PropTypes.objectOf(PropTypes.Function).isRequired,
+  toasterMessage: PropTypes.objectOf(PropTypes.Function).isRequired,
+  getData: PropTypes.objectOf(PropTypes.Function).isRequired,
+};
+
+export default EditInvoicePopup;

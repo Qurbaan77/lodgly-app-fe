@@ -7,6 +7,7 @@ import { userInstance } from '../../../axios/axiosconfig';
 const { Header } = Layout;
 
 const TopHeader = (props) => {
+  console.log(props);
   const [propertyData, setPropertyData] = useState([]);
   const [propertyName, setPropertyName] = useState();
   const [menu, setMenu] = useState();
