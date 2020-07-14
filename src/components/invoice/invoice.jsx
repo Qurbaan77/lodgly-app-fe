@@ -443,6 +443,7 @@ const Invoice = () => {
               close={closeEditInvoice}
               invoiceData={currentInvoice}
               invoiceItems={currentInvoiceItems}
+              setInvoiceItems={setCurrentInvoiceItems}
               showDeleteWarning={showpopup}
               toasterMessage={toasterMessage}
             />

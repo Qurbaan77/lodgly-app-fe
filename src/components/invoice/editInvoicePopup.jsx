@@ -40,11 +40,9 @@ const EditInvoicePopup = (props) => {
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [vatId, setVatId] = useState(null);
-  const [pricePanel, setPricePanel] = useState([1]);
   const [quantity, setQuantity] = useState(null);
   const [price, setPrice] = useState(null);
   const [amount, setAmount] = useState(null);
-  const [discountType, setDiscountType] = useState('%');
   const [discount, setDiscount] = useState(null);
   const [itemTotal, setItemTotal] = useState(null);
   const [quantityCopy, setQuantityCopy] = useState([]);
@@ -54,6 +52,9 @@ const EditInvoicePopup = (props) => {
   const [itemTotalCopy, setItemTotalCopy] = useState([]);
   const [showLoader, setShowLoader] = useState(true);
   const [cancellation, setCancellation] = useState(false);
+  const [discountPer, setDiscountPer] = useState(null);
+  const [deleteInvoiceItemId, setDeleteInvoiecItemId] = useState(null);
+  const [itemState, setItemState] = useState([]);
 
   useEffect(() => {
     if (props.visible) {
@@ -78,13 +79,17 @@ const EditInvoicePopup = (props) => {
       setEmail(invoiceData.email);
       setVatId(invoiceData.vat);
       setAddress(invoiceData.address);
+      setItemState(invoiceItems);
       if (invoiceItems.length) {
         invoiceItems.forEach((el, i) => {
           form.setFieldsValue({
             [`itemDescription${i}`]: el.itemDescription,
             [`quantity${i}`]: el.quantity,
             [`price${i}`]: el.price,
+            [`amount${i}`]: el.amount,
             [`discount${i}`]: el.discount,
+            [`discountPer${i}`]: el.discountPer,
+            [`itemTotal${i}`]: el.itemTotal,
           });
         });
       }
@@ -102,19 +107,28 @@ const EditInvoicePopup = (props) => {
     valuesCopy.dueDate = moment(valuesCopy.dueDate._d).format('YYYY/MM/DD');
     console.log(valuesCopy);
     // valuesCopy.time = time.slice(0, 5);
-    // const itemData = [];
-    // pricePanel.map((el) => {
-    //   console.log(valuesCopy[el]);
-    //   console.log(valuesCopy[el].price, valuesCopy[el].quantity);
-    //   valuesCopy[el].amount = valuesCopy[el].price * valuesCopy[el].quantity;
-    //   valuesCopy[el].itemTotal = valuesCopy[el].price * valuesCopy[el].quantity
-    //     - (valuesCopy[el].price
-    //       * valuesCopy[el].quantity
-    //       * valuesCopy[el].discount)
-    //     / 100;
-    //   itemData.push(valuesCopy[el]);
-    // });
-    // valuesCopy.itemData = itemData;
+    const itemData = [];
+    if (invoiceItems.length) {
+      invoiceItems.forEach((el, i) => {
+        const ele = el;
+        const q = 'quantity';
+        const p = 'price';
+        const a = 'amount';
+        const d0 = 'discountPer';
+        const d1 = 'discount';
+        const it = 'itemTotal';
+        ele.id = el.id || null;
+        ele.quantity = valuesCopy[q + i];
+        ele.price = valuesCopy[p + i];
+        ele.amount = valuesCopy[a + i];
+        ele.discountPer = valuesCopy[d0 + i];
+        ele.discount = valuesCopy[d1 + i];
+        ele.itemTotal = valuesCopy[it + i];
+        console.log(ele);
+        itemData.push(ele);
+      });
+    }
+    valuesCopy.itemData = itemData;
     // valuesCopy.userPhone = userData.userPhone;
     // valuesCopy.userEmail = userData.userEmail;
     // const { clientName } = valuesCopy;
@@ -123,7 +137,7 @@ const EditInvoicePopup = (props) => {
     // valuesCopy.propertyAddress = property.propertyAddress;
     // valuesCopy.website = property.website;
     // valuesCopy.propertyId = property.propertyId;
-    // console.log(valuesCopy);
+    console.log(valuesCopy);
     // if (!draftBtn) {
     //   const res = await userInstance.post('/createInvoice', valuesCopy);
     //   console.log('pdf post response', res);
@@ -148,61 +162,54 @@ const EditInvoicePopup = (props) => {
   };
 
   const handleQuantity = (e, ele, i) => {
-    invoiceItems.forEach((element, index) => {
-      if (index === i) {
-        element.amount = e.target.value * element.price;
-      }
+    console.log(ele)
+    const { price: paisa, discountPer: perDiscount } = ele;
+    console.log(paisa, perDiscount)
+    setQuantity(e.target.value);
+    if (ele.price) {
+      form.setFieldsValue({
+        [`amount${i}`]: e.target.value * paisa,
+        [`discount${i}`]: (e.target.value * paisa) * (perDiscount / 100),
+        [`itemTotal${i}`]: e.target.value * paisa - (e.target.value * paisa) * (perDiscount / 100),
+      });
+    }
+  };
+
+  const handlePrice = (e, i, ele) => {
+    const { discountPer: perDiscount } = ele;
+    setPriceCopy(e.target.value);
+    form.setFieldsValue({
+      [`amount${i}`]: quantity * e.target.value,
+      [`itemTotal${i}`]: quantity * e.target.value,
+
     });
-    console.log(invoiceItems);
-    // setInvoiceItems(invoiceItems);
+    if (ele.discountPer) {
+      form.setFieldsValue({
+        [`discount${i}`]: (quantity * e.target.value) * (perDiscount / 100),
+      });
+    }
+    setAmount(quantity * e.target.value);
   };
 
-  console.log(invoiceItems);
-  const handlePrice = (e, ele) => {
-    const d = e.target.value;
-    ele.price = d;
-    // priceCopy[i] = d;
-    // amountCopy[i] = quantityCopy[i] * d;
-    // setPriceCopy((priceCopy) => [...priceCopy, d]);
-    // setAmountCopy((amountCopy) => [...amountCopy, quantityCopy[ele - 1] * d]);
+  const handleDiscount = (e, i) => {
+    setDiscountPer(e.target.value);
+    setDiscount(amount - (amount) * (e.target.value / 100));
+    form.setFieldsValue({
+      [`discount${i}`]: (amount) * (e.target.value / 100),
+      [`itemTotal${i}`]: amount - (amount) * (e.target.value / 100),
+    });
   };
-
-  const handleDiscount = (e, ele) => {
-    const d = e.target.value;
-    // setDiscount(d);
-    // setDiscountCopy((discountCopy) => [...discountCopy, d]);
-
-    // setItemTotalCopy((itemTotalCopy) => [
-    //   ...itemTotalCopy,
-    //   amountCopy[ele - 1] - (amountCopy[ele - 1] * d) / 100,
-    // ]);
-    // if (discountType === '%') {
-    //   console.log(amountCopy[ele - 1]);
-    //   setItemTotal(amount - (amount * d) / 100);
-    //   setItemTotalCopy((itemTotalCopy) => [
-    //     ...itemTotalCopy,
-    //     amountCopy[ele - 1] - (amountCopy[ele - 1] * d) / 100,
-    //   ]);
-    // } else {
-    //   setItemTotal(amount - d);
-    //   setItemTotalCopy((itemTotalCopy) => [
-    //     ...itemTotalCopy,
-    //     amountCopy[ele - 1] - d,
-    //   ]);
-    // }
-  };
-
-  let i = 1;
 
   const addMorePanel = () => {
-    i += 1;
-    setPricePanel([...pricePanel, i]);
+    if (invoiceItems.length) {
+      setInvoiceItems(invoiceItems.concat([{}]));
+    }
   };
 
   const removePanel = (ele) => {
-    const oldarray = [...pricePanel];
-    oldarray.pop();
-    setPricePanel([...oldarray]);
+    setDeleteInvoiecItemId(ele.id);
+    const data = invoiceItems.filter((el) => el.id !== ele.id);
+    setInvoiceItems([...data]);
   };
 
   const handleCancelllation = async () => {
@@ -224,7 +231,7 @@ const EditInvoicePopup = (props) => {
   const handleDelete = () => {
     props.close();
     props.showDeleteWarning(invoiceData);
-  }
+  };
   return (
     <Modal
       title="Edit invoice"
@@ -399,43 +406,42 @@ const EditInvoicePopup = (props) => {
                 <Col span={3}>
                   <Form.Item name={`price${j}`} label="Price">
                     <Input
-                      // value={price}
-                      onBlur={(e) => handlePrice(e, ele, j)}
+                      value={price}
+                      onChange={(e) => handlePrice(e, j, ele)}
                     />
                   </Form.Item>
                 </Col>
 
                 <Col span={3}>
-                  <div className="amount-field">
+                  {/* <div className="amount-field">
                     <p>{ele.amount}</p>
-                  </div>
+                  </div> */}
+                  <Form.Item name={`amount${j}`} label="Price">
+                    <Input disabled onChange={(e) => setAmount(e.target.value)} />
+                  </Form.Item>
                 </Col>
 
                 <Col span={2} className="label-hidden">
                   <Form.Item
-                    name={[ele, 'discountType']}
-                    label="Discount Type"
+                    name={`discountPer${j}`}
                   >
-                    <Select placeholder="Discount type" defaultValue="%">
-                      <Select.Option value="€">€</Select.Option>
-                      <Select.Option value="%">%</Select.Option>
-                    </Select>
+                    <Input placeholder="%" onChange={(e) => handleDiscount(e, j)} />
                   </Form.Item>
                 </Col>
 
                 <Col span={3}>
                   <Form.Item name={`discount${j}`} label="Discount">
-                    <Input
-                      // value={discount}
-                      onBlur={(e) => handleDiscount(e, ele, j)}
-                    />
+                    <Input disabled />
                   </Form.Item>
                 </Col>
 
                 <Col span={3}>
-                  <div className="amount-field" key={ele.id}>
+                  {/* <div className="amount-field" key={ele.id}>
                     <p>{itemTotalCopy[j]}</p>
-                  </div>
+                  </div> */}
+                  <Form.Item name={`itemTotal${j}`} label="Total">
+                    <Input disabled />
+                  </Form.Item>
                 </Col>
 
                 <Col span={2} className="deleteicon">
@@ -468,7 +474,9 @@ const EditInvoicePopup = (props) => {
                 TOTAL:
                 {' '}
                 <span>
-                  {itemTotalCopy.reduce((a, b) => a + (b || 0), 0)}
+                  {invoiceItems
+                    .map((el) => el.itemTotal)
+                    .reduce((a, b) => a + (b || 0), 0)}
                   {' '}
                   €
                 </span>

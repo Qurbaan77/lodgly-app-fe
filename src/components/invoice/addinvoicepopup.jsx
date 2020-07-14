@@ -70,24 +70,27 @@ const AdInvoicePopup = (props) => {
     valuesCopy.dueDate = moment(valuesCopy.dueDate._d).format('YYYY/MM/DD');
     valuesCopy.time = time.slice(0, 5);
     const itemData = [];
-    pricePanel.map((el) => {
+    pricePanel.forEach((el) => {
       valuesCopy[el].amount = valuesCopy[el].price * valuesCopy[el].quantity;
       valuesCopy[el].itemTotal = valuesCopy[el].price * valuesCopy[el].quantity
         - (valuesCopy[el].price
           * valuesCopy[el].quantity
           * valuesCopy[el].discount)
         / 100;
+      valuesCopy[el].discountPer = valuesCopy[el].discount;
+      valuesCopy[el].discount = ((valuesCopy[el].amount) * (valuesCopy[el].discount / 100));
       itemData.push(valuesCopy[el]);
+
     });
     valuesCopy.itemData = itemData;
     valuesCopy.phone = userData[0].phone;
     valuesCopy.email = userData[0].email;
-    const { clientName } = valuesCopy;
     valuesCopy.total = itemTotalCopy.reduce((a, b) => a + (b || 0), 0);
     valuesCopy.propertyName = property[0].propertyName;
     valuesCopy.propertyAddress = property[0].address;
     valuesCopy.website = property[0].website;
     valuesCopy.propertyId = property[0].id;
+    const { clientName } = valuesCopy;
     valuesCopy.impression = impression;
     valuesCopy.label = `INVOICE ${
       label ? label + 1 : 1
@@ -411,7 +414,6 @@ const AdInvoicePopup = (props) => {
                     onSelect={(value) => handleDiscountType(value, ele)}
                     defaultValue="%"
                   >
-                    <Select.Option value="€">€</Select.Option>
                     <Select.Option value="%">%</Select.Option>
                   </Select>
                 </Form.Item>
