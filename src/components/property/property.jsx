@@ -174,7 +174,8 @@ const Property = () => {
   const props = {
     name: 'file',
     multiple: false,
-    action: `http://localhost:3001/users/propertyPicture/${id}`,
+    // action: `http://localhost:3001/users/propertyPicture/${id}`,
+    action: `http://165.22.87.22:3002/users/propertyPicture/${id}`,
     onChange(info) {
       if (info.file.status === 'done') {
         message.success(`${info.file.name} file uploaded successfully`);

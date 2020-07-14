@@ -157,7 +157,8 @@ const AddProperty = () => {
 
   const props = {
     name: 'file',
-    action: `http://localhost:3001/users/propertyPicture${props2}`,
+    // action: `http://localhost:3001/users/propertyPicture${props2}`,
+    action: `http://165.22.87.22:3002/users/propertyPicture${props2}`,
     headers: {
       authorization: 'authorization-text',
     },
