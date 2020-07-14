@@ -4,37 +4,21 @@ import {
   Form,
   Select,
   Input,
-  InputNumber,
-  Switch,
   DatePicker,
-  Radio,
-  Slider,
   Button,
-  Upload,
-  Rate,
   Checkbox,
   Row,
   Col,
+  Table, Tag, Modal,
 } from 'antd';
 import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
   DeleteOutlined,
   FormOutlined,
   HomeOutlined,
   PlusOutlined,
-  SearchOutlined,
-  VerticalAlignMiddleOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-import { Collapse } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
-import { Avatar } from 'antd';
-import { Table, Tag } from 'antd';
-import { Modal } from 'antd';
+
 import people1 from '../../assets/images/people-1.png';
 import people2 from '../../assets/images/people-2.png';
 import people3 from '../../assets/images/people-3.jpg';
@@ -57,14 +41,6 @@ const Task = () => {
   const [group, setGroup] = useState([]);
   const [currTaskId, setCurrTaskId] = useState(0);
   const [isGroup, sertIsGroup] = useState(true);
-
-  useEffect(() => {
-    if (localStorage.getItem('groupId')){
-      sertIsGroup(false)
-    }
-    getData();
-    getGroupData();
-  }, []);
 
   const columns = [
     {
@@ -98,7 +74,7 @@ const Task = () => {
             <Tag color={color} key={tags}>
               {tags.toUpperCase()}
             </Tag>
-            <span class="group-action">
+            <span className="group-action">
               <FormOutlined onClick={() => edit(record)} />
               <DeleteOutlined onClick={() => showDeletePopup(record.id)} />
             </span>
@@ -125,8 +101,8 @@ const Task = () => {
 
   const getData = async () => {
     const values = {
-      groupId : localStorage.getItem('groupId')
-    }
+      groupId: localStorage.getItem('groupId'),
+    };
     const response = await userInstance.post('/taskList', values);
     if (response.data.code === 200) {
       setTasks(response.data.taskDetail);
@@ -134,7 +110,6 @@ const Task = () => {
   };
 
   const getGroupData = async () => {
-    const groupId = localStorage.getItem('groupId')
     const response = await userInstance.post('/groupList');
     if (response.data.code === 200) {
       response.data.groupDetail
@@ -153,7 +128,7 @@ const Task = () => {
     values.groupId = localStorage.getItem('groupId');
     const response = await userInstance.post('/addTask', values);
     const statusCode = response.data.code;
-    const msg = response.data.msg;
+    const { msg } = response.data;
     if (statusCode === 200) {
       setEditUser(initialFormState);
       setNotifyType('success');
@@ -168,8 +143,8 @@ const Task = () => {
   };
 
   const showDeletePopup = (taskId) => {
-    setCurrTaskId(taskId)
-    setVisible2(true)
+    setCurrTaskId(taskId);
+    setVisible2(true);
   };
 
   const remove = async () => {
@@ -178,7 +153,6 @@ const Task = () => {
     };
     const response = await userInstance.post('/deleteTask', data);
     const statusCode = response.data.code;
-    const msg = response.data.msg;
     if (statusCode == 200) {
       setVisible2(false);
       getData();
@@ -186,7 +160,6 @@ const Task = () => {
   };
 
   const edit = async (data) => {
-    console.log(data);
     form.setFieldsValue({
       id: data.id,
       taskName: data.taskName,
@@ -200,23 +173,40 @@ const Task = () => {
     setNotifyType('');
   };
 
+  useEffect(() => {
+    if (localStorage.getItem('groupId')) {
+      sertIsGroup(false);
+    }
+    getData();
+    getGroupData();
+  }, []);
+
   return (
     <Wrapper>
       <div className="cleaning-group">
         <div className="page-header">
           <h1>
-            <HomeOutlined /> {localStorage.getItem('groupId') ? group.groupName : 'No group is Selected'}
+            <HomeOutlined />
+            {' '}
+            {localStorage.getItem('groupId')
+              ? group.groupName
+              : 'No group is Selected'}
           </h1>
 
           <div className="cleaning-button">
             <div className="user-avatar">
               <PlusOutlined />
-              <img src={people1} />
-              <img src={people2} />
-              <img src={people3} />
-              <img src={people4} />
+              <img src={people1} alt="people1" />
+              <img src={people2} alt="people2" />
+              <img src={people3} alt="people3" />
+              <img src={people4} alt="people4" />
             </div>
-            <Button type="primary" icon={<PlusOutlined />} onClick={show} disabled={isGroup}>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={show}
+              disabled={isGroup}
+            >
               Add Task
             </Button>
           </div>
@@ -300,7 +290,7 @@ const Task = () => {
       >
         <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         <Form form={form} name="basic" onFinish={onFinish}>
-          <Form.Item label="ID" name="id" hidden={true}>
+          <Form.Item label="ID" name="id" hidden>
             <Input />
           </Form.Item>
 

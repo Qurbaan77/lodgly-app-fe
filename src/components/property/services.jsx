@@ -2,35 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './property.css';
 import {
-  Form,
-  Select,
-  Input,
-  Layout,
-  Menu,
-  Button,
-  Tooltip,
-  Dropdown,
-} from 'antd';
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  HomeOutlined,
-  PlusOutlined,
-  DeleteOutlined,
-  FormOutlined,
-  SearchOutlined,
-  VerticalAlignMiddleOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-} from '@ant-design/icons';
+  Form, Input, Button, Tooltip, Modal , Table } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-import { Modal } from 'antd';
-import { Table } from 'antd';
-import property1 from '../../assets/images/property-1.png';
-import property2 from '../../assets/images/property-2.png';
-import property3 from '../../assets/images/property-3.png';
-import { Row, Col } from 'antd';
+
+
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import DeletePopup from './deletepopup';
@@ -39,7 +15,6 @@ const Services = () => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [visible1, setVisible1] = useState(false);
-  const [group, setGroup] = useState([]);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const [serviceData, setServiceData] = useState([]);
@@ -48,7 +23,7 @@ const Services = () => {
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   console.log(userCred);
-  const [{ propertiesWrite, userId }] = userCred ? userCred : [{}];
+  const [{ propertiesWrite }] = userCred || [{}];
   const canWrite = propertiesWrite;
 
   const columns = [
@@ -136,7 +111,7 @@ const Services = () => {
     values.propertyNo = localStorage.getItem('propertyId');
     const response = await userInstance.post('/addService', values);
     const statusCode = response.data.code;
-    const msg = response.data.msg;
+    const { msg } = response.data;
     if (statusCode === 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
@@ -217,7 +192,7 @@ const Services = () => {
         <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         <Form form={form} name="basic" onFinish={onFinish}>
           <Form.Item name="serviceId">
-            <Input hidden={true} />
+            <Input hidden />
           </Form.Item>
           <Form.Item
             label="Service Name"
@@ -257,7 +232,7 @@ const Services = () => {
             <Button
               style={{ marginRight: 10 }}
               onClick={() => {
-                setVisible(false)
+                setVisible(false);
               }}
             >
               Cancel

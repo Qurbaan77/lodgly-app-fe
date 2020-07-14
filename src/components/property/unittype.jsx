@@ -1,48 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
-  Form,
-  Select,
-  Input,
-  InputNumber,
-  Switch,
-  Radio,
-  Slider,
-  Button,
-  Upload,
-  Rate,
-  Checkbox,
-  Row,
-  Col,
-  Tooltip,
+  Button, Tooltip, Modal, Empty,
 } from 'antd';
 import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
   HomeOutlined,
   PlusOutlined,
-  SearchOutlined,
-  VerticalAlignMiddleOutlined,
   DeleteOutlined,
   FormOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
   CloseCircleOutlined,
   CheckCircleOutlined,
 } from '@ant-design/icons';
+import queryString from 'query-string';
 import Wrapper from '../wrapper';
-import { Collapse } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
-import { Modal } from 'antd';
-import { Empty } from 'antd';
+
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
-import queryString from 'query-string';
 
 const UnitType = () => {
-  const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [showPanel, setShowPanel] = useState(true);
   const [showEdit, setShowEdit] = useState(true);
@@ -56,8 +32,7 @@ const UnitType = () => {
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  console.log(userCred);
-  const  [{ propertiesWrite, userId }] = userCred ? userCred : [{}];
+  const [{ propertiesWrite, userId }] = userCred || [{}];
   const canWrite = propertiesWrite;
   const show = (unittypeId) => {
     setVisible(true);
@@ -78,9 +53,9 @@ const UnitType = () => {
 
   const onFinish = async (id) => {
     const values = {
-      name: name,
+      name,
       propertyId: localStorage.getItem('propertyId'),
-      id: id,
+      id,
       affiliateId: userId,
     };
     const response = await userInstance.post('/addUnitType', values);
@@ -97,7 +72,6 @@ const UnitType = () => {
   };
 
   const editName = (unittypeId) => {
-    console.log('unittypeId', unittypeId);
     setEditId(unittypeId);
     setShowEdit(false);
   };
@@ -136,36 +110,43 @@ const UnitType = () => {
       <div className="unit-type">
         <div className="page-header">
           <h1>
-            <HomeOutlined /> Unit Type
+            <HomeOutlined />
+            {' '}
+            Unit Type
           </h1>
-          {
-            isSubUser ? canWrite ?
+          {isSubUser ? (
+            canWrite ? (
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => setShowPanel(false)}
+              >
+                Add Unit Type
+              </Button>
+            ) : (
+              <Tooltip
+                title="You are not authorize to create new unit types"
+                color="gold"
+              >
+                <Button
+                  disabled="true"
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  onClick={() => setShowPanel(false)}
+                >
+                  Add Unit Type
+                </Button>
+              </Tooltip>
+            )
+          ) : (
             <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setShowPanel(false)}
-          >
-            Add Unit Type
-          </Button> :
-          <Tooltip title='You are not authorize to create new unit types' color='gold'>
-          <Button
-            disabled='true'
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setShowPanel(false)}
-          >
-            Add Unit Type
-          </Button>
-          </Tooltip> :
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => setShowPanel(false)}
-          >
-            Add Unit Type
-          </Button>
-          }
-          
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => setShowPanel(false)}
+            >
+              Add Unit Type
+            </Button>
+          )}
         </div>
         <div className="panel-box units editunit" hidden={showPanel}>
           <div className="group-name">
@@ -178,58 +159,64 @@ const UnitType = () => {
           </div>
           <div className="group-action">
             <div className="can-btn" onClick={() => setShowPanel(true)}>
-              <CloseCircleOutlined /> Cancel
+              <CloseCircleOutlined />
+              {' '}
+              Cancel
             </div>
             <div className="sav-btn" onClick={() => onFinish()}>
-              <CheckCircleOutlined /> Save
+              <CheckCircleOutlined />
+              {' '}
+              Save
             </div>
           </div>
         </div>
         {unittypeData.length ? (
           <div className="panel-container">
-            {unittypeData.map((el, i) => {
-              return (
-                <div
-                  className={
+            {unittypeData.map((el, i) => (
+              <div
+                className={
                     editId === i
                       ? 'panel-box units editunitname'
                       : 'panel-box units'
                   }
-                >
-                  <div className="group-name">
-                    <h4
-                      onClick={() => edit(el.id)}
-                      hidden={editId === i ? true : false}
-                    >
-                      {el.unitTypeName}
-                    </h4>
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Edit Unit"
-                      onChange={onChange}
-                      hidden={editId === i ? false : true}
-                    ></input>
-                    <span>1 unit are assigned</span>
-                  </div>
-                  {editId === i ? (
-                    <div className="group-action">
-                      <div className="can-btn" onClick={() => setEditId(null)}>
-                        <CloseCircleOutlined /> Cancel
-                      </div>
-                      <div className="sav-btn" onClick={() => onFinish(el.id)}>
-                        <CheckCircleOutlined /> Save
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="group-action">
-                      <FormOutlined onClick={() => editName(i)} />
-                      <DeleteOutlined onClick={() => show(el.id)} />
-                    </div>
-                  )}
+              >
+                <div className="group-name">
+                  <h4
+                    onClick={() => edit(el.id)}
+                    hidden={editId === i}
+                  >
+                    {el.unitTypeName}
+                  </h4>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Edit Unit"
+                    onChange={onChange}
+                    hidden={editId !== i}
+                  />
+                  <span>1 unit are assigned</span>
                 </div>
-              );
-            })}
+                {editId === i ? (
+                  <div className="group-action">
+                    <div className="can-btn" onClick={() => setEditId(null)}>
+                      <CloseCircleOutlined />
+                      {' '}
+                      Cancel
+                    </div>
+                    <div className="sav-btn" onClick={() => onFinish(el.id)}>
+                      <CheckCircleOutlined />
+                      {' '}
+                      Save
+                    </div>
+                  </div>
+                ) : (
+                  <div className="group-action">
+                    <FormOutlined onClick={() => editName(i)} />
+                    <DeleteOutlined onClick={() => show(el.id)} />
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         ) : (
           <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} hidden={empty} />

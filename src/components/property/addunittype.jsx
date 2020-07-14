@@ -2,47 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
-  Form,
-  Select,
-  Input,
-  InputNumber,
-  DatePicker,
-  Switch,
-  Radio,
-  Slider,
-  Button,
-  Upload,
-  Rate,
-  Checkbox,
-  Row,
-  Col,
-} from 'antd';
+  Form, Input, DatePicker, Button, Row, Col, 
+  Modal } from 'antd';
 import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
   HomeOutlined,
-  PlusOutlined,
-  SearchOutlined,
-  VerticalAlignMiddleOutlined,
   DeleteOutlined,
   FormOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
   CloseCircleOutlined,
   CheckCircleOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-import { Collapse } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
-import { Modal } from 'antd';
+
 import DeletePopup from './deletepopup';
-import queryString from 'query-string';
 import { userInstance } from '../../axios/axiosconfig';
-import { dbAdress } from '../../config/keys';
 import GSTC from './GSTC';
 
-const { MonthPicker, RangePicker } = DatePicker;
+const { RangePicker } = DatePicker;
 
 const AddUnitType = () => {
   const [form] = Form.useForm();
@@ -56,13 +31,11 @@ const AddUnitType = () => {
   const [editId, setEditId] = useState(null);
   const [showEdit, setShowEdit] = useState(true);
 
-  const parsed = queryString.parse(window.location.search);
   const history = useHistory();
 
   const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
 
   const show = (unitId) => {
-    console.log('unitId', unitId);
     setVisible(true);
     setCurUnit(unitId);
   };
@@ -82,7 +55,7 @@ const AddUnitType = () => {
   const onFinish = async (values) => {
     values.id = localStorage.getItem('unittypeId');
     values.propertyId = localStorage.getItem('propertyId');
-    values.unitTypeName = 'Unit Type ' + unittypeNo;
+    values.unitTypeName = `Unit Type ${ unittypeNo}`;
     values.affiliateId = userId;
     const response = await userInstance.post('/addUnitType', values);
     if (response.data.code === 200) {
@@ -95,7 +68,7 @@ const AddUnitType = () => {
       unitName: name,
       propertyId: localStorage.getItem('propertyId'),
       unittypeId: localStorage.getItem('unittypeId'),
-      id: id,
+      id,
       affiliateId: userId,
     };
     const response = await userInstance.post('/addUnit', values);
@@ -125,21 +98,7 @@ const AddUnitType = () => {
     }
   };
 
-  const addUnit = async () => {
-    const values = {
-      propertyId: localStorage.getItem('propertyId'),
-      unittypeId: localStorage.getItem('unittypeId'),
-      unitName: currentUnittype.unitTypeName,
-      affiliateID: userId,
-    };
-    const response = await userInstance.post('/addUnit', values);
-    if (response.data.code === 200) {
-      getUnitData();
-    }
-  };
-
   const editName = (unitId) => {
-    console.log('unitId', unitId);
     setEditId(unitId);
     setShowEdit(false);
   };
@@ -174,15 +133,15 @@ const AddUnitType = () => {
     height: 300,
     list: {
       rows: {
-        '1': {
+        1: {
           id: '1',
           label: 'Rooms to Sell',
         },
-        '2': {
+        2: {
           id: '2',
           label: 'Price per night',
         },
-        '3': {
+        3: {
           id: '3',
           label: 'Minimum stay',
         },
@@ -210,7 +169,7 @@ const AddUnitType = () => {
     },
     chart: {
       items: {
-        '1': {
+        1: {
           id: '1',
           rowId: '1',
           label: 'Item 1',
@@ -219,7 +178,7 @@ const AddUnitType = () => {
             end: new Date().getTime(),
           },
         },
-        '2': {
+        2: {
           id: '2',
           rowId: '2',
           label: 'Item 2',
@@ -228,7 +187,7 @@ const AddUnitType = () => {
             end: new Date().getTime(),
           },
         },
-        '3': {
+        3: {
           id: '3',
           rowId: '3',
           label: 'Item 3',
@@ -237,7 +196,7 @@ const AddUnitType = () => {
             end: new Date().getTime(),
           },
         },
-        '4': {
+        4: {
           id: '4',
           rowId: '4',
           label: 'Item 4',
@@ -246,7 +205,7 @@ const AddUnitType = () => {
             end: new Date().getTime() + 12 * 24 * 60 * 60 * 1000,
           },
         },
-        '5': {
+        5: {
           id: '5',
           rowId: '4',
           label: 'Item 5',
@@ -259,7 +218,7 @@ const AddUnitType = () => {
     },
   };
 
-  let subs = [];
+  const subs = [];
 
   async function onState(state) {
     const unittypeId = localStorage.getItem('unittypeId');
@@ -271,13 +230,7 @@ const AddUnitType = () => {
 
     const [filterData] = data.filter((el) => el.id == unittypeId);
     const {
-      startDay,
-      endDay,
-      minimumStay,
-      noOfUnits,
-      perNight,
-      roomsToSell,
-      unitTypeName,
+      startDay, endDay, minimumStay, perNight, roomsToSell, 
     } = filterData;
     //
     state.update('config.chart.items.1', (item1) => {
@@ -310,11 +263,9 @@ const AddUnitType = () => {
     );
   }
 
-  useEffect(() => {
-    return () => {
+  useEffect(() => () => {
       subs.forEach((unsub) => unsub());
-    };
-  });
+    });
 
   useEffect(() => {
     getData();
@@ -326,10 +277,11 @@ const AddUnitType = () => {
       <div className="unit-type">
         <div className="page-header">
           <h1>
-            <HomeOutlined />{' '}
+            <HomeOutlined />
+            {' '}
             {currentUnittype.id
               ? currentUnittype.unitTypeName
-              : 'Unit type ' + unittypeNo}
+              : `Unit type ${ unittypeNo}`}
           </h1>
         </div>
 
@@ -397,11 +349,15 @@ const AddUnitType = () => {
               </div>
               <div className="group-action">
                 <div className="can-btn" onClick={() => setShowPanel(true)}>
-                  <CloseCircleOutlined /> Cancel
-                </div>
+                  <CloseCircleOutlined />
+                  {' '}
+                  Cancel
+</div>
                 <div className="sav-btn" onClick={() => onUnitSave()}>
-                  <CheckCircleOutlined /> Save
-                </div>
+                  <CheckCircleOutlined />
+                  {' '}
+                  Save
+</div>
               </div>
             </div>
 
@@ -409,11 +365,16 @@ const AddUnitType = () => {
               <p>Assign Your Units</p>
               <span>Now add unit to unit type</span>
               <div className="panel-container">
-                {unitData.map((el, i) => {
-                  return (
-                    <div className={editId === i ? "panel-box units editunitname" : "panel-box units"}>
+                {unitData.map((el, i) => (
+                    <div
+                      className={
+                        editId === i
+                          ? 'panel-box units editunitname'
+                          : 'panel-box units'
+                      }
+                    >
                       <div className="group-name">
-                        <h4 hidden={editId === i ? true : false}>
+                        <h4 hidden={editId === i}>
                           {el.unitName}
                         </h4>
                         <input
@@ -421,8 +382,8 @@ const AddUnitType = () => {
                           name="name"
                           placeholder="Edit Unit"
                           onChange={onChange}
-                          hidden={editId === i ? false : true}
-                        ></input>
+                          hidden={editId !== i}
+                         />
                         <span>1 unit are assigned</span>
                       </div>
 
@@ -432,14 +393,18 @@ const AddUnitType = () => {
                             className="can-btn"
                             onClick={() => setEditId(null)}
                           >
-                            <CloseCircleOutlined /> Cancel
-                          </div>
+                            <CloseCircleOutlined />
+{' '}
+Cancel
+</div>
                           <div
                             className="sav-btn"
                             onClick={() => onUnitSave(el.id)}
                           >
-                            <CheckCircleOutlined /> Save
-                          </div>
+                            <CheckCircleOutlined />
+{' '}
+Save
+</div>
                         </div>
                       ) : (
                         <div className="group-action">
@@ -448,8 +413,7 @@ const AddUnitType = () => {
                         </div>
                       )}
                     </div>
-                  );
-                })}
+                  ))}
               </div>
               <div>
                 <Button onClick={() => setShowPanel(false)}>Add unit</Button>

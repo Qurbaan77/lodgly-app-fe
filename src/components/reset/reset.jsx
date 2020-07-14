@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './reset.css';
-import { Form, Input, Button, Checkbox } from 'antd';
-import { Link } from 'react-router-dom';
+import { Form, Input, Button } from 'antd';
+import queryString from 'query-string';
 import logo from '../../assets/images/logo.jpg';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
-import queryString from 'query-string';
 
 const Reset = () => {
   const [form] = Form.useForm();
@@ -17,7 +16,7 @@ const Reset = () => {
     values.hex = parsed.hh;
     const response = await userInstance.post('/forgetpassword', values);
     const statusCode = response.data.code;
-    const msg = response.data.msg;
+    const { msg } = response.data;
     if (statusCode == 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
@@ -39,7 +38,7 @@ const Reset = () => {
   return (
     <div className="forget">
       <div className="forget-section">
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
+        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         <div className="container">
           <div classNmae="row">
             <div className="col-md-12">
@@ -86,8 +85,8 @@ const Reset = () => {
                           ({ getFieldValue }) => ({
                             validator(rule, value) {
                               if (
-                                !value ||
-                                getFieldValue('newpassword') === value
+                                !value
+                                || getFieldValue('newpassword') === value
                               ) {
                                 return Promise.resolve();
                               }

@@ -1,23 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import './userprofile.css';
-import {
-  Form,
-  Input,
-  Dropdown,
-  Menu,
-  Tooltip,
-  Cascader,
-  Select,
-  Row,
-  Col,
-  Checkbox,
-  Button,
-  AutoComplete,
-} from 'antd';
+import { Dropdown, Menu } from 'antd';
 import { Link } from 'react-router-dom';
-import user from '../../../assets/images/profile_user.jpg';
 import { SettingOutlined } from '@ant-design/icons';
 import { userInstance } from '../../../axios/axiosconfig';
+import user from '../../../assets/images/profile_user.jpg';
 
 const UserProfile = (props) => {
   const [img, setImg] = useState('');
@@ -26,22 +13,29 @@ const UserProfile = (props) => {
   const getUserInfo = async () => {
     const response = await userInstance.post('/getuserData');
     const body = response.data.userData;
-    setImg(body[0].image)
-    setName(body[0].fname + ' '+ body[0].lname)
+    if (body.length > 0) {
+      if (body[0].image !== null) {
+        setImg(body[0].image);
+      } else {
+        setImg(user);
+      }
+      if (body[0].fname !== null && body[0].lname !== null) {
+        setName(`${body[0].fname} ${body[0].lname}`);
+      }
+    }
   };
 
   useEffect(() => {
-    props.getUserInfo();
-  },[])
-
+    getUserInfo();
+  }, [props]);
 
   const menu = (
     <Menu>
       <Menu.Item>
-        <Link to={'/profile'}>My Profile</Link>
+        <Link to="/profile">My Profile</Link>
       </Menu.Item>
       <Menu.Item>
-        <Link to={'/billinginformation'}>Billing</Link>
+        <Link to="/billinginformation">Billing</Link>
       </Menu.Item>
     </Menu>
   );
@@ -49,7 +43,7 @@ const UserProfile = (props) => {
   return (
     <div className="user-profile">
       <div className="user-img">
-        <img src={props.img} alt="User" />
+        <img src={img} alt="User" />
 
         <Dropdown overlay={menu}>
           <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
@@ -57,8 +51,8 @@ const UserProfile = (props) => {
           </a>
         </Dropdown>
       </div>
-      <h3>{name}</h3>
-      <span>Admin</span>
+      <h3>{name || 'No Name Added'}</h3>
+      <span>User</span>
     </div>
   );
 };

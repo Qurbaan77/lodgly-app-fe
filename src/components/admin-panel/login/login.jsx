@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './login.css';
-import { Form, Input, Button, Checkbox } from 'antd';
+import {
+  Form, Input, Button, Checkbox,
+} from 'antd';
 import { Link } from 'react-router-dom';
 import {
   MenuUnfoldOutlined,
@@ -25,11 +27,11 @@ const AdminLogin = () => {
     console.log('Success:', values);
     const response = await adminInstance.post('/login', values);
     const statusCode = response.data.code;
-    const msg = response.data.msg;
+    const { msg } = response.data;
 
     if (statusCode == 200) {
       localStorage.setItem('adminToken', response.data.token);
-      let payload = tokenparser(response.data.token);
+      const payload = tokenparser(response.data.token);
       localStorage.setItem('userId', payload.userid);
       setNotifyType('success');
       setNotifyMsg(msg);
@@ -41,14 +43,12 @@ const AdminLogin = () => {
   };
 
   const tokenparser = (token) => {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
       atob(base64)
         .split('')
-        .map(function (c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        })
+        .map((c) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`)
         .join(''),
     );
     return JSON.parse(jsonPayload);
@@ -62,7 +62,7 @@ const AdminLogin = () => {
     <div className="admin-login">
       <div className="admin-login-container">
         <div className="left">
-        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} />
+          <Toaster notifyType={notifyType} notifyMsg={notifyMsg} />
           <div className="row">
             <div className="col-md-12">
               <div className="login-form">
@@ -114,7 +114,7 @@ const AdminLogin = () => {
 
               <div className="q-links">
                 <p>
-                  <Link to={'/'}>Forget your password?</Link>
+                  <Link to="/">Forget your password?</Link>
                 </p>
               </div>
             </div>
@@ -122,7 +122,7 @@ const AdminLogin = () => {
         </div>
 
         <div className="right">
-          <div className="admin-bg"></div>
+          <div className="admin-bg" />
         </div>
       </div>
     </div>

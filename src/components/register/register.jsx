@@ -1,27 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import './register.css';
 import {
-  Form,
-  Input,
-  Tooltip,
-  Cascader,
-  Select,
-  Row,
-  Col,
-  Checkbox,
-  Button,
-  AutoComplete,
+  Form, Input, Select, Row, Col, Checkbox, Button,
 } from 'antd';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import CountryCode from './CountryCode';
 import logo from '../../assets/images/logo.jpg';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
-
-const { Option } = Select;
-const AutoCompleteOption = AutoComplete.Option;
 
 const Register = () => {
   const [form] = Form.useForm();
@@ -33,7 +20,7 @@ const Register = () => {
   const onFinish = async (values) => {
     const response = await userInstance.post('/signup', values);
     const statusCode = response.data.code;
-    const msg = response.data.msg;
+    const { msg } = response.data;
     if (statusCode == 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
@@ -53,8 +40,6 @@ const Register = () => {
     setPhone(value);
   };
 
-  const [autoCompleteResult, setAutoCompleteResult] = useState([]);
-
   return (
     <div className="register">
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
@@ -67,7 +52,11 @@ const Register = () => {
               </div>
               <div className="register-form">
                 <h1>Register</h1>
-                <p>We're happy to have you here!</p>
+                <p>
+                  We
+                  <span>&apos;</span>
+                  re happy to have you here!
+                </p>
                 <div className="register-box">
                   <Form
                     form={form}
@@ -152,15 +141,13 @@ const Register = () => {
                             ({ getFieldValue }) => ({
                               validator(rule, value) {
                                 if (
-                                  !value ||
-                                  getFieldValue('password') === value
+                                  !value
+                                  || getFieldValue('password') === value
                                 ) {
                                   return Promise.resolve();
                                 }
 
-                                return Promise.reject(
-                                  'The two passwords that you entered do not match!',
-                                );
+                                return Promise.reject(new Error('The two passwords that you entered do not match!'));
                               },
                             }),
                           ]}
@@ -170,15 +157,15 @@ const Register = () => {
                       </Col>
                     </Row>
 
-                    <Row>
+                    {/* <Row>
                       <Col span={24}>
-                        <Form.Item label="Select Package" hidden={true}>
+                        <Form.Item label="Select Package" hidden>
                           <Select>
                             <Select.Option value="demo">Demo</Select.Option>
                           </Select>
                         </Form.Item>
                       </Col>
-                    </Row>
+                    </Row> */}
 
                     <Row>
                       <Col span={24}>
@@ -196,7 +183,7 @@ const Register = () => {
                           ]}
                         >
                           <PhoneInput
-                            country={'us'}
+                            country="us"
                             value={phone}
                             onChange={(value) => handleChange(value)}
                           />
@@ -211,16 +198,16 @@ const Register = () => {
                           valuePropName="checked"
                           rules={[
                             {
-                              validator: (_, value) =>
-                                value
-                                  ? Promise.resolve()
-                                  : Promise.reject('Should accept agreement'),
+                              validator: (_, value) => (value
+                                ? Promise.resolve()
+                                : Promise.reject('Should accept agreement')),
                             },
                           ]}
                         >
                           <Checkbox>
-                            I have read the{' '}
-                            <Link to={'/register'}>agreement</Link>
+                            I have read the
+                            {' '}
+                            <Link to="/register">agreement</Link>
                           </Checkbox>
                         </Form.Item>
                       </Col>
@@ -245,7 +232,9 @@ const Register = () => {
 
               <div className="q-links">
                 <p>
-                  Already have an account? <Link to={'/'}>Login now</Link>
+                  Already have an account?
+                  {' '}
+                  <Link to="/">Login now</Link>
                 </p>
               </div>
             </div>

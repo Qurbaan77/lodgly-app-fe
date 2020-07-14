@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Dropdown, Input } from 'antd';
-import { Layout, Menu } from 'antd';
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  SearchOutlined,
-  VerticalAlignMiddleOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-} from '@ant-design/icons';
+import { Dropdown, Layout, Menu } from 'antd';
+
+import { SearchOutlined, VerticalAlignMiddleOutlined } from '@ant-design/icons';
 import { userInstance } from '../../../axios/axiosconfig';
-import Form from 'antd/lib/form/Form';
 
 const { Header } = Layout;
 
@@ -22,52 +13,59 @@ const TopHeader = (props) => {
 
   const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
 
-  useEffect(() => {
-    async function getData() {
-      const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
-      const data = response.data.propertiesData;
-      if (response.data.code === 200) {
-        setPropertyData(data);
-      }
-    }
-
-    getData();
-  }, []);
-
   const onChange = (value, name) => {
     localStorage.setItem('topNavId', value);
     setPropertyName(name);
-    props.fun(value)
+    props.fun(value);
     // props.onChange(value)
   };
 
   const fun = () => {
     props.fun();
     localStorage.removeItem('topNavId');
-    setPropertyName()
-  }
+    setPropertyName();
+  };
 
   const fun1 = (e) => {
-    let menu = '';
+    let menu1 = '';
     e.preventDefault();
-    menu = (
+    menu1 = (
       <Menu>
-        {propertyData.map((el, i) => {
-          return (
-            <Menu.Item
-              key={el.id}
-              onClick={() => onChange(el.id, el.propertyName)}
-            >
-              {el.propertyName}
-            </Menu.Item>
-          );
-        })}
-        <Menu.Item onClick={() =>fun()}>All Properties</Menu.Item>
+        {propertyData.map((el) => (
+          <Menu.Item
+            key={el.id}
+            onClick={() => onChange(el.id, el.propertyName)}
+          >
+            {el.propertyName}
+          </Menu.Item>
+        ))}
+        <Menu.Item onClick={() => fun()}>All Properties</Menu.Item>
       </Menu>
     );
 
-    setMenu(menu);
+    setMenu(menu1);
   };
+
+  useEffect(() => {
+    async function getData() {
+      const response = await userInstance.post('/fetchProperty', {
+        affiliateId: userId,
+      });
+      const data = response.data.propertiesData;
+      if (response.data.code === 200) {
+        if (localStorage.getItem('topNavId')) {
+          data
+            .filter(
+              (el) => el.id === parseInt(localStorage.getItem('topNavId'), 10)
+            )
+            .map((filter) => setPropertyName(filter.propertyName));
+        }
+        setPropertyData(data);
+      }
+    }
+
+    getData();
+  }, []);
 
   return (
     <Header
@@ -86,8 +84,7 @@ const TopHeader = (props) => {
         </div>
         <Dropdown overlay={menu} trigger={['click']}>
           <a className="ant-dropdown-link" onClick={(e) => fun1(e)}>
-            {propertyName ? propertyName : 'Select Property'}{' '}
-            <VerticalAlignMiddleOutlined />
+            {propertyName || 'Select Property'} <VerticalAlignMiddleOutlined />
           </a>
         </Dropdown>
       </div>

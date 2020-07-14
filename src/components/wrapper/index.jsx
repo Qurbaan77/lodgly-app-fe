@@ -1,14 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Layout, Menu, Dropdown } from 'antd';
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  SearchOutlined,
-  VerticalAlignMiddleOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-} from '@ant-design/icons';
+import React from 'react';
+import { Layout } from 'antd';
 import TopHeader from '../navbar/topheader/topheader';
 import Sidenav from '../navbar/sidenav/sidenav';
 
@@ -22,10 +13,10 @@ const Wrapper = (props) => {
   return (
     <div className="wrapper">
       <Layout>
-        <Sidenav img={props.img} getUserInfo={props.getUserInfo}/>
+        <Sidenav img={props.img} name={props.name} getUserInfo={props.getUserInfo} />
 
         <Layout className="site-layout">
-          <TopHeader onChange={handleChange} fun={props.fun}/>
+          <TopHeader onChange={handleChange} fun={props.fun} />
 
           <Content
             className="site-layout-background"

@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './forget.css';
-import { Form, Input, Button, Checkbox } from 'antd';
-import { Link } from 'react-router-dom';
+import { Form, Input, Button } from 'antd';
 import logo from '../../assets/images/logo.jpg';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
@@ -14,8 +13,8 @@ const Forget = () => {
   const onFinish = async (values) => {
     const response = await userInstance.post('/resetpassword', values);
     const statusCode = response.data.code;
-    const msg = response.data.msg;
-    if (statusCode == 200) {
+    const { msg } = response.data;
+    if (statusCode === 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
     } else {
@@ -25,10 +24,6 @@ const Forget = () => {
     form.resetFields();
   };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-  };
-
   const close = () => {
     setNotifyType('');
   };
@@ -36,7 +31,7 @@ const Forget = () => {
   return (
     <div className="forget">
       <div className="forget-section">
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
+        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         <div className="container">
           <div classNmae="row">
             <div className="col-md-12">
@@ -55,7 +50,6 @@ const Forget = () => {
                         remember: true,
                       }}
                       onFinish={onFinish}
-                      onFinishFailed={onFinishFailed}
                     >
                       <Form.Item
                         label="E-mail Address"

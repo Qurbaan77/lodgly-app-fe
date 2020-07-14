@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import './login.css';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button } from 'antd';
 import logo from '../../assets/images/logo.jpg';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
@@ -10,22 +10,33 @@ const Login = () => {
   const [form] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
-  const [subUserPerm, setSubUserPerm] = useState([]);
   const history = useHistory();
+
+
+  const tokenparser = (token) => {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`)
+        .join(''),
+    );
+    return JSON.parse(jsonPayload);
+  };
 
   const onFinish = async (values) => {
     const response = await userInstance.post('/login', values);
-    console.log(response);
     const statusCode = response.data.code;
-    const msg = response.data.msg;
+    const { msg } = response.data;
 
     if (statusCode === 200) {
-       if(response.data.subUser.length) {
-         localStorage.setItem('isSubUser',true);
+      if (response.data.subUser.length) {
+        localStorage.setItem('isSubUser', true);
         localStorage.setItem('subUserCred', JSON.stringify(response.data.subUser));
-       }
+      }
       localStorage.setItem('token', response.data.token);
-      let payload = tokenparser(response.data.token);
+      const payload = tokenparser(response.data.token);
       localStorage.setItem('userId', payload.userid);
       setNotifyType('success');
       setNotifyMsg(msg);
@@ -41,19 +52,6 @@ const Login = () => {
     setNotifyType('');
   };
 
-  const tokenparser = (token) => {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map(function (c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join(''),
-    );
-    return JSON.parse(jsonPayload);
-  };
 
   return (
     <div className="login">
@@ -71,7 +69,11 @@ const Login = () => {
               />
               <div className="login-form">
                 <h1>Sign In</h1>
-                <p>We're happy to have you here again!</p>
+                <p>
+                  We
+                  <span>&apos;</span>
+                  re happy to have you here again!
+                </p>
                 <div className="login-box">
                   <Form
                     form={form}
@@ -126,13 +128,17 @@ const Login = () => {
 
               <div className="q-links">
                 <p>
-                  Don't have an account yet?{' '}
-                  <Link to={'/register'}>Register now</Link>
+                  Don
+                  <span>&apos;</span>
+                  t have an account yet?
+                  {' '}
+                  <Link to="/register">Register now</Link>
                 </p>
 
                 <p>
-                  Forget your password?{' '}
-                  <Link to={'/forget'}>Get a new password</Link>
+                  Forget your password?
+                  {' '}
+                  <Link to="/forget">Get a new password</Link>
                 </p>
               </div>
             </div>

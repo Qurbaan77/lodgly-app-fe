@@ -4,172 +4,44 @@ import {
   Form,
   Select,
   Input,
-  InputNumber,
-  Switch,
-  Radio,
-  Slider,
   Button,
   Upload,
-  Rate,
-  Checkbox,
   Row,
   Col,
   message,
+  Collapse,
 } from 'antd';
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  HomeOutlined,
-  PlusOutlined,
-  SearchOutlined,
-  VerticalAlignMiddleOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-} from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-import property1 from '../../assets/images/property-1.png';
-import property2 from '../../assets/images/property-2.png';
-import property3 from '../../assets/images/property-3.png';
-import { Collapse } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
-import Password from 'antd/lib/input/Password';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
 
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
-
 const normFile = (e) => {
-  console.log('Upload event:', e);
   if (Array.isArray(e)) {
     return e;
   }
   return e && e.fileList;
 };
 
-function onChange(checkedValues) {}
-
-const petOptions = [
-  'Pets Negotiable',
-  'Cats OK',
-  'Dogs OK',
-  'No Pets',
-  'Don’t specify',
-];
-const featureOptions = [
-  'Furnished or available furnished',
-  'Washer/Dryer',
-  'Parking',
-];
-
-const featureOptions2 = [
-  'Gym/Fitness Center',
-  'Air Conditioning',
-  'Hardwood Floors',
-  'Fireplace',
-  'Dishwasher',
-  'Storage',
-  'Walk-In Closet',
-  'Pool',
-  'Hot Tub',
-];
-const featureOptions3 = [
-  'Outdoor Space',
-  'Shared Yard',
-  'Private Yard',
-  'Patio',
-  'Balcony',
-  'Garden',
-  'Wheelchair accessible',
-];
-
-const Profile = (prop) => {
-  console.log('props', prop)
+const Profile = () => {
   const [form1] = Form.useForm();
-  const [form2] = Form.useForm();
   const [form3] = Form.useForm();
   const [form4] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const userId = localStorage.getItem('userId');
   const [img, setImg] = useState('');
-
-  const props = {
-    name: 'file',
-    multiple: false,
-    action: `http://localhost:3001/users/photo/${userId}`,
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
-
-  const personalInfoFinish = async (values) => {
-    console.log('Form is good', values);
-    const response = await userInstance.post('/updatePersonalInfo', values);
-    const statusCode = response.data.code;
-    const msg = response.data.msg;
-    if (statusCode == 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
-      getUserInfo();
-    } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
-    }
-    form1.resetFields();
-  };
-
-  const passwordFininsh = async (values) => {
-    const response = await userInstance.post('/changePassword', values);
-    const statusCode = response.data.code;
-    const msg = response.data.msg;
-    if (statusCode == 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
-    } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
-    }
-    form3.resetFields();
-  };
-
-  const companyFinsh = async (values) => {
-    const response = await userInstance.post('/updateOrganisation', values);
-    const statusCode = response.data.code;
-    const msg = response.data.msg;
-    if (statusCode == 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
-      getCompanyInfo();
-    } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
-    }
-    form4.resetFields();
-  };
-
-  const close = () => {
-    setNotifyType('');
-  };
+  const [userName, setUserName] = useState('');
 
   const getUserInfo = async () => {
     const response = await userInstance.post('/getuserData');
     const body = response.data.userData;
-    setImg(body[0].image)
     if (body.length > 0) {
+      const fullname = `${body[0].fname} ${body[0].lname}`;
+      setImg(body[0].image);
+      setUserName(fullname);
       form1.setFieldsValue({
         fname: body[0].fname,
         lname: body[0].lname,
@@ -183,7 +55,6 @@ const Profile = (prop) => {
   const getCompanyInfo = async () => {
     const response = await userInstance.post('/getCompanyData');
     const body = response.data.companyData;
-    console.log(body);
     if (body.length > 0) {
       form4.setFieldsValue({
         name: body[0].name,
@@ -196,6 +67,70 @@ const Profile = (prop) => {
       });
     }
   };
+  const personalInfoFinish = async (values) => {
+    const response = await userInstance.post('/updatePersonalInfo', values);
+    const statusCode = response.data.code;
+    const { msg } = response.data;
+    if (statusCode === 200) {
+      setNotifyType('success');
+      setNotifyMsg(msg);
+      getUserInfo();
+    } else {
+      setNotifyType('error');
+      setNotifyMsg(msg);
+    }
+    form1.resetFields();
+  };
+
+  const companyFinsh = async (values) => {
+    const response = await userInstance.post('/updateOrganisation', values);
+    const statusCode = response.data.code;
+    const { msg } = response.data;
+    if (statusCode === 200) {
+      setNotifyType('success');
+      setNotifyMsg(msg);
+      getCompanyInfo();
+    } else {
+      setNotifyType('error');
+      setNotifyMsg(msg);
+    }
+    form4.resetFields();
+  };
+
+  const passwordFininsh = async (values) => {
+    const response = await userInstance.post('/changePassword', values);
+    const statusCode = response.data.code;
+    const { msg } = response.data;
+    if (statusCode === 200) {
+      setNotifyType('success');
+      setNotifyMsg(msg);
+    } else {
+      setNotifyType('error');
+      setNotifyMsg(msg);
+    }
+    form3.resetFields();
+  };
+
+  const close = () => {
+    setNotifyType('');
+  };
+
+  const props = {
+    name: 'file',
+    multiple: false,
+    action: `http://localhost:3001/users/photo/${userId}`,
+    onChange(info) {
+      // if (info.file.status !== 'uploading') {
+      //   console.log(info.file, info.fileList);
+      // }
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+        getUserInfo();
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
 
   useEffect(() => {
     getUserInfo();
@@ -203,11 +138,13 @@ const Profile = (prop) => {
   }, []);
 
   return (
-    <Wrapper img={img} getUserInfo={getUserInfo}>
+    <Wrapper img={img} name={userName} getUserInfo={getUserInfo}>
       <div className="personal-information">
         <div className="page-header">
           <h1>
-            <UserOutlined /> Personal Information
+            <UserOutlined />
+            {' '}
+            Personal Information
           </h1>
         </div>
         <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
@@ -398,15 +335,13 @@ const Profile = (prop) => {
                               ({ getFieldValue }) => ({
                                 validator(rule, value) {
                                   if (
-                                    !value ||
-                                    getFieldValue('newPassword') === value
+                                    !value
+                                    || getFieldValue('newPassword') === value
                                   ) {
                                     return Promise.resolve();
                                   }
 
-                                  return Promise.reject(
-                                    'The two passwords that you entered do not match!',
-                                  );
+                                  return Promise.reject(new Error('The two passwords that you entered do not match!'));
                                 },
                               }),
                             ]}

@@ -1,0 +1,22 @@
+.ant-layout.ant-layout-has-sider > .ant-layout {
+    width: calc(100% - 200px);
+}
+
+
+.chart-body {
+    background: #fff;
+    padding: 30px;
+    border: 1px solid #eaeaea;
+    margin-bottom: 20px;
+}
+
+.chart-body h3 {
+    font-weight: 600;
+    font-size: 15px;
+    margin: 0;
+    padding-bottom: 20px;
+}
+
+.apexcharts-canvas {
+    width: 100%!important;
+}

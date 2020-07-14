@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
+
 import './sidenav.css';
 import { Layout, Menu } from 'antd';
 import {
@@ -11,30 +11,25 @@ import {
 import logo from '../../../assets/images/logo.png';
 import UserProfile from '../userprofile/userprofile';
 import { userInstance } from '../../../axios/axiosconfig';
-import queryString from 'query-string';
-
-import booking_icon from '../../../assets/images/menu/booking-icon.png';
-import calender_icon from '../../../assets/images/menu/calendar-icon.png';
-import property_icon from '../../../assets/images/menu/property-icon.png';
-import guest_icon from '../../../assets/images/menu/guest-icon.png';
-import team_icon from '../../../assets/images/menu/team-icon.png';
-import invoice_icon from '../../../assets/images/menu/invoice-icon.png';
-import stats_icon from '../../../assets/images/menu/stats-icon.png';
-import integration_icon from '../../../assets/images/menu/integration-icon.png';
-import owner_icon from '../../../assets/images/menu/owner-icon.png';
-import property_detail_icon from '../../../assets/images/menu/property-detail-icon.png';
-import unit_icon from '../../../assets/images/menu/unit-type-icon.png';
-import task_icon from '../../../assets/images/menu/task-icon.png';
-import channel_icon from '../../../assets/images/menu/channel-icon.png';
-
-
+import bookingIcon from '../../../assets/images/menu/booking-icon.png';
+import calenderIcon from '../../../assets/images/menu/calendar-icon.png';
+import propertyIcon from '../../../assets/images/menu/property-icon.png';
+import guestIcon from '../../../assets/images/menu/guest-icon.png';
+import teamIcon from '../../../assets/images/menu/team-icon.png';
+import invoiceIcon from '../../../assets/images/menu/invoice-icon.png';
+import statsIcon from '../../../assets/images/menu/stats-icon.png';
+import integrationIcon from '../../../assets/images/menu/integration-icon.png';
+import ownerIcon from '../../../assets/images/menu/owner-icon.png';
+import propertyDetailIcon from '../../../assets/images/menu/property-detail-icon.png';
+import unitIcon from '../../../assets/images/menu/unit-type-icon.png';
+import taskIcon from '../../../assets/images/menu/task-icon.png';
+import channelIcon from '../../../assets/images/menu/channel-icon.png';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-
 const Sidenav = (props) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const {img, name, getUserInfo} = props;
   const [propertyData, setPropertyData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
   const [menu, setMenu] = useState(false);
@@ -48,47 +43,80 @@ const Sidenav = (props) => {
   const [disableGuests, setDisableGuests] = useState(false);
   const history = useHistory();
 
-  const toggle = () => {
-    setCollapsed(!collapsed);
-  };
-
-  const handleMenu = (e, propertyNo) => {
-    if (e === `open`) {
-      setMenu(true);
-    } else if (e === `close`) {
-      setMenu(false);
-    } else if (e === `toggle`) {
-      setMenu(!menu);
-    }
-  };
-
   const exit = async () => {
     const response = await userInstance.post('/logout');
-    if(response.status === 200) {
+    if (response.status === 200) {
       localStorage.clear();
       history.push('/');
     }
   };
   const isSubUser = localStorage.getItem('isSubUser');
   const subUserCred = JSON.parse(localStorage.getItem('subUserCred'));
-  console.log(subUserCred);
-  const [{ bookingRead, calendarRead, guestsRead, invoicesRead, 
-    propertiesRead, serviceRead, statsRead, teamRead, userId
-  }] = subUserCred ? subUserCred : [{}];
+  const [{
+    bookingRead, calendarRead, guestsRead, invoicesRead,
+    propertiesRead, serviceRead, statsRead, teamRead, userId,
+  }] = subUserCred || [{}];
 
-  const getSubUser = async () => {
-    isSubUser ? bookingRead ? setHideBooking(false) : setHideBooking(true) : setHideBooking(false);
-    isSubUser ? calendarRead ? setHidecalendar(false) : setHidecalendar(true) : setHidecalendar(false);
-    isSubUser ? teamRead ? setHideTeam(false) : setHideTeam(true) : setHideTeam(false);
-    isSubUser ? invoicesRead ? setHideInvoice(false) : setHideInvoice(true) : setHideInvoice(false);
-    isSubUser ? statsRead ? setHideStats(false) : setHideStats(true) : setHideStats(false);
-    isSubUser ? propertiesRead ? setDisableProperties(false) : setDisableProperties(true) : setDisableProperties(false);
-    isSubUser ? guestsRead ? setDisableGuests(false) : setDisableGuests(true) : setDisableGuests(false);
-    isSubUser ? serviceRead ? setHideService(false) : setHideService(true) : setHideService(false);
-  }
+  const getSubUser = () => {
+    if (!isSubUser) {
+      setHideBooking(false);
+    } else if (bookingRead) {
+      setHideBooking(false);
+    } else {
+      setHideBooking(true);
+    }
+    if (!isSubUser) {
+      setHidecalendar(false);
+    } else if (calendarRead) {
+      setHidecalendar(false);
+    } else {
+      setHidecalendar(true);
+    }
+    if (!isSubUser) {
+      setHideInvoice(false);
+    } else if (invoicesRead) {
+      setHideInvoice(false);
+    } else {
+      setHideInvoice(true);
+    }
+    if (!isSubUser) {
+      setDisableProperties(false);
+    } else if (propertiesRead) {
+      setDisableProperties(false);
+    } else {
+      setDisableProperties(true);
+    }
+    if (!isSubUser) {
+      setHideService(false);
+    } else if (serviceRead) {
+      setHideService(false);
+    } else {
+      setHideService(true);
+    }
+    if (!isSubUser) {
+      setHideStats(false);
+    } else if (statsRead) {
+      setHideStats(false);
+    } else {
+      setHideStats(true);
+    }
+    if (!isSubUser) {
+      setHideTeam(false);
+    } else if (teamRead) {
+      setHideTeam(false);
+    } else {
+      setHideTeam(true);
+    }
+    if (!isSubUser) {
+      setDisableGuests(false);
+    } else if (guestsRead) {
+      setDisableGuests(false);
+    } else {
+      setDisableGuests(true);
+    }
+  };
 
   const getData = async () => {
-    const pathname = window.location.pathname;
     const Id = localStorage.getItem('propertyId');
     const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
     const data = response.data.propertiesData;
@@ -104,119 +132,118 @@ const Sidenav = (props) => {
   };
 
   const changeMenu = () => {
-    const pathname = window.location.pathname;
-    const parsed = queryString.parse(window.location.search);
+    const { pathname } = window.location;
     if (
-      pathname == '/property' ||
-      pathname == '/unittype' ||
-      pathname == '/addunittype' ||
-      pathname == '/channelmanager' ||
-      pathname == '/services' ||
-      pathname == '/groups' ||
-      pathname == '/task'
-    )
-      setMenu(!menu);
+      pathname === '/property'
+      || pathname === '/unittype'
+      || pathname === '/addunittype'
+      || pathname === '/channelmanager'
+      || pathname === '/services'
+      || pathname === '/groups'
+      || pathname === '/task'
+    ) { setMenu(!menu); }
   };
 
   useEffect(() => {
     getData();
     changeMenu();
-    if(localStorage.getItem('isSubUser')) {
+    if (localStorage.getItem('isSubUser')) {
       getSubUser();
     }
   }, []);
 
   return (
-    <Sider theme="light" trigger={null} collapsible collapsed={collapsed}>
+    <Sider theme="light" trigger={null} collapsible collapsed={false}>
       <div className="sidebar-logo">
-        <img src={logo} alt='logo'/>
+        <img src={logo} alt="logo" />
       </div>
 
-      <UserProfile img={props.img} getUserInfo={props.getUserInfo}/>
+      <UserProfile img={img} name={name} getUserInfo={getUserInfo} />
 
       <Menu
-        className={`main-menu ${menu ? `hide` : ``}`}
+        className={`main-menu ${menu ? 'hide' : ''}`}
         theme="light"
         mode="inline"
         defaultSelectedKeys={['0']}
         style={{ height: '100%' }}
       >
         <Menu.Item key="0" hidden={hideBooking}>
-          <img src={booking_icon} alt='booking-icon'/>
-          <Link to={'/booking'}>Booking</Link>
+          <img src={bookingIcon} alt="booking-icon" />
+          <Link to="/booking">Booking</Link>
         </Menu.Item>
 
         <Menu.Item hidden={hideCalendar}>
-          <img src={calender_icon} alt='calendar-icon'/>
-          <Link to={'/calendar'}>Calendar</Link>
+          <img src={calenderIcon} alt="calendar-icon" />
+          <Link to="/calendar">Calendar</Link>
         </Menu.Item>
 
         <SubMenu
-        disabled={disableProperties}
-          title={
+          disabled={disableProperties}
+          title={(
             <div>
-              <img src={property_icon} alt='property-icon'/>
-              <Link to={'/propertylist'}>Properties</Link>
+              <img src={propertyIcon} alt="property-icon" />
+              <Link to="/propertylist">Properties</Link>
             </div>
-          }
+          )}
         >
-          {propertyData.map((el, i) => {
-            return (
-              <Menu.Item key={el.propertyNo} >
-                <Link
-                  to={'/property'}
-                  onClick={() => localStorage.setItem('propertyId', el.id)}
-                >
-                  Property No {el.propertyNo}{' '}
-                </Link>
-              </Menu.Item>
-            );
-          })}
+          {propertyData.map((el) => (
+            <Menu.Item key={el.propertyNo}>
+              <Link
+                to="/property"
+                onClick={() => localStorage.setItem('propertyId', el.id)}
+              >
+                Property No
+                {' '}
+                {el.propertyNo}
+                {' '}
+              </Link>
+            </Menu.Item>
+          ))}
         </SubMenu>
 
         <SubMenu
-        disabled={disableGuests}
-          title={
+          disabled={disableGuests}
+          title={(
             <div>
-              <img src={guest_icon} alt='guest-icon'/>
+              <img src={guestIcon} alt="guest-icon" />
               <span>Guests</span>
             </div>
-          }
+          )}
         >
-          <Menu.Item key="3"  hidden='true'>Option 3</Menu.Item>
+          <Menu.Item key="3" hidden="true">Option 3</Menu.Item>
           <Menu.Item key="4">Option 4</Menu.Item>
         </SubMenu>
 
         <Menu.Item hidden={hideTeam}>
-        <img src={team_icon} alt='team'/>
-          <Link to={'/team'}>Team</Link>
+          <img src={teamIcon} alt="team" />
+          <Link to="/team">Team</Link>
         </Menu.Item>
 
         <Menu.Item hidden={hideInvoice}>
-          <img src={invoice_icon} alt='invoice-icon'/>
-          <Link to={'/invoice'}>Invoices</Link>
+          <img src={invoiceIcon} alt="invoice-icon" />
+          <Link to="/invoice">Invoices</Link>
         </Menu.Item>
 
         <Menu.Item hidden={hideStats}>
-          <img src={stats_icon} alt='stats=icon'/>
-          <span>Stats</span>
+          <img src={statsIcon} alt="stats=icon" />
+          <Link to="/stats">Stats</Link>
         </Menu.Item>
 
         <SubMenu
-          title={
+          title={(
             <div>
-              <img src={integration_icon} alt='integration-icon'/>
+              <img src={integrationIcon} alt="integration-icon" />
               <span>Integrations</span>
             </div>
-          }
+          )}
         >
           <Menu.Item key="5">Option 3</Menu.Item>
           <Menu.Item key="6">Option 4</Menu.Item>
         </SubMenu>
 
         <Menu.Item>
-          <img src={owner_icon} alt='owner-icon'/>
-          <Link to={'/owner'}>Owner</Link>
+          <img src={ownerIcon} alt="owner-icon" />
+          <Link to="/owner">Owner</Link>
         </Menu.Item>
 
         <Menu.Item onClick={() => exit()}>
@@ -226,7 +253,7 @@ const Sidenav = (props) => {
       </Menu>
 
       <Menu
-        className={`main-menu-mbl ${menu ? `show` : ``}`}
+        className={`main-menu-mbl ${menu ? 'show' : ''}`}
         theme="light"
         mode="inline"
         defaultSelectedKeys={['1']}
@@ -235,32 +262,34 @@ const Sidenav = (props) => {
         <span className="submenu-heading">
           <ArrowLeftOutlined />
           <Link
-            to={'/propertylist'}
+            to="/propertylist"
             onClick={() => localStorage.removeItem('propertyId')}
           >
-            Property {currProperty}
+            Property
+            {' '}
+            {currProperty}
           </Link>
         </span>
         <Menu.Item key="1">
-          <img src={property_detail_icon} alt='property'/>
-          <Link to={'/property'}>Details</Link>
+          <img src={propertyDetailIcon} alt="property" />
+          <Link to="/property">Details</Link>
         </Menu.Item>
         <Menu.Item>
-          <img src={unit_icon} alt='unit'/>
-          <Link to={'/unittype'}>Unit Type</Link>
+          <img src={unitIcon} alt="unit" />
+          <Link to="/unittype">Unit Type</Link>
         </Menu.Item>
         <Menu.Item>
-          <img src={task_icon} alt='task'/>
-          <Link to={'/groups'}>Tasks</Link>
+          <img src={taskIcon} alt="task" />
+          <Link to="/groups">Tasks</Link>
         </Menu.Item>
         <Menu.Item>
-          <img src={channel_icon} alt='channel'/>
-          <Link to={'/channelmanager'}>Channel Manager</Link>
+          <img src={channelIcon} alt="channel" />
+          <Link to="/channelmanager">Channel Manager</Link>
         </Menu.Item>
 
         <Menu.Item hidden={hideService}>
           <ApartmentOutlined />
-          <Link to={'/services'}>Services</Link>
+          <Link to="/services">Services</Link>
         </Menu.Item>
       </Menu>
     </Sider>

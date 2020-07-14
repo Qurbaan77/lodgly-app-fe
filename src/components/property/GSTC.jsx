@@ -5,7 +5,7 @@ import 'gantt-schedule-timeline-calendar/dist/style.css';
 let gstc;
 export default function GSTCWrapper(props) {
   // @ts-ignore
-  let state = GSTC.api.stateFromConfig(props.config);
+  const state = GSTC.api.stateFromConfig(props.config);
   props.onState(state);
 
   const callback = useCallback(
@@ -18,15 +18,13 @@ export default function GSTCWrapper(props) {
         });
       }
     },
-    [state]
+    [state],
   );
 
-  useEffect(() => {
-    return () => {
-      if (gstc) {
-        // gstc.app.destroy();
-      }
-    };
+  useEffect(() => () => {
+    if (gstc) {
+      // gstc.app.destroy();
+    }
   });
 
   return <div ref={callback} />;

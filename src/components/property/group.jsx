@@ -2,88 +2,39 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
-  Form,
-  Select,
-  Input,
-  InputNumber,
-  Switch,
-  Radio,
-  Slider,
-  DatePicker,
-  TimePicker,
-  Button,
-  Upload,
-  Rate,
-  Checkbox,
-  Row,
-  Col,
-} from 'antd';
+  Form, Select, Input, DatePicker, Button, Checkbox, 
+  Collapse , Modal } from 'antd';
 import {
-  MenuUnfoldOutlined,
   FolderOutlined,
   DeleteOutlined,
   FormOutlined,
-  CheckOutlined,
   BellOutlined,
-  MenuFoldOutlined,
   HomeOutlined,
   PlusOutlined,
-  SearchOutlined,
-  VerticalAlignMiddleOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import Toaster from '../toaster/toaster';
-import { Collapse } from 'antd';
-import { InboxOutlined } from '@ant-design/icons';
-import { Modal } from 'antd';
-import { Avatar } from 'antd';
+
+
 import people1 from '../../assets/images/people-1.png';
 import people2 from '../../assets/images/people-2.png';
 import people3 from '../../assets/images/people-3.jpg';
 import people4 from '../../assets/images/people-4.jpg';
 import { userInstance } from '../../axios/axiosconfig';
-import { Redirect } from 'react-router-dom';
 import DeletePopup from './deletepopup';
 
 const { Panel } = Collapse;
 
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
-
 const { Option } = Select;
 
-const { MonthPicker, RangePicker } = DatePicker;
-
-const genExtra = () => (
-  <FolderOutlined
-    onClick={(event) => {
-      event.stopPropagation();
-    }}
-  />
-);
-
-const tExtra = () => (
-  <BellOutlined
-    onClick={(event) => {
-      event.stopPropagation();
-    }}
-  />
-);
-
-const Groups = (props) => {
+const Groups = () => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
   const [group, setGroup] = useState([]);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
-  const [currGroupId ,setCurrGroupId] = useState(0);
+  const [currGroupId, setCurrGroupId] = useState(0);
   const history = useHistory();
 
   useEffect(() => {
@@ -97,7 +48,7 @@ const Groups = (props) => {
   };
 
   const showDeletePopup = (groupId) => {
-    setCurrGroupId(groupId)
+    setCurrGroupId(groupId);
     setVisible2(true);
   };
 
@@ -118,7 +69,7 @@ const Groups = (props) => {
   const onFinish = async (values) => {
     const response = await userInstance.post('/addGroup', values);
     const statusCode = response.data.code;
-    const msg = response.data.msg;
+    const { msg } = response.data;
     if (statusCode == 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
@@ -145,7 +96,7 @@ const Groups = (props) => {
       count: data.checkCount,
       interval: data.checkInterval,
       month: data.month,
-    })
+    });
     setVisible(true);
   };
 
@@ -155,7 +106,7 @@ const Groups = (props) => {
     };
     const response = await userInstance.post('/deleteGroup', data);
     const statusCode = response.data.code;
-    const msg = response.data.msg;
+    const { msg } = response.data;
     if (statusCode == 200) {
       getData();
       setVisible2(false);
@@ -163,18 +114,19 @@ const Groups = (props) => {
   };
 
   const addTask = (groupId) => {
-    localStorage.setItem('groupId', groupId)
+    localStorage.setItem('groupId', groupId);
     history.push('/task');
   };
-
 
   return (
     <Wrapper>
       <div className="group">
         <div className="page-header">
           <h1>
-            <HomeOutlined /> Groups
-          </h1>
+            <HomeOutlined />
+            {' '}
+            Groups
+</h1>
 
           <Button type="primary" icon={<PlusOutlined />} onClick={show}>
             Add Group
@@ -182,8 +134,7 @@ const Groups = (props) => {
         </div>
 
         <div className="panel-container">
-          {group.map((el, i) => {
-            return (
+          {group.map((el, i) => (
               <div className="panel-box groups">
                 <div className="group-icon">
                   <FolderOutlined />
@@ -192,7 +143,11 @@ const Groups = (props) => {
                 <div className="group-name">
                   <h4 onClick={() => addTask(el.id)}>{el.groupName}</h4>
                   <span>
-                    Check every {el.checkCount} {el.checkInterval}
+                    Check every 
+{' '}
+{el.checkCount} 
+{' '}
+{el.checkInterval}
                   </span>
                 </div>
 
@@ -221,8 +176,7 @@ const Groups = (props) => {
                   </div>
                 </div>
               </div>
-            );
-          })}
+            ))}
         </div>
       </div>
 
@@ -235,7 +189,7 @@ const Groups = (props) => {
       >
         <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         <Form form={form} name="basic" onFinish={onFinish}>
-          <Form.Item label="Id" name="id" hidden={true}>
+          <Form.Item label="Id" name="id" hidden>
             <Input />
           </Form.Item>
           <Form.Item
@@ -312,11 +266,11 @@ const Groups = (props) => {
           </Form.Item>
 
           <Form.Item>
-          <Button
-            style={{ marginRight: 10 }}
-            onClick={() => {
-              setVisible(false)
-            }}
+            <Button
+              style={{ marginRight: 10 }}
+              onClick={() => {
+                setVisible(false);
+              }}
             >
               Cancel
             </Button>

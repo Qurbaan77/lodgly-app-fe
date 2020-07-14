@@ -1,54 +1,37 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from 'react-places-autocomplete';
 import './property.css';
 import {
   Form,
   Select,
   Input,
-  InputNumber,
-  Switch,
-  Radio,
-  Slider,
   Button,
   Upload,
-  Rate,
   Checkbox,
   Row,
   Col,
-  Tooltip
+  message,
+  Tooltip,
+  Collapse,
 } from 'antd';
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  HomeOutlined,
-  PlusOutlined,
-  SearchOutlined,
-  VerticalAlignMiddleOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-} from '@ant-design/icons';
+import { HomeOutlined, InboxOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-import property1 from '../../assets/images/property-1.png';
-import property2 from '../../assets/images/property-2.png';
-import property3 from '../../assets/images/property-3.png';
-import { Collapse } from 'antd';
+
 import Toaster from '../toaster/toaster';
-import { isEqual } from 'lodash';
-import { InboxOutlined } from '@ant-design/icons';
+
 import { userInstance } from '../../axios/axiosconfig';
-import queryString from 'query-string';
 
 const { Panel } = Collapse;
 
 const normFile = (e) => {
-  console.log('Upload event:', e);
   if (Array.isArray(e)) {
     return e;
   }
   return e && e.fileList;
 };
-
-function onChange(checkedValues) {}
 
 const petOptions = [
   'Pets Negotiable',
@@ -93,42 +76,43 @@ const Property = () => {
   const [feature1, setFeature1] = useState([]);
   const [feature2, setFeature2] = useState([]);
   const [feature3, setFeature3] = useState([]);
-  
+  const [id, setId] = useState([]);
+  const [address, setAddress] = useState('');
+
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  console.log(userCred);
-  const  [{ propertiesWrite, userId }] = userCred ? userCred : [{}];
+  const [{ propertiesWrite, userId }] = userCred || [{}];
   const canWrite = propertiesWrite;
-  useEffect(() => {
-      getData();
-  }, []);
 
   const close = () => {
     setNotifyType('');
   };
 
   const getData = async () => {
-    const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
+    setId(localStorage.getItem('userId'));
+    const response = await userInstance.post('/fetchProperty', {
+      affiliateId: userId,
+    });
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
-      const parsed = queryString.parse(window.location.search);
       const curProperty = data.filter(
         (el) => el.id == localStorage.getItem('propertyId'),
       );
       setCurrentProperty(curProperty);
+      setId(curProperty[0].id);
       setPetPolicy(curProperty[0].petPolicy);
       setFeature1(curProperty[0].feature1);
       setFeature2(curProperty[0].feature2);
       setFeature3(curProperty[0].feature3);
     }
-  }
+  };
 
   const onFinish = async (values) => {
     values.propertyNo = currentProperty[0].propertyNo;
     values.affiliateId = userId;
     const response = await userInstance.post('/addProperty', values);
     const statusCode = response.data.code;
-    const msg = response.data.msg;
+    const { msg } = response.data;
     if (statusCode === 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
@@ -138,66 +122,101 @@ const Property = () => {
       setNotifyMsg(msg);
     }
     form.resetFields();
-  }
+  };
 
   const onChange = async (checkedValues) => {
     const listData = {
       checkedValues,
       No: currentProperty[0].propertyNo,
-    }
-    const response = await userInstance.post('/listing', listData);
+    };
+    await userInstance.post('/listing', listData);
   };
 
   const onChange1 = async (checkedValues1) => {
     const listData = {
       checkedValues1,
       No: currentProperty[0].propertyNo,
-    }
-    const response = await userInstance.post('/listing', listData);
+    };
+    await userInstance.post('/listing', listData);
   };
 
   const onChange2 = async (checkedValues2) => {
     const listData = {
       checkedValues2,
       No: currentProperty[0].propertyNo,
-    }
-    const response = await userInstance.post('/listing', listData);
+    };
+    await userInstance.post('/listing', listData);
   };
 
   const onChange3 = async (checkedValues3) => {
     const listData = {
       checkedValues3,
       No: currentProperty[0].propertyNo,
-    }
-    const response = await userInstance.post('/listing', listData);
+    };
+    await userInstance.post('/listing', listData);
   };
 
+  const handleAddressChange = (address) => {
+    setAddress(...address);
+  };
+
+  const handleAddressSelect = (address) => {
+    console.log('handleAddressSelect', address);
+    form.setFieldsValue({
+      address,
+    });
+    geocodeByAddress(address)
+      .then((results) => getLatLng(results[0]))
+      .then((latLng) => console.log('Success', latLng))
+      .catch((error) => console.error('Error', error));
+  };
+
+  const props = {
+    name: 'file',
+    multiple: false,
+    action: `http://localhost:3001/users/propertyPicture/${id}`,
+    onChange(info) {
+      if (info.file.status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <Wrapper>
       <div className="add-property">
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
-        {currentProperty.map((el, i) => {
-            form.setFieldsValue({
-              propertyName: el.propertyName,
-              propertyType: el.propertyType,
-              address: el.address,
-              country: el.country,
-              state: el.state,
-              city: el.city,
-              zip: el.zip,
-              website: el.website,
-              
-              bedrooms: el.bedrooms,
-              fullBathroom: el.fullBathroom,
-              halfBathroom: el.halfBathroom,
-              sqfoot: el.sqfoot,
-              description: el.description,
-            })  
+        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
+        {currentProperty.map((el) => {
+          form.setFieldsValue({
+            propertyName: el.propertyName,
+            propertyType: el.propertyType,
+            address: el.address,
+            country: el.country,
+            state: el.state,
+            city: el.city,
+            zip: el.zip,
+            website: el.website,
+
+            bedrooms: el.bedrooms,
+            fullBathroom: el.fullBathroom,
+            halfBathroom: el.halfBathroom,
+            sqfoot: el.sqfoot,
+            description: el.description,
+          });
           return (
             <div className="page-header">
               <h1>
-                <HomeOutlined /> Property {el.propertyNo}
+                <HomeOutlined />
+                {' '}
+                Property
+                <span>&nbsp;</span>
+                {el.propertyNo}
               </h1>
             </div>
           );
@@ -226,9 +245,59 @@ const Property = () => {
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item name="address" label="Address">
-                        <Input placeholder="4901 St Anthony Eye" />
+                    <Form.Item name="address" label="Address">
+                        {/* <Input placeholder='4901 St Anthony Eye' /> */}
+                        <PlacesAutocomplete
+                          value={address}
+                          onChange={handleAddressChange}
+                          onSelect={handleAddressSelect}
+                        >
+                          {({
+                            getInputProps,
+                            suggestions,
+                            getSuggestionItemProps,
+                            loading,
+                          }) => (
+                            <div>
+                              <Input
+                                {...getInputProps({
+                                  placeholder: 'Search Places ...',
+                                  className: 'location-search-input',
+                                })}
+                              />
+                              <div className="autocomplete-dropdown-container">
+                                {loading && <div>Loading...</div>}
+                                {suggestions.map((suggestion) => {
+                                  const className = suggestion.active
+                                    ? 'suggestion-item--active'
+                                    : 'suggestion-item';
+                                  // inline style for demonstration purpose
+                                  const style = suggestion.active
+                                    ? {
+                                      backgroundColor: '#fafafa',
+                                      cursor: 'pointer',
+                                    }
+                                    : {
+                                      backgroundColor: '#ffffff',
+                                      cursor: 'pointer',
+                                    };
+                                  return (
+                                    <div
+                                      {...getSuggestionItemProps(suggestion, {
+                                        className,
+                                        style,
+                                      })}
+                                    >
+                                      <span>{suggestion.description}</span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          )}
+                        </PlacesAutocomplete>
                       </Form.Item>
+    
                     </Col>
 
                     <Col span={12}>
@@ -271,7 +340,7 @@ const Property = () => {
 
                     <Col span={24}>
                       <Form.Item>
-                      <Button htmlType="submit">Update</Button>
+                        <Button htmlType="submit">Update</Button>
                       </Form.Item>
                     </Col>
                   </Row>
@@ -295,7 +364,7 @@ const Property = () => {
 
                     <Col span={8}>
                       <Form.Item name="bedrooms" label="Bedrooms">
-                      <Select>
+                        <Select>
                           <Select.Option value="1">1</Select.Option>
                           <Select.Option value="2">2</Select.Option>
                           <Select.Option value="3">3</Select.Option>
@@ -308,7 +377,7 @@ const Property = () => {
                     <Col span={8}>
                       <Form.Item name="fullBathroom" label="Full Bathrooms">
                         <Select>
-                        <Select.Option value="1">1</Select.Option>
+                          <Select.Option value="1">1</Select.Option>
                           <Select.Option value="2">2</Select.Option>
                           <Select.Option value="3">3</Select.Option>
                         </Select>
@@ -341,7 +410,7 @@ const Property = () => {
 
                     <Col span={24}>
                       <Form.Item>
-                      <Button htmlType="submit">Update</Button>
+                        <Button htmlType="submit">Update</Button>
                       </Form.Item>
                     </Col>
                   </Row>
@@ -351,7 +420,7 @@ const Property = () => {
 
             <Panel header="Listing" key="3">
               <div className="listing-info-form">
-                <Form >
+                <Form>
                   <Row gutter={[16, 0]}>
                     <Col span={6}>
                       <Form.Item label="Pet Policy">
@@ -409,7 +478,8 @@ const Property = () => {
                           getValueFromEvent={normFile}
                           noStyle
                         >
-                          <Upload.Dragger name="files" action="/upload.do">
+                          {/* <Upload.Dragger name="files" action="/upload.do"> */}
+                          <Upload.Dragger {...props}>
                             <p className="ant-upload-drag-icon">
                               <InboxOutlined />
                             </p>
@@ -435,15 +505,20 @@ const Property = () => {
 
                     <Col span={24}>
                       <Form.Item>
-                      {
-                        isSubUser ? canWrite ? 
-                        <Button>Save</Button> : 
-                        <Tooltip title='You are not authorize to save New Property' color='gold'>
-                        <Button disabled='true'>Save</Button> 
-                        </Tooltip> : 
-                        <Button>Save</Button>
-                      }
-                        
+                        {isSubUser ? (
+                          canWrite ? (
+                            <Button>Save</Button>
+                          ) : (
+                            <Tooltip
+                              title="You are not authorize to save New Property"
+                              color="gold"
+                            >
+                              <Button disabled="true">Save</Button>
+                            </Tooltip>
+                          )
+                        ) : (
+                          <Button>Save</Button>
+                        )}
                       </Form.Item>
                     </Col>
                   </Row>

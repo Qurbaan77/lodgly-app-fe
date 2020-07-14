@@ -1,6 +1,6 @@
 // Local services
 // export const client = 'http://localhost:3000';
-// export const server = 'http://localhost:8080';
+// export const server = 'http://localhost:3001';
 // export const dbAdress = 'mySql://http://localhost:3001/lodgly';
 
 // Live Services
