@@ -118,8 +118,8 @@ const Profile = () => {
   const props = {
     name: 'file',
     multiple: false,
-    // action: `http://localhost:3001/users/photo/${userId}`,
-    action: `http://165.22.87.22:3002/users/photo/${userId}`,
+    action: `http://localhost:8080/users/photo/${userId}`,
+    // action: `http://165.22.87.22:3002/users/photo/${userId}`,
     onChange(info) {
       // if (info.file.status !== 'uploading') {
       //   console.log(info.file, info.fileList);

@@ -30,7 +30,7 @@ import Calendar from './components/calendar/calendar';
 import Popup from './components/calendar/popup';
 import { PrivateRoute, LoginRoute } from './Routes/PrivateRoute';
 import {
-  SecureBooking, SecureCalendar, SecureProperty, SecureTeam, SecureOwner,
+  SecureBooking, SecureCalendar, SecureProperty, SecureTeam, SecureOwner, SecureInvoice, SecureService,
 } from './Routes/SecureRoute';
 
 import Owner from './components/owner/owner';
@@ -202,27 +202,30 @@ const App = () => {
                 }
 
                 {
-                isSubUser
-                  ? (
-                    <SecureProperty
-                      exact
-                      path="/addunittype"
-                      component={() => <AddUnitType />}
-                    />
-                  )
-                  : (
-                    <PrivateRoute
-                      exact
-                      path="/addunittype"
-                      component={() => <AddUnitType />}
-                    />
-                  )
-               }
+                  isSubUser
+                    ? (
+                      <SecureProperty
+                        exact
+                        path="/addunittype"
+                        component={() => <AddUnitType />}
+                      />
+                    )
+                    : (
+                      <PrivateRoute
+                        exact
+                        path="/addunittype"
+                        component={() => <AddUnitType />}
+                      />
+                    )
+                }
 
                 <LoginRoute exact path="/forget" component={() => <Forget />} />
                 <LoginRoute exact path="/reset" component={() => <Reset />} />
                 <LoginRoute exact path="/thankyou" component={() => <Thankyou />} />
-                <Route exact path="/services" component={() => <Services />} />
+                {
+                  isSubUser ? <SecureService exact path="/services" component={() => <Services />} /> : <PrivateRoute exact path="/services" component={() => <Services />} />
+                }
+
                 {
                   isSubUser ? <SecureCalendar exact path="/calendar" component={() => <Calendar />} /> : (
                     <PrivateRoute
@@ -251,8 +254,9 @@ const App = () => {
                   path="/billinginformation"
                   component={() => <BillingInformation />}
                 />
-                <Route exact path="/invoice" component={() => <Invoice />} />
-                <Route exact path="/invoicelist" component={() => <InvoiceList />} />
+                {
+                  isSubUser ? <SecureInvoice exact path="/invoice" component={() => <Invoice />} /> : <PrivateRoute exact path="/invoice" component={() => <Invoice />} />
+                }
                 <Route exact path="/stats" component={() => <Stats />} />
               </div>
             </main>

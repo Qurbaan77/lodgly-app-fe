@@ -19,7 +19,7 @@ const PropertyList = () => {
   const [{ propertiesWrite, userId }] = userCred || [{}];
   const canWrite = propertiesWrite;
 
-  useEffect(() => {
+  useEffect(async () => {
     setTopNavId(localStorage.getItem('topNavId'));
   }, []);
 
@@ -59,29 +59,29 @@ const PropertyList = () => {
                 Add Property
               </Button>
             ) : (
-              <Tooltip
-                title="You are not authorize to create new property"
-                color="gold"
-              >
-                <Button
-                  disabled="true"
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={() => history.push('/addproperty')}
+                <Tooltip
+                  title="You are not authorize to create new property"
+                  color="gold"
                 >
-                  Add Property
+                  <Button
+                    disabled="true"
+                    type="primary"
+                    icon={<PlusOutlined />}
+                    onClick={() => history.push('/addproperty')}
+                  >
+                    Add Property
                 </Button>
-              </Tooltip>
-            )
+                </Tooltip>
+              )
           ) : (
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => history.push('/addproperty')}
-            >
-              Add Property
-            </Button>
-          )}
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                onClick={() => history.push('/addproperty')}
+              >
+                Add Property
+              </Button>
+            )}
         </div>
 
         <div className="property-list">

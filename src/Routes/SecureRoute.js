@@ -14,6 +14,10 @@ const [
     teamWrite,
     ownerRead,
     ownerWrite,
+    invoiceRead,
+    invoiceWrite,
+    serviceRead,
+    serviceWrite,
   },
 ] = subUserCred || [{}];
 
@@ -23,8 +27,8 @@ export const SecureBooking = ({ component: Component, ...rest }) => (
     render={(props) => (bookingRead || bookingWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
-    ))}
+        <Redirect to="/" />
+      ))}
   />
 );
 
@@ -34,8 +38,8 @@ export const SecureCalendar = ({ component: Component, ...rest }) => (
     render={(props) => (calendarRead || calendarWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
-    ))}
+        <Redirect to="/" />
+      ))}
   />
 );
 
@@ -45,8 +49,8 @@ export const SecureProperty = ({ component: Component, ...rest }) => (
     render={(props) => (propertiesRead || propertiesWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
-    ))}
+        <Redirect to="/" />
+      ))}
   />
 );
 
@@ -56,8 +60,8 @@ export const SecureTeam = ({ component: Component, ...rest }) => (
     render={(props) => (teamRead || teamWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
-    ))}
+        <Redirect to="/" />
+      ))}
   />
 );
 
@@ -67,7 +71,28 @@ export const SecureOwner = ({ component: Component, ...rest }) => (
     render={(props) => (ownerRead || ownerWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
-    ))}
+        <Redirect to="/" />
+      ))}
+  />
+);
+
+export const SecureInvoice = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) => (invoiceRead || invoiceWrite ? (
+      <Component {...props} {...rest} />
+    ) : (
+        <Redirect to="/" />
+      ))}
+  />
+);
+export const SecureService = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) => (serviceRead || serviceWrite ? (
+      <Component {...props} {...rest} />
+    ) : (
+        <Redirect to="/" />
+      ))}
   />
 );

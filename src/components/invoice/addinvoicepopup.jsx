@@ -80,7 +80,6 @@ const AdInvoicePopup = (props) => {
       valuesCopy[el].discountPer = valuesCopy[el].discount;
       valuesCopy[el].discount = ((valuesCopy[el].amount) * (valuesCopy[el].discount / 100));
       itemData.push(valuesCopy[el]);
-
     });
     valuesCopy.itemData = itemData;
     valuesCopy.phone = userData[0].phone;
@@ -110,7 +109,7 @@ const AdInvoicePopup = (props) => {
         element.click();
         props.getData();
         props.close();
-        props.toasterMessage(res.data.msg);
+        props.toasterMessage('successfully issued invoice');
       } else {
         setShowLoader(true);
       }
@@ -121,9 +120,9 @@ const AdInvoicePopup = (props) => {
       console.log('draft response', response);
       if (response.data.code === 200) {
         setShowLoader(true);
-        props.getData();
         props.close();
-        props.toasterMessage(response.data.msg);
+        props.getData();
+        props.toasterMessage('successfully drafted invoice');
       } else {
         setShowLoader(true);
       }
@@ -133,25 +132,17 @@ const AdInvoicePopup = (props) => {
 
   const handleQuantity = (e, ele) => {
     const d = e.target.value;
-    console.log(d);
     setQuantity(d);
     setQuantityCopy((quantityCopy) => [...quantityCopy, d]);
   };
-  console.log(quantity);
-  console.log(quantityCopy);
 
   const handlePrice = (e, ele) => {
-    console.log(e.target.value);
     const d = e.target.value;
     setPrice(d);
     setPriceCopy((priceCopy) => [...priceCopy, d]);
     setAmount(d * quantity);
     setAmountCopy((amountCopy) => [...amountCopy, quantityCopy[ele - 1] * d]);
   };
-  console.log(price);
-  console.log(quantityCopy);
-  console.log(priceCopy);
-
   const handleDiscount = (e, ele) => {
     const d = e.target.value;
     setDiscount(d);
@@ -268,29 +259,37 @@ const AdInvoicePopup = (props) => {
 
               <Row>
                 <Col span={12} style={{ marginRight: 10 }}>
-                  <Form.Item name="date" label="Date">
+                  <Form.Item
+                    name="date"
+                    label="Date"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter date',
+                      },
+                    ]}
+                  >
                     <DatePicker
-                      name="date"
-                      label="Date"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please enter date',
-                        },
-                      ]}
+                      value={date}
+                      onChange={(e) => {
+                        const d1 = moment(e._id).format('MM/DD/YYYY');
+                        setDeliveryDate(d1);
+                      }}
                     />
                   </Form.Item>
                 </Col>
 
                 <Col span={9}>
-                  <Form.Item name="time"
+                  <Form.Item
+                    name="time"
                     label="Time"
                     rules={[
                       {
                         required: true,
                         message: 'Please enter time',
                       },
-                    ]}>
+                    ]}
+                  >
                     <TimePicker
                       format="HH:mm:ss"
                       value={time}
@@ -365,19 +364,29 @@ const AdInvoicePopup = (props) => {
             <div className="client-info">
               <h4>Client:</h4>
 
-              <Form.Item label="Full Name" name="clientName">
+              <Form.Item
+                label="Full Name"
+                name="clientName"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter client name',
+                  },
+                ]}
+              >
                 <Input
                   value={fName}
                   onChange={(e) => setFName(e.target.value)}
                 />
               </Form.Item>
 
-              <Form.Item label="Full Name"
-                name="clientName"
+              <Form.Item
+                label="Email"
+                name="email"
                 rules={[
                   {
                     required: true,
-                    message: 'Please enter client name',
+                    message: 'Please enter client email',
                   },
                 ]}
               >
@@ -432,7 +441,9 @@ const AdInvoicePopup = (props) => {
               </Col>
 
               <Col span={2}>
-                <Form.Item name={[ele, 'quantity']} label="Qty."
+                <Form.Item
+                  name={[ele, 'quantity']}
+                  label="Qty."
                   rules={[
                     {
                       required: true,
@@ -466,20 +477,23 @@ const AdInvoicePopup = (props) => {
               </Col>
 
               <Col span={3}>
-                <div className="amount-field">
-                  <p>{amountCopy[ele - 1]}</p>
-                </div>
+                <Form.Item label="Amount">
+                  <div className="amount-field">
+                    <p>{amountCopy[ele - 1]}</p>
+                  </div>
+                </Form.Item>
               </Col>
 
               <Col span={2} className="label-hidden">
                 <Form.Item name={[ele, 'discountType']} label="Discount Type">
-                  <Select
+                  {/* <Select
                     placeholder="Discount type"
                     onSelect={(value) => handleDiscountType(value, ele)}
                     defaultValue="%"
                   >
                     <Select.Option value="%">%</Select.Option>
-                  </Select>
+                  </Select> */}
+                  <Input placeholder="%" disabled />
                 </Form.Item>
               </Col>
 
@@ -493,9 +507,11 @@ const AdInvoicePopup = (props) => {
               </Col>
 
               <Col span={3}>
-                <div className="amount-field" key={ele}>
-                  <p>{itemTotalCopy[ele - 1]}</p>
-                </div>
+                <Form.Item label="Total">
+                  <div className="amount-field" key={ele}>
+                    <p>{itemTotalCopy[ele - 1]}</p>
+                  </div>
+                </Form.Item>
               </Col>
 
               <Col span={2} className="deleteicon">

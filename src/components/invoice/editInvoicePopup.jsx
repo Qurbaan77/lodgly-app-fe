@@ -133,10 +133,10 @@ const EditInvoicePopup = (props) => {
     valuesCopy.website = property[0].website;
     valuesCopy.propertyId = property[0].id;
     valuesCopy.deleteInvoiceItemId = deleteInvoiceItemId;
+    valuesCopy.label = invoiceData.label;
     console.log(valuesCopy);
     if (issueState) (valuesCopy.status = 'Issued');
-    // because i am resuing draft api one api with many functions
-    const res = await userInstance.post('/invoicedraft', valuesCopy);
+    const res = issueState ? await userInstance.post('/invoicedraft', valuesCopy) : await userInstance.post('/downloadinvoice', valuesCopy);
     console.log('pdf post response', res);
     if (res.status === 200) {
       const element = document.createElement('a');
@@ -155,6 +155,8 @@ const EditInvoicePopup = (props) => {
     } else {
       setShowLoader(true);
     }
+    setShowLoader(true);
+    form.resetFields();
   };
 
   const handleQuantity = (e, ele, i) => {

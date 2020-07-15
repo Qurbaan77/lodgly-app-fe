@@ -177,19 +177,20 @@ const Invoice = () => {
     setShowLoader(false);
     const urls = [];
     checkedInvoice.map((el) => (el.pdfurl ? urls.push(el.pdfurl) : ''));
-
-    const download = (pdfurls) => {
-      const url = pdfurls.pop();
-      console.log(url);
-      const a = document.createElement('a');
-      a.setAttribute('href', url);
-      a.setAttribute('download', '');
-      a.click();
-      if (pdfurls.length === 0) {
-        clearInterval(interval);
-      }
-    };
-    const interval = setInterval(download, 1000, urls);
+    if (urls.length) {
+      const download = (pdfurls) => {
+        const url = pdfurls.pop();
+        console.log(url);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', '');
+        a.click();
+        if (pdfurls.length === 0) {
+          clearInterval(interval);
+        }
+      };
+      const interval = setInterval(download, 1000, urls);
+    }
     setShowLoader(true);
   };
 
@@ -243,7 +244,7 @@ const Invoice = () => {
             <div className="add-invoice">
               <img src={invoice} alt="invoice" />
               <h4>Invoices</h4>
-              <p>Currently there are no Sub users created</p>
+              <p>Currently there are no Invoices created</p>
               {topNavId ? perm : propertySelectButton}
             </div>
           </div>
