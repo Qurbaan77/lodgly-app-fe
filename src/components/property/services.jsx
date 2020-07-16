@@ -234,6 +234,7 @@ const Services = () => {
               onClick={() => {
                 setVisible(false);
               }}
+              className="border-btn"
             >
               Cancel
             </Button>

@@ -742,7 +742,7 @@ body {
 
 .assign-unit span {
   font-size: 12px;
-  color: #999;
+
 }
 
 .assign-unit {
@@ -887,8 +887,19 @@ margin: 0;
   opacity: 1;
 }
 
+.group-modal .ant-btn.border-btn {
+  background: transparent;
+  border: 1px solid #c1c1c1;
+  padding: 9px 20px;
+}
+
+.group-modal .ant-btn.border-btn span {
+  color: #999;
+}
+
 @media screen and (min-width: 1367px) {
   .unittype-calendar {
     max-width: 1400px;
   }
 }
+

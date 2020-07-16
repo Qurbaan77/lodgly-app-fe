@@ -7,8 +7,13 @@ import { userInstance } from '../../axios/axiosconfig';
 import statsIcon from '../../assets/images/menu/stats-icon.png';
 import qst from '../../assets/images/menu/qst.png';
 
-const Stats = () => (
-  <Wrapper>
+const Stats = () => {
+  const [topNavId, setTopNavId] = useState();
+  useEffect(() => {
+    setTopNavId(localStorage.getItem('topNavId'));
+  }, []);
+  return (
+    <Wrapper fun={setTopNavId}>
     <div className="stats-page">
       <div className="page-header">
         <h1>
@@ -20,7 +25,7 @@ const Stats = () => (
         <div className="accomandation-chart">
           <Row>
             <Col span={24}>
-              <AccommodationChart />
+              <AccommodationChart topNavId={topNavId} />
             </Col>
           </Row>
         </div>
@@ -28,7 +33,7 @@ const Stats = () => (
         <div className="occupancy-chart">
           <Row>
             <Col span={24}>
-              <OccupancyChart />
+              <OccupancyChart topNavId={topNavId} />
             </Col>
           </Row>
         </div>
@@ -47,18 +52,19 @@ const Stats = () => (
         <div className="pace-chart">
           <Row>
             <Col span={24}>
-              <PaceChart />
+              <PaceChart topNavId={topNavId} />
             </Col>
           </Row>
         </div>
       </div>
     </div>
   </Wrapper>
-);
+  );
+};
 
 export default Stats;
 
-const AccommodationChart = () => {
+const AccommodationChart = (props) => {
   const [currYear, setCurrYear] = useState();
   const [prevYear, setPrevYear] = useState();
   const [currArr, setCurrArr] = useState();
@@ -66,15 +72,17 @@ const AccommodationChart = () => {
 
   useEffect(() => {
     async function getData() {
-      const response = await userInstance.post('/getRevenue');
-      console.log(response)
+      const values = {
+        propertyId: localStorage.getItem('topNavId')
+      };
+      const response = await userInstance.post('/getRevenue', values);
       setCurrArr(response.data.currYearArr);
       setPrevArr(response.data.prevYearArr);
       setPrevYear(response.data.currYear);
       setCurrYear(response.data.prevYear);
     }
     getData();
-  }, []);
+  }, [props.topNavId]);
 
   const state = {
     series: [
@@ -160,33 +168,36 @@ const AccommodationChart = () => {
   );
 };
 
-const OccupancyChart = () => {
+const OccupancyChart = (props) => {
   const [currYear, setCurrYear] = useState();
   const [prevYear, setPrevYear] = useState();
-  const [currArr, setCurrArr] = useState();
-  const [prevArr, setPrevArr] = useState();
+  const [currArr, setCurrArr] = useState([]);
+  const [prevArr, setPrevArr] = useState([]);
 
   useEffect(() => {
     async function getData() {
-      const response = await userInstance.post('/getOccupancy');
-      console.log(response);
-      setCurrArr(response.data.currYearArr);
+      const values = {
+        propertyId: localStorage.getItem('topNavId')
+      };
+      const response = await userInstance.post('/getOccupancy', values);
       setPrevArr(response.data.prevYearArr);
+      setCurrArr(response.data.currYearArr);
+
       setPrevYear(response.data.currYear);
       setCurrYear(response.data.prevYear);
     }
     getData();
-  }, []);
+  }, [props.topNavId]);
 
   const state = {
     series: [
       {
         name: currYear,
-        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        data: currArr,
       },
       {
         name: prevYear,
-        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        data: prevArr,
       },
     ],
     options: {
@@ -265,6 +276,17 @@ const OccupancyChart = () => {
 };
 
 const ReservationCountryChart = () => {
+  const [country, setCountry] = useState();
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    async function getData() {
+      const response = await userInstance.post('/getCountryReport');
+      setCountry(response.data.country);
+      setData(response.data.data)
+    }
+    getData();
+  }, []);
   const state = {
     series: [
       {
@@ -410,8 +432,8 @@ const ReservationCountryChart = () => {
 const ReservationChannelChart = () => {
   const state = {
     series: [20, 30, 50],
-
     options: {
+      labels: ['Airbnb', 'Booking', 'Booking'],
       chart: {
         type: 'donut',
       },
@@ -453,16 +475,36 @@ const ReservationChannelChart = () => {
   );
 };
 
-const PaceChart = () => {
+const PaceChart = (props) => {
+  const [currYear, setCurrYear] = useState();
+  const [prevYear, setPrevYear] = useState();
+  const [currArr, setCurrArr] = useState([]);
+  const [prevArr, setPrevArr] = useState([]);
+
+  useEffect(() => {
+    const values = {
+      propertyId: localStorage.getItem('topNavId')
+    };
+    async function getData() {
+      const response = await userInstance.post('/getPace', values);
+      setPrevArr(response.data.prevYearArr);
+      setCurrArr(response.data.currYearArr);
+
+      setPrevYear(response.data.currYear);
+      setCurrYear(response.data.prevYear);
+    }
+    getData();
+  }, [props.topNavId]);
+
   const state = {
     series: [
       {
-        name: 'Optimal',
-        data: [5, 25, 15, 20, 40, 30, 35, 35, 45, 50],
+        name: currYear,
+        data: currArr,
       },
       {
-        name: 'Average',
-        data: [10, 35, 20, 25, 50, 35, 40, 45, 50, 55],
+        name: prevYear,
+        data: prevArr,
       },
     ],
     options: {
@@ -480,11 +522,27 @@ const PaceChart = () => {
         width: [2, 2, 1],
         curve: 'straight',
       },
-      labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
-      title: {
-        text: '',
+      xaxis: {
+        categories: [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec',
+        ],
       },
-      xaxis: {},
+      yaxis: {
+        title: {
+          text: '',
+        },
+      },
     },
   };
 

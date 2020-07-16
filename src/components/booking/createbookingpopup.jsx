@@ -324,6 +324,7 @@ const CreateBookingPopup = (props) => {
   };
 
   const fun4 = (value) => {
+    if (value) {
     console.log(value[0]._d);
     const d1 = new Date(value[0]._d);
     const d2 = new Date(value[1]._d);
@@ -331,6 +332,7 @@ const CreateBookingPopup = (props) => {
     const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
     console.log(day);
     setNight(day);
+    }
   };
 
   const createGuestDetails = (
