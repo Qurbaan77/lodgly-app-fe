@@ -711,3 +711,9 @@ ul.filter-list li span span {
 .detail ul li {
   margin-right: 10px;
 }
+
+.filter-icon .ant-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+}

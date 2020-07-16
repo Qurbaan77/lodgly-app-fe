@@ -29,6 +29,7 @@ import EditInvoicePopup from './editInvoicePopup';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import DeletePopup from './deletepopup';
+import { element } from 'prop-types';
 
 const Invoice = () => {
   const { Option } = Select;
@@ -138,6 +139,9 @@ const Invoice = () => {
     const inb = await userInstance.post('getInvoice');
 
     if (inb.data.code === 200) {
+      inb.data.invoiceData.forEach((el, i) => {
+        el[`checked${i}`] = false;
+      });
       setInvoiceData(inb.data.invoiceData);
       setInvoiceItems(inb.data.invoiceItems);
       setPage(false);
@@ -156,6 +160,12 @@ const Invoice = () => {
     }
   };
   const handleCheck = (el) => {
+    invoiceData.forEach((element) => {
+      if (el.id === element.id) {
+        console.log(element)
+      }
+
+    })
     const filterFromArray = checkedInvoice.filter((ele) => ele.id === el.id);
     if (filterFromArray.length === 0) {
       setCheckedInvoice([...checkedInvoice, el]);
@@ -177,20 +187,19 @@ const Invoice = () => {
     setShowLoader(false);
     const urls = [];
     checkedInvoice.map((el) => (el.pdfurl ? urls.push(el.pdfurl) : ''));
-    if (urls.length) {
-      const download = (pdfurls) => {
-        const url = pdfurls.pop();
-        console.log(url);
-        const a = document.createElement('a');
-        a.setAttribute('href', url);
-        a.setAttribute('download', '');
-        a.click();
-        if (pdfurls.length === 0) {
-          clearInterval(interval);
-        }
-      };
-      const interval = setInterval(download, 1000, urls);
-    }
+
+    const download = (pdfurls) => {
+      const url = pdfurls.pop();
+      console.log(url);
+      const a = document.createElement('a');
+      a.setAttribute('href', url);
+      a.setAttribute('download', '');
+      a.click();
+      if (pdfurls.length === 0) {
+        clearInterval(interval);
+      }
+    };
+    const interval = setInterval(download, 1000, urls);
     setShowLoader(true);
   };
 
@@ -244,7 +253,7 @@ const Invoice = () => {
             <div className="add-invoice">
               <img src={invoice} alt="invoice" />
               <h4>Invoices</h4>
-              <p>Currently there are no Invoices created</p>
+              <p>Currently there are no Sub users created</p>
               {topNavId ? perm : propertySelectButton}
             </div>
           </div>
@@ -297,9 +306,10 @@ const Invoice = () => {
                         .reverse()
                         .slice(pagination.minValue, pagination.maxValue)
                         .map((el, i) => (
-                          <tr key={i}>
+                          <tr key={el.id}>
                             <td>
                               <Checkbox
+                                checked={el.checked}
                                 onClick={() => handleCheck(el, i)}
                               />
                               {el.date.slice(0, 10)}

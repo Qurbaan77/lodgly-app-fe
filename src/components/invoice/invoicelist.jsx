@@ -30,6 +30,7 @@ import {
   DownOutlined,
   VideoCameraOutlined,
   UploadOutlined,
+  MoreOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import { Modal } from 'antd';
@@ -101,7 +102,10 @@ const InvoiceList = () => {
                   <td>1,400,00 EUR</td>
                   <td>-</td>
                   <td>
-                    <div className="invoice-action">
+                     <div className="action-icon">
+                         <MoreOutlined />
+                      </div>
+                    <div className="invoice-action">                      
                       <FormOutlined />
                       <DeleteOutlined />
                     </div>
@@ -115,6 +119,9 @@ const InvoiceList = () => {
                   <td>1,400,00 EUR</td>
                   <td>-</td>
                   <td>
+                  <div className="action-icon">
+                         <MoreOutlined />
+                      </div>
                     <div className="invoice-action">
                       <FormOutlined />
                       <DeleteOutlined />
@@ -129,6 +136,9 @@ const InvoiceList = () => {
                   <td>1,400,00 EUR</td>
                   <td>-</td>
                   <td>
+                  <div className="action-icon">
+                         <MoreOutlined />
+                      </div>
                     <div className="invoice-action">
                       <FormOutlined />
                       <DeleteOutlined />
@@ -143,6 +153,9 @@ const InvoiceList = () => {
                   <td>1,400,00 EUR</td>
                   <td>-</td>
                   <td>
+                  <div className="action-icon">
+                         <MoreOutlined />
+                      </div>
                     <div className="invoice-action">
                       <FormOutlined />
                       <DeleteOutlined />
@@ -157,6 +170,9 @@ const InvoiceList = () => {
                   <td>1,400,00 EUR</td>
                   <td>-</td>
                   <td>
+                  <div className="action-icon">
+                         <MoreOutlined />
+                      </div>
                     <div className="invoice-action">
                       <FormOutlined />
                       <DeleteOutlined />

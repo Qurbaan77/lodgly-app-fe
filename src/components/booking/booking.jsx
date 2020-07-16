@@ -25,6 +25,7 @@ import Wrapper from '../wrapper';
 import GuestPopup from './guestpopup';
 import CreateBookingPopup from './createbookingpopup';
 import EditBookingPopup from './editbookingpopup';
+import BookingFilter from './filter';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import filter_icon from '../../assets/images/menu/filter-icon.png';
@@ -44,7 +45,7 @@ const Booking = () => {
   const [visible, setVisible] = useState(false);
   const [visibleGuest, setVisibleGuest] = useState(false);
   const [visibleEditBooking, setVisibleEditBooking] = useState(false);
-
+  const [visiblefilter,setVisibleFilter]=useState(false)
   const [guest, setGuest] = useState(false);
   const [booked, setBooked] = useState(true);
   const [bookingData, setBookingData] = useState([]);
@@ -70,6 +71,10 @@ const Booking = () => {
     setVisible(true);
   };
 
+  const showfilter = () => {
+    setVisibleFilter(true);
+  };
+
   const showGuest = () => {
     setGuest(true);
   };
@@ -77,11 +82,13 @@ const Booking = () => {
   const handleOk = () => {
     setVisible(false);
     setVisibleGuest(false);
+    setVisibleFilter(false);
   };
 
   const handleCancel = () => {
     setVisible(false);
     setVisibleGuest(false);
+    setVisibleFilter(false);
   };
 
   const getData = async () => {
@@ -247,7 +254,9 @@ const Booking = () => {
                   </div>
 
                   <div className="filter-icon">
-                    <img src={filter_icon} alt="filter-icon" />
+                  <Button onClick={showfilter}> <img src={filter_icon} alt="filter-icon" />
+                 </Button>
+                    
                   </div>
                 </div>
 
@@ -515,6 +524,12 @@ const Booking = () => {
         setCurrentService={setCurrentService}
         setBooked={setBooked}
       />
+
+      <BookingFilter 
+       visible={visiblefilter}
+       handleCancel={handleCancel}
+       handleOk={handleOk}
+       />
     </Wrapper>
   );
 };

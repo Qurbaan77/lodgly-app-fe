@@ -44,12 +44,17 @@ const EditInvoicePopup = (props) => {
   const [price, setPrice] = useState(null);
   const [amount, setAmount] = useState(null);
   const [discount, setDiscount] = useState(null);
+  const [itemTotal, setItemTotal] = useState(null);
+  const [quantityCopy, setQuantityCopy] = useState([]);
+  const [priceCopy, setPriceCopy] = useState([]);
+  const [amountCopy, setAmountCopy] = useState([]);
+  const [discountCopy, setDiscountCopy] = useState([]);
+  const [itemTotalCopy, setItemTotalCopy] = useState([]);
   const [showLoader, setShowLoader] = useState(true);
   const [cancellation, setCancellation] = useState(false);
   const [discountPer, setDiscountPer] = useState(null);
   const [deleteInvoiceItemId, setDeleteInvoiecItemId] = useState(null);
   const [itemState, setItemState] = useState([]);
-  const [issueState, setIssueState] = useState(false);
 
   useEffect(() => {
     if (props.visible) {
@@ -93,16 +98,16 @@ const EditInvoicePopup = (props) => {
 
   const handleFinish = async (values) => {
     // TODO implement extra buttons function
-    setShowLoader(false);
+    // setShowLoader(false);
     const valuesCopy = values;
     valuesCopy.date = moment(valuesCopy.date._d).format('YYYY/MM/DD');
     valuesCopy.deliveryDate = moment(valuesCopy.deliveryDate._d).format(
       'YYYY/MM/DD',
     );
     valuesCopy.dueDate = moment(valuesCopy.dueDate._d).format('YYYY/MM/DD');
-    valuesCopy.time = time.slice(0, 5);
+    console.log(valuesCopy);
+    // valuesCopy.time = time.slice(0, 5);
     const itemData = [];
-    let total = 0;
     if (invoiceItems.length) {
       invoiceItems.forEach((el, i) => {
         const ele = el;
@@ -119,48 +124,47 @@ const EditInvoicePopup = (props) => {
         ele.discountPer = valuesCopy[d0 + i];
         ele.discount = valuesCopy[d1 + i];
         ele.itemTotal = valuesCopy[it + i];
-        total += ele.itemTotal;
+        console.log(ele);
         itemData.push(ele);
       });
     }
     valuesCopy.itemData = itemData;
-    valuesCopy.phone = userData[0].phone;
-    valuesCopy.email = userData[0].email;
-    const { clientName } = valuesCopy;
-    valuesCopy.total = total;
-    valuesCopy.propertyName = property[0].propertyName;
-    valuesCopy.propertyAddress = property[0].address;
-    valuesCopy.website = property[0].website;
-    valuesCopy.propertyId = property[0].id;
-    valuesCopy.deleteInvoiceItemId = deleteInvoiceItemId;
-    valuesCopy.label = invoiceData.label;
+    // valuesCopy.userPhone = userData.userPhone;
+    // valuesCopy.userEmail = userData.userEmail;
+    // const { clientName } = valuesCopy;
+    // valuesCopy.total = itemTotalCopy.reduce((a, b) => a + (b || 0), 0);
+    // valuesCopy.propertyName = property.propertyName;
+    // valuesCopy.propertyAddress = property.propertyAddress;
+    // valuesCopy.website = property.website;
+    // valuesCopy.propertyId = property.propertyId;
     console.log(valuesCopy);
-    if (issueState) (valuesCopy.status = 'Issued');
-    const res = issueState ? await userInstance.post('/invoicedraft', valuesCopy) : await userInstance.post('/downloadinvoice', valuesCopy);
-    console.log('pdf post response', res);
-    if (res.status === 200) {
-      const element = document.createElement('a');
-      element.setAttribute('href', `${res.data.url}`);
-      element.setAttribute('download', `${clientName}.pdf`);
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.click();
-      props.getData();
-      props.close();
-      let msg;
-      if (issueState) {
-        (msg = 'Invoice issued');
-        props.toasterMessage(msg);
-      }
-    } else {
-      setShowLoader(true);
-    }
-    setShowLoader(true);
-    form.resetFields();
+    // if (!draftBtn) {
+    //   const res = await userInstance.post('/createInvoice', valuesCopy);
+    //   console.log('pdf post response', res);
+    //   if (res.status === 200) {
+    //     const element = document.createElement('a');
+    //     element.setAttribute('href', `${res.data}`);
+    //     element.setAttribute('download', `${clientName}.pdf`);
+    //     element.style.display = 'none';
+    //     document.body.appendChild(element);
+    //     element.click();
+    //     setShowLoader(true);
+    //   }
+    // } else {
+    //   const response = await userInstance.post('/invoicedraft', valuesCopy);
+    //   console.log('draft response', response);
+    //   if (response.data.code === 200) {
+    //     setShowLoader(true);
+    //     props.getData();
+    //     props.close();
+    //   }
+    // }
   };
 
   const handleQuantity = (e, ele, i) => {
+    console.log(ele)
     const { price: paisa, discountPer: perDiscount } = ele;
+    console.log(paisa, perDiscount)
     setQuantity(e.target.value);
     if (ele.price) {
       form.setFieldsValue({
@@ -168,21 +172,16 @@ const EditInvoicePopup = (props) => {
         [`discount${i}`]: (e.target.value * paisa) * (perDiscount / 100),
         [`itemTotal${i}`]: e.target.value * paisa - (e.target.value * paisa) * (perDiscount / 100),
       });
-      invoiceItems.forEach((el) => {
-        if (el.id === ele.id) {
-          el.itemTotal = e.target.value * paisa - (e.target.value * paisa) * (perDiscount / 100);
-        }
-      });
-      setItemState(invoiceItems);
     }
   };
 
   const handlePrice = (e, i, ele) => {
     const { discountPer: perDiscount } = ele;
-    setPrice(e.target.value);
+    setPriceCopy(e.target.value);
     form.setFieldsValue({
       [`amount${i}`]: quantity * e.target.value,
       [`itemTotal${i}`]: quantity * e.target.value,
+
     });
     if (ele.discountPer) {
       form.setFieldsValue({
@@ -190,49 +189,20 @@ const EditInvoicePopup = (props) => {
       });
     }
     setAmount(quantity * e.target.value);
-    invoiceItems.forEach((el) => {
-      if (el.id === ele.id) {
-        el.itemTotal = quantity * e.target.value;
-      }
-    });
-    setItemState(invoiceItems);
   };
 
-  const handleDiscount = (e, ele, i) => {
-    const element = ele;
-    if (ele.discountPer) {
-      form.setFieldsValue({
-        [`discount${i}`]: (element.amount) * (e.target.value / 100),
-        [`itemTotal${i}`]: element.amount - (element.amount) * (e.target.value / 100),
-      });
-      invoiceItems.forEach((el) => {
-        if (el.id === ele.id) {
-          el.itemTotal = element.amount - (element.amount) * (e.target.value / 100);
-        }
-      });
-      setItemState(invoiceItems);
-    }
+  const handleDiscount = (e, i) => {
     setDiscountPer(e.target.value);
     setDiscount(amount - (amount) * (e.target.value / 100));
     form.setFieldsValue({
       [`discount${i}`]: (amount) * (e.target.value / 100),
       [`itemTotal${i}`]: amount - (amount) * (e.target.value / 100),
     });
-    invoiceItems.forEach((el) => {
-      if (el.id === ele.id) {
-        el.itemTotal = amount - (amount) * (e.target.value / 100);
-      }
-    });
-    setItemState(invoiceItems);
   };
 
   const addMorePanel = () => {
     if (invoiceItems.length) {
-      let i;
-      invoiceItems.forEach((el) => {
-        i = el.id;
-      });
-      setInvoiceItems(invoiceItems.concat([{ id: i + 1 }]));
+      setInvoiceItems(invoiceItems.concat([{}]));
     }
   };
 
@@ -240,12 +210,6 @@ const EditInvoicePopup = (props) => {
     setDeleteInvoiecItemId(ele.id);
     const data = invoiceItems.filter((el) => el.id !== ele.id);
     setInvoiceItems([...data]);
-    invoiceItems.forEach((el) => {
-      if (el.id === ele.id) {
-        el.itemTotal = 0;
-      }
-    });
-    setItemState(invoiceItems);
   };
 
   const handleCancelllation = async () => {
@@ -262,10 +226,6 @@ const EditInvoicePopup = (props) => {
         props.toasterMessage(cancel.data.msg);
       }
     }
-  };
-
-  const handleIssue = () => {
-    setIssueState(true);
   };
 
   const handleDelete = () => {
@@ -319,37 +279,13 @@ const EditInvoicePopup = (props) => {
               </h4>
               <Row>
                 <Col span={12} style={{ marginRight: 10 }}>
-                  <Form.Item
-                    name="date"
-                    label="Date"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please enter date',
-                      },
-                    ]}
-                  >
-                    <DatePicker
-                      value={date}
-                      onChange={(e) => {
-                        const d1 = moment(e._id).format('MM/DD/YYYY');
-                        setDate(d1);
-                      }}
-                    />
+                  <Form.Item name="date" label="Date">
+                    <DatePicker />
                   </Form.Item>
                 </Col>
 
                 <Col span={9}>
-                  <Form.Item
-                    name="time"
-                    label="Time"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please enter time',
-                      },
-                    ]}
-                  >
+                  <Form.Item name="time" label="Time">
                     <TimePicker
                       format="HH:mm:ss"
                       value={time}
@@ -364,16 +300,7 @@ const EditInvoicePopup = (props) => {
 
               <Row>
                 <Col span={12}>
-                  <Form.Item
-                    name="deliveryDate"
-                    label="Delivery Date"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please enter delivery date',
-                      },
-                    ]}
-                  >
+                  <Form.Item name="deliveryDate" label="Delivery Date">
                     <DatePicker
                       value={deliveryDate}
                       onChange={(e) => {
@@ -423,16 +350,7 @@ const EditInvoicePopup = (props) => {
           <Col span={10}>
             <div className="client-info">
               <h4>Client:</h4>
-              <Form.Item
-                label="Full Name"
-                name="clientName"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter client name',
-                  },
-                ]}
-              >
+              <Form.Item label="Full Name" name="clientName">
                 <Input
                   value={fName}
                   onChange={(e) => setFName(e.target.value)}
@@ -446,16 +364,7 @@ const EditInvoicePopup = (props) => {
                 />
               </Form.Item>
 
-              <Form.Item
-                label="Address"
-                name="address"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please enter client address',
-                  },
-                ]}
-              >
+              <Form.Item label="Address" name="address">
                 <Input
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
@@ -480,28 +389,13 @@ const EditInvoicePopup = (props) => {
                   <Form.Item
                     name={`itemDescription${j}`}
                     label="Item Description"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please enter item description',
-                      },
-                    ]}
                   >
                     <Input />
                   </Form.Item>
                 </Col>
 
                 <Col span={2}>
-                  <Form.Item
-                    name={`quantity${j}`}
-                    label="Qty."
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please enter quantity',
-                      },
-                    ]}
-                  >
+                  <Form.Item name={`quantity${j}`} label="Qty.">
                     <Input
                       // value={quantity}
                       onChange={(e) => handleQuantity(e, ele, j)}
@@ -510,16 +404,7 @@ const EditInvoicePopup = (props) => {
                 </Col>
 
                 <Col span={3}>
-                  <Form.Item
-                    name={`price${j}`}
-                    label="Price"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Please enter price',
-                      },
-                    ]}
-                  >
+                  <Form.Item name={`price${j}`} label="Price">
                     <Input
                       value={price}
                       onChange={(e) => handlePrice(e, j, ele)}
@@ -536,12 +421,11 @@ const EditInvoicePopup = (props) => {
                   </Form.Item>
                 </Col>
 
-                <Col span={2} className="label-hidden" >
+                <Col span={2} className="label-hidden">
                   <Form.Item
                     name={`discountPer${j}`}
-                    label="Discount"
                   >
-                    <Input placeholder="%" value={discountPer} onChange={(e) => handleDiscount(e, ele, j)} />
+                    <Input placeholder="%" onChange={(e) => handleDiscount(e, j)} />
                   </Form.Item>
                 </Col>
 
@@ -590,7 +474,7 @@ const EditInvoicePopup = (props) => {
                 TOTAL:
                 {' '}
                 <span>
-                  {itemState
+                  {invoiceItems
                     .map((el) => el.itemTotal)
                     .reduce((a, b) => a + (b || 0), 0)}
                   {' '}
@@ -661,7 +545,7 @@ const EditInvoicePopup = (props) => {
                       <Button className="delete-btn" icon={<DeleteOutlined />} style={{ marginRight: 10 }} onClick={handleDelete}>
                         Delete
                       </Button>
-                      <Button type="primary" htmlType="submit" onClick={handleIssue}>
+                      <Button type="primary" htmlType="submit">
                         Issue
                       </Button>
                     </>

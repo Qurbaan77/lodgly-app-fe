@@ -1,0 +1,27 @@
+.alert-box {
+    padding: 20px;
+}
+
+.alert-box .ant-alert-message {
+    color: #faad14;
+}
+
+.alert-box .ant-alert-close-icon .anticon-close, .alert-box .ant-alert-close-icon .anticon-close:hover {
+    color: #faad14;
+}
+
+.alert-box .ant-alert-with-description .ant-alert-description {
+    display: inline-block;
+    padding-left: 20px;
+}
+
+.alert-box .ant-alert-with-description .ant-alert-message {
+    display: inline-block;
+    margin-bottom: 0px;
+    color: #faad14;
+    font-size: 14px;
+}
+
+.alert-box .ant-alert-with-description .ant-alert-description a {
+    text-decoration: underline!important;
+}

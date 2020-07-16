@@ -19,69 +19,64 @@ const PropertyList = () => {
   const [{ propertiesWrite, userId }] = userCred || [{}];
   const canWrite = propertiesWrite;
 
-  useEffect(async () => {
+  useEffect(() => {
     setTopNavId(localStorage.getItem('topNavId'));
   }, []);
 
-  useEffect(() => {
-    async function getData() {
-      const response = await userInstance.post('/fetchProperty', {
-        affiliateId: userId,
+  const getData = async () => {
+    const response = await userInstance.post('/fetchProperty', {
+      affiliateId: userId,
+    });
+    console.log(response);
+    const data2 = [];
+    const data = response.data.propertiesData;
+    data
+      .filter((el) => el.id === parseInt(localStorage.getItem('topNavId'), 10))
+      .map((filterData) => {
+        data2.push(filterData);
       });
-      console.log(response);
-      const data2 = [];
-      const data = response.data.propertiesData;
-      data
-        .filter((el) => el.id === parseInt(localStorage.getItem('topNavId'), 10))
-        .map((filterData) => {
-          data2.push(filterData);
-        });
-      if (response.data.code === 200) {
-        setPropertyData(data2.length > 0 ? data2 : data);
-      }
+    if (response.data.code === 200) {
+      setPropertyData(data2.length > 0 ? data2 : data);
     }
+  };
 
+  useEffect(() => {
     getData();
   }, [topNavId]);
 
+  const enableButton = (
+    <Button
+      type="primary"
+      icon={<PlusOutlined />}
+      onClick={() => history.push('/addproperty')}
+    >
+      Add Property
+    </Button>
+  );
+  const disableButton = (
+    <Tooltip
+      title="You are not authorize to create new property"
+      color="gold"
+    >
+      <Button
+        disabled="true"
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={() => history.push('/addproperty')}
+      >
+        Add Property
+      </Button>
+    </Tooltip>
+  );
+
+  const btn1 = isSubUser && canWrite ? enableButton : disableButton;
+  const btn2 = isSubUser ? btn1 : enableButton;
   return (
     <Wrapper fun={setTopNavId}>
       <div className="property-listing">
         <div className="page-header">
           <h1>All Properties</h1>
-          {isSubUser ? (
-            canWrite ? (
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={() => history.push('/addproperty')}
-              >
-                Add Property
-              </Button>
-            ) : (
-                <Tooltip
-                  title="You are not authorize to create new property"
-                  color="gold"
-                >
-                  <Button
-                    disabled="true"
-                    type="primary"
-                    icon={<PlusOutlined />}
-                    onClick={() => history.push('/addproperty')}
-                  >
-                    Add Property
-                </Button>
-                </Tooltip>
-              )
-          ) : (
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={() => history.push('/addproperty')}
-              >
-                Add Property
-              </Button>
-            )}
+          {btn2}
         </div>
 
         <div className="property-list">
@@ -100,12 +95,16 @@ const PropertyList = () => {
                       <li>
                         <HomeOutlined />
                         {' '}
-                        {el.noUnitType} Unit Types
+                        {el.noUnitType}
+                        {' '}
+                        Unit Types
                       </li>
                       <li>
                         <HomeOutlined />
                         {' '}
-                        {el.noUnit} Unit
+                        {el.noUnit}
+                        {' '}
+                        Unit
                       </li>
                     </ul>
                   </div>

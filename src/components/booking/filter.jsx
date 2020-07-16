@@ -9,6 +9,7 @@ import {
   Checkbox,
   Row,
   Col,
+  Modal,
   Menu, Dropdown,
 } from 'antd';
 import {
@@ -40,17 +41,21 @@ const menu = (
   </Menu>
 );
 
-const BookingFilter = () => {
+const BookingFilter = (props) => {
   function onChange(checked) {
     console.log(`switch to ${checked}`);
   }
 
   return (
-    <Wrapper>
+    <Modal title="Filter" 
+    visible={props.visible}
+    onOk={props.handleOk}
+    onCancel={props.handleCancel}
+    wrapClassName="filter-modal">
       <div className="booking-filter">
         <div className="container">
           <Row>
-            <Col span={10}>
+            <Col span={24}>
               <div className="filter-box">
                 <h2>Filters</h2>
 
@@ -152,7 +157,7 @@ const BookingFilter = () => {
           </Row>
         </div>
       </div>
-    </Wrapper>
+      </Modal>
   );
 };
 
