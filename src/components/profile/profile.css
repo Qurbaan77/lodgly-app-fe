@@ -132,3 +132,9 @@
 .billing-container .ant-collapse-item:last-child > .ant-collapse-content {
     min-height: 225px;
 }
+
+.main-info-form .ant-upload-list-item-card-actions-btn {
+    background: transparent;
+    padding: 0;
+    border: none;
+}

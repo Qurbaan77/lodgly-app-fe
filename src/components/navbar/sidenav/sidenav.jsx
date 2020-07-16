@@ -172,12 +172,12 @@ const Sidenav = (props) => {
           <Link to="/booking">Booking</Link>
         </Menu.Item>
 
-        <Menu.Item hidden={hideCalendar}>
+        <Menu.Item key="1" hidden={hideCalendar}>
           <img src={calenderIcon} alt="calendar-icon" />
           <Link to="/calendar">Calendar</Link>
         </Menu.Item>
 
-        <SubMenu
+        <SubMenu key="2"
           disabled={disableProperties}
           title={(
             <div>

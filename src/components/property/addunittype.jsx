@@ -335,7 +335,7 @@ const AddUnitType = () => {
                 ) : null}
               </div>
               <Form.Item>
-                <Button htmlType="submit">Save</Button>
+                <Button htmlType="submit" style={{marginTop: "20px"}}>Save</Button>
               </Form.Item>
             </Form>
             <div className="panel-box units editunit" hidden={showPanel}>

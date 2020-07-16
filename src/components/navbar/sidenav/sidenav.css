@@ -169,3 +169,16 @@ margin-right: 10px;
 .main-menu li a:hover, .main-menu li span:hover {
   color: #fab52c!important;
 }
+
+.main-menu-mbl li img {
+  width: 18px;
+  margin-right: 10px;
+}
+
+.main-menu-mbl li a {
+  color: #b5b5b5!important;
+}
+
+.main-menu-mbl li .anticon {
+  color: #b5b5b5;
+}
