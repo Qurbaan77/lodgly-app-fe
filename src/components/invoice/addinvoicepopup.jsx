@@ -269,12 +269,28 @@ const AdInvoicePopup = (props) => {
               <Row>
                 <Col span={12} style={{ marginRight: 10 }}>
                   <Form.Item name="date" label="Date">
-                    <DatePicker />
+                    <DatePicker
+                      name="date"
+                      label="Date"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please enter date',
+                        },
+                      ]}
+                    />
                   </Form.Item>
                 </Col>
 
                 <Col span={9}>
-                  <Form.Item name="time" label="Time">
+                  <Form.Item name="time"
+                    label="Time"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter time',
+                      },
+                    ]}>
                     <TimePicker
                       format="HH:mm:ss"
                       value={time}
@@ -289,7 +305,16 @@ const AdInvoicePopup = (props) => {
 
               <Row>
                 <Col span={12}>
-                  <Form.Item name="deliveryDate" label="Delivery Date">
+                  <Form.Item
+                    name="deliveryDate"
+                    label="Delivery Date"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please enter delivery date',
+                      },
+                    ]}
+                  >
                     <DatePicker
                       value={deliveryDate}
                       onChange={(e) => {
@@ -347,14 +372,31 @@ const AdInvoicePopup = (props) => {
                 />
               </Form.Item>
 
-              <Form.Item label="Email" name="email">
+              <Form.Item label="Full Name"
+                name="clientName"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter client name',
+                  },
+                ]}
+              >
                 <Input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </Form.Item>
 
-              <Form.Item label="Address" name="address">
+              <Form.Item
+                label="Address"
+                name="address"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter client address',
+                  },
+                ]}
+              >
                 <Input
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
@@ -378,13 +420,26 @@ const AdInvoicePopup = (props) => {
                 <Form.Item
                   name={[ele, 'itemDescription']}
                   label="Item Description"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter item description',
+                    },
+                  ]}
                 >
                   <Input />
                 </Form.Item>
               </Col>
 
               <Col span={2}>
-                <Form.Item name={[ele, 'quantity']} label="Qty.">
+                <Form.Item name={[ele, 'quantity']} label="Qty."
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter quantity',
+                    },
+                  ]}
+                >
                   <Input
                     // value={quantity}
                     onBlur={(e) => handleQuantity(e, ele)}
@@ -393,7 +448,16 @@ const AdInvoicePopup = (props) => {
               </Col>
 
               <Col span={3}>
-                <Form.Item name={[ele, 'price']} label="Price">
+                <Form.Item
+                  name={[ele, 'price']}
+                  label="Price"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Please enter price',
+                    },
+                  ]}
+                >
                   <Input
                     // value={price}
                     onBlur={(e) => handlePrice(e, ele)}

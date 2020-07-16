@@ -178,7 +178,7 @@ const CreateBookingPopup = (props) => {
         + (values[ele].servicePrice
           * values[ele].serviceQuantity
           * values[ele].serviceTax)
-          / 100;
+        / 100;
       values[ele].serviceAmount = data;
       serviceData.push(values[ele]);
       console.log(values[ele]);
@@ -277,8 +277,7 @@ const CreateBookingPopup = (props) => {
     const [unit] = unitData
       .filter((el) => el.unitName === unitname)
       .map((el) => el.unittypeId);
-    console.log(unit);
-    unitTypeData.map((el) => {
+    unitTypeData.forEach((el) => {
       if (el.id === unit) {
         setPrice(el.perNight);
         form.setFieldsValue({ perNight: el.perNight });
@@ -289,26 +288,21 @@ const CreateBookingPopup = (props) => {
     setUnitName(unitname);
   };
   const fun5 = (value, event) => {
-    console.log(event.children);
     setChannel(event.children);
   };
   const handleCommissionChange = (e) => {
-    console.log(e.target.value);
     setChannelCommission(e.target.value);
   };
 
   const handleDiscount = (value) => {
-    console.log(value);
     setDiscountType(value);
     if (value === '%') {
       const data = amt * (discountAmount / 100);
       setDiscount(data);
       setAccomodation(amt - data);
-      console.log(data);
     } else {
       setDiscount(discountAmount);
       setAccomodation(amt - discountAmount);
-      console.log(discountAmount);
     }
   };
 
@@ -325,13 +319,13 @@ const CreateBookingPopup = (props) => {
 
   const fun4 = (value) => {
     if (value) {
-    console.log(value[0]._d);
-    const d1 = new Date(value[0]._d);
-    const d2 = new Date(value[1]._d);
-    const diff = Math.abs(d1 - d2);
-    const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
-    console.log(day);
-    setNight(day);
+      console.log(value[0]._d);
+      const d1 = new Date(value[0]._d);
+      const d2 = new Date(value[1]._d);
+      const diff = Math.abs(d1 - d2);
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+      console.log(day);
+      setNight(day);
     }
   };
 
