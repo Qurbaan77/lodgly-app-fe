@@ -45,7 +45,7 @@ const Booking = () => {
   const [visible, setVisible] = useState(false);
   const [visibleGuest, setVisibleGuest] = useState(false);
   const [visibleEditBooking, setVisibleEditBooking] = useState(false);
-  const [visiblefilter,setVisibleFilter]=useState(false)
+  const [visiblefilter, setVisibleFilter] = useState(false)
   const [guest, setGuest] = useState(false);
   const [booked, setBooked] = useState(true);
   const [bookingData, setBookingData] = useState([]);
@@ -106,10 +106,10 @@ const Booking = () => {
     console.log(data);
     data.length
       ? data.map((el) => {
-          el.fullname
-            ? guestname.push(el.fullname)
-            : guestname.push('Unknown Guest');
-        })
+        el.fullname
+          ? guestname.push(el.fullname)
+          : guestname.push('Unknown Guest');
+      })
       : guestname.push('Unknown Guest');
     console.log(guestname);
     guestname.push(data.fullname);
@@ -254,9 +254,9 @@ const Booking = () => {
                   </div>
 
                   <div className="filter-icon">
-                  <Button onClick={showfilter}> <img src={filter_icon} alt="filter-icon" />
-                 </Button>
-                    
+                    <Button onClick={showfilter}> <img src={filter_icon} alt="filter-icon" />
+                    </Button>
+
                   </div>
                 </div>
 
@@ -312,39 +312,39 @@ const Booking = () => {
                         Create Booking
                       </Button>
                     ) : (
-                      <Tooltip
-                        title="You are not authorize to create booking"
-                        color="gold"
-                      >
-                        <Button
-                          disabled="true"
-                          type="primary"
-                          icon={<PlusOutlined />}
-                          onClick={() => {
-                            setVisible(true);
-                            setEditBookingValues({});
-                            setEditCurrentGuest({});
-                            form.resetFields();
-                          }}
+                        <Tooltip
+                          title="You are not authorize to create booking"
+                          color="gold"
                         >
-                          Create Booking
+                          <Button
+                            disabled="true"
+                            type="primary"
+                            icon={<PlusOutlined />}
+                            onClick={() => {
+                              setVisible(true);
+                              setEditBookingValues({});
+                              setEditCurrentGuest({});
+                              form.resetFields();
+                            }}
+                          >
+                            Create Booking
                         </Button>
-                      </Tooltip>
-                    )
+                        </Tooltip>
+                      )
                   ) : (
-                    <Button
-                      type="primary"
-                      icon={<PlusOutlined />}
-                      onClick={() => {
-                        setVisible(true);
-                        setEditBookingValues({});
-                        setEditCurrentGuest({});
-                        form.resetFields();
-                      }}
-                    >
-                      Create Booking
-                    </Button>
-                  )}
+                      <Button
+                        type="primary"
+                        icon={<PlusOutlined />}
+                        onClick={() => {
+                          setVisible(true);
+                          setEditBookingValues({});
+                          setEditCurrentGuest({});
+                          form.resetFields();
+                        }}
+                      >
+                        Create Booking
+                      </Button>
+                    )}
                 </div>
               </div>
             </Col>
@@ -376,21 +376,21 @@ const Booking = () => {
                             onClick={() => editBooking(currentBooking)}
                           />
                         ) : (
-                          <Tooltip
-                            title="You are not authorize to edit booking"
-                            color="gold"
-                          >
-                            <FormOutlined
-                              disabled="true"
-                              onClick={() => editBooking(currentBooking)}
-                            />
-                          </Tooltip>
-                        )
+                            <Tooltip
+                              title="You are not authorize to edit booking"
+                              color="gold"
+                            >
+                              <FormOutlined
+                                disabled="true"
+                                onClick={() => editBooking(currentBooking)}
+                              />
+                            </Tooltip>
+                          )
                       ) : (
-                        <FormOutlined
-                          onClick={() => editBooking(currentBooking)}
-                        />
-                      )}
+                          <FormOutlined
+                            onClick={() => editBooking(currentBooking)}
+                          />
+                        )}
                       <Dropdown overlay={menu}>
                         <Button>
                           Booked <DownOutlined />
@@ -525,11 +525,11 @@ const Booking = () => {
         setBooked={setBooked}
       />
 
-      <BookingFilter 
-       visible={visiblefilter}
-       handleCancel={handleCancel}
-       handleOk={handleOk}
-       />
+      <BookingFilter
+        visible={visiblefilter}
+        handleCancel={handleCancel}
+        handleOk={handleOk}
+      />
     </Wrapper>
   );
 };

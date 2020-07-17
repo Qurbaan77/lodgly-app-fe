@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Layout } from 'antd';
 import TopHeader from '../navbar/topheader/topheader';
 import Sidenav from '../navbar/sidenav/sidenav';
@@ -6,27 +7,18 @@ import AlertBox from './alert';
 
 const { Content } = Layout;
 
-const Wrapper = (props) => {
-  const [isAlertBoxCollapsed, setAlertBoxXollapsed] = useState(false);
-
+const Wrapper = ({ img, name, getUserInfo, fun, children, onChange }) => {
   const handleChange = (newValue) => {
-    props.onChange(newValue);
-  };
-
-  const handleAlertBox = (value) => {
-    setAlertBoxXollapsed(value);
+    onChange(newValue);
   };
 
   return (
     <div className="wrapper">
       <Layout>
-        <Sidenav img={props.img} name={props.name} getUserInfo={props.getUserInfo} />
-
+        <Sidenav img={img} name={name} getUserInfo={getUserInfo} />
         <Layout className="site-layout">
-          <TopHeader onChange={handleChange} fun={props.fun} />
-          {
-            isAlertBoxCollapsed ? '' : <AlertBox handleAlertBox={handleAlertBox} />
-          }
+          <TopHeader onChange={handleChange} fun={fun} />
+          <AlertBox />
           <Content
             className="site-layout-background"
             style={{
@@ -35,12 +27,18 @@ const Wrapper = (props) => {
               minHeight: 280,
             }}
           >
-            <div className="content">{props.children}</div>
+            <div className="content">{children}</div>
           </Content>
         </Layout>
       </Layout>
     </div>
   );
+};
+
+Wrapper.propTypes = {
+  img: PropTypes.string.isRequired,
+  getUserInfo: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
 };
 
 export default Wrapper;

@@ -99,7 +99,7 @@ const AdInvoicePopup = (props) => {
       valuesCopy.status = 'Issued';
       const res = await userInstance.post('/invoicedraft', valuesCopy);
       console.log('pdf post response', res);
-    setShowLoader(true);
+      setShowLoader(true);
       if (res.status === 200) {
         const element = document.createElement('a');
         element.setAttribute('href', `${res.data.url}`);
@@ -116,15 +116,15 @@ const AdInvoicePopup = (props) => {
     } else {
       valuesCopy.status = 'Draft';
       const response = await userInstance.post('/invoicedraft', valuesCopy);
-     setShowLoader(true);
+      setShowLoader(true);
       console.log('draft response', response);
       if (response.data.code === 200) {
-     setShowLoader(true);
+        setShowLoader(true);
         props.close();
         props.getData();
         props.toasterMessage('successfully drafted invoice');
       } else {
-       setShowLoader(true);
+        setShowLoader(true);
       }
     }
     setShowLoader(true);

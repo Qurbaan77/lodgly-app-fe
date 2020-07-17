@@ -1,4 +1,6 @@
-import React, { useEffect, useState, Fragment } from 'react';
+import React, {
+  useEffect, useState, useCallback, Fragment,
+} from 'react';
 import './invoice.css';
 import {
   Select,
@@ -10,7 +12,9 @@ import {
   Pagination,
   Tag,
 } from 'antd';
-import { PlusOutlined, DeleteOutlined, FormOutlined } from '@ant-design/icons';
+import {
+  PlusOutlined, DeleteOutlined, FormOutlined, MoreOutlined,
+} from '@ant-design/icons';
 import Wrapper from '../wrapper';
 
 // import { Table } from 'antd';
@@ -29,7 +33,6 @@ import EditInvoicePopup from './editInvoicePopup';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import DeletePopup from './deletepopup';
-import { element } from 'prop-types';
 
 const Invoice = () => {
   const { Option } = Select;
@@ -52,7 +55,17 @@ const Invoice = () => {
   const [notifyMsg, setNotifyMsg] = useState();
   const [visibleDeletePopup, setVisibleDeletePopup] = useState(false);
   const [removeId, setDeleteId] = useState(null);
+  const [selectAllCheck, setSelectAllCheck] = useState(false);
 
+  function useForceUpdate() {
+    const [, setTick] = useState(0);
+    const update = useCallback(() => {
+      setTick((tick) => tick + 1);
+    }, []);
+    return update;
+  }
+
+  const forceUpdate = useForceUpdate();
   console.log(topNavId);
   const show = () => {
     setVisible(true);
@@ -161,11 +174,13 @@ const Invoice = () => {
   };
   const handleCheck = (el) => {
     invoiceData.forEach((element) => {
-      if (el.id === element.id) {
-        console.log(element)
+      if (el.id === element.id && element[Object.keys(el)[20]] === true) {
+        element[Object.keys(el)[20]] = false;
+      } else if (el.id === element.id && element[Object.keys(el)[20]] === false) {
+        element[Object.keys(el)[20]] = true;
       }
-
-    })
+    });
+    setInvoiceData(invoiceData);
     const filterFromArray = checkedInvoice.filter((ele) => ele.id === el.id);
     if (filterFromArray.length === 0) {
       setCheckedInvoice([...checkedInvoice, el]);
@@ -184,28 +199,64 @@ const Invoice = () => {
   }, []);
 
   const handleDownload = () => {
-    setShowLoader(false);
     const urls = [];
     checkedInvoice.map((el) => (el.pdfurl ? urls.push(el.pdfurl) : ''));
-
-    const download = (pdfurls) => {
-      const url = pdfurls.pop();
-      console.log(url);
-      const a = document.createElement('a');
-      a.setAttribute('href', url);
-      a.setAttribute('download', '');
-      a.click();
-      if (pdfurls.length === 0) {
-        clearInterval(interval);
-      }
-    };
-    const interval = setInterval(download, 1000, urls);
-    setShowLoader(true);
+    if (urls.length) {
+      const download = (pdfurls) => {
+        const url = pdfurls.pop();
+        console.log(url);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', '');
+        a.click();
+        if (pdfurls.length === 0) {
+          clearInterval(interval);
+        }
+      };
+      const interval = setInterval(download, 1000, urls);
+    }
   };
 
   const handlePrint = () => {
     const [url] = checkedInvoice.map((el) => el.pdfurl);
     window.open(url);
+  };
+
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
+  const handleSelectAll = (e) => {
+    if (e.currentTarget.value === 'true') {
+      setSelectAllCheck(false);
+      invoiceData.slice(0).reverse().slice(pagination.minValue, pagination.maxValue)
+        .forEach((el) => {
+          el[Object.keys(el)[20]] = false;
+        });
+      setInvoiceData(invoiceData);
+      setCheckedInvoice([]);
+    } else {
+      setSelectAllCheck(true);
+      invoiceData.slice(0).reverse().slice(pagination.minValue, pagination.maxValue)
+        .forEach((el) => {
+          el[Object.keys(el)[20]] = true;
+        });
+      const data = invoiceData.filter((el) => el[Object.keys(el)[20]] !== false);
+      setInvoiceData(invoiceData);
+      setCheckedInvoice(data);
+    }
+
+    forceUpdate();
+  };
+
+  const handleCancelCheck = () => {
+    setSelectAllCheck(false);
+    invoiceData.slice(0).reverse().slice(pagination.minValue, pagination.maxValue)
+      .forEach((el) => {
+        el[Object.keys(el)[20]] = false;
+      });
+    setInvoiceData(invoiceData);
+    setCheckedInvoice([]);
   };
 
   const enableButton = (
@@ -309,7 +360,7 @@ const Invoice = () => {
                           <tr key={el.id}>
                             <td>
                               <Checkbox
-                                checked={el.checked}
+                                checked={el[Object.keys(el)[20]]}
                                 onClick={() => handleCheck(el, i)}
                               />
                               {el.date.slice(0, 10)}
@@ -325,10 +376,14 @@ const Invoice = () => {
                             <td>
                               {el.total}
                               {' '}
-                            EUR
-                          </td>
+                              EUR
+                            </td>
                             <td>{el.status}</td>
                             <td>
+                              <div className="action-icon">
+                                <MoreOutlined />
+                              </div>
+
                               <div className="invoice-action">
                                 <FormOutlined
                                   onClick={() => showEditInvoice(el, i)}
@@ -348,15 +403,12 @@ const Invoice = () => {
                     <div className="filter-invoice">
                       <ul>
                         <li>
-                          <img src={editIcon} alt="" />
-                        </li>
-                        <li>
                           <img
                             role="presentation"
                             className="download-img"
                             src={refreshIcon}
                             alt=""
-                            onClick={getData}
+                            onClick={handleRefresh}
                           />
                         </li>
                         <li>
@@ -365,18 +417,18 @@ const Invoice = () => {
                       </ul>
                     </div>
                     <div className="invoice-filter-box">
-                      {/* <Checkbox hidden={true}>Select all</Checkbox> */}
-                      {/* {checkedInvoice.length ? (
-                      <div className='cancel-icon' onClick={setCheckedInvoice}>
-                        <img src={cancel_icon} alt=''/>
+                      <Checkbox checked={selectAllCheck} value={selectAllCheck} onClick={handleSelectAll}>Select all</Checkbox>
+                      {checkedInvoice.length ? (
+                        <div className="cancel-icon" onClick={handleCancelCheck} role="presentation">
+                          <img src={cancelIcon} alt="" />
                         Cancel
-                      </div>
-                    ) : (
-                      <div className='cancel-icon' hidden={true}>
-                        <img src={cancel_icon} alt=''/>
+                        </div>
+                      ) : (
+                          <div className="cancel-icon" hidden>
+                            <img src={cancelIcon} alt="" />
                         Cancel
-                      </div>
-                    )} */}
+                          </div>
+                        )}
 
                       {checkedInvoice.length ? (
                         <Tag color="#FB4B56">

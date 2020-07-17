@@ -59,6 +59,7 @@ const GuestPopup = (props) => {
       setNotifyMsg(msg);
     }
     form.resetFields();
+    props.closeToaster();
   };
 
   return (

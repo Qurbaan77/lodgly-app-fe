@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { Alert } from 'antd';
 import { userInstance } from '../../axios/axiosconfig';
 
@@ -23,7 +22,7 @@ const AlertBox = () => {
     <>
       {!isCollapsed ? (
         <div className="alert-box">
-          <Alert message={`Your trail period will end in ${daysLeft} days`} description={<a href="/billinginformation">Subscribe</a>} type="warning" showIcon closable />
+          <Alert message={`Your trail period will end in ${daysLeft} days`} description={<a href="/billinginformation">Subscribe</a>} type="warning" showIcon closable onClose={handleClose} />
         </div>
       )
         : ''}

@@ -43,6 +43,20 @@
 }
 
 
+.action-icon{
+  position: absolute;
+}
+
+.action-icon .anticon {
+  font-size: 22px;
+  color: #999;
+}
+
+.custom-table table tr:hover .action-icon {
+  opacity: 0;
+}
+
+
 
 .invoice-action {
   opacity: 0;
