@@ -51,12 +51,11 @@ const Login = () => {
     setNotifyType('');
   };
 
-
   return (
     <div className="login">
       <div className="login-section">
         <div className="container">
-          <div classNmae="row">
+          <div className="row">
             <div className="col-md-12">
               <div className="login-logo">
                 <img src={logo} alt="Logo" />

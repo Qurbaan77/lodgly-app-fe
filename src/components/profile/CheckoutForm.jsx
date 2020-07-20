@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { Form, Button } from 'antd';
 import { userInstance } from '../../axios/axiosconfig';
@@ -22,12 +22,37 @@ const CARD_ELEMENT_OPTIONS = {
   },
 };
 const CheckoutForm = ({
-  total, currency, unitsSelected, subscriptionType, planType,
+  total, currency, unitsSelected, subscriptionType, planType, toaster,
 }) => {
-    console.log( total, currency, unitsSelected, subscriptionType, planType);
+  console.log(total, currency, unitsSelected, subscriptionType, planType);
   const [error, setError] = useState();
   const stripe = useStripe();
   const elements = useElements();
+  const [data, addData] = useState();
+  const [units, setUnits] = useState();
+  const [del, setDel] = useState(false);
+
+  // getting ongoing subscription
+  const getUser = async () => {
+    const response = await userInstance.get('/transactions');
+    const { Data, code } = response.data;
+    if (code === 200 && Data != null) {
+      addData(Data);
+      setUnits(Data.units);
+      const value = localStorage.getItem('delete');
+      const datainlocal = JSON.parse(value) === true;
+      if (datainlocal) {
+        setDel(datainlocal);
+      } else {
+        setDel(false);
+      }
+    } else {
+      addData('');
+    }
+  };
+  useEffect(() => {
+    getUser();
+  }, []);
 
   // Handle real-time validation errors from the card Element.
   const handleChange = (event) => {
@@ -40,7 +65,7 @@ const CheckoutForm = ({
 
   // Handle form submission.
   const handleSubmit = async (event) => {
-      console.log(event);
+    console.log(event);
     // event.preventDefault();
     if (!stripe || !elements) {
       // Stripe.js has not loaded yet. Make sure to disable
@@ -58,23 +83,20 @@ const CheckoutForm = ({
       if (total !== 0) {
         const payload = {
           stripeToken: result.token.id,
-          amount: total,
+          amount: total / 100,
           interval: subscriptionType,
           noOfUnits: unitsSelected,
           currency,
           planType,
         };
-        const response = await userInstance.post(
-          '/charge',
-          payload,
-        );
+        const response = await userInstance.post('/charge', payload);
         console.log(response);
-        const { code, msg } = response.data;
+        const { code } = response.data;
         if (code === 200) {
-          // Toaster message here
-          window.location.href = '/payment';
+          toaster('success', 'Your Transaction was successful');
+          // window.location.href = '/payment';
         } else {
-          // toaster message here
+          toaster('error', 'Transaction Failed');
         }
       } else {
         const err = 'Amount Is Empty';
@@ -85,16 +107,16 @@ const CheckoutForm = ({
 
   return (
     <div>
-      <Form onFinish={(e)=>handleSubmit(e)}>
+      <Form onFinish={(e) => handleSubmit(e)}>
         {' '}
-        <Form.Item label='Enter Your Card Details'>
+        <Form.Item label="Enter Your Card Details">
           <CardElement
-            className='stripe-element'
+            className="stripe-element"
             options={CARD_ELEMENT_OPTIONS}
             onChange={handleChange}
           />
         </Form.Item>
-        <Button type='primary' disabled={!stripe} htmlType="submit">
+        <Button type="primary" disabled={!stripe} htmlType="submit">
           submit Details
         </Button>
       </Form>

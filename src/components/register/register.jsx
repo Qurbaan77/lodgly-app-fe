@@ -45,7 +45,7 @@ const Register = () => {
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <div className="register-section">
         <div className="container">
-          <div classNmae="row">
+          <div className="row">
             <div className="col-md-12">
               <div className="register-logo">
                 <img src={logo} alt="Logo" />

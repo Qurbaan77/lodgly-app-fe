@@ -16,6 +16,7 @@ import BillingHistory from './billinghistory';
 import { basicPrice, advancePrice, discount } from '../../config/keys';
 import { userInstance, stripeKey } from '../../axios/axiosconfig';
 import CheckoutForm from './CheckoutForm';
+import Toaster from '../toaster/toaster';
 
 const stripePromise = loadStripe(stripeKey);
 
@@ -31,6 +32,14 @@ const BillingInformation = () => {
   const [subscriptionType, setSubscriptionType] = useState('month');
   const [exchangeRate, setExchangeRate] = useState([]);
   const [currency, setCurrency] = useState('');
+  const [notifyType, setNotifyType] = useState();
+  const [notifyMsg, setNotifyMsg] = useState();
+  const [subscribedUnits, setSubscribedUnits] = useState();
+  const [data, addData] = useState();
+  const [del, setDel] = useState(false);
+  const [invoiceList, setInvoiceList] = useState([]);
+  const [end, setEnd] = useState('');
+  const [currentCurrency, setCurrentCurrency] = useState('');
 
   useEffect(() => {
     const getData = async () => {
@@ -51,6 +60,56 @@ const BillingInformation = () => {
     };
     getData();
   }, []);
+
+  console.log(data);
+
+  // function for getting current subscription
+
+  const getUser = async () => {
+    const response = await userInstance.get('/transactions');
+    console.log(response);
+    const { code, transactions } = response.data;
+    if (code === 200 && transactions != null) {
+      addData(transactions);
+      setSubscribedUnits(transactions[0].units);
+      setCurrentCurrency(transactions[0].currency);
+      const value = localStorage.getItem('delete');
+      const datainlocal = JSON.parse(value) === true;
+      if (datainlocal) {
+        setDel(datainlocal);
+      } else {
+        setDel(false);
+      }
+    } else {
+      addData('');
+    }
+  };
+
+  // function for getting invoices
+  const getInvoice = async () => {
+    const response = await userInstance.post('/getBillingInvoice');
+    console.log(response);
+    if (response.data.code === 200) {
+      setInvoiceList(response.data.invoicesList);
+      console.log(response.data.invoicesList[0]);
+      const { end: endAt } = response.data.invoicesList[0];
+      setEnd(endAt);
+    }
+  };
+  console.log(invoiceList);
+  useEffect(() => {
+    getUser();
+    getInvoice();
+  }, []);
+
+  const close = () => {
+    setNotifyType('');
+  };
+
+  const toasterMessage = (type, msg) => {
+    setNotifyType(type);
+    setNotifyMsg(msg);
+  };
 
   /* ------------------------------- All input handling functions here -------------------------- */
 
@@ -100,22 +159,22 @@ const BillingInformation = () => {
         if (subscriptionType === 'year' && currency === 'CHF') {
           setTotal(
             basicPrice * exchangeRate.CHF * unitsSelected * 12
-              - (basicPrice * exchangeRate.CHF * unitsSelected * 12 * discount)
-                / 100,
+            - (basicPrice * exchangeRate.CHF * unitsSelected * 12 * discount)
+            / 100,
           );
         }
         if (subscriptionType === 'year' && currency === 'PLN') {
           setTotal(
             basicPrice * exchangeRate.PLN * unitsSelected * 12
-              - (basicPrice * exchangeRate.PLN * unitsSelected * 12 * discount)
-                / 100,
+            - (basicPrice * exchangeRate.PLN * unitsSelected * 12 * discount)
+            / 100,
           );
         }
         if (subscriptionType === 'year' && currency === 'GBP') {
           setTotal(
             basicPrice * exchangeRate.GBP * unitsSelected * 12
-              - (basicPrice * exchangeRate.GBP * unitsSelected * 12 * discount)
-                / 100,
+            - (basicPrice * exchangeRate.GBP * unitsSelected * 12 * discount)
+            / 100,
           );
         }
       }
@@ -137,19 +196,19 @@ const BillingInformation = () => {
       if (subscriptionType === 'year' && currency === 'CHF') {
         setTotal(
           basicPrice * exchangeRate.CHF * e * 12
-            - (basicPrice * exchangeRate.CHF * e * 12 * discount) / 100,
+          - (basicPrice * exchangeRate.CHF * e * 12 * discount) / 100,
         );
       }
       if (subscriptionType === 'year' && currency === 'PLN') {
         setTotal(
           basicPrice * exchangeRate.PLN * e * 12
-            - (basicPrice * exchangeRate.PLN * e * 12 * discount) / 100,
+          - (basicPrice * exchangeRate.PLN * e * 12 * discount) / 100,
         );
       }
       if (subscriptionType === 'year' && currency === 'GBP') {
         setTotal(
           basicPrice * exchangeRate.GBP * e * 12
-            - (basicPrice * exchangeRate.GBP * e * 12 * discount) / 100,
+          - (basicPrice * exchangeRate.GBP * e * 12 * discount) / 100,
         );
       }
     }
@@ -211,7 +270,7 @@ const BillingInformation = () => {
         setUnitPrice(advancePrice * exchangeRate.CHF);
         const amount = advancePrice * exchangeRate.CHF * unitsSelected * 12
           - (advancePrice * exchangeRate.CHF * unitsSelected * 12 * discount)
-            / 100;
+          / 100;
         setTotal(amount);
       }
     }
@@ -235,7 +294,7 @@ const BillingInformation = () => {
         setUnitPrice(advancePrice * exchangeRate.PLN);
         const amount = advancePrice * exchangeRate.PLN * unitsSelected * 12
           - (advancePrice * exchangeRate.PLN * unitsSelected * 12 * discount)
-            / 100;
+          / 100;
         setTotal(amount);
       }
     }
@@ -259,16 +318,17 @@ const BillingInformation = () => {
         setUnitPrice(advancePrice * exchangeRate.GBP);
         const amount = advancePrice * exchangeRate.GBP * unitsSelected * 12
           - (advancePrice * exchangeRate.GBP * unitsSelected * 12 * discount)
-            / 100;
+          / 100;
         setTotal(amount);
       }
     }
   };
 
-  /* ------------------------------- All payment handling functions here -------------------------- */
+  /* ----------------------------- All payment handling functions here -------------------------- */
 
   return (
     <Wrapper>
+      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <div className="billing-information">
         <div className="page-header">
           <h1>
@@ -407,12 +467,12 @@ const BillingInformation = () => {
                               <div>
                                 <Elements stripe={stripePromise}>
                                   <CheckoutForm
-                                    total={total}
+                                    total={(total + Number.EPSILON) * 100}
                                     currency={currency}
                                     unitsSelected={unitsSelected}
                                     subscriptionType={subscriptionType}
                                     planType={planType}
-
+                                    toaster={toasterMessage}
                                   />
                                 </Elements>
                               </div>
@@ -425,58 +485,81 @@ const BillingInformation = () => {
                 </Panel>
               </Collapse>
             </Col>
+            {
+              data && data.length > 0 ? (
+                <Col span={12}>
+                  <Collapse defaultActiveKey={['1']} accordion>
+                    <Panel header="Monthly Subscription Plan" key="1">
+                      <div className="billing-info-form">
+                        <Row gutter={[16, 0]}>
+                          <Col span={14}>
+                            <div className="subscription-plan-list">
+                              <ul>
+                                <li>
+                                  Plan
+                                  {' '}
+                                  <span>
+                                    {data[0].Amount}
+                                    {' '}
+                                    {data[0].currency}
+                                    /
+                                    {' '}
+                                    {data[0].interval}
+                                  </span>
+                                </li>
+                                {/* <li>
+                                  Bonus Credit
+                                  {' '}
+                                  <span>305 EUR</span>
+                                </li> */}
+                                <li>
+                                  Plan Type
+                                  {' '}
+                                  <span>{data[0].planType}</span>
+                                </li>
+                                <li>
+                                  Discount
+                                  {' '}
+                                  <span>{data[0].planType === 'basic' ? '' : '23% off Pay-As-You-Go'}</span>
+                                </li>
+                              </ul>
+                            </div>
+                          </Col>
 
-            <Col span={12}>
-              <Collapse defaultActiveKey={['1']} accordion>
-                <Panel header="Monthly Subscription Plan" key="1">
-                  <div className="billing-info-form">
-                    <Row gutter={[16, 0]}>
-                      <Col span={14}>
-                        <div className="subscription-plan-list">
-                          <ul>
-                            <li>
-                              Tier 3
-                              {' '}
-                              <span>1,000,00 EUR/month</span>
-                            </li>
-                            <li>
-                              Bonus Credit
-                              {' '}
-                              <span>305 EUR</span>
-                            </li>
-                            <li>
-                              Rate
-                              {' '}
-                              <span>11.5 / hr</span>
-                            </li>
-                            <li>
-                              Discount
-                              {' '}
-                              <span>23% off Pay-As-You-Go</span>
-                            </li>
-                          </ul>
-                        </div>
-                      </Col>
-
-                      <Col span={10}>
-                        <div className="subscription-plan-list">
-                          <p>
-                            Your
-                            {' '}
-                            <span>Monthly Subscription Plan</span>
-                          </p>
-                          <p>will review on November 20, 2019.</p>
-                        </div>
-                      </Col>
-                    </Row>
-                  </div>
-                </Panel>
-              </Collapse>
-            </Col>
+                          <Col span={10}>
+                            <div className="subscription-plan-list">
+                              <p>
+                                Your
+                                {' '}
+                                <span>
+                                  {data[0].interval}
+                                  ly Subscription Plan
+                                </span>
+                              </p>
+                              <p>
+                                will renew on
+                                {' '}
+                                {' '}
+                                {end}
+                              </p>
+                            </div>
+                          </Col>
+                        </Row>
+                      </div>
+                    </Panel>
+                  </Collapse>
+                </Col>
+              )
+                : ''
+            }
           </Row>
         </div>
       </div>
-      <BillingHistory />
+      <BillingHistory
+        invoiceList={invoiceList}
+        data={data}
+        currency={currentCurrency}
+      />
     </Wrapper>
   );
 };
