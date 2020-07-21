@@ -27,7 +27,7 @@ const BillingHistory = ({ invoiceList, data }) => (
                   <tr key={el.invoiceId}>
                     <td>{el.start}</td>
                     <td>
-                      {data[0].interval}
+                      {data.interval}
                       ly Subscription
                     </td>
                     <td>

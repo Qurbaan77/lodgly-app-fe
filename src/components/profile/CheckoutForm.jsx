@@ -23,36 +23,12 @@ const CARD_ELEMENT_OPTIONS = {
 };
 const CheckoutForm = ({
   total, currency, unitsSelected, subscriptionType, planType, toaster,
+  submitChange, showCancelCheckout,
 }) => {
-  console.log(total, currency, unitsSelected, subscriptionType, planType);
+  console.log();
   const [error, setError] = useState();
   const stripe = useStripe();
   const elements = useElements();
-  const [data, addData] = useState();
-  const [units, setUnits] = useState();
-  const [del, setDel] = useState(false);
-
-  // getting ongoing subscription
-  const getUser = async () => {
-    const response = await userInstance.get('/transactions');
-    const { Data, code } = response.data;
-    if (code === 200 && Data != null) {
-      addData(Data);
-      setUnits(Data.units);
-      const value = localStorage.getItem('delete');
-      const datainlocal = JSON.parse(value) === true;
-      if (datainlocal) {
-        setDel(datainlocal);
-      } else {
-        setDel(false);
-      }
-    } else {
-      addData('');
-    }
-  };
-  useEffect(() => {
-    getUser();
-  }, []);
 
   // Handle real-time validation errors from the card Element.
   const handleChange = (event) => {
@@ -90,7 +66,6 @@ const CheckoutForm = ({
           planType,
         };
         const response = await userInstance.post('/charge', payload);
-        console.log(response);
         const { code } = response.data;
         if (code === 200) {
           toaster('success', 'Your Transaction was successful');
@@ -107,19 +82,40 @@ const CheckoutForm = ({
 
   return (
     <div>
-      <Form onFinish={(e) => handleSubmit(e)}>
-        {' '}
-        <Form.Item label="Enter Your Card Details">
-          <CardElement
-            className="stripe-element"
-            options={CARD_ELEMENT_OPTIONS}
-            onChange={handleChange}
-          />
-        </Form.Item>
-        <Button type="primary" disabled={!stripe} htmlType="submit">
-          submit Details
-        </Button>
-      </Form>
+      {
+      showCancelCheckout
+        ? (
+          <Form onFinish={(e) => submitChange(e)}>
+            {' '}
+            <Form.Item label="Enter Your Card Details">
+              <CardElement
+                className="stripe-element"
+                options={CARD_ELEMENT_OPTIONS}
+                onChange={handleChange}
+              />
+            </Form.Item>
+            <Button type="primary" disabled={!stripe} htmlType="submit">
+              submit Details
+            </Button>
+          </Form>
+        )
+        : (
+          <Form onFinish={(e) => handleSubmit(e)}>
+            {' '}
+            <Form.Item label="Enter Your Card Details">
+              <CardElement
+                className="stripe-element"
+                options={CARD_ELEMENT_OPTIONS}
+                onChange={handleChange}
+              />
+            </Form.Item>
+            <Button type="primary" disabled={!stripe} htmlType="submit">
+              submit Details
+            </Button>
+          </Form>
+        )
+    }
+
     </div>
   );
 };
