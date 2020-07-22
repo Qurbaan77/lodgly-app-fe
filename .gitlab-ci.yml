@@ -1,7 +1,9 @@
 image: node:latest
 
 variables:
-  DIST_PATH: build/
+  DIST_PATH: "build/"
+  S3_BUCKET_NAME: "app.lodgly.dev-eu-west-1"
+  DISTTRIBUTION_ID_STAGING: "E1JQNPOIGER7J"
 
 stages:
   - build
@@ -11,31 +13,36 @@ cache:
   key: $CI_COMMIT_REF_SLUG
   paths:
     - node_modules/
+    - .cache/
+    - build/
 
 build:
   stage: build
   script:
     - npm prune
-    - npm install --quiet
-    - CI=false npm run build
-  environment:
-    name: staging
+    - npm install --production
+    - npm run build
   artifacts:
     when: on_success
     paths:
       - $DIST_PATH
     expire_in: 20 mins
+  only:
+    - staging
+    - master
 
 staging:
   image: python:latest
   stage: deploy
+  dependencies:
+    - build
   before_script:
     - pip install awscli
   script:
-    - aws s3 sync $DIST_PATH s3://${S3_BUCKET_NAME}/ --acl public-read --delete
-    # - id=$(aws cloudfront create-invalidation --distribution-id ${CF_DISTRIBUTION_ID} --paths '/*' --query 'Invalidation.Id' --output text) && aws cloudfront wait invalidation-completed --id ${id} --distribution-id ${CF_DISTRIBUTION_ID}
+    - aws s3 sync $DIST_PATH s3://${S3_BUCKET_NAME}/ --delete
+    - INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id ${DISTTRIBUTION_ID_STAGING} --paths /* --query 'Invalidation.Id' --output text) && aws cloudfront wait invalidation-completed --id ${INVALIDATION_ID} --distribution-id ${DISTTRIBUTION_ID_STAGING}
   environment:
     name: staging
-    url: https://staging.app.lodgly.dev/
+    url: https://d30z3lnbnqtivm.cloudfront.net
   only:
     - staging
