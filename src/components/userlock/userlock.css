@@ -1,0 +1,29 @@
+.user-lock {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-lock-content {
+    padding: 20px;
+    text-align: center;
+}
+
+.user-lock-content .anticon {
+    font-size: 80px;
+    color: #d4d4d4;
+    background: #f1f1f1;
+    width: 150px;
+    height: 150px;
+    line-height: 175px;
+    border-radius: 100%;
+}
+
+
+
+.user-lock-content p {
+    font-size: 18px;
+    padding-top: 20px;
+    color: #999;
+}
