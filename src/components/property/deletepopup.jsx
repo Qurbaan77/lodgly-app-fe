@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './property.css';
 import { Button } from 'antd';
 import { WarningOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -18,5 +19,14 @@ const DeletePopup = ({ dataObject, cancel }) => (
     </Button>
   </div>
 );
+
+DeletePopup.propTypes = {
+  dataObject: PropTypes.func,
+  cancel: PropTypes.func,
+};
+DeletePopup.defaultProps = {
+  dataObject: () => {},
+  cancel: () => {},
+};
 
 export default DeletePopup;

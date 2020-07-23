@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import './stats.css';
 import { Row, Col } from 'antd';
 import Chart from 'react-apexcharts';
@@ -6,65 +7,91 @@ import Wrapper from '../wrapper';
 import { userInstance } from '../../axios/axiosconfig';
 import statsIcon from '../../assets/images/menu/stats-icon.png';
 import qst from '../../assets/images/menu/qst.png';
+import UserLock from '../userlock/userlock';
 
 const Stats = () => {
   const [topNavId, setTopNavId] = useState();
+  const [subscribed, setSubscribed] = useState();
+  const [onTrial, setOnTrial] = useState();
+  const [daysLeft, setDaysLeft] = useState();
+
+  const getData = async () => {
+    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    if (response0.data.code === 200) {
+      const [{
+        days, isOnTrial, isSubscribed,
+      }] = response0.data.userSubsDetails;
+      setDaysLeft(days);
+      setSubscribed(isSubscribed);
+      setOnTrial(isOnTrial);
+    }
+  };
   useEffect(() => {
     setTopNavId(localStorage.getItem('topNavId'));
+    getData();
   }, []);
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
     <Wrapper fun={setTopNavId}>
-    <div className="stats-page">
-      <div className="page-header">
-        <h1>
-          <img src={statsIcon} alt="statsIcon" /> Stats
-        </h1>
-      </div>
+      {
+      hasAccess
+        ? (
+          <div className="stats-page">
+            <div className="page-header">
+              <h1>
+                <img src={statsIcon} alt="statsIcon" />
+                {' '}
+                Stats
+              </h1>
+            </div>
 
-      <div className="container">
-        <div className="accomandation-chart">
-          <Row>
-            <Col span={24}>
-              <AccommodationChart topNavId={topNavId} />
-            </Col>
-          </Row>
-        </div>
+            <div className="container">
+              <div className="accomandation-chart">
+                <Row>
+                  <Col span={24}>
+                    <AccommodationChart topNavId={topNavId} />
+                  </Col>
+                </Row>
+              </div>
 
-        <div className="occupancy-chart">
-          <Row>
-            <Col span={24}>
-              <OccupancyChart topNavId={topNavId} />
-            </Col>
-          </Row>
-        </div>
+              <div className="occupancy-chart">
+                <Row>
+                  <Col span={24}>
+                    <OccupancyChart topNavId={topNavId} />
+                  </Col>
+                </Row>
+              </div>
 
-        <div className="reservation-chart">
-          <Row>
-            <Col span={16} style={{ paddingRight: '20px' }}>
-              <ReservationCountryChart />
-            </Col>
-            <Col span={8}>
-              <ReservationChannelChart />
-            </Col>
-          </Row>
-        </div>
+              <div className="reservation-chart">
+                <Row>
+                  <Col span={16} style={{ paddingRight: '20px' }}>
+                    <ReservationCountryChart />
+                  </Col>
+                  <Col span={8}>
+                    <ReservationChannelChart />
+                  </Col>
+                </Row>
+              </div>
 
-        <div className="pace-chart">
-          <Row>
-            <Col span={24}>
-              <PaceChart topNavId={topNavId} />
-            </Col>
-          </Row>
-        </div>
-      </div>
-    </div>
-  </Wrapper>
+              <div className="pace-chart">
+                <Row>
+                  <Col span={24}>
+                    <PaceChart topNavId={topNavId} />
+                  </Col>
+                </Row>
+              </div>
+            </div>
+          </div>
+        )
+        : <UserLock />
+    }
+    </Wrapper>
   );
 };
 
 export default Stats;
 
-const AccommodationChart = (props) => {
+const AccommodationChart = ({ topNavId }) => {
   const [currYear, setCurrYear] = useState();
   const [prevYear, setPrevYear] = useState();
   const [currArr, setCurrArr] = useState();
@@ -73,7 +100,7 @@ const AccommodationChart = (props) => {
   useEffect(() => {
     async function getData() {
       const values = {
-        propertyId: localStorage.getItem('topNavId')
+        propertyId: localStorage.getItem('topNavId'),
       };
       const response = await userInstance.post('/getRevenue', values);
       setCurrArr(response.data.currYearArr);
@@ -82,7 +109,7 @@ const AccommodationChart = (props) => {
       setCurrYear(response.data.prevYear);
     }
     getData();
-  }, [props.topNavId]);
+  }, [topNavId]);
 
   const state = {
     series: [
@@ -168,7 +195,11 @@ const AccommodationChart = (props) => {
   );
 };
 
-const OccupancyChart = (props) => {
+AccommodationChart.propTypes = {
+  topNavId: PropTypes.number.isRequired,
+};
+
+const OccupancyChart = ({ topNavId }) => {
   const [currYear, setCurrYear] = useState();
   const [prevYear, setPrevYear] = useState();
   const [currArr, setCurrArr] = useState([]);
@@ -177,7 +208,7 @@ const OccupancyChart = (props) => {
   useEffect(() => {
     async function getData() {
       const values = {
-        propertyId: localStorage.getItem('topNavId')
+        propertyId: localStorage.getItem('topNavId'),
       };
       const response = await userInstance.post('/getOccupancy', values);
       setPrevArr(response.data.prevYearArr);
@@ -187,7 +218,7 @@ const OccupancyChart = (props) => {
       setCurrYear(response.data.prevYear);
     }
     getData();
-  }, [props.topNavId]);
+  }, [topNavId]);
 
   const state = {
     series: [
@@ -275,15 +306,17 @@ const OccupancyChart = (props) => {
   );
 };
 
+OccupancyChart.propTypes = {
+  topNavId: PropTypes.number.isRequired,
+};
+
 const ReservationCountryChart = () => {
-  const [country, setCountry] = useState();
-  const [data, setData] = useState();
+  // const [country, setCountry] = useState();
+  // const [data, setData] = useState();
 
   useEffect(() => {
     async function getData() {
-      const response = await userInstance.post('/getCountryReport');
-      setCountry(response.data.country);
-      setData(response.data.data)
+      await userInstance.post('/getCountryReport');
     }
     getData();
   }, []);
@@ -475,7 +508,7 @@ const ReservationChannelChart = () => {
   );
 };
 
-const PaceChart = (props) => {
+const PaceChart = ({ topNavId }) => {
   const [currYear, setCurrYear] = useState();
   const [prevYear, setPrevYear] = useState();
   const [currArr, setCurrArr] = useState([]);
@@ -483,7 +516,7 @@ const PaceChart = (props) => {
 
   useEffect(() => {
     const values = {
-      propertyId: localStorage.getItem('topNavId')
+      propertyId: localStorage.getItem('topNavId'),
     };
     async function getData() {
       const response = await userInstance.post('/getPace', values);
@@ -494,7 +527,7 @@ const PaceChart = (props) => {
       setCurrYear(response.data.prevYear);
     }
     getData();
-  }, [props.topNavId]);
+  }, [topNavId]);
 
   const state = {
     series: [
@@ -564,4 +597,8 @@ const PaceChart = (props) => {
       </div>
     </div>
   );
+};
+
+PaceChart.propTypes = {
+  topNavId: PropTypes.number.isRequired,
 };

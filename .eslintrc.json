@@ -3,10 +3,7 @@
         "browser": true,
         "es2020": true
     },
-    "extends": [
-        "plugin:react/recommended",
-        "airbnb"
-    ],
+    "extends": [ "airbnb" ],
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -18,10 +15,13 @@
         "react"
     ],
     "rules": {
-        "import/no-cycle" : ["error", { "maxDepth": 5 }],
-        "no-unused-vars": [
-            "error",
-            { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }
-        ]
+        "react/jsx-filename-extension": [1, {
+        "extensions": [".js", ".jsx"]}
+        ],
+        "no-param-reassign": 0,
+        "no-underscore-dangle":  "off",
+        "no-use-before-define": ["error", { "variables": false }],
+        "no-shadow": "off",
+        "react/jsx-props-no-spreading": "off"
     }
 }

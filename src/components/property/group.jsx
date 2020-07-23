@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
-  Form, Select, Input, DatePicker, Button, Checkbox, 
-  Collapse , Modal } from 'antd';
+  Form, Select, Input, DatePicker, Button, Checkbox,
+  Modal,
+} from 'antd';
 import {
   FolderOutlined,
   DeleteOutlined,
@@ -15,15 +16,12 @@ import {
 import Wrapper from '../wrapper';
 import Toaster from '../toaster/toaster';
 
-
 import people1 from '../../assets/images/people-1.png';
 import people2 from '../../assets/images/people-2.png';
 import people3 from '../../assets/images/people-3.jpg';
 import people4 from '../../assets/images/people-4.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
-
-const { Panel } = Collapse;
 
 const { Option } = Select;
 
@@ -70,7 +68,7 @@ const Groups = () => {
     const response = await userInstance.post('/addGroup', values);
     const statusCode = response.data.code;
     const { msg } = response.data;
-    if (statusCode == 200) {
+    if (statusCode === 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
       setVisible(false);
@@ -106,8 +104,7 @@ const Groups = () => {
     };
     const response = await userInstance.post('/deleteGroup', data);
     const statusCode = response.data.code;
-    const { msg } = response.data;
-    if (statusCode == 200) {
+    if (statusCode === 200) {
       getData();
       setVisible2(false);
     }
@@ -126,7 +123,7 @@ const Groups = () => {
             <HomeOutlined />
             {' '}
             Groups
-</h1>
+          </h1>
 
           <Button type="primary" icon={<PlusOutlined />} onClick={show}>
             Add Group
@@ -134,49 +131,49 @@ const Groups = () => {
         </div>
 
         <div className="panel-container">
-          {group.map((el, i) => (
-              <div className="panel-box groups">
-                <div className="group-icon">
-                  <FolderOutlined />
-                </div>
+          {group.map((el) => (
+            <div className="panel-box groups">
+              <div className="group-icon">
+                <FolderOutlined />
+              </div>
 
-                <div className="group-name">
-                  <h4 onClick={() => addTask(el.id)}>{el.groupName}</h4>
-                  <span>
-                    Check every 
-{' '}
-{el.checkCount} 
-{' '}
-{el.checkInterval}
-                  </span>
-                </div>
+              <div className="group-name">
+                <h4 onClick={() => addTask(el.id)} role="presentation">{el.groupName}</h4>
+                <span>
+                  Check every
+                  {' '}
+                  {el.checkCount}
+                  {' '}
+                  {el.checkInterval}
+                </span>
+              </div>
 
-                <div className="group-people">
-                  <ul>
-                    <li>
-                      <img src={people1} />
-                    </li>
-                    <li>
-                      <img src={people2} />
-                    </li>
-                    <li>
-                      <img src={people3} />
-                    </li>
-                    <li>
-                      <img src={people4} />
-                    </li>
-                  </ul>
-                </div>
+              <div className="group-people">
+                <ul>
+                  <li>
+                    <img src={people1} alt="people1" />
+                  </li>
+                  <li>
+                    <img src={people2} alt="people2" />
+                  </li>
+                  <li>
+                    <img src={people3} alt="people3" />
+                  </li>
+                  <li>
+                    <img src={people4} alt="people4" />
+                  </li>
+                </ul>
+              </div>
 
-                <div className="group-action">
-                  <BellOutlined />
-                  <div className="hover-action">
-                    <FormOutlined onClick={() => edit(el)} />
-                    <DeleteOutlined onClick={() => showDeletePopup(el.id)} />
-                  </div>
+              <div className="group-action">
+                <BellOutlined />
+                <div className="hover-action">
+                  <FormOutlined onClick={() => edit(el)} />
+                  <DeleteOutlined onClick={() => showDeletePopup(el.id)} />
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -205,10 +202,10 @@ const Groups = () => {
           <Form.Item>
             <div className="user-avatar">
               <PlusOutlined />
-              <img src={people1} />
-              <img src={people2} />
-              <img src={people3} />
-              <img src={people4} />
+              <img src={people1} alt="people1" />
+              <img src={people2} alt="people2" />
+              <img src={people3} alt="people3" />
+              <img src={people4} alt="people4" />
             </div>
           </Form.Item>
 

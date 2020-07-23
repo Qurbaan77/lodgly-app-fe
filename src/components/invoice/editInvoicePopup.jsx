@@ -1,6 +1,3 @@
-// Doing this because we have no other option the date coming from date picker
-// is in the moment object and inside object object value is defined as _d so we can't change that
-/* eslint-disable no-underscore-dangle */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './invoice.css';
@@ -26,7 +23,6 @@ import loader from '../../assets/images/loader.svg';
 import { userInstance } from '../../axios/axiosconfig';
 
 const EditInvoicePopup = (props) => {
-  console.log(props);
   const {
     userData, property, invoiceData, invoiceItems, setInvoiceItems, close, visible, handleOk,
     handleCancel,
@@ -43,7 +39,7 @@ const EditInvoicePopup = (props) => {
   const [quantity, setQuantity] = useState(null);
   const [price, setPrice] = useState(null);
   const [amount, setAmount] = useState(null);
-  const [discount, setDiscount] = useState(null);
+  // const [discount, setDiscount] = useState(null);
   const [showLoader, setShowLoader] = useState(true);
   const [cancellation, setCancellation] = useState(false);
   const [discountPer, setDiscountPer] = useState(null);
@@ -56,8 +52,6 @@ const EditInvoicePopup = (props) => {
       const date0 = moment(invoiceData.date);
       const deliveryDate0 = moment(invoiceData.deliveryDate);
       const dueDate0 = moment(invoiceData.dueDate);
-      const time0 = moment(parseInt(invoiceData.time));
-      console.log(time0);
       setDate(date0);
       setDueDate(dueDate0);
       setDeliveryDate(deliveryDate0);
@@ -94,7 +88,6 @@ const EditInvoicePopup = (props) => {
   }, [visible]);
 
   const handleFinish = async (values) => {
-    // TODO implement extra buttons function
     setShowLoader(false);
     const valuesCopy = values;
     valuesCopy.date = moment(valuesCopy.date._d).format('YYYY/MM/DD');
@@ -136,10 +129,8 @@ const EditInvoicePopup = (props) => {
     valuesCopy.propertyId = property[0].id;
     valuesCopy.deleteInvoiceItemId = deleteInvoiceItemId;
     valuesCopy.label = invoiceData.label;
-    console.log(valuesCopy);
     if (issueState) (valuesCopy.status = 'Issued');
     const res = issueState ? await userInstance.post('/invoicedraft', valuesCopy) : await userInstance.post('/downloadinvoice', valuesCopy);
-    console.log('pdf post response', res);
     if (res.status === 200) {
       const element = document.createElement('a');
       element.setAttribute('href', `${res.data.url}`);
@@ -154,6 +145,7 @@ const EditInvoicePopup = (props) => {
         (msg = 'Invoice issued');
         props.toasterMessage(msg);
       }
+      setShowLoader(true);
     } else {
       setShowLoader(true);
     }
@@ -214,7 +206,7 @@ const EditInvoicePopup = (props) => {
       setItemState(invoiceItems);
     }
     setDiscountPer(e.target.value);
-    setDiscount(amount - (amount) * (e.target.value / 100));
+    // setDiscount(amount - (amount) * (e.target.value / 100));
     form.setFieldsValue({
       [`discount${i}`]: (amount) * (e.target.value / 100),
       [`itemTotal${i}`]: amount - (amount) * (e.target.value / 100),
@@ -537,7 +529,7 @@ const EditInvoicePopup = (props) => {
                   </Form.Item>
                 </Col>
 
-                <Col span={2} className="label-hidden" >
+                <Col span={2} className="label-hidden">
                   <Form.Item
                     name={`discountPer${j}`}
                     label="Discount"
@@ -696,19 +688,33 @@ const EditInvoicePopup = (props) => {
 };
 
 EditInvoicePopup.propTypes = {
-  userData: PropTypes.objectOf(PropTypes.object).isRequired,
-  property: PropTypes.objectOf(PropTypes.object).isRequired,
-  invoiceData: PropTypes.objectOf(PropTypes.object).isRequired,
-  invoiceItems: PropTypes.objectOf(PropTypes.object).isRequired,
-  setInvoiceItems: PropTypes.objectOf(PropTypes.Function).isRequired,
-  close: PropTypes.objectOf(PropTypes.Function).isRequired,
-  status: PropTypes.objectOf(PropTypes.String).isRequired,
-  visible: PropTypes.objectOf(PropTypes.Boolean).isRequired,
-  handleOk: PropTypes.objectOf(PropTypes.Function).isRequired,
-  handleCancel: PropTypes.objectOf(PropTypes.Function).isRequired,
-  showDeleteWarning: PropTypes.objectOf(PropTypes.Function).isRequired,
-  toasterMessage: PropTypes.objectOf(PropTypes.Function).isRequired,
-  getData: PropTypes.objectOf(PropTypes.Function).isRequired,
+  userData: PropTypes.objectOf(PropTypes.object),
+  property: PropTypes.objectOf(PropTypes.object),
+  invoiceData: PropTypes.objectOf(PropTypes.object),
+  invoiceItems: PropTypes.objectOf(PropTypes.array),
+  setInvoiceItems: PropTypes.func,
+  close: PropTypes.func,
+  status: PropTypes.string,
+  visible: PropTypes.bool,
+  handleOk: PropTypes.func,
+  handleCancel: PropTypes.func,
+  showDeleteWarning: PropTypes.func,
+  toasterMessage: PropTypes.func,
+  getData: PropTypes.func,
 };
-
+EditInvoicePopup.defaultProps = {
+  userData: {},
+  property: {},
+  invoiceData: {},
+  invoiceItems: [],
+  setInvoiceItems: () => {},
+  close: () => {},
+  status: '',
+  visible: false,
+  handleOk: () => {},
+  handleCancel: () => {},
+  showDeleteWarning: () => {},
+  toasterMessage: () => {},
+  getData: () => {},
+};
 export default EditInvoicePopup;

@@ -1,71 +1,48 @@
-import React, { useEffect, useState, Fragment } from 'react';
-import { useHistory, Link } from 'react-router-dom';
-import './calendar.css';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+// import { useHistory } from 'react-router-dom';
+import './calendar';
 import {
   Form,
   Select,
   Input,
-  InputNumber,
-  Switch,
   Radio,
-  Slider,
   DatePicker,
-  TimePicker,
   Button,
-  Upload,
-  Rate,
-  Checkbox,
   Row,
   Col,
-  Collapse, Modal, Avatar,
+  Collapse, Modal,
 } from 'antd';
 import {
-  MenuUnfoldOutlined,
   PlusSquareOutlined,
-  MenuFoldOutlined,
-  HomeOutlined,
   PlusOutlined,
-  SearchOutlined,
-  VerticalAlignMiddleOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  InboxOutlined, EditOutlined, DeleteOutlined,
+  EditOutlined, DeleteOutlined,
 } from '@ant-design/icons';
 
-import { HelpBlock } from 'react-bootstrap';
 import countryList from 'react-select-country-list';
-import Wrapper from '../wrapper';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
 
-const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
-`;
-
-const { Option } = Select;
-
-const { MonthPicker, RangePicker } = DatePicker;
+const { RangePicker } = DatePicker;
 let i = 1;
 let j = 1;
 
-const CreateBookingPopup = (props) => {
-  console.log('props', props);
-  const arr = [];
+const AddReservation = (props) => {
+  const {
+    getData, close, visible, handleOk, handleCancel,
+  } = props;
   const [form] = Form.useForm();
-  const [visible, setVisible] = useState(false);
-  const [radio, setRadio] = useState(1);
+  // const [visible1, setVisible1] = useState(false);
+  // const [radio, setRadio] = useState(1);
   const [channel, setChannel] = useState('');
-  const [children1, setChildren1] = useState(0);
-  const [children2, setChildren2] = useState(0);
+  // const [children1, setChildren1] = useState(0);
+  // const [children2, setChildren2] = useState(0);
   const [channelCommission, setChannelCommission] = useState(null);
   const [panel, setPanel] = useState([1]);
   const [servicePanel, setServicePanel] = useState([100]);
-  const [arrValue, setArrValue] = useState(2);
+  // const [arrValue, setArrValue] = useState(2);
   const [price, setPrice] = useState(0);
   const [night, setNight] = useState(0);
   const [amt, setAmt] = useState(0);
@@ -83,16 +60,15 @@ const CreateBookingPopup = (props) => {
   const [depositType, setDepositType] = useState('€');
   const [depositAmount, setDepositAmount] = useState(null);
   const [discountAmount, setdiscountAmount] = useState(null);
-  const [editServicePanel, setEditServicePanel] = useState([]);
 
-  const [fullname, setFullname] = useState({});
-  const [email, setEmail] = useState({});
-  const [phone, setPhone] = useState({});
-  const [country, setCountry] = useState({});
+  // const [fullname, setFullname] = useState({});
+  // const [email, setEmail] = useState({});
+  // const [phone, setPhone] = useState({});
+  // const [country, setCountry] = useState({});
   const [serviceData, setServiceData] = useState([]);
   const [currentService, setCurrentService] = useState({});
   const [unitData, setUnitData] = useState([]);
-  const [currentUnit, setCurrentUnit] = useState({});
+  // const [currentUnit, setCurrentUnit] = useState({});
   const [unitTypeData, setUnitTypeData] = useState([]);
 
   const [notifyType, setNotifyType] = useState();
@@ -100,24 +76,26 @@ const CreateBookingPopup = (props) => {
 
   const [propertyData, setPropertyData] = useState([]);
   const [currentPropertyId, setCurrentPropertyId] = useState(null);
-  const history = useHistory();
+  // const history = useHistory();
 
-  const show = () => {
-    setVisible(true);
-  };
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  const [{ userId }] = userCred || [{}];
 
-  const close = () => {
-    setNotifyType('');
-  };
+  // const show = () => {
+  //   setVisible(true);
+  // };
 
-  const Ok = () => {
-    setVisible(false);
-    console.log('working');
-  };
+  // const close = () => {
+  //   setNotifyType('');
+  // };
 
-  const Cancel = () => {
-    setVisible(false);
-  };
+  // const Ok = () => {
+  //   setVisible1(false);
+  // };
+
+  // const Cancel = () => {
+  //   setVisible(false);
+  // };
 
   const addMore = () => {
     i += 1;
@@ -135,9 +113,9 @@ const CreateBookingPopup = (props) => {
     setServicePanel([...servicePanel, j]);
   };
 
-  const removeServicePanel = (value) => {
+  const removeServicePanel = () => {
     if (serviceAmount !== 0) {
-      const sum = parseInt(total) - parseInt(serviceAmount);
+      const sum = parseInt(total, 10) - parseInt(serviceAmount, 10);
       setServiceAmount(0);
       setServicePrice(0);
       setServiceTax(0);
@@ -160,41 +138,42 @@ const CreateBookingPopup = (props) => {
     values.accomodation = accomodation;
 
     const guestData = [];
-    const serviceData = [];
+    const serviceDataNew = [];
     // values.acknowledge = radio;
-    values.totalAmount = parseInt(total) + parseInt(accomodation);
+    values.totalAmount = parseInt(total, 10) + parseInt(accomodation, 10);
     // values.total = parseInt(total) + parseInt(accomodation);
 
-    panel.map((el, i) => {
+    panel.forEach((el) => {
       guestData.push(values[el]);
     });
     values.guestData = guestData;
-    guestData.length > 1 ? values.guest = guestData[0].fullName : values.guest = 'No Guest';
-    servicePanel.map((ele, i) => {
+    if (guestData.length > 1) {
+      values.guest = guestData[0].fullName;
+    } else {
+      values.guest = 'No Guest';
+    }
+
+    servicePanel.forEach((ele) => {
       const data = values[ele].servicePrice * values[ele].serviceQuantity
         + (values[ele].servicePrice
           * values[ele].serviceQuantity
           * values[ele].serviceTax)
           / 100;
       values[ele].serviceAmount = data;
-      serviceData.push(values[ele]);
-      console.log(values[ele]);
+      serviceDataNew.push(values[ele]);
     });
-    values.serviceData = serviceData;
+    values.serviceData = serviceDataNew;
     values.propertyName = currentPropertyName;
     values.propertyId = currentPropertyId;
     values.channel = channel;
     values.commission = channelCommission;
     values.unitName = unitName;
-    const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
     values.affiliateId = userId;
-    console.log('Received values of edit form: ', values);
-    const response = await userInstance.post('/addReservation', values);
-    console.log('response', response.data.code);
+    const response = await userInstance.post('/addBooking', values);
     const { msg } = response.data;
     if (response.data.code === 200) {
-      props.getData();
-      props.close();
+      getData();
+      close();
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
@@ -203,12 +182,12 @@ const CreateBookingPopup = (props) => {
     form.resetFields();
   };
 
-  const handleChange = (e) => {
-    console.log('handleChange', e.target.value);
-  };
+  // const handleChange = (e) => {
+  //   console.log('handleChange', e.target.value);
+  // };
 
   const getPropertyData = async () => {
-    const response = await userInstance.post('/fetchProperty');
+    const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
       setPropertyData(data);
@@ -219,21 +198,15 @@ const CreateBookingPopup = (props) => {
     getPropertyData();
   }, []);
 
-  console.log(servicePrice, serviceAmt, serviceTax);
-
   const calculateTotal = () => {
     const calculate = servicePrice * serviceAmt
       + servicePrice * serviceAmt * (serviceTax / 100);
-    const sum = parseInt(total) + parseInt(calculate);
+    const sum = parseInt(total, 10) + parseInt(calculate, 10);
     setServiceAmount(calculate);
     setTotal(sum);
-    console.log('Calculate', calculate);
-    console.log('service amount', serviceAmount);
   };
 
   const fun1 = async (value, event) => {
-    console.log(value);
-    console.log(event.children);
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
@@ -243,10 +216,8 @@ const CreateBookingPopup = (props) => {
     const data = response.data.servicData;
     const response2 = await userInstance.post('/getUnit', payload);
     const data2 = response2.data.unitData;
-    console.log('unitData', data2);
     const response3 = await userInstance.post('/getUnittype', payload);
     const data3 = response3.data.unittypeData;
-    console.log('unittype data', data3);
     if (response.data.code === 200) {
       setServiceData(data);
     }
@@ -260,14 +231,14 @@ const CreateBookingPopup = (props) => {
     }
   };
 
-  const fun2 = (value, event) => {
+  const fun2 = (value) => {
     serviceData
       .filter((el) => el.serviceName === value)
       .map((filterService) => setCurrentService(filterService));
 
-    unitData
-      .filter((el) => el.propertyId == value)
-      .map((filterUnit) => setCurrentUnit(filterUnit));
+    // unitData
+    //   .filter((el) => el.propertyId === value)
+    //   .map((filterUnit) => setCurrentUnit(filterUnit));
   };
 
   const fun3 = (value, event) => {
@@ -275,8 +246,7 @@ const CreateBookingPopup = (props) => {
     const [unit] = unitData
       .filter((el) => el.unitName === unitname)
       .map((el) => el.unittypeId);
-    console.log(unit);
-    unitTypeData.map((el) => {
+    unitTypeData.forEach((el) => {
       if (el.id === unit) {
         setPrice(el.perNight);
         form.setFieldsValue({ perNight: el.perNight });
@@ -287,26 +257,21 @@ const CreateBookingPopup = (props) => {
     setUnitName(unitname);
   };
   const fun5 = (value, event) => {
-    console.log(event.children);
     setChannel(event.children);
   };
   const handleCommissionChange = (e) => {
-    console.log(e.target.value);
     setChannelCommission(e.target.value);
   };
 
   const handleDiscount = (value) => {
-    console.log(value);
     setDiscountType(value);
     if (value === '%') {
       const data = amt * (discountAmount / 100);
       setDiscount(data);
       setAccomodation(amt - data);
-      console.log(data);
     } else {
       setDiscount(discountAmount);
       setAccomodation(amt - discountAmount);
-      console.log(discountAmount);
     }
   };
 
@@ -322,19 +287,19 @@ const CreateBookingPopup = (props) => {
   };
 
   const fun4 = (value) => {
-    console.log(value[0]._d);
-    const d1 = new Date(value[0]._d);
-    const d2 = new Date(value[1]._d);
-    const diff = Math.abs(d1 - d2);
-    const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
-    console.log(day);
-    setNight(day);
+    if (value) {
+      const d1 = new Date(value[0]._d);
+      const d2 = new Date(value[1]._d);
+      const diff = Math.abs(d1 - d2);
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+      setNight(day);
+    }
   };
 
   const createGuestDetails = (
     <>
-      {panel.map((el, i) => (
-        <div className="addi-box">
+      {panel.map((el) => (
+        <div className="addi-box" id={el}>
           <Row style={{ alignItems: 'center' }}>
             <Col span={6}>
               <Form.Item
@@ -342,7 +307,7 @@ const CreateBookingPopup = (props) => {
                 name={[el, 'fullName']}
                 style={{ paddingRight: 20 }}
               >
-                <Input onChange={(e) => setFullname(e.target.value)} />
+                <Input />
               </Form.Item>
             </Col>
 
@@ -352,7 +317,7 @@ const CreateBookingPopup = (props) => {
                 name={[el, 'email']}
                 style={{ paddingRight: 20 }}
               >
-                <Input onChange={(e) => setEmail(e.target.value)} />
+                <Input />
               </Form.Item>
             </Col>
 
@@ -365,7 +330,7 @@ const CreateBookingPopup = (props) => {
                 <Select showSearch>
                   {countryList()
                     .getData()
-                    .map((ele, i) => (
+                    .map((ele) => (
                       <Select.Option value={ele.label}>
                         {ele.label}
                       </Select.Option>
@@ -381,7 +346,6 @@ const CreateBookingPopup = (props) => {
                 style={{ paddingRight: 20 }}
               >
                 <Input
-                  onChange={(e) => setPhone(e.target.value)}
                   type="number"
                   minLength="9"
                   maxLength="15"
@@ -391,7 +355,7 @@ const CreateBookingPopup = (props) => {
 
             <Col span={24}>
               <div className="additional-edit">
-                <a href="">
+                <a href="#">
                   <EditOutlined />
                   {' '}
                   Edit/Additional Data
@@ -412,9 +376,9 @@ const CreateBookingPopup = (props) => {
     <Modal
       title="Create Booking"
       name="modal1"
-      visible={props.visible}
-      onOk={props.handleOk}
-      onCancel={props.handleCancel}
+      visible={visible}
+      onOk={handleOk}
+      onCancel={handleCancel}
       wrapClassName="create-booking-modal"
     >
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
@@ -441,7 +405,6 @@ const CreateBookingPopup = (props) => {
             <Radio.Group
               name="radiogroup"
               defaultValue={1}
-              onChange={(e) => setRadio(e.target.value)}
             >
               <Radio value={1}>Confirmed</Radio>
               <Radio value={2}>Option</Radio>
@@ -466,7 +429,7 @@ const CreateBookingPopup = (props) => {
                 placeholder="Select"
                 onSelect={(value, event) => fun1(value, event)}
               >
-                {propertyData.map((el, i) => (
+                {propertyData.map((el) => (
                   <Select.Option value={el.id}>
                     {el.propertyName}
                   </Select.Option>
@@ -491,7 +454,7 @@ const CreateBookingPopup = (props) => {
                 placeholder="Select"
                 onSelect={(value, event) => fun3(value, event)}
               >
-                {unitData.map((el, i) => (
+                {unitData.map((el) => (
                   <Select.Option value={el.id}>{el.unitName}</Select.Option>
                 ))}
               </Select>
@@ -600,7 +563,7 @@ const CreateBookingPopup = (props) => {
 
                     <Row>
                       <Col span={24}>
-                        <div className="additional-add" onClick={addMore}>
+                        <div className="additional-add" onClick={addMore} role="presentation">
                           <PlusOutlined />
                           {' '}
                           Add additional guest
@@ -650,7 +613,10 @@ const CreateBookingPopup = (props) => {
             <Col span={16}>
               <Form.Item>
                 <div className="inline-form">
-                  <label>Average price per night</label>
+                  <label htmlFor="abc">
+                    <input hidden />
+                    Average price per night
+                  </label>
                   <Form.Item name="perNight">
                     <Input
                       type="number"
@@ -666,7 +632,10 @@ const CreateBookingPopup = (props) => {
                       onChange={(e) => setPrice(e.target.value)}
                     />
                   </Form.Item>
-                  <label>X</label>
+                  <label htmlFor="number">
+                    <input hidden />
+                    X
+                  </label>
                   <Input
                     type="number"
                     placeholder="0 nights"
@@ -675,7 +644,10 @@ const CreateBookingPopup = (props) => {
                     disabled="true"
                     onChange={(e) => setNight(e.target.value)}
                   />
-                  <label>=</label>
+                  <label htmlFor="amount">
+                    <input hidden />
+                    =
+                  </label>
                   <Input
                     name="totalAAmount"
                     type="number"
@@ -684,23 +656,34 @@ const CreateBookingPopup = (props) => {
                       setAmt(e.target.value);
                     }}
                   />
-                  <label>EUR</label>
+                  <label htmlFor="eur">
+                    <input hidden />
+                    EUR
+                  </label>
                 </div>
 
                 <div className="inline-form">
-                  <label>Discount</label>
+                  <label htmlFor="discount">
+                    <input hidden />
+                    Discount
+                  </label>
                   <Input
                     type="number"
                     placeholder="0,00"
                     onChange={(e) => {
                       setDiscount(e.target.value);
                       setdiscountAmount(e.target.value);
-                      discountType === '€'
-                        ? setAccomodation(amt - e.target.value)
-                        : setAccomodation(amt - amt * (e.target.value / 100));
+                      if (discountType === '€') {
+                        setAccomodation(amt - e.target.value);
+                      } else {
+                        setAccomodation(amt - amt * (e.target.value / 100));
+                      }
                     }}
                   />
-                  <label>X</label>
+                  <label htmlFor="discount">
+                    <input hidden />
+                    X
+                  </label>
                   <Form.Item name="discountType">
                     <Select
                       placeholder="Discount type"
@@ -711,7 +694,10 @@ const CreateBookingPopup = (props) => {
                       <Select.Option value="%">%</Select.Option>
                     </Select>
                   </Form.Item>
-                  <label>=</label>
+                  <label htmlFor="equal">
+                    <input hidden />
+                    =
+                  </label>
                   <Input
                     type="number"
                     value={
@@ -721,7 +707,10 @@ const CreateBookingPopup = (props) => {
                     }
                     onBlur={(e) => setAccomodation(e.target.value)}
                   />
-                  <label>EUR</label>
+                  <label htmlFor="eur">
+                    <input hidden />
+                    EUR
+                  </label>
                 </div>
               </Form.Item>
             </Col>
@@ -730,7 +719,10 @@ const CreateBookingPopup = (props) => {
           <Row style={{ alignItems: 'center' }}>
             <Col span={24}>
               <div className="per-night">
-                <label>Per Night</label>
+                <label htmlFor="night">
+                  <input hidden />
+                  Per Night
+                </label>
                 <span>Accommondation cost:</span>
                 <span className="amnt">
                   {accomodation}
@@ -741,7 +733,7 @@ const CreateBookingPopup = (props) => {
             </Col>
 
             <Col span={24}>
-              <div className="srvice-heading" onClick={addMoreService}>
+              <div className="srvice-heading" onClick={addMoreService} role="presentation">
                 <PlusOutlined />
                 {' '}
                 Add Services
@@ -761,10 +753,9 @@ const CreateBookingPopup = (props) => {
                     key="1"
                   >
                     <div className="service-form">
-                      {servicePanel.map((ele, i) =>
-                        // create booking service
-                        (
-                          <div className="inline-form">
+                      {servicePanel.map((ele) =>
+                      // create booking service
+                        ( <div className="inline-form">
                             <div className="delete-data">
                               <DeleteOutlined
                                 onClick={() => removeServicePanel(ele)}
@@ -777,9 +768,9 @@ const CreateBookingPopup = (props) => {
                                   placeholder="Select Service"
                                   onSelect={(value, event) => fun2(value, event)}
                                 >
-                                  {serviceData.map((ele, i) => (
-                                    <Select.Option value={ele.serviceName}>
-                                      {ele.serviceName}
+                                  {serviceData.map((element) => (
+                                    <Select.Option value={element.serviceName}>
+                                      {element.serviceName}
                                     </Select.Option>
                                   ))}
                                 </Select>
@@ -800,7 +791,10 @@ const CreateBookingPopup = (props) => {
                               </Form.Item>
                             </Col>
 
-                            <label>X</label>
+                            <label htmlFor="x">
+                              <input hidden />
+                              X
+                            </label>
                             <Col span={4}>
                               <Form.Item name={[ele, 'serviceQuantity']}>
                                 <Input
@@ -811,7 +805,10 @@ const CreateBookingPopup = (props) => {
                               </Form.Item>
                             </Col>
 
-                            <label>+</label>
+                            <label htmlFor="plus">
+                              <input hidden />
+                              +
+                            </label>
                             <Col span={4}>
                               <Form.Item name={[ele, 'serviceTax']}>
                                 <Input
@@ -822,7 +819,10 @@ const CreateBookingPopup = (props) => {
                               </Form.Item>
                             </Col>
 
-                            <label>=</label>
+                            <label htmlFor="equal">
+                              <input hidden />
+                              =
+                            </label>
                             <Col span={4}>
                               <Form.Item name={[ele, 'serviceAmount']}>
                                 <Input
@@ -832,7 +832,10 @@ const CreateBookingPopup = (props) => {
                               </Form.Item>
                             </Col>
 
-                            <label>EUR</label>
+                            <label htmlFor="eur">
+                              <input hidden />
+                              EUR
+                            </label>
                           </div>
                         ))}
                     </div>
@@ -854,10 +857,16 @@ const CreateBookingPopup = (props) => {
               </div>
 
               <div className="deposit">
-                <label>Deposit</label>
+                <label htmlFor="discount">
+                  <input hidden />
+                  Deposit
+                </label>
 
                 <div className="inline-form">
-                  <label>Accommodation deposit</label>
+                  <label htmlFor="deposit">
+                    <input hidden />
+                    Accommodation deposit
+                  </label>
 
                   <Input
                     name="deposit"
@@ -885,7 +894,7 @@ const CreateBookingPopup = (props) => {
 
             <Col span={24}>
               <div className="outstanding">
-                <label>
+                <label htmlFor="depo">
                   Accommodation deposit:
                   {' '}
                   <span>
@@ -895,7 +904,7 @@ const CreateBookingPopup = (props) => {
                       : `${deposit}€`}
                   </span>
                 </label>
-                <label>
+                <label htmlFor="amount">
                   Outstanding amount:
                   {' '}
                   <span>
@@ -923,12 +932,12 @@ const CreateBookingPopup = (props) => {
               <Button
                 style={{ marginRight: 10 }}
                 onClick={() => {
-                  props.close();
+                  close();
                 }}
               >
                 Cancel
               </Button>
-              <Button type="primary" htmlType="submit" onClick={() => Ok}>
+              <Button type="primary" htmlType="submit">
                 Save Reservation
               </Button>
             </Form.Item>
@@ -939,4 +948,19 @@ const CreateBookingPopup = (props) => {
   );
 };
 
-export default CreateBookingPopup;
+AddReservation.propTypes = {
+  close: PropTypes.func,
+  handleCancel: PropTypes.func,
+  handleOk: PropTypes.func,
+  getData: PropTypes.func,
+  visible: PropTypes.bool,
+};
+AddReservation.defaultProps = {
+  close: () => {},
+  handleCancel: () => {},
+  handleOk: () => {},
+  getData: () => {},
+  visible: false,
+};
+
+export default AddReservation;

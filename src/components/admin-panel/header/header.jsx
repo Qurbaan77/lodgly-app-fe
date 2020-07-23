@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './header.css';
 import {
-  Menu, Dropdown, Form, Input, Button, Checkbox,
+  Menu, Dropdown,
 } from 'antd';
 import { Link } from 'react-router-dom';
-import {
-  MenuUnfoldOutlined, MenuFoldOutlined, HomeOutlined, PlusOutlined, SearchOutlined, VerticalAlignMiddleOutlined, UserOutlined, VideoCameraOutlined, UploadOutlined,
-} from '@ant-design/icons';
 import logo from '../../../assets/images/admin-logo.jpg';
 import user from '../../../assets/images/user.jpg';
 
@@ -37,7 +34,7 @@ const AdminHeader = () => (
     <div className="admin-header-container">
 
       <div className="admin-logo">
-        <img src={logo} />
+        <img src={logo} alt="" />
       </div>
 
       <div className="admin-menu">
@@ -55,7 +52,7 @@ const AdminHeader = () => (
 
         <Dropdown overlay={menu}>
           <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
-            <img src={user} />
+            <img src={user} alt="" />
           </a>
         </Dropdown>
 

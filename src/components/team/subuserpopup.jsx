@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import './team.css';
 import {
-  Form, Select, Input, Button, Checkbox, Modal, Row, Col } from 'antd';
+  Form, Select, Input, Button, Checkbox, Modal, Row, Col,
+} from 'antd';
 
 import { userInstance } from '../../axios/axiosconfig';
 
-const SubUserPopup = (props) => {
+const SubUserPopup = ({
+  visible, handleOk, handleCancel, close, getData,
+}) => {
   const [form] = Form.useForm();
   const [bookingRead, setBookingRead] = useState(false);
   const [bookingWrite, setBookingWrite] = useState(false);
@@ -93,8 +97,8 @@ const SubUserPopup = (props) => {
     values.affiliateId = userId;
     const response = await userInstance.post('/addTeam', values);
     if (response.status === 200) {
-      props.getData();
-      props.close();
+      getData();
+      close();
       form.resetFields();
       setBookingRead(false);
       setBookingWrite(false);
@@ -118,29 +122,37 @@ const SubUserPopup = (props) => {
   };
 
   const handleBookingRead = (e) => (e.target.value ? setBookingRead(false) : setBookingRead(true));
-  const handleBookingWrite = (e) => (e.target.value ? setBookingWrite(false) : setBookingWrite(true));
-  const handlePropertiesRead = (e) => (e.target.value ? setPropertiesRead(false) : setPropertiesRead(true));
-  const handlePropertiesWrite = (e) => (e.target.value ? setPropertiesWrite(false) : setPropertiesWrite(true));
-  const handleCalendarRead = (e) => (e.target.value ? setCalendarRead(false) : setCalendarRead(true));
-  const handleCalendarWrite = (e) => (e.target.value ? setCalendarWrite(false) : setCalendarWrite(true));
+  const handleBookingWrite = (e) => (e.target.value
+    ? setBookingWrite(false) : setBookingWrite(true));
+  const handlePropertiesRead = (e) => (e.target.value
+    ? setPropertiesRead(false) : setPropertiesRead(true));
+  const handlePropertiesWrite = (e) => (e.target.value
+    ? setPropertiesWrite(false) : setPropertiesWrite(true));
+  const handleCalendarRead = (e) => (e.target.value
+    ? setCalendarRead(false) : setCalendarRead(true));
+  const handleCalendarWrite = (e) => (e.target.value
+    ? setCalendarWrite(false) : setCalendarWrite(true));
   const handleGuestsRead = (e) => (e.target.value ? setGuestsRead(false) : setGuestsRead(true));
   const handleGuestsWrite = (e) => (e.target.value ? setGuestsWrite(false) : setGuestsWrite(true));
   const handleTeamRead = (e) => (e.target.value === 'true' ? setTeamRead(false) : setTeamRead(true));
   const handleTeamWrite = (e) => (e.target.value === 'true' ? setTeamWrite(false) : setTeamWrite(true));
-  const handleInvoicesRead = (e) => (e.target.value ? setInvoicesRead(false) : setInvoicesRead(true));
-  const handleInvoicesWrite = (e) => (e.target.value ? setInvoicesWrite(false) : setInvoicesWrite(true));
+  const handleInvoicesRead = (e) => (e.target.value
+    ? setInvoicesRead(false) : setInvoicesRead(true));
+  const handleInvoicesWrite = (e) => (e.target.value
+    ? setInvoicesWrite(false) : setInvoicesWrite(true));
   const handleStatsRead = (e) => (e.target.value ? setStatsRead(false) : setStatsRead(true));
   const handleStatsWrite = (e) => (e.target.value ? setStatsWrite(false) : setStatsWrite(true));
   const handleServiceRead = (e) => (e.target.value ? setServiceRead(false) : setServiceRead(true));
-  const handleServiceWrite = (e) => (e.target.value ? setServiceWrite(false) : setServiceWrite(true));
+  const handleServiceWrite = (e) => (e.target.value
+    ? setServiceWrite(false) : setServiceWrite(true));
   const handleOwnerRead = (e) => (e.target.value ? setOwnerRead(false) : setOwnerRead(true));
   const handleOwnerWrite = (e) => (e.target.value ? setOwnerWrite(false) : setOwnerWrite(true));
   return (
     <Modal
       title="Add New Sub-User"
-      visible={props.visible}
-      onOk={props.handleOk}
-      onCancel={props.handleCancel}
+      visible={visible}
+      onOk={handleOk}
+      onCancel={handleCancel}
       wrapClassName="guest-modal sub-user"
     >
       <Form name="basic" form={form} onFinish={onFinish}>
@@ -428,7 +440,7 @@ const SubUserPopup = (props) => {
         >
           <Col span={24}>
             <Form.Item>
-              <Button style={{ marginRight: 10 }} onClick={props.close}>
+              <Button style={{ marginRight: 10 }} onClick={close}>
                 Cancel
               </Button>
               <Button type="primary" htmlType="submit">
@@ -442,4 +454,18 @@ const SubUserPopup = (props) => {
   );
 };
 
+SubUserPopup.propTypes = {
+  getData: PropTypes.func,
+  close: PropTypes.func,
+  handleCancel: PropTypes.func,
+  handleOk: PropTypes.func,
+  visible: PropTypes.bool,
+};
+SubUserPopup.defaultProps = {
+  getData: () => {},
+  close: () => {},
+  handleCancel: () => {},
+  handleOk: () => {},
+  visible: false,
+};
 export default SubUserPopup;

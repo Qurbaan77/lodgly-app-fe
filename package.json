@@ -27,6 +27,7 @@
     "react-phone-input-2": "^2.13.5",
     "react-places-autocomplete": "^7.2.1",
     "react-router-dom": "^5.1.2",
+    "history": "5.0.0",
     "react-scripts": "3.4.0",
     "react-select-country-list": "^2.2.1",
     "save": "^2.4.0",
@@ -35,6 +36,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "lint": "eslint src",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -54,11 +56,14 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^7.4.0",
+    "eslint": "^7.5.0",
     "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.21.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.3",
-    "eslint-plugin-react-hooks": "^4.0.4"
+    "eslint-plugin-react-hooks": "^4.0.4",
+    "prettier": "^2.0.5"
   }
 }

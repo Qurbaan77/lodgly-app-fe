@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './calendar.css';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
-import {
-  Button,
-  Tooltip,
-} from 'antd';
+import { Button, Tooltip } from 'antd';
 import Wrapper from '../wrapper';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
 import GSTC from './GSTC';
+import UserLock from '../userlock/userlock';
 import { userInstance } from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
 
@@ -19,6 +17,9 @@ const Calendar = () => {
   const [unitData, setUnitData] = useState([]);
   const [visible, setVisible] = useState(false);
   const [topNavId, setTopNavId] = useState();
+  const [subscribed, setSubscribed] = useState();
+  const [onTrial, setOnTrial] = useState();
+  const [daysLeft, setDaysLeft] = useState();
   // const [topNavId, setPId] = useState();
   // const handleChange = (newValue) => {
   //   setPId(newValue);
@@ -99,8 +100,12 @@ const Calendar = () => {
   const items = {};
   for (let i = 0; i < reservationData.length; i = +1) {
     const id = reservationData[i].id.toString();
-    const startDate = new Date(reservationData[i].startDate.split('T', 1).toString()).getTime();
-    const endDate = new Date(reservationData[i].endDate.split('T', 1).toString()).getTime();
+    const startDate = new Date(
+      reservationData[i].startDate.split('T', 1).toString(),
+    ).getTime();
+    const endDate = new Date(
+      reservationData[i].endDate.split('T', 1).toString(),
+    ).getTime();
     items[id] = {
       id,
       rowId: `ut${reservationData[i].unitId.toString()}`,
@@ -130,7 +135,9 @@ const Calendar = () => {
   const subs = [];
 
   const getProperty = async () => {
-    const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
+    const response = await userInstance.post('/fetchProperty', {
+      affiliateId: userId,
+    });
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
       setPropertyData(data);
@@ -138,7 +145,18 @@ const Calendar = () => {
   };
 
   const getData = async () => {
-    const response = await userInstance.post('/getReservation', { affiliateId: userId });
+    const res = await userInstance.get('/getUserSubscriptionStatus');
+    if (res.data.code === 200) {
+      const [{
+        days, isOnTrial, isSubscribed,
+      }] = res.data.userSubsDetails;
+      setDaysLeft(days);
+      setSubscribed(isSubscribed);
+      setOnTrial(isOnTrial);
+    }
+    const response = await userInstance.post('/getReservation', {
+      affiliateId: userId,
+    });
     const { reservationData: data } = response.data;
     if (response.data.code === 200) {
       setReservationData(data);
@@ -149,7 +167,9 @@ const Calendar = () => {
   };
 
   const getCalendarData = async () => {
-    const response = await userInstance.post('/getReservationCalendarData', { affiliateId: userId });
+    const response = await userInstance.post('/getReservationCalendarData', {
+      affiliateId: userId,
+    });
     const { unittypeData: data0 } = response.data;
     const { unitData: data1 } = response.data;
     if (response.data.code === 200) {
@@ -197,59 +217,78 @@ const Calendar = () => {
     );
   }
 
-  const btn = isSubUser && canWrite ?
-  <>
-   <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-  Add Reservation
-</Button>
-<Button className="border-btn" icon={<TeamOutlined />}>
-  Group Reservation
-</Button>
-</> : 
-<>
- <Tooltip title="You are not authorize for adding reservation" color="gold">
- <Button type="primary" icon={<PlusOutlined />} onClick={show} disabled="true">
-   Add Reservation
- </Button>
-</Tooltip>
-<Tooltip title="You are not authorize for adding reservation" color="gold">
- <Button className="border-btn" icon={<TeamOutlined />}>
-   Group Reservation
- </Button>
-</Tooltip>
-</>
-  console.log('Btn', btn)
-
-  return (
-    // <Wrapper onChange={handleChange}>
-    <Wrapper fun={setTopNavId}>
-      <div className="calendar">
-        <div className="calendar-btn">
-          { 
-          isSubUser ? btn : 
-          <>
-          <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+  const btn = isSubUser && canWrite ? (
+    <>
+      <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+        Add Reservation
+      </Button>
+      <Button className="border-btn" icon={<TeamOutlined />}>
+        Group Reservation
+      </Button>
+    </>
+  ) : (
+    <>
+      <Tooltip
+        title="You are not authorize for adding reservation"
+        color="gold"
+      >
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={show}
+          disabled="true"
+        >
           Add Reservation
         </Button>
+      </Tooltip>
+      <Tooltip
+        title="You are not authorize for adding reservation"
+        color="gold"
+      >
         <Button className="border-btn" icon={<TeamOutlined />}>
           Group Reservation
         </Button>
-        </> }
+      </Tooltip>
+    </>
+  );
 
-        </div>
-        <div className="calendar-calendar">
-          <GSTC config={config} onState={onState} />
-        </div>
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+  return (
+    <Wrapper fun={setTopNavId}>
+      {
+      hasAccess
+        ? (
+          <div className="calendar">
+            <div className="calendar-btn">
+              {isSubUser ? (
+                btn
+              ) : (
+                <>
+                  <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+                    Add Reservation
+                  </Button>
+                  <Button className="border-btn" icon={<TeamOutlined />}>
+                    Group Reservation
+                  </Button>
+                </>
+              )}
+            </div>
+            <div className="calendar-calendar">
+              <GSTC config={config} onState={onState} />
+            </div>
 
-        <AddReservation
-          title="Add New Reservation"
-          visible={visible}
-          onOk={handleOk}
-          close={handleCancel}
-          wrapClassName="create-booking-modal"
-          getData={getData}
-        />
-      </div>
+            <AddReservation
+              title="Add New Reservation"
+              visible={visible}
+              onOk={handleOk}
+              close={handleCancel}
+              wrapClassName="create-booking-modal"
+              getData={getData}
+            />
+          </div>
+        )
+        : <UserLock />
+    }
     </Wrapper>
   );
 };

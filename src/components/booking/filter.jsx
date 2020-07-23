@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './booking.css';
 import {
   Form,
@@ -19,12 +20,12 @@ import {
   MailOutlined,
   DownOutlined,
 } from '@ant-design/icons';
-import Wrapper from '../wrapper';
+// import Wrapper from '../wrapper';
 
 const { RangePicker } = DatePicker;
 
-function onChange(e) {
-  console.log(`checked = ${e.target.checked}`);
+function onChange() {
+  // console.log(`checked = ${e.target.checked}`);
 }
 
 const menu = (
@@ -42,16 +43,18 @@ const menu = (
 );
 
 const BookingFilter = (props) => {
-  function onChange(checked) {
-    console.log(`switch to ${checked}`);
-  }
+  const { visible, handleOk, handleCancel } = props;
+  // function onChange(checked) {
+  //   console.log(`switch to ${checked}`);
 
   return (
-    <Modal title="Filter" 
-    visible={props.visible}
-    onOk={props.handleOk}
-    onCancel={props.handleCancel}
-    wrapClassName="filter-modal">
+    <Modal
+      title="Filter"
+      visible={visible}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      wrapClassName="filter-modal"
+    >
       <div className="booking-filter">
         <div className="container">
           <Row>
@@ -88,6 +91,7 @@ const BookingFilter = (props) => {
                       >
                         <Dropdown overlay={menu} trigger={['click']}>
                           <a
+                            role="presentation"
                             className="ant-dropdown-link"
                             onClick={(e) => e.preventDefault()}
                           >
@@ -100,11 +104,20 @@ const BookingFilter = (props) => {
                     <Col span={24}>
                       <Form.Item label="Price" name="price">
                         <div className="inline-form">
-                          <label>from</label>
+                          <label htmlFor="from">
+                            <input hidden />
+                            from
+                          </label>
                           <Input type="text" placeholder="1000000" />
-                          <label>to</label>
+                          <label htmlFor="from">
+                            <input hidden />
+                            to
+                          </label>
                           <Input type="text" placeholder="1000000" />
-                          <label>USD</label>
+                          <label htmlFor="from">
+                            <input hidden />
+                            USD
+                          </label>
                         </div>
                       </Form.Item>
                     </Col>
@@ -157,8 +170,13 @@ const BookingFilter = (props) => {
           </Row>
         </div>
       </div>
-      </Modal>
+    </Modal>
   );
+};
+BookingFilter.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  handleCancel: PropTypes.func.isRequired,
+  handleOk: PropTypes.func.isRequired,
 };
 
 export default BookingFilter;

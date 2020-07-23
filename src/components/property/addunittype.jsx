@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
-  Form, Input, DatePicker, Button, Row, Col, 
-  Modal } from 'antd';
+  Form, Input, DatePicker, Button, Row, Col,
+  Modal,
+} from 'antd';
 import {
   HomeOutlined,
   DeleteOutlined,
@@ -29,7 +30,6 @@ const AddUnitType = () => {
   const [showPanel, setShowPanel] = useState(true);
   const [name, setName] = useState();
   const [editId, setEditId] = useState(null);
-  const [showEdit, setShowEdit] = useState(true);
 
   const history = useHistory();
 
@@ -55,7 +55,7 @@ const AddUnitType = () => {
   const onFinish = async (values) => {
     values.id = localStorage.getItem('unittypeId');
     values.propertyId = localStorage.getItem('propertyId');
-    values.unitTypeName = `Unit Type ${ unittypeNo}`;
+    values.unitTypeName = `Unit Type ${unittypeNo}`;
     values.affiliateId = userId;
     const response = await userInstance.post('/addUnitType', values);
     if (response.data.code === 200) {
@@ -90,7 +90,7 @@ const AddUnitType = () => {
     if (response.data.code === 200) {
       if (unittypeId) {
         data
-          .filter((el) => el.id == unittypeId)
+          .filter((el) => el.id === parseInt(unittypeId, 10))
           .map((filterUnittype) => setCurrentUnittype(filterUnittype));
       } else {
         setUnittypeNo(data.length + 1);
@@ -100,7 +100,6 @@ const AddUnitType = () => {
 
   const editName = (unitId) => {
     setEditId(unitId);
-    setShowEdit(false);
   };
 
   const getUnitData = async () => {
@@ -112,7 +111,7 @@ const AddUnitType = () => {
     const data = response.data.unitData;
     if (response.data.code === 200) {
       data
-        .filter((el) => el.unittypeId == localStorage.getItem('unittypeId'))
+        .filter((el) => el.unittypeId === parseInt(localStorage.getItem('unittypeId'), 10))
         .map((filterUnit) => arr.push(filterUnit));
       setUnitData(arr);
     }
@@ -228,9 +227,9 @@ const AddUnitType = () => {
     const response = await userInstance.post('/getUnittype', values);
     const data = response.data.unittypeData;
 
-    const [filterData] = data.filter((el) => el.id == unittypeId);
+    const [filterData] = data.filter((el) => el.id === parseInt(unittypeId, 10));
     const {
-      startDay, endDay, minimumStay, perNight, roomsToSell, 
+      startDay, endDay, minimumStay, perNight, roomsToSell,
     } = filterData;
     //
     state.update('config.chart.items.1', (item1) => {
@@ -252,25 +251,23 @@ const AddUnitType = () => {
       return item3;
     });
     subs.push(
-      state.subscribe('config.chart.items', (items) => {
-        console.log('items changed', items);
+      state.subscribe('config.chart.items', () => {
       }),
     );
     subs.push(
-      state.subscribe('config.list.rows', (rows) => {
-        console.log('rows changed', rows);
+      state.subscribe('config.list.rows', () => {
       }),
     );
   }
 
   useEffect(() => () => {
-      subs.forEach((unsub) => unsub());
-    });
+    subs.forEach((unsub) => unsub());
+  });
 
   useEffect(() => {
     getData();
     getUnitData();
-  }, []);
+  });
 
   return (
     <Wrapper>
@@ -281,7 +278,7 @@ const AddUnitType = () => {
             {' '}
             {currentUnittype.id
               ? currentUnittype.unitTypeName
-              : `Unit type ${ unittypeNo}`}
+              : `Unit type ${unittypeNo}`}
           </h1>
         </div>
 
@@ -335,7 +332,7 @@ const AddUnitType = () => {
                 ) : null}
               </div>
               <Form.Item>
-                <Button htmlType="submit" style={{marginTop: "20px"}}>Save</Button>
+                <Button htmlType="submit" style={{ marginTop: '20px' }}>Save</Button>
               </Form.Item>
             </Form>
             <div className="panel-box units editunit" hidden={showPanel}>
@@ -348,16 +345,26 @@ const AddUnitType = () => {
                 />
               </div>
               <div className="group-action">
-                <div className="can-btn" onClick={() => setShowPanel(true)}>
+                <div
+                  className="can-btn"
+                  onClick={() => setShowPanel(true)}
+                  role="button"
+                  aria-hidden="true"
+                >
                   <CloseCircleOutlined />
                   {' '}
                   Cancel
-</div>
-                <div className="sav-btn" onClick={() => onUnitSave()}>
+                </div>
+                <div
+                  className="sav-btn"
+                  onClick={() => onUnitSave()}
+                  role="button"
+                  aria-hidden="true"
+                >
                   <CheckCircleOutlined />
                   {' '}
                   Save
-</div>
+                </div>
               </div>
             </div>
 
@@ -366,54 +373,58 @@ const AddUnitType = () => {
               <span>Now add unit to unit type</span>
               <div className="panel-container">
                 {unitData.map((el, i) => (
-                    <div
-                      className={
+                  <div
+                    className={
                         editId === i
                           ? 'panel-box units editunitname'
                           : 'panel-box units'
                       }
-                    >
-                      <div className="group-name">
-                        <h4 hidden={editId === i}>
-                          {el.unitName}
-                        </h4>
-                        <input
-                          type="text"
-                          name="name"
-                          placeholder="Edit Unit"
-                          onChange={onChange}
-                          hidden={editId !== i}
-                         />
-                        <span>1 unit are assigned</span>
-                      </div>
-
-                      {editId === i ? (
-                        <div className="group-action">
-                          <div
-                            className="can-btn"
-                            onClick={() => setEditId(null)}
-                          >
-                            <CloseCircleOutlined />
-{' '}
-Cancel
-</div>
-                          <div
-                            className="sav-btn"
-                            onClick={() => onUnitSave(el.id)}
-                          >
-                            <CheckCircleOutlined />
-{' '}
-Save
-</div>
-                        </div>
-                      ) : (
-                        <div className="group-action">
-                          <FormOutlined onClick={() => editName(i)} />
-                          <DeleteOutlined onClick={() => show(el.id)} />
-                        </div>
-                      )}
+                  >
+                    <div className="group-name">
+                      <h4 hidden={editId === i}>
+                        {el.unitName}
+                      </h4>
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Edit Unit"
+                        onChange={onChange}
+                        hidden={editId !== i}
+                      />
+                      <span>1 unit are assigned</span>
                     </div>
-                  ))}
+
+                    {editId === i ? (
+                      <div className="group-action">
+                        <div
+                          className="can-btn"
+                          onClick={() => setEditId(null)}
+                          role="button"
+                          aria-hidden="true"
+                        >
+                          <CloseCircleOutlined />
+                          {' '}
+                          Cancel
+                        </div>
+                        <div
+                          className="sav-btn"
+                          onClick={() => onUnitSave(el.id)}
+                          role="button"
+                          aria-hidden="true"
+                        >
+                          <CheckCircleOutlined />
+                          {' '}
+                          Save
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="group-action">
+                        <FormOutlined onClick={() => editName(i)} />
+                        <DeleteOutlined onClick={() => show(el.id)} />
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
               <div>
                 <Button onClick={() => setShowPanel(false)}>Add unit</Button>

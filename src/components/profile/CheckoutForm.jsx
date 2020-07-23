@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { Form, Button } from 'antd';
 import { userInstance } from '../../axios/axiosconfig';
@@ -23,25 +24,22 @@ const CARD_ELEMENT_OPTIONS = {
 };
 const CheckoutForm = ({
   total, currency, unitsSelected, subscriptionType, planType, toaster,
-  submitChange, showCancelCheckout,
+  submitChange, showCancelCheckout, hideBilling, getData,
 }) => {
-  console.log();
-  const [error, setError] = useState();
   const stripe = useStripe();
   const elements = useElements();
 
   // Handle real-time validation errors from the card Element.
   const handleChange = (event) => {
     if (event.error) {
-      setError(event.error.message);
+      toaster('error', event.error.message);
     } else {
-      setError(null);
+      toaster('', '');
     }
   };
 
   // Handle form submission.
   const handleSubmit = async (event) => {
-    console.log(event);
     // event.preventDefault();
     if (!stripe || !elements) {
       // Stripe.js has not loaded yet. Make sure to disable
@@ -52,9 +50,9 @@ const CheckoutForm = ({
     const result = await stripe.createToken(card);
     if (result.error) {
       // Inform the user if there was an error.
-      setError(result.error.message);
+      toaster('error', event.error.message);
     } else {
-      setError(null);
+      toaster('', '');
       // Send the token to your server.
       if (total !== 0) {
         const payload = {
@@ -69,13 +67,15 @@ const CheckoutForm = ({
         const { code } = response.data;
         if (code === 200) {
           toaster('success', 'Your Transaction was successful');
+          hideBilling(true);
+          getData();
           // window.location.href = '/payment';
         } else {
           toaster('error', 'Transaction Failed');
         }
       } else {
         const err = 'Amount Is Empty';
-        setError(err);
+        toaster('error', err);
       }
     }
   };
@@ -119,5 +119,28 @@ const CheckoutForm = ({
     </div>
   );
 };
-
+CheckoutForm.propTypes = {
+  total: PropTypes.number,
+  currency: PropTypes.string,
+  unitsSelected: PropTypes.number,
+  subscriptionType: PropTypes.string,
+  planType: PropTypes.string,
+  toaster: PropTypes.func,
+  submitChange: PropTypes.string,
+  showCancelCheckout: PropTypes.bool,
+  hideBilling: PropTypes.func,
+  getData: PropTypes.func,
+};
+CheckoutForm.defaultProps = {
+  total: 0,
+  currency: '',
+  unitsSelected: 0,
+  subscriptionType: '',
+  planType: '',
+  toaster: () => {},
+  submitChange: '',
+  showCancelCheckout: false,
+  hideBilling: () => {},
+  getData: () => {},
+};
 export default CheckoutForm;

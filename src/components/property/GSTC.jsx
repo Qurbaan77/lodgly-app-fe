@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import GSTC from 'gantt-schedule-timeline-calendar';
 import 'gantt-schedule-timeline-calendar/dist/style.css';
 
 let gstc;
-export default function GSTCWrapper(props) {
+const GSTCWrapper = ({ config, onState }) => {
   // @ts-ignore
-  const state = GSTC.api.stateFromConfig(props.config);
-  props.onState(state);
+  const state = GSTC.api.stateFromConfig(config);
+  onState(state);
 
   const callback = useCallback(
     (node) => {
@@ -28,4 +29,15 @@ export default function GSTCWrapper(props) {
   });
 
   return <div ref={callback} />;
-}
+};
+
+GSTCWrapper.propTypes = {
+  config: PropTypes.string,
+  onState: PropTypes.func,
+};
+GSTCWrapper.defaultProps = {
+  config: '',
+  onState: () => {},
+};
+
+export default GSTCWrapper;

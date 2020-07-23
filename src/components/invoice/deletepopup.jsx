@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './invoice.css';
 import {
   Button,
@@ -10,13 +11,15 @@ import {
 } from '@ant-design/icons';
 
 const DeletePopup = (props) => {
-  const { dataObject, cancel } = props;
+  const {
+    dataObject, cancel, visible, handleOk, handleCancel,
+  } = props;
 
   return (
     <Modal
-      visible={props.visible}
-      onOk={props.handleOk}
-      onCancel={props.handleCancel}
+      visible={visible}
+      onOk={handleOk}
+      onCancel={handleCancel}
       wrapClassName="delete-modal"
     >
       <div className="delete-popup-box">
@@ -36,4 +39,18 @@ const DeletePopup = (props) => {
   );
 };
 
+DeletePopup.propTypes = {
+  dataObject: PropTypes.func,
+  cancel: PropTypes.func,
+  visible: PropTypes.bool,
+  handleCancel: PropTypes.func,
+  handleOk: PropTypes.func,
+};
+DeletePopup.defaultProps = {
+  dataObject: () => {},
+  cancel: () => {},
+  visible: false,
+  handleCancel: () => {},
+  handleOk: () => {},
+};
 export default DeletePopup;

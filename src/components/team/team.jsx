@@ -14,6 +14,7 @@ import EditSubUserPopup from './editsubuserpopup';
 import subuser from '../../assets/images/subuser.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
+import UserLock from '../userlock/userlock';
 
 const TeamListing = () => {
   const [visible, setVisible] = useState(false);
@@ -22,6 +23,9 @@ const TeamListing = () => {
   const [currentSubUser, setCurrentSubUser] = useState(false);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
+  const [subscribed, setSubscribed] = useState();
+  const [onTrial, setOnTrial] = useState();
+  const [daysLeft, setDaysLeft] = useState();
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -70,6 +74,15 @@ const TeamListing = () => {
   };
 
   const getData = async () => {
+    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    if (response0.data.code === 200) {
+      const [{
+        days, isOnTrial, isSubscribed,
+      }] = response0.data.userSubsDetails;
+      setDaysLeft(days);
+      setSubscribed(isSubscribed);
+      setOnTrial(isOnTrial);
+    }
     const response = await userInstance.post('/getSubUser', {
       affiliateId: userId,
     });
@@ -82,7 +95,32 @@ const TeamListing = () => {
     getData();
   }, []);
 
-  return (
+  const enableButton = (
+    <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+      Add New Sub-User
+    </Button>
+  );
+  const disabledButton = (
+    <Tooltip
+      title="You are not authorize to add new sub user"
+      color="gold"
+    >
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={show}
+        disabled="true"
+      >
+        Add New Sub-User
+      </Button>
+    </Tooltip>
+  );
+  const btn1 = isSubUser && canWrite ? enableButton : disabledButton;
+  const btn2 = isSubUser ? btn1 : enableButton;
+
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+
+  const pageContent = (
     <>
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       {subUser.length ? (
@@ -108,13 +146,13 @@ const TeamListing = () => {
                       <th>Sub User</th>
                       <th>Email</th>
                       <th>Role</th>
-                      <th />
+                      {/* <th /> */}
                     </tr>
                   </thead>
 
                   <tbody>
                     {subUser.map((el, i) => (
-                      <tr key={i}>
+                      <tr key={el.id}>
                         <td>
                           <div className="team-info">
                             <div className="team-pic">
@@ -172,31 +210,7 @@ const TeamListing = () => {
               <img src={subuser} alt="subuser" />
               <h4>Sub Users</h4>
               <p>Currently there are no Sub users created</p>
-              {isSubUser ? (
-                canWrite ? (
-                  <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                    Add New Sub-User
-                  </Button>
-                ) : (
-                  <Tooltip
-                    title="You are not authorize to add new sub user"
-                    color="gold"
-                  >
-                    <Button
-                      type="primary"
-                      icon={<PlusOutlined />}
-                      onClick={show}
-                      disabled="true"
-                    >
-                      Add New Sub-User
-                    </Button>
-                  </Tooltip>
-                )
-              ) : (
-                <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                  Add New Sub-User
-                </Button>
-              )}
+              {btn2}
             </div>
           </div>
           <SubUserPopup
@@ -208,6 +222,18 @@ const TeamListing = () => {
           />
         </Wrapper>
       )}
+    </>
+  );
+  return (
+    <>
+      {
+      hasAccess ? pageContent
+        : (
+          <Wrapper>
+            <UserLock />
+          </Wrapper>
+        )
+    }
     </>
   );
 };

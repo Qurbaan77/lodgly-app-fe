@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from 'react-places-autocomplete';
+import PlacesAutocomplete from 'react-places-autocomplete';
 import './property.css';
 import {
   Form,
@@ -96,7 +93,7 @@ const Property = () => {
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
       const curProperty = data.filter(
-        (el) => el.id == localStorage.getItem('propertyId'),
+        (el) => el.id === parseInt(localStorage.getItem('propertyId'), 10),
       );
       setCurrentProperty(curProperty);
       setId(curProperty[0].id);
@@ -161,14 +158,9 @@ const Property = () => {
   };
 
   const handleAddressSelect = (address) => {
-    console.log('handleAddressSelect', address);
     form.setFieldsValue({
       address,
     });
-    geocodeByAddress(address)
-      .then((results) => getLatLng(results[0]))
-      .then((latLng) => console.log('Success', latLng))
-      .catch((error) => console.error('Error', error));
   };
 
   const props = {
@@ -189,6 +181,14 @@ const Property = () => {
     getData();
   }, []);
 
+  const enableButton = <Button>Save</Button>;
+  const disableButton = (
+    <Tooltip title="You are not authorize to save New Property" color="gold">
+      <Button disabled="true">Save</Button>
+    </Tooltip>
+  );
+  const btn1 = isSubUser && canWrite ? enableButton : disableButton;
+  const btn2 = isSubUser ? btn1 : enableButton;
   return (
     <Wrapper>
       <div className="add-property">
@@ -246,7 +246,7 @@ const Property = () => {
                     </Col>
 
                     <Col span={24}>
-                    <Form.Item name="address" label="Address">
+                      <Form.Item name="address" label="Address">
                         {/* <Input placeholder='4901 St Anthony Eye' /> */}
                         <PlacesAutocomplete
                           value={address}
@@ -275,13 +275,13 @@ const Property = () => {
                                   // inline style for demonstration purpose
                                   const style = suggestion.active
                                     ? {
-                                      backgroundColor: '#fafafa',
-                                      cursor: 'pointer',
+                                        backgroundColor: '#fafafa',
+                                        cursor: 'pointer',
                                     }
-                                    : {
-                                      backgroundColor: '#ffffff',
-                                      cursor: 'pointer',
-                                    };
+                                  : {
+                                        backgroundColor: '#ffffff',
+                                        cursor: 'pointer',
+                                  };
                                   return (
                                     <div
                                       {...getSuggestionItemProps(suggestion, {
@@ -298,7 +298,6 @@ const Property = () => {
                           )}
                         </PlacesAutocomplete>
                       </Form.Item>
-    
                     </Col>
 
                     <Col span={12}>
@@ -479,7 +478,6 @@ const Property = () => {
                           getValueFromEvent={normFile}
                           noStyle
                         >
-                          {/* <Upload.Dragger name="files" action="/upload.do"> */}
                           <Upload.Dragger {...props}>
                             <p className="ant-upload-drag-icon">
                               <InboxOutlined />
@@ -505,22 +503,7 @@ const Property = () => {
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item>
-                        {isSubUser ? (
-                          canWrite ? (
-                            <Button>Save</Button>
-                          ) : (
-                            <Tooltip
-                              title="You are not authorize to save New Property"
-                              color="gold"
-                            >
-                              <Button disabled="true">Save</Button>
-                            </Tooltip>
-                          )
-                        ) : (
-                          <Button>Save</Button>
-                        )}
-                      </Form.Item>
+                      <Form.Item>{btn2}</Form.Item>
                     </Col>
                   </Row>
                 </Form>

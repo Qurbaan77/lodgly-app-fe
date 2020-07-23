@@ -30,7 +30,8 @@ import Calendar from './components/calendar/calendar';
 import Popup from './components/calendar/popup';
 import { PrivateRoute, LoginRoute } from './Routes/PrivateRoute';
 import {
-  SecureBooking, SecureCalendar, SecureProperty, SecureTeam, SecureOwner, SecureInvoice, SecureService,
+  SecureBooking, SecureCalendar, SecureProperty, SecureTeam,
+  SecureOwner, SecureInvoice, SecureService,
 } from './Routes/SecureRoute';
 
 import Owner from './components/owner/owner';
@@ -38,7 +39,6 @@ import Team from './components/team/team';
 import Profile from './components/profile/profile';
 import BillingInformation from './components/profile/billinginformation';
 import Invoice from './components/invoice/invoice';
-import InvoiceList from './components/invoice/invoicelist';
 import Stats from './components/stats/stats';
 
 import './responsive.css';

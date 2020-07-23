@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './property.css';
 import {
-  Form, Input, Button, Tooltip, Modal , Table } from 'antd';
+  Form, Input, Button, Tooltip, Modal, Table,
+} from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-
 
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
@@ -22,7 +22,6 @@ const Services = () => {
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  console.log(userCred);
   const [{ propertiesWrite }] = userCred || [{}];
   const canWrite = propertiesWrite;
 
@@ -45,10 +44,14 @@ const Services = () => {
       title: 'Action',
       dataIndex: 'action',
       key: 'x',
-      render: (text, record) => (
+      render: (record) => (
         <div className="service-margin">
-          <a onClick={() => edit(record.id)}>Edit</a>
-          <a onClick={() => delRow(record.id)}>Delete</a>
+          <a onClick={() => edit(record.id)} role="button" aria-hidden="true">
+            Edit
+          </a>
+          <a onClick={() => delRow(record.id)} role="button" aria-hidden="true">
+            Delete
+          </a>
         </div>
       ),
     },
@@ -81,7 +84,7 @@ const Services = () => {
 
   const edit = (id) => {
     serviceData
-      .filter((ele) => ele.id == id)
+      .filter((ele) => ele.id === id)
       .map((filterService) => showInform(filterService));
   };
 
@@ -139,37 +142,37 @@ const Services = () => {
     getData();
   }, []);
 
+  const enableButton = (
+    <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+      <Link to="/services">Add Services</Link>
+    </Button>
+  );
+
+  const disableButton = (
+    <Tooltip
+      title="You are not authorize to create create new service"
+      color="gold"
+    >
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={show}
+        disabled="true"
+      >
+        <Link to="/services">Add Services</Link>
+      </Button>
+    </Tooltip>
+  );
+  const btn1 = isSubUser && canWrite ? enableButton : disableButton;
+  const btn2 = isSubUser ? btn1 : enableButton;
+
   return (
     <Wrapper>
       <div className="property-listing">
         <div className="page-header">
           <h1>Services</h1>
 
-          {isSubUser ? (
-            canWrite ? (
-              <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                <Link to="/services">Add Services</Link>
-              </Button>
-            ) : (
-              <Tooltip
-                title="You are not authorize to create create new service"
-                color="gold"
-              >
-                <Button
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={show}
-                  disabled="true"
-                >
-                  <Link to="/services">Add Services</Link>
-                </Button>
-              </Tooltip>
-            )
-          ) : (
-            <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-              <Link to="/services">Add Services</Link>
-            </Button>
-          )}
+          {btn2}
         </div>
 
         <div className="services-list">

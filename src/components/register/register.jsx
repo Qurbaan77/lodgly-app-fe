@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import './register.css';
 import {
-  Form, Input, Select, Row, Col, Checkbox, Button,
+  Form, Input, Row, Col, Checkbox, Button,
 } from 'antd';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
@@ -21,7 +21,7 @@ const Register = () => {
     const response = await userInstance.post('/signup', values);
     const statusCode = response.data.code;
     const { msg } = response.data;
-    if (statusCode == 200) {
+    if (statusCode === 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
       history.push('/thankyou');
@@ -147,7 +147,11 @@ const Register = () => {
                                   return Promise.resolve();
                                 }
 
-                                return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                return Promise.reject(
+                                  new Error(
+                                    'The two passwords that you entered do not match!',
+                                  ),
+                                );
                               },
                             }),
                           ]}
@@ -200,7 +204,7 @@ const Register = () => {
                             {
                               validator: (_, value) => (value
                                 ? Promise.resolve()
-                                : Promise.reject('Should accept agreement')),
+                                : Promise.reject(new Error('Should accept agreement'))),
                             },
                           ]}
                         >

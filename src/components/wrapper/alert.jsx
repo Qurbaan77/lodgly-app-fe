@@ -3,14 +3,13 @@ import { Alert } from 'antd';
 import { userInstance } from '../../axios/axiosconfig';
 
 const AlertBox = () => {
-  const [daysLeft, setDaysLeft] = useState(null);
+  const [daysLeft, setDaysLeft] = useState(14);
 
+  const getDays = async () => {
+    const res = await userInstance.post('trialDays');
+    setDaysLeft(res.data.data);
+  };
   useEffect(() => {
-    const getDays = async () => {
-      const res = await userInstance.post('trialDays');
-      console.log(res);
-      setDaysLeft(res.data.data);
-    };
     getDays();
   }, []);
 
@@ -22,10 +21,18 @@ const AlertBox = () => {
     <>
       {!isCollapsed ? (
         <div className="alert-box">
-          <Alert message={`Your trail period will end in ${daysLeft} days`} description={<a href="/billinginformation">Subscribe</a>} type="warning" showIcon closable onClose={handleClose} />
+          <Alert
+            message={`Your trail period will end in ${daysLeft} days`}
+            description={<a href="/billinginformation">Subscribe</a>}
+            type="warning"
+            showIcon
+            closable
+            onClose={handleClose}
+          />
         </div>
-      )
-        : ''}
+      ) : (
+        ''
+      )}
     </>
   );
 };

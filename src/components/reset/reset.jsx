@@ -17,7 +17,7 @@ const Reset = () => {
     const response = await userInstance.post('/forgetpassword', values);
     const statusCode = response.data.code;
     const { msg } = response.data;
-    if (statusCode == 200) {
+    if (statusCode === 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
     } else {
@@ -25,10 +25,6 @@ const Reset = () => {
       setNotifyMsg(msg);
     }
     form.resetFields();
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
   };
 
   const close = () => {
@@ -57,7 +53,7 @@ const Reset = () => {
                         remember: true,
                       }}
                       onFinish={onFinish}
-                      onFinishFailed={onFinishFailed}
+
                     >
                       <Form.Item
                         label="New Password"
@@ -92,7 +88,7 @@ const Reset = () => {
                               }
 
                               return Promise.reject(
-                                'The two passwords that you entered do not match!',
+                                new Error('The two passwords that you entered do not match!'),
                               );
                             },
                           }),

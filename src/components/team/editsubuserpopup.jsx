@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import './team.css';
 import {
   Form, Select, Input, Button, Checkbox, Modal, Row, Col,
 } from 'antd';
-import team from '../../assets/images/profile_user.jpg';
+// import team from '../../assets/images/profile_user.jpg';
 
 import { userInstance } from '../../axios/axiosconfig';
 
-const SubUserPopup = (props) => {
-  const { subUserData } = props;
+const EditSubUserPopup = (props) => {
+  const {
+    subUserData, getData, close, handleOk, handleCancel, visible,
+  } = props;
   const [form] = Form.useForm();
   const [bookingRead, setBookingRead] = useState(false);
   const [bookingWrite, setBookingWrite] = useState(false);
@@ -52,10 +55,9 @@ const SubUserPopup = (props) => {
     setServiceWrite(subUserData.serviceWrite);
     setOwnerRead(subUserData.ownerRead);
     setOwnerWrite(subUserData.ownerWrite);
-  }, [props.visible]);
+  }, [visible]);
 
   const handleSelect = (value) => {
-    console.log(value);
     if (value === 'fullaccess') {
       setBookingRead(true);
       setBookingWrite(true);
@@ -121,35 +123,47 @@ const SubUserPopup = (props) => {
     copyValues.affiliateId = subUserData.userId;
     const response = await userInstance.post('/updateSubUser', copyValues);
     if (response.status === 200) {
-      props.getData();
-      props.close();
+      getData();
+      close();
     }
   };
   const handleBookingRead = (e) => (e.target.value ? setBookingRead(false) : setBookingRead(true));
-  const handleBookingWrite = (e) => (e.target.value ? setBookingWrite(false) : setBookingWrite(true));
-  const handlePropertiesRead = (e) => (e.target.value ? setPropertiesRead(false) : setPropertiesRead(true));
-  const handlePropertiesWrite = (e) => (e.target.value ? setPropertiesWrite(false) : setPropertiesWrite(true));
-  const handleCalendarRead = (e) => (e.target.value ? setCalendarRead(false) : setCalendarRead(true));
-  const handleCalendarWrite = (e) => (e.target.value ? setCalendarWrite(false) : setCalendarWrite(true));
-  const handleGuestsRead = (e) => (e.target.value ? setGuestsRead(false) : setGuestsRead(true));
-  const handleGuestsWrite = (e) => (e.target.value ? setGuestsWrite(false) : setGuestsWrite(true));
-  const handleTeamRead = (e) => (e.target.value === 'true' ? setTeamRead(false) : setTeamRead(true));
-  const handleTeamWrite = (e) => (e.target.value === 'true' ? setTeamWrite(false) : setTeamWrite(true));
-  const handleInvoicesRead = (e) => (e.target.value ? setInvoicesRead(false) : setInvoicesRead(true));
-  const handleInvoicesWrite = (e) => (e.target.value ? setInvoicesWrite(false) : setInvoicesWrite(true));
+  const handleBookingWrite = (e) => (e.target.value
+    ? setBookingWrite(false) : setBookingWrite(true));
+  const handlePropertiesRead = (e) => (e.target.value
+    ? setPropertiesRead(false) : setPropertiesRead(true));
+  const handlePropertiesWrite = (e) => (e.target.value
+    ? setPropertiesWrite(false) : setPropertiesWrite(true));
+  const handleCalendarRead = (e) => (e.target.value
+    ? setCalendarRead(false) : setCalendarRead(true));
+  const handleCalendarWrite = (e) => (e.target.value
+    ? setCalendarWrite(false) : setCalendarWrite(true));
+  const handleGuestsRead = (e) => (e.target.value
+    ? setGuestsRead(false) : setGuestsRead(true));
+  const handleGuestsWrite = (e) => (e.target.value
+    ? setGuestsWrite(false) : setGuestsWrite(true));
+  const handleTeamRead = (e) => (e.target.value === 'true'
+    ? setTeamRead(false) : setTeamRead(true));
+  const handleTeamWrite = (e) => (e.target.value === 'true'
+    ? setTeamWrite(false) : setTeamWrite(true));
+  const handleInvoicesRead = (e) => (e.target.value
+    ? setInvoicesRead(false) : setInvoicesRead(true));
+  const handleInvoicesWrite = (e) => (e.target.value
+    ? setInvoicesWrite(false) : setInvoicesWrite(true));
   const handleStatsRead = (e) => (e.target.value ? setStatsRead(false) : setStatsRead(true));
   const handleStatsWrite = (e) => (e.target.value ? setStatsWrite(false) : setStatsWrite(true));
   const handleServiceRead = (e) => (e.target.value ? setServiceRead(false) : setServiceRead(true));
-  const handleServiceWrite = (e) => (e.target.value ? setServiceWrite(false) : setServiceWrite(true));
+  const handleServiceWrite = (e) => (e.target.value
+    ? setServiceWrite(false) : setServiceWrite(true));
   const handleOwnerRead = (e) => (e.target.value ? setOwnerRead(false) : setOwnerRead(true));
   const handleOwnerWrite = (e) => (e.target.value ? setOwnerWrite(false) : setOwnerWrite(true));
 
   return (
     <Modal
       title="Edit Sub-User"
-      visible={props.visible}
-      onOk={props.handleOk}
-      onCancel={props.handleCancel}
+      visible={visible}
+      onOk={handleOk}
+      onCancel={handleCancel}
       wrapClassName="guest-modal sub-user"
     >
       <Form name="basic" form={form} onFinish={onFinish}>
@@ -437,7 +451,7 @@ const SubUserPopup = (props) => {
         >
           <Col span={24}>
             <Form.Item>
-              <Button style={{ marginRight: 10 }} onClick={props.close}>
+              <Button style={{ marginRight: 10 }} onClick={close}>
                 Cancel
               </Button>
               <Button type="primary" htmlType="submit">
@@ -451,4 +465,20 @@ const SubUserPopup = (props) => {
   );
 };
 
-export default SubUserPopup;
+EditSubUserPopup.propTypes = {
+  subUserData: PropTypes.objectOf(PropTypes.object),
+  getData: PropTypes.func,
+  close: PropTypes.func,
+  handleCancel: PropTypes.func,
+  handleOk: PropTypes.func,
+  visible: PropTypes.bool,
+};
+EditSubUserPopup.defaultProps = {
+  subUserData: {},
+  getData: () => {},
+  close: () => {},
+  handleCancel: () => {},
+  handleOk: () => {},
+  visible: false,
+};
+export default EditSubUserPopup;

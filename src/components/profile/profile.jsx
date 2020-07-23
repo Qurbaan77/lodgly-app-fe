@@ -15,6 +15,7 @@ import { UserOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
+import UserLock from '../userlock/userlock';
 
 const { Panel } = Collapse;
 
@@ -34,8 +35,20 @@ const Profile = () => {
   const userId = localStorage.getItem('userId');
   const [img, setImg] = useState('');
   const [userName, setUserName] = useState('');
+  const [subscribed, setSubscribed] = useState();
+  const [onTrial, setOnTrial] = useState();
+  const [daysLeft, setDaysLeft] = useState();
 
   const getUserInfo = async () => {
+    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    if (response0.data.code === 200) {
+      const [{
+        days, isOnTrial, isSubscribed,
+      }] = response0.data.userSubsDetails;
+      setDaysLeft(days);
+      setSubscribed(isSubscribed);
+      setOnTrial(isOnTrial);
+    }
     const response = await userInstance.post('/getuserData');
     const body = response.data.userData;
     if (body.length > 0) {
@@ -138,319 +151,326 @@ const Profile = () => {
     getCompanyInfo();
   }, []);
 
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
     <Wrapper img={img} name={userName} getUserInfo={getUserInfo}>
-      <div className="personal-information">
-        <div className="page-header">
-          <h1>
-            <UserOutlined />
-            {' '}
-            Personal Information
-          </h1>
-        </div>
-        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
+      {
+      hasAccess
+        ? (
+          <div className="personal-information">
+            <div className="page-header">
+              <h1>
+                <UserOutlined />
+                {' '}
+                Personal Information
+              </h1>
+            </div>
+            <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
 
-        <div className="profile-container">
-          <Row gutter={[16, 0]}>
-            <Col span={12}>
-              <Collapse defaultActiveKey={['1']} accordion>
-                <Panel header="Details" key="1">
-                  <div className="main-info-form">
-                    <h4>Details</h4>
-                    <p>Add or edit your personal information</p>
-                    <Form
-                      form={form1}
-                      name="basic"
-                      onFinish={personalInfoFinish}
-                    >
-                      <Row gutter={[16, 0]}>
-                        <Col span={12}>
-                          <Form.Item>
-                            <Form.Item
-                              name="dragger"
-                              valuePropName="fileList"
-                              getValueFromEvent={normFile}
-                              noStyle
-                            >
-                              <Upload.Dragger {...props}>
-                                <p className="ant-upload-drag-icon">
-                                  <UserOutlined />
-                                </p>
-                                <p className="ant-upload-text">
-                                  Drop photos here or
-                                </p>
-                                <p className="ant-upload-hint">CHOOSE FILE</p>
-                              </Upload.Dragger>
+            <div className="profile-container">
+              <Row gutter={[16, 0]}>
+                <Col span={12}>
+                  <Collapse defaultActiveKey={['1']} accordion>
+                    <Panel header="Details" key="1">
+                      <div className="main-info-form">
+                        <h4>Details</h4>
+                        <p>Add or edit your personal information</p>
+                        <Form
+                          form={form1}
+                          name="basic"
+                          onFinish={personalInfoFinish}
+                        >
+                          <Row gutter={[16, 0]}>
+                            <Col span={12}>
+                              <Form.Item>
+                                <Form.Item
+                                  name="dragger"
+                                  valuePropName="fileList"
+                                  getValueFromEvent={normFile}
+                                  noStyle
+                                >
+                                  <Upload.Dragger {...props}>
+                                    <p className="ant-upload-drag-icon">
+                                      <UserOutlined />
+                                    </p>
+                                    <p className="ant-upload-text">
+                                      Drop photos here or
+                                    </p>
+                                    <p className="ant-upload-hint">CHOOSE FILE</p>
+                                  </Upload.Dragger>
+                                </Form.Item>
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={12}>
+                              <Form.Item
+                                label="First Name"
+                                name="fname"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'Please enter your first name!',
+                                  },
+                                ]}
+                              >
+                                <Input placeholder="" />
+                              </Form.Item>
+
+                              <Form.Item
+                                label="Last Name"
+                                name="lname"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'Please enter your last name!',
+                                  },
+                                ]}
+                              >
+                                <Input placeholder="" />
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={24}>
+                              <Form.Item label="Address" name="address">
+                                <Input placeholder="" />
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={12}>
+                              <Form.Item label="Email" name="email">
+                                <Input placeholder="" />
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={12}>
+                              <Form.Item label="Phone" name="phone">
+                                <Input
+                                  placeholder=""
+                                  type="number"
+                                  minLength="9"
+                                  maxLength="15"
+                                />
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={12}>
+                              <Form.Item>
+                                <Button type="primary" htmlType="submit">
+                                  Save
+                                </Button>
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                        </Form>
+                      </div>
+                    </Panel>
+                  </Collapse>
+
+                  <Collapse defaultActiveKey={['2']} accordion>
+                    <Panel header="Application Settings" key="2">
+                      <div className="main-info-form">
+                        <h4>Application Settings</h4>
+                        <p>Add or edit your personal information</p>
+
+                        <Row gutter={[16, 0]}>
+                          <Col span={12}>
+                            <Form.Item label="UI Language">
+                              <Select>
+                                <Select.Option value="demo">English</Select.Option>
+                              </Select>
                             </Form.Item>
-                          </Form.Item>
-                        </Col>
+                          </Col>
 
-                        <Col span={12}>
-                          <Form.Item
-                            label="First Name"
-                            name="fname"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Please enter your first name!',
-                              },
-                            ]}
-                          >
-                            <Input placeholder="" />
-                          </Form.Item>
+                          <Col span={12}>
+                            <Form.Item label="Timezone">
+                              <Select>
+                                <Select.Option value="demo">
+                                  Europe/Vienna
+                                </Select.Option>
+                              </Select>
+                            </Form.Item>
+                          </Col>
 
-                          <Form.Item
-                            label="Last Name"
-                            name="lname"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Please enter your last name!',
-                              },
-                            ]}
-                          >
-                            <Input placeholder="" />
-                          </Form.Item>
-                        </Col>
+                          <Col span={24}>
+                            <Form.Item>
+                              <Button>Save</Button>
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                      </div>
+                    </Panel>
+                  </Collapse>
 
-                        <Col span={24}>
-                          <Form.Item label="Address" name="address">
-                            <Input placeholder="" />
-                          </Form.Item>
-                        </Col>
+                  <Collapse defaultActiveKey={['3']} accordion>
+                    <Panel header="Password Change" key="3">
+                      <div className="main-info-form">
+                        <h4>Password Change</h4>
+                        <p>Add or edit your personal information</p>
 
-                        <Col span={12}>
-                          <Form.Item label="Email" name="email">
-                            <Input placeholder="" />
-                          </Form.Item>
-                        </Col>
+                        <Form form={form3} onFinish={passwordFininsh}>
+                          <Row gutter={[16, 0]}>
+                            <Col span={24}>
+                              <Form.Item
+                                name="oldPassword"
+                                label="Old Password"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'Please enter your old password!',
+                                  },
+                                ]}
+                              >
+                                <Input.Password placeholder="" />
+                              </Form.Item>
+                            </Col>
 
-                        <Col span={12}>
-                          <Form.Item label="Phone" name="phone">
-                            <Input
-                              placeholder=""
-                              type="number"
-                              minLength="9"
-                              maxLength="15"
-                            />
-                          </Form.Item>
-                        </Col>
+                            <Col span={24}>
+                              <Form.Item
+                                name="newPassword"
+                                label="New Password"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'Please enter your new password!',
+                                  },
+                                ]}
+                              >
+                                <Input.Password placeholder="" />
+                              </Form.Item>
+                            </Col>
 
-                        <Col span={12}>
-                          <Form.Item>
-                            <Button type="primary" htmlType="submit">
-                              Save
-                            </Button>
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                    </Form>
-                  </div>
-                </Panel>
-              </Collapse>
-
-              <Collapse defaultActiveKey={['2']} accordion>
-                <Panel header="Application Settings" key="2">
-                  <div className="main-info-form">
-                    <h4>Application Settings</h4>
-                    <p>Add or edit your personal information</p>
-
-                    <Row gutter={[16, 0]}>
-                      <Col span={12}>
-                        <Form.Item label="UI Language">
-                          <Select>
-                            <Select.Option value="demo">English</Select.Option>
-                          </Select>
-                        </Form.Item>
-                      </Col>
-
-                      <Col span={12}>
-                        <Form.Item label="Timezone">
-                          <Select>
-                            <Select.Option value="demo">
-                              Europe/Vienna
-                            </Select.Option>
-                          </Select>
-                        </Form.Item>
-                      </Col>
-
-                      <Col span={24}>
-                        <Form.Item>
-                          <Button>Save</Button>
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  </div>
-                </Panel>
-              </Collapse>
-
-              <Collapse defaultActiveKey={['3']} accordion>
-                <Panel header="Password Change" key="3">
-                  <div className="main-info-form">
-                    <h4>Password Change</h4>
-                    <p>Add or edit your personal information</p>
-
-                    <Form form={form3} onFinish={passwordFininsh}>
-                      <Row gutter={[16, 0]}>
-                        <Col span={24}>
-                          <Form.Item
-                            name="oldPassword"
-                            label="Old Password"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Please enter your old password!',
-                              },
-                            ]}
-                          >
-                            <Input.Password placeholder="" />
-                          </Form.Item>
-                        </Col>
-
-                        <Col span={24}>
-                          <Form.Item
-                            name="newPassword"
-                            label="New Password"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Please enter your new password!',
-                              },
-                            ]}
-                          >
-                            <Input.Password placeholder="" />
-                          </Form.Item>
-                        </Col>
-
-                        <Col span={24}>
-                          <Form.Item
-                            name="confirm"
-                            label="Repeat New Password"
-                            dependencies={['newPassword']}
-                            hasFeedback
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Please confirm your password!',
-                              },
-                              ({ getFieldValue }) => ({
-                                validator(rule, value) {
-                                  if (
-                                    !value
+                            <Col span={24}>
+                              <Form.Item
+                                name="confirm"
+                                label="Repeat New Password"
+                                dependencies={['newPassword']}
+                                hasFeedback
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'Please confirm your password!',
+                                  },
+                                  ({ getFieldValue }) => ({
+                                    validator(rule, value) {
+                                      if (
+                                        !value
                                     || getFieldValue('newPassword') === value
-                                  ) {
-                                    return Promise.resolve();
-                                  }
+                                      ) {
+                                        return Promise.resolve();
+                                      }
 
-                                  return Promise.reject(new Error('The two passwords that you entered do not match!'));
-                                },
-                              }),
-                            ]}
-                          >
-                            <Input.Password placeholder="" />
-                          </Form.Item>
-                        </Col>
+                                      return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                    },
+                                  }),
+                                ]}
+                              >
+                                <Input.Password placeholder="" />
+                              </Form.Item>
+                            </Col>
 
-                        <Col span={24}>
-                          <Form.Item>
-                            <Button type="primary" htmlType="submit">
-                              Change Password
-                            </Button>
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                    </Form>
-                  </div>
-                </Panel>
-              </Collapse>
-            </Col>
+                            <Col span={24}>
+                              <Form.Item>
+                                <Button type="primary" htmlType="submit">
+                                  Change Password
+                                </Button>
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                        </Form>
+                      </div>
+                    </Panel>
+                  </Collapse>
+                </Col>
 
-            <Col span={12}>
-              <Collapse defaultActiveKey={['4']} accordion>
-                <Panel header="Company Data" key="4">
-                  <div className="main-info-form">
-                    <h4>Company Data</h4>
-                    <p>Add or edit your company data</p>
+                <Col span={12}>
+                  <Collapse defaultActiveKey={['4']} accordion>
+                    <Panel header="Company Data" key="4">
+                      <div className="main-info-form">
+                        <h4>Company Data</h4>
+                        <p>Add or edit your company data</p>
 
-                    <Form form={form4} onFinish={companyFinsh}>
-                      <Row gutter={[16, 0]}>
-                        <Col span={24}>
-                          <Form.Item
-                            name="name"
-                            label="Name"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Please enter your name!',
-                              },
-                            ]}
-                          >
-                            <Input />
-                          </Form.Item>
-                        </Col>
+                        <Form form={form4} onFinish={companyFinsh}>
+                          <Row gutter={[16, 0]}>
+                            <Col span={24}>
+                              <Form.Item
+                                name="name"
+                                label="Name"
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: 'Please enter your name!',
+                                  },
+                                ]}
+                              >
+                                <Input />
+                              </Form.Item>
+                            </Col>
 
-                        <Col span={24}>
-                          <Form.Item name="address" label="Address">
-                            <Input placeholder="4901 St Anthony Eye" />
-                          </Form.Item>
-                        </Col>
+                            <Col span={24}>
+                              <Form.Item name="address" label="Address">
+                                <Input placeholder="4901 St Anthony Eye" />
+                              </Form.Item>
+                            </Col>
 
-                        <Col span={12}>
-                          <Form.Item name="country" label="Country">
-                            <Select>
-                              <Select.Option value="demo">
-                                Croatia
-                              </Select.Option>
-                            </Select>
-                          </Form.Item>
-                        </Col>
+                            <Col span={12}>
+                              <Form.Item name="country" label="Country">
+                                <Select>
+                                  <Select.Option value="demo">
+                                    Croatia
+                                  </Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </Col>
 
-                        <Col span={12}>
-                          <Form.Item name="state" label="State">
-                            <Select>
-                              <Select.Option value="demo">Choose</Select.Option>
-                            </Select>
-                          </Form.Item>
-                        </Col>
+                            <Col span={12}>
+                              <Form.Item name="state" label="State">
+                                <Select>
+                                  <Select.Option value="demo">Choose</Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </Col>
 
-                        <Col span={12}>
-                          <Form.Item name="city" label="City">
-                            <Select>
-                              <Select.Option value="demo">Zadar</Select.Option>
-                            </Select>
-                          </Form.Item>
-                        </Col>
+                            <Col span={12}>
+                              <Form.Item name="city" label="City">
+                                <Select>
+                                  <Select.Option value="demo">Zadar</Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </Col>
 
-                        <Col span={12}>
-                          <Form.Item name="zip" label="Zip">
-                            <Select>
-                              <Select.Option value="demo">Choose</Select.Option>
-                            </Select>
-                          </Form.Item>
-                        </Col>
+                            <Col span={12}>
+                              <Form.Item name="zip" label="Zip">
+                                <Select>
+                                  <Select.Option value="demo">Choose</Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </Col>
 
-                        <Col span={24}>
-                          <Form.Item name="zip" label="Vat ID">
-                            <Input />
-                          </Form.Item>
-                        </Col>
+                            <Col span={24}>
+                              <Form.Item name="zip" label="Vat ID">
+                                <Input />
+                              </Form.Item>
+                            </Col>
 
-                        <Col span={24}>
-                          <Form.Item>
-                            <Button type="primary" htmlType="submit">
-                              Save
-                            </Button>
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                    </Form>
-                  </div>
-                </Panel>
-              </Collapse>
-            </Col>
-          </Row>
-        </div>
-      </div>
+                            <Col span={24}>
+                              <Form.Item>
+                                <Button type="primary" htmlType="submit">
+                                  Save
+                                </Button>
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                        </Form>
+                      </div>
+                    </Panel>
+                  </Collapse>
+                </Col>
+              </Row>
+            </div>
+          </div>
+        )
+        : <UserLock />
+    }
     </Wrapper>
   );
 };

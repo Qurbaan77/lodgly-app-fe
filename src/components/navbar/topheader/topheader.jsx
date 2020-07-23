@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Dropdown, Layout, Menu } from 'antd';
-
 import { SearchOutlined, VerticalAlignMiddleOutlined } from '@ant-design/icons';
 import { userInstance } from '../../../axios/axiosconfig';
 
 const { Header } = Layout;
 
-const TopHeader = (props) => {
-  console.log(props);
+const TopHeader = ({ fun }) => {
   const [propertyData, setPropertyData] = useState([]);
   const [propertyName, setPropertyName] = useState();
   const [menu, setMenu] = useState();
@@ -17,17 +16,16 @@ const TopHeader = (props) => {
   const onChange = (value, name) => {
     localStorage.setItem('topNavId', value);
     setPropertyName(name);
-    props.fun(value);
-    // props.onChange(value)
+    fun(value);
   };
 
-  const fun = () => {
-    props.fun();
+  const clear = () => {
+    fun();
     localStorage.removeItem('topNavId');
     setPropertyName();
   };
 
-  const fun1 = (e) => {
+  const selectProperty = (e) => {
     let menu1 = '';
     e.preventDefault();
     menu1 = (
@@ -40,7 +38,7 @@ const TopHeader = (props) => {
             {el.propertyName}
           </Menu.Item>
         ))}
-        <Menu.Item onClick={() => fun()}>All Properties</Menu.Item>
+        <Menu.Item onClick={() => clear()}>All Properties</Menu.Item>
       </Menu>
     );
 
@@ -57,7 +55,7 @@ const TopHeader = (props) => {
         if (localStorage.getItem('topNavId')) {
           data
             .filter(
-              (el) => el.id === parseInt(localStorage.getItem('topNavId'), 10)
+              (el) => el.id === parseInt(localStorage.getItem('topNavId'), 10),
             )
             .map((filter) => setPropertyName(filter.propertyName));
         }
@@ -74,23 +72,27 @@ const TopHeader = (props) => {
       className="site-layout-background"
       style={{ padding: 0 }}
     >
-      {/* {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-            className: 'trigger',
-            onClick: toggle,
-            })} */}
-
       <div className="header-property">
         <div className="search-box">
           <SearchOutlined />
         </div>
         <Dropdown overlay={menu} trigger={['click']}>
-          <a className="ant-dropdown-link" onClick={(e) => fun1(e)}>
-            {propertyName || 'Select Property'} <VerticalAlignMiddleOutlined />
+          <a className="ant-dropdown-link" onClick={(e) => selectProperty(e)}>
+            {propertyName || 'Select Property'}
+            {' '}
+            <VerticalAlignMiddleOutlined />
           </a>
         </Dropdown>
       </div>
     </Header>
   );
+};
+
+TopHeader.propTypes = {
+  fun: PropTypes.func,
+};
+TopHeader.defaultProps = {
+  fun: () => {},
 };
 
 export default TopHeader;

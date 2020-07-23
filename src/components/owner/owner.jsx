@@ -26,6 +26,7 @@ import owner from '../../assets/images/profile_user.jpg';
 import subuser from '../../assets/images/subuser.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
+import UserLock from '../userlock/userlock';
 
 const Owner = () => {
   const [form] = Form.useForm();
@@ -38,6 +39,9 @@ const Owner = () => {
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const [curOwner, setCurOwner] = useState();
+  const [subscribed, setSubscribed] = useState();
+  const [onTrial, setOnTrial] = useState();
+  const [daysLeft, setDaysLeft] = useState();
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
 
@@ -71,6 +75,15 @@ const Owner = () => {
   };
 
   const getPropertyData = async () => {
+    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    if (response0.data.code === 200) {
+      const [{
+        days, isOnTrial, isSubscribed,
+      }] = response0.data.userSubsDetails;
+      setDaysLeft(days);
+      setSubscribed(isSubscribed);
+      setOnTrial(isOnTrial);
+    }
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
@@ -78,7 +91,7 @@ const Owner = () => {
     const arr = [];
     data
       .filter((el) => el.ownerId === 0)
-      .map((filterData) => {
+      .forEach((filterData) => {
         arr.push(filterData);
       });
     if (response.data.code === 200) {
@@ -95,7 +108,6 @@ const Owner = () => {
     }
   };
 
-
   const edit = async (data) => {
     const m1 = moment(data.dob);
     const response = await userInstance.post('/fetchProperty', {
@@ -106,8 +118,8 @@ const Owner = () => {
     setNotifyType('');
     const selectedProperty = [];
     data2
-      .filter((el) => el.ownerId == data.id)
-      .map((filter) => {
+      .forEach((el) => el.ownerId === data.id)
+      .forEach((filter) => {
         selectedProperty.push(filter.id);
       });
     form.setFieldsValue({
@@ -132,7 +144,6 @@ const Owner = () => {
     const copyValues = values;
     copyValues.affiliateId = userId;
     const response = await userInstance.post('/addOwner', copyValues);
-    console.log(response)
     const statusCode = response.data.code;
     const { msg } = response.data;
     if (statusCode === 200) {
@@ -188,7 +199,9 @@ const Owner = () => {
   const btn = isSubUser && canWrite ? enableButton : disabledButton;
   const perm = isSubUser ? btn : enableButton;
 
-  return (
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+
+  const pageContent = (
     <>
       {subUserData.length ? (
         <Wrapper>
@@ -432,7 +445,7 @@ const Owner = () => {
                     size="large"
                     placeholder="Please select property"
                   >
-                    {propertyData.map((el, i) => (
+                    {propertyData.map((el) => (
                       <Option value={el.id}>{el.propertyName}</Option>
                     ))}
                   </Select>
@@ -477,31 +490,7 @@ const Owner = () => {
               <img src={subuser} alt="subuser" />
               <h4>Owner</h4>
               <p>Currently there are no Owner created</p>
-              {isSubUser ? (
-                canWrite ? (
-                  <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                    Add New Owner
-                  </Button>
-                ) : (
-                  <Tooltip
-                    title="You are not authorize to add new sub user"
-                    color="gold"
-                  >
-                    <Button
-                      type="primary"
-                      icon={<PlusOutlined />}
-                      onClick={show}
-                      disabled="true"
-                    >
-                      Add New Owner
-                    </Button>
-                  </Tooltip>
-                )
-              ) : (
-                <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                  Add New Owner
-                </Button>
-              )}
+              {perm}
             </div>
           </div>
           <Modal
@@ -706,6 +695,16 @@ const Owner = () => {
           </Modal>
         </Wrapper>
       )}
+    </>
+  );
+  return (
+    <>
+      {hasAccess ? pageContent
+        : (
+          <Wrapper>
+            <UserLock />
+          </Wrapper>
+        )}
     </>
   );
 };
