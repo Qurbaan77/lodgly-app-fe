@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Router, Route } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import Header from './components/header/header';
@@ -51,22 +51,23 @@ const App = () => {
     <div className="App">
       <div className="main-wrapper">
         <>
-          <Router history={history}>
-            <Header />
-            <main>
-              <div className="main_content">
-                <LoginRoute exact path="/" component={() => <Login />} />
-                <LoginRoute exact path="/register" component={() => <Register />} />
-                <PrivateRoute
-                  exact
-                  path="/sidenav"
-                  component={() => <Sidenav />}
-                />
-                {
+          <Suspense fallback={null}>
+            <Router history={history}>
+              <Header />
+              <main>
+                <div className="main_content">
+                  <LoginRoute exact path="/" component={() => <Login />} />
+                  <LoginRoute exact path="/register" component={() => <Register />} />
+                  <PrivateRoute
+                    exact
+                    path="/sidenav"
+                    component={() => <Sidenav />}
+                  />
+                  {
                   isSubUser ? <SecureProperty exact path="/addproperty" component={() => <AddProperty />} /> : <PrivateRoute exact path="/addproperty" component={() => <AddProperty />} />
                 }
 
-                {
+                  {
                   isSubUser
                     ? (
                       <SecureProperty
@@ -83,7 +84,7 @@ const App = () => {
                     )
                 }
 
-                {
+                  {
                   isSubUser
                     ? (
                       <SecureProperty
@@ -100,28 +101,28 @@ const App = () => {
                     )
                 }
 
-                <PrivateRoute
-                  exact
-                  path="/groups"
-                  component={() => <Groups />}
-                />
-                <PrivateRoute
-                  exact
-                  path="/task"
-                  component={() => <Task />}
-                />
-                <PrivateRoute
-                  exact
-                  path="/channelmanager"
-                  component={() => <ChannelManager />}
-                />
-                <Route exact path="/admin" component={() => <AdminLogin />} />
-                <Route
-                  exact
-                  path="/adminsetting"
-                  component={() => <AdminSetting />}
-                />
-                {
+                  <PrivateRoute
+                    exact
+                    path="/groups"
+                    component={() => <Groups />}
+                  />
+                  <PrivateRoute
+                    exact
+                    path="/task"
+                    component={() => <Task />}
+                  />
+                  <PrivateRoute
+                    exact
+                    path="/channelmanager"
+                    component={() => <ChannelManager />}
+                  />
+                  <Route exact path="/admin" component={() => <AdminLogin />} />
+                  <Route
+                    exact
+                    path="/adminsetting"
+                    component={() => <AdminSetting />}
+                  />
+                  {
                   isSubUser
                     ? (
                       <SecureBooking
@@ -138,7 +139,7 @@ const App = () => {
                       />
                     )
                 }
-                {
+                  {
                   isSubUser
                     ? (
                       <SecureBooking
@@ -156,7 +157,7 @@ const App = () => {
                     )
                 }
 
-                {
+                  {
                   isSubUser
                     ? (
                       <SecureBooking
@@ -173,17 +174,17 @@ const App = () => {
                       />
                     )
                 }
-                <PrivateRoute
-                  exact
-                  path="/filter"
-                  component={() => <BookingFilter />}
-                />
-                <PrivateRoute
-                  exact
-                  path="/deletepopup"
-                  component={() => <DeletePopup />}
-                />
-                {
+                  <PrivateRoute
+                    exact
+                    path="/filter"
+                    component={() => <BookingFilter />}
+                  />
+                  <PrivateRoute
+                    exact
+                    path="/deletepopup"
+                    component={() => <DeletePopup />}
+                  />
+                  {
                   isSubUser
                     ? (
                       <SecureProperty
@@ -201,7 +202,7 @@ const App = () => {
                     )
                 }
 
-                {
+                  {
                   isSubUser
                     ? (
                       <SecureProperty
@@ -219,14 +220,14 @@ const App = () => {
                     )
                 }
 
-                <LoginRoute exact path="/forget" component={() => <Forget />} />
-                <LoginRoute exact path="/reset" component={() => <Reset />} />
-                <LoginRoute exact path="/thankyou" component={() => <Thankyou />} />
-                {
+                  <LoginRoute exact path="/forget" component={() => <Forget />} />
+                  <LoginRoute exact path="/reset" component={() => <Reset />} />
+                  <LoginRoute exact path="/thankyou" component={() => <Thankyou />} />
+                  {
                   isSubUser ? <SecureService exact path="/services" component={() => <Services />} /> : <PrivateRoute exact path="/services" component={() => <Services />} />
                 }
 
-                {
+                  {
                   isSubUser ? <SecureCalendar exact path="/calendar" component={() => <Calendar />} /> : (
                     <PrivateRoute
                       exact
@@ -236,32 +237,33 @@ const App = () => {
                   )
                 }
 
-                <PrivateRoute exact path="/popup" component={() => <Popup />} />
+                  <PrivateRoute exact path="/popup" component={() => <Popup />} />
 
-                {
+                  {
                   isSubUser ? <SecureOwner exact path="/owner" component={() => <Owner />} /> : <PrivateRoute exact path="/owner" component={() => <Owner />} />
                 }
 
-                {/* Additional Work */}
+                  {/* Additional Work */}
 
-                {
+                  {
                   isSubUser ? <SecureTeam exact path="/team" component={() => <Team />} /> : <PrivateRoute exact path="/team" component={() => <Team />} />
                 }
 
-                <Route exact path="/profile" component={() => <Profile />} />
-                <Route
-                  exact
-                  path="/billinginformation"
-                  component={() => <BillingInformation />}
-                />
-                {
+                  <Route exact path="/profile" component={() => <Profile />} />
+                  <Route
+                    exact
+                    path="/billinginformation"
+                    component={() => <BillingInformation />}
+                  />
+                  {
                   isSubUser ? <SecureInvoice exact path="/invoice" component={() => <Invoice />} /> : <PrivateRoute exact path="/invoice" component={() => <Invoice />} />
                 }
-                <Route exact path="/stats" component={() => <Stats />} />
-              </div>
-            </main>
-            <Footer />
-          </Router>
+                  <Route exact path="/stats" component={() => <Stats />} />
+                </div>
+              </main>
+              <Footer />
+            </Router>
+          </Suspense>
         </>
       </div>
     </div>

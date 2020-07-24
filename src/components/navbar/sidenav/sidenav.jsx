@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './sidenav.css';
 import { Layout, Menu } from 'antd';
 import {
@@ -24,11 +25,13 @@ import propertyDetailIcon from '../../../assets/images/menu/property-detail-icon
 import unitIcon from '../../../assets/images/menu/unit-type-icon.png';
 import taskIcon from '../../../assets/images/menu/task-icon.png';
 import channelIcon from '../../../assets/images/menu/channel-icon.png';
+import closeicon from '../../../assets/images/menu/close-icon.png';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-const Sidenav = ({ img, name, getUserInfo }) => {
+const Sidenav = ({ img, name, getUserInfo, menutoggle, setMenuToggle, handleMenu }) => {
+  const { t } = useTranslation();
   const [propertyData, setPropertyData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
   const [menu, setMenu] = useState(false);
@@ -152,10 +155,11 @@ const Sidenav = ({ img, name, getUserInfo }) => {
   }, []);
 
   return (
-    <Sider theme="light" trigger={null} collapsible collapsed={false}>
-      <div className="sidebar-logo">
-        <img src={logo} alt="logo" />
-      </div>
+    <Sider theme="light" trigger={null} collapsible  className={`side-menu ${menutoggle ? `menu-show`:``}` }>
+    <div className="sidebar-logo">
+      <img className="logo" src={logo} alt="logo" />
+      <img className="close-icon" src={closeicon} alt="close" onClick={()=> handleMenu(`close`)} />
+    </div>
 
       <UserProfile img={img} name={name} getUserInfo={getUserInfo} />
 
@@ -168,12 +172,12 @@ const Sidenav = ({ img, name, getUserInfo }) => {
       >
         <Menu.Item key="0" hidden={hideBooking}>
           <img src={bookingIcon} alt="booking-icon" />
-          <Link to="/booking">Booking</Link>
+          <Link to="/booking">{t('sidebar.menu1')}</Link>
         </Menu.Item>
 
         <Menu.Item key="1" hidden={hideCalendar}>
           <img src={calenderIcon} alt="calendar-icon" />
-          <Link to="/calendar">Calendar</Link>
+          <Link to="/calendar">{t('sidebar.menu2')}</Link>
         </Menu.Item>
 
         <SubMenu
@@ -182,7 +186,7 @@ const Sidenav = ({ img, name, getUserInfo }) => {
           title={(
             <div>
               <img src={propertyIcon} alt="property-icon" />
-              <Link to="/propertylist">Properties</Link>
+              <Link to="/propertylist">{t('sidebar.menu3')}</Link>
             </div>
           )}
         >
@@ -192,7 +196,7 @@ const Sidenav = ({ img, name, getUserInfo }) => {
                 to="/property"
                 onClick={() => localStorage.setItem('propertyId', el.id)}
               >
-                Property No
+                {t('strings.propertyno')}
                 {' '}
                 {el.propertyNo}
                 {' '}
@@ -201,54 +205,42 @@ const Sidenav = ({ img, name, getUserInfo }) => {
           ))}
         </SubMenu>
 
-        <SubMenu
-          disabled={disableGuests}
-          title={(
-            <div>
+
+        <Menu.Item disabled={disableGuests}>
               <img src={guestIcon} alt="guest-icon" />
-              <span>Guests</span>
-            </div>
-          )}
-        >
-          <Menu.Item key="3" hidden="true">Option 3</Menu.Item>
-          <Menu.Item key="4">Option 4</Menu.Item>
-        </SubMenu>
+              <span>{t('sidebar.menu4')}</span>
+        </Menu.Item>
 
         <Menu.Item hidden={hideTeam}>
           <img src={teamIcon} alt="team" />
-          <Link to="/team">Team</Link>
+          <Link to="/team">{t('sidebar.menu5')}</Link>
         </Menu.Item>
 
         <Menu.Item hidden={hideInvoice}>
           <img src={invoiceIcon} alt="invoice-icon" />
-          <Link to="/invoice">Invoices</Link>
+          <Link to="/invoice">{t('sidebar.menu6')}</Link>
         </Menu.Item>
 
         <Menu.Item hidden={hideStats}>
           <img src={statsIcon} alt="stats=icon" />
-          <Link to="/stats">Stats</Link>
+          <Link to="/stats">{t('sidebar.menu7')}</Link>
         </Menu.Item>
 
-        <SubMenu
-          title={(
-            <div>
-              <img src={integrationIcon} alt="integration-icon" />
-              <span>Integrations</span>
-            </div>
-          )}
-        >
-          <Menu.Item key="5">Option 3</Menu.Item>
-          <Menu.Item key="6">Option 4</Menu.Item>
-        </SubMenu>
+
+
+        <Menu.Item>
+            <img src={integrationIcon} alt="integration-icon" />
+              <span>{t('sidebar.menu8')}</span>
+        </Menu.Item>
 
         <Menu.Item>
           <img src={ownerIcon} alt="owner-icon" />
-          <Link to="/owner">Owner</Link>
+          <Link to="/owner">{t('sidebar.menu9')}</Link>
         </Menu.Item>
 
         <Menu.Item onClick={() => exit()}>
           <PoweroffOutlined />
-          <span>Logout</span>
+          <span>{t('sidebar.menu10')}</span>
         </Menu.Item>
       </Menu>
 
@@ -272,24 +264,24 @@ const Sidenav = ({ img, name, getUserInfo }) => {
         </span>
         <Menu.Item key="1">
           <img src={propertyDetailIcon} alt="property" />
-          <Link to="/property">Details</Link>
+          <Link to="/property">{t('sidebar.menu11')}</Link>
         </Menu.Item>
         <Menu.Item>
           <img src={unitIcon} alt="unit" />
-          <Link to="/unittype">Unit Type</Link>
+          <Link to="/unittype">{t('sidebar.menu12')}</Link>
         </Menu.Item>
         <Menu.Item>
           <img src={taskIcon} alt="task" />
-          <Link to="/groups">Tasks</Link>
+          <Link to="/groups">{t('sidebar.menu13')}</Link>
         </Menu.Item>
         <Menu.Item>
           <img src={channelIcon} alt="channel" />
-          <Link to="/channelmanager">Channel Manager</Link>
+          <Link to="/channelmanager">{t('sidebar.menu14')}</Link>
         </Menu.Item>
 
         <Menu.Item hidden={hideService}>
           <ApartmentOutlined />
-          <Link to="/services">Services</Link>
+          <Link to="/services">{t('sidebar.menu15')}</Link>
         </Menu.Item>
       </Menu>
     </Sider>
@@ -302,7 +294,7 @@ Sidenav.propTypes = {
   getUserInfo: PropTypes.func,
 };
 Sidenav.defaultProps = {
-  element: '',
+  img: '',
   name: '',
   getUserInfo: () => {},
 };

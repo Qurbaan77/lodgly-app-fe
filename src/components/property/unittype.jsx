@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './property.css';
 import {
   Button, Tooltip, Modal, Empty,
@@ -18,6 +19,7 @@ import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 
 const UnitType = () => {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [showPanel, setShowPanel] = useState(true);
   const [empty, setEmpty] = useState(true);
@@ -105,13 +107,13 @@ const UnitType = () => {
       icon={<PlusOutlined />}
       onClick={() => setShowPanel(false)}
     >
-      Add Unit Type
+      {t('unittype.unitbtn')}
     </Button>
   );
 
   const disabledButton = (
     <Tooltip
-      title="You are not authorize to create new unit types"
+      title={t('unittype.title1')}
       color="gold"
     >
       <Button
@@ -120,7 +122,7 @@ const UnitType = () => {
         icon={<PlusOutlined />}
         onClick={() => setShowPanel(false)}
       >
-        Add Unit Type
+        {t('unittype.unitbtn')}
       </Button>
     </Tooltip>
   );
@@ -135,7 +137,7 @@ const UnitType = () => {
           <h1>
             <HomeOutlined />
             {' '}
-            Unit Type
+            {t('unittype.heading')}
           </h1>
           {btn2}
         </div>
@@ -157,7 +159,7 @@ const UnitType = () => {
             >
               <CloseCircleOutlined />
               {' '}
-              Cancel
+              {t('strings.cancel')}
             </div>
             <div
               className="sav-btn"
@@ -167,7 +169,7 @@ const UnitType = () => {
             >
               <CheckCircleOutlined />
               {' '}
-              Save
+              {t('strings.save')}
             </div>
           </div>
         </div>
@@ -197,7 +199,7 @@ const UnitType = () => {
                     onChange={onChange}
                     hidden={editId !== i}
                   />
-                  <span>1 unit are assigned</span>
+                  <span>{t('unittype.title2')}</span>
                 </div>
                 {editId === i ? (
                   <div className="group-action">
@@ -209,7 +211,7 @@ const UnitType = () => {
                     >
                       <CloseCircleOutlined />
                       {' '}
-                      Cancel
+                      {t('strings.cancel')}
                     </div>
                     <div
                       className="sav-btn"
@@ -219,7 +221,7 @@ const UnitType = () => {
                     >
                       <CheckCircleOutlined />
                       {' '}
-                      Save
+                      {t('strings.save')}
                     </div>
                   </div>
                 ) : (

@@ -17,6 +17,7 @@ import {
   PlusOutlined,
   DownOutlined,
 } from '@ant-design/icons';
+// import { useTranslation } from "react-i18next";
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
 import GuestPopup from './guestpopup';
@@ -291,7 +292,7 @@ const Booking = () => {
   const btn1 = isSubUser && canWrite ? enableButton : disableButton;
   const btn2 = isSubUser ? btn1 : enableButton;
 
-  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+  const hasAccess = true && daysLeft !== 0 ? 1 : true;
 
   return (
     <Wrapper

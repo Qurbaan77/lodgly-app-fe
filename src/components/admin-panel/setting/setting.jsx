@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './setting.css';
 import {
   Form, Input, Button, Row, Col,
@@ -16,6 +17,7 @@ import Toaster from '../../toaster/toaster';
 import { adminInstance } from '../../../axios/axiosconfig';
 
 const AdminSetting = () => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
@@ -66,7 +68,7 @@ const AdminSetting = () => {
             <h1>
               <HomeOutlined />
               {' '}
-              Setting
+              {t('admin.heading')}
             </h1>
 
           </div>
@@ -99,7 +101,7 @@ const AdminSetting = () => {
                       <Col span={12}>
                         <Form.Item
                           name="firstname"
-                          label="First Name"
+                          label={t('admin.label1')}
                           rules={[
                             {
                               required: true,
@@ -115,7 +117,7 @@ const AdminSetting = () => {
                       <Col span={12}>
                         <Form.Item
                           name="lastname"
-                          label="Last Name"
+                          label={t('admin.label2')}
                           rules={[
                             {
                               required: true,
@@ -133,7 +135,7 @@ const AdminSetting = () => {
                       <Col span={12}>
                         <Form.Item
                           name="email"
-                          label="E-mail"
+                          label={t('admin.label3')}
                           rules={[
                             {
                               type: 'email',
@@ -152,7 +154,7 @@ const AdminSetting = () => {
                       <Col span={12}>
                         <Form.Item
                           name="phone"
-                          label="Phone"
+                          label={t('admin.label4')}
                           rules={[
 
                             {
@@ -171,7 +173,7 @@ const AdminSetting = () => {
                       <Col span={24}>
                         <Form.Item>
                           <Button type="primary" className="register-btn" htmlType="submit">
-                            Save
+                            {t('strings.save')}
                           </Button>
                         </Form.Item>
                       </Col>
@@ -191,7 +193,7 @@ const AdminSetting = () => {
 
               <SettingOutlined />
 
-              <h3>Change Password</h3>
+              <h3>{t('admin.heading3')}</h3>
 
             </div>
 
@@ -210,7 +212,7 @@ const AdminSetting = () => {
                     <Col span={12}>
                       <Form.Item
                         name="password"
-                        label="Password"
+                        label={t('admin.label5')}
                         rules={[
                           {
                             required: true,
@@ -226,7 +228,7 @@ const AdminSetting = () => {
                     <Col span={12}>
                       <Form.Item
                         name="confirm"
-                        label="Confirm Password"
+                        label={t('admin.label6')}
                         dependencies={['password']}
                         hasFeedback
                         rules={[
@@ -255,7 +257,7 @@ const AdminSetting = () => {
                     <Col span={24}>
                       <Form.Item>
                         <Button type="primary" className="register-btn" htmlType="submit">
-                          Change Password
+                          {t('admin.heading3')}
                         </Button>
                       </Form.Item>
                     </Col>

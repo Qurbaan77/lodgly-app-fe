@@ -20,6 +20,7 @@ import {
   MailOutlined,
   DownOutlined,
 } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 // import Wrapper from '../wrapper';
 
 const { RangePicker } = DatePicker;
@@ -43,13 +44,14 @@ const menu = (
 );
 
 const BookingFilter = (props) => {
+  const { t } = useTranslation();
   const { visible, handleOk, handleCancel } = props;
   // function onChange(checked) {
   //   console.log(`switch to ${checked}`);
 
   return (
     <Modal
-      title="Filter"
+      title={t('filter.heading1')}
       visible={visible}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -60,24 +62,24 @@ const BookingFilter = (props) => {
           <Row>
             <Col span={24}>
               <div className="filter-box">
-                <h2>Filters</h2>
+                <h2>{t('filter.heading2')}</h2>
 
                 <Form name="basic">
                   <Row style={{ alignItems: 'center' }}>
                     <Col span={24}>
-                      <Form.Item label="Select Date" name="groupname">
+                      <Form.Item label={t('filter.label5')} name="groupname">
                         <RangePicker />
                       </Form.Item>
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item label="Property" name="property">
+                      <Form.Item label={t('strings.property')} name="property">
                         <Select>
                           <Select.Option value="demo">
-                            All Property
+                            {t('strings.all_property')}
                           </Select.Option>
                           <Select.Option value="demo">
-                            All Property
+                            {t('strings.all_property')}
                           </Select.Option>
                         </Select>
                       </Form.Item>
@@ -86,37 +88,37 @@ const BookingFilter = (props) => {
                     <Col span={24}>
                       <Form.Item
                         className="filter-select"
-                        label="Status"
+                        label={t('strings.status')}
                         name="status"
                       >
                         <Dropdown overlay={menu} trigger={['click']}>
-                          <a
+                          <div
                             role="presentation"
                             className="ant-dropdown-link"
                             onClick={(e) => e.preventDefault()}
                           >
                             <DownOutlined />
-                          </a>
+                          </div>
                         </Dropdown>
                       </Form.Item>
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item label="Price" name="price">
+                      <Form.Item label={t('strings.price')} name="price">
                         <div className="inline-form">
                           <label htmlFor="from">
                             <input hidden />
-                            from
+                            {t('strings.from')}
                           </label>
                           <Input type="text" placeholder="1000000" />
                           <label htmlFor="from">
                             <input hidden />
-                            to
+                            {t('strings.to')}
                           </label>
                           <Input type="text" placeholder="1000000" />
                           <label htmlFor="from">
                             <input hidden />
-                            USD
+                            {t('strings.usd')}
                           </label>
                         </div>
                       </Form.Item>
@@ -129,7 +131,7 @@ const BookingFilter = (props) => {
                             <span>
                               <RedEnvelopeOutlined />
                               {' '}
-                              Unreplied
+                              {t('filter.label1')}
                             </span>
                             <Switch defaultChecked onChange={onChange} />
                           </li>
@@ -138,7 +140,7 @@ const BookingFilter = (props) => {
                             <span>
                               <MailOutlined />
                               {' '}
-                              Unread
+                              {t('filter.label2')}
                             </span>
                             <Switch onChange={onChange} />
                           </li>
@@ -147,7 +149,7 @@ const BookingFilter = (props) => {
                             <span>
                               <ReconciliationOutlined />
                               {' '}
-                              Overdue
+                              {t('filter.label3')}
                             </span>
                             <Switch onChange={onChange} />
                           </li>
@@ -156,7 +158,7 @@ const BookingFilter = (props) => {
                             <span>
                               <DeleteOutlined />
                               {' '}
-                              Trash
+                              {t('filter.label4')}
                             </span>
                             <Switch onChange={onChange} />
                           </li>

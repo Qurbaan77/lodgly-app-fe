@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
+import moment from 'moment';
 import './profile.css';
 import {
-  Form, Select, Row, Col, Collapse, Button,
+  Form, Select, Row, Col, Collapse, Button, Tooltip,
 } from 'antd';
 import {
   UserOutlined,
@@ -46,16 +47,18 @@ const BillingInformation = () => {
     gbp: false,
   });
   const [showCancelCheckout, setShowCancelCheckout] = useState(false);
+  const [canDowngrade, setCanDowngrade] = useState();
 
   useEffect(() => {
     const getData = async () => {
       const res = await userInstance.post('/getTotalUnit');
       if (res.data.code === 200) {
-        const units = res.data.data;
+        const units = res.data.totalUnit;
         const range = Array(units + 50 - units + 1)
           .fill()
           .map((_, idx) => units + idx);
         setUnitDropDown(range);
+        setCanDowngrade(res.data.totalUnit < res.data.units);
       }
       const response = await userInstance.post('/getRate');
       if (response.data.code === 200) {
@@ -71,8 +74,10 @@ const BillingInformation = () => {
 
   const getUser = async () => {
     const response = await userInstance.get('/transactions');
-    const { code, transactions } = response.data;
+    const { code, transactions, startDate } = response.data;
     if (code === 200 && transactions != null) {
+      const renewDate = moment(new Date(startDate)).add(1, 'M');
+      setEnd(renewDate._d.toDateString());
       transactions.forEach((element) => {
         addData(element);
         setCurrentCurrency(element.currency);
@@ -88,8 +93,6 @@ const BillingInformation = () => {
     const response = await userInstance.post('/getBillingInvoice');
     if (response.data.code === 200) {
       setInvoiceList(response.data.invoicesList);
-      const { end: endAt } = response.data.invoicesList[0];
-      setEnd(endAt);
     }
   };
 
@@ -384,7 +387,7 @@ const BillingInformation = () => {
       setNotifyMsg(res.data.msg);
       getUser();
       getInvoice();
-      hideBilling(true);
+      setHideBilling(true);
     } else {
       setNotifyType('error');
       setNotifyMsg('Unable to change your plan please try after some time');
@@ -658,8 +661,23 @@ const BillingInformation = () => {
                             </ul>
                           </div>
                           <Button onClick={handleChangeSubscription}>
-                            upgrade/downgrade
+                            Upgrade
                           </Button>
+                          {
+                            canDowngrade
+                              ? (
+                                <Button style={{ margin: '50px 30px 20px 10px' }} onClick={handleChangeSubscription}>
+                                  Downgrade
+                                </Button>
+                              )
+                              : (
+                                <Tooltip title="You are utilising all your subscribed units,to downgrade you have to delete some units" color="cyan">
+                                  <Button style={{ margin: '50px 30px 20px 10px' }} disabled>
+                                    downgrade
+                                  </Button>
+                                </Tooltip>
+                              )
+                          }
                         </Col>
 
                         <Col span={10}>
@@ -674,6 +692,7 @@ const BillingInformation = () => {
                             </p>
                             <p>
                               will renew on
+                              {' '}
                               {end}
                             </p>
                           </div>

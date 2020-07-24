@@ -4,6 +4,7 @@ import './property.css';
 import {
   Form, Input, DatePicker, Button, Row, Col,
   Modal,
+  Tooltip,
 } from 'antd';
 import {
   HomeOutlined,
@@ -30,7 +31,9 @@ const AddUnitType = () => {
   const [showPanel, setShowPanel] = useState(true);
   const [name, setName] = useState();
   const [editId, setEditId] = useState(null);
-
+  const [totalUnit, setTotalUnit] = useState();
+  const [isOnTrial, setIsOnTrial] = useState();
+  const [subscribedUnits, setSubscribedUnits] = useState();
   const history = useHistory();
 
   const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
@@ -108,12 +111,15 @@ const AddUnitType = () => {
       propertyId: localStorage.getItem('propertyId'),
     };
     const response = await userInstance.post('/getUnit', values);
-    const data = response.data.unitData;
+    const { data } = response;
     if (response.data.code === 200) {
-      data
+      data.unitData
         .filter((el) => el.unittypeId === parseInt(localStorage.getItem('unittypeId'), 10))
         .map((filterUnit) => arr.push(filterUnit));
       setUnitData(arr);
+      setTotalUnit(data.unitData.length);
+      setSubscribedUnits(data.units);
+      setIsOnTrial(data.isOnTrial);
     }
   };
 
@@ -267,8 +273,18 @@ const AddUnitType = () => {
   useEffect(() => {
     getData();
     getUnitData();
-  });
+  }, []);
 
+  const isLimitReached = totalUnit + 1 > subscribedUnits;
+  const normalSaveUnitBtn = (
+    <Button onClick={() => setShowPanel(false)}>Add unit</Button>
+  );
+  const disbledSaveUnitBtn = (
+    <Tooltip title="You are not allowed to create more units, Please upgrade your plan" color="gold">
+      <Button onClick={() => setShowPanel(false)} disabled={isLimitReached}>Add unit</Button>
+    </Tooltip>
+  );
+  const btn = isLimitReached ? disbledSaveUnitBtn : normalSaveUnitBtn;
   return (
     <Wrapper>
       <div className="unit-type">
@@ -427,7 +443,12 @@ const AddUnitType = () => {
                 ))}
               </div>
               <div>
-                <Button onClick={() => setShowPanel(false)}>Add unit</Button>
+                {
+                isOnTrial
+                  ? <Button onClick={() => setShowPanel(false)}>Add unit</Button>
+                  : btn
+              }
+
               </div>
               <Modal
                 visible={visible}

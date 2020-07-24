@@ -1,0 +1,317 @@
+{
+     "strings":{
+
+        "days":"days",
+        "name":"Name",
+        "save":"Save",
+        "cancel":"Cancel",
+        "choose":"Choose",
+        "pet":"Pets Negotiable",
+        "cat":"Cats OK",
+        "dog":"Dogs OK",
+        "no_pet":"No Pets",
+        "dont_specify":"Don’t specify",
+        "furnished":"Furnished or available furnished",
+        "washer":"Washer/Dryer",
+        "parking":"Parking",
+        "gym":"Gym/Fitness Center",
+        "air":"Air Conditioning",
+        "hardwood":"Hardwood Floors",
+        "fire":"Fireplace",
+        "dish":"Dishwasher",
+        "storage":"Storage",
+        "walk_in":"Walk-In Closet",
+        "pool":"Pool",
+        "hot_tub":"Hot Tub",
+        "outdoor":"Outdoor Space",
+        "shared":"Shared Yard",
+        "private":"Private Yard",
+        "patio":"Patio",
+         "balcony":"Balcony",
+        "garden":"Garden",
+        "wheelchair":"Wheelchair accessible",
+        "property":"Property",
+        "propertyno":"Property No",
+        "edit_unit":"Edit Unit",
+        "day":"Day",
+        "week":"Week",
+        "month":"Month",
+        "notes":"Note",
+        "tags":"Tags",
+        "unit_t":"Unit Types",
+        "units":"Units",
+        "unit":"Unit",
+        "reservations":"Reservations",
+        "full":"Full Name",
+        "email":"Email",
+        "country":"Country",
+        "phone":"Phone",
+        "select":"Select",
+        "adults":"Adults",
+        "children":"Children",
+        "confirmed":"Confirmed",
+        "option":"Option",
+        "all_property":"  All Property",
+        "status":"Status",
+        "from":"from",
+        "to":"from",
+        "usd":"from"
+       
+      
+       
+
+
+     },
+
+
+
+
+    "header": {
+        "heading": "Header",
+        "searchplaceholder": "Select Property"
+        
+    },
+    "sidebar": {
+        "heading": "Sidebar",
+        "menu1": "Booking",
+        "menu2": "Calendar",
+        "menu3": "Properties",
+        "menu4": "Guests",
+        "submenu1":"Option 4",
+        "menu5": "Team",
+        "menu6": "Invoices",
+        "menu7": "Stats",
+        "menu8": "Integrations",
+        "submenu2":"Option 3",
+        "menu9": "Owner",
+        "menu10": "Logout",
+        "menu11":"Details",
+        "menu12":"Unit Type",
+        "menu13":"Tasks",
+        "menu14":"Channel Manager",
+        "menu15":"Services"
+
+
+    },
+    "propertylist": {
+        "heading": "All Properties",
+        "addbtn": "Add Property",
+        "alert":"Your trail period will end in",
+        "link-heading":"Subscribe"
+
+    },
+    "addproperty": {
+        "heading": " Property",
+        "title1": "MAIN INFORMATION",   
+        "detail1":"My Demo Property",
+        "detail2":"Property Type",
+        "detail3":"Address",
+        "detail4":"Search Places",
+        "detail5":"Country",
+        "detail6":"State",
+        "detail7":"City",
+        "detail8":"Zip",
+        "detail9":"Website",
+        "title2":"DETAILS",
+        "detail10":"Bedrooms",
+        "detail11":"Full Bathrooms",
+        "detail12":"Half Bathrooms",
+        "detail13":"SQ Footage",
+        "detail14":"Description",
+        "title3":"LISTING",
+        "detail15":"Pet Policy",
+        "detail16":"Features and Amenities",
+        "title4":"PHOTO",
+        "detail17":"Show off your place",
+        "detail18":"Video Tour (Optional)",
+        "detail19":"Drop photos here or",
+        "detail20":"CHOOSE FILE",
+        "detail21":" At least 1 photo is required. Max file size is 30MBper image. JPG, PNG, or GIF formats only.",
+        "title5":"Please add the property Name",
+        "title6":"You are not authorize to save New Property",
+        "detail22":"YouTube videos only. Paste your link here"
+     
+
+       
+      
+
+    },
+    "unittype": {
+
+        "heading":"Unit Type",
+        "unitbtn":"Add Unit Type",
+        "title1":"You are not authorize to create new unit types",
+        "title2":"1 unit are assigned"
+
+
+
+
+
+    },
+    "group": {
+
+        "heading":"Groups",
+        "groupbtn":"Add Group",
+        "title1":"  Check every ",
+        "title2":"Group Name",
+        "title3":"Inventory Check",
+        "title4":"Check only on free days",
+        "title5":"Previous Checking",
+        "title6":"Next Checking",
+        "title7":"ADD/EDIT GROUPS"
+
+
+    },
+    "task": {
+
+        "heading":"No group is Selected",
+        "groupbtn":" Add Task",
+        "title1":"  Check every ",
+        "title2":"Group Name",
+        "title3":"Inventory Check",
+        "title4":"Check only on free days",
+        "title5":"Previous Checking",
+        "title6":"Next Checking",
+        "title7":"ADD/EDIT TASK"
+
+
+    },
+    "channel": {
+
+        "heading":"Channel Manager",
+        "heading1":"Activating Channel Manager",
+        "heading3":"Two-way full connection",
+        "para1":"In order to connect your property via Channel Manager there are some steps you need to take. This will ensure that the connection is working properly and will eliminate the risk of problems. These steps are explained below. When we activate the connection, all data from Lodgly will be sent to that online reservation channel so it is important to enter all rates and availability, along with  all reservations to Lodgly before activating it. Please note that you won",
+        "para3":"Need Help?",
+        "para2":"  t be able to open / close dates in Extranets or change rates directly on connected channels. All updates will be done through Lodgly. ",
+        "para4":"Click on each step opens a detailed explanation",
+        "para5":" Two-way connection with online reservations channels like Booking.com, Expedia, Airbnb etc. automatically syncs your rates and availability, as well as reservations. When the connection is active, all new reservations made through those channels will be pulled automatically to Lodgly. From there, Lodgly will update other connected channels and close those periods for sale. Also, all of your direct reservations entered to Lodgly manually will besent to all connected channels and those dates will be closed.",
+        "para6":"Below is a list of online reservation channels. If you work with one of them already, and want to connect it please do the following: select the",
+        "para7":"  plus icon",
+        "para8":"  and follow instructions from there.",
+        "para9":" One-way iCal synchronization",
+        "para10":" One-way sync with online reservation channels like HomeAway, FlipKey, HouseTrip etc. only sends availability from Lodgly to them (open / closed dates), while rates and availability, along with reservations will still be managed directly on those channels. Let’s say you receive a reservation from HomeAway. You will have to enter it to Lodgly; from there Lodgly will close  other connected channels. Please note that you will still manage rates manually in extranets of those connected channels. Below is a list of online reservation channels. If you work with one of them already, and want to connect it please do the following:select the “plus icon” and follow instructions from there.",
+      
+        "para11":" Please enter property details - property name, address, telephone number.",
+        "para12":"  Unit types and units Online reservation channels that support two-way connection to Rentlio, group accommodation units to unit  types. E.g. if your property has two one-bedroom apartments with   same rates you need to create one unit type in Rentlio. Name it",
+        "para13":"   one-bedroom apartment",
+        "para14":" and assign two units, Apartment 1 and Apartment 2. Booking.com, Expedia and various channels have the same methodology. You already understand this if you work with one of them. Please note that you can create unique names for unit types and units in Rentlio, they don’t have to match the names set on online reservation channels.",
+        "para15":"  We offer two-way connection with Airbnb, but this channel has some  exceptions. When creating a profile on Airbnb you create a Listing  that matches one unit in Rentlio. Because of that, connecting Airbnb  and Rentlio is done by connecting the Listing to Unit Type. This means that you will have to create one Unit type and add one Unit to  it in Rentlio in order to connect it to Airbnb Listing.",
+        "para16":"Please enter units and rates in Rentlio - Settings - Units and rates - Edit unit type. Please note that units and rates are set on Unit type level. Before connecting to online reservation channels we advise you to load rates and availability for one year in advance;  however 90 days is the minimum in order to activate the connection.",
+        "para17":"  Enter all active reservations, except Booking.com reservations* up to today in Rentlio. When you activate the connection, all these periods will be closed automatically on connected online reservation  channels. This is a mandatory step in order to avoid overlapped reservations and reopening of closed dates. When the connection is active, everything from Rentlio (rates and availability, reservations) will be sent to the connected online reservation channel.",
+        "para18":" * Booking.com reservations will be imported automatically when we connect your property",
+      
+        "title1":"Rates and Availability",
+        "title3":"Help"
+       
+
+    },
+
+    "admin": {
+
+        "heading":"Setting",
+        "heading2":"Admin",
+        "heading3":"Change Password",
+        "label1":"First Name",
+        "label2":"Last Name",
+        "label3":"E-mail",
+        "label4":"Phone",
+        "label5":"Password",
+        "label7":"Confirm Password"
+        
+      
+
+
+    },
+    "bookingpop": {
+
+        "heading":"Create Booking",
+        "heading2":"Edit/Additional Data",
+    
+        "label1":"Reservation Date",
+        "label2":"Add additional guest",
+        "label3":"Accommodation",
+        "label4":"Average price per night",
+        "label5":"Discount",
+        "label6":"Per Night",
+        "label7":"Accommondation cost",
+        "label8":"Add Services",
+        "label9":"Select Service",
+        "label10":" Total",
+        "label11":" Deposit",
+        "label12":" Accommodation deposit",
+        "label13":" Deposit type",
+        "label14":"Outstanding amount",
+        "label15":"Channel, Commission(%)",
+        "label16":"Childrens(0-12yrs)",
+        "label17":"Childrens(12+ yrs)",
+        "label18":"Add Guest Details (Optional)",
+        "label19":"ADD NOTES (OPTIONAL)",
+        "label20":"ADD INTERNAL NOTES (OPTIONAL)"
+      
+
+        
+      
+
+    },
+      "editbooking": {
+
+    "heading":"Edit Booking",
+    "heading2":"Edit/Additional Data",
+
+    "label1":"Reservation Date",
+    "label2":"Add additional guest",
+    "label3":"Accommodation",
+    "label4":"Average price per night",
+    "label5":"Discount",
+    "label6":"Per Night",
+    "label7":"Accommondation cost",
+    "label8":"Add Services",
+    "label9":"Select Service",
+    "label10":" Total",
+    "label11":" Deposit",
+    "label12":" Accommodation deposit",
+    "label13":" Deposit type",
+    "label14":"Outstanding amount",
+    "label15":"Channel, Commission(%)",
+    "label16":"Childrens(0-12yrs)",
+    "label17":"Childrens(12+ yrs)",
+    "label18":"Add Guest Details (Optional)",
+    "label19":"ADD NOTES (OPTIONAL)",
+    "label20":"ADD INTERNAL NOTES (OPTIONAL)"
+  
+
+    
+  
+
+
+},
+  "filter": {
+
+    "heading":"Edit Booking",
+    "heading1":"Filters",
+    "heading2":"Filter",
+
+    "label1":" Unreplied",
+    "label2":" Unread",
+    "label3":" Overdue",
+    "label4":"  Trash",
+    "label5":" Select Date"
+ 
+  
+
+    
+  
+
+
+}
+
+
+
+    
+
+
+
+
+
+}

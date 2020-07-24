@@ -5,12 +5,14 @@ import {
   Button, Tooltip, Row, Col,
 } from 'antd';
 import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
 import property1 from '../../assets/images/property-1.png';
 import UserLock from '../userlock/userlock';
 import { userInstance } from '../../axios/axiosconfig';
 
 const PropertyList = () => {
+  const { t } = useTranslation();
   const [propertyData, setPropertyData] = useState([]);
   const [topNavId, setTopNavId] = useState();
   const [subscribed, setSubscribed] = useState();
@@ -30,7 +32,6 @@ const PropertyList = () => {
   const getData = async () => {
     const res = await userInstance.get('/getUserSubscriptionStatus');
     if (res.data.code === 200) {
-      console.log(res.data);
       const [{
         days, isOnTrial, isSubscribed,
       }] = res.data.userSubsDetails;
@@ -64,7 +65,7 @@ const PropertyList = () => {
       icon={<PlusOutlined />}
       onClick={() => history.push('/addproperty')}
     >
-      Add Property
+      {t('propertylist.addbtn')}
     </Button>
   );
   const disableButton = (
@@ -75,7 +76,7 @@ const PropertyList = () => {
         icon={<PlusOutlined />}
         onClick={() => history.push('/addproperty')}
       >
-        Add Property
+        {t('propertylist.addbtn')}
       </Button>
     </Tooltip>
   );
@@ -94,7 +95,7 @@ const PropertyList = () => {
         ? (
           <div className="property-listing">
             <div className="page-header">
-              <h1>All Properties</h1>
+              <h1>{t('propertylist.heading')}</h1>
               {btn2}
             </div>
 

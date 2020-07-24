@@ -48,3 +48,24 @@
 .ant-layout-sider-collapsed .user-profile span {
     font-size: 10px;
 }
+
+
+
+
+
+
+
+.language .ant-btn, .language .ant-btn:hover, .language .ant-btn:focus {
+    background: transparent;
+    border: none;
+    padding: 5px;
+    box-shadow: none;
+}
+
+.language .ant-btn span {
+    color: #999;
+}
+
+.language {
+    margin-right: 25px;
+}

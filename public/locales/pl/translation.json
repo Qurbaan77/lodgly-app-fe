@@ -1,0 +1,220 @@
+{
+  "strings": {
+    "days": "Wybierać",
+    "name": "Imię",
+    "save": "Zapisać",
+    "choose": "Choose",
+    "cancel": "Anuluj",
+    "property": "Własność",
+    "propertyno": "Właściwość",
+    "edit_unit": "Edytuj jednostkę",
+    "day": "Dzień",
+    "week": "Tydzień",
+    "month": "Miesiąc",
+    "notes": "Uwaga",
+    "tags": "Tagi",
+    "unit_t": "Typy jednostek",
+    "units": "Jednostki",
+    "unit":"Jednostka",
+    "reservations": "Rezerwacje",
+    "full":"Pełne imię i nazwisko",
+    "email":" E-mail",
+    "country":"Kraj",
+    "phone":"Telefon",
+    "select":"Wybierz",
+    "adults":" Dorośli ludzie",
+    "children":"Dzieci",
+    "confirmed":" Potwierdzony",
+    "option":"Opcja",
+    "all_property":" Cała własność",
+        "status":"Status",
+        "from":"z",
+        "to":"do",
+        "usd":"USD",
+        "price":"Cena £"
+       
+  },
+
+  "header": {
+    "heading": "Nagłówek",
+    "searchplaceholder": "Wybierz Właściwość"
+  },
+  "sidebar": {
+    "heading": "Pasek boczny",
+    "menu1": "Rezerwować",
+    "menu2": "Kalendarz",
+    "menu3": "Nieruchomości",
+    "menu4": "Goście",
+    "submenu1": "Opcja 4",
+    "menu5": "Zespół",
+    "menu6": "Faktury",
+    "menu7": "Statystyki",
+    "menu8": "Integracje",
+    "submenu2": "Opcja 3",
+    "menu9": "Właściciel",
+    "menu10": "Wyloguj",
+    "menu11": "Detale",
+    "menu12": "Typ jednostki",
+    "menu13": "Zadania",
+    "menu14": "Channel Manager",
+    "menu15": "Usługi"
+  },
+  "propertylist": {
+    "heading": "Wszystkie właściwości",
+    "addbtn": "Dodaj właściwość",
+    "alert": "Twój okres próbny zakończy się za zero dni",
+    "link-heading": "Subskrybuj"
+  },
+  "addproperty": {
+    "heading": " własność",
+    "title1": "INFORMACJA GŁÓWNA",
+    "detail1": "Moja własność demonstracyjna",
+    "detail2": "Typ nieruchomości",
+    "detail3": "Adres",
+    "detail4": "Wyszukaj miejsca",
+    "detail5": "Kraj",
+    "detail6": "Stan",
+    "detail7": "Miasto",
+    "detail8": "Zamek błyskawiczny",
+    "detail9": "Stronie internetowej",
+    "title2": "DETALE",
+    "detail10": "Sypialnie",
+    "detail11": "Pełne łazienki",
+    "detail12": "Pół łazienki",
+    "detail13": "SQ Footage",
+    "detail14": "Opis",
+    "title3": "LISTING",
+    "detail15": "Zasady dotyczące zwierząt domowych",
+    "detail16": "Funkcje i udogodnienia",
+    "title4": "ZDJĘCIE",
+    "detail17": "Pochwal się swoim miejscem",
+    "detail18": "Wycieczka wideo (opcjonalnie)",
+    "detail19": "Upuść zdjęcia tutaj lub",
+    "detail20": "WYBIERZ PLIK",
+    "detail21": " Wymagane jest co najmniej 1 zdjęcie. Maksymalny rozmiar pliku to 30 MB na obraz. Tylko formaty JPG, PNG lub GIF.",
+    "title5": "Dodaj nazwę właściwości",
+    "title6": "Nie masz uprawnień do zapisania nowej właściwości",
+    "detail22": "Tylko filmy z YouTube. Wklej tutaj swój link"
+  },
+  "unittype": {
+    "heading": "Typ jednostki",
+    "unitbtn": "Dodaj typ jednostki",
+    "title1": "Nie masz uprawnień do tworzenia nowych typów jednostek",
+    "title2": "Przypisana jest 1 jednostka"
+  },
+  "group": {
+    "heading": "Grupy",
+    "groupbtn": "Dodaj grupę",
+    "title1": "  Sprawdź co ",
+    "title2": "Nazwa grupy",
+    "title3": "Kontrola zapasów",
+    "title4": "Sprawdzaj tylko w wolne dni",
+    "title5": "Poprzednie sprawdzenie",
+    "title6": "Następne sprawdzanie",
+    "title7": "DODAJ / EDYTUJ GRUPY"
+  },
+  "task": {
+    "heading": "Nie wybrano żadnej grupy",
+    "groupbtn": "Dodaj zadanie",
+    "title1": "Sprawdź co ",
+    "title2": "No Data",
+    "title3": "Sprawdź co",
+    "title4": "Sprawdzaj tylko w wolne dni",
+    "title5": "Poprzednie sprawdzenie",
+    "title6": "Następne sprawdzanie",
+    "title7": "DODAJ / EDYTUJ ZADANIE"
+  },
+  "channel": {
+    "heading": "Channel Manager",
+    "heading1": "Aktywacja Channel Managera",
+    "heading3": "Dwukierunkowe pełne połączenie  ",
+    "para1": "Aby połączyć swoją nieruchomość za pośrednictwem Channel Managera, musisz wykonać kilka czynności. Zapewni to prawidłowe działanie połączenia i wyeliminuje ryzyko problemów. Te kroki wyjaśniono poniżej. Kiedy aktywujemy połączenie, wszystkie dane z Lodgly zostaną przesłane do tego internetowego kanału rezerwacji, dlatego ważne jest, aby przed aktywacją wprowadzić wszystkie stawki i dostępność wraz ze wszystkimi rezerwacjami do Lodgly. Pamiętaj, że wygrałeś",
+    "para3": "Potrzebuję pomocy?",
+    "para2": "  nie móc otwierać / zamykać dat w Extranetach lub zmieniać kursów bezpośrednio na podłączonych kanałach. Wszystkie aktualizacje będą dokonywane za pośrednictwem Lodgly. ",
+    "para4": "Kliknij każdy krok, aby wyświetlić szczegółowe wyjaśnienie",
+    "para5": " Dwukierunkowe połączenie z kanałami rezerwacji online, takimi jak Booking.com, Expedia, Airbnb itp., Automatycznie synchronizuje Twoje ceny i dostępność, a także rezerwacje. Gdy połączenie jest aktywne, wszystkie nowe rezerwacje dokonane za pośrednictwem tych kanałów będą automatycznie pobierane do Lodgly. Stamtąd Lodgly zaktualizuje inne podłączone kanały i zamknie te okresy na sprzedaż. Ponadto wszystkie Twoje rezerwacje bezpośrednie wprowadzone ręcznie do Lodgly zostaną przesłane do wszystkich połączonych kanałów, a te daty zostaną zamknięte.",
+    "para6": "Poniżej znajduje się lista kanałów rezerwacji online. Jeśli już pracujesz z jednym z nich i chcesz go połączyć, wykonaj następujące czynności: wybierz plik",
+    "para7": "  ikona plusa",
+    "para8": "  i postępuj zgodnie z wyświetlanymi instrukcjami.",
+    "para9": "    Jednokierunkowa synchronizacja iCal",
+    "para10": " Jednokierunkowa synchronizacja z kanałami rezerwacji online, takimi jak HomeAway, FlipKey, HouseTrip itp. Wysyła do nich informacje o dostępności z Lodgly (daty otwarte / zamknięte), podczas gdy stawki i dostępność wraz z rezerwacjami będą nadal zarządzane bezpośrednio na tych kanałach. Załóżmy, że otrzymujesz rezerwację od HomeAway. Będziesz musiał wejść do Lodgly; stamtąd Lodgly zamknie inne podłączone kanały. Pamiętaj, że nadal będziesz ręcznie zarządzać stawkami w ekstranetach tych połączonych kanałów. Poniżej znajduje się lista kanałów rezerwacji online. Jeśli już pracujesz z jednym z nich i chcesz go podłączyć, wykonaj następujące czynności: wybierz „ikonę plusa” i postępuj zgodnie z wyświetlanymi instrukcjami.",
+
+    "para11": "Proszę podać szczegóły nieruchomości - nazwę nieruchomości, adres, numer telefonu.",
+    "para12": " Typy jednostek i jednostki Kanały rezerwacji online, które obsługują dwukierunkowe połączenie z Rentlio, grupowe jednostki zakwaterowania do typów jednostek. Na przykład. Jeśli Twoja nieruchomość składa się z dwóch jednopokojowych mieszkań o takich samych cenach, musisz utworzyć jeden typ jednostki w Rentlio. Nazwij to ",
+    "para13": "  apartament z jedną sypialnią",
+    "para14": " i przypisz dwie jednostki, Apartament 1 i Apartament 2. Booking.com, Expedia i różne kanały mają tę samą metodologię. Już to rozumiesz, jeśli pracujesz z jednym z nich. Pamiętaj, że możesz tworzyć unikalne nazwy dla typów jednostek i jednostek w Rentlio, nie muszą one pasować do nazw ustawionych w kanałach rezerwacji online.",
+    "para15": "  Oferujemy dwukierunkowe połączenie z Airbnb, ale ten kanał ma pewne wyjątki. Tworząc profil na Airbnb, tworzysz ofertę, która pasuje do jednej jednostki w Rentlio. Z tego powodu połączenie Airbnb i Rentlio odbywa się poprzez połączenie oferty z typem jednostki. Oznacza to, że będziesz musiał utworzyć jeden typ Jednostki i dodać do niego jedną Jednostkę w Rentlio, aby połączyć ją z Listą Airbnb.",
+    "para16": "Proszę wprowadzić jednostki i stawki w Rentlio - Ustawienia - Jednostki i stawki - Edytuj typ jednostki. Należy pamiętać, że jednostki i stawki są ustawiane na poziomie typu jednostki. Przed połączeniem się z kanałami rezerwacji online radzimy załadować stawki i dostępność z rocznym wyprzedzeniem; jednakże 90 dni to minimum na aktywację połączenia.",
+    "para17": " Wprowadź wszystkie aktywne rezerwacje, z wyjątkiem rezerwacji na Booking.com * do dzisiaj w Rentlio. Po aktywowaniu połączenia wszystkie te okresy zostaną automatycznie zamknięte na połączonych kanałach rezerwacji online. Jest to obowiązkowy krok, aby uniknąć nakładania się rezerwacji i ponownego otwarcia zamkniętych terminów. Gdy połączenie jest aktywne, wszystko z Rentlio (ceny i dostępność, rezerwacje) zostanie wysłane do podłączonego kanału rezerwacji online.",
+    "para18": "  * Rezerwacje z Booking.com zostaną zaimportowane automatycznie, gdy połączymy Twój obiekt",
+
+    "title1": "Ceny i dostępność",
+    "title3": "Wsparcie"
+  },
+  "admin": {
+    "heading": "Oprawa",
+
+    "heading2": "Admin",
+    "heading3": "Zmień hasło",
+    "label1": "Imię",
+    "label2": "Nazwisko",
+    "label3": "E-mail",
+    "label4": "Telefon",
+    "label5": "Hasło",
+    "label6": "Potwierdź hasło",
+    "label7": "First Name"
+  },
+  "bookingpop": {
+
+    "heading":" Utwórz rezerwację",
+    "heading2":"Edycja / dodatkowe dane",
+
+    "label1":"Data rezerwacji",
+    "label2":"  Dodaj dodatkowego gościa",
+    "label3":"Nocleg",
+    "label4":"Średnia cena za noc",
+    "label5":" Zniżka",
+    "label6":"   Co noc",
+    "label7":"Koszt zakwaterowania",
+    "label8":"Dodaj usługi",
+    "label9":"Wybierz usługę",
+    "label10":" Całkowity",
+    "label11":" Kaucja",
+    "label12":" Depozyt za zakwaterowanie",
+    "label13":" Rodzaj depozytu",
+    "label14":"Kwota pozostająca do spłaty",
+    "label15":"Kanał, prowizja (%)",
+    "label16":"Dzieci (0-12 lat)",
+    "label17":" Dzieci (od 12 lat)",
+    "label18":"   Dodaj dane gościa (opcjonalnie)",
+    "label19":" DODAJ UWAGI (OPCJONALNIE)",
+    "label20":" DODAJ UWAGI (OPCJONALNIE)"
+  
+
+    
+  
+
+
+},
+"filter": {
+
+    "heading":"Edytuj rezerwację",
+    "heading1":"Filtry",
+    "heading2":"Filtr",
+
+    "label1":"   Bez odpowiedzi",
+    "label2":" nieprzeczytane",
+    "label3":"Zaległy",
+    "label4":"  Śmieci",
+    "label5":"Wybierz datę"
+ 
+  
+
+    
+  
+
+
+}
+
+
+}
