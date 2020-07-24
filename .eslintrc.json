@@ -1,27 +1,36 @@
 {
-    "env": {
-        "browser": true,
-        "es2020": true
+  "env": {
+    "browser": true,
+    "es2020": true
+  },
+  "extends": ["airbnb"],
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
     },
-    "extends": [ "airbnb" ],
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 11,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react"
+    "ecmaVersion": 11,
+    "sourceType": "module"
+  },
+  "plugins": ["react"],
+  "rules": {
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [".js", ".jsx"]
+      }
     ],
-    "rules": {
-        "react/jsx-filename-extension": [1, {
-        "extensions": [".js", ".jsx"]}
-        ],
-        "no-param-reassign": 0,
-        "no-underscore-dangle":  "off",
-        "no-use-before-define": ["error", { "variables": false }],
-        "no-shadow": "off",
-        "react/jsx-props-no-spreading": "off"
-    }
+    "no-param-reassign": 0,
+    "jsx-a11y/label-has-for": [
+      0,
+      {
+        "components": ["Label"],
+        "required": {
+          "some": ["nesting", "id"]
+        },
+        "allowChildren": false,
+        "assert": "htmlFor"
+      }
+    ],
+    "no-underscore-dangle": "off"
+  }
 }
