@@ -78,7 +78,7 @@ const Owner = () => {
     const arr = [];
     data
       .filter((el) => el.ownerId === 0)
-      .map((filterData) => {
+      .forEach((filterData) => {
         arr.push(filterData);
       });
     if (response.data.code === 200) {
@@ -95,7 +95,6 @@ const Owner = () => {
     }
   };
 
-
   const edit = async (data) => {
     const m1 = moment(data.dob);
     const response = await userInstance.post('/fetchProperty', {
@@ -106,8 +105,8 @@ const Owner = () => {
     setNotifyType('');
     const selectedProperty = [];
     data2
-      .filter((el) => el.ownerId == data.id)
-      .map((filter) => {
+      .filter((el) => el.ownerId === data.id)
+      .forEach((filter) => {
         selectedProperty.push(filter.id);
       });
     form.setFieldsValue({
@@ -132,7 +131,6 @@ const Owner = () => {
     const copyValues = values;
     copyValues.affiliateId = userId;
     const response = await userInstance.post('/addOwner', copyValues);
-    console.log(response)
     const statusCode = response.data.code;
     const { msg } = response.data;
     if (statusCode === 200) {
@@ -163,6 +161,11 @@ const Owner = () => {
     getSubUserData();
     getPropertyData();
   }, []);
+
+  const HandleChange=(e)=>{
+    console.log('Fubction is called');
+    console.log(e);
+  }
 
   const enableButton = (
     <Button type="primary" icon={<PlusOutlined />} onClick={show}>
@@ -432,7 +435,7 @@ const Owner = () => {
                     size="large"
                     placeholder="Please select property"
                   >
-                    {propertyData.map((el, i) => (
+                    {propertyData.map((el) => (
                       <Option value={el.id}>{el.propertyName}</Option>
                     ))}
                   </Select>
@@ -477,31 +480,7 @@ const Owner = () => {
               <img src={subuser} alt="subuser" />
               <h4>Owner</h4>
               <p>Currently there are no Owner created</p>
-              {isSubUser ? (
-                canWrite ? (
-                  <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                    Add New Owner
-                  </Button>
-                ) : (
-                  <Tooltip
-                    title="You are not authorize to add new sub user"
-                    color="gold"
-                  >
-                    <Button
-                      type="primary"
-                      icon={<PlusOutlined />}
-                      onClick={show}
-                      disabled="true"
-                    >
-                      Add New Owner
-                    </Button>
-                  </Tooltip>
-                )
-              ) : (
-                <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                  Add New Owner
-                </Button>
-              )}
+              {perm}
             </div>
           </div>
           <Modal
@@ -679,7 +658,7 @@ const Owner = () => {
                     placeholder="Please select property"
                   >
                     {propertyData.map((el) => (
-                      <Option value={el.id}>{el.propertyName}</Option>
+                      <Option value={el.id} >{el.propertyName}</Option>
                     ))}
                   </Select>
                 </Form.Item>

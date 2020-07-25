@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import './booking.css';
 import {
   Form,
@@ -10,7 +11,9 @@ import {
   Row,
   Col,
   Modal,
-  Menu, Dropdown,
+  Menu,
+  Dropdown,
+  Button,
 } from 'antd';
 import {
   DeleteOutlined,
@@ -19,12 +22,13 @@ import {
   MailOutlined,
   DownOutlined,
 } from '@ant-design/icons';
-import Wrapper from '../wrapper';
+// import Wrapper from '../wrapper';
+import { userInstance } from '../../axios/axiosconfig';
 
 const { RangePicker } = DatePicker;
 
-function onChange(e) {
-  console.log(`checked = ${e.target.checked}`);
+function onChange() {
+  // console.log(`checked = ${e.target.checked}`);
 }
 
 const menu = (
@@ -42,16 +46,47 @@ const menu = (
 );
 
 const BookingFilter = (props) => {
-  function onChange(checked) {
-    console.log(`switch to ${checked}`);
+  const [form] = Form.useForm();
+  const { visible, handleOk, handleCancel, setPropertyId } = props;
+  const [propertyData, setPropertyData] = useState([]);
+  const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
+  // function onChange(checked) {
+  //   console.log(`switch to ${checked}`);
+
+  const onFinish = async (values) => {
+    console.log(values);
+    setPropertyId(values.property);
+    handleCancel();
+    // const response = await userInstance.post('/filterBooking', {
+    //   affiliateId: userId,
+    // });
+    // const data = response.data.propertiesData;
+    // if (response.data.code === 200) {
+    //   setPropertyData(data);
+    // }
   }
 
+  useEffect(() => {
+    async function getData() {
+      const response = await userInstance.post('/fetchProperty', {
+        affiliateId: userId,
+      });
+      const data = response.data.propertiesData;
+      if (response.data.code === 200) {
+        setPropertyData(data);
+      }
+    }
+    getData();
+  }, []);
+
   return (
-    <Modal title="Filter" 
-    visible={props.visible}
-    onOk={props.handleOk}
-    onCancel={props.handleCancel}
-    wrapClassName="filter-modal">
+    <Modal
+      title="Filter"
+      visible={visible}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      wrapClassName="filter-modal"
+    >
       <div className="booking-filter">
         <div className="container">
           <Row>
@@ -59,7 +94,7 @@ const BookingFilter = (props) => {
               <div className="filter-box">
                 <h2>Filters</h2>
 
-                <Form name="basic">
+                <Form name="basic" form={form} onFinish={onFinish}>
                   <Row style={{ alignItems: 'center' }}>
                     <Col span={24}>
                       <Form.Item label="Select Date" name="groupname">
@@ -69,14 +104,15 @@ const BookingFilter = (props) => {
 
                     <Col span={24}>
                       <Form.Item label="Property" name="property">
-                        <Select>
-                          <Select.Option value="demo">
-                            All Property
+                      <Select
+                        placeholder="Select"
+                      >
+                        {propertyData.map((el) => (
+                          <Select.Option value={el.id}>
+                            {el.propertyName}
                           </Select.Option>
-                          <Select.Option value="demo">
-                            All Property
-                          </Select.Option>
-                        </Select>
+                        ))}
+                      </Select>
                       </Form.Item>
                     </Col>
 
@@ -88,6 +124,7 @@ const BookingFilter = (props) => {
                       >
                         <Dropdown overlay={menu} trigger={['click']}>
                           <a
+                            role="presentation"
                             className="ant-dropdown-link"
                             onClick={(e) => e.preventDefault()}
                           >
@@ -100,11 +137,20 @@ const BookingFilter = (props) => {
                     <Col span={24}>
                       <Form.Item label="Price" name="price">
                         <div className="inline-form">
-                          <label>from</label>
+                          <label htmlFor="from">
+                            <input hidden />
+                            from
+                          </label>
                           <Input type="text" placeholder="1000000" />
-                          <label>to</label>
+                          <label htmlFor="from">
+                            <input hidden />
+                            to
+                          </label>
                           <Input type="text" placeholder="1000000" />
-                          <label>USD</label>
+                          <label htmlFor="from">
+                            <input hidden />
+                            USD
+                          </label>
                         </div>
                       </Form.Item>
                     </Col>
@@ -150,6 +196,16 @@ const BookingFilter = (props) => {
                         </ul>
                       </Form.Item>
                     </Col>
+                    <Col span={24}>
+                    <Form.Item>
+                      <Button style={{ marginRight: 10 }} onClick={handleCancel}>
+                        Cancel
+                      </Button>
+                      <Button type="primary" htmlType="submit">
+                        OK
+                      </Button>
+                    </Form.Item>
+                  </Col>
                   </Row>
                 </Form>
               </div>
@@ -157,8 +213,13 @@ const BookingFilter = (props) => {
           </Row>
         </div>
       </div>
-      </Modal>
+    </Modal>
   );
+};
+BookingFilter.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  handleCancel: PropTypes.func.isRequired,
+  handleOk: PropTypes.func.isRequired,
 };
 
 export default BookingFilter;

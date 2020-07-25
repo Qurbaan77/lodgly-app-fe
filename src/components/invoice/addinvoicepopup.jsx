@@ -1,6 +1,3 @@
-// Doing this because we have no other option the date coming from date picker
-// is in the moment object and inside object object value is defined as _d so we can't change that
-/* eslint-disable no-underscore-dangle */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './invoice.css';
@@ -25,8 +22,9 @@ import { userInstance } from '../../axios/axiosconfig';
 
 let i = 1;
 const AdInvoicePopup = (props) => {
-  console.log(props);
-  const { userData, property, label, visible, handleCancel, handleOk } = props;
+  const {
+    userData, property, label, visible, handleCancel, handleOk,
+  } = props;
   // const [{ phone: userPhone, email: userEmail }] = userData || [
   //   { phone: null, email: null },
   // ];
@@ -35,7 +33,7 @@ const AdInvoicePopup = (props) => {
   // ] = property || [{ propertyName: null, address: null, website: null }];
   // console.log(userPhone, userEmail);
   const [draftBtn, setDraftBtn] = useState(false);
-  const [date, setDate] = useState(null);
+  // const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState(null);
   const [dueDate, setDueDate] = useState(null);
@@ -44,21 +42,19 @@ const AdInvoicePopup = (props) => {
   const [address, setAddress] = useState('');
   const [vatId, setVatId] = useState(null);
   const [pricePanel, setPricePanel] = useState([1]);
-  const [quantity, setQuantity] = useState(null);
-  const [price, setPrice] = useState(null);
-  const [amount, setAmount] = useState(null);
-  const [discountType, setDiscountType] = useState('%');
-  const [discount, setDiscount] = useState(null);
-  const [itemTotal, setItemTotal] = useState(null);
+  // const [quantity, setQuantity] = useState(null);
+  // const [price, setPrice] = useState(null);
+  // const [amount, setAmount] = useState(null);
+  // const [discountType, setDiscountType] = useState('%');
+  // const [discount, setDiscount] = useState(null);
+  // const [itemTotal, setItemTotal] = useState(null);
   const [quantityCopy, setQuantityCopy] = useState([]);
-  const [priceCopy, setPriceCopy] = useState([]);
+  // const [priceCopy, setPriceCopy] = useState([]);
   const [amountCopy, setAmountCopy] = useState([]);
-  const [discountCopy, setDiscountCopy] = useState([]);
+  // const [discountCopy, setDiscountCopy] = useState([]);
   const [itemTotalCopy, setItemTotalCopy] = useState([]);
   const [showLoader, setShowLoader] = useState(true);
   const [impression, setImpression] = useState('');
-
-  console.log('draft state', draftBtn);
 
   const handleFinish = async (values) => {
     setShowLoader(false);
@@ -93,12 +89,10 @@ const AdInvoicePopup = (props) => {
     valuesCopy.impression = impression;
     valuesCopy.label = `INVOICE ${
       label ? label + 1 : 1
-      } - ${new Date().getFullYear()}`;
-    console.log(valuesCopy);
+    } - ${new Date().getFullYear()}`;
     if (!draftBtn) {
       valuesCopy.status = 'Issued';
       const res = await userInstance.post('/invoicedraft', valuesCopy);
-      console.log('pdf post response', res);
       setShowLoader(true);
       if (res.status === 200) {
         const element = document.createElement('a');
@@ -117,7 +111,6 @@ const AdInvoicePopup = (props) => {
       valuesCopy.status = 'Draft';
       const response = await userInstance.post('/invoicedraft', valuesCopy);
       setShowLoader(true);
-      console.log('draft response', response);
       if (response.data.code === 200) {
         setShowLoader(true);
         props.close();
@@ -130,77 +123,64 @@ const AdInvoicePopup = (props) => {
     setShowLoader(true);
   };
 
-  const handleQuantity = (e, ele) => {
+  const handleQuantity = (e) => {
     const d = e.target.value;
-    setQuantity(d);
+    // setQuantity(d);
     setQuantityCopy((quantityCopy) => [...quantityCopy, d]);
   };
 
   const handlePrice = (e, ele) => {
     const d = e.target.value;
-    setPrice(d);
-    setPriceCopy((priceCopy) => [...priceCopy, d]);
-    setAmount(d * quantity);
+    // setPrice(d);
+    // setPriceCopy((priceCopy) => [...priceCopy, d]);
+    // setAmount(d * quantity);
     setAmountCopy((amountCopy) => [...amountCopy, quantityCopy[ele - 1] * d]);
   };
   const handleDiscount = (e, ele) => {
     const d = e.target.value;
-    setDiscount(d);
-    setDiscountCopy((discountCopy) => [...discountCopy, d]);
-    if (discountType === '%') {
-      console.log(amountCopy[ele - 1]);
-      setItemTotal(amount - (amount * d) / 100);
-      setItemTotalCopy((itemTotalCopy) => [
-        ...itemTotalCopy,
-        amountCopy[ele - 1] - (amountCopy[ele - 1] * d) / 100,
-      ]);
-    } else {
-      setItemTotal(amount - d);
-      setItemTotalCopy((itemTotalCopy) => [
-        ...itemTotalCopy,
-        amountCopy[ele - 1] - d,
-      ]);
-    }
+    // setDiscount(d);
+    // setDiscountCopy((discountCopy) => [...discountCopy, d]);
+    // if (discountType === '%') {
+    // setItemTotal(amount - (amount * d) / 100);
+    setItemTotalCopy((itemTotalCopy) => [
+      ...itemTotalCopy,
+      amountCopy[ele - 1] - (amountCopy[ele - 1] * d) / 100,
+    ]);
+    // } else {
+    //   setItemTotal(amount - d);
+    //   setItemTotalCopy((itemTotalCopy) => [
+    //     ...itemTotalCopy,
+    //     amountCopy[ele - 1] - d,
+    //   ]);
+    // }
   };
 
-  const handleDiscountType = (value, ele) => {
-    setDiscountType(value);
-    if (discount && discountCopy.length) {
-      console.log('a');
-      if (value === '%') {
-        console.log('b');
-        console.log(
-          amountCopy[ele - 1]
-          - (amountCopy[ele - 1] * discountCopy[ele - 1]) / 100,
-        );
-        setItemTotal(amount - (amount * discount) / 100);
-        setItemTotalCopy((itemTotalCopy) => [
-          ...itemTotalCopy,
-          amountCopy[ele - 1]
-          - (amountCopy[ele - 1] * discountCopy[ele - 1]) / 100,
-        ]);
-      } else {
-        setItemTotal(amount - discount);
-        setItemTotalCopy((itemTotalCopy) => [
-          ...itemTotalCopy,
-          amountCopy[ele - 1] - discountCopy[ele - 1],
-        ]);
-        console.log(amountCopy[ele - 1] - discountCopy[ele - 1]);
-        console.log('c');
-      }
-    }
-  };
-
-  console.log(pricePanel);
-
+  // const handleDiscountType = (value, ele) => {
+  //   setDiscountType(value);
+  //   if (discount && discountCopy.length) {
+  //     if (value === '%') {
+  //       setItemTotal(amount - (amount * discount) / 100);
+  //       setItemTotalCopy((itemTotalCopy) => [
+  //         ...itemTotalCopy,
+  //         amountCopy[ele - 1]
+  //         - (amountCopy[ele - 1] * discountCopy[ele - 1]) / 100,
+  //       ]);
+  //     } else {
+  //       setItemTotal(amount - discount);
+  //       setItemTotalCopy((itemTotalCopy) => [
+  //         ...itemTotalCopy,
+  //         amountCopy[ele - 1] - discountCopy[ele - 1],
+  //       ]);
+  //     }
+  //   }
+  // };
 
   const addMorePanel = () => {
-    console.log('gsfg');
     i += 1;
     setPricePanel([...pricePanel, i]);
   };
 
-  const removePanel = (ele) => {
+  const removePanel = () => {
     const oldarray = [...pricePanel];
     oldarray.pop();
     setPricePanel([...oldarray]);
@@ -270,7 +250,7 @@ const AdInvoicePopup = (props) => {
                     ]}
                   >
                     <DatePicker
-                      value={date}
+                      // value={date}
                       onChange={(e) => {
                         const d1 = moment(e._id).format('MM/DD/YYYY');
                         setDeliveryDate(d1);
@@ -617,15 +597,26 @@ const AdInvoicePopup = (props) => {
 };
 
 AdInvoicePopup.propTypes = {
-  userData: PropTypes.objectOf(PropTypes.object).isRequired,
-  property: PropTypes.objectOf(PropTypes.object).isRequired,
-  close: PropTypes.objectOf(PropTypes.Function).isRequired,
-  visible: PropTypes.objectOf(PropTypes.Boolean).isRequired,
-  handleOk: PropTypes.objectOf(PropTypes.Function).isRequired,
-  handleCancel: PropTypes.objectOf(PropTypes.Function).isRequired,
-  toasterMessage: PropTypes.objectOf(PropTypes.Function).isRequired,
-  getData: PropTypes.objectOf(PropTypes.Function).isRequired,
-  label: PropTypes.objectOf(PropTypes.number).isRequired,
+  userData: PropTypes.objectOf(PropTypes.object),
+  property: PropTypes.objectOf(PropTypes.object),
+  close: PropTypes.func,
+  visible: PropTypes.bool,
+  handleOk: PropTypes.func,
+  handleCancel: PropTypes.func,
+  toasterMessage: PropTypes.objectOf(PropTypes.Function),
+  getData: PropTypes.func,
+  label: PropTypes.number,
+};
+AdInvoicePopup.defaultProps = {
+  userData: {},
+  property: {},
+  close: () => {},
+  visible: false,
+  handleOk: () => {},
+  handleCancel: () => {},
+  toasterMessage: () => {},
+  getData: () => {},
+  label: 0,
 };
 
 export default AdInvoicePopup;

@@ -717,3 +717,7 @@ ul.filter-list li span span {
   border: none;
   padding: 0;
 }
+
+.filter-modal .ant-modal-footer {
+  display: none;
+}

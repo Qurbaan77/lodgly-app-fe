@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { Form, Button } from 'antd';
 import { userInstance } from '../../axios/axiosconfig';
@@ -25,23 +26,20 @@ const CheckoutForm = ({
   total, currency, unitsSelected, subscriptionType, planType, toaster,
   submitChange, showCancelCheckout,
 }) => {
-  console.log();
-  const [error, setError] = useState();
   const stripe = useStripe();
   const elements = useElements();
 
   // Handle real-time validation errors from the card Element.
   const handleChange = (event) => {
     if (event.error) {
-      setError(event.error.message);
+      toaster('error', event.error.message);
     } else {
-      setError(null);
+      toaster('', '');
     }
   };
 
   // Handle form submission.
   const handleSubmit = async (event) => {
-    console.log(event);
     // event.preventDefault();
     if (!stripe || !elements) {
       // Stripe.js has not loaded yet. Make sure to disable
@@ -52,9 +50,9 @@ const CheckoutForm = ({
     const result = await stripe.createToken(card);
     if (result.error) {
       // Inform the user if there was an error.
-      setError(result.error.message);
+      toaster('error', event.error.message);
     } else {
-      setError(null);
+      toaster('', '');
       // Send the token to your server.
       if (total !== 0) {
         const payload = {
@@ -75,7 +73,7 @@ const CheckoutForm = ({
         }
       } else {
         const err = 'Amount Is Empty';
-        setError(err);
+        toaster('error', err);
       }
     }
   };
@@ -118,6 +116,16 @@ const CheckoutForm = ({
 
     </div>
   );
+};
+CheckoutForm.propTypes = {
+  total: PropTypes.number.isRequired,
+  currency: PropTypes.string.isRequired,
+  unitsSelected: PropTypes.number.isRequired,
+  subscriptionType: PropTypes.string.isRequired,
+  planType: PropTypes.string.isRequired,
+  toaster: PropTypes.func.isRequired,
+  submitChange: PropTypes.string.isRequired,
+  showCancelCheckout: PropTypes.bool.isRequired,
 };
 
 export default CheckoutForm;

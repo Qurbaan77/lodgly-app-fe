@@ -1,20 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './login.css';
 import {
-  Form, Input, Button, Checkbox,
+  Form, Input, Button,
 } from 'antd';
 import { Link } from 'react-router-dom';
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  HomeOutlined,
-  PlusOutlined,
-  SearchOutlined,
-  VerticalAlignMiddleOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-} from '@ant-design/icons';
 import Toaster from '../../toaster/toaster';
 import { adminInstance } from '../../../axios/axiosconfig';
 
@@ -24,12 +13,22 @@ const AdminLogin = () => {
   const [notifyMsg, setNotifyMsg] = useState();
 
   const onFinish = async (values) => {
-    console.log('Success:', values);
     const response = await adminInstance.post('/login', values);
     const statusCode = response.data.code;
     const { msg } = response.data;
 
-    if (statusCode == 200) {
+    const tokenparser = (token) => {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`)
+          .join(''),
+      );
+      return JSON.parse(jsonPayload);
+    };
+    if (statusCode === 200) {
       localStorage.setItem('adminToken', response.data.token);
       const payload = tokenparser(response.data.token);
       localStorage.setItem('userId', payload.userid);
@@ -42,22 +41,6 @@ const AdminLogin = () => {
     form.resetFields();
   };
 
-  const tokenparser = (token) => {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map((c) => `%${(`00${c.charCodeAt(0).toString(16)}`).slice(-2)}`)
-        .join(''),
-    );
-    return JSON.parse(jsonPayload);
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-  };
-
   return (
     <div className="admin-login">
       <div className="admin-login-container">
@@ -67,7 +50,7 @@ const AdminLogin = () => {
             <div className="col-md-12">
               <div className="login-form">
                 <h1>Welcome back!</h1>
-                <p>We're happy to have you here again!</p>
+                <p>We are happy to have you here again!</p>
                 <div className="login-box">
                   <Form
                     name="basic"
@@ -75,7 +58,6 @@ const AdminLogin = () => {
                       remember: true,
                     }}
                     onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
                   >
                     <Form.Item
                       label="E-mail Address"

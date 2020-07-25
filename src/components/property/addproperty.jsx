@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from 'react-places-autocomplete';
+import PlacesAutocomplete from 'react-places-autocomplete';
 import './property.css';
 import {
   Form,
@@ -27,7 +24,6 @@ import Toaster from '../toaster/toaster';
 const { Panel } = Collapse;
 
 const normFile = (e) => {
-  console.log('Upload event:', e);
   if (Array.isArray(e)) {
     return e;
   }
@@ -78,7 +74,6 @@ const AddProperty = () => {
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  console.log(userCred);
   const [{ propertiesWrite, userId }] = userCred || [{}];
   const canWrite = propertiesWrite;
 
@@ -101,7 +96,6 @@ const AddProperty = () => {
   };
 
   const onFinish = async (values) => {
-    console.log('Values', values);
     values.propertyNo = No;
     values.affiliateId = userId;
     const response = await userInstance.post('/addProperty', values);
@@ -176,15 +170,20 @@ const AddProperty = () => {
   };
 
   const handleAddressSelect = (address) => {
-    console.log('handleAddressSelect', address);
     form.setFieldsValue({
       address,
     });
-    geocodeByAddress(address)
-      .then((results) => getLatLng(results[0]))
-      .then((latLng) => console.log('Success', latLng))
-      .catch((error) => console.error('Error', error));
   };
+
+  const enableButton = <Button>Save</Button>;
+  const disabledButton = (
+    <Tooltip title="You are not authorize to save New Property" color="gold">
+      <Button disabled="true">Save</Button>
+    </Tooltip>
+  );
+
+  const btn1 = isSubUser && canWrite ? enableButton : disabledButton;
+  const btn2 = isSubUser ? btn1 : enableButton;
 
   return (
     <Wrapper>
@@ -261,13 +260,13 @@ const AddProperty = () => {
                                   // inline style for demonstration purpose
                                   const style = suggestion.active
                                     ? {
-                                      backgroundColor: '#fafafa',
-                                      cursor: 'pointer',
-                                    }
+                                        backgroundColor: '#fafafa',
+                                        cursor: 'pointer',
+                                      }
                                     : {
-                                      backgroundColor: '#ffffff',
-                                      cursor: 'pointer',
-                                    };
+                                        backgroundColor: '#ffffff',
+                                        cursor: 'pointer',
+                                      };
                                   return (
                                     <div
                                       {...getSuggestionItemProps(suggestion, {
@@ -400,7 +399,9 @@ const AddProperty = () => {
                           title="Please add the property Name"
                           color="gold"
                         >
-                          <Button htmlType="submit" disabled="true">Save</Button>
+                          <Button htmlType="submit" disabled="true">
+                            Save
+                          </Button>
                         </Tooltip>
                       </Form.Item>
                     </Col>
@@ -499,27 +500,7 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item>
-                        {isSubUser ? (
-                          canWrite ? (
-                            <Button>Save</Button>
-                          ) : (
-                            <Tooltip
-                              title="You are not authorize to save New Property"
-                              color="gold"
-                            >
-                              <Button disabled="true">Save</Button>
-                            </Tooltip>
-                          )
-                        ) : (
-                          <Tooltip
-                            title="Please add the property Name"
-                            color="gold"
-                          >
-                            <Button disabled="true">Save</Button>
-                          </Tooltip>
-                        )}
-                      </Form.Item>
+                      <Form.Item>{btn2}</Form.Item>
                     </Col>
                   </Row>
                 </Form>

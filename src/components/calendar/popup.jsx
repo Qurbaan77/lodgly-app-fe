@@ -8,11 +8,13 @@ import {
   Radio,
   DatePicker,
   Button,
-  Checkbox,
+  // Checkbox,
   Row,
   Col,
   Avatar,
-  Collapse, Modal, Menu,
+  Collapse,
+  Modal,
+  // Menu,
 } from 'antd';
 import {
   PlusOutlined,
@@ -28,29 +30,29 @@ const { Panel } = Collapse;
 const { RangePicker } = DatePicker;
 
 const text = `
-  A dog is a type of domesticated animal.
-  Known for its loyalty and faithfulness,
-  it can be found as a welcome guest in many households across the world.
+A dog is a type of domesticated animal.
+Known for its loyalty and faithfulness,
+it can be found as a welcome guest in many households across the world.
 `;
 
-function onChange(e) {
-  console.log(`checked = ${e.target.checked}`);
-}
+// function onChange() {
+// // console.log(`checked = ${e.target.checked}`);
+// }
 
-const menu = (
-  <Menu>
-    <Menu.Item key="0">
-      <Checkbox onChange={onChange}>Double Room</Checkbox>
-    </Menu.Item>
-    <Menu.Item key="1">
-      <Checkbox onChange={onChange}>Two Bedroom</Checkbox>
-    </Menu.Item>
-    <Menu.Item key="1">
-      <Checkbox onChange={onChange}>One Bedroom</Checkbox>
-    </Menu.Item>
+// const menu = (
+// <Menu>
+// <Menu.Item key="0">
+// <Checkbox onChange={onChange}>Double Room</Checkbox>
+// </Menu.Item>
+// <Menu.Item key="1">
+// <Checkbox onChange={onChange}>Two Bedroom</Checkbox>
+// </Menu.Item>
+// <Menu.Item key="1">
+// <Checkbox onChange={onChange}>One Bedroom</Checkbox>
+// </Menu.Item>
 
-  </Menu>
-);
+// </Menu>
+// );
 
 const Popup = () => {
   const [visible, setVisible] = useState(false);
@@ -95,20 +97,39 @@ const Popup = () => {
 
   return (
     <Wrapper>
-
-      <Button type="primary" icon={<PlusOutlined />} onClick={show} style={{ marginRight: 20 }}>
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={show}
+        style={{ marginRight: 20 }}
+      >
         Update Guest
       </Button>
 
-      <Button type="primary" icon={<PlusOutlined />} onClick={show1} style={{ marginRight: 20 }}>
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={show1}
+        style={{ marginRight: 20 }}
+      >
         Group Reservation
       </Button>
 
-      <Button type="primary" icon={<PlusOutlined />} onClick={show2} style={{ marginRight: 20 }}>
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={show2}
+        style={{ marginRight: 20 }}
+      >
         Calendar Setting
       </Button>
 
-      <Button type="primary" icon={<PlusOutlined />} onClick={show3} style={{ marginRight: 20 }}>
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={show3}
+        style={{ marginRight: 20 }}
+      >
         Reservation
       </Button>
 
@@ -119,7 +140,6 @@ const Popup = () => {
         wrapClassName="guest-modal"
       >
         <UpdateGuest />
-
       </Modal>
 
       <Modal
@@ -129,7 +149,6 @@ const Popup = () => {
         wrapClassName="create-booking-modal group-reservation"
       >
         <GroupReservation />
-
       </Modal>
 
       <Modal
@@ -139,7 +158,6 @@ const Popup = () => {
         wrapClassName="create-booking-modal calendar-setting"
       >
         <CalendarSetting />
-
       </Modal>
 
       <Modal
@@ -150,7 +168,6 @@ const Popup = () => {
       >
         <Reservation />
       </Modal>
-
     </Wrapper>
   );
 };
@@ -158,7 +175,6 @@ const Popup = () => {
 export default Popup;
 
 const UpdateGuest = () => (
-
   <Form name="basic">
     <Row style={{ alignItems: 'center' }}>
       <Col span={12}>
@@ -183,11 +199,7 @@ const UpdateGuest = () => (
 
     <Row style={{ alignItems: 'center' }}>
       <Col span={12}>
-        <Form.Item
-          label="E-mail"
-          name="email"
-          style={{ paddingRight: 20 }}
-        >
+        <Form.Item label="E-mail" name="email" style={{ paddingRight: 20 }}>
           <Input placeholder="Email" />
         </Form.Item>
       </Col>
@@ -281,15 +293,11 @@ const UpdateGuest = () => (
       </Col>
     </Row>
   </Form>
-
 );
 
 const GroupReservation = () => (
-
   <Form name="basic">
-
     <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
-
       <Col span={24}>
         <Form.Item
           label="Reservation Date"
@@ -312,130 +320,124 @@ const GroupReservation = () => (
           <p>Availability is checked automatically</p>
         </div>
       </Col>
-
     </Row>
 
     <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
-
       <Col span={24}>
         <Form.Item
           className="comision"
           label="Channel, Commission(%)"
           name="channel"
         >
-          <Select
-            style={{ width: '70%', display: 'inline-block' }}
-          >
+          <Select style={{ width: '70%', display: 'inline-block' }}>
             <Select.Option value="demo">Holiday House</Select.Option>
             <Select.Option value="demo">Holiday House</Select.Option>
           </Select>
 
           <Input
             style={{
-              width: '26%', display: 'inline-block', verticalAlign: 'sub', marginLeft: '4%',
+              width: '26%',
+              display: 'inline-block',
+              verticalAlign: 'sub',
+              marginLeft: '4%',
             }}
           />
         </Form.Item>
       </Col>
-
     </Row>
 
     <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
       <Col span={24}>
-
         <div className="reservation-booker">
-
           <h4>Reservation Booker</h4>
 
           <Row>
             <Col span={12}>
-              <label>Full Name</label>
+              <label htmlFor="name">
+                <input hidden />
+                Full Name
+              </label>
               <p>Name Name</p>
             </Col>
 
             <Col span={12}>
-              <label>Country</label>
+              <label htmlFor="country">
+                <input hidden />
+                Country
+              </label>
               <p>Germany</p>
             </Col>
 
             <Col span={12}>
-              <label>Email</label>
+              <label htmlFor="email">
+                <input hidden />
+                Email
+              </label>
               <p>test@gmail.com</p>
             </Col>
 
             <Col span={12}>
-              <label>Phone</label>
+              <label htmlFor="phone">
+                <input hidden />
+                Phone
+              </label>
               <p>+123456789</p>
             </Col>
-
           </Row>
-
         </div>
 
         <div className="add-edit-data">
           <a href="">
-            <FormOutlined />
-            {' '}
-            Edit/Additional Data
+            <FormOutlined /> Edit/Additional Data
           </a>
         </div>
       </Col>
     </Row>
 
     <Row style={{ alignItems: 'center' }}>
-
       <Col span={24}>
         <Form.Item style={{ marginBottom: '0' }}>
-
           <Collapse accordion>
-
-            <Panel icon={<PlusSquareOutlined />} header="Add Guest Details (Optional)" key="1">
+            <Panel
+              icon={<PlusSquareOutlined />}
+              header="Add Guest Details (Optional)"
+              key="1"
+            >
               {text}
             </Panel>
-
           </Collapse>
         </Form.Item>
       </Col>
     </Row>
 
-    <Row style={{
-      alignItems: 'center', background: '#fbfbfc', padding: '0px 20px', paddingTop: '20px',
-    }}
+    <Row
+      style={{
+        alignItems: 'center',
+        background: '#fbfbfc',
+        padding: '0px 20px',
+        paddingTop: '20px',
+      }}
     >
-
       <Col span={24}>
         <Form.Item style={{ textAlign: 'center' }}>
           <Button type="primary" htmlType="submit">
             Save Reservation
           </Button>
         </Form.Item>
-
       </Col>
     </Row>
-
   </Form>
-
 );
 
 const CalendarSetting = () => {
-  function onChange(checked) {
-    console.log(`switch to ${checked}`);
-  }
+  function onChange() {}
 
   return (
-
     <div className="filter-box">
-
       <Form name="basic">
-
         <Row style={{ alignItems: 'center' }}>
-
           <Col span={24}>
-            <Form.Item
-
-              label="Show on Reservations"
-              name="property"
-            >
+            <Form.Item label="Show on Reservations" name="property">
               <Select style={{ marginBottom: '10px' }}>
                 <Select.Option value="demo">All Property</Select.Option>
                 <Select.Option value="demo">All Property</Select.Option>
@@ -449,10 +451,7 @@ const CalendarSetting = () => {
           </Col>
 
           <Col span={24}>
-            <Form.Item
-              label="Reservation Color Based On"
-              name="status"
-            >
+            <Form.Item label="Reservation Color Based On" name="status">
               <Select>
                 <Select.Option value="demo">All Property</Select.Option>
                 <Select.Option value="demo">All Property</Select.Option>
@@ -462,9 +461,7 @@ const CalendarSetting = () => {
 
           <Col span={24}>
             <Form.Item>
-
               <ul className="filter-list">
-
                 <li>
                   <span className="uppercase">Show on Reservation</span>
                   <Switch defaultChecked onChange={onChange} />
@@ -473,8 +470,10 @@ const CalendarSetting = () => {
 
               <h4>Show/Hide Restrictions</h4>
 
-              <ul className="filter-list" style={{ margin: '0', padding: '0', border: 'none' }}>
-
+              <ul
+                className="filter-list"
+                style={{ margin: '0', padding: '0', border: 'none' }}
+              >
                 <li>
                   <span>Min Stay</span>
                   <Switch defaultChecked onChange={onChange} />
@@ -504,32 +503,24 @@ const CalendarSetting = () => {
                   <span>No Departure</span>
                   <Switch onChange={onChange} />
                 </li>
-
               </ul>
-
             </Form.Item>
           </Col>
-
         </Row>
-
       </Form>
-
     </div>
-
   );
 };
 
 const Reservation = () => {
-  function onChange(checked) {
-    console.log(`switch to ${checked}`);
-  }
+  function onChange() {}
 
   return (
-
     <Form name="basic">
-
-      <Row className="reservation-info" style={{ alignItems: 'center', padding: '20px 20px' }}>
-
+      <Row
+        className="reservation-info"
+        style={{ alignItems: 'center', padding: '20px 20px' }}
+      >
         <Col span={12}>
           <span className="reserv-id">ID 1235378</span>
           <span className="reserv-tag">AirBnB</span>
@@ -549,10 +540,12 @@ const Reservation = () => {
         <Col span={12}>
           <h4>Total: 1000,00 EUR</h4>
         </Col>
-
       </Row>
 
-      <Row className="reservation-info" style={{ alignItems: 'center', padding: '5px 20px' }}>
+      <Row
+        className="reservation-info"
+        style={{ alignItems: 'center', padding: '5px 20px' }}
+      >
         <Col span={8}>
           <span>Total nights:</span>
         </Col>
@@ -564,10 +557,12 @@ const Reservation = () => {
         <Col span={10}>
           <span>Service Cost: 0,00 EUR</span>
         </Col>
-
       </Row>
 
-      <Row className="reservation-info" style={{ alignItems: 'center', padding: '5px 20px' }}>
+      <Row
+        className="reservation-info"
+        style={{ alignItems: 'center', padding: '5px 20px' }}
+      >
         <Col span={8}>
           <span>Price per nights:</span>
         </Col>
@@ -581,7 +576,10 @@ const Reservation = () => {
         </Col>
       </Row>
 
-      <Row className="reservation-info" style={{ alignItems: 'center', padding: '5px 20px' }}>
+      <Row
+        className="reservation-info"
+        style={{ alignItems: 'center', padding: '5px 20px' }}
+      >
         <Col span={8}>
           <span>Adults:</span>
         </Col>
@@ -595,7 +593,10 @@ const Reservation = () => {
         </Col>
       </Row>
 
-      <Row className="reservation-info" style={{ alignItems: 'center', padding: '5px 20px' }}>
+      <Row
+        className="reservation-info"
+        style={{ alignItems: 'center', padding: '5px 20px' }}
+      >
         <Col span={8}>
           <span>Children:</span>
         </Col>
@@ -613,9 +614,7 @@ const Reservation = () => {
         <Col span={24}>
           <div className="add-edit-data">
             <a href="">
-              <FormOutlined />
-              {' '}
-              Add Note
+              <FormOutlined /> Add Note
             </a>
             <Form.Item style={{ display: 'none' }}>
               <Input.TextArea placeholder="Internal Note" />
@@ -624,21 +623,23 @@ const Reservation = () => {
 
           <div className="add-edit-data">
             <a href="">
-              <BellOutlined />
-              {' '}
-              Add Task
+              <BellOutlined /> Add Task
             </a>
             <Form.Item style={{ display: 'none' }}>
               <Input.TextArea placeholder="Add New Task" />
             </Form.Item>
           </div>
-
         </Col>
       </Row>
 
-      <Row className="reservation-user" style={{ alignItems: 'center', padding: '0px 20px' }}>
+      <Row
+        className="reservation-user"
+        style={{ alignItems: 'center', padding: '0px 20px' }}
+      >
         <div className="user-box">
-          <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>KB</Avatar>
+          <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
+            KB
+          </Avatar>
           <p>Kurtis Baraccano</p>
         </div>
         <div className="user-box">
@@ -647,9 +648,13 @@ const Reservation = () => {
         </div>
       </Row>
 
-      <Row style={{
-        alignItems: 'center', background: '#fbfbfc', padding: '0px 20px', paddingTop: '20px',
-      }}
+      <Row
+        style={{
+          alignItems: 'center',
+          background: '#fbfbfc',
+          padding: '0px 20px',
+          paddingTop: '20px',
+        }}
       >
         <Col span={24}>
           <Form.Item style={{ textAlign: 'center' }}>
@@ -661,15 +666,11 @@ const Reservation = () => {
 
           <Form.Item style={{ textAlign: 'center' }}>
             <a href="" className="delete-reserv">
-              <DeleteOutlined />
-              {' '}
-              Delete this reservation
+              <DeleteOutlined /> Delete this reservation
             </a>
           </Form.Item>
         </Col>
       </Row>
-
     </Form>
-
   );
 };

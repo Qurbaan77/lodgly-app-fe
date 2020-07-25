@@ -46,7 +46,7 @@ const UserProfile = (props) => {
         <img src={img} alt="User" />
 
         <Dropdown overlay={menu}>
-          <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
+          <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()} role="button" aria-hidden="true">
             <SettingOutlined />
           </a>
         </Dropdown>

@@ -107,6 +107,13 @@ const AccommodationChart = (props) => {
           endingShape: 'rounded',
         },
       },
+      legend: {
+        position: 'top',
+        markers: {
+          strokeColor: 'transparent',
+          fillColors: ['#82858C', '#FAB52C'],
+        },
+      },
       dataLabels: {
         enabled: false,
       },
@@ -114,6 +121,9 @@ const AccommodationChart = (props) => {
         show: true,
         width: 2,
         colors: ['transparent'],
+      },
+      fill: {
+        colors: ['#82858C', '#FAB52C']
       },
       xaxis: {
         categories: [
@@ -135,9 +145,6 @@ const AccommodationChart = (props) => {
         title: {
           text: '',
         },
-      },
-      fill: {
-        opacity: 1,
       },
       tooltip: {
         y: {
@@ -169,8 +176,6 @@ const AccommodationChart = (props) => {
 };
 
 const OccupancyChart = (props) => {
-  const [currYear, setCurrYear] = useState();
-  const [prevYear, setPrevYear] = useState();
   const [currArr, setCurrArr] = useState([]);
   const [prevArr, setPrevArr] = useState([]);
 
@@ -182,9 +187,6 @@ const OccupancyChart = (props) => {
       const response = await userInstance.post('/getOccupancy', values);
       setPrevArr(response.data.prevYearArr);
       setCurrArr(response.data.currYearArr);
-
-      setPrevYear(response.data.currYear);
-      setCurrYear(response.data.prevYear);
     }
     getData();
   }, [props.topNavId]);
@@ -192,12 +194,12 @@ const OccupancyChart = (props) => {
   const state = {
     series: [
       {
-        name: currYear,
-        data: currArr,
+        name: new Date().getFullYear() - 1,
+        data: prevArr,
       },
       {
-        name: prevYear,
-        data: prevArr,
+        name: new Date().getFullYear(),
+        data: currArr,
       },
     ],
     options: {
@@ -210,6 +212,12 @@ const OccupancyChart = (props) => {
         },
         zoom: {
           enabled: false,
+        },
+      },
+      legend: {
+        markers: {
+          strokeColor: 'transparent',
+          fillColors: ['#82858C', '#7FBD34'],
         },
       },
       responsive: [
@@ -248,10 +256,18 @@ const OccupancyChart = (props) => {
       },
       legend: {
         position: 'top',
-        offsetX: 40,
+        offsetX: 0,
+        labels: {
+          colors: ['#82858C', '#7FBD34'],
+          useSeriesColors: false,
+        },
+        markers: {
+          strokeColor: 'transparent',
+          fillColors: ['#82858C', '#7FBD34'],
+        },
       },
       fill: {
-        opacity: 1,
+        colors: ['#82858C', '#7FBD34'],
       },
     },
   };
@@ -259,8 +275,7 @@ const OccupancyChart = (props) => {
   return (
     <div className="chart-body">
       <h3>
-        Occupancy per month
-        <img src={qst} alt="qst" />
+        Occupancy per month <img src={qst} />
       </h3>
 
       <div id="chart">
@@ -276,139 +291,48 @@ const OccupancyChart = (props) => {
 };
 
 const ReservationCountryChart = () => {
-  const [country, setCountry] = useState();
-  const [data, setData] = useState();
+  const [country, setCountry] = useState([]);
+  const [average, setAverage] = useState([]);
 
   useEffect(() => {
     async function getData() {
       const response = await userInstance.post('/getCountryReport');
-      setCountry(response.data.country);
-      setData(response.data.data)
+      if (response.data.code === 200) { 
+        setCountry(response.data.country)
+        setAverage(response.data.average)
+      }
     }
     getData();
   }, []);
+
   const state = {
-    series: [
-      {
-        name: 'Bob',
-        data: [
-          {
-            x: 'United State',
-            y: [
-              new Date('2019-03-05').getTime(),
-              new Date('2019-03-08').getTime(),
-            ],
-          },
-          {
-            x: 'Belgium',
-            y: [
-              new Date('2019-03-02').getTime(),
-              new Date('2019-03-05').getTime(),
-            ],
-          },
-          {
-            x: 'Ireland',
-            y: [
-              new Date('2019-03-03').getTime(),
-              new Date('2019-03-09').getTime(),
-            ],
-          },
-          {
-            x: 'Norway',
-            y: [
-              new Date('2019-03-11').getTime(),
-              new Date('2019-03-16').getTime(),
-            ],
-          },
-        ],
-      },
-      {
-        name: 'Joe',
-        data: [
-          {
-            x: 'United State',
-            y: [
-              new Date('2019-03-02').getTime(),
-              new Date('2019-03-05').getTime(),
-            ],
-          },
-          {
-            x: 'Ireland',
-            y: [
-              new Date('2019-03-06').getTime(),
-              new Date('2019-03-16').getTime(),
-            ],
-          },
-          {
-            x: 'Belgium',
-            y: [
-              new Date('2019-03-03').getTime(),
-              new Date('2019-03-07').getTime(),
-            ],
-          },
-          {
-            x: 'China',
-            y: [
-              new Date('2019-03-20').getTime(),
-              new Date('2019-03-22').getTime(),
-            ],
-          },
-          {
-            x: 'United State',
-            y: [
-              new Date('2019-03-10').getTime(),
-              new Date('2019-03-16').getTime(),
-            ],
-          },
-        ],
-      },
-      {
-        name: 'Dan',
-        data: [
-          {
-            x: 'Belgium',
-            y: [
-              new Date('2019-03-10').getTime(),
-              new Date('2019-03-17').getTime(),
-            ],
-          },
-          {
-            x: 'Norway',
-            y: [
-              new Date('2019-03-05').getTime(),
-              new Date('2019-03-09').getTime(),
-            ],
-          },
-        ],
-      },
-    ],
-    options: {
-      chart: {
-        height: 450,
-        type: 'rangeBar',
-      },
-      plotOptions: {
-        bar: {
-          horizontal: true,
-          barHeight: '40%',
-        },
-      },
-      xaxis: {
-        type: 'datetime',
-      },
-      stroke: {
-        width: 1,
-      },
-      fill: {
-        type: 'solid',
-        opacity: 0.6,
-      },
-      legend: {
-        position: 'top',
-        horizontalAlign: 'left',
-      },
-    },
-  };
+ 
+    series: [{
+    data: average
+  }],
+
+  options: {
+    chart: {
+    type: 'bar',
+    height: 350
+  },
+  fill: {
+    colors: ['#FAB52C']
+  },
+  plotOptions: {
+    bar: {
+      horizontal: true,
+      columnWidth: '10%',
+    }
+  },
+  dataLabels: {
+    enabled: false
+  },
+  xaxis: {
+    categories: country,
+  }
+  },
+};
 
   return (
     <div className="chart-body">
@@ -421,7 +345,7 @@ const ReservationCountryChart = () => {
         <Chart
           options={state.options}
           series={state.series}
-          type="rangeBar"
+          type="bar"
           height={300}
         />
       </div>
@@ -439,6 +363,14 @@ const ReservationChannelChart = () => {
       },
       legend: {
         position: 'bottom',
+        markers: {
+          strokeColor: 'transparent',
+          fillColors: ['#82858C', '#7FBD34', '#FAB52C'],
+  
+        },
+      },
+      fill: {
+        colors: ['#82858C', '#7FBD34', '#FAB52C']
       },
       responsive: [
         {
@@ -517,6 +449,20 @@ const PaceChart = (props) => {
         animations: {
           enabled: false,
         },
+      },
+      legend: {
+        labels: {
+          colors: ['#82858C', '#FAB52C'],
+          useSeriesColors: false
+      },
+      markers: {
+        strokeColor: 'transparent',
+        fillColors: ['#82858C', '#FAB52C'],
+
+      },
+      },
+      markers: {
+        colors: ['#82858C', '#FAB52C']
       },
       stroke: {
         width: [2, 2, 1],

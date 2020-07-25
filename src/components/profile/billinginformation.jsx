@@ -33,7 +33,6 @@ const BillingInformation = () => {
   const [currency, setCurrency] = useState('');
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
-  const [subscribedUnits, setSubscribedUnits] = useState();
   const [data, addData] = useState();
   const [invoiceList, setInvoiceList] = useState([]);
   const [end, setEnd] = useState('');
@@ -41,7 +40,10 @@ const BillingInformation = () => {
   const [hideBilling, setHideBilling] = useState(true);
   const [disablePlanType, setDisablePlanType] = useState(false);
   const [disableCurrency, setDisableCurrency] = useState({
-    eur: false, chf: false, pln: false, gbp: false,
+    eur: false,
+    chf: false,
+    pln: false,
+    gbp: false,
   });
   const [showCancelCheckout, setShowCancelCheckout] = useState(false);
 
@@ -65,18 +67,14 @@ const BillingInformation = () => {
     getData();
   }, []);
 
-  console.log(data);
-
   // function for getting current subscription
 
   const getUser = async () => {
     const response = await userInstance.get('/transactions');
-    console.log(response);
     const { code, transactions } = response.data;
     if (code === 200 && transactions != null) {
       transactions.forEach((element) => {
         addData(element);
-        setSubscribedUnits(element.units);
         setCurrentCurrency(element.currency);
       });
     } else {
@@ -88,10 +86,8 @@ const BillingInformation = () => {
   // function for getting invoices
   const getInvoice = async () => {
     const response = await userInstance.post('/getBillingInvoice');
-    console.log(response);
     if (response.data.code === 200) {
       setInvoiceList(response.data.invoicesList);
-      console.log(response.data.invoicesList[0]);
       const { end: endAt } = response.data.invoicesList[0];
       setEnd(endAt);
     }
@@ -159,22 +155,22 @@ const BillingInformation = () => {
         if (subscriptionType === 'year' && currency === 'CHF') {
           setTotal(
             basicPrice * exchangeRate.CHF * unitsSelected * 12
-            - (basicPrice * exchangeRate.CHF * unitsSelected * 12 * discount)
-            / 100,
+              - (basicPrice * exchangeRate.CHF * unitsSelected * 12 * discount)
+                / 100,
           );
         }
         if (subscriptionType === 'year' && currency === 'PLN') {
           setTotal(
             basicPrice * exchangeRate.PLN * unitsSelected * 12
-            - (basicPrice * exchangeRate.PLN * unitsSelected * 12 * discount)
-            / 100,
+              - (basicPrice * exchangeRate.PLN * unitsSelected * 12 * discount)
+                / 100,
           );
         }
         if (subscriptionType === 'year' && currency === 'GBP') {
           setTotal(
             basicPrice * exchangeRate.GBP * unitsSelected * 12
-            - (basicPrice * exchangeRate.GBP * unitsSelected * 12 * discount)
-            / 100,
+              - (basicPrice * exchangeRate.GBP * unitsSelected * 12 * discount)
+                / 100,
           );
         }
       }
@@ -196,19 +192,19 @@ const BillingInformation = () => {
       if (subscriptionType === 'year' && currency === 'CHF') {
         setTotal(
           basicPrice * exchangeRate.CHF * e * 12
-          - (basicPrice * exchangeRate.CHF * e * 12 * discount) / 100,
+            - (basicPrice * exchangeRate.CHF * e * 12 * discount) / 100,
         );
       }
       if (subscriptionType === 'year' && currency === 'PLN') {
         setTotal(
           basicPrice * exchangeRate.PLN * e * 12
-          - (basicPrice * exchangeRate.PLN * e * 12 * discount) / 100,
+            - (basicPrice * exchangeRate.PLN * e * 12 * discount) / 100,
         );
       }
       if (subscriptionType === 'year' && currency === 'GBP') {
         setTotal(
           basicPrice * exchangeRate.GBP * e * 12
-          - (basicPrice * exchangeRate.GBP * e * 12 * discount) / 100,
+            - (basicPrice * exchangeRate.GBP * e * 12 * discount) / 100,
         );
       }
     }
@@ -270,7 +266,7 @@ const BillingInformation = () => {
         setUnitPrice(advancePrice * exchangeRate.CHF);
         const amount = advancePrice * exchangeRate.CHF * unitsSelected * 12
           - (advancePrice * exchangeRate.CHF * unitsSelected * 12 * discount)
-          / 100;
+            / 100;
         setTotal(amount);
       }
     }
@@ -294,7 +290,7 @@ const BillingInformation = () => {
         setUnitPrice(advancePrice * exchangeRate.PLN);
         const amount = advancePrice * exchangeRate.PLN * unitsSelected * 12
           - (advancePrice * exchangeRate.PLN * unitsSelected * 12 * discount)
-          / 100;
+            / 100;
         setTotal(amount);
       }
     }
@@ -318,7 +314,7 @@ const BillingInformation = () => {
         setUnitPrice(advancePrice * exchangeRate.GBP);
         const amount = advancePrice * exchangeRate.GBP * unitsSelected * 12
           - (advancePrice * exchangeRate.GBP * unitsSelected * 12 * discount)
-          / 100;
+            / 100;
         setTotal(amount);
       }
     }
@@ -328,29 +324,41 @@ const BillingInformation = () => {
 
   const handleChangeSubscription = async () => {
     setHideBilling(false);
-    if (data.interval === 'year') (setDisablePlanType(true));
+    if (data.interval === 'year') setDisablePlanType(true);
     setShowCancelCheckout(true);
     setCurrency(data.currency);
     setUnitsSelected(data.units);
     if (data.currency === 'EUR') {
-      (setDisableCurrency({
-        ...disableCurrency, chf: true, pln: true, gbp: true,
-      }));
+      setDisableCurrency({
+        ...disableCurrency,
+        chf: true,
+        pln: true,
+        gbp: true,
+      });
     }
     if (data.currency === 'CHF') {
-      (setDisableCurrency({
-        ...disableCurrency, eur: true, pln: true, gbp: true,
-      }));
+      setDisableCurrency({
+        ...disableCurrency,
+        eur: true,
+        pln: true,
+        gbp: true,
+      });
     }
     if (data.currency === 'GBP') {
-      (setDisableCurrency({
-        ...disableCurrency, chf: true, pln: true, eur: true,
-      }));
+      setDisableCurrency({
+        ...disableCurrency,
+        chf: true,
+        pln: true,
+        eur: true,
+      });
     }
     if (data.currency === 'PLN') {
-      (setDisableCurrency({
-        ...disableCurrency, chf: true, eur: true, gbp: true,
-      }));
+      setDisableCurrency({
+        ...disableCurrency,
+        chf: true,
+        eur: true,
+        gbp: true,
+      });
     }
   };
 
@@ -384,7 +392,9 @@ const BillingInformation = () => {
 
   const handleCancelSubscription = async () => {
     try {
-      const response = await userInstance.post('/cancelSubscription', { subscriptionId: data.subscriptionId });
+      const response = await userInstance.post('/cancelSubscription', {
+        subscriptionId: data.subscriptionId,
+      });
       if (response.data.code === 200) {
         setNotifyType('success');
         setNotifyMsg(response.data.msg);
@@ -402,7 +412,6 @@ const BillingInformation = () => {
         <div className="page-header">
           <h1>
             <UserOutlined />
-            {' '}
             Billing Information
           </h1>
         </div>
@@ -418,15 +427,12 @@ const BillingInformation = () => {
                         <div className="subscription-plan-list">
                           <div className="invoice-warning" hidden>
                             <WarningOutlined />
-                            {' '}
-                            You have trial period active
-                            untill 4.07.2020.
+                            You have trial period active untill 4.07.2020.
                           </div>
                           <div className="invoice-error" hidden>
                             <CloseCircleOutlined hidden />
-                            {' '}
-                            Payment method not
-                            set. Please update your payment method.
+                            Payment method not set. Please update your payment
+                            method.
                           </div>
                           <Form>
                             <Row gutter={[16, 0]}>
@@ -489,7 +495,10 @@ const BillingInformation = () => {
                                     placeholder="Monthly"
                                     onSelect={handlePlanType}
                                   >
-                                    <Select.Option value="month" disabled={disablePlanType}>
+                                    <Select.Option
+                                      value="month"
+                                      disabled={disablePlanType}
+                                    >
                                       Monthly
                                     </Select.Option>
                                     <Select.Option value="year">
@@ -514,16 +523,28 @@ const BillingInformation = () => {
                                     placeholder="currency"
                                     onSelect={handleCurrencyChange}
                                   >
-                                    <Select.Option value="EUR" disabled={disableCurrency.eur}>
+                                    <Select.Option
+                                      value="EUR"
+                                      disabled={disableCurrency.eur}
+                                    >
                                       EUR
                                     </Select.Option>
-                                    <Select.Option value="CHF" disabled={disableCurrency.chf}>
+                                    <Select.Option
+                                      value="CHF"
+                                      disabled={disableCurrency.chf}
+                                    >
                                       CHF
                                     </Select.Option>
-                                    <Select.Option value="PLN" disabled={disableCurrency.pln}>
+                                    <Select.Option
+                                      value="PLN"
+                                      disabled={disableCurrency.pln}
+                                    >
                                       PLN
                                     </Select.Option>
-                                    <Select.Option value="GBP" disabled={disableCurrency.gbp}>
+                                    <Select.Option
+                                      value="GBP"
+                                      disabled={disableCurrency.gbp}
+                                    >
                                       GBP
                                     </Select.Option>
                                   </Select>
@@ -540,7 +561,9 @@ const BillingInformation = () => {
                                     ) / 100 || 0}
                                     <span>
                                       {' '}
-                                      {data ? data.currency : currency || ''}
+                                      {data
+                                        ? data.currency
+                                        : currency || ''}
                                       {' '}
                                       per
                                       {' '}
@@ -554,31 +577,27 @@ const BillingInformation = () => {
                             <Col span={6}>
                               <div>
                                 <Elements stripe={stripePromise}>
-                                  {
-                                  showCancelCheckout
-                                    ? (
-                                      <CheckoutForm
-                                        total={(total + Number.EPSILON) * 100}
-                                        currency={currency}
-                                        unitsSelected={unitsSelected}
-                                        subscriptionType={subscriptionType}
-                                        planType={planType}
-                                        toaster={toasterMessage}
-                                        submitChange={submitChangesubscription}
-                                        showCancelCheckout={showCancelCheckout}
-                                      />
-                                    )
-                                    : (
-                                      <CheckoutForm
-                                        total={(total + Number.EPSILON) * 100}
-                                        currency={currency}
-                                        unitsSelected={unitsSelected}
-                                        subscriptionType={subscriptionType}
-                                        planType={planType}
-                                        toaster={toasterMessage}
-                                      />
-                                    )
-}
+                                  {showCancelCheckout ? (
+                                    <CheckoutForm
+                                      total={(total + Number.EPSILON) * 100}
+                                      currency={currency}
+                                      unitsSelected={unitsSelected}
+                                      subscriptionType={subscriptionType}
+                                      planType={planType}
+                                      toaster={toasterMessage}
+                                      submitChange={submitChangesubscription}
+                                      showCancelCheckout={showCancelCheckout}
+                                    />
+                                  ) : (
+                                    <CheckoutForm
+                                      total={(total + Number.EPSILON) * 100}
+                                      currency={currency}
+                                      unitsSelected={unitsSelected}
+                                      subscriptionType={subscriptionType}
+                                      planType={planType}
+                                      toaster={toasterMessage}
+                                    />
+                                  )}
                                 </Elements>
                               </div>
                             </Col>
@@ -590,79 +609,83 @@ const BillingInformation = () => {
                 </Panel>
               </Collapse>
             </Col>
-            {
-              data ? (
-                <Col span={12}>
-                  <Collapse defaultActiveKey={['1']} accordion>
-                    <Panel header={`${data.interval}ly Subscription Plan`} key="1">
-                      <div className="billing-info-form">
-                        <Row gutter={[16, 0]}>
-                          <Col span={14}>
-                            <div className="subscription-plan-list">
-                              <ul>
-                                <li>
-                                  Plan
+            {data ? (
+              <Col span={12}>
+                <Collapse defaultActiveKey={['1']} accordion>
+                  <Panel
+                    header={`${data.interval}ly Subscription Plan`}
+                    key="1"
+                  >
+                    <div className="billing-info-form">
+                      <Row gutter={[16, 0]}>
+                        <Col span={14}>
+                          <div className="subscription-plan-list">
+                            <ul>
+                              <li>
+                                Plan
+                                {' '}
+                                <span>
+                                  {data.Amount}
                                   {' '}
-                                  <span>
-                                    {data.Amount}
-                                    {' '}
-                                    {data.currency}
-                                    /
-                                    {' '}
-                                    {data.interval}
-                                  </span>
-                                </li>
-                                {/* <li>
+                                  {data.currency}
+                                  /
+                                  {' '}
+                                  {data.interval}
+                                </span>
+                              </li>
+                              {/* <li>
                                   Bonus Credit
                                   {' '}
                                   <span>305 EUR</span>
                                 </li> */}
-                                <li>
-                                  Plan Type
-                                  {' '}
-                                  <span>{data.planType}</span>
-                                </li>
-                                <li>
-                                  Discount
-                                  {' '}
-                                  <span>{data.planType === 'basic' ? '' : '23% off Pay-As-You-Go'}</span>
-                                </li>
-                              </ul>
-                            </div>
-                            <Button onClick={handleChangeSubscription}>
-                              upgrade/downgrade
-                            </Button>
-                          </Col>
-
-                          <Col span={10}>
-                            <div className="subscription-plan-list">
-                              <p>
-                                Your
+                              <li>
+                                Plan Type
+                                {' '}
+                                <span>{data.planType}</span>
+                              </li>
+                              <li>
+                                Discount
                                 {' '}
                                 <span>
-                                  {data.interval}
-                                  ly Subscription Plan
+                                  {data.planType === 'basic'
+                                    ? ''
+                                    : '23% off Pay-As-You-Go'}
                                 </span>
-                              </p>
-                              <p>
-                                will renew on
-                                {' '}
-                                {' '}
-                                {end}
-                              </p>
-                            </div>
-                            <Button onClick={handleCancelSubscription}>
-                              cancel
-                            </Button>
-                          </Col>
-                        </Row>
-                      </div>
-                    </Panel>
-                  </Collapse>
-                </Col>
-              )
-                : ''
-            }
+                              </li>
+                            </ul>
+                          </div>
+                          <Button onClick={handleChangeSubscription}>
+                            upgrade/downgrade
+                          </Button>
+                        </Col>
+
+                        <Col span={10}>
+                          <div className="subscription-plan-list">
+                            <p>
+                              Your
+                              {' '}
+                              <span>
+                                {data.interval}
+                                ly Subscription Plan
+                              </span>
+                            </p>
+                            <p>
+                              will renew on
+                              {end}
+                            </p>
+                          </div>
+                          <Button onClick={handleCancelSubscription}>
+                            cancel
+                          </Button>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Panel>
+                </Collapse>
+              </Col>
+            ) : (
+              ''
+            )}
           </Row>
         </div>
       </div>

@@ -49,8 +49,11 @@ const BillingHistory = ({ invoiceList, data }) => (
 );
 
 BillingHistory.propTypes = {
-  invoiceList: PropTypes.objectOf(PropTypes.array).isRequired,
-  data: PropTypes.objectOf(PropTypes.array).isRequired,
+  invoiceList: PropTypes.objectOf(PropTypes.array),
+  data: PropTypes.objectOf(PropTypes.array),
 };
-
+BillingHistory.defaultProps = {
+  invoiceList: [],
+  data: [],
+};
 export default BillingHistory;

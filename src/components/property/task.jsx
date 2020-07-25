@@ -36,8 +36,6 @@ const Task = () => {
   const [tasks, setTasks] = useState([]);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
-  const initialFormState = { name: '' };
-  const [editUser, setEditUser] = useState(initialFormState);
   const [group, setGroup] = useState([]);
   const [currTaskId, setCurrTaskId] = useState(0);
   const [isGroup, sertIsGroup] = useState(true);
@@ -47,7 +45,6 @@ const Task = () => {
       title: 'Name',
       dataIndex: 'taskName',
       key: 'taskName',
-      render: (text) => <a>{text}</a>,
     },
     {
       title: 'Notes',
@@ -113,8 +110,8 @@ const Task = () => {
     const response = await userInstance.post('/groupList');
     if (response.data.code === 200) {
       response.data.groupDetail
-        .filter((el) => el.id == localStorage.getItem('groupId'))
-        .map((filter) => {
+        .filter((el) => el.id === parseInt(localStorage.getItem('groupId'), 10))
+        .forEach((filter) => {
           setGroup(filter);
         });
     }
@@ -130,7 +127,6 @@ const Task = () => {
     const statusCode = response.data.code;
     const { msg } = response.data;
     if (statusCode === 200) {
-      setEditUser(initialFormState);
       setNotifyType('success');
       setNotifyMsg(msg);
       setVisible(false);
@@ -153,7 +149,7 @@ const Task = () => {
     };
     const response = await userInstance.post('/deleteTask', data);
     const statusCode = response.data.code;
-    if (statusCode == 200) {
+    if (statusCode === 200) {
       setVisible2(false);
       getData();
     }

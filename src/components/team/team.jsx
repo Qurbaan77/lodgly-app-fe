@@ -82,6 +82,28 @@ const TeamListing = () => {
     getData();
   }, []);
 
+  const enableButton = (
+    <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+      Add New Sub-User
+    </Button>
+  );
+  const disabledButton = (
+    <Tooltip
+      title="You are not authorize to add new sub user"
+      color="gold"
+    >
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={show}
+        disabled="true"
+      >
+        Add New Sub-User
+      </Button>
+    </Tooltip>
+  );
+  const btn1 = isSubUser && canWrite ? enableButton : disabledButton;
+  const btn2 = isSubUser ? btn1 : enableButton;
   return (
     <>
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
@@ -108,13 +130,13 @@ const TeamListing = () => {
                       <th>Sub User</th>
                       <th>Email</th>
                       <th>Role</th>
-                      <th />
+                      {/* <th /> */}
                     </tr>
                   </thead>
 
                   <tbody>
                     {subUser.map((el, i) => (
-                      <tr key={i}>
+                      <tr key={el.id}>
                         <td>
                           <div className="team-info">
                             <div className="team-pic">
@@ -172,31 +194,7 @@ const TeamListing = () => {
               <img src={subuser} alt="subuser" />
               <h4>Sub Users</h4>
               <p>Currently there are no Sub users created</p>
-              {isSubUser ? (
-                canWrite ? (
-                  <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                    Add New Sub-User
-                  </Button>
-                ) : (
-                  <Tooltip
-                    title="You are not authorize to add new sub user"
-                    color="gold"
-                  >
-                    <Button
-                      type="primary"
-                      icon={<PlusOutlined />}
-                      onClick={show}
-                      disabled="true"
-                    >
-                      Add New Sub-User
-                    </Button>
-                  </Tooltip>
-                )
-              ) : (
-                <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                  Add New Sub-User
-                </Button>
-              )}
+              {btn2}
             </div>
           </div>
           <SubUserPopup

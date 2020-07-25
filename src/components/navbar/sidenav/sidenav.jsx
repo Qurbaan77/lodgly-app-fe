@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useHistory, Link } from 'react-router-dom';
-
 import './sidenav.css';
 import { Layout, Menu } from 'antd';
 import {
@@ -28,8 +28,7 @@ import channelIcon from '../../../assets/images/menu/channel-icon.png';
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-const Sidenav = (props) => {
-  const {img, name, getUserInfo} = props;
+const Sidenav = ({ img, name, getUserInfo }) => {
   const [propertyData, setPropertyData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
   const [menu, setMenu] = useState(false);
@@ -124,7 +123,7 @@ const Sidenav = (props) => {
       setPropertyData(data);
       if (Id) {
         const curProperty = data.filter(
-          (el) => el.id == Id,
+          (el) => el.id === parseInt(Id, 10),
         );
         setCurrProperty(curProperty[0].propertyNo);
       }
@@ -177,7 +176,8 @@ const Sidenav = (props) => {
           <Link to="/calendar">Calendar</Link>
         </Menu.Item>
 
-        <SubMenu key="2"
+        <SubMenu
+          key="2"
           disabled={disableProperties}
           title={(
             <div>
@@ -294,6 +294,17 @@ const Sidenav = (props) => {
       </Menu>
     </Sider>
   );
+};
+
+Sidenav.propTypes = {
+  img: PropTypes.element,
+  name: PropTypes.string,
+  getUserInfo: PropTypes.func,
+};
+Sidenav.defaultProps = {
+  element: '',
+  name: '',
+  getUserInfo: () => {},
 };
 
 export default Sidenav;

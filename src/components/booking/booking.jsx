@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import './booking.css';
 import {
   Form,
-  DatePicker,
   Button,
   Row,
   Col,
   Tooltip,
-  Collapse,
   Menu,
   Dropdown,
   Tag,
@@ -27,15 +25,15 @@ import CreateBookingPopup from './createbookingpopup';
 import EditBookingPopup from './editbookingpopup';
 import BookingFilter from './filter';
 import { userInstance } from '../../axios/axiosconfig';
-import Toaster from '../toaster/toaster';
-import filter_icon from '../../assets/images/menu/filter-icon.png';
+// import Toaster from '../toaster/toaster';
+import filterIcon from '../../assets/images/menu/filter-icon.png';
 
-import edit_icon from '../../assets/images/menu/pencil-icon.png';
-import download_icon from '../../assets/images/menu/download-icon.png';
-import refresh_icon from '../../assets/images/menu/refresh-icon.png';
+import editIcon from '../../assets/images/menu/pencil-icon.png';
+import downloadIcon from '../../assets/images/menu/download-icon.png';
+import refreshIcon from '../../assets/images/menu/refresh-icon.png';
 
-const { Panel } = Collapse;
-const { MonthPicker, RangePicker } = DatePicker;
+// const { Panel } = Collapse;
+// const { MonthPicker, RangePicker } = DatePicker;
 
 const useForceUpdate = () => useState()[1];
 const Booking = () => {
@@ -45,8 +43,8 @@ const Booking = () => {
   const [visible, setVisible] = useState(false);
   const [visibleGuest, setVisibleGuest] = useState(false);
   const [visibleEditBooking, setVisibleEditBooking] = useState(false);
-  const [visiblefilter, setVisibleFilter] = useState(false)
-  const [guest, setGuest] = useState(false);
+  const [visiblefilter, setVisibleFilter] = useState(false);
+  // const [guest, setGuest] = useState(false);
   const [booked, setBooked] = useState(true);
   const [bookingData, setBookingData] = useState([]);
   const [guestData, setGuestData] = useState([]);
@@ -56,28 +54,27 @@ const Booking = () => {
   const [currentService, setCurrentService] = useState([]);
   const [editCurrentGuest, setEditCurrentGuest] = useState([]);
   const [topNavId, setTopNavId] = useState();
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
-
+  
   const [editValues, setEditValues] = useState({});
   const [editBookingValues, setEditBookingValues] = useState({});
 
+  const [propertyId, setPropertyId] = useState(0);
+  const [rangeDate, setRangeDate] = useState([]);
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  console.log(userCred);
   const [{ bookingWrite, userId }] = userCred || [{}];
   const canWrite = bookingWrite;
-  const show = () => {
-    setVisible(true);
-  };
+  // const show = () => {
+  //   setVisible(true);
+  // };
 
   const showfilter = () => {
     setVisibleFilter(true);
   };
 
-  const showGuest = () => {
-    setGuest(true);
-  };
+  // const showGuest = () => {
+  //   setGuest(true);
+  // };
 
   const handleOk = () => {
     setVisible(false);
@@ -92,28 +89,28 @@ const Booking = () => {
   };
 
   const getData = async () => {
-    console.log('get Function is Called!');
     const response = await userInstance.post('/getBooking', {
       affiliateId: userId,
     });
-    console.log(response);
     const bookingdata = response.data.bookingData;
     const guestdata = response.data.guestData;
     const servicedata = response.data.serviceData;
     const guestnum = guestdata.map((el) => el.length);
     const guestname = [];
-    const data = guestdata.map((el) => el.find((el) => el.id));
-    console.log(data);
-    data.length
-      ? data.map((el) => {
-        el.fullname
-          ? guestname.push(el.fullname)
-          : guestname.push('Unknown Guest');
-      })
-      : guestname.push('Unknown Guest');
-    console.log(guestname);
+    const data = guestdata.map((el) => el.find((ele) => ele.id));
+    if (data.length) {
+      data.forEach((el) => {
+        if (el.fullname) {
+          guestname.push(el.fullname);
+        } else {
+          guestname.push('Unknown Guest');
+        }
+      });
+    } else {
+      guestname.push('Unknown Guest');
+    }
     guestname.push(data.fullname);
-    bookingdata.map((el, i) => {
+    bookingdata.forEach((el, i) => {
       const d1 = new Date(el.startDate);
       const d2 = new Date(el.endDate);
       const diff = Math.abs(d1 - d2);
@@ -125,20 +122,12 @@ const Booking = () => {
       el.guest = guestname[i] || 'Unknown Guest';
     });
 
-    console.log('bookingdata', bookingdata);
-    // bookingdata.filter((el) => el.propertyId === parseInt(localStorage.getItem('topNavId'), 10)).map((filter) =>
-    //   setBookingData([filter]);
-    // );
-
-    // console.log('guestdata', guestdata);
-    // console.log('servicedata', servicedata);
     if (response.data.code === 200) {
       if (localStorage.getItem('topNavId')) {
         const arr = [];
         bookingdata
           .filter(
-            (el) =>
-              el.propertyId === parseInt(localStorage.getItem('topNavId'), 10)
+            (el) => el.propertyId === parseInt(localStorage.getItem('topNavId'), 10),
           )
           .map((filter) => arr.push(filter));
         setBookingData(arr);
@@ -152,12 +141,11 @@ const Booking = () => {
     }
   };
 
-  const close = () => {
-    setNotifyType('');
-  };
+  // const close = () => {
+  //   setNotifyType('');
+  // };
 
   const selectBooking = (values) => {
-    console.log('values', values);
     values.startDate = values.startDate.slice(0, 10);
     values.endDate = values.endDate.slice(0, 10);
     const d1 = new Date(values.startDate);
@@ -165,22 +153,15 @@ const Booking = () => {
     const diff = Math.abs(d1 - d2);
     const day = Math.floor(diff / (24 * 60 * 60 * 1000));
     values.night = day + 1;
-    console.log(values);
     localStorage.setItem('bookingId', values.id);
     localStorage.setItem('propertyId', values.propertyId);
     const arr = [];
-    guestData.filter((el) =>
-      el
-        .filter((ele) => ele.bookingId == values.id)
-        .map((filterGuest) => arr.push(filterGuest))
-    );
-    console.log(arr);
+    guestData.filter((el) => el
+      .filter((ele) => ele.bookingId === values.id)
+      .map((filterGuest) => arr.push(filterGuest)));
 
     const data = [];
-    serviceData.map((el) =>
-      el.map((el) => (el.bookingId === values.id ? data.push(el) : null))
-    );
-    console.log(data);
+    serviceData.map((el) => el.map((ele) => (ele.bookingId === values.id ? data.push(el) : null)));
     setCurrentService(data);
     setEditCurrentGuest(arr);
     setCurrentBooking(values);
@@ -189,7 +170,6 @@ const Booking = () => {
   };
 
   const editBooking = (values) => {
-    console.log(values);
     setVisibleEditBooking(true);
     setEditBookingValues(values);
     form.setFieldsValue({
@@ -218,9 +198,9 @@ const Booking = () => {
     </Menu>
   );
 
-  const onClick = () => {
-    setVisible(true);
-  };
+  // const onClick = () => {
+  //   setVisible(true);
+  // };
 
   const closeGuest = () => {
     setVisibleGuest(false);
@@ -235,6 +215,92 @@ const Booking = () => {
     getData();
   }, [topNavId]);
 
+  useEffect(() => {
+    let copyBookingData = bookingData;
+    const filterBooked = [];
+    copyBookingData.filter((el) => el.propertyId  === propertyId).map((filter) => {
+      filterBooked.push(filter)
+    })
+
+    // if (rangeDate.length > 0) {
+    //   if (filterArr.length > 0) {
+    //     filterArr
+    //       .filter(
+    //         (el) => new Date(el.startDate) >= rangeDate[0]._d
+    //           && new Date(el.startDate) <= rangeDate[1]._d,
+    //       )
+    //       .map((filter) => arr2.push(filter));
+    //   } else {
+    //     arr
+    //       .filter(
+    //         (el) => new Date(el.startDate) >= rangeDate[0]._d
+    //           && new Date(el.startDate) <= rangeDate[1]._d,
+    //       )
+    //       .map((filter) => filterArr.push(filter));
+    //   }
+    // }
+
+    setBookingData(filterBooked)
+  }, [propertyId])
+
+  const enableButton = (
+    <Button
+      type="primary"
+      icon={<PlusOutlined />}
+      onClick={() => {
+        setVisible(true);
+        setEditBookingValues({});
+        setEditCurrentGuest({});
+        form.resetFields();
+      }}
+    >
+      Create Booking
+    </Button>
+  );
+  const disableButton = (
+    <Tooltip
+      title="You are not authorize to create booking"
+      color="gold"
+    >
+      <Button
+        disabled="true"
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={() => {
+          setVisible(true);
+          setEditBookingValues({});
+          setEditCurrentGuest({});
+          form.resetFields();
+        }}
+      >
+        Create Booking
+      </Button>
+    </Tooltip>
+  );
+
+  const editButton = (
+    <FormOutlined
+      onClick={() => editBooking(currentBooking)}
+    />
+  );
+  const disableEditButton = (
+    <Tooltip
+      title="You are not authorize to edit booking"
+      color="gold"
+    >
+      <FormOutlined
+        disabled="true"
+        onClick={() => editBooking(currentBooking)}
+      />
+    </Tooltip>
+  );
+
+  const edit = isSubUser && canWrite ? editButton : disableEditButton;
+  const edit2 = isSubUser ? edit : editButton;
+
+  const btn1 = isSubUser && canWrite ? enableButton : disableButton;
+  const btn2 = isSubUser ? btn1 : enableButton;
+
   return (
     <Wrapper fun={setTopNavId}>
       <div className="booking">
@@ -244,8 +310,12 @@ const Booking = () => {
               <div className="booking-list-conatiner">
                 <div className="booking-filter-box">
                   <div className="filter-section">
-                    <label>Filters:</label>
-                    <div className="filter-item">
+                    <label htmlFor="filter">
+                      Filters:
+                      {' '}
+                      <input type="text" hidden />
+                    </label>
+                    <div className="filter-item" id="filters">
                       <Tag color="default">item 1</Tag>
                       <Tag color="success">item 2</Tag>
                       <Tag color="default">item 3</Tag>
@@ -254,7 +324,9 @@ const Booking = () => {
                   </div>
 
                   <div className="filter-icon">
-                    <Button onClick={showfilter}> <img src={filter_icon} alt="filter-icon" />
+                    <Button onClick={showfilter}>
+                      {' '}
+                      <img src={filterIcon} alt="filter-icon" />
                     </Button>
 
                   </div>
@@ -262,6 +334,7 @@ const Booking = () => {
 
                 {bookingData.map((el, i) => (
                   <div
+                    role="presentation"
                     className="booking-list"
                     onClick={() => selectBooking(el, i)}
                   >
@@ -271,16 +344,24 @@ const Booking = () => {
                       <ul>
                         <li>{el.created_date}</li>
                         <li>
-                          {el.nights} <ThunderboltOutlined />
+                          {el.nights}
+                          {' '}
+                          <ThunderboltOutlined />
                         </li>
                         <li>
-                          {el.noOfGuest} <UserOutlined />
+                          {el.noOfGuest}
+                          {' '}
+                          <UserOutlined />
                         </li>
                       </ul>
                     </div>
                     <div className="detail-info">
                       <span>{el.created_time}</span>
-                      <span className="green-label"> €{el.totalAmount}</span>
+                      <span className="green-label">
+                        {' '}
+                        €
+                        {el.totalAmount}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -288,63 +369,16 @@ const Booking = () => {
                 <div className="bookin-footer">
                   <ul>
                     <li>
-                      <img src={edit_icon} alt="edit-icon" />
+                      <img src={editIcon} alt="edit-icon" />
                     </li>
                     <li>
-                      <img src={download_icon} alt="download=icon" />
+                      <img src={downloadIcon} alt="download=icon" />
                     </li>
                     <li>
-                      <img src={refresh_icon} alt="refresh-icon" />
+                      <img src={refreshIcon} alt="refresh-icon" />
                     </li>
                   </ul>
-                  {isSubUser ? (
-                    canWrite ? (
-                      <Button
-                        type="primary"
-                        icon={<PlusOutlined />}
-                        onClick={() => {
-                          setVisible(true);
-                          setEditBookingValues({});
-                          setEditCurrentGuest({});
-                          form.resetFields();
-                        }}
-                      >
-                        Create Booking
-                      </Button>
-                    ) : (
-                        <Tooltip
-                          title="You are not authorize to create booking"
-                          color="gold"
-                        >
-                          <Button
-                            disabled="true"
-                            type="primary"
-                            icon={<PlusOutlined />}
-                            onClick={() => {
-                              setVisible(true);
-                              setEditBookingValues({});
-                              setEditCurrentGuest({});
-                              form.resetFields();
-                            }}
-                          >
-                            Create Booking
-                        </Button>
-                        </Tooltip>
-                      )
-                  ) : (
-                      <Button
-                        type="primary"
-                        icon={<PlusOutlined />}
-                        onClick={() => {
-                          setVisible(true);
-                          setEditBookingValues({});
-                          setEditCurrentGuest({});
-                          form.resetFields();
-                        }}
-                      >
-                        Create Booking
-                      </Button>
-                    )}
+                  {btn2}
                 </div>
               </div>
             </Col>
@@ -355,8 +389,16 @@ const Booking = () => {
                   {currentGuest.length > 0 ? currentGuest[0].fullname : null}
                 </h3>
                 <ul>
-                  <li>{currentBooking.night} Night - 1 room,</li>
-                  <li>{currentBooking.noOfGuest} Guests,</li>
+                  <li>
+                    {currentBooking.night}
+                    {' '}
+                    Night - 1 room,
+                  </li>
+                  <li>
+                    {currentBooking.noOfGuest}
+                    {' '}
+                    Guests,
+                  </li>
                   <li>
                     ID:
                     {currentBooking.id}
@@ -369,31 +411,13 @@ const Booking = () => {
                       <h3>Booking</h3>
                     </div>
 
-                    <div className="box-editing" onClick={forceUpdate}>
-                      {isSubUser ? (
-                        canWrite ? (
-                          <FormOutlined
-                            onClick={() => editBooking(currentBooking)}
-                          />
-                        ) : (
-                            <Tooltip
-                              title="You are not authorize to edit booking"
-                              color="gold"
-                            >
-                              <FormOutlined
-                                disabled="true"
-                                onClick={() => editBooking(currentBooking)}
-                              />
-                            </Tooltip>
-                          )
-                      ) : (
-                          <FormOutlined
-                            onClick={() => editBooking(currentBooking)}
-                          />
-                        )}
+                    <div className="box-editing" onClick={forceUpdate} role="presentation">
+                      {edit2}
                       <Dropdown overlay={menu}>
                         <Button>
-                          Booked <DownOutlined />
+                          Booked
+                          {' '}
+                          <DownOutlined />
                         </Button>
                       </Dropdown>
                     </div>
@@ -415,7 +439,11 @@ const Booking = () => {
                     <div className="prorety-box">
                       <span>channel, commission(%)</span>
                       <p>
-                        {currentBooking.channel} ({currentBooking.commission})
+                        {currentBooking.channel}
+                        {' '}
+                        (
+                        {currentBooking.commission}
+                        )
                       </p>
                     </div>
                   </div>
@@ -423,21 +451,35 @@ const Booking = () => {
                   <div className="booking-item">
                     <div className="prorety-box">
                       <span>Guests</span>
-                      <p>{currentBooking.adult} Adults</p>
-                      <p>{currentBooking.children1} Children (0-12 yrs)</p>
+                      <p>
+                        {currentBooking.adult}
+                        {' '}
+                        Adults
+                      </p>
+                      <p>
+                        {currentBooking.children1}
+                        {' '}
+                        Children (0-12 yrs)
+                      </p>
                     </div>
 
                     <div className="prorety-box">
                       <span>Date</span>
                       <p>
-                        {currentBooking.startDate}/{currentBooking.endDate}
+                        {currentBooking.startDate}
+                        /
+                        {currentBooking.endDate}
                       </p>
-                      <p>{currentBooking.night} Nights</p>
+                      <p>
+                        {currentBooking.night}
+                        {' '}
+                        Nights
+                      </p>
                     </div>
                   </div>
                 </div>
 
-                {currentGuest.map((el, i) => (
+                {currentGuest.map((el) => (
                   <div className="booking-box">
                     <div className="booking-head">
                       <div className="box-heading">
@@ -457,7 +499,10 @@ const Booking = () => {
 
                       <div className="prorety-box">
                         <span>Country</span>
-                        <p>{el.country} </p>
+                        <p>
+                          {el.country}
+                          {' '}
+                        </p>
                       </div>
                     </div>
 
@@ -529,6 +574,8 @@ const Booking = () => {
         visible={visiblefilter}
         handleCancel={handleCancel}
         handleOk={handleOk}
+        setBookingData={setBookingData}
+        setPropertyId={setPropertyId}
       />
     </Wrapper>
   );

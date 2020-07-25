@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import './booking.css';
 import {
   Form,
@@ -16,10 +17,14 @@ import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 
 const GuestPopup = (props) => {
+  const {
+    editValues, getData, close: close1, setBooked, closeToaster,
+    visible, handleOk, handleCancel,
+  } = props;
   const [form] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
-  const guestData = props.editValues;
+  const guestData = editValues;
 
   const close = () => {
     setNotifyType('');
@@ -41,7 +46,6 @@ const GuestPopup = (props) => {
   });
 
   const onFinish = async (values) => {
-    console.log(values);
     values.bookingId = localStorage.getItem('bookingId');
     const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
     values.affiliateId = userId;
@@ -51,23 +55,23 @@ const GuestPopup = (props) => {
     if (statusCode === 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
-      props.getData();
-      props.close();
-      props.setBooked(true);
+      getData();
+      close1();
+      setBooked(true);
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
     form.resetFields();
-    props.closeToaster();
+    closeToaster();
   };
 
   return (
     <Modal
       title="Guest"
-      visible={props.visible}
-      onOk={props.handleOk}
-      onCancel={props.handleCancel}
+      visible={visible}
+      onOk={handleOk}
+      onCancel={handleCancel}
       wrapClassName="guest-modal"
     >
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
@@ -205,7 +209,7 @@ const GuestPopup = (props) => {
         <Row style={{ alignItems: 'center', textAlign: 'right' }}>
           <Col span={24}>
             <Form.Item>
-              <Button style={{ marginRight: 10 }} onClick={props.close}>
+              <Button style={{ marginRight: 10 }} onClick={close1}>
                 Cancel
               </Button>
               <Button type="primary" htmlType="submit">
@@ -219,4 +223,24 @@ const GuestPopup = (props) => {
   );
 };
 
+GuestPopup.propTypes = {
+  editValues: PropTypes.objectOf(PropTypes.object),
+  getData: PropTypes.func,
+  close: PropTypes.func,
+  setBooked: PropTypes.func,
+  closeToaster: PropTypes.func,
+  visible: PropTypes.bool,
+  handleCancel: PropTypes.func,
+  handleOk: PropTypes.func,
+};
+GuestPopup.defaultProps = {
+  editValues: {},
+  getData: () => {},
+  close: () => {},
+  setBooked: () => {},
+  closeToaster: () => {},
+  visible: false,
+  handleCancel: () => {},
+  handleOk: () => {},
+};
 export default GuestPopup;

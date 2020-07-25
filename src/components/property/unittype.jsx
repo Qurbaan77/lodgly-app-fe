@@ -12,7 +12,6 @@ import {
   CloseCircleOutlined,
   CheckCircleOutlined,
 } from '@ant-design/icons';
-import queryString from 'query-string';
 import Wrapper from '../wrapper';
 
 import { userInstance } from '../../axios/axiosconfig';
@@ -21,10 +20,8 @@ import DeletePopup from './deletepopup';
 const UnitType = () => {
   const [visible, setVisible] = useState(false);
   const [showPanel, setShowPanel] = useState(true);
-  const [showEdit, setShowEdit] = useState(true);
   const [empty, setEmpty] = useState(true);
   const [unittypeData, setUnittypeData] = useState([]);
-  const [currProperty, setCurrProperty] = useState(0);
   const [currUnittype, setCurrUnittype] = useState(0);
   const [name, setName] = useState();
   const [editId, setEditId] = useState(null);
@@ -73,7 +70,18 @@ const UnitType = () => {
 
   const editName = (unittypeId) => {
     setEditId(unittypeId);
-    setShowEdit(false);
+  };
+
+  const getData = async () => {
+    const values = {
+      propertyId: localStorage.getItem('propertyId'),
+    };
+    const response = await userInstance.post('/getUnittype', values);
+    const data = response.data.unittypeData;
+    if (response.data.code === 200) {
+      setEmpty(false);
+      setUnittypeData(data);
+    }
   };
 
   const remove = async () => {
@@ -87,23 +95,38 @@ const UnitType = () => {
     }
   };
 
-  async function getData() {
-    const parsed = queryString.parse(window.location.search);
-    const values = {
-      propertyId: localStorage.getItem('propertyId'),
-    };
-    setCurrProperty(parsed.propertyNo);
-    const response = await userInstance.post('/getUnittype', values);
-    const data = response.data.unittypeData;
-    if (response.data.code === 200) {
-      setEmpty(false);
-      setUnittypeData(data);
-    }
-  }
-
   useEffect(() => {
     getData();
   }, []);
+
+  const enableButton = (
+    <Button
+      type="primary"
+      icon={<PlusOutlined />}
+      onClick={() => setShowPanel(false)}
+    >
+      Add Unit Type
+    </Button>
+  );
+
+  const disabledButton = (
+    <Tooltip
+      title="You are not authorize to create new unit types"
+      color="gold"
+    >
+      <Button
+        disabled="true"
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={() => setShowPanel(false)}
+      >
+        Add Unit Type
+      </Button>
+    </Tooltip>
+  );
+
+  const btn1 = isSubUser && canWrite ? enableButton : disabledButton;
+  const btn2 = isSubUser ? btn1 : enableButton;
 
   return (
     <Wrapper>
@@ -114,39 +137,7 @@ const UnitType = () => {
             {' '}
             Unit Type
           </h1>
-          {isSubUser ? (
-            canWrite ? (
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                onClick={() => setShowPanel(false)}
-              >
-                Add Unit Type
-              </Button>
-            ) : (
-              <Tooltip
-                title="You are not authorize to create new unit types"
-                color="gold"
-              >
-                <Button
-                  disabled="true"
-                  type="primary"
-                  icon={<PlusOutlined />}
-                  onClick={() => setShowPanel(false)}
-                >
-                  Add Unit Type
-                </Button>
-              </Tooltip>
-            )
-          ) : (
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => setShowPanel(false)}
-            >
-              Add Unit Type
-            </Button>
-          )}
+          {btn2}
         </div>
         <div className="panel-box units editunit" hidden={showPanel}>
           <div className="group-name">
@@ -158,12 +149,22 @@ const UnitType = () => {
             />
           </div>
           <div className="group-action">
-            <div className="can-btn" onClick={() => setShowPanel(true)}>
+            <div
+              className="can-btn"
+              onClick={() => setShowPanel(true)}
+              role="button"
+              aria-hidden="true"
+            >
               <CloseCircleOutlined />
               {' '}
               Cancel
             </div>
-            <div className="sav-btn" onClick={() => onFinish()}>
+            <div
+              className="sav-btn"
+              onClick={() => onFinish()}
+              role="button"
+              aria-hidden="true"
+            >
               <CheckCircleOutlined />
               {' '}
               Save
@@ -175,15 +176,17 @@ const UnitType = () => {
             {unittypeData.map((el, i) => (
               <div
                 className={
-                    editId === i
-                      ? 'panel-box units editunitname'
-                      : 'panel-box units'
-                  }
+                  editId === i
+                    ? 'panel-box units editunitname'
+                    : 'panel-box units'
+                }
               >
                 <div className="group-name">
                   <h4
                     onClick={() => edit(el.id)}
                     hidden={editId === i}
+                    role="presentation"
+                    aria-hidden="true"
                   >
                     {el.unitTypeName}
                   </h4>
@@ -198,12 +201,22 @@ const UnitType = () => {
                 </div>
                 {editId === i ? (
                   <div className="group-action">
-                    <div className="can-btn" onClick={() => setEditId(null)}>
+                    <div
+                      className="can-btn"
+                      onClick={() => setEditId(null)}
+                      role="button"
+                      aria-hidden="true"
+                    >
                       <CloseCircleOutlined />
                       {' '}
                       Cancel
                     </div>
-                    <div className="sav-btn" onClick={() => onFinish(el.id)}>
+                    <div
+                      className="sav-btn"
+                      onClick={() => onFinish(el.id)}
+                      role="button"
+                      aria-hidden="true"
+                    >
                       <CheckCircleOutlined />
                       {' '}
                       Save

@@ -27,12 +27,11 @@ const PropertyList = () => {
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
-    console.log(response);
     const data2 = [];
     const data = response.data.propertiesData;
     data
       .filter((el) => el.id === parseInt(localStorage.getItem('topNavId'), 10))
-      .map((filterData) => {
+      .forEach((filterData) => {
         data2.push(filterData);
       });
     if (response.data.code === 200) {
@@ -54,10 +53,7 @@ const PropertyList = () => {
     </Button>
   );
   const disableButton = (
-    <Tooltip
-      title="You are not authorize to create new property"
-      color="gold"
-    >
+    <Tooltip title="You are not authorize to create new property" color="gold">
       <Button
         disabled="true"
         type="primary"
@@ -80,9 +76,13 @@ const PropertyList = () => {
         </div>
 
         <div className="property-list">
-          <Row gutter={{
-            xs: 8, sm: 16, md: 24, lg: 32,
-          }}
+          <Row
+            gutter={{
+              xs: 8,
+              sm: 16,
+              md: 24,
+              lg: 32,
+            }}
           >
             {propertyData.map((el) => (
               <Col className="gutter-row" span={8}>

@@ -8,7 +8,6 @@ const AlertBox = () => {
   useEffect(() => {
     const getDays = async () => {
       const res = await userInstance.post('trialDays');
-      console.log(res);
       setDaysLeft(res.data.data);
     };
     getDays();
@@ -22,10 +21,18 @@ const AlertBox = () => {
     <>
       {!isCollapsed ? (
         <div className="alert-box">
-          <Alert message={`Your trail period will end in ${daysLeft} days`} description={<a href="/billinginformation">Subscribe</a>} type="warning" showIcon closable onClose={handleClose} />
+          <Alert
+            message={`Your trial period will end in ${daysLeft} days`}
+            description={<a href="/billinginformation">Subscribe</a>}
+            type="warning"
+            showIcon
+            closable
+            onClose={handleClose}
+          />
         </div>
-      )
-        : ''}
+      ) : (
+        ''
+      )}
     </>
   );
 };

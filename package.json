@@ -27,6 +27,7 @@
     "react-phone-input-2": "^2.13.5",
     "react-places-autocomplete": "^7.2.1",
     "react-router-dom": "^5.1.2",
+    "history": "^5.0.0",
     "react-scripts": "3.4.0",
     "react-select-country-list": "^2.2.1",
     "save": "^2.4.0",
