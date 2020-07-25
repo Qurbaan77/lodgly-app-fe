@@ -387,9 +387,11 @@ const GroupReservation = () => (
         </div>
 
         <div className="add-edit-data">
-          <a href="">
-            <FormOutlined /> Edit/Additional Data
-          </a>
+          <div>
+            <FormOutlined />
+            {' '}
+            Edit/Additional Data
+          </div>
         </div>
       </Col>
     </Row>
@@ -613,18 +615,22 @@ const Reservation = () => {
       <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
         <Col span={24}>
           <div className="add-edit-data">
-            <a href="">
-              <FormOutlined /> Add Note
-            </a>
+            <div>
+              <FormOutlined />
+              {' '}
+              Add Note
+            </div>
             <Form.Item style={{ display: 'none' }}>
               <Input.TextArea placeholder="Internal Note" />
             </Form.Item>
           </div>
 
           <div className="add-edit-data">
-            <a href="">
-              <BellOutlined /> Add Task
-            </a>
+            <div>
+              <BellOutlined />
+              {' '}
+              Add Task
+            </div>
             <Form.Item style={{ display: 'none' }}>
               <Input.TextArea placeholder="Add New Task" />
             </Form.Item>
@@ -665,9 +671,11 @@ const Reservation = () => {
           </Form.Item>
 
           <Form.Item style={{ textAlign: 'center' }}>
-            <a href="" className="delete-reserv">
-              <DeleteOutlined /> Delete this reservation
-            </a>
+            <div className="delete-reserv">
+              <DeleteOutlined />
+              {' '}
+              Delete this reservation
+            </div>
           </Form.Item>
         </Col>
       </Row>

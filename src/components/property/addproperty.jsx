@@ -17,6 +17,7 @@ import {
 } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { HomeOutlined, InboxOutlined } from '@ant-design/icons';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import Wrapper from '../wrapper';
 
 import { userInstance } from '../../axios/axiosconfig';
@@ -72,6 +73,7 @@ const AddProperty = () => {
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const [address, setAddress] = useState('');
+  const [country, setCountry] = useState(null);
   const history = useHistory();
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
@@ -194,8 +196,8 @@ const AddProperty = () => {
         <div className="page-header">
           <h1>
             <HomeOutlined />
-            {' '}
             {t('addproperty.heading')}
+            {' '}
             {No}
           </h1>
         </div>
@@ -234,7 +236,6 @@ const AddProperty = () => {
 
                     <Col span={24}>
                       <Form.Item name="address" label={t('addproperty.detail3')}>
-                        {/* <Input placeholder='4901 St Anthony Eye' /> */}
                         <PlacesAutocomplete
                           value={address}
                           onChange={handleAddressChange}
@@ -262,13 +263,13 @@ const AddProperty = () => {
                                   // inline style for demonstration purpose
                                   const style = suggestion.active
                                     ? {
-                                        backgroundColor: '#fafafa',
-                                        cursor: 'pointer',
-                                      }
+                                      backgroundColor: '#fafafa',
+                                      cursor: 'pointer',
+                                    }
                                     : {
-                                        backgroundColor: '#ffffff',
-                                        cursor: 'pointer',
-                                      };
+                                      backgroundColor: '#ffffff',
+                                      cursor: 'pointer',
+                                    };
                                   return (
                                     <div
                                       {...getSuggestionItemProps(suggestion, {
@@ -289,33 +290,25 @@ const AddProperty = () => {
 
                     <Col span={12}>
                       <Form.Item name="country" label={t('addproperty.detail5')}>
-                        <Select>
-                          <Select.Option value="demo">Croatia</Select.Option>
-                        </Select>
+                        <CountryDropdown onChange={(val) => setCountry(val)} />
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
                       <Form.Item name="state" label={t('addproperty.detail6')}>
-                        <Select>
-                          <Select.Option value="demo">Choose</Select.Option>
-                        </Select>
+                        <RegionDropdown country={country} />
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
                       <Form.Item name="city" label={t('addproperty.detail7')}>
-                        <Select>
-                          <Select.Option value="demo">Zadar</Select.Option>
-                        </Select>
+                        <Input />
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
                       <Form.Item name="zip" label={t('addproperty.detail8')}>
-                        <Select>
-                          <Select.Option value="demo">Choose</Select.Option>
-                        </Select>
+                        <Input />
                       </Form.Item>
                     </Col>
 

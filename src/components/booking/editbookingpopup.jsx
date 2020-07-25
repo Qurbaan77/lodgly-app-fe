@@ -657,11 +657,11 @@ const Editbookingpopup = (props) => {
 
                             <Col span={24}>
                               <div className="additional-edit">
-                                <a href="">
+                                <div>
                                   <EditOutlined />
                                   {' '}
                                   Edit/Additional Data
-                                </a>
+                                </div>
                               </div>
                             </Col>
                           </Row>
@@ -874,94 +874,92 @@ const Editbookingpopup = (props) => {
                   >
                     <div className="service-form">
                       {currentService.length
-                        ? currentService.map((el, j) =>
-                        // edit booking service
-                          (
-                            <div className="inline-form">
-                              <div className="delete-data">
-                                <DeleteOutlined
-                                  onClick={() => handleRemoveEditServicePanel(el)}
-                                />
-                              </div>
-                              <Col span={4}>
-                                <Form.Item name={`serviceName${j}`}>
-                                  <Select
-                                    style={{ width: '100px' }}
-                                    placeholder="Select Service"
-                                    onSelect={(value, event) => fun2(value, event)}
-                                  >
-                                    {serviceData.map((ele) => (
-                                      <Select.Option
-                                        value={ele.serviceName}
-                                      >
-                                        {ele.serviceName}
-                                      </Select.Option>
-                                    ))}
-                                  </Select>
-                                </Form.Item>
-                              </Col>
-                              <Col span={4}>
-                                <Form.Item name={`servicePrice${j}`}>
-                                  <Select
-                                    placeholder="Rate"
-                                    onSelect={(value) => setServicePrice(value)}
-                                  >
-                                    <Select.Option
-                                      value={editServicePanel.servicePrice}
-                                    >
-                                      {editServicePanel.servicePrice}
-                                    </Select.Option>
-                                  </Select>
-                                </Form.Item>
-                              </Col>
-
-                              <label htmlFor="dis">
-                                <input hidden />
-                                X
-                              </label>
-                              <Col span={4}>
-                                <Form.Item name={`serviceQuantity${j}`}>
-                                  <Input
-                                    type="number"
-                                    placeholder="Quantity"
-                                    onChange={(e) => setServiceAmt(e.target.value)}
-                                  />
-                                </Form.Item>
-                              </Col>
-
-                              <label htmlFor="dis">
-                                <input hidden />
-                                +
-                              </label>
-                              <Col span={4}>
-                                <Form.Item name={`serviceTax${i}`}>
-                                  <Input
-                                    type="number"
-                                    placeholder="%"
-                                    onChange={(e) => setServiceTax(e.target.value)}
-                                  />
-                                </Form.Item>
-                              </Col>
-
-                              <label htmlFor="dis">
-                                <input hidden />
-                                =
-                              </label>
-                              <Col span={4}>
-                                <Form.Item name={`serviceAmount${i}`}>
-                                  <Input
-                                    value={serviceAmount}
-                                    onBlur={calculateTotal}
-                                  />
-                                </Form.Item>
-                              </Col>
-
-                              <label htmlFor="eur">
-                                <input hidden />
-                                EUR
-                              </label>
+                        ? currentService.map((el, j) => (
+                          <div className="inline-form">
+                            <div className="delete-data">
+                              <DeleteOutlined
+                                onClick={() => handleRemoveEditServicePanel(el)}
+                              />
                             </div>
-                          ))
+                            <Col span={4}>
+                              <Form.Item name={`serviceName${j}`}>
+                                <Select
+                                  style={{ width: '100px' }}
+                                  placeholder="Select Service"
+                                  onSelect={(value, event) => fun2(value, event)}
+                                >
+                                  {serviceData.map((ele) => (
+                                    <Select.Option
+                                      value={ele.serviceName}
+                                    >
+                                      {ele.serviceName}
+                                    </Select.Option>
+                                  ))}
+                                </Select>
+                              </Form.Item>
+                            </Col>
+                            <Col span={4}>
+                              <Form.Item name={`servicePrice${j}`}>
+                                <Select
+                                  placeholder="Rate"
+                                  onSelect={(value) => setServicePrice(value)}
+                                >
+                                  <Select.Option
+                                    value={editServicePanel.servicePrice}
+                                  >
+                                    {editServicePanel.servicePrice}
+                                  </Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </Col>
+
+                            <label htmlFor="dis">
+                              <input hidden />
+                              X
+                            </label>
+                            <Col span={4}>
+                              <Form.Item name={`serviceQuantity${j}`}>
+                                <Input
+                                  type="number"
+                                  placeholder="Quantity"
+                                  onChange={(e) => setServiceAmt(e.target.value)}
+                                />
+                              </Form.Item>
+                            </Col>
+
+                            <label htmlFor="dis">
+                              <input hidden />
+                              +
+                            </label>
+                            <Col span={4}>
+                              <Form.Item name={`serviceTax${i}`}>
+                                <Input
+                                  type="number"
+                                  placeholder="%"
+                                  onChange={(e) => setServiceTax(e.target.value)}
+                                />
+                              </Form.Item>
+                            </Col>
+
+                            <label htmlFor="dis">
+                              <input hidden />
+                              =
+                            </label>
+                            <Col span={4}>
+                              <Form.Item name={`serviceAmount${i}`}>
+                                <Input
+                                  value={serviceAmount}
+                                  onBlur={calculateTotal}
+                                />
+                              </Form.Item>
+                            </Col>
+
+                            <label htmlFor="eur">
+                              <input hidden />
+                              EUR
+                            </label>
+                          </div>
+                        ))
                         : null}
                     </div>
                   </Panel>

@@ -15,11 +15,12 @@ import Wrapper from '../wrapper';
 
 import BillingHistory from './billinghistory';
 import { basicPrice, advancePrice, discount } from '../../config/keys';
-import { userInstance, stripeKey } from '../../axios/axiosconfig';
+import { userInstance } from '../../axios/axiosconfig';
+import keys from '../../config/default';
 import CheckoutForm from './CheckoutForm';
 import Toaster from '../toaster/toaster';
 
-const stripePromise = loadStripe(stripeKey);
+const stripePromise = loadStripe(keys.development.webserver.stripeApiKey);
 
 const { Panel } = Collapse;
 
@@ -253,7 +254,6 @@ const BillingInformation = () => {
       if (planType === 'basic' && subscriptionType === 'month') {
         setUnitPrice(basicPrice * exchangeRate.CHF);
         setTotal(basicPrice * exchangeRate.CHF * unitsSelected);
-        console.log(basicPrice * exchangeRate.CHF * unitsSelected);
       }
       if (planType === 'basic' && subscriptionType === 'year') {
         setUnitPrice(basicPrice * exchangeRate.CHF);
@@ -519,7 +519,7 @@ const BillingInformation = () => {
                                   rules={[
                                     {
                                       required: true,
-                                      message: 'Please enter price',
+                                      message: 'Please select currency',
                                     },
                                   ]}
                                 >

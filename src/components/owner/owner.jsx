@@ -80,9 +80,9 @@ const Owner = () => {
       const [{
         days, isOnTrial, isSubscribed,
       }] = response0.data.userSubsDetails;
-      setDaysLeft(days);
-      setSubscribed(isSubscribed);
-      setOnTrial(isOnTrial);
+      setDaysLeft(parseInt(days, 10));
+      setSubscribed(JSON.parse(isSubscribed));
+      setOnTrial(JSON.parse(isOnTrial));
     }
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
@@ -175,11 +175,6 @@ const Owner = () => {
     getPropertyData();
   }, []);
 
-  const HandleChange=(e)=>{
-    console.log('Fubction is called');
-    console.log(e);
-  }
-
   const enableButton = (
     <Button type="primary" icon={<PlusOutlined />} onClick={show}>
       Add New Owner
@@ -224,7 +219,6 @@ const Owner = () => {
                       <th>Sub User</th>
                       <th>Email</th>
                       <th>Properties</th>
-                      <th />
                     </tr>
                   </thead>
 
@@ -673,7 +667,7 @@ const Owner = () => {
                     placeholder="Please select property"
                   >
                     {propertyData.map((el) => (
-                      <Option value={el.id} >{el.propertyName}</Option>
+                      <Option value={el.id}>{el.propertyName}</Option>
                     ))}
                   </Select>
                 </Form.Item>

@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD
-=======
 import { useTranslation } from 'react-i18next';
->>>>>>> 58642955d221d7e08012236afea63ef2e11c5482
 import './setting.css';
 import {
   Form, Input, Button, Row, Col,
@@ -71,11 +68,7 @@ const AdminSetting = () => {
             <h1>
               <HomeOutlined />
               {' '}
-<<<<<<< HEAD
-              Setting
-=======
               {t('admin.heading')}
->>>>>>> 58642955d221d7e08012236afea63ef2e11c5482
             </h1>
 
           </div>
@@ -108,11 +101,7 @@ const AdminSetting = () => {
                       <Col span={12}>
                         <Form.Item
                           name="firstname"
-<<<<<<< HEAD
-                          label="First Name"
-=======
                           label={t('admin.label1')}
->>>>>>> 58642955d221d7e08012236afea63ef2e11c5482
                           rules={[
                             {
                               required: true,
@@ -128,11 +117,7 @@ const AdminSetting = () => {
                       <Col span={12}>
                         <Form.Item
                           name="lastname"
-<<<<<<< HEAD
-                          label="Last Name"
-=======
                           label={t('admin.label2')}
->>>>>>> 58642955d221d7e08012236afea63ef2e11c5482
                           rules={[
                             {
                               required: true,
@@ -150,11 +135,7 @@ const AdminSetting = () => {
                       <Col span={12}>
                         <Form.Item
                           name="email"
-<<<<<<< HEAD
-                          label="E-mail"
-=======
                           label={t('admin.label3')}
->>>>>>> 58642955d221d7e08012236afea63ef2e11c5482
                           rules={[
                             {
                               type: 'email',
@@ -173,11 +154,7 @@ const AdminSetting = () => {
                       <Col span={12}>
                         <Form.Item
                           name="phone"
-<<<<<<< HEAD
-                          label="Phone"
-=======
                           label={t('admin.label4')}
->>>>>>> 58642955d221d7e08012236afea63ef2e11c5482
                           rules={[
 
                             {
@@ -196,11 +173,7 @@ const AdminSetting = () => {
                       <Col span={24}>
                         <Form.Item>
                           <Button type="primary" className="register-btn" htmlType="submit">
-<<<<<<< HEAD
-                            Save
-=======
                             {t('strings.save')}
->>>>>>> 58642955d221d7e08012236afea63ef2e11c5482
                           </Button>
                         </Form.Item>
                       </Col>
@@ -220,11 +193,7 @@ const AdminSetting = () => {
 
               <SettingOutlined />
 
-<<<<<<< HEAD
-              <h3>Change Password</h3>
-=======
               <h3>{t('admin.heading3')}</h3>
->>>>>>> 58642955d221d7e08012236afea63ef2e11c5482
 
             </div>
 
@@ -243,11 +212,7 @@ const AdminSetting = () => {
                     <Col span={12}>
                       <Form.Item
                         name="password"
-<<<<<<< HEAD
-                        label="Password"
-=======
                         label={t('admin.label5')}
->>>>>>> 58642955d221d7e08012236afea63ef2e11c5482
                         rules={[
                           {
                             required: true,
@@ -263,11 +228,7 @@ const AdminSetting = () => {
                     <Col span={12}>
                       <Form.Item
                         name="confirm"
-<<<<<<< HEAD
-                        label="Confirm Password"
-=======
                         label={t('admin.label6')}
->>>>>>> 58642955d221d7e08012236afea63ef2e11c5482
                         dependencies={['password']}
                         hasFeedback
                         rules={[
@@ -296,11 +257,7 @@ const AdminSetting = () => {
                     <Col span={24}>
                       <Form.Item>
                         <Button type="primary" className="register-btn" htmlType="submit">
-<<<<<<< HEAD
-                          Change Password
-=======
                           {t('admin.heading3')}
->>>>>>> 58642955d221d7e08012236afea63ef2e11c5482
                         </Button>
                       </Form.Item>
                     </Col>

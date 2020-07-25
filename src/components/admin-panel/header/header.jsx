@@ -51,9 +51,9 @@ const AdminHeader = () => (
         </ul>
 
         <Dropdown overlay={menu}>
-          <a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
+          <div className="ant-dropdown-link" onClick={(e) => e.preventDefault()} role="presentation" aria-hidden="true">
             <img src={user} alt="" />
-          </a>
+          </div>
         </Dropdown>
 
       </div>

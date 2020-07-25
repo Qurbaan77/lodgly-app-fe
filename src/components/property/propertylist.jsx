@@ -35,9 +35,9 @@ const PropertyList = () => {
       const [{
         days, isOnTrial, isSubscribed,
       }] = res.data.userSubsDetails;
-      setDaysLeft(days);
-      setSubscribed(isSubscribed);
-      setOnTrial(isOnTrial);
+      setDaysLeft(parseInt(days, 10));
+      setSubscribed(JSON.parse(isSubscribed));
+      setOnTrial(JSON.parse(isOnTrial));
     }
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,

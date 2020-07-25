@@ -897,6 +897,22 @@ margin: 0;
   color: #999;
 }
 
+#country {
+  border: 1.5px solid #eaeaea !important;
+  border-radius: 0;
+  padding: 8px 15px !important;
+  height: auto;
+  width: 100%;
+}
+
+#state {
+      border: 1.5px solid #eaeaea !important;
+  border-radius: 0;
+  padding: 8px 15px !important;
+  height: auto;
+  width: 100%;
+}
+
 @media screen and (min-width: 1367px) {
   .unittype-calendar {
     max-width: 1400px;

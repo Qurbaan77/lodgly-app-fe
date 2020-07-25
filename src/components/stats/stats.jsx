@@ -150,7 +150,7 @@ const AccommodationChart = ({ topNavId }) => {
         colors: ['transparent'],
       },
       fill: {
-        colors: ['#82858C', '#FAB52C']
+        colors: ['#82858C', '#FAB52C'],
       },
       xaxis: {
         categories: [
@@ -207,8 +207,6 @@ AccommodationChart.propTypes = {
 };
 
 const OccupancyChart = ({ topNavId }) => {
-  const [currYear, setCurrYear] = useState();
-  const [prevYear, setPrevYear] = useState();
   const [currArr, setCurrArr] = useState([]);
   const [prevArr, setPrevArr] = useState([]);
 
@@ -245,12 +243,6 @@ const OccupancyChart = ({ topNavId }) => {
         },
         zoom: {
           enabled: false,
-        },
-      },
-      legend: {
-        markers: {
-          strokeColor: 'transparent',
-          fillColors: ['#82858C', '#7FBD34'],
         },
       },
       responsive: [
@@ -308,7 +300,9 @@ const OccupancyChart = ({ topNavId }) => {
   return (
     <div className="chart-body">
       <h3>
-        Occupancy per month <img src={qst} />
+        Occupancy per month
+        {' '}
+        <img src={qst} alt="qst" />
       </h3>
 
       <div id="chart">
@@ -328,44 +322,48 @@ OccupancyChart.propTypes = {
 };
 
 const ReservationCountryChart = () => {
-  // const [country, setCountry] = useState();
-  // const [data, setData] = useState();
+  const [country, setCountry] = useState([]);
+  const [average, setAverage] = useState([]);
 
   useEffect(() => {
     async function getData() {
-      await userInstance.post('/getCountryReport');
+      const response = await userInstance.post('/getCountryReport');
+      if (response.data.code === 200) {
+        setCountry(response.data.country);
+        setAverage(response.data.average);
+      }
     }
     getData();
   }, []);
 
   const state = {
- 
-    series: [{
-    data: average
-  }],
 
-  options: {
-    chart: {
-    type: 'bar',
-    height: 350
-  },
-  fill: {
-    colors: ['#FAB52C']
-  },
-  plotOptions: {
-    bar: {
-      horizontal: true,
-      columnWidth: '10%',
-    }
-  },
-  dataLabels: {
-    enabled: false
-  },
-  xaxis: {
-    categories: country,
-  }
-  },
-};
+    series: [{
+      data: average,
+    }],
+
+    options: {
+      chart: {
+        type: 'bar',
+        height: 350,
+      },
+      fill: {
+        colors: ['#FAB52C'],
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+          columnWidth: '10%',
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      xaxis: {
+        categories: country,
+      },
+    },
+  };
 
   return (
     <div className="chart-body">
@@ -399,11 +397,11 @@ const ReservationChannelChart = () => {
         markers: {
           strokeColor: 'transparent',
           fillColors: ['#82858C', '#7FBD34', '#FAB52C'],
-  
+
         },
       },
       fill: {
-        colors: ['#82858C', '#7FBD34', '#FAB52C']
+        colors: ['#82858C', '#7FBD34', '#FAB52C'],
       },
       responsive: [
         {
@@ -486,16 +484,16 @@ const PaceChart = ({ topNavId }) => {
       legend: {
         labels: {
           colors: ['#82858C', '#FAB52C'],
-          useSeriesColors: false
-      },
-      markers: {
-        strokeColor: 'transparent',
-        fillColors: ['#82858C', '#FAB52C'],
+          useSeriesColors: false,
+        },
+        markers: {
+          strokeColor: 'transparent',
+          fillColors: ['#82858C', '#FAB52C'],
 
-      },
+        },
       },
       markers: {
-        colors: ['#82858C', '#FAB52C']
+        colors: ['#82858C', '#FAB52C'],
       },
       stroke: {
         width: [2, 2, 1],

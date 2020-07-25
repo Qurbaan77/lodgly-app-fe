@@ -46,12 +46,12 @@ const Services = () => {
       key: 'x',
       render: (record) => (
         <div className="service-margin">
-          <a onClick={() => edit(record.id)} role="button" aria-hidden="true">
+          <div onClick={() => edit(record.id)} role="button" aria-hidden="true">
             Edit
-          </a>
-          <a onClick={() => delRow(record.id)} role="button" aria-hidden="true">
+          </div>
+          <div onClick={() => delRow(record.id)} role="button" aria-hidden="true">
             Delete
-          </a>
+          </div>
         </div>
       ),
     },

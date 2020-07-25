@@ -1,3 +1,62 @@
+
+
+.clean-filter {
+    padding-top: 30px;
+}
+
+
+.ant-btn.border-btn {
+    background: transparent;
+    border: 1px solid #c1c1c1;
+    padding: 9px 20px;
+  }
+  
+  .ant-btn.border-btn span {
+    color: #999;
+  }
+  
+
+  .filter-box form {
+    padding: 0;
+}
+
+
+.filter-box h2 {
+    display: none;
+}
+
+
+.search-content .ant-input {
+    border: none!important;
+}
+
+.search-content {
+    padding: 0px 10px;
+    margin-top: -15px;
+    display: none;
+}
+
+.search-content .ant-input-affix-wrapper {
+    border: none;
+}
+
+
+
+
+/******************************************************************************************************/
+
+                                /*********** Media Query ***********/   
+
+/******************************************************************************************************/
+
+
+
+
+
+
+
+
+
 @media screen and (max-width:767px){
 
 
@@ -29,10 +88,35 @@
     
     .ant-btn.menu-btn {
         display: block;
+        top:12px;
+    }
+
+    .ant-layout-header {
+        height: auto;
     }
     
     .search-box {
         padding-right: 20px;
+    }
+
+    .search-content.search-expand {
+        display: block;
+    }
+
+    .search-content .ant-input-suffix {
+        right: 10px;
+        top: 13px;
+    }  
+
+    .search-content .ant-input-affix-wrapper:focus {
+        box-shadow: none;
+        outline: none;
+    }
+    
+    .search-content .anticon {
+        font-size: 20px;
+        color: #d6d6d6;
+        cursor: pointer;
     }
     
     .header-property {
@@ -102,12 +186,29 @@
     
     .search-box span {
        font-size: 22px;
+       position: relative;
+       top: 4px;
     }
     
     .ant-modal {
         max-width: calc(100vw - 0px);
     }
     
+
+    /*********** Login, Register, Forget ***********/
+
+    .login-form {
+        padding: 50px 30px;
+
+    }
+
+    .register-form {
+        padding: 50px 30px;
+    }
+
+    .forget-form {
+        padding: 50px 30px;
+    }
     
     /*********** Booking ***********/
     
@@ -170,6 +271,85 @@
     }    
     
     
+    /************ Unit Type **************/
+
+    .panel-box.units.editunit .group-action {
+        width: 50%;
+    }
+
+
+     /************ Group **************/
+
+    .group-modal .ant-picker{
+        padding: 8px 11px 8px;
+    }
+
+
+    /************ Cleaning Group **************/
+
+    .cleaning-group .page-header {
+        flex-wrap: wrap;
+    }
+
+    .cleaning-button {
+        justify-content: space-between;
+        padding-top: 20px;
+    }
+
+    .clean-filter {
+        padding-top: 50px;
+    }
     
+    .clean-filter .ant-col-12 {
+        display: block;
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .cleaning-group .ant-picker{
+        padding: 8px 11px 8px;
+    }
+
+
+/************ Channel Manager **************/
+
+
+    .our-client .ant-col-6 {
+        display: block;
+        -ms-flex: 0 0 33.33333333%;
+        flex: 0 0 33.33333333%;
+        max-width: 33.33333333%;
+    }
+
+    .step-box {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding-bottom: 30px;
+    }
+
+    .channel-step {
+        flex-wrap: wrap;
+        padding-bottom: 0;
+    }
+
+    .step-box span{
+        padding-left: 15px;
+    }
+
+    .step-box::after {
+        width: 30px;
+        height: 9px;
+        right: inherit;
+        top: 50%;
+        transform: rotate(90deg);
+        margin-top: 15px;
+        left: 5px;
+    }
+
+    .step-box img {
+        max-width: 40px;
+    }
     
     }

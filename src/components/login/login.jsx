@@ -19,7 +19,7 @@ const Login = () => {
       atob(base64)
         .split('')
         .map((c) => `%${`00${c.charCodeAt(0).toString(16)}`.slice(-2)}`)
-        .join('')
+        .join(''),
     );
     return JSON.parse(jsonPayload);
   };
@@ -34,7 +34,7 @@ const Login = () => {
         localStorage.setItem('isSubUser', true);
         localStorage.setItem(
           'subUserCred',
-          JSON.stringify(response.data.subUser)
+          JSON.stringify(response.data.subUser),
         );
       }
       localStorage.setItem('token', response.data.token);
@@ -130,12 +130,15 @@ const Login = () => {
               <div className="q-links">
                 <p>
                   Don
-                  <span>&apos;</span>t have an account yet?{' '}
+                  <span>&apos;</span>
+                  t have an account yet?
+                  {' '}
                   <Link to="/register">Register now</Link>
                 </p>
 
                 <p>
-                  Forget your password?{' '}
+                  Forget your password?
+                  {' '}
                   <Link to="/forget">Get a new password</Link>
                 </p>
               </div>

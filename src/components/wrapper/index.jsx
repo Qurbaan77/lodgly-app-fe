@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Layout } from 'antd';
 import TopHeader from '../navbar/topheader/topheader';
 import Sidenav from '../navbar/sidenav/sidenav';
 import AlertBox from './alert';
-import { userInstance } from '../../axios/axiosconfig';
 
 const { Content } = Layout;
 
@@ -15,29 +14,33 @@ const Wrapper = ({
     onChange(newValue);
   };
 
-
   const [menutoggle, setMenuToggle] = useState(false);
-  const handleMenu = (e) =>{
-    if(e === `open`){
-      setMenuToggle(true) 
-    }else if(e === `close`){
-      setMenuToggle(false) 
-    }else if(e === `toggle`){
-      setMenuToggle(!menutoggle) 
+  const handleMenu = (e) => {
+    if (e === 'open') {
+      setMenuToggle(true);
+    } else if (e === 'close') {
+      setMenuToggle(false);
+    } else if (e === 'toggle') {
+      setMenuToggle(!menutoggle);
     }
-}
-
-
+  };
 
   return (
-    <div className={`wrapper ${menutoggle ? `wrapper-expand`:``}` }>
+    <div className={`wrapper ${menutoggle ? 'wrapper-expand' : ''}`}>
       <Layout>
-        <Sidenav menutoggle={menutoggle} img={img} name={name} handleMenu={handleMenu} getUserInfo={getUserInfo} />
+        <Sidenav
+          menutoggle={menutoggle}
+          img={img}
+          name={name}
+          handleMenu={handleMenu}
+          getUserInfo={getUserInfo}
+        />
         <Layout className="site-layout">
           <TopHeader
             onChange={handleChange}
             fun={fun}
-            setMenuToggle={setMenuToggle} menutoggle={menutoggle}
+            setMenuToggle={setMenuToggle}
+            menutoggle={menutoggle}
           />
           <AlertBox />
           <Content

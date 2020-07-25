@@ -62,9 +62,7 @@ const Booking = () => {
 
   const [editValues, setEditValues] = useState({});
   const [editBookingValues, setEditBookingValues] = useState({});
-
-  const [propertyId, setPropertyId] = useState(0);
-  const [rangeDate, setRangeDate] = useState([]);
+  const [filterValues, setFilterValues] = useState({});
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ bookingWrite, userId }] = userCred || [{}];
@@ -99,9 +97,9 @@ const Booking = () => {
       const [{
         days, isOnTrial, isSubscribed,
       }] = res.data.userSubsDetails;
-      setDaysLeft(days);
-      setSubscribed(isSubscribed);
-      setOnTrial(isOnTrial);
+      setDaysLeft(parseInt(days, 10));
+      setSubscribed(JSON.parse(isSubscribed));
+      setOnTrial(JSON.parse(isOnTrial));
     }
     const response = await userInstance.post('/getBooking', {
       affiliateId: userId,
@@ -236,6 +234,48 @@ const Booking = () => {
     getData();
   }, [topNavId]);
 
+  useEffect(() => {
+    const rangeDate = filterValues.groupname;
+    const copyBookingData = bookingData;
+    const filterBooked = [];
+    const filterAgain = [];
+
+    if (rangeDate.length > 0) {
+      copyBookingData
+        .filter(
+          (el) => new Date(el.startDate) >= rangeDate[0]._d
+              && new Date(el.startDate) <= rangeDate[1]._d,
+        )
+        .map((filter) => filterBooked.push(filter));
+      // if (filterBooked.length > 0) {
+      //   filterBooked
+      //     .filter(
+      //       (el) => new Date(el.startDate) >= rangeDate[0]._d
+      //         && new Date(el.startDate) <= rangeDate[1]._d,
+      //     )
+      //     .map((filter) => filterAgain.push(filter));
+      // } else {
+      //   copyBookingData
+      //     .filter(
+      //       (el) => new Date(el.startDate) >= rangeDate[0]._d
+      //         && new Date(el.startDate) <= rangeDate[1]._d,
+      //     )
+      //     .map((filter) => filterBooked.push(filter));
+      // }
+    }
+
+    // if (propertyId > 0) {
+    //   copyBookingData.filter((el) => el.propertyId  === propertyId).map((filter) => {
+    //     filterBooked.push(filter)
+    //   })
+    // }
+    // console.log(rangeDate);
+    // console.log(copyBookingData);
+    // console.log(filterBooked);
+
+    setBookingData(filterAgain.length > 0 ? filterAgain : filterBooked);
+  }, [filterValues]);
+
   const enableButton = (
     <Button
       type="primary"
@@ -294,7 +334,7 @@ const Booking = () => {
   const btn1 = isSubUser && canWrite ? enableButton : disableButton;
   const btn2 = isSubUser ? btn1 : enableButton;
 
-  const hasAccess = true && daysLeft !== 0 ? 1 : true;
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
 
   return (
     <Wrapper
@@ -575,7 +615,7 @@ const Booking = () => {
         handleCancel={handleCancel}
         handleOk={handleOk}
         setBookingData={setBookingData}
-        setPropertyId={setPropertyId}
+        setFilterValues={setFilterValues}
       />
     </Wrapper>
   );

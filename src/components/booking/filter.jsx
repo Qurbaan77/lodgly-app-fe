@@ -22,7 +22,7 @@ import {
   MailOutlined,
   DownOutlined,
 } from '@ant-design/icons';
-// import Wrapper from '../wrapper';
+import { useTranslation } from 'react-i18next';
 import { userInstance } from '../../axios/axiosconfig';
 
 const { RangePicker } = DatePicker;
@@ -47,15 +47,27 @@ const menu = (
 
 const BookingFilter = (props) => {
   const [form] = Form.useForm();
-  const { visible, handleOk, handleCancel, setPropertyId } = props;
+  const { t } = useTranslation();
+  const {
+    visible, handleOk, handleCancel, setFilterValues,
+  } = props;
   const [propertyData, setPropertyData] = useState([]);
   const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
   // function onChange(checked) {
   //   console.log(`switch to ${checked}`);
 
   const onFinish = async (values) => {
-    console.log(values);
-    setPropertyId(values.property);
+    setFilterValues(values);
+    // setPropertyId(values.property);
+    // if (values.groupname !== undefined) {
+    //   const arr2 = Object.values(values.groupname);
+    //   console.log(arr2);
+    //   setRangeDate(values.groupname);
+    // } else {
+    //   const arr2 = [];
+    //   console.log(arr2)
+    //   setRangeDate(arr2);
+    // }
     handleCancel();
     // const response = await userInstance.post('/filterBooking', {
     //   affiliateId: userId,
@@ -64,7 +76,7 @@ const BookingFilter = (props) => {
     // if (response.data.code === 200) {
     //   setPropertyData(data);
     // }
-  }
+  };
 
   useEffect(() => {
     async function getData() {
@@ -104,15 +116,15 @@ const BookingFilter = (props) => {
 
                     <Col span={24}>
                       <Form.Item label="Property" name="property">
-                      <Select
-                        placeholder="Select"
-                      >
-                        {propertyData.map((el) => (
-                          <Select.Option value={el.id}>
-                            {el.propertyName}
-                          </Select.Option>
-                        ))}
-                      </Select>
+                        <Select
+                          placeholder="Select"
+                        >
+                          {propertyData.map((el) => (
+                            <Select.Option value={el.id}>
+                              {el.propertyName}
+                            </Select.Option>
+                          ))}
+                        </Select>
                       </Form.Item>
                     </Col>
 
@@ -123,7 +135,7 @@ const BookingFilter = (props) => {
                         name="status"
                       >
                         <Dropdown overlay={menu} trigger={['click']}>
-                          <a
+                          <div
                             role="presentation"
                             className="ant-dropdown-link"
                             onClick={(e) => e.preventDefault()}
@@ -197,15 +209,15 @@ const BookingFilter = (props) => {
                       </Form.Item>
                     </Col>
                     <Col span={24}>
-                    <Form.Item>
-                      <Button style={{ marginRight: 10 }} onClick={handleCancel}>
-                        Cancel
-                      </Button>
-                      <Button type="primary" htmlType="submit">
-                        OK
-                      </Button>
-                    </Form.Item>
-                  </Col>
+                      <Form.Item>
+                        <Button style={{ marginRight: 10 }} onClick={handleCancel}>
+                          Cancel
+                        </Button>
+                        <Button type="primary" htmlType="submit">
+                          OK
+                        </Button>
+                      </Form.Item>
+                    </Col>
                   </Row>
                 </Form>
               </div>
@@ -217,9 +229,16 @@ const BookingFilter = (props) => {
   );
 };
 BookingFilter.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  handleCancel: PropTypes.func.isRequired,
-  handleOk: PropTypes.func.isRequired,
+  visible: PropTypes.bool,
+  handleCancel: PropTypes.func,
+  handleOk: PropTypes.func,
+  setFilterValues: PropTypes.func,
+};
+BookingFilter.defaultProps = {
+  visible: false,
+  handleCancel: () => {},
+  handleOk: () => {},
+  setFilterValues: () => {},
 };
 
 export default BookingFilter;

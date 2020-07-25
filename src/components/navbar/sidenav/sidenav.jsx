@@ -30,7 +30,9 @@ import closeicon from '../../../assets/images/menu/close-icon.png';
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
-const Sidenav = ({ img, name, getUserInfo, menutoggle, setMenuToggle, handleMenu }) => {
+const Sidenav = ({
+  img, name, getUserInfo, menutoggle, handleMenu,
+}) => {
   const { t } = useTranslation();
   const [propertyData, setPropertyData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
@@ -155,11 +157,11 @@ const Sidenav = ({ img, name, getUserInfo, menutoggle, setMenuToggle, handleMenu
   }, []);
 
   return (
-    <Sider theme="light" trigger={null} collapsible  className={`side-menu ${menutoggle ? `menu-show`:``}` }>
-    <div className="sidebar-logo">
-      <img className="logo" src={logo} alt="logo" />
-      <img className="close-icon" src={closeicon} alt="close" onClick={()=> handleMenu(`close`)} />
-    </div>
+    <Sider theme="light" trigger={null} collapsible className={`side-menu ${menutoggle ? 'menu-show' : ''}`}>
+      <div className="sidebar-logo">
+        <img className="logo" src={logo} alt="logo" />
+        <img className="close-icon" src={closeicon} alt="close" onClick={() => handleMenu('close')} role="presentation" aria-hidden="true" />
+      </div>
 
       <UserProfile img={img} name={name} getUserInfo={getUserInfo} />
 
@@ -205,10 +207,9 @@ const Sidenav = ({ img, name, getUserInfo, menutoggle, setMenuToggle, handleMenu
           ))}
         </SubMenu>
 
-
         <Menu.Item disabled={disableGuests}>
-              <img src={guestIcon} alt="guest-icon" />
-              <span>{t('sidebar.menu4')}</span>
+          <img src={guestIcon} alt="guest-icon" />
+          <span>{t('sidebar.menu4')}</span>
         </Menu.Item>
 
         <Menu.Item hidden={hideTeam}>
@@ -226,11 +227,9 @@ const Sidenav = ({ img, name, getUserInfo, menutoggle, setMenuToggle, handleMenu
           <Link to="/stats">{t('sidebar.menu7')}</Link>
         </Menu.Item>
 
-
-
         <Menu.Item>
-            <img src={integrationIcon} alt="integration-icon" />
-              <span>{t('sidebar.menu8')}</span>
+          <img src={integrationIcon} alt="integration-icon" />
+          <span>{t('sidebar.menu8')}</span>
         </Menu.Item>
 
         <Menu.Item>
@@ -292,11 +291,15 @@ Sidenav.propTypes = {
   img: PropTypes.element,
   name: PropTypes.string,
   getUserInfo: PropTypes.func,
+  menutoggle: PropTypes.bool,
+  handleMenu: PropTypes.func,
 };
 Sidenav.defaultProps = {
   img: '',
   name: '',
   getUserInfo: () => {},
+  handleMenu: () => {},
+  menutoggle: false,
 };
 
 export default Sidenav;

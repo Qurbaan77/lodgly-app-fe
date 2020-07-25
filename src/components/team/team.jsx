@@ -79,9 +79,9 @@ const TeamListing = () => {
       const [{
         days, isOnTrial, isSubscribed,
       }] = response0.data.userSubsDetails;
-      setDaysLeft(days);
-      setSubscribed(isSubscribed);
-      setOnTrial(isOnTrial);
+      setDaysLeft(parseInt(days, 10));
+      setSubscribed(JSON.parse(isSubscribed));
+      setOnTrial(JSON.parse(isOnTrial));
     }
     const response = await userInstance.post('/getSubUser', {
       affiliateId: userId,

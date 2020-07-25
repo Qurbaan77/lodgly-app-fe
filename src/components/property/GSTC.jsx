@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import GSTC from 'gantt-schedule-timeline-calendar';
-import 'gantt-schedule-timeline-calendar/dist/style.css';
+import GSTC from 'react-gantt-schedule-timeline-calendar';
 
 let gstc;
 const GSTCWrapper = ({ config, onState }) => {
