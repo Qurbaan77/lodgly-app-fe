@@ -26,6 +26,7 @@ import owner from '../../assets/images/profile_user.jpg';
 import subuser from '../../assets/images/subuser.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
+import UserLock from '../userlock/userlock';
 
 const Owner = () => {
   const [form] = Form.useForm();
@@ -38,6 +39,9 @@ const Owner = () => {
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const [curOwner, setCurOwner] = useState();
+  const [subscribed, setSubscribed] = useState();
+  const [onTrial, setOnTrial] = useState();
+  const [daysLeft, setDaysLeft] = useState();
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
 
@@ -71,6 +75,15 @@ const Owner = () => {
   };
 
   const getPropertyData = async () => {
+    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    if (response0.data.code === 200) {
+      const [{
+        days, isOnTrial, isSubscribed,
+      }] = response0.data.userSubsDetails;
+      setDaysLeft(days);
+      setSubscribed(isSubscribed);
+      setOnTrial(isOnTrial);
+    }
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
@@ -105,7 +118,7 @@ const Owner = () => {
     setNotifyType('');
     const selectedProperty = [];
     data2
-      .filter((el) => el.ownerId === data.id)
+      .forEach((el) => el.ownerId === data.id)
       .forEach((filter) => {
         selectedProperty.push(filter.id);
       });
@@ -191,7 +204,9 @@ const Owner = () => {
   const btn = isSubUser && canWrite ? enableButton : disabledButton;
   const perm = isSubUser ? btn : enableButton;
 
-  return (
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+
+  const pageContent = (
     <>
       {subUserData.length ? (
         <Wrapper>
@@ -685,6 +700,16 @@ const Owner = () => {
           </Modal>
         </Wrapper>
       )}
+    </>
+  );
+  return (
+    <>
+      {hasAccess ? pageContent
+        : (
+          <Wrapper>
+            <UserLock />
+          </Wrapper>
+        )}
     </>
   );
 };

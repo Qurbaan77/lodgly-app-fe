@@ -14,6 +14,7 @@ import EditSubUserPopup from './editsubuserpopup';
 import subuser from '../../assets/images/subuser.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
+import UserLock from '../userlock/userlock';
 
 const TeamListing = () => {
   const [visible, setVisible] = useState(false);
@@ -22,6 +23,9 @@ const TeamListing = () => {
   const [currentSubUser, setCurrentSubUser] = useState(false);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
+  const [subscribed, setSubscribed] = useState();
+  const [onTrial, setOnTrial] = useState();
+  const [daysLeft, setDaysLeft] = useState();
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -70,6 +74,15 @@ const TeamListing = () => {
   };
 
   const getData = async () => {
+    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    if (response0.data.code === 200) {
+      const [{
+        days, isOnTrial, isSubscribed,
+      }] = response0.data.userSubsDetails;
+      setDaysLeft(days);
+      setSubscribed(isSubscribed);
+      setOnTrial(isOnTrial);
+    }
     const response = await userInstance.post('/getSubUser', {
       affiliateId: userId,
     });
@@ -104,7 +117,10 @@ const TeamListing = () => {
   );
   const btn1 = isSubUser && canWrite ? enableButton : disabledButton;
   const btn2 = isSubUser ? btn1 : enableButton;
-  return (
+
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+
+  const pageContent = (
     <>
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       {subUser.length ? (
@@ -206,6 +222,18 @@ const TeamListing = () => {
           />
         </Wrapper>
       )}
+    </>
+  );
+  return (
+    <>
+      {
+      hasAccess ? pageContent
+        : (
+          <Wrapper>
+            <UserLock />
+          </Wrapper>
+        )
+    }
     </>
   );
 };

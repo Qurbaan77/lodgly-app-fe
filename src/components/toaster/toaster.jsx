@@ -36,10 +36,15 @@ const Toaster = ({
 );
 
 Toaster.propTypes = {
-  show: PropTypes.func.isRequired,
-  notifyType: PropTypes.string.isRequired,
-  notifyMsg: PropTypes.string.isRequired,
-  close: PropTypes.func.isRequired,
+  show: PropTypes.func,
+  notifyType: PropTypes.string,
+  notifyMsg: PropTypes.string,
+  close: PropTypes.func,
 };
-
+Toaster.defaultProps = {
+  show: () => {},
+  notifyType: '',
+  notifyMsg: '',
+  close: () => {},
+};
 export default Toaster;

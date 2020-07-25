@@ -32,6 +32,7 @@ import EditInvoicePopup from './editInvoicePopup';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import DeletePopup from './deletepopup';
+import UserLock from '../userlock/userlock';
 
 const Invoice = () => {
   // const { Option } = Select;
@@ -55,6 +56,9 @@ const Invoice = () => {
   const [visibleDeletePopup, setVisibleDeletePopup] = useState(false);
   const [removeId, setDeleteId] = useState(null);
   const [selectAllCheck, setSelectAllCheck] = useState(false);
+  const [subscribed, setSubscribed] = useState();
+  const [onTrial, setOnTrial] = useState();
+  const [daysLeft, setDaysLeft] = useState();
 
   function useUpdate() {
     const [, setTick] = useState(0);
@@ -148,8 +152,16 @@ const Invoice = () => {
   const canWrite = invoiceWrite;
 
   const getData = async () => {
+    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    if (response0.data.code === 200) {
+      const [{
+        days, isOnTrial, isSubscribed,
+      }] = response0.data.userSubsDetails;
+      setDaysLeft(days);
+      setSubscribed(isSubscribed);
+      setOnTrial(isOnTrial);
+    }
     const inb = await userInstance.post('getInvoice');
-
     if (inb.data.code === 200) {
       inb.data.invoiceData.forEach((el, i) => {
         el[`checked${i}`] = false;
@@ -289,7 +301,9 @@ const Invoice = () => {
 
   const btn = isSubUser && canWrite ? enableButton : disabledButton;
   const perm = isSubUser ? btn : enableButton;
-  return (
+
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+  const pageContent = (
     <>
       <Toaster
         notifyType={notifyType}
@@ -306,13 +320,6 @@ const Invoice = () => {
               {topNavId ? perm : propertySelectButton}
             </div>
           </div>
-          {/* <Modal
-            title="Create new invoice"
-            visible={visible}
-            onOk={handleOk}
-            onCancel={handleCancel}
-            wrapClassName="guest-modal add-invoice-popup"
-          > */}
           <AdInvoicePopup
             handleOk={handleOk}
             visible={visible}
@@ -322,7 +329,6 @@ const Invoice = () => {
             label={1}
             close={close}
           />
-          {/* </Modal> */}
         </Wrapper>
       ) : (
         <Wrapper fun={setTopNavId}>
@@ -365,9 +371,9 @@ const Invoice = () => {
                           </td>
                           <td>
                             {el.label
-                                || `INVOICE ${
-                                  el.id
-                                } - ${new Date().getFullYear()}`}
+                              || `INVOICE ${
+                                el.id
+                              } - ${new Date().getFullYear()}`}
                           </td>
                           <td>{el.type || 'Invoice'}</td>
                           <td>{el.clientName}</td>
@@ -517,6 +523,18 @@ const Invoice = () => {
           />
         </Wrapper>
       )}
+    </>
+  );
+  return (
+    <>
+      {
+      hasAccess ? pageContent
+        : (
+          <Wrapper>
+            <UserLock />
+          </Wrapper>
+        )
+        }
     </>
   );
 };

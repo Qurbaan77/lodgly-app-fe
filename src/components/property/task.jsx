@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './property.css';
 import {
   Form,
@@ -30,6 +31,7 @@ import DeletePopup from './deletepopup';
 const { Option } = Select;
 
 const Task = () => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
@@ -203,7 +205,7 @@ const Task = () => {
               onClick={show}
               disabled={isGroup}
             >
-              Add Task
+              {t('task.groupbtn')}
             </Button>
           </div>
         </div>
@@ -216,7 +218,7 @@ const Task = () => {
           <Row>
             <Col span={12}>
               <Form.Item
-                label="Check Every"
+                label={t('task.title1')}
                 style={{ marginBottom: 0, textAlign: 'left' }}
               >
                 <Form.Item
@@ -237,15 +239,15 @@ const Task = () => {
                     marginRight: 8,
                   }}
                 >
-                  <Select placeholder="Day">
-                    <Option value="Day">Day</Option>
-                    <Option value="Week">Week</Option>
-                    <Option value="Month">Month</Option>
+                  <Select placeholder={t('strings.day')}>
+                    <Option value="Day">{t('strings.day')}</Option>
+                    <Option value="Week">{t('strings.week')}</Option>
+                    <Option value="Month">{t('strings.month')}</Option>
                   </Select>
                 </Form.Item>
 
                 <Form.Item name="month" style={{ display: 'inline-block' }}>
-                  <Checkbox>Check only on free days</Checkbox>
+                  <Checkbox>{t('task.title4')}</Checkbox>
                 </Form.Item>
               </Form.Item>
             </Col>
@@ -254,7 +256,7 @@ const Task = () => {
               <Form.Item>
                 <Form.Item
                   name="date-picker"
-                  label="Previous Checking"
+                  label={t('task.title5')}
                   style={{
                     display: 'inline-block',
                     width: 'calc(40% - 5px)',
@@ -266,7 +268,7 @@ const Task = () => {
 
                 <Form.Item
                   name="date-picker"
-                  label="Next Checking"
+                  label={t('task.title6')}
                   style={{ display: 'inline-block', width: 'calc(40% - 5px)' }}
                 >
                   <DatePicker />
@@ -278,7 +280,7 @@ const Task = () => {
       </div>
 
       <Modal
-        title="Add/Edit Task"
+        title={t('task.title7')}
         visible={visible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -324,10 +326,10 @@ const Task = () => {
                 setVisible(false);
               }}
             >
-              Cancel
+              {t('strings.cancel')}
             </Button>
             <Button type="primary" htmlType="submit">
-              Save
+              {t('strings.save')}
             </Button>
           </Form.Item>
         </Form>

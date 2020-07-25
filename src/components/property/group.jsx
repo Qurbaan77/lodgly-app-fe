@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import './property.css';
 import {
   Form, Select, Input, DatePicker, Button, Checkbox,
@@ -26,6 +27,7 @@ import DeletePopup from './deletepopup';
 const { Option } = Select;
 
 const Groups = () => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
@@ -122,11 +124,11 @@ const Groups = () => {
           <h1>
             <HomeOutlined />
             {' '}
-            Groups
+            {t('group.heading')}
           </h1>
 
           <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-            Add Group
+            {t('group.groupbtn')}
           </Button>
         </div>
 
@@ -140,7 +142,7 @@ const Groups = () => {
               <div className="group-name">
                 <h4 onClick={() => addTask(el.id)} role="presentation">{el.groupName}</h4>
                 <span>
-                  Check every
+                  {t('group.title1')}
                   {' '}
                   {el.checkCount}
                   {' '}
@@ -178,7 +180,7 @@ const Groups = () => {
       </div>
 
       <Modal
-        title="Add/Edit Groups"
+        title={t('group.title7')}
         visible={visible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -190,13 +192,13 @@ const Groups = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            label="Group Name"
+            label={t('group.title2')}
             name="groupname"
             rules={[
               { required: true, message: 'Please input your group name!' },
             ]}
           >
-            <Input placeholder="Inventory Check" />
+            <Input placeholder={t('group.title3')} />
           </Form.Item>
 
           <Form.Item>
@@ -209,7 +211,7 @@ const Groups = () => {
             </div>
           </Form.Item>
 
-          <Form.Item label="Check Every" style={{ marginBottom: 0 }}>
+          <Form.Item label={t('group.title1')} style={{ marginBottom: 0 }}>
             <Form.Item
               name="count"
               style={{
@@ -228,22 +230,22 @@ const Groups = () => {
                 marginRight: 8,
               }}
             >
-              <Select placeholder="Day">
-                <Option value="Day">Day</Option>
-                <Option value="Week">Week</Option>
-                <Option value="Month">Month</Option>
+              <Select placeholder={t('strings.day')}>
+                <Option value="Day">{t('strings.day')}</Option>
+                <Option value="Week">{t('strings.week')}</Option>
+                <Option value="Month">{t('strings.month')}</Option>
               </Select>
             </Form.Item>
 
             <Form.Item name="month" style={{ display: 'inline-block' }}>
-              <Checkbox>Check only on free days</Checkbox>
+              <Checkbox>{t('group.title4')}</Checkbox>
             </Form.Item>
           </Form.Item>
 
           <Form.Item>
             <Form.Item
               name="prevCheck"
-              label="Previous Checking"
+              label={t('group.title5')}
               style={{
                 display: 'inline-block',
                 width: 'calc(40% - 5px)',
@@ -255,7 +257,7 @@ const Groups = () => {
 
             <Form.Item
               name="nextCheck"
-              label="Next Checking"
+              label={t('group.title6')}
               style={{ display: 'inline-block', width: 'calc(40% - 5px)' }}
             >
               <DatePicker />
@@ -269,10 +271,10 @@ const Groups = () => {
                 setVisible(false);
               }}
             >
-              Cancel
+              {t('strings.cancel')}
             </Button>
             <Button type="primary" htmlType="submit">
-              Save
+              {t('strings.save')}
             </Button>
           </Form.Item>
         </Form>

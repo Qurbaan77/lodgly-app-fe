@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './property.css';
 import {
   Button, Row, Col, Modal,
@@ -25,6 +26,7 @@ import client16 from '../../assets/images/item-16.jpg';
 import client17 from '../../assets/images/item-17.jpg';
 
 const ChannelManager = () => {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
 
   const show = () => {
@@ -43,87 +45,69 @@ const ChannelManager = () => {
     <Wrapper>
       <div className="channel-container">
         <div className="page-header">
-          <h1>Channel Manager</h1>
+          <h1>{t('channel.heading')}</h1>
         </div>
 
         <div className="channel-content">
           <div className="active-channel">
-            <h3>Activating Channel Manager</h3>
+            <h3>{t('channel.heading1')}</h3>
             <p>
-              In order to connect your property via Channel Manager there are
-              some steps you need to take. This will ensure that the connection
-              is working properly and will eliminate the risk of problems. These
-              steps are explained below. When we activate the connection, all
-              data from Lodgly will be sent to that online reservation channel
-              so it is important to enter all rates and availability, along with
-              all reservations to Lodgly before activating it. Please note that
-              you won
+              {t('channel.para1')}
               <span>&apos;</span>
-              t be able to open / close dates in
-              Extranets or change rates directly on connected channels. All
-              updates will be done through Lodgly.
+              {t('channel.para2')}
             </p>
           </div>
 
           <div className="channel-step">
             <div className="step-box">
               <img src={check} alt="image1" />
-              <span>Property</span>
+              <span>{t('strings.property')}</span>
             </div>
 
             <div className="step-box">
               <img src={check} alt="image2" />
-              <span>Unit Types</span>
+              <span>{t('strings.unit_t')}</span>
             </div>
 
             <div className="step-box">
               <img src={check} alt="image3" />
-              <span>Units</span>
+              <span>{t('strings.units')}</span>
             </div>
 
             <div className="step-box">
               <img src={check} alt="image4" />
-              <span>Rates and Availability</span>
+              <span>{t('channel.title1')}</span>
             </div>
 
             <div className="step-box">
               <img src={check} alt="image5" />
-              <span>Reservations</span>
+              <span>{t('strings.reservations')}</span>
             </div>
           </div>
 
           <div className="need-help">
-            <p>Need Help?</p>
-            <p>Click on each step opens a detailed explanation</p>
+            <p>{t('channel.para3')}</p>
+            <p>{t('channel.para4')}</p>
             <Button type="primary" onClick={show}>
-              Activating Channel Manager
+              {t('channel.heading1')}
             </Button>
           </div>
 
           <div className="active-channel">
-            <h3>Two-way full connection</h3>
+            <h3>{t('channel.heading3')}</h3>
             <p>
-              Two-way connection with online reservations channels like
-              Booking.com, Expedia, Airbnb etc. automatically syncs your rates
-              and availability, as well as reservations. When the connection is
-              active, all new reservations made through those channels will be
-              pulled automatically to Lodgly. From there, Lodgly will update
-              other connected channels and close those periods for sale. Also,
-              all of your direct reservations entered to Lodgly manually will be
-              sent to all connected channels and those dates will be closed.
+              {t('channel.para5')}
               {' '}
             </p>
 
             <p>
-              Below is a list of online reservation channels. If you work with
-              one of them already, and want to connect it please do the
-              following: select the
+              {t('channel.para6')}
               {' '}
               <span>&quot;</span>
-              plus icon
+              {t('channel.para7')}
               <span>&quot;</span>
               {' '}
-              and follow instructions from there.
+              {t('channel.para8')}
             </p>
           </div>
 
@@ -167,21 +151,13 @@ const ChannelManager = () => {
               </Col>
             </Row>
           </div>
-
           <div className="active-channel">
-            <h3>One-way iCal synchronization</h3>
+            <h3>
+              {' '}
+              {t('channel.para9')}
+            </h3>
             <p>
-              One-way sync with online reservation channels like HomeAway,
-              FlipKey, HouseTrip etc. only sends availability from Lodgly to
-              them (open / closed dates), while rates and availability, along
-              with reservations will still be managed directly on those
-              channels. Let’s say you receive a reservation from HomeAway. You
-              will have to enter it to Lodgly; from there Lodgly will close
-              other connected channels. Please note that you will still manage
-              rates manually in extranets of those connected channels. Below is
-              a list of online reservation channels. If you work with one of
-              them already, and want to connect it please do the following:
-              select the “plus icon” and follow instructions from there.
+              {t('channel.para10')}
             </p>
           </div>
 
@@ -211,69 +187,49 @@ const ChannelManager = () => {
       </div>
 
       <Modal
-        title="Help"
+        title={t('channel.title3')}
         visible={visible}
         onOk={handleOk}
         onCancel={handleCancel}
         wrapClassName="help-modal"
       >
         <div className="modal-body">
-          <h4>Property</h4>
+          <h4>
+            {' '}
+            {t('strings.property')}
+          </h4>
           <p>
-            Please enter property details - property name, address, telephone
-            number.
+            {t('channel.para11')}
           </p>
           <p>
-            Unit types and units Online reservation channels that support
-            two-way connection to Rentlio, group accommodation units to unit
-            types. E.g. if your property has two one-bedroom apartments with
-            same rates you need to create one unit type in Rentlio. Name it
+            {t('channel.para12')}
             {' '}
             <span>&quot;</span>
-            one-bedroom apartment
+            {t('channel.para13')}
             <span>&quot;</span>
             {' '}
-            and
-            assign two units, Apartment 1 and Apartment 2. Booking.com, Expedia
-            and various channels have the same methodology. You already
-            understand this if you work with one of them. Please note that you
-            can create unique names for unit types and units in Rentlio, they
-            don’t have to match the names set on online reservation channels.
+            {t('channel.para14')}
           </p>
 
           <p>
-            We offer two-way connection with Airbnb, but this channel has some
-            exceptions. When creating a profile on Airbnb you create a Listing
-            that matches one unit in Rentlio. Because of that, connecting Airbnb
-            and Rentlio is done by connecting the Listing to Unit Type. This
-            means that you will have to create one Unit type and add one Unit to
-            it in Rentlio in order to connect it to Airbnb Listing.
+            {t('channel.para15')}
           </p>
 
-          <h4>Rates and availability</h4>
+          <h4>
+            {' '}
+            {t('channel.title1')}
+          </h4>
 
           <p>
-            Please enter units and rates in Rentlio - Settings - Units and rates
-            - Edit unit type. Please note that units and rates are set on Unit
-            type level. Before connecting to online reservation channels we
-            advise you to load rates and availability for one year in advance;
-            however 90 days is the minimum in order to activate the connection.
+            {t('channel.para16')}
           </p>
 
-          <h4>Reservations</h4>
+          <h4>{t('strings.reservations')}</h4>
           <p>
-            Enter all active reservations, except Booking.com reservations* up
-            to today in Rentlio. When you activate the connection, all these
-            periods will be closed automatically on connected online reservation
-            channels. This is a mandatory step in order to avoid overlapped
-            reservations and reopening of closed dates. When the connection is
-            active, everything from Rentlio (rates and availability,
-            reservations) will be sent to the connected online reservation
-            channel.
+            {t('channel.para17')}
           </p>
           <p>
-            * Booking.com reservations will be imported automatically when we
-            connect your property
+            {t('channel.para18')}
           </p>
         </div>
       </Modal>

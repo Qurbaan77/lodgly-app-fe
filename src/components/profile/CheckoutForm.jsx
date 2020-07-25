@@ -24,7 +24,7 @@ const CARD_ELEMENT_OPTIONS = {
 };
 const CheckoutForm = ({
   total, currency, unitsSelected, subscriptionType, planType, toaster,
-  submitChange, showCancelCheckout,
+  submitChange, showCancelCheckout, hideBilling, getData,
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -67,6 +67,8 @@ const CheckoutForm = ({
         const { code } = response.data;
         if (code === 200) {
           toaster('success', 'Your Transaction was successful');
+          hideBilling(true);
+          getData();
           // window.location.href = '/payment';
         } else {
           toaster('error', 'Transaction Failed');
@@ -118,14 +120,27 @@ const CheckoutForm = ({
   );
 };
 CheckoutForm.propTypes = {
-  total: PropTypes.number.isRequired,
-  currency: PropTypes.string.isRequired,
-  unitsSelected: PropTypes.number.isRequired,
-  subscriptionType: PropTypes.string.isRequired,
-  planType: PropTypes.string.isRequired,
-  toaster: PropTypes.func.isRequired,
-  submitChange: PropTypes.string.isRequired,
-  showCancelCheckout: PropTypes.bool.isRequired,
+  total: PropTypes.number,
+  currency: PropTypes.string,
+  unitsSelected: PropTypes.number,
+  subscriptionType: PropTypes.string,
+  planType: PropTypes.string,
+  toaster: PropTypes.func,
+  submitChange: PropTypes.string,
+  showCancelCheckout: PropTypes.bool,
+  hideBilling: PropTypes.func,
+  getData: PropTypes.func,
 };
-
+CheckoutForm.defaultProps = {
+  total: 0,
+  currency: '',
+  unitsSelected: 0,
+  subscriptionType: '',
+  planType: '',
+  toaster: () => {},
+  submitChange: '',
+  showCancelCheckout: false,
+  hideBilling: () => {},
+  getData: () => {},
+};
 export default CheckoutForm;

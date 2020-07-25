@@ -93,6 +93,7 @@ width: 50px;
 display: flex;
 justify-content: flex-end;
 align-items: center;
+position: relative;
 }
 
 .header-property .ant-dropdown-link {
@@ -181,4 +182,39 @@ margin-right: 10px;
 
 .main-menu-mbl li .anticon {
   color: #b5b5b5;
+}
+
+
+
+.ant-btn.menu-btn {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  position: absolute;
+  left: 0;
+  display: none;
+}
+
+
+.ant-btn.menu-btn:hover, .ant-btn.menu-btn:focus {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.close-icon{
+  display: none;
+}
+
+
+.mobile-logo{
+  display: none;
+}
+
+.property-mbl{
+  display: none;
+}
+
+.ant-menu-submenu .ant-menu-submenu-arrow {
+  display: none;
 }
