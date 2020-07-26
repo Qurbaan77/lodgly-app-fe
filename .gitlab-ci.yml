@@ -2,7 +2,7 @@ image: node:latest
 
 variables:
   DIST_PATH: "build/"
-  STAGING_S3_BUCKET: s3://app.lodgly.dev-eu-west-1/
+  STAGING_S3_BUCKET: 
   STAGING_DISTRIBUTION_ID: E3M7F9R5097WEJ
   PRODUCTION_S3_BUCKET: s3://app.lodgly.dev-eu-west-1/
   PRODUCTION_DISTRIBUTION_ID: EHFOM17FM0DJ6
@@ -41,7 +41,7 @@ staging:
   before_script:
     - pip install awscli
   script:
-    - aws s3 sync $DIST_PATH s3://${STAGING_S3_BUCKET}/ --delete
+    - aws s3 sync $DIST_PATH $STAGING_S3_BUCKET --delete
     - INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id ${STAGING_DISTRIBUTION_ID} --paths /* --query 'Invalidation.Id' --output text) && aws cloudfront wait invalidation-completed --id ${INVALIDATION_ID} --distribution-id ${STAGING_DISTRIBUTION_ID}
   environment:
     name: staging
@@ -57,7 +57,7 @@ production:
   before_script:
     - pip install awscli
   script:
-    - aws s3 sync $DIST_PATH s3://${PRODUCTION_S3_BUCKET}/ --delete
+    - aws s3 sync $DIST_PATH $PRODUCTION_S3_BUCKET --delete
     - INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id ${PRODUCTION_DISTRIBUTION_ID} --paths /* --query 'Invalidation.Id' --output text) && aws cloudfront wait invalidation-completed --id ${INVALIDATION_ID} --distribution-id ${PRODUCTION_DISTRIBUTION_ID}
   environment:
     name: staging
