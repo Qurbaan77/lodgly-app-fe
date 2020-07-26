@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PlacesAutocomplete from 'react-places-autocomplete';
 import './property.css';
 import {
@@ -16,10 +16,9 @@ import {
 } from 'antd';
 import { HomeOutlined, InboxOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-
 import Toaster from '../toaster/toaster';
-
 import { userInstance } from '../../axios/axiosconfig';
+import { server } from '../../config/keys';
 
 const { Panel } = Collapse;
 
@@ -85,7 +84,7 @@ const Property = () => {
     setNotifyType('');
   };
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     setId(localStorage.getItem('userId'));
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
@@ -102,7 +101,7 @@ const Property = () => {
       setFeature2(curProperty[0].feature2);
       setFeature3(curProperty[0].feature3);
     }
-  };
+  }, [userId]);
 
   const onFinish = async (values) => {
     values.propertyNo = currentProperty[0].propertyNo;
@@ -166,8 +165,8 @@ const Property = () => {
   const props = {
     name: 'file',
     multiple: false,
-    action: `http://localhost:3001/users/propertyPicture/${id}`,
-    // action: `http://165.22.87.22:3002/users/propertyPicture/${id}`,
+    // action: `http://localhost:3001/users/propertyPicture/${id}`,
+    action: `${server}/users/propertyPicture/${id}`,
     onChange(info) {
       if (info.file.status === 'done') {
         message.success(`${info.file.name} file uploaded successfully`);
@@ -179,7 +178,7 @@ const Property = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [getData]);
 
   const enableButton = <Button>Save</Button>;
   const disableButton = (

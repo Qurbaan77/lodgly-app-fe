@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 // import { useHistory } from 'react-router-dom';
 import {
@@ -185,17 +185,17 @@ const AddReservation = (props) => {
   //   console.log('handleChange', e.target.value);
   // };
 
-  const getPropertyData = async () => {
+  const getPropertyData = useCallback(async () => {
     const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
       setPropertyData(data);
     }
-  };
+  }, [userId]);
 
   useEffect(() => {
     getPropertyData();
-  }, []);
+  }, [getPropertyData]);
 
   const calculateTotal = () => {
     const calculate = servicePrice * serviceAmt

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
@@ -27,9 +27,10 @@ const PropertyList = () => {
 
   useEffect(() => {
     setTopNavId(localStorage.getItem('topNavId'));
-  }, []);
+  }, [topNavId]);
 
-  const getData = async () => {
+  // keep function reference
+  const getData = useCallback(async () => {
     const res = await userInstance.get('/getUserSubscriptionStatus');
     if (res.data.code === 200) {
       const [{
@@ -45,7 +46,7 @@ const PropertyList = () => {
     const data2 = [];
     const data = response.data.propertiesData;
     data
-      .filter((el) => el.id === parseInt(localStorage.getItem('topNavId'), 10))
+      .filter((el) => el.id === parseInt(topNavId, 10))
       .forEach((filterData) => {
         data2.push(filterData);
       });
@@ -53,11 +54,37 @@ const PropertyList = () => {
       setPropertyData(data2.length > 0 ? data2 : data);
     }
     await userInstance.get('/getSubscriptionStatus');
-  };
+  }, [userId, topNavId]);
+
+  // const getData = async () => {
+  //   const res = await userInstance.get('/getUserSubscriptionStatus');
+  //   if (res.data.code === 200) {
+  //     const [{
+  //       days, isOnTrial, isSubscribed,
+  //     }] = res.data.userSubsDetails;
+  //     setDaysLeft(parseInt(days, 10));
+  //     setSubscribed(JSON.parse(isSubscribed));
+  //     setOnTrial(JSON.parse(isOnTrial));
+  //   }
+  //   const response = await userInstance.post('/fetchProperty', {
+  //     affiliateId: userId,
+  //   });
+  //   const data2 = [];
+  //   const data = response.data.propertiesData;
+  //   data
+  //     .filter((el) => el.id === parseInt(localStorage.getItem('topNavId'), 10))
+  //     .forEach((filterData) => {
+  //       data2.push(filterData);
+  //     });
+  //   if (response.data.code === 200) {
+  //     setPropertyData(data2.length > 0 ? data2 : data);
+  //   }
+  //   await userInstance.get('/getSubscriptionStatus');
+  // };
 
   useEffect(() => {
     getData();
-  }, [topNavId]);
+  }, [getData]);
 
   const enableButton = (
     <Button

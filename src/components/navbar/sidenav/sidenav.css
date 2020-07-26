@@ -101,6 +101,7 @@ position: relative;
   padding: 10px 150px 10px 15px;
   color: #a5a5a5!important;
   position: relative;
+  line-height: 1.5;
 }
 
 .header-property {
@@ -108,6 +109,9 @@ position: relative;
   max-width: 400px;
   width: 100%;
   text-align: right;
+  display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
 .header-property .ant-dropdown-link span {
 position: absolute;

@@ -83,7 +83,7 @@ const Calendar = () => {
 
   useEffect(() => () => {
     subs.forEach((unsub) => unsub());
-  }, []);
+  }, [subs]);
 
   const getProperty = async () => {
     await userInstance.post('/fetchProperty');

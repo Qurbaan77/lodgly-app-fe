@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { HomeOutlined, InboxOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import Wrapper from '../wrapper';
-
+import { server } from '../../config/keys';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 
@@ -93,7 +93,7 @@ const AddProperty = () => {
     }
 
     getData();
-  }, []);
+  }, [userId]);
 
   const close = () => {
     setNotifyType('');
@@ -156,7 +156,7 @@ const AddProperty = () => {
   const props = {
     name: 'file',
     // action: `http://localhost:3001/users/propertyPicture${props2}`,
-    action: `http://165.22.87.22:3002/users/propertyPicture${props2}`,
+    action: `${server}/users/propertyPicture${props2}`,
     headers: {
       authorization: 'authorization-text',
     },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './team.css';
 import { Button, Tooltip } from 'antd';
 import {
@@ -73,7 +73,8 @@ const TeamListing = () => {
     }
   };
 
-  const getData = async () => {
+  // keep function reference
+  const getData = useCallback(async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
     if (response0.data.code === 200) {
       const [{
@@ -89,11 +90,29 @@ const TeamListing = () => {
     if (response.status === 200) {
       setSubUser(response.data.subUser);
     }
-  };
+  }, [userId]);
+
+  // const getData = async () => {
+  //   const response0 = await userInstance.get('/getUserSubscriptionStatus');
+  //   if (response0.data.code === 200) {
+  //     const [{
+  //       days, isOnTrial, isSubscribed,
+  //     }] = response0.data.userSubsDetails;
+  //     setDaysLeft(parseInt(days, 10));
+  //     setSubscribed(JSON.parse(isSubscribed));
+  //     setOnTrial(JSON.parse(isOnTrial));
+  //   }
+  //   const response = await userInstance.post('/getSubUser', {
+  //     affiliateId: userId,
+  //   });
+  //   if (response.status === 200) {
+  //     setSubUser(response.data.subUser);
+  //   }
+  // };
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [getData]);
 
   const enableButton = (
     <Button type="primary" icon={<PlusOutlined />} onClick={show}>

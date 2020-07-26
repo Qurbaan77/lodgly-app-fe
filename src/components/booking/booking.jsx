@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './booking.css';
 import {
   Form,
@@ -91,7 +91,7 @@ const Booking = () => {
     setVisibleFilter(false);
   };
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     const res = await userInstance.get('/getUserSubscriptionStatus');
     if (res.data.code === 200) {
       const [{
@@ -142,11 +142,11 @@ const Booking = () => {
     // console.log('guestdata', guestdata);
     // console.log('servicedata', servicedata);
     if (response.data.code === 200) {
-      if (localStorage.getItem('topNavId')) {
+      if (topNavId) {
         const arr = [];
         bookingdata
           .filter(
-            (el) => el.propertyId === parseInt(localStorage.getItem('topNavId'), 10),
+            (el) => el.propertyId === parseInt(topNavId, 10),
           )
           .map((filter) => arr.push(filter));
         setBookingData(arr);
@@ -158,11 +158,11 @@ const Booking = () => {
         }
       }
     }
-  };
+  }, [userId, topNavId]);
 
-  // const close = () => {
-  //   setNotifyType('');
-  // };
+  useEffect(() => {
+    setTopNavId(localStorage.getItem('topNavId'));
+  }, [topNavId]);
 
   const selectBooking = (values) => {
     values.startDate = values.startDate.slice(0, 10);
@@ -232,49 +232,23 @@ const Booking = () => {
 
   useEffect(() => {
     getData();
-  }, [topNavId]);
+  }, [getData]);
 
   useEffect(() => {
-    const rangeDate = filterValues.groupname;
     const copyBookingData = bookingData;
     const filterBooked = [];
     const filterAgain = [];
 
-    if (rangeDate.length > 0) {
+    if (filterValues.groupname !== undefined) {
       copyBookingData
         .filter(
-          (el) => new Date(el.startDate) >= rangeDate[0]._d
-              && new Date(el.startDate) <= rangeDate[1]._d,
+          (el) => new Date(el.startDate) >= filterValues.groupname[0]._d
+              && new Date(el.startDate) <= filterValues.groupname[1]._d,
         )
         .map((filter) => filterBooked.push(filter));
-      // if (filterBooked.length > 0) {
-      //   filterBooked
-      //     .filter(
-      //       (el) => new Date(el.startDate) >= rangeDate[0]._d
-      //         && new Date(el.startDate) <= rangeDate[1]._d,
-      //     )
-      //     .map((filter) => filterAgain.push(filter));
-      // } else {
-      //   copyBookingData
-      //     .filter(
-      //       (el) => new Date(el.startDate) >= rangeDate[0]._d
-      //         && new Date(el.startDate) <= rangeDate[1]._d,
-      //     )
-      //     .map((filter) => filterBooked.push(filter));
-      // }
     }
-
-    // if (propertyId > 0) {
-    //   copyBookingData.filter((el) => el.propertyId  === propertyId).map((filter) => {
-    //     filterBooked.push(filter)
-    //   })
-    // }
-    // console.log(rangeDate);
-    // console.log(copyBookingData);
-    // console.log(filterBooked);
-
     setBookingData(filterAgain.length > 0 ? filterAgain : filterBooked);
-  }, [filterValues]);
+  }, [filterValues, bookingData]);
 
   const enableButton = (
     <Button

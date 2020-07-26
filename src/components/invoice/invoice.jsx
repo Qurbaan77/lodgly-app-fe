@@ -151,7 +151,7 @@ const Invoice = () => {
   const [{ invoiceWrite, userId }] = userCred || [{}];
   const canWrite = invoiceWrite;
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
     if (response0.data.code === 200) {
       const [{
@@ -182,7 +182,7 @@ const Invoice = () => {
     if (response.data.code === 200) {
       setUserInfo(response.data.userInfo);
     }
-  };
+  }, [userId]);
   const handleCheck = (el) => {
     invoiceData.forEach((element) => {
       if (el.id === element.id && element[Object.keys(el)[20]] === true) {
@@ -203,11 +203,11 @@ const Invoice = () => {
   useEffect(() => {
     const data = propertyInfo.filter((property) => property.id === topNavId);
     setCurrentPropertyInfo(data);
-  }, [topNavId]);
+  }, [topNavId, propertyInfo]);
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [getData]);
 
   const handleDownload = () => {
     const urls = [];

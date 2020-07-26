@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import './team.css';
 import {
@@ -32,7 +32,7 @@ const EditSubUserPopup = (props) => {
   const [ownerRead, setOwnerRead] = useState(false);
   const [ownerWrite, setOwnerWrite] = useState(false);
 
-  useEffect(() => {
+  const updateValues = useCallback(() => {
     form.setFieldsValue({
       email: subUserData.email,
       role: subUserData.role,
@@ -55,7 +55,11 @@ const EditSubUserPopup = (props) => {
     setServiceWrite(subUserData.serviceWrite);
     setOwnerRead(subUserData.ownerRead);
     setOwnerWrite(subUserData.ownerWrite);
-  }, [visible]);
+  }, [subUserData, form]);
+
+  useEffect(() => {
+    updateValues();
+  }, [visible, updateValues]);
 
   const handleSelect = (value) => {
     if (value === 'fullaccess') {

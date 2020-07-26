@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './profile.css';
 import {
   Form,
@@ -16,6 +16,7 @@ import Wrapper from '../wrapper';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
+import { server } from '../../config/keys';
 
 const { Panel } = Collapse;
 
@@ -39,7 +40,7 @@ const Profile = () => {
   const [onTrial, setOnTrial] = useState();
   const [daysLeft, setDaysLeft] = useState();
 
-  const getUserInfo = async () => {
+  const getUserInfo = useCallback(async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
     if (response0.data.code === 200) {
       const [{
@@ -63,9 +64,9 @@ const Profile = () => {
         phone: body[0].phone,
       });
     }
-  };
+  }, [form1]);
 
-  const getCompanyInfo = async () => {
+  const getCompanyInfo = useCallback(async () => {
     const response = await userInstance.post('/getCompanyData');
     const body = response.data.companyData;
     if (body.length > 0) {
@@ -79,7 +80,8 @@ const Profile = () => {
         vatId: body[0].vatId,
       });
     }
-  };
+  }, [form4]);
+
   const personalInfoFinish = async (values) => {
     const response = await userInstance.post('/updatePersonalInfo', values);
     const statusCode = response.data.code;
@@ -131,8 +133,8 @@ const Profile = () => {
   const props = {
     name: 'file',
     multiple: false,
-    action: `http://localhost:8080/users/photo/${userId}`,
-    // action: `http://165.22.87.22:3002/users/photo/${userId}`,
+    // action: `http://localhost:8080/users/photo/${userId}`,
+    action: `${server}/users/photo/${userId}`,
     onChange(info) {
       // if (info.file.status !== 'uploading') {
       //   console.log(info.file, info.fileList);
@@ -149,7 +151,7 @@ const Profile = () => {
   useEffect(() => {
     getUserInfo();
     getCompanyInfo();
-  }, []);
+  }, [getUserInfo, getCompanyInfo]);
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (

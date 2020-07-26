@@ -9,7 +9,7 @@ const AlertBox = () => {
   const [daysLeft, setDaysLeft] = useState(14);
 
   const getDays = async () => {
-    const res = await userInstance.post('trialDays');
+    const res = await userInstance.post('/trialDays');
     if (res.data.code === 400) {
       localStorage.removeItem('token');
       localStorage.removeItem('userId');

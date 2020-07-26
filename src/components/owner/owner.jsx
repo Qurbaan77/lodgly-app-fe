@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './owner.css';
 import {
   Form,
@@ -74,7 +74,7 @@ const Owner = () => {
     setCurOwner(unitId);
   };
 
-  const getPropertyData = async () => {
+  const getPropertyData = useCallback(async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
     if (response0.data.code === 200) {
       const [{
@@ -97,16 +97,16 @@ const Owner = () => {
     if (response.data.code === 200) {
       setPropertyData(arr);
     }
-  };
+  }, [userId]);
 
-  const getSubUserData = async () => {
+  const getSubUserData = useCallback(async () => {
     const response = await userInstance.post('/getOwner', {
       affiliateId: userId,
     });
     if (response.data.code === 200) {
       setSubUserData(response.data.data);
     }
-  };
+  }, [userId]);
 
   const edit = async (data) => {
     const m1 = moment(data.dob);
@@ -173,7 +173,7 @@ const Owner = () => {
   useEffect(() => {
     getSubUserData();
     getPropertyData();
-  }, []);
+  }, [getSubUserData, getPropertyData]);
 
   const enableButton = (
     <Button type="primary" icon={<PlusOutlined />} onClick={show}>

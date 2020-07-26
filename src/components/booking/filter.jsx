@@ -89,7 +89,7 @@ const BookingFilter = (props) => {
       }
     }
     getData();
-  }, []);
+  }, [userId]);
 
   return (
     <Modal

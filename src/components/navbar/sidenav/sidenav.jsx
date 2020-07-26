@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -61,7 +61,7 @@ const Sidenav = ({
     propertiesRead, serviceRead, statsRead, teamRead, userId,
   }] = subUserCred || [{}];
 
-  const getSubUser = () => {
+  const getSubUser = useCallback(() => {
     if (!isSubUser) {
       setHideBooking(false);
     } else if (bookingRead) {
@@ -118,9 +118,17 @@ const Sidenav = ({
     } else {
       setDisableGuests(true);
     }
-  };
+  }, [bookingRead,
+    calendarRead,
+    guestsRead,
+    invoicesRead,
+    isSubUser,
+    propertiesRead,
+    serviceRead,
+    statsRead,
+    teamRead]);
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     const Id = localStorage.getItem('propertyId');
     const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
     const data = response.data.propertiesData;
@@ -133,9 +141,9 @@ const Sidenav = ({
         setCurrProperty(curProperty[0].propertyNo);
       }
     }
-  };
+  }, [userId]);
 
-  const changeMenu = () => {
+  const changeMenu = useCallback(() => {
     const { pathname } = window.location;
     if (
       pathname === '/property'
@@ -146,15 +154,18 @@ const Sidenav = ({
       || pathname === '/groups'
       || pathname === '/task'
     ) { setMenu(!menu); }
-  };
+  }, [menu]);
+
+  // useEffect(() => {
+  //   changeMenu();
+  // }, [changeMenu]);
 
   useEffect(() => {
     getData();
-    changeMenu();
     if (localStorage.getItem('isSubUser')) {
       getSubUser();
     }
-  }, []);
+  }, [getData, getSubUser]);
 
   return (
     <Sider theme="light" trigger={null} collapsible className={`side-menu ${menutoggle ? 'menu-show' : ''}`}>
@@ -196,7 +207,10 @@ const Sidenav = ({
             <Menu.Item key={el.propertyNo}>
               <Link
                 to="/property"
-                onClick={() => localStorage.setItem('propertyId', el.id)}
+                onClick={() => {
+                  localStorage.setItem('propertyId', el.id);
+                  changeMenu();
+                }}
               >
                 {t('strings.propertyno')}
                 {' '}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import './invoice.css';
 import {
@@ -47,8 +47,8 @@ const EditInvoicePopup = (props) => {
   const [itemState, setItemState] = useState([]);
   const [issueState, setIssueState] = useState(false);
 
-  useEffect(() => {
-    if (props.visible) {
+  const updateValues = useCallback(() => {
+    if (visible) {
       const date0 = moment(invoiceData.date);
       const deliveryDate0 = moment(invoiceData.deliveryDate);
       const dueDate0 = moment(invoiceData.dueDate);
@@ -85,7 +85,11 @@ const EditInvoicePopup = (props) => {
         });
       }
     }
-  }, [visible]);
+  }, [visible, form, invoiceData, invoiceItems]);
+
+  useEffect(() => {
+    updateValues();
+  }, [visible, updateValues]);
 
   const handleFinish = async (values) => {
     setShowLoader(false);

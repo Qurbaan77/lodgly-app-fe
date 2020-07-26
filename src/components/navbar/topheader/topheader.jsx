@@ -19,9 +19,9 @@ const { Header } = Layout;
 const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
   const { t, i18n } = useTranslation();
 
-  const changeLanguage = (event) => {
+  const changeLanguage = useCallback((event) => {
     i18n.changeLanguage(event);
-  };
+  }, [i18n]);
   const [propertyData, setPropertyData] = useState([]);
   const [propertyName, setPropertyName] = useState();
   const [menu, setMenu] = useState();
@@ -79,15 +79,15 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
     }
 
     getData();
-  }, []);
+  }, [userId]);
 
   const english = useCallback(() => {
     changeLanguage('en');
-  }, []);
+  }, [changeLanguage]);
 
   const polish = useCallback(() => {
     changeLanguage('pl');
-  }, []);
+  }, [changeLanguage]);
 
   const language = (
     <Menu>

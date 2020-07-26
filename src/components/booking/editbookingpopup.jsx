@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 // import { useHistory } from 'react-router-dom';
 import './booking.css';
@@ -96,8 +96,8 @@ const Editbookingpopup = (props) => {
   // const history = useHistory();
   const { nights, perNight } = editBookingValues;
 
-  useEffect(() => {
-    if (props.visible) {
+  const updateFields = useCallback(() => {
+    if (visible) {
       fun1(editBookingValues.propertyId);
       const m1 = moment(editBookingValues.startDate);
       const m2 = moment(editBookingValues.endDate);
@@ -164,7 +164,12 @@ const Editbookingpopup = (props) => {
             / 100,
       );
     }
-  }, [visible]);
+  }, [currentService, editBookingValues, editCurrentGuest, form, nights, perNight,
+    visible]);
+
+  useEffect(() => {
+    updateFields();
+  }, [visible, updateFields]);
 
   // const show = () => {
   //   setVisible(true);

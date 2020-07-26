@@ -21,7 +21,6 @@ import CheckoutForm from './CheckoutForm';
 import Toaster from '../toaster/toaster';
 
 const stripePromise = loadStripe(keys.development.webserver.stripeApiKey);
-
 const { Panel } = Collapse;
 
 const BillingInformation = () => {
