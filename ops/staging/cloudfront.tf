@@ -14,7 +14,7 @@ resource "aws_cloudfront_distribution" "lodgly_dev" {
   wait_for_deployment = false
   default_root_object = "index.html"
   price_class         = "PriceClass_All"
-  comment             = "[staging] Lodgly Main App"
+  comment             = "[${var.environment}] ${var.description}"
 
   origin {
     domain_name = aws_s3_bucket.lodgly_dev.bucket_domain_name
@@ -26,8 +26,7 @@ resource "aws_cloudfront_distribution" "lodgly_dev" {
   }
 
   aliases = [
-    replace(var.domain, "*.", ""),
-    var.domain,
+    var.domain
   ]
 
   custom_error_response {

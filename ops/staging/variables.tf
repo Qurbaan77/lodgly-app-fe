@@ -13,6 +13,11 @@ variable "bucket" {
   default = "lodgly.dev-eu-west-1"
 }
 
+variable "description" {
+  type    = string
+  default = "Lodgly Main App"
+}
+
 variable "domain" {
   type    = string
   default = "*.lodgly.dev"
