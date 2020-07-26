@@ -63,4 +63,4 @@ production:
     name: staging
     url: https://d30z3lnbnqtivm.cloudfront.net
   only:
-    - staging
+    - master
