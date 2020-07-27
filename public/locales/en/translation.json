@@ -96,9 +96,8 @@
     "propertylist": {
         "heading": "All Properties",
         "addbtn": "Add Property",
-        "alert":"Your trail period will end in",
+        "alert":"Your trial period will end in",
         "link-heading":"Subscribe"
-
     },
     "addproperty": {
         "heading": " Property",

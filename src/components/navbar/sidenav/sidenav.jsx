@@ -31,7 +31,7 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 const Sidenav = ({
-  img, name, getUserInfo, menutoggle, handleMenu,
+  img, name, getUserInfo, menutoggle,
 }) => {
   const { t } = useTranslation();
   const [propertyData, setPropertyData] = useState([]);
@@ -167,6 +167,17 @@ const Sidenav = ({
     }
   }, [getData, getSubUser]);
 
+  const [nav, setNav] = useState(false);
+  const handleMenu = (e) => {
+    if (e === 'open') {
+      setNav(true);
+    } else if (e === 'close') {
+      setNav(false);
+    } else if (e === 'toggle') {
+      setNav(!nav);
+    }
+  };
+
   return (
     <Sider theme="light" trigger={null} collapsible className={`side-menu ${menutoggle ? 'menu-show' : ''}`}>
       <div className="sidebar-logo">
@@ -177,7 +188,7 @@ const Sidenav = ({
       <UserProfile img={img} name={name} getUserInfo={getUserInfo} />
 
       <Menu
-        className={`main-menu ${menu ? 'hide' : ''}`}
+        className={`main-menu ${nav ? 'hide' : ''}`}
         theme="light"
         mode="inline"
         defaultSelectedKeys={['0']}
@@ -194,6 +205,7 @@ const Sidenav = ({
         </Menu.Item>
 
         <SubMenu
+          onClick={() => handleMenu('toggle')}
           key="2"
           disabled={disableProperties}
           title={(
@@ -258,13 +270,13 @@ const Sidenav = ({
       </Menu>
 
       <Menu
-        className={`main-menu-mbl ${menu ? 'show' : ''}`}
+        className={`main-menu-mbl ${nav ? 'show' : ''}`}
         theme="light"
         mode="inline"
         defaultSelectedKeys={['1']}
         style={{ height: '100%' }}
       >
-        <span className="submenu-heading">
+        <span className="submenu-heading" onClick={() => handleMenu('close')} role="presentation">
           <ArrowLeftOutlined />
           <Link
             to="/propertylist"
@@ -306,13 +318,13 @@ Sidenav.propTypes = {
   name: PropTypes.string,
   getUserInfo: PropTypes.func,
   menutoggle: PropTypes.bool,
-  handleMenu: PropTypes.func,
+  // handleMenu: PropTypes.func,
 };
 Sidenav.defaultProps = {
   img: '',
   name: '',
   getUserInfo: () => {},
-  handleMenu: () => {},
+  // handleMenu: () => {},
   menutoggle: false,
 };
 

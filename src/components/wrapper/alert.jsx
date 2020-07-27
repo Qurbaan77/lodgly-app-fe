@@ -11,8 +11,7 @@ const AlertBox = () => {
   const getDays = async () => {
     const res = await userInstance.post('/trialDays');
     if (res.data.code === 400) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('userId');
+      localStorage.clear();
       window.location.reload();
     }
     if (!JSON.parse(res.data.isOnTrial)) {
@@ -27,7 +26,7 @@ const AlertBox = () => {
   const handleClose = () => {
     localStorage.setItem('collapse', 1);
   };
-  const isCollapsed = localStorage.getItem('collapse');
+  const isCollapsed = localStorage.getItem('collapse') || false;
   return (
     <>
       {!isCollapsed ? (

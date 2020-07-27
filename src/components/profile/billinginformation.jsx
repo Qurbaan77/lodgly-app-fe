@@ -14,21 +14,24 @@ import {
 import Wrapper from '../wrapper';
 
 import BillingHistory from './billinghistory';
-import { basicPrice, advancePrice, discount } from '../../config/keys';
+import {
+  STRIPE_APP_KEY,
+} from '../../config/keys';
+import config from '../../config/config.json';
 import { userInstance } from '../../axios/axiosconfig';
-import keys from '../../config/default';
 import CheckoutForm from './CheckoutForm';
+// import loader from '../../assets/images/loader.svg';
 import Toaster from '../toaster/toaster';
 
-const stripePromise = loadStripe(keys.development.webserver.stripeApiKey);
+const stripePromise = loadStripe(STRIPE_APP_KEY);
 const { Panel } = Collapse;
-
+const { basicPrice, advancePrice, discount } = config.development.Billing;
 const BillingInformation = () => {
   const [unitDropDown, setUnitDropDown] = useState([]);
   const [total, setTotal] = useState(0);
   const [unitPrice, setUnitPrice] = useState(basicPrice);
   const [unitsSelected, setUnitsSelected] = useState();
-  const [planType, setPlanType] = useState('basic');
+  const [planType, setPlanType] = useState('');
   const [subscriptionType, setSubscriptionType] = useState('');
   const [exchangeRate, setExchangeRate] = useState([]);
   const [currency, setCurrency] = useState('');
@@ -48,12 +51,14 @@ const BillingInformation = () => {
   });
   const [showCancelCheckout, setShowCancelCheckout] = useState(false);
   const [canDowngrade, setCanDowngrade] = useState();
+  // const [showCard, setShowCard] = useState(true);
+  // const [disablePayNow, setDisablePayNow] = useState(true);
 
   useEffect(() => {
     const getData = async () => {
       const res = await userInstance.post('/getTotalUnit');
-      if (res.data.code === 200) {
-        const units = res.data.totalUnit;
+      if (res.data.code === 200 || res.data.code === 404) {
+        const units = res.data.totalUnit || 1;
         const range = Array(units + 50 - units + 1)
           .fill()
           .map((_, idx) => units + idx);
@@ -74,10 +79,16 @@ const BillingInformation = () => {
 
   const getUser = async () => {
     const response = await userInstance.get('/transactions');
-    const { code, transactions, startDate } = response.data;
+    const { code, transactions, endDate } = response.data;
     if (code === 200 && transactions != null) {
-      const renewDate = moment(new Date(startDate)).add(1, 'M');
-      setEnd(renewDate._d.toDateString());
+      const [{ interval }] = transactions;
+      if (interval === 'month') {
+        const renewDate = moment(endDate);
+        setEnd(renewDate._d.toDateString());
+      } else {
+        const renewDate = moment(endDate);
+        setEnd(renewDate._d.toDateString());
+      }
       transactions.forEach((element) => {
         addData(element);
         setCurrentCurrency(element.currency);
@@ -323,6 +334,12 @@ const BillingInformation = () => {
     }
   };
 
+  // const disablebtn = () => {
+  //   if (!unitsSelected && !subscriptionType && !currency && !planType) {
+  //     setDisablePayNow(false);
+  //     console.log('shgsgs');
+  //   }
+  // };
   /* ----------------------------- All payment handling functions here -------------------------- */
 
   const handleChangeSubscription = async () => {
@@ -408,8 +425,17 @@ const BillingInformation = () => {
     }
   };
 
+  // const ShowLoader = (
+  //   <div className="loader">
+  //     <div className="loader-box">
+  //       <img src={loader} alt="loader" />
+  //     </div>
+  //   </div>
+  // );
+
   return (
     <Wrapper>
+      {/* <Suspense fallback={<ShowLoader />}> */}
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <div className="billing-information">
         <div className="page-header">
@@ -576,6 +602,14 @@ const BillingInformation = () => {
                                   <p>20% discount if you select Yearly plan</p>
                                 </Form.Item>
                               </Col>
+                              {/* <Col span={9}>
+                                <Button
+                                  onClick={disablebtn}
+                                  disabled={disablePayNow}
+                                >
+                                  Pay Now
+                                </Button>
+                              </Col> */}
                             </Row>
                             <Col span={6}>
                               <div>
@@ -601,6 +635,7 @@ const BillingInformation = () => {
                                       toaster={toasterMessage}
                                       hideBilling={setHideBilling}
                                       getData={getUser}
+                                      getInvoice={getInvoice}
                                     />
                                   )}
                                 </Elements>
@@ -715,6 +750,7 @@ const BillingInformation = () => {
         data={data}
         currency={currentCurrency}
       />
+      {/* </Suspense> */}
     </Wrapper>
   );
 };

@@ -12,5 +12,3 @@ export const adminInstance = axios.create({
   baseURL: `${server}/admin`,
   withCredentials: true,
 });
-
-export const stripeKey = 'pk_test_WN4YUK81X937Y9LdFX14Ts5t';

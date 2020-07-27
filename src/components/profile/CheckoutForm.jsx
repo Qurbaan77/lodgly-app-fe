@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { Form, Button } from 'antd';
 import { userInstance } from '../../axios/axiosconfig';
+import loader from '../../assets/images/loader.svg';
 
 // Custom styling can be passed to options when creating an Element.
 const CARD_ELEMENT_OPTIONS = {
@@ -24,11 +25,11 @@ const CARD_ELEMENT_OPTIONS = {
 };
 const CheckoutForm = ({
   total, currency, unitsSelected, subscriptionType, planType, toaster,
-  submitChange, showCancelCheckout, hideBilling, getData,
+  submitChange, showCancelCheckout, hideBilling, getData, getInvoice,
 }) => {
   const stripe = useStripe();
   const elements = useElements();
-
+  const [hideLoader, setHideLoader] = useState(true);
   // Handle real-time validation errors from the card Element.
   const handleChange = (event) => {
     if (event.error) {
@@ -55,6 +56,7 @@ const CheckoutForm = ({
       toaster('', '');
       // Send the token to your server.
       if (total !== 0) {
+        setHideLoader(false);
         const payload = {
           stripeToken: result.token.id,
           amount: total / 100,
@@ -66,14 +68,17 @@ const CheckoutForm = ({
         const response = await userInstance.post('/charge', payload);
         const { code } = response.data;
         if (code === 200) {
+          setHideLoader(true);
           toaster('success', 'Your Transaction was successful');
           hideBilling(true);
           getData();
-          // window.location.href = '/payment';
+          getInvoice();
         } else {
+          setHideLoader(true);
           toaster('error', 'Transaction Failed');
         }
       } else {
+        setHideLoader(true);
         const err = 'Amount Is Empty';
         toaster('error', err);
       }
@@ -82,6 +87,11 @@ const CheckoutForm = ({
 
   return (
     <div>
+      <div className="loader" hidden={hideLoader}>
+        <div className="loader-box">
+          <img src={loader} alt="loader" />
+        </div>
+      </div>
       {
       showCancelCheckout
         ? (
@@ -130,6 +140,7 @@ CheckoutForm.propTypes = {
   showCancelCheckout: PropTypes.bool,
   hideBilling: PropTypes.func,
   getData: PropTypes.func,
+  getInvoice: PropTypes.func,
 };
 CheckoutForm.defaultProps = {
   total: 0,
@@ -142,5 +153,6 @@ CheckoutForm.defaultProps = {
   showCancelCheckout: false,
   hideBilling: () => {},
   getData: () => {},
+  getInvoice: () => {},
 };
 export default CheckoutForm;
