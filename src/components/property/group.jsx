@@ -220,7 +220,7 @@ const Groups = () => {
                 marginRight: 8,
               }}
             >
-              <Input placeholder="" />
+              <Input placeholder="" type="number" />
             </Form.Item>
             <Form.Item
               name="interval"

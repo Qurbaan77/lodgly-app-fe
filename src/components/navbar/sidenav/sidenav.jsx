@@ -36,7 +36,6 @@ const Sidenav = ({
   const { t } = useTranslation();
   const [propertyData, setPropertyData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
-  const [menu, setMenu] = useState(false);
   const [hideBooking, setHideBooking] = useState(false);
   const [hideCalendar, setHidecalendar] = useState(false);
   const [hideInvoice, setHideInvoice] = useState(false);
@@ -143,22 +142,24 @@ const Sidenav = ({
     }
   }, [userId]);
 
+  const [nav, setNav] = useState(false);
   const changeMenu = useCallback(() => {
     const { pathname } = window.location;
     if (
-      pathname === '/property'
+      (pathname === '/property'
       || pathname === '/unittype'
       || pathname === '/addunittype'
       || pathname === '/channelmanager'
       || pathname === '/services'
       || pathname === '/groups'
-      || pathname === '/task'
-    ) { setMenu(!menu); }
-  }, [menu]);
+      || pathname === '/task')
+      && nav === false
+    ) { setNav(true); }
+  }, [nav]);
 
-  // useEffect(() => {
-  //   changeMenu();
-  // }, [changeMenu]);
+  useEffect(() => {
+    changeMenu();
+  }, [changeMenu]);
 
   useEffect(() => {
     getData();
@@ -167,7 +168,11 @@ const Sidenav = ({
     }
   }, [getData, getSubUser]);
 
-  const [nav, setNav] = useState(false);
+  const func = (id) => {
+    localStorage.setItem('propertyId', id);
+    setNav(true);
+    changeMenu();
+  };
   const handleMenu = (e) => {
     if (e === 'open') {
       setNav(true);
@@ -220,8 +225,7 @@ const Sidenav = ({
               <Link
                 to="/property"
                 onClick={() => {
-                  localStorage.setItem('propertyId', el.id);
-                  changeMenu();
+                  func(el.id);
                 }}
               >
                 {t('strings.propertyno')}

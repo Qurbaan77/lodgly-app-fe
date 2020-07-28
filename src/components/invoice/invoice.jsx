@@ -453,7 +453,7 @@ const Invoice = () => {
                     )}
                     <div className="filter-icons">
                       <ul>
-                        <li>
+                        <li hidden={!checkedInvoice.length}>
                           <img
                             role="presentation"
                             className="download-img"

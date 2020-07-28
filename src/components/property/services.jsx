@@ -222,14 +222,14 @@ const Services = () => {
               },
             ]}
           >
-            <Input />
+            <Input type="number" />
           </Form.Item>
           <Form.Item
             label="Standard Quantity"
             name="servicequantity"
             style={{ padding: '0px 10px' }}
           >
-            <Input />
+            <Input type="number" />
           </Form.Item>
           <Form.Item className="text-center">
             <Button

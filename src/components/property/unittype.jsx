@@ -79,12 +79,23 @@ const UnitType = () => {
       propertyId: localStorage.getItem('propertyId'),
     };
     const response = await userInstance.post('/getUnittype', values);
-    const data = response.data.unittypeData;
+    console.log(response);
+    const { unittypeData, units } = response.data;
     if (response.data.code === 200) {
+      unittypeData.forEach((el) => {
+        let sum = 0;
+        units.forEach((ele) => {
+          if (el.id === ele.unittypeId) {
+            sum += 1;
+          }
+        });
+        el.noOfUnits = sum;
+      });
       setEmpty(false);
-      setUnittypeData(data);
+      setUnittypeData(unittypeData);
     }
   };
+  console.log(unittypeData);
 
   const remove = async () => {
     const values = {
@@ -199,7 +210,11 @@ const UnitType = () => {
                     onChange={onChange}
                     hidden={editId !== i}
                   />
-                  <span>{t('unittype.title2')}</span>
+                  <span>
+                    {el.noOfUnits}
+                    {' '}
+                    {t('unittype.title2')}
+                  </span>
                 </div>
                 {editId === i ? (
                   <div className="group-action">

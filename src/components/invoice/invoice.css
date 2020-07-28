@@ -423,3 +423,13 @@
 .additional-fields .ant-form-item-explain {
   font-size: 10px;
 }
+.cross-btn {
+  position: absolute;
+  right: 10px;
+  top: 20px;
+}
+
+.cross-btn .anticon {
+  font-size: 20px;
+  color: #999;
+}

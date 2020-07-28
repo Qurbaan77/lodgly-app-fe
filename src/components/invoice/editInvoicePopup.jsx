@@ -12,7 +12,7 @@ import {
   Row, Col,
 } from 'antd';
 
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import propertyIcon from '../../assets/images/menu/property-icon-orange.png';
 import printIcon from '../../assets/images/menu/print-white.png';
@@ -269,6 +269,10 @@ const EditInvoicePopup = (props) => {
     props.close();
     props.showDeleteWarning(invoiceData);
   };
+  const handleCross = () => {
+    props.close();
+  };
+
   return (
     <Modal
       title="Edit invoice"
@@ -277,6 +281,9 @@ const EditInvoicePopup = (props) => {
       onCancel={handleCancel}
       wrapClassName="guest-modal add-invoice-popup"
     >
+      <div className="cross-btn">
+        <CloseOutlined onClick={handleCross} />
+      </div>
       <Form name="basic" form={form} onFinish={handleFinish}>
         <Row style={{ alignItems: 'center' }}>
           <Col span={12}>

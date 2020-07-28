@@ -11,7 +11,7 @@ import {
   Modal,
   Row, Col,
 } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
 
 import moment from 'moment';
 import propertyIcon from '../../assets/images/menu/property-icon-orange.png';
@@ -189,7 +189,9 @@ const AdInvoicePopup = (props) => {
   const handleDraft = () => {
     setDraftBtn(true);
   };
-
+  const handleCross = () => {
+    props.close();
+  };
   return (
     <Modal
       title="Create new invoice"
@@ -197,7 +199,11 @@ const AdInvoicePopup = (props) => {
       onOk={handleOk}
       onCancel={handleCancel}
       wrapClassName="guest-modal add-invoice-popup"
+      destroyOnClose
     >
+      <div className="cross-btn">
+        <CloseOutlined onClick={handleCross} />
+      </div>
       <Form name="basic" onFinish={handleFinish}>
         <Row style={{ alignItems: 'center' }}>
           <Col span={12}>

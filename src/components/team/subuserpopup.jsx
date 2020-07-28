@@ -4,7 +4,7 @@ import './team.css';
 import {
   Form, Select, Input, Button, Checkbox, Modal, Row, Col,
 } from 'antd';
-
+import { CloseOutlined } from '@ant-design/icons';
 import { userInstance } from '../../axios/axiosconfig';
 
 const SubUserPopup = ({
@@ -147,6 +147,10 @@ const SubUserPopup = ({
     ? setServiceWrite(false) : setServiceWrite(true));
   const handleOwnerRead = (e) => (e.target.value ? setOwnerRead(false) : setOwnerRead(true));
   const handleOwnerWrite = (e) => (e.target.value ? setOwnerWrite(false) : setOwnerWrite(true));
+
+  const handleCross = () => {
+    close();
+  };
   return (
     <Modal
       title="Add New Sub-User"
@@ -155,6 +159,9 @@ const SubUserPopup = ({
       onCancel={handleCancel}
       wrapClassName="guest-modal sub-user"
     >
+      <div className="cross-btn">
+        <CloseOutlined onClick={handleCross} />
+      </div>
       <Form name="basic" form={form} onFinish={onFinish}>
         <Row style={{ alignItems: 'center' }}>
           <Col span={8}>
