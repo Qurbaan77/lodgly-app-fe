@@ -15,7 +15,7 @@ const Wrapper = ({
   };
 
   const [menutoggle, setMenuToggle] = useState(false);
-  const handleMenu = (e) => {
+  const handleMenuSide = (e) => {
     if (e === 'open') {
       setMenuToggle(true);
     } else if (e === 'close') {
@@ -32,7 +32,7 @@ const Wrapper = ({
           menutoggle={menutoggle}
           img={img}
           name={name}
-          handleMenu={handleMenu}
+          handleMenuSide={handleMenuSide}
           getUserInfo={getUserInfo}
         />
         <Layout className="site-layout">

@@ -31,7 +31,48 @@
         "from":"z",
         "to":"do",
         "usd":"USD",
-        "price":"Cena £"
+        "price":"Cena £",
+        "date":"Data",
+        "delete_item":" Usuń przedmiot",
+        "address":"Adres",
+        "state":"Stan",
+        "update":"Aktualizacja",
+        "website":"Aktualizacja",
+        "city":"Miasto",
+        "zip":"Zamek błyskawiczny",
+        "edit":"Edytować",
+        "delete":"Usunąć",
+        "guests":"Goście",
+        "reservat":"Rezerwacja",
+        "guest": "Gość",
+       "bank_note": "UWAGI BANKOWE",
+       "card": "KARTA",
+      "check": " CZEK",
+      "bank_transfer": "PRZELEW BANKOWY",
+       "client": "Klient",
+      "delivery_date": "Data dostarczenia",
+
+    "discount_type": "Typ rabatu",
+    "total": "CAŁKOWITY",
+    "save_draft": "Zapisz Projekt",
+    "issue": "Kwestia",
+    "print": "Wydrukować",
+    "cancellation": "Anulowanie",
+    "invoices": "Faktury",
+    "label": "Etykieta",
+    "type": "Rodzaj",
+    "amount": "Ilość",
+    "action": "Akcja",
+    "select_all": "Zaznacz wszystko",
+    "selected": "Wybrany",
+    "gender": "Płeć",
+    "chanel_commission": "Kanał, prowizja (%)",
+    "reservation_date": "Data rezerwacji",
+    "Name": "Imię",
+    "nights": "Noce",
+    "dob": "Data urodzenia",
+    "citizenship": "Obywatelstwo"
+       
        
   },
 
@@ -111,7 +152,8 @@
     "title4": "Sprawdzaj tylko w wolne dni",
     "title5": "Poprzednie sprawdzenie",
     "title6": "Następne sprawdzanie",
-    "title7": "DODAJ / EDYTUJ GRUPY"
+    "title7": "DODAJ / EDYTUJ GRUPY",
+    "title8":"Wprowadź nazwę swojej grupy!"
   },
   "task": {
     "heading": "Nie wybrano żadnej grupy",
@@ -122,7 +164,14 @@
     "title4": "Sprawdzaj tylko w wolne dni",
     "title5": "Poprzednie sprawdzenie",
     "title6": "Następne sprawdzanie",
-    "title7": "DODAJ / EDYTUJ ZADANIE"
+    "title7": "DODAJ / EDYTUJ ZADANIE",
+    "rules":"Wprowadź nazwę zadania!",
+    "rules1":"Wpisz swoją notatkę!",
+    "option1":"Zatwierdzony",
+    "option2":"Czekanie",
+    "option3":"Upadek",
+    "option4":"W recenzji"
+
   },
   "channel": {
     "heading": "Channel Manager",
@@ -151,19 +200,31 @@
     "title1": "Ceny i dostępność",
     "title3": "Wsparcie"
   },
-  "admin": {
-    "heading": "Oprawa",
+  "setting": {
 
-    "heading2": "Admin",
-    "heading3": "Zmień hasło",
-    "label1": "Imię",
-    "label2": "Nazwisko",
-    "label3": "E-mail",
-    "label4": "Telefon",
-    "label5": "Hasło",
-    "label6": "Potwierdź hasło",
-    "label7": "First Name"
-  },
+    "heading":"Setting",
+    "heading2":"Admin",
+    "heading3":"Change Password",
+    "label1":"First Name",
+    "label2":"Last Name",
+    "label3":"E-mail",
+    "label4":"Phone",
+    "label5":"Password",
+    "label7":"Confirm Password",
+    "label8":" Please input your firstname!",
+    "label9":" Please input your lastname!",
+    "label10":"The input is not valid E-mail!",
+    "label11":"Please input your E-mail!",
+    "label12":"The input is not valid E-mail!",
+    "label13":" Please input your phone",
+    "label14":" Please input your password!",
+    "label15":" Please confirm your password!"
+   
+    
+  
+
+
+},
   "bookingpop": {
 
     "heading":" Utwórz rezerwację",
@@ -188,7 +249,16 @@
     "label17":" Dzieci (od 12 lat)",
     "label18":"   Dodaj dane gościa (opcjonalnie)",
     "label19":" DODAJ UWAGI (OPCJONALNIE)",
-    "label20":" DODAJ UWAGI (OPCJONALNIE)"
+    "label20":" DODAJ UWAGI (OPCJONALNIE)",
+    "rule1":"'Wymagana jest data rezerwacji",
+    "rule2":"Nazwa nieruchomości jest wymagana",
+    "rule3":"Unit is required",
+    "rule4":" Wymagana jest prowizja",
+    "rule5":" Pole wymagane",
+    "rule6":"Rodzaj rabatu",
+    "rule7":"Wybierz usługę",
+    "rule8":"  Ilość",
+    "rule9":"Oceniać"
   
 
     
@@ -214,7 +284,482 @@
   
 
 
+},
+"booking": {
+
+  "heading":" Filtry",
+    "tag1":"poz.1",
+    "tag2":"poz.2",
+    "tag3":"poz.3",
+   
+    "heading3":"Rezerwować",
+    "heading5":" Dodaj dodatkowego gościa",
+    "heading4":"  Zarezerwowane",
+    "heading6":"kanał, prowizja (%)",
+  
+    "label1":"Noc - 1 pokój,",
+    "label2":"  Goście,",
+    "label3":" ID:",
+    "label4":" Dzieci (0-12 yrs)",
+    "label5":"Noce",
+    "label6":" Dodaj dodatkowego gościa"
+
+  
+
+
+
+},
+"addunity": {
+
+
+  
+  "label1":" Cena za noc",
+  "label2":" Pokoje do sprzedaży",
+  "label3":"  Minimalny pobyt",
+  "label4":"Edytuj jednostkę",
+ "updatebtn":"Zaktualizuj kalendarz",
+ "para1":"Przypisz swoje jednostki",
+ "para2":"Teraz dodaj jednostkę do typu jednostki",
+ "para3":"Przypisana jest 1 jednostka",
+ "para4":"Dodaj jednostkę"
+
+
+
+  
+
+
+
+},
+"property": {
+
+
+  
+  "heading1":"Nie masz uprawnień do zapisania nowej właściwości",
+  "heading2":"Typ nieruchomości",
+  "heading3":"Moja własność demonstracyjna",
+  "label1":"Sypialnie",
+  "label2":"Pełne łazienki",
+  "label3":"Pół łazienki",
+  "label4":"SQ Footage",
+  "label5":"Opis",
+  "label6":"Zasady dotyczące zwierząt domowych",
+  "label7":"Funkcje i udogodnienia",
+  "para1":"Pochwal się swoim miejscem",
+  "para2":"Upuść zdjęcia tutaj lub",
+  "label8":" Wymagane jest co najmniej 1 zdjęcie. Maksymalny rozmiar pliku to 30 MB na obraz. Tylko formaty JPG, PNG lub GIF.",
+  "label9":"WYBIERZ PLIK",
+  "para3":"Wycieczka wideo (opcjonalnie)",
+  "para4":"Tylko filmy z YouTube. Wklej tutaj swój link"
+
+ 
+
+  
+
+
+
+},
+"deletepopup": {
+
+
+  
+  "heading1":"Usunąć ten obiekt?",
+  "heading2":"Usunięcie tych elementów spowoduje trwałe usunięcie ich z Twojej sieci."
+ 
+
+  
+
+
+
+},
+"addreservation": {
+
+
+  
+  "heading1":"Edycja / dodatkowe dane",
+  "heading2":"Data rezerwacji",
+  "heading3":"Wymagana jest data rezerwacji",
+  "heading4":"Nazwa nieruchomości jest wymagana",
+  "heading5":"Jednostka jest wymagana",
+  "heading6":"Kanał, prowizja (%)",
+  "heading8":"Wymagana jest prowizja",
+  "heading9":"Pole wymagane",
+  "heading10":"Dzieci (0-12 lat)",
+  "heading11":"Dzieci (od 12 lat)",
+  "heading12":"Dodaj dodatkowego gościa",
+  "heading13":"Dodaj dane gościa (opcjonalnie)",
+  "heading14":"Dodaj uwagi (opcjonalnie)",
+  "heading15":"Utwórz rezerwację",
+  "heading16":"Dodaj uwagi (opcjonalnie)",
+   "heading17":"Accomodation",
+   " heading18 " :"Średnia cena za noc",
+   "heading19":"  Zniżka",
+   "heading20":"Rodzaj rabatu",
+   "heading21":" Co noc",
+   "heading22":"Koszt zakwaterowania",
+   "heading23":"   Dodaj usługi",
+   "heading24":"Ilość",
+   "heading25":"Całkowity",
+   "heading26":"  Kaucja",
+   "heading27":"Depozyt za zakwaterowanie",
+   "heading28":" Kwota pozostająca do spłaty",
+   "heading29":"0 nocy",
+   "heading30":"0 nights",
+   "heading31":" Dodaj rezerwację",
+   "heading32":" Rezerwacja grupowa",
+   "heading33":"Nie masz uprawnień do dodawania rezerwacji",
+   "headig34":"Dodaj nową rezerwację"
+
+  
+ 
+
+  
+
+
+
+},
+"services": {
+
+
+  
+  "heading1":"Dodaj usługi",
+  "heading2":"Nie masz uprawnień do tworzenia nowych usług",
+  "heading3":"Usługi",
+  "heading4":"Nazwa serwisu",
+  "heading5":"proszę podać nazwę usługi",
+  "heading6":" Cena usługi",
+  "heading8":"Proszę podać cenę",
+  "heading9":"Ilość standardowa"
+ 
+
+  
+
+
+
+},
+
+"calendarpop": {
+
+  "heading1":" Zaktualizuj gościa",
+  "heading2":" Rezerwacja grupowa",
+  "heading3":" Ustawienie kalendarza",
+  "heading4":"Dodaj nową rezerwację grupową",
+  "heading5":"Gość",
+  "heading6":"Kanał, prowizja (%)",
+  "heading8":"Wymagana jest prowizja",
+  "heading9":"Pole wymagane",
+  "heading10":"Dzieci(0-12yrs)",
+  "heading11":"Dzieci(12+ yrs)",
+  "heading12":"Dodaj dodatkowego gościa",
+  "heading13":"Dodaj dane gościa (opcjonalnie)",
+  "heading14":"Dodaj uwagi (opcjonalnie)",
+  "heading15":"Utwórz rezerwację",
+  "heading16":"Dodaj uwagi (opcjonalnie)",
+   "heading17":"Dodaj uwagi (opcjonalnie)",
+   "heading18":"Zakwaterowanie",
+   " heading19 " :"Średnia cena za noc",
+   "heading20":" Zniżka",
+   "heading21":"Rodzaj rabatu",
+   "heading22":" Co noc",
+   "heading23":"Koszt zakwaterowania",
+   "heading24":" Dodaj usługi",
+   "heading25":"Ilość",
+   "heading26":"Całkowity",
+   "heading27":"Kaucja",
+   "heading28":"Depozyt za zakwaterowanie",
+   "heading29":"Kwota pozostająca do spłaty",
+   "heading30":"0 nocy",
+   "heading31":"Dodaj rezerwację",
+   "heading32":"Rezerwacja grupowa",
+   "heading33":"Nie masz uprawnień do dodawania rezerwacji",
+   "headig34":"Dodaj nową rezerwację",
+   "label1":"Data urodzenia",
+   "label2":"Rodzaj dokumentu",
+   "label3":"Numer dokumentu",
+   "label4":"Miejsce zamieszkania",
+   "label5":"Obywatelstwo",
+   "label6":"Dostępność jest sprawdzana automatycznie",
+   "label7":"Rezerwujący Booker",
+   "label8":"Edycja / dodatkowe dane",
+   "label9":"Pokaż / ukryj ograniczenia",
+   "label10":"Min Stay",
+   "label11":"Max Stay",
+   "label12":"Przyjazd na minimalny pobyt",
+   "label13":"Maksymalny czas przyjazdu",
+   "label14":"Brak zameldowania",
+   "label15":"Brak wyjazdu",
+   "label16":"Pokaż na rezerwacjach",
+   "label17":"Kolor rezerwacji oparty na",
+   "label18":"Płatny",
+   "label19":"Całkowita liczba nocy",
+   "label20":"Koszt usługi",
+   "label21":"Cena za noc",
+   "label22":"Standardowa stawka",
+   "label23":"Dodaj notatkę",
+   "label24":"Dodaj zadanie",
+   "label25":"Dodaj gościa",
+   "label26":"Zameldować się",
+   "label27":"Edytuj rezerwację"
+
+
+},
+"adminheader": {
+
+  "label1":"Mój profil",
+  "label2":"Oprawa",
+  "label3":"Ustawienie kalendarza"
+  
+   
+},
+
+
+"adminlogin": {
+
+  "label1":" Witamy spowrotem!",
+  "label2":" Cieszymy się, że znów tu jesteś!",
+  "label3":" Adres e-mail",
+  "label4":"Podaj swój adres e-mail!",
+  "label5":"Hasło",
+  "label6":" Wprowadź swoje hasło!",
+  "label7":"Zaloguj sie",
+  "label8":"Zapomniałeś hasła?",
+  "label9":"Zaloguj sie"
+  
+   
+},
+"forget": {
+
+  "heading1":"Uzyskaj nowe hasło",
+  "label2":" Wpisz swój adres e-mail, aby zresetować hasło",
+  "label3":" Adres e-mail",
+  "label4":"Podaj swój adres e-mail!",
+  "label5":"Wprowadzone dane są nieprawidłowe. E-mail!",
+  "label6":"Podaj swój adres e-mail!",
+  "label7":"Zatwierdź"
+ 
+  
+   
+},
+"invoice": {
+
+  "heading1":"Utwórz nową fakturę",
+  "label1":" Faktura",
+  "label2":" Proszę podać datę",
+  "label3":"Wprowadź godzinę",
+  "label4":"Wprowadź datę dostawy",
+  "label5":"Klient",
+  "label6":"Wprowadź nazwę klienta",
+  "label7":" Wprowadź adres klienta",
+ "label8":"Proszę podać cenę",
+ "label9":" Wprowadź ilość",
+ "label10":"Dodaj dodatkowego gościa",
+ "label11":"UWAGA: Wystawiona faktura ma przypisany numer porządkowy i nie można go zmienić. Fakturę zapisaną jako wersję roboczą można później zmienić.",
+  "label12":"Wprowadź adres e-mail klienta",
+  "label13":"opis przedmiotu",
+  "label14":"Wprowadź opis przedmiotu",
+  "label15":"Usunąć ten obiekt?",
+  "label16":"Usunięcie tej faktury spowoduje trwałe usunięcie jej z Twojej sieci.",
+  "label17":"Usuń przedmiot",
+  "heading2":"Edytuj fakturę",
+  "heading3":"Obecnie nie ma utworzonych subużytkowników"
+  
+ 
+  
+   
+},
+"login": {
+  "heading1": "Zaloguj się",
+  "label1": "  My",
+  "label2": "cieszę się, że znowu tu jesteś!",
+  "label3": "Adres e-mail",
+  "label4": "Podaj swój adres e-mail!",
+  "label5": "Hasło",
+  "label6": "Wprowadź swoje hasło!",
+  "label7": " Zaloguj się",
+  "label8": "lub połącz się z",
+  "label9": " Google",
+  "label10": "  Don",
+  "label11": "nie masz jeszcze konta?",
+  "label12": " Zapomniałeś hasła?",
+  "label13": "Uzyskaj nowe hasło",
+  "label14": "Zarejestruj się teraz"
+},
+"owner": {
+  "heading1": "Właściciel",
+  "label1": " Użytkownik podrzędny",
+  "label2": " Email",
+  "label3": " Nieruchomości",
+  "label4": "Stanowisko",
+  "label5": "Imię",
+  "label6": "Wprowadź imię!",
+  "label7": "Drugie imię",
+  "label8": "Wpisz drugie imię!",
+  "label9": " Niepoprawny email!",
+  "label10": "Wprowadź e-mail!",
+  "label11": " Kraj zamieszkania",
+  "label12": "Miejsce zamieszkania",
+  "label13": "Rodzaj dokumentu",
+  "label14": "Numer dokumentu",
+  "label15": " Wybierz swoją nieruchomość!",
+  "label16": "Wybierz nieruchomość",
+  "label17": "Zapisz własność właściciela",
+  "label18": "Obecnie nie utworzono żadnego właściciela",
+  "label19": "Zaktualizuj właściciela",
+  "label20": "Informacje o właścicielu"
+ 
+},
+"billinghistory": {
+  "heading1": "Historia rozliczeń",
+  "label2": "  Plan płatności",
+  "label3": "Całkowite wykorzystanie",
+  "label4": " Saldo",
+  "label5": " ly Subskrypcja",
+  "label6": " Pobierz fakturę"
+},
+"billinginformation": {
+  "heading1": "Informacje rozliczeniowe",
+  "label2": " Masz aktywny okres próbny do",
+  "label3": "Nie ustawiono metody płatności. Zaktualizuj metodę płatności.",
+  "label4": "  Postęp",
+  "label5": " Podstawowy",
+  "label6": "Typ subskrypcji",
+  "label7": "Cena za jednostkę",
+  "label8": "Jednostki",
+  "label9": "Wybierz jednostki",
+  "label10": "Typ planu",
+  "label11": "Miesięczny",
+  "label12": "Rocznie",
+  "label13": " Proszę podać cenę",
+  "label14": " 20% zniżki, jeśli wybierzesz abonament roczny",
+  "label15": "  za",
+  "label16": "   Plan",
+  "label17": " Zniżka",
+  "label18": "  upgrade/downgrade",
+  "label19": " Twój",
+  "label20": " ly Plan abonamentowy",
+  "label21": " odnowi się",
+  "label22": "  Cena całkowita"
+},
+"checkoutform": {
+  "heading1": " Wprowadź dane swojej karty",
+  "label1": " Prześlij Szczegóły"
+},
+"billingprofile": {
+  "heading1": " Informacje osobiste",
+  "label1": " Detale",
+  "label2": " Dodaj lub edytuj swoje dane osobowe",
+  "label3": "Upuść zdjęcia tutaj lub",
+  "label4": "  WYBIERZ PLIK",
+  "label5": " Imię",
+  "label6": " Proszę podaj swoje imię!",
+  "label7": "  Nazwisko",
+  "label8": " Proszę podać swoje nazwisko!",
+  "label9": "Ustawienia aplikacji",
+
+  "label10": " Język interfejsu użytkownika",
+  "label11": " Strefa czasowa",
+  "label12": "  Zmiana hasła",
+  "label13": " Stare hasło",
+  "label14": " Wpisz swoje stare hasło!",
+  "label15": "nowe hasło",
+  "label16": " Wpisz nowe hasło!",
+  "label17": " Powtórz nowe hasło",
+  "label18": "Proszę, potwierdź swoje hasło!",
+  "label19": " Zmień hasło",
+  "label20": "Dane firmy",
+  "label21": "Proszę wpisać swoje imię!",
+  "label22": "Dane firmy",
+  "label23": " Dodaj lub edytuj dane swojej firmy"
+},
+
+"register": {
+  "heading1": " Zarejestrować",
+  "label1": "My",
+  "label2": " cieszę się, że tu jesteś!",
+  "label3": " Wprowadzone dane są nieprawidłowe. E-mail!",
+  "label4": " Wpisz swój adres e-mail!",
+  "label5": "Wprowadź swoją nazwę użytkownika!",
+  "label6": "Hasło powinno mieć od 6 do 15 znaków!",
+  "label7": "Wprowadź swój numer telefonu z zakresu od 9 do 15!",
+  "label8": "Nazwa Użytkownika",
+  "label9": "Hasło",
+  "label10": "Potwierdź hasło",
+  "label11": " Proszę, potwierdź swoje hasło!",
+  "label12": "Numer telefonu",
+  "label13": " Przeczytałem",
+  "label14": "umowa",
+  "label15": "  Zarejestrować",
+  "label16": "  Posiadasz już konto?",
+  "label17": "Zaloguj się teraz"
+},
+"userprofile": {
+  "label1": " Mój profil",
+  "label2": "Dane do faktury"
+},
+"reset": {
+  "heading1": " Uzyskaj nowe hasło",
+  "label2": " Wpisz swój adres e-mail, aby zresetować hasło",
+  "label3": " Adres e-mail",
+  "label4": "Podaj swój adres e-mail!",
+  "label5": "Wprowadzone dane są nieprawidłowe. E-mail!",
+  "label6": "   Zatwierdź",
+  "label7": " nowe hasło",
+  "label8": "Wprowadź swoje hasło!",
+  "label9": "Potwierdź hasło",
+  "label10": " Proszę, potwierdź swoje hasło!",
+  "label11": "   Zmień hasło"
+},
+"stats": {
+  "heading1": "Dochody z zakwaterowania",
+  "label2": "Statystyki",
+  "label3": "Obłożenie miesięcznie",
+  "label4": "Rezerwacje według kraju",
+  "label5": "Rezerwacje na kanał",
+  "label6": "Raport o tempie",
+  "label7": "  Nowe hasło",
+  "label8": "Wprowadź swoje hasło!",
+  "label9": "Potwierdź hasło",
+  "label10": " Proszę, potwierdź swoje hasło!",
+  "label11": " Zmień hasło"
+},
+"editsubuserpopup": {
+  "heading1": " Edytuj użytkownika podrzędnego",
+  "label2": "Wprowadzone dane są nieprawidłowe. E-mail!",
+  "label3": "Wpisz swój adres e-mail!",
+  "label4": "Podużytkownik",
+  "label5": " Pełny dostęp",
+  "label6": "Rezerwować",
+  "label7": " Ceny i dostępność synchronizowane z połączonymi OTA",
+  "label8": "Kalendarz",
+  "label9": "Opis dostępu",
+  "label10": "Nieruchomości",
+  "label11": "Zarezerwowane terminy w kalendarzu",
+  "label12": "Goście",
+  "label13":"Meldowanie i wymeldowanie gości w Dashboard, kanałach sprzedaży. Raportowanie gości eVisitor (jeśli skonfigurowano integrację eVisitor). Kanały sprzedaży i ustawienia channel managera.",
+  "label14":"Zespół",
+  "label15":"Dodatkowe usługi i ich ustawienia",
+  "label16":"Faktury",
+  "label17":"Czytać",
+  "label18":"pisać",
+  "label20":" Opis dostępu",
+  "label21":" Faktury, oferty i wystawianie faktur",
+  "label22":"Statystyki",
+  "label23":" Ekran statystyk",
+  "label24":"Usługi",
+  "label25":"Ustawienia usługi, ustawienia faktur i ustawienia channel managera",
+  "label26":"Właściciel",
+  "label27":"Rola"
+
+
+  
 }
+
+
+
+
+
+
+
+
 
 
 }

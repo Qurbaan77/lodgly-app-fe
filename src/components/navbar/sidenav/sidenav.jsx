@@ -31,7 +31,7 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 const Sidenav = ({
-  img, name, getUserInfo, menutoggle,
+  img, name, getUserInfo, handleMenuSide, menutoggle,
 }) => {
   const { t } = useTranslation();
   const [propertyData, setPropertyData] = useState([]);
@@ -170,7 +170,6 @@ const Sidenav = ({
 
   const func = (id) => {
     localStorage.setItem('propertyId', id);
-    setNav(true);
     changeMenu();
   };
   const handleMenu = (e) => {
@@ -187,7 +186,7 @@ const Sidenav = ({
     <Sider theme="light" trigger={null} collapsible className={`side-menu ${menutoggle ? 'menu-show' : ''}`}>
       <div className="sidebar-logo">
         <img className="logo" src={logo} alt="logo" />
-        <img className="close-icon" src={closeicon} alt="close" onClick={() => handleMenu('close')} role="presentation" aria-hidden="true" />
+        <img className="close-icon" src={closeicon} alt="close" onClick={() => handleMenuSide('close')} role="presentation" aria-hidden="true" />
       </div>
 
       <UserProfile img={img} name={name} getUserInfo={getUserInfo} />
@@ -322,13 +321,13 @@ Sidenav.propTypes = {
   name: PropTypes.string,
   getUserInfo: PropTypes.func,
   menutoggle: PropTypes.bool,
-  // handleMenu: PropTypes.func,
+  handleMenuSide: PropTypes.func,
 };
 Sidenav.defaultProps = {
   img: '',
   name: '',
   getUserInfo: () => {},
-  // handleMenu: () => {},
+  handleMenuSide: () => {},
   menutoggle: false,
 };
 

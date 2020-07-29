@@ -101,6 +101,7 @@
 
     .search-content.search-expand {
         display: block;
+        width: 100%;
     }
 
     .search-content .ant-input-suffix {
@@ -123,6 +124,7 @@
         padding-right: 0;
         max-width: 100%;
         width: 100%;
+        flex-wrap: wrap;
     }
     
     .language {

@@ -120,7 +120,7 @@ const BookingFilter = (props) => {
                           placeholder="Select"
                         >
                           {propertyData.map((el) => (
-                            <Select.Option value={el.id}>
+                            <Select.Option value={el.id} key={el.id}>
                               {el.propertyName}
                             </Select.Option>
                           ))}

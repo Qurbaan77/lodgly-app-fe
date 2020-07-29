@@ -113,31 +113,33 @@ const Owner = () => {
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
-    const data2 = response.data.propertiesData;
-    setVisible(true);
-    setNotifyType('');
-    const selectedProperty = [];
-    data2
-      .forEach((el) => el.ownerId === data.id)
-      .forEach((filter) => {
+    console.log(response);
+    if (response.data.code === 200) {
+      const data2 = response.data.propertiesData;
+      setVisible(true);
+      setNotifyType('');
+      const selectedProperty = [];
+      const data3 = data2.filter((el) => el.ownerId === data.id);
+      data3.forEach((filter) => {
         selectedProperty.push(filter.id);
       });
-    form.setFieldsValue({
-      id: data.id,
-      firstname: data.fname,
-      secondname: data.lname,
-      email: data.email,
-      phone: data.phone,
-      dob: m1,
-      gender: data.gender,
-      country: data.country,
-      citizenship: data.citizenship,
-      address: data.address,
-      document: data.typeofdoc,
-      documentnumber: data.docNo,
-      notes: data.notes,
-      properties: selectedProperty,
-    });
+      form.setFieldsValue({
+        id: data.id,
+        firstname: data.fname,
+        secondname: data.lname,
+        email: data.email,
+        phone: data.phone,
+        dob: m1,
+        gender: data.gender,
+        country: data.country,
+        citizenship: data.citizenship,
+        address: data.address,
+        document: data.typeofdoc,
+        documentnumber: data.docNo,
+        notes: data.notes,
+        properties: selectedProperty,
+      });
+    }
   };
 
   const onFinish = async (values) => {

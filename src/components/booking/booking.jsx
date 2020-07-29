@@ -234,7 +234,7 @@ const Booking = () => {
     getData();
   }, [getData]);
 
-  useEffect(() => {
+  const filterValue = useCallback(() => {
     const copyBookingData = bookingData;
     const filterBooked = [];
     const filterAgain = [];
@@ -246,9 +246,13 @@ const Booking = () => {
               && new Date(el.startDate) <= filterValues.groupname[1]._d,
         )
         .map((filter) => filterBooked.push(filter));
+      setBookingData(filterAgain.length > 0 ? filterAgain : filterBooked);
     }
-    setBookingData(filterAgain.length > 0 ? filterAgain : filterBooked);
-  }, [filterValues, bookingData]);
+  }, [bookingData, filterValues]);
+
+  useEffect(() => {
+    filterValue();
+  }, [filterValue]);
 
   const enableButton = (
     <Button

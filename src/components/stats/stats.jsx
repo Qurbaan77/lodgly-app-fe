@@ -203,7 +203,10 @@ const AccommodationChart = ({ topNavId }) => {
 };
 
 AccommodationChart.propTypes = {
-  topNavId: PropTypes.number.isRequired,
+  topNavId: PropTypes.number,
+};
+AccommodationChart.defaultProps = {
+  topNavId: 0,
 };
 
 const OccupancyChart = ({ topNavId }) => {
@@ -318,9 +321,11 @@ const OccupancyChart = ({ topNavId }) => {
 };
 
 OccupancyChart.propTypes = {
-  topNavId: PropTypes.number.isRequired,
+  topNavId: PropTypes.number,
 };
-
+OccupancyChart.defaultProps = {
+  topNavId: 0,
+};
 const ReservationCountryChart = () => {
   const [country, setCountry] = useState([]);
   const [average, setAverage] = useState([]);
@@ -544,5 +549,8 @@ const PaceChart = ({ topNavId }) => {
 };
 
 PaceChart.propTypes = {
-  topNavId: PropTypes.number.isRequired,
+  topNavId: PropTypes.number,
+};
+PaceChart.defaultProps = {
+  topNavId: 0,
 };
