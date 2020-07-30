@@ -113,7 +113,6 @@ const Owner = () => {
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
-    console.log(response);
     if (response.data.code === 200) {
       const data2 = response.data.propertiesData;
       setVisible(true);

@@ -79,7 +79,6 @@ const UnitType = () => {
       propertyId: localStorage.getItem('propertyId'),
     };
     const response = await userInstance.post('/getUnittype', values);
-    console.log(response);
     const { unittypeData, units } = response.data;
     if (response.data.code === 200) {
       unittypeData.forEach((el) => {
@@ -95,7 +94,6 @@ const UnitType = () => {
       setUnittypeData(unittypeData);
     }
   };
-  console.log(unittypeData);
 
   const remove = async () => {
     const values = {

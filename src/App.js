@@ -28,6 +28,7 @@ import Reset from './components/reset/reset';
 import Services from './components/property/services';
 import Calendar from './components/calendar/calendar';
 import Popup from './components/calendar/popup';
+import Company from './components/company/company';
 import { PrivateRoute, LoginRoute } from './Routes/PrivateRoute';
 import {
   SecureBooking, SecureCalendar, SecureProperty, SecureTeam,
@@ -57,6 +58,7 @@ const App = () => {
               <main>
                 <div className="main_content">
                   <LoginRoute exact path="/" component={() => <Login />} />
+                  <LoginRoute exact path="/company" component={() => <Company />} />
                   <LoginRoute exact path="/register" component={() => <Register />} />
                   <PrivateRoute
                     exact

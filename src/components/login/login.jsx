@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import './login.css';
 import { Form, Input, Button } from 'antd';
+import queryString from 'query-string';
 import logo from '../../assets/images/logo.jpg';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
@@ -53,6 +54,25 @@ const Login = () => {
   const close = () => {
     setNotifyType('');
   };
+
+  useEffect(() => {
+    async function fetchData() {
+      const values = queryString.parse(window.location.search);
+      const forgetHex = values.token;
+      if (forgetHex !== undefined) {
+        const response = await userInstance.get(`/verify/${forgetHex}`);
+        const { msg } = response.data;
+        if (response.data.code === 200) {
+          setNotifyType('success');
+          setNotifyMsg(msg);
+        } else {
+          setNotifyType('error');
+          setNotifyMsg(msg);
+        }
+      }
+    }
+    fetchData();
+  }, []);
 
   return (
     <div className="login">
