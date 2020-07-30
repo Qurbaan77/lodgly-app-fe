@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import PlacesAutocomplete from 'react-places-autocomplete';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import './property.css';
 import {
   Form,
@@ -17,7 +18,6 @@ import {
 } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { HomeOutlined, InboxOutlined } from '@ant-design/icons';
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import Wrapper from '../wrapper';
 import { server } from '../../config/keys';
 import { userInstance } from '../../axios/axiosconfig';

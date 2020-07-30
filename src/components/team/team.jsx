@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import Helmet from 'react-helmet';
 import './team.css';
 import { Button, Tooltip } from 'antd';
 import {
@@ -12,6 +13,7 @@ import team from '../../assets/images/profile_user.jpg';
 import SubUserPopup from './subuserpopup';
 import EditSubUserPopup from './editsubuserpopup';
 import subuser from '../../assets/images/subuser.jpg';
+import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import UserLock from '../userlock/userlock';
@@ -141,10 +143,14 @@ const TeamListing = () => {
 
   const pageContent = (
     <>
+      
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       {subUser.length ? (
         <Wrapper>
           <div className="team-page">
+            
+
+
             <div className="page-header">
               <h1>
                 <PartitionOutlined />
@@ -245,10 +251,17 @@ const TeamListing = () => {
   );
   return (
     <>
+     <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <body className="team-page-view"/>
+      </Helmet>
       {
       hasAccess ? pageContent
         : (
           <Wrapper>
+           
             <UserLock />
           </Wrapper>
         )

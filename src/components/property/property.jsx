@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PlacesAutocomplete from 'react-places-autocomplete';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import Helmet from 'react-helmet';
 import './property.css';
 import {
   Form,
@@ -19,6 +21,7 @@ import Wrapper from '../wrapper';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 import { server } from '../../config/keys';
+import favicon from '../../assets/images/logo-mobile.png';
 
 const { Panel } = Collapse;
 
@@ -74,6 +77,7 @@ const Property = () => {
   const [feature3, setFeature3] = useState([]);
   const [id, setId] = useState([]);
   const [address, setAddress] = useState('');
+  const [country, setCountry] = useState(null);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -190,6 +194,12 @@ const Property = () => {
   const btn2 = isSubUser ? btn1 : enableButton;
   return (
     <Wrapper>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <body className="detail-page-view" />
+      </Helmet>
       <div className="add-property">
         <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         {currentProperty.map((el) => {
@@ -301,17 +311,13 @@ const Property = () => {
 
                     <Col span={12}>
                       <Form.Item name="country" label="Country">
-                        <Select>
-                          <Select.Option value="demo">Croatia</Select.Option>
-                        </Select>
+                        <CountryDropdown onChange={(val) => setCountry(val)} />
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
                       <Form.Item name="state" label="State">
-                        <Select>
-                          <Select.Option value="demo">Choose</Select.Option>
-                        </Select>
+                        <RegionDropdown country={country} />
                       </Form.Item>
                     </Col>
 

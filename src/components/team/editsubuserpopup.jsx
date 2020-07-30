@@ -32,6 +32,8 @@ const EditSubUserPopup = (props) => {
   const [serviceWrite, setServiceWrite] = useState(false);
   const [ownerRead, setOwnerRead] = useState(false);
   const [ownerWrite, setOwnerWrite] = useState(false);
+  const [billingRead, setBillingRead] = useState(false);
+  const [billingWrite, setBillingWrite] = useState(false);
 
   const updateValues = useCallback(() => {
     form.setFieldsValue({
@@ -56,6 +58,8 @@ const EditSubUserPopup = (props) => {
     setServiceWrite(subUserData.serviceWrite);
     setOwnerRead(subUserData.ownerRead);
     setOwnerWrite(subUserData.ownerWrite);
+    setBillingWrite(subUserData.billingWrite);
+    setBillingRead(subUserData.billingRead);
   }, [subUserData, form]);
 
   useEffect(() => {
@@ -82,6 +86,8 @@ const EditSubUserPopup = (props) => {
       setServiceWrite(true);
       setOwnerRead(true);
       setOwnerWrite(true);
+      setBillingRead(true);
+      setBillingWrite(true);
     } else {
       setBookingRead(subUserData.bookingRead);
       setBookingWrite(subUserData.bookingWrite);
@@ -101,6 +107,8 @@ const EditSubUserPopup = (props) => {
       setServiceWrite(subUserData.serviceWrite);
       setOwnerRead(subUserData.ownerRead);
       setOwnerWrite(subUserData.ownerWrite);
+      setBillingRead(subUserData.billingRead);
+      setBillingWrite(subUserData.billingWrite);
     }
   };
 
@@ -126,6 +134,8 @@ const EditSubUserPopup = (props) => {
     copyValues.ownerRead = ownerRead;
     copyValues.ownerWrite = ownerWrite;
     copyValues.affiliateId = subUserData.userId;
+    copyValues.billingRead = billingRead;
+    copyValues.bookingWrite = billingWrite;
     const response = await userInstance.post('/updateSubUser', copyValues);
     if (response.status === 200) {
       getData();
@@ -162,6 +172,9 @@ const EditSubUserPopup = (props) => {
     ? setServiceWrite(false) : setServiceWrite(true));
   const handleOwnerRead = (e) => (e.target.value ? setOwnerRead(false) : setOwnerRead(true));
   const handleOwnerWrite = (e) => (e.target.value ? setOwnerWrite(false) : setOwnerWrite(true));
+  const handleBillingRead = (e) => (e.target.value ? setBillingRead(false) : setBillingRead(true));
+  const handleBillingWrite = (e) => (e.target.value ? setBillingWrite(false)
+    : setBillingWrite(true));
 
   const handleCross = () => close();
 
@@ -445,6 +458,35 @@ const EditSubUserPopup = (props) => {
                   <th>
                     Property settings, invoice settings and channel manager
                     settings
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </Row>
+
+        <Row>
+          <div className="custom-table subuser-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Billing</th>
+                  <th>
+                    <Checkbox
+                      value={billingRead}
+                      onChange={(e) => handleBillingRead(e)}
+                      checked={billingRead}
+                    />
+                  </th>
+                  <th>
+                    <Checkbox
+                      value={billingWrite}
+                      onChange={(e) => handleBillingWrite(e)}
+                      checked={billingWrite}
+                    />
+                  </th>
+                  <th>
+                    Billing, Upgrade/downgrade plans
                   </th>
                 </tr>
               </thead>

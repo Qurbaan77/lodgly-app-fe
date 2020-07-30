@@ -1,5 +1,8 @@
 import React, { Suspense } from 'react';
 import { Router, Route } from 'react-router-dom';
+// 'history' is pre installed library of react If I install npm i history
+// then page rendering is not work-->
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { createBrowserHistory } from 'history';
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
@@ -31,7 +34,7 @@ import Popup from './components/calendar/popup';
 import { PrivateRoute, LoginRoute } from './Routes/PrivateRoute';
 import {
   SecureBooking, SecureCalendar, SecureProperty, SecureTeam,
-  SecureOwner, SecureInvoice, SecureService,
+  SecureOwner, SecureInvoice, SecureService, SecureStats, SecureBilling,
 } from './Routes/SecureRoute';
 
 import Owner from './components/owner/owner';
@@ -249,16 +252,42 @@ const App = () => {
                   isSubUser ? <SecureTeam exact path="/team" component={() => <Team />} /> : <PrivateRoute exact path="/team" component={() => <Team />} />
                 }
 
-                  <Route exact path="/profile" component={() => <Profile />} />
-                  <Route
-                    exact
-                    path="/billinginformation"
-                    component={() => <BillingInformation />}
-                  />
+                  <PrivateRoute exact path="/profile" component={() => <Profile />} />
+                  {
+                    isSubUser ? (
+                      <SecureBilling
+                        exact
+                        path="/billinginformation"
+                        component={() => <BillingInformation />}
+                      />
+                    )
+                      : (
+                        <PrivateRoute
+                          exact
+                          path="/billinginformation"
+                          component={() => <BillingInformation />}
+                        />
+                      )
+                  }
+                  {
+                    isSubUser ? (
+                      <SecureStats
+                        exact
+                        path="/stats"
+                        component={() => <Stats />}
+                      />
+                    )
+                      : (
+                        <PrivateRoute
+                          exact
+                          path="/stats"
+                          component={() => <Stats />}
+                        />
+                      )
+                  }
                   {
                   isSubUser ? <SecureInvoice exact path="/invoice" component={() => <Invoice />} /> : <PrivateRoute exact path="/invoice" component={() => <Invoice />} />
                 }
-                  <Route exact path="/stats" component={() => <Stats />} />
                 </div>
               </main>
               <Footer />

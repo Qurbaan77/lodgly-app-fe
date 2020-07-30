@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
 import './stats.css';
 import { Row, Col } from 'antd';
 import Chart from 'react-apexcharts';
@@ -7,6 +8,7 @@ import Wrapper from '../wrapper';
 import { userInstance } from '../../axios/axiosconfig';
 import statsIcon from '../../assets/images/menu/stats-icon.png';
 import qst from '../../assets/images/menu/qst.png';
+import favicon from '../../assets/images/logo-mobile.png';
 import UserLock from '../userlock/userlock';
 
 const Stats = () => {
@@ -33,6 +35,12 @@ const Stats = () => {
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
     <Wrapper fun={setTopNavId}>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <body className="stats-page-view"/>
+      </Helmet>
       {
       hasAccess
         ? (

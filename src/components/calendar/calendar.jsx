@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Helmet from 'react-helmet';
 import './calendar.css';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
 import {
@@ -10,6 +11,7 @@ import Wrapper from '../wrapper';
 import GSTC from './GSTC';
 import { userInstance } from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
+import favicon from '../../assets/images/logo-mobile.png';
 
 const Calendar = () => {
   // const [propertyData, setPropertyData] = useState([]);
@@ -127,6 +129,12 @@ const Calendar = () => {
 
   return (
     <Wrapper>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <body className="calendar-page-view"/>
+      </Helmet>
       <div className="calendar">
         <div className="calendar-btn">
           <Button type="primary" icon={<PlusOutlined />} onClick={show}>

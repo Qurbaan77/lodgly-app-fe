@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import Helmet from 'react-helmet';
 import './booking.css';
 import {
   Form,
@@ -31,6 +32,7 @@ import filterIcon from '../../assets/images/menu/filter-icon.png';
 import editIcon from '../../assets/images/menu/pencil-icon.png';
 import downloadIcon from '../../assets/images/menu/download-icon.png';
 import refreshIcon from '../../assets/images/menu/refresh-icon.png';
+import favicon from '../../assets/images/logo-mobile.png';
 
 // const { Panel } = Collapse;
 // const { MonthPicker, RangePicker } = DatePicker;
@@ -318,6 +320,12 @@ const Booking = () => {
     <Wrapper
       fun={setTopNavId}
     >
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <body className="booking-page-view"/>
+      </Helmet>
       {hasAccess
         ? (
           <div className="booking">
@@ -517,7 +525,7 @@ const Booking = () => {
                           <div className="prorety-box">
                             <span>Country</span>
                             <p>
-                              {el.country}
+                              {el.country || 'NA'}
                               {' '}
                             </p>
                           </div>
@@ -526,12 +534,12 @@ const Booking = () => {
                         <div className="booking-item">
                           <div className="prorety-box">
                             <span>Email</span>
-                            <p>{el.email}</p>
+                            <p>{el.email || 'NA'}</p>
                           </div>
 
                           <div className="prorety-box">
                             <span>Phone</span>
-                            <p>{el.phone}</p>
+                            <p>{el.phone || 'NA'}</p>
                           </div>
                         </div>
 

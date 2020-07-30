@@ -10,6 +10,9 @@
       "basicPrice": "4",
       "advancePrice": "8",
       "discount": "20"
+    },
+    "sentry": {
+      "sentryDsn": "https://4a5a7e0c86a64bafabf7c4819b87b615@o317016.ingest.sentry.io/1832149"
     }
   },
   "staging": {

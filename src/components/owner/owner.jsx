@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import Helmet from 'react-helmet';
 import './owner.css';
 import {
   Form,
@@ -22,7 +23,7 @@ import property1 from '../../assets/images/property-1.png';
 import property2 from '../../assets/images/property-2.png';
 import property3 from '../../assets/images/property-3.png';
 import owner from '../../assets/images/profile_user.jpg';
-
+import favicon from '../../assets/images/logo-mobile.png';
 import subuser from '../../assets/images/subuser.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
@@ -113,7 +114,6 @@ const Owner = () => {
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
-    console.log(response);
     if (response.data.code === 200) {
       const data2 = response.data.propertiesData;
       setVisible(true);
@@ -700,6 +700,12 @@ const Owner = () => {
   );
   return (
     <>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <body className="owner-page-view"/>
+      </Helmet>
       {hasAccess ? pageContent
         : (
           <Wrapper>

@@ -29,12 +29,15 @@ const UserProfile = (props) => {
     getUserInfo();
   }, [props]);
 
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  const [{ billingWrite }] = userCred || [{}];
+
   const menu = (
     <Menu>
       <Menu.Item>
         <Link to="/profile">My Profile</Link>
       </Menu.Item>
-      <Menu.Item>
+      <Menu.Item hidden={billingWrite}>
         <Link to="/billinginformation">Billing</Link>
       </Menu.Item>
     </Menu>

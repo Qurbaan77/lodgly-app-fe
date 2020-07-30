@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Helmet from 'react-helmet';
 import './property.css';
 import {
   Form, Input, Button, Tooltip, Modal, Table,
@@ -10,6 +11,7 @@ import Wrapper from '../wrapper';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import DeletePopup from './deletepopup';
+import favicon from '../../assets/images/logo-mobile.png';
 
 const Services = () => {
   const [form] = Form.useForm();
@@ -29,12 +31,10 @@ const Services = () => {
     {
       title: 'Service Name',
       dataIndex: 'serviceName',
-      width: 400,
     },
     {
       title: 'Service Price',
       dataIndex: 'servicePrice',
-      width: 400,
     },
     {
       title: 'Standard Quanity',
@@ -168,6 +168,12 @@ const Services = () => {
 
   return (
     <Wrapper>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <body className="service-page-view" />
+      </Helmet>
       <div className="property-listing">
         <div className="page-header">
           <h1>Services</h1>
@@ -179,8 +185,6 @@ const Services = () => {
           <Table
             columns={columns}
             dataSource={serviceData}
-            pagination={{ pageSize: 50 }}
-            scroll={{ y: 500 }}
           />
         </div>
       </div>

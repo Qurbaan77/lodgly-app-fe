@@ -6,10 +6,12 @@ import {
 } from 'antd';
 import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import Helmet from 'react-helmet';
 import Wrapper from '../wrapper';
 import property1 from '../../assets/images/property-1.png';
 import UserLock from '../userlock/userlock';
 import { userInstance } from '../../axios/axiosconfig';
+import NoList from './nolist';
 
 const PropertyList = () => {
   const { t } = useTranslation();
@@ -117,11 +119,14 @@ const PropertyList = () => {
     <Wrapper
       fun={setTopNavId}
     >
+      <Helmet>
+        <body className="property-page-view" />
+      </Helmet>
       {
       hasAccess
         ? (
           <div className="property-listing">
-            <div className="page-header">
+            <div className="page-header" hidden={!(propertyData.length > 0)}>
               <h1>{t('propertylist.heading')}</h1>
               {btn2}
             </div>
@@ -135,38 +140,48 @@ const PropertyList = () => {
                   lg: 32,
                 }}
               >
-                {propertyData.map((el) => (
-                  <Col className="gutter-row" span={8}>
-                    <div className="property">
-                      <img src={el.image || property1} alt="property" />
-                      <div className="property-info">
-                        <h3>{el.propertyName}</h3>
-                        <span>{el.created_at.split('T', 1)}</span>
-                        <ul>
-                          <li>
-                            <HomeOutlined />
-                            {' '}
-                            {el.noUnitType}
-                            {' '}
-                            Unit Types
-                          </li>
-                          <li>
-                            <HomeOutlined />
-                            {' '}
-                            {el.noUnit}
-                            {' '}
-                            Unit
-                          </li>
-                        </ul>
+                { propertyData && propertyData.length > 0
+                  ? propertyData.map((el) => (
+                    <Col className="gutter-row" span={8} key={el.id}>
+                      <div className="property">
+                        <img src={el.image || property1} alt="property" />
+                        <div className="property-info">
+                          <h3>{el.propertyName}</h3>
+                          <span>{el.created_at.split('T', 1)}</span>
+                          <ul>
+                            <li>
+                              <HomeOutlined />
+                              {' '}
+                              {el.noUnitType}
+                              {' '}
+                              Unit Types
+                            </li>
+                            <li>
+                              <HomeOutlined />
+                              {' '}
+                              {el.noUnit}
+                              {' '}
+                              Unit
+                            </li>
+                          </ul>
+                        </div>
                       </div>
-                    </div>
-                  </Col>
-                ))}
+                    </Col>
+                  ))
+                  : (
+                    <Col span={24}>
+                      <NoList
+                        isSubUser={isSubUser}
+                        canWrite={canWrite}
+                      />
+                    </Col>
+                  )}
               </Row>
             </div>
           </div>
         )
         : <UserLock />
+        // <NoList />
 }
     </Wrapper>
   );

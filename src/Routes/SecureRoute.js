@@ -19,6 +19,10 @@ const [
     invoiceWrite,
     serviceRead,
     serviceWrite,
+    statsRead,
+    statsWrite,
+    billingRead,
+    billingWrite,
   },
 ] = subUserCred || [{}];
 
@@ -97,6 +101,43 @@ export const SecureService = ({ component: Component, ...rest }) => (
     ))}
   />
 );
+
+export const SecureStats = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) => (statsRead || statsWrite ? (
+      <Component {...props} {...rest} />
+    ) : (
+      <Redirect to="/" />
+    ))}
+  />
+);
+
+export const SecureBilling = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) => (billingRead && billingWrite ? (
+      <Component {...props} {...rest} />
+    ) : (
+      <Redirect to="/" />
+    ))}
+  />
+);
+
+SecureBilling.propTypes = {
+  component: PropTypes.func,
+};
+SecureBilling.defaultProps = {
+  component: '',
+};
+
+SecureStats.propTypes = {
+  component: PropTypes.func,
+};
+SecureStats.defaultProps = {
+  component: '',
+};
+
 SecureBooking.propTypes = {
   component: PropTypes.func,
 };

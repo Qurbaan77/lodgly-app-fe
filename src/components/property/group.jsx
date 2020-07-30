@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import Helmet from 'react-helmet';
 import './property.css';
 import {
   Form, Select, Input, DatePicker, Button, Checkbox,
@@ -21,6 +22,7 @@ import people1 from '../../assets/images/people-1.png';
 import people2 from '../../assets/images/people-2.png';
 import people3 from '../../assets/images/people-3.jpg';
 import people4 from '../../assets/images/people-4.jpg';
+import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 
@@ -34,7 +36,7 @@ const Groups = () => {
   const [group, setGroup] = useState([]);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
-  const [currGroupId, setCurrGroupId] = useState(0);
+  const [currGroupId, setCurrGroupId] = useState(null);
   const history = useHistory();
 
   useEffect(() => {
@@ -67,6 +69,9 @@ const Groups = () => {
   };
 
   const onFinish = async (values) => {
+    if (currGroupId) {
+      values.id = currGroupId;
+    }
     const response = await userInstance.post('/addGroup', values);
     const statusCode = response.data.code;
     const { msg } = response.data;
@@ -90,6 +95,7 @@ const Groups = () => {
   };
 
   const edit = async (data) => {
+    setCurrGroupId(data.id);
     form.setFieldsValue({
       id: data.id,
       groupname: data.groupName,
@@ -119,6 +125,12 @@ const Groups = () => {
 
   return (
     <Wrapper>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <body className="group-page-view" />
+      </Helmet>
       <div className="group">
         <div className="page-header">
           <h1>
@@ -133,6 +145,7 @@ const Groups = () => {
         </div>
 
         <div className="panel-container">
+          <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
           {group.map((el) => (
             <div className="panel-box groups">
               <div className="group-icon">
@@ -186,11 +199,7 @@ const Groups = () => {
         onCancel={handleCancel}
         wrapClassName="group-modal"
       >
-        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         <Form form={form} name="basic" onFinish={onFinish}>
-          <Form.Item label="Id" name="id" hidden>
-            <Input />
-          </Form.Item>
           <Form.Item
             label={t('group.title2')}
             name="groupname"

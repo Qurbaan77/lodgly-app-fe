@@ -773,6 +773,7 @@ body {
 .services-list {
   background: #fff;
   padding: 20px;
+  overflow-x: auto;
 }
 
 .service-margin a{

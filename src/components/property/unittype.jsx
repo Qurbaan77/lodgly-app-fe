@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import Helmet from 'react-helmet';
 import './property.css';
 import {
   Button, Tooltip, Modal, Empty,
@@ -14,7 +15,7 @@ import {
   CheckCircleOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-
+import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 
@@ -79,7 +80,6 @@ const UnitType = () => {
       propertyId: localStorage.getItem('propertyId'),
     };
     const response = await userInstance.post('/getUnittype', values);
-    console.log(response);
     const { unittypeData, units } = response.data;
     if (response.data.code === 200) {
       unittypeData.forEach((el) => {
@@ -95,7 +95,6 @@ const UnitType = () => {
       setUnittypeData(unittypeData);
     }
   };
-  console.log(unittypeData);
 
   const remove = async () => {
     const values = {
@@ -143,6 +142,12 @@ const UnitType = () => {
 
   return (
     <Wrapper>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <body className="unit-page-view" />
+      </Helmet>
       <div className="unit-type">
         <div className="page-header">
           <h1>

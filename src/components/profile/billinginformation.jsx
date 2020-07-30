@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Helmet from 'react-helmet';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import moment from 'moment';
@@ -20,6 +21,7 @@ import {
 import config from '../../config/config.json';
 import { userInstance } from '../../axios/axiosconfig';
 import CheckoutForm from './CheckoutForm';
+import favicon from '../../assets/images/logo-mobile.png';
 // import loader from '../../assets/images/loader.svg';
 import Toaster from '../toaster/toaster';
 
@@ -435,6 +437,11 @@ const BillingInformation = () => {
 
   return (
     <Wrapper>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+      </Helmet>
       {/* <Suspense fallback={<ShowLoader />}> */}
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <div className="billing-information">

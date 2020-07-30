@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Helmet from 'react-helmet';
 import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
@@ -14,7 +15,7 @@ import {
   CheckCircleOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-
+import favicon from '../../assets/images/logo-mobile.png';
 import DeletePopup from './deletepopup';
 import { userInstance } from '../../axios/axiosconfig';
 import GSTC from './GSTC';
@@ -287,6 +288,11 @@ const AddUnitType = () => {
   const btn = isLimitReached ? disbledSaveUnitBtn : normalSaveUnitBtn;
   return (
     <Wrapper>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+      </Helmet>
       <div className="unit-type">
         <div className="page-header">
           <h1>

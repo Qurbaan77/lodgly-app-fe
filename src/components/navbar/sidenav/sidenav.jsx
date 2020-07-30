@@ -15,11 +15,11 @@ import { userInstance } from '../../../axios/axiosconfig';
 import bookingIcon from '../../../assets/images/menu/booking-icon.png';
 import calenderIcon from '../../../assets/images/menu/calendar-icon.png';
 import propertyIcon from '../../../assets/images/menu/property-icon.png';
-import guestIcon from '../../../assets/images/menu/guest-icon.png';
+// import guestIcon from '../../../assets/images/menu/guest-icon.png';
 import teamIcon from '../../../assets/images/menu/team-icon.png';
 import invoiceIcon from '../../../assets/images/menu/invoice-icon.png';
 import statsIcon from '../../../assets/images/menu/stats-icon.png';
-import integrationIcon from '../../../assets/images/menu/integration-icon.png';
+// import integrationIcon from '../../../assets/images/menu/integration-icon.png';
 import ownerIcon from '../../../assets/images/menu/owner-icon.png';
 import propertyDetailIcon from '../../../assets/images/menu/property-detail-icon.png';
 import unitIcon from '../../../assets/images/menu/unit-type-icon.png';
@@ -43,7 +43,7 @@ const Sidenav = ({
   const [hideStats, setHideStats] = useState(false);
   const [hideService, setHideService] = useState(false);
   const [disableProperties, setDisableProperties] = useState(false);
-  const [disableGuests, setDisableGuests] = useState(false);
+  // const [disableGuests, setDisableGuests] = useState(false);
   const history = useHistory();
 
   const exit = async () => {
@@ -111,11 +111,11 @@ const Sidenav = ({
       setHideTeam(true);
     }
     if (!isSubUser) {
-      setDisableGuests(false);
+      // setDisableGuests(false);
     } else if (guestsRead) {
-      setDisableGuests(false);
+      // setDisableGuests(false);
     } else {
-      setDisableGuests(true);
+      // setDisableGuests(true);
     }
   }, [bookingRead,
     calendarRead,
@@ -195,20 +195,20 @@ const Sidenav = ({
         className={`main-menu ${nav ? 'hide' : ''}`}
         theme="light"
         mode="inline"
-        defaultSelectedKeys={['0']}
         style={{ height: '100%' }}
       >
-        <Menu.Item key="0" hidden={hideBooking}>
+        <Menu.Item className="booking-nav" hidden={hideBooking}>
           <img src={bookingIcon} alt="booking-icon" />
           <Link to="/booking">{t('sidebar.menu1')}</Link>
         </Menu.Item>
 
-        <Menu.Item key="1" hidden={hideCalendar}>
+        <Menu.Item className="calendar-nav" hidden={hideCalendar}>
           <img src={calenderIcon} alt="calendar-icon" />
           <Link to="/calendar">{t('sidebar.menu2')}</Link>
         </Menu.Item>
 
         <SubMenu
+          className="property-nav"
           onClick={() => handleMenu('toggle')}
           key="2"
           disabled={disableProperties}
@@ -236,37 +236,37 @@ const Sidenav = ({
           ))}
         </SubMenu>
 
-        <Menu.Item disabled={disableGuests}>
+        {/* <Menu.Item className="guest-nav" disabled={disableGuests}>
           <img src={guestIcon} alt="guest-icon" />
-          <span>{t('sidebar.menu4')}</span>
-        </Menu.Item>
+          <Link to="/">{t('sidebar.menu4')}</Link>
+        </Menu.Item> */}
 
-        <Menu.Item hidden={hideTeam}>
+        <Menu.Item className="team-nav" hidden={hideTeam}>
           <img src={teamIcon} alt="team" />
           <Link to="/team">{t('sidebar.menu5')}</Link>
         </Menu.Item>
 
-        <Menu.Item hidden={hideInvoice}>
+        <Menu.Item className="invoice-nav" hidden={hideInvoice}>
           <img src={invoiceIcon} alt="invoice-icon" />
           <Link to="/invoice">{t('sidebar.menu6')}</Link>
         </Menu.Item>
 
-        <Menu.Item hidden={hideStats}>
+        <Menu.Item className="stats-nav" hidden={hideStats}>
           <img src={statsIcon} alt="stats=icon" />
           <Link to="/stats">{t('sidebar.menu7')}</Link>
         </Menu.Item>
 
-        <Menu.Item>
+        {/* <Menu.Item className="integration-nav">
           <img src={integrationIcon} alt="integration-icon" />
-          <span>{t('sidebar.menu8')}</span>
-        </Menu.Item>
+          <Link to="/">{t('sidebar.menu8')}</Link>
+        </Menu.Item> */}
 
-        <Menu.Item>
+        <Menu.Item className="owner-nav">
           <img src={ownerIcon} alt="owner-icon" />
           <Link to="/owner">{t('sidebar.menu9')}</Link>
         </Menu.Item>
 
-        <Menu.Item onClick={() => exit()}>
+        <Menu.Item className="logout-nav" onClick={() => exit()}>
           <PoweroffOutlined />
           <span>{t('sidebar.menu10')}</span>
         </Menu.Item>
@@ -276,7 +276,6 @@ const Sidenav = ({
         className={`main-menu-mbl ${nav ? 'show' : ''}`}
         theme="light"
         mode="inline"
-        defaultSelectedKeys={['1']}
         style={{ height: '100%' }}
       >
         <span className="submenu-heading" onClick={() => handleMenu('close')} role="presentation">
@@ -290,24 +289,24 @@ const Sidenav = ({
             {currProperty}
           </Link>
         </span>
-        <Menu.Item key="1">
+        <Menu.Item className="detail-nav">
           <img src={propertyDetailIcon} alt="property" />
           <Link to="/property">{t('sidebar.menu11')}</Link>
         </Menu.Item>
-        <Menu.Item>
+        <Menu.Item className="unit-nav">
           <img src={unitIcon} alt="unit" />
           <Link to="/unittype">{t('sidebar.menu12')}</Link>
         </Menu.Item>
-        <Menu.Item>
+        <Menu.Item className="group-nav">
           <img src={taskIcon} alt="task" />
           <Link to="/groups">{t('sidebar.menu13')}</Link>
         </Menu.Item>
-        <Menu.Item>
+        <Menu.Item className="channel-nav">
           <img src={channelIcon} alt="channel" />
           <Link to="/channelmanager">{t('sidebar.menu14')}</Link>
         </Menu.Item>
 
-        <Menu.Item hidden={hideService}>
+        <Menu.Item className="service-nav" hidden={hideService}>
           <ApartmentOutlined />
           <Link to="/services">{t('sidebar.menu15')}</Link>
         </Menu.Item>

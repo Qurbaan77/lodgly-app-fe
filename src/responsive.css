@@ -40,6 +40,86 @@
     border: none;
 }
 
+.apexcharts-menu {
+    min-width: 130px!important;
+}
+
+.ant-dropdown-menu.setting-dropdown {
+    margin-left: 68px;
+}
+
+
+
+
+
+/********************Sidebar Menu **************/
+
+
+.ant-menu .ant-menu-item, .ant-menu .ant-menu-submenu {
+    position: relative;
+}
+
+
+
+.booking-page-view .ant-menu .booking-nav,
+.calendar-page-view .ant-menu .calendar-nav,
+.team-page-view .ant-menu .team-nav,
+.stats-page-view .ant-menu .stats-nav,
+.property-page-view .ant-menu .property-nav,
+.owner-page-view .ant-menu .owner-nav,
+.invoice-page-view .ant-menu .invoice-nav,
+.service-page-view .ant-menu .service-nav,
+.task-page-view .ant-menu .task-nav,
+.unit-page-view .ant-menu .unit-nav,
+.channel-page-view .ant-menu .channel-nav,
+.group-page-view .ant-menu .group-nav,
+.detail-page-view .ant-menu .detail-nav   {
+    background-color: #fffaf0!important;
+}
+
+.booking-page-view .ant-menu .booking-nav a,
+.calendar-page-view .ant-menu .calendar-nav a,
+.team-page-view .ant-menu .team-nav a,
+.stats-page-view .ant-menu .stats-nav a,
+.property-page-view .ant-menu .property-nav a,
+.owner-page-view .ant-menu .owner-nav a,
+.invoice-page-view .ant-menu .invoice-nav a,
+.service-page-view .ant-menu .service-nav a,
+.task-page-view .ant-menu .task-nav a,
+.unit-page-view .ant-menu .unit-nav a,
+.channel-page-view .ant-menu .channel-nav a,
+.group-page-view .ant-menu .group-nav a,
+.detail-page-view .ant-menu .detail-nav a  {
+    color: #fab52c!important;
+}
+
+
+.booking-page-view .ant-menu .booking-nav:before,
+.calendar-page-view .ant-menu .calendar-nav:before,
+.team-page-view .ant-menu .team-nav:before,
+.stats-page-view .ant-menu .stats-nav:before,
+.property-page-view .ant-menu .property-nav:before,
+.owner-page-view .ant-menu .owner-nav:before,
+.invoice-page-view .ant-menu .invoice-nav:before,
+.service-page-view .ant-menu .service-nav:before,
+.task-page-view .ant-menu .task-nav:before,
+.unit-page-view .ant-menu .unit-nav:before,
+.channel-page-view .ant-menu .channel-nav:before,
+.group-page-view .ant-menu .group-nav:before,
+.detail-page-view .ant-menu .detail-nav:before {
+    content: "";
+    position: absolute;
+    width: 3px;
+    height: 100%;
+    left: 0;
+    background: #fab52c;
+}
+
+
+
+
+
+
 
 
 
@@ -354,4 +434,32 @@
         max-width: 40px;
     }
     
+
+
+    /************ Profile **************/
+    .profile-container .ant-col-12 {
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+
+ /************ Property List **************/
+    .property-listing .ant-col-8 {
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+
+
+ /************  Stats**************/
+
+
+    .stats-page .ant-col-16, .stats-page .ant-col-8, .stats-page .ant-col-24 {
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
     }

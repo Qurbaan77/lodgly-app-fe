@@ -29,6 +29,8 @@ const SubUserPopup = ({
   const [serviceWrite, setServiceWrite] = useState(false);
   const [ownerRead, setOwnerRead] = useState(false);
   const [ownerWrite, setOwnerWrite] = useState(false);
+  const [billingRead, setBillingRead] = useState(false);
+  const [billingWrite, setBillingWrite] = useState(false);
 
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ userId }] = userCred || [{}];
@@ -53,6 +55,8 @@ const SubUserPopup = ({
       setServiceWrite(true);
       setOwnerRead(true);
       setOwnerWrite(true);
+      setBillingRead(true);
+      setBillingWrite(true);
     } else {
       setBookingRead(false);
       setBookingWrite(false);
@@ -72,6 +76,8 @@ const SubUserPopup = ({
       setServiceWrite(false);
       setOwnerRead(false);
       setOwnerWrite(false);
+      setBillingRead(false);
+      setBillingWrite(false);
     }
   };
 
@@ -95,6 +101,8 @@ const SubUserPopup = ({
     values.ownerRead = ownerRead;
     values.ownerWrite = ownerWrite;
     values.affiliateId = userId;
+    values.billingRead = billingRead;
+    values.billingWrite = billingWrite;
     const response = await userInstance.post('/addTeam', values);
     if (response.status === 200) {
       getData();
@@ -118,6 +126,8 @@ const SubUserPopup = ({
       setServiceWrite(false);
       setOwnerRead(false);
       setOwnerWrite(false);
+      setBillingRead(false);
+      setBillingWrite(false);
     }
   };
 
@@ -147,6 +157,9 @@ const SubUserPopup = ({
     ? setServiceWrite(false) : setServiceWrite(true));
   const handleOwnerRead = (e) => (e.target.value ? setOwnerRead(false) : setOwnerRead(true));
   const handleOwnerWrite = (e) => (e.target.value ? setOwnerWrite(false) : setOwnerWrite(true));
+  const handleBillingRead = (e) => (e.target.value ? setBillingRead(false) : setBillingRead(true));
+  const handleBillingWrite = (e) => (e.target.value ? setBillingWrite(false)
+    : setBillingWrite(true));
 
   const handleCross = () => {
     close();
@@ -431,6 +444,35 @@ const SubUserPopup = ({
                   <th>
                     Property settings, invoice settings and channel manager
                     settings
+                  </th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </Row>
+
+        <Row>
+          <div className="custom-table subuser-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Billing</th>
+                  <th>
+                    <Checkbox
+                      value={billingRead}
+                      onChange={(e) => handleBillingRead(e)}
+                      checked={billingRead}
+                    />
+                  </th>
+                  <th>
+                    <Checkbox
+                      value={billingWrite}
+                      onChange={(e) => handleBillingWrite(e)}
+                      checked={billingWrite}
+                    />
+                  </th>
+                  <th>
+                    Billing, Upgrade/downgrade plans
                   </th>
                 </tr>
               </thead>

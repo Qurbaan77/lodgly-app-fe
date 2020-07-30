@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import Helmet from 'react-helmet';
 import './login.css';
 import { Form, Input, Button } from 'antd';
 import logo from '../../assets/images/logo.jpg';
 import Toaster from '../toaster/toaster';
+import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 
 const Login = () => {
@@ -55,98 +57,105 @@ const Login = () => {
   };
 
   return (
-    <div className="login">
-      <div className="login-section">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12">
-              <div className="login-logo">
-                <img src={logo} alt="Logo" />
-              </div>
-              <Toaster
-                notifyType={notifyType}
-                notifyMsg={notifyMsg}
-                close={close}
-              />
-              <div className="login-form">
-                <h1>Sign In</h1>
-                <p>
-                  We
-                  <span>&apos;</span>
-                  re happy to have you here again!
-                </p>
-                <div className="login-box">
-                  <Form
-                    form={form}
-                    name="basic"
-                    initialValues={{
-                      remember: true,
-                    }}
-                    onFinish={onFinish}
-                  >
-                    <Form.Item
-                      label="E-mail Address"
-                      name="email"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please enter your E-mail Address!',
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-
-                    <Form.Item
-                      label="Password"
-                      name="password"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please input your password!',
-                        },
-                      ]}
-                    >
-                      <Input.Password />
-                    </Form.Item>
-
-                    <Form.Item>
-                      <Button className="login-btn" htmlType="submit">
-                        Sign In
-                      </Button>
-                    </Form.Item>
-
-                    <div className="google-login">
-                      <p>or connect with</p>
-
-                      <Button className="google-btn">
-                        <span>Google</span>
-                      </Button>
-                    </div>
-                  </Form>
+    <>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+      </Helmet>
+      <div className="login">
+        <div className="login-section">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="login-logo">
+                  <img src={logo} alt="Logo" />
                 </div>
-              </div>
+                <Toaster
+                  notifyType={notifyType}
+                  notifyMsg={notifyMsg}
+                  close={close}
+                />
+                <div className="login-form">
+                  <h1>Sign In</h1>
+                  <p>
+                    We
+                    <span>&apos;</span>
+                    re happy to have you here again!
+                  </p>
+                  <div className="login-box">
+                    <Form
+                      form={form}
+                      name="basic"
+                      initialValues={{
+                        remember: true,
+                      }}
+                      onFinish={onFinish}
+                    >
+                      <Form.Item
+                        label="E-mail Address"
+                        name="email"
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Please enter your E-mail Address!',
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
 
-              <div className="q-links">
-                <p>
-                  Don
-                  <span>&apos;</span>
-                  t have an account yet?
-                  {' '}
-                  <Link to="/register">Register now</Link>
-                </p>
+                      <Form.Item
+                        label="Password"
+                        name="password"
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Please input your password!',
+                          },
+                        ]}
+                      >
+                        <Input.Password />
+                      </Form.Item>
 
-                <p>
-                  Forget your password?
-                  {' '}
-                  <Link to="/forget">Get a new password</Link>
-                </p>
+                      <Form.Item>
+                        <Button className="login-btn" htmlType="submit">
+                          Sign In
+                        </Button>
+                      </Form.Item>
+
+                      <div className="google-login">
+                        <p>or connect with</p>
+
+                        <Button className="google-btn">
+                          <span>Google</span>
+                        </Button>
+                      </div>
+                    </Form>
+                  </div>
+                </div>
+
+                <div className="q-links">
+                  <p>
+                    Don
+                    <span>&apos;</span>
+                    t have an account yet?
+                    {' '}
+                    <Link to="/register">Register now</Link>
+                  </p>
+
+                  <p>
+                    Forget your password?
+                    {' '}
+                    <Link to="/forget">Get a new password</Link>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

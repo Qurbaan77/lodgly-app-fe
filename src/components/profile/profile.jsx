@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import Helmet from 'react-helmet';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import './profile.css';
 import {
   Form,
@@ -16,6 +18,7 @@ import Wrapper from '../wrapper';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
+import favicon from '../../assets/images/logo-mobile.png';
 import { server } from '../../config/keys';
 
 const { Panel } = Collapse;
@@ -39,6 +42,7 @@ const Profile = () => {
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState();
   const [daysLeft, setDaysLeft] = useState();
+  const [country, setCountry] = useState(null);
 
   const getUserInfo = useCallback(async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
@@ -156,6 +160,11 @@ const Profile = () => {
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
     <Wrapper img={img} name={userName} getUserInfo={getUserInfo}>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+      </Helmet>
       {
       hasAccess
         ? (
@@ -416,35 +425,25 @@ const Profile = () => {
 
                             <Col span={12}>
                               <Form.Item name="country" label="Country">
-                                <Select>
-                                  <Select.Option value="demo">
-                                    Croatia
-                                  </Select.Option>
-                                </Select>
+                                <CountryDropdown onChange={(val) => setCountry(val)} />
                               </Form.Item>
                             </Col>
 
                             <Col span={12}>
                               <Form.Item name="state" label="State">
-                                <Select>
-                                  <Select.Option value="demo">Choose</Select.Option>
-                                </Select>
+                                <RegionDropdown country={country} />
                               </Form.Item>
                             </Col>
 
                             <Col span={12}>
                               <Form.Item name="city" label="City">
-                                <Select>
-                                  <Select.Option value="demo">Zadar</Select.Option>
-                                </Select>
+                                <Input />
                               </Form.Item>
                             </Col>
 
                             <Col span={12}>
                               <Form.Item name="zip" label="Zip">
-                                <Select>
-                                  <Select.Option value="demo">Choose</Select.Option>
-                                </Select>
+                                <Input />
                               </Form.Item>
                             </Col>
 

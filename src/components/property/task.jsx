@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Helmet from 'react-helmet';
 import './property.css';
 import {
   Form,
@@ -24,6 +25,7 @@ import people1 from '../../assets/images/people-1.png';
 import people2 from '../../assets/images/people-2.png';
 import people3 from '../../assets/images/people-3.jpg';
 import people4 from '../../assets/images/people-4.jpg';
+import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import DeletePopup from './deletepopup';
@@ -181,6 +183,12 @@ const Task = () => {
 
   return (
     <Wrapper>
+       <Helmet>
+              <link rel="icon" href={favicon} />
+              <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+              <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+              <body className="task-page-view" />
+            </Helmet>
       <div className="cleaning-group">
         <div className="page-header">
           <h1>
