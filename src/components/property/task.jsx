@@ -183,12 +183,12 @@ const Task = () => {
 
   return (
     <Wrapper>
-       <Helmet>
-              <link rel="icon" href={favicon} />
-              <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-              <meta name="description" content="Grow your Vacation Rental with Lodgly" />
-              <body className="task-page-view" />
-            </Helmet>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <body className="task-page-view" />
+      </Helmet>
       <div className="cleaning-group">
         <div className="page-header">
           <h1>

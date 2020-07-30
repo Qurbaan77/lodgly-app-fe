@@ -133,7 +133,7 @@ const Calendar = () => {
         <link rel="icon" href={favicon} />
         <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
         <meta name="description" content="Grow your Vacation Rental with Lodgly" />
-        <body className="calendar-page-view"/>
+        <body className="calendar-page-view" />
       </Helmet>
       <div className="calendar">
         <div className="calendar-btn">

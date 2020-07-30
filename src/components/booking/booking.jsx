@@ -324,7 +324,7 @@ const Booking = () => {
         <link rel="icon" href={favicon} />
         <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
         <meta name="description" content="Grow your Vacation Rental with Lodgly" />
-        <body className="booking-page-view"/>
+        <body className="booking-page-view" />
       </Helmet>
       {hasAccess
         ? (

@@ -704,7 +704,7 @@ const Owner = () => {
         <link rel="icon" href={favicon} />
         <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
         <meta name="description" content="Grow your Vacation Rental with Lodgly" />
-        <body className="owner-page-view"/>
+        <body className="owner-page-view" />
       </Helmet>
       {hasAccess ? pageContent
         : (

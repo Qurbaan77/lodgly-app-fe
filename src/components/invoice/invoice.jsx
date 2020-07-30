@@ -533,7 +533,7 @@ const Invoice = () => {
         <link rel="icon" href={favicon} />
         <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
         <meta name="description" content="Grow your Vacation Rental with Lodgly" />
-        <body className="invoice-page-view"/>
+        <body className="invoice-page-view" />
       </Helmet>
       {
       hasAccess ? pageContent
