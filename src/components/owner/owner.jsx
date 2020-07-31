@@ -121,8 +121,9 @@ const Owner = () => {
       const selectedProperty = [];
       const data3 = data2.filter((el) => el.ownerId === data.id);
       data3.forEach((filter) => {
-        selectedProperty.push(filter.id);
+        selectedProperty.push(filter.propertyName);
       });
+      console.log('selected property', selectedProperty);
       form.setFieldsValue({
         id: data.id,
         firstname: data.fname,

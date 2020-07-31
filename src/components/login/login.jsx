@@ -28,6 +28,9 @@ const Login = () => {
   };
 
   const onFinish = async (values) => {
+    const companyName = window.location.hostname.split('.');
+    const copyValues = values;
+    copyValues.company = companyName[0];
     const response = await userInstance.post('/login', values);
     const statusCode = response.data.code;
     const { msg } = response.data;
