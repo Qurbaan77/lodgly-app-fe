@@ -1,112 +1,167 @@
 import React, { useEffect, useState } from 'react';
-import Helmet from 'react-helmet';
 import './calendar.css';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
-import {
-  Button,
-  Modal,
-} from 'antd';
+import { Button, Tooltip } from 'antd';
 import Wrapper from '../wrapper';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
 import GSTC from './GSTC';
 import { userInstance } from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
-import favicon from '../../assets/images/logo-mobile.png';
 
 const Calendar = () => {
-  // const [propertyData, setPropertyData] = useState([]);
-  // const [reservationData, setReservationData] = useState([]);
-  // const [guestData, setGuestData] = useState([]);
+  const [propertyData, setPropertyData] = useState([]);
+  const [reservationData, setReservationData] = useState([]);
+  const [guestName, setGuestName] = useState('');
+  const [unittypeData, setUnittypeData] = useState([]);
+  const [unitData, setUnitData] = useState([]);
   const [visible, setVisible] = useState(false);
-  const config = {
-    height: 500,
-    list: {
-      rows: {
-        1: {
-          id: '1',
-          label: 'Unit Type 1',
-        },
+  const [topNavId, setTopNavId] = useState(0);
+
+  const isSubUser = localStorage.getItem('isSubUser') || false;
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  const [{ calendarWrite, userId }] = userCred || [{}];
+  const canWrite = calendarWrite;
+  const rows = {};
+
+  propertyData.forEach((el, i) => {
+    unittypeData.forEach((ele, j) => {
+      const uttId = `utt${ele.id.toString()}`;
+      if (topNavId > 0) {
+        if (unittypeData[j].propertyId === topNavId) {
+          rows[uttId] = {
+            id: uttId,
+            label: ele.unitTypeName,
+            progress: 50,
+            expanded: false,
+          };
+        }
+      } else {
+        rows[uttId] = {
+          id: uttId,
+          label: ele.unitTypeName,
+          progress: 50,
+          expanded: false,
+        };
+      }
+
+      unitData.forEach((elem, k) => {
+        const utId = `ut${elem.id.toString()}`;
+        const a = `mt_1${ele.id.toString()}`;
+        const b = `mt_2${ele.id.toString()}`;
+        rows[a] = {
+          id: a,
+          label: 'Price per night',
+          parentId: `utt${ele.id.toString()}`,
+          progress: 50,
+        };
+        rows[b] = {
+          id: b,
+          label: 'Minimum stay',
+          progress: 50,
+          parentId: `utt${ele.id.toString()}`,
+        };
+        if (elem.unittypeId === ele.id) {
+          rows[utId] = {
+            id: utId,
+            label: unitData[k].unitName,
+            progress: 50,
+            parentId: `utt${unittypeData[j].id.toString()}`,
+            expanded: false,
+          };
+        }
+      });
+    });
+  });
+
+  const columns = {
+    percent: 100,
+    data: {
+      id: {
+        id: 'id',
+        width: 100,
+        expander: true,
+        header: {},
       },
-      columns: {
-        data: {
-          id: {
-            id: 'id',
-            data: 'id',
-            width: 100,
-            expander: true,
-            header: {
-              content: 'ID',
-            },
-          },
-          label: {
-            id: 'label',
-            data: 'label',
-            width: 200,
-            header: {
-              content: 'Label',
-            },
-          },
+      label: {
+        id: 'label',
+        data: 'label',
+        width: 200,
+        header: {
+          content: 'Label',
         },
       },
     },
+  };
 
-    chart: {
-      items: {
-        1: {
-          id: '1',
-          rowId: '1',
-          label: 'Item 1',
-          time: {
-            start: new Date().getTime(),
-            end: new Date().getTime() + 24 * 60 * 60 * 1000,
-          },
-        },
+  const items = {};
+  reservationData.forEach((element) => {
+    const id = element.id.toString();
+    const startDate = new Date(
+      element.startDate.split('T', 1).toString()
+    ).getTime();
+    const endDate = new Date(
+      element.endDate.split('T', 1).toString()
+    ).getTime();
+    items[id] = {
+      id,
+      rowId: `ut${element.unitId.toString()}`,
+      label: `${guestName} / ${element.totalAmount} EUR`,
+      time: {
+        start: startDate,
+        end: endDate,
       },
+      style: {
+        background: 'blue',
+      },
+    };
+  });
+
+  const config = {
+    height: 650,
+    list: {
+      rows,
+      columns,
+    },
+    chart: {
+      items,
     },
   };
 
   const subs = [];
 
-  function onState(state) {
-    state.update('config.chart.items.1', (item1) => {
-      item1.label = 'Gantt schedule timeline calendar';
-      item1.time.end = +2 * 24 * 60 * 60 * 1000;
-      return item1;
-    });
-    subs.push(
-      state.subscribe('config.chart.items', () => {
-      }),
-    );
-    subs.push(
-      state.subscribe('config.list.rows', () => {
-      }),
-    );
-  }
-
-  useEffect(() => () => {
-    subs.forEach((unsub) => unsub());
-  }, [subs]);
-
   const getProperty = async () => {
-    await userInstance.post('/fetchProperty');
-    // const data = response.data.propertiesData;
-    // if (response.data.code === 200) {
-    //   setPropertyData(data);
-    // }
+    const response = await userInstance.post('/fetchProperty', {
+      affiliateId: userId,
+    });
+    const data = response.data.propertiesData;
+    if (response.data.code === 200) {
+      setPropertyData(data);
+    }
   };
 
   const getData = async () => {
-    await userInstance.post('/getReservation');
-    // const { reservationData } = response.data;
-    // const guestdata = response.data.guestData;
-    // if (response.data.code === 200) {
-    //   setReservationData([...reservationData]);
-    //   setGuestData([...guestdata]);
-    // }
+    const response = await userInstance.post('/getReservation', {
+      affiliateId: userId,
+    });
+    const { reservationData: data } = response.data;
+    if (response.data.code === 200) {
+      setReservationData(data);
+      if (response.data.guestData.length !== 0) {
+        setGuestName(response.data.guestData[0][0].fullname);
+      }
+    }
   };
 
   const getCalendarData = async () => {
-    await userInstance.post('/getReservationCalendarData');
+    const response = await userInstance.post('/getReservationCalendarData', {
+      affiliateId: userId,
+    });
+    const { unittypeData: data0 } = response.data;
+    const { unitData: data1 } = response.data;
+    if (response.data.code === 200) {
+      setUnittypeData(data0);
+      setUnitData(data1);
+    }
   };
 
   useEffect(() => {
@@ -114,6 +169,10 @@ const Calendar = () => {
     getProperty();
     getCalendarData();
   }, []);
+
+  useEffect(() => {
+    subs.forEach((unsub) => unsub());
+  });
 
   const show = () => {
     setVisible(true);
@@ -127,45 +186,89 @@ const Calendar = () => {
     setVisible(false);
   };
 
-  return (
-    <Wrapper>
-      <Helmet>
-        <link rel="icon" href={favicon} />
-        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
-        <body className="calendar-page-view" />
-      </Helmet>
-      <div className="calendar">
-        <div className="calendar-btn">
-          <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+  function onState(state) {
+    // state.update("config.chart.items", items => {
+    //   items.time.end = today.getTime() + 2 * 24 * 60 * 60 * 1000;
+    //   return items;
+    // });
+    subs.push(
+      state.subscribe('config.chart.items', () => {
+        // console.log('items changed', items);
+      })
+    );
+    subs.push(
+      state.subscribe('config.list.rows', () => {
+        // console.log('rows changed', rows);
+      })
+    );
+  }
+
+  const btn =
+    isSubUser && canWrite ? (
+      <>
+        <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+          Add Reservation
+        </Button>
+        <Button className="border-btn" icon={<TeamOutlined />}>
+          Group Reservation
+        </Button>
+      </>
+    ) : (
+      <>
+        <Tooltip
+          title="You are not authorize for adding reservation"
+          color="gold"
+        >
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={show}
+            disabled="true"
+          >
             Add Reservation
           </Button>
+        </Tooltip>
+        <Tooltip
+          title="You are not authorize for adding reservation"
+          color="gold"
+        >
           <Button className="border-btn" icon={<TeamOutlined />}>
             Group Reservation
           </Button>
-        </div>
+        </Tooltip>
+      </>
+    );
 
+  return (
+    // <Wrapper onChange={handleChange}>
+    <Wrapper fun={setTopNavId}>
+      <div className="calendar">
+        <div className="calendar-btn">
+          {isSubUser ? (
+            btn
+          ) : (
+            <>
+              <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+                Add Reservation
+              </Button>
+              <Button className="border-btn" icon={<TeamOutlined />}>
+                Group Reservation
+              </Button>
+            </>
+          )}
+        </div>
         <div className="calendar-calendar">
           <GSTC config={config} onState={onState} />
         </div>
 
-        <Modal
+        <AddReservation
           title="Add New Reservation"
           visible={visible}
           onOk={handleOk}
           close={handleCancel}
           wrapClassName="create-booking-modal"
           getData={getData}
-        >
-          <AddReservation
-            title="Add New Reservation"
-            visible={visible}
-            onOk={handleOk}
-            close={handleCancel}
-            wrapClassName="create-booking-modal"
-            getData={getData}
-          />
-        </Modal>
+        />
       </div>
     </Wrapper>
   );

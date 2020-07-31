@@ -4,9 +4,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import moment from 'moment';
 import './profile.css';
-import {
-  Form, Select, Row, Col, Collapse, Button, Tooltip,
-} from 'antd';
+import { Form, Select, Row, Col, Collapse, Button, Tooltip } from 'antd';
 import {
   UserOutlined,
   WarningOutlined,
@@ -15,9 +13,7 @@ import {
 import Wrapper from '../wrapper';
 
 import BillingHistory from './billinghistory';
-import {
-  STRIPE_APP_KEY,
-} from '../../config/keys';
+import { STRIPE_APP_KEY } from '../../config/keys';
 import config from '../../config/config.json';
 import { userInstance } from '../../axios/axiosconfig';
 import CheckoutForm from './CheckoutForm';
@@ -59,6 +55,7 @@ const BillingInformation = () => {
   useEffect(() => {
     const getData = async () => {
       const res = await userInstance.post('/getTotalUnit');
+      console.log(res);
       if (res.data.code === 200 || res.data.code === 404) {
         const units = res.data.totalUnit || 1;
         const range = Array(units + 50 - units + 1)
@@ -133,8 +130,9 @@ const BillingInformation = () => {
         if (subscriptionType === 'month') {
           setTotal(advancePrice * unitsSelected);
         } else {
-          const amount = unitsSelected * advancePrice * 12
-            - (unitsSelected * advancePrice * 12 * discount) / 100;
+          const amount =
+            unitsSelected * advancePrice * 12 -
+            (unitsSelected * advancePrice * 12 * discount) / 100;
           setTotal(amount);
         }
       }
@@ -150,8 +148,9 @@ const BillingInformation = () => {
         if (subscriptionType === 'month') {
           setTotal(basicPrice * unitsSelected);
         } else {
-          const amount = unitsSelected * basicPrice * 12
-            - (unitsSelected * basicPrice * 12 * discount) / 100;
+          const amount =
+            unitsSelected * basicPrice * 12 -
+            (unitsSelected * basicPrice * 12 * discount) / 100;
           setTotal(amount);
         }
       }
@@ -170,23 +169,23 @@ const BillingInformation = () => {
         }
         if (subscriptionType === 'year' && currency === 'CHF') {
           setTotal(
-            basicPrice * exchangeRate.CHF * unitsSelected * 12
-              - (basicPrice * exchangeRate.CHF * unitsSelected * 12 * discount)
-                / 100,
+            basicPrice * exchangeRate.CHF * unitsSelected * 12 -
+              (basicPrice * exchangeRate.CHF * unitsSelected * 12 * discount) /
+                100
           );
         }
         if (subscriptionType === 'year' && currency === 'PLN') {
           setTotal(
-            basicPrice * exchangeRate.PLN * unitsSelected * 12
-              - (basicPrice * exchangeRate.PLN * unitsSelected * 12 * discount)
-                / 100,
+            basicPrice * exchangeRate.PLN * unitsSelected * 12 -
+              (basicPrice * exchangeRate.PLN * unitsSelected * 12 * discount) /
+                100
           );
         }
         if (subscriptionType === 'year' && currency === 'GBP') {
           setTotal(
-            basicPrice * exchangeRate.GBP * unitsSelected * 12
-              - (basicPrice * exchangeRate.GBP * unitsSelected * 12 * discount)
-                / 100,
+            basicPrice * exchangeRate.GBP * unitsSelected * 12 -
+              (basicPrice * exchangeRate.GBP * unitsSelected * 12 * discount) /
+                100
           );
         }
       }
@@ -207,20 +206,20 @@ const BillingInformation = () => {
       }
       if (subscriptionType === 'year' && currency === 'CHF') {
         setTotal(
-          basicPrice * exchangeRate.CHF * e * 12
-            - (basicPrice * exchangeRate.CHF * e * 12 * discount) / 100,
+          basicPrice * exchangeRate.CHF * e * 12 -
+            (basicPrice * exchangeRate.CHF * e * 12 * discount) / 100
         );
       }
       if (subscriptionType === 'year' && currency === 'PLN') {
         setTotal(
-          basicPrice * exchangeRate.PLN * e * 12
-            - (basicPrice * exchangeRate.PLN * e * 12 * discount) / 100,
+          basicPrice * exchangeRate.PLN * e * 12 -
+            (basicPrice * exchangeRate.PLN * e * 12 * discount) / 100
         );
       }
       if (subscriptionType === 'year' && currency === 'GBP') {
         setTotal(
-          basicPrice * exchangeRate.GBP * e * 12
-            - (basicPrice * exchangeRate.GBP * e * 12 * discount) / 100,
+          basicPrice * exchangeRate.GBP * e * 12 -
+            (basicPrice * exchangeRate.GBP * e * 12 * discount) / 100
         );
       }
     }
@@ -231,8 +230,9 @@ const BillingInformation = () => {
     if (e === 'month') {
       setTotal(unitsSelected * unitPrice);
     } else {
-      const amount = unitsSelected * unitPrice * 12
-        - (unitsSelected * unitPrice * 12 * discount) / 100;
+      const amount =
+        unitsSelected * unitPrice * 12 -
+        (unitsSelected * unitPrice * 12 * discount) / 100;
       setTotal(amount);
     }
   };
@@ -246,8 +246,9 @@ const BillingInformation = () => {
       }
       if (planType === 'basic' && subscriptionType === 'year') {
         setUnitPrice(basicPrice);
-        const amount = basicPrice * unitsSelected * 12
-          - (basicPrice * unitsSelected * 12 * discount) / 100;
+        const amount =
+          basicPrice * unitsSelected * 12 -
+          (basicPrice * unitsSelected * 12 * discount) / 100;
         setTotal(amount);
       }
       if (planType === 'advance' && subscriptionType === 'month') {
@@ -256,8 +257,9 @@ const BillingInformation = () => {
       }
       if (planType === 'advance' && subscriptionType === 'year') {
         setUnitPrice(advancePrice);
-        const amount = advancePrice * unitsSelected * 12
-          - (advancePrice * unitsSelected * 12 * discount) / 100;
+        const amount =
+          advancePrice * unitsSelected * 12 -
+          (advancePrice * unitsSelected * 12 * discount) / 100;
         setTotal(amount);
       }
     }
@@ -269,8 +271,9 @@ const BillingInformation = () => {
       }
       if (planType === 'basic' && subscriptionType === 'year') {
         setUnitPrice(basicPrice * exchangeRate.CHF);
-        const amount = basicPrice * exchangeRate.CHF * unitsSelected * 12
-          - (basicPrice * exchangeRate.CHF * unitsSelected * 12 * discount) / 100;
+        const amount =
+          basicPrice * exchangeRate.CHF * unitsSelected * 12 -
+          (basicPrice * exchangeRate.CHF * unitsSelected * 12 * discount) / 100;
 
         setTotal(amount);
       }
@@ -280,9 +283,10 @@ const BillingInformation = () => {
       }
       if (planType === 'advance' && subscriptionType === 'year') {
         setUnitPrice(advancePrice * exchangeRate.CHF);
-        const amount = advancePrice * exchangeRate.CHF * unitsSelected * 12
-          - (advancePrice * exchangeRate.CHF * unitsSelected * 12 * discount)
-            / 100;
+        const amount =
+          advancePrice * exchangeRate.CHF * unitsSelected * 12 -
+          (advancePrice * exchangeRate.CHF * unitsSelected * 12 * discount) /
+            100;
         setTotal(amount);
       }
     }
@@ -294,8 +298,9 @@ const BillingInformation = () => {
       }
       if (planType === 'basic' && subscriptionType === 'year') {
         setUnitPrice(basicPrice * exchangeRate.PLN);
-        const amount = basicPrice * exchangeRate.PLN * unitsSelected * 12
-          - (basicPrice * exchangeRate.PLN * unitsSelected * 12 * discount) / 100;
+        const amount =
+          basicPrice * exchangeRate.PLN * unitsSelected * 12 -
+          (basicPrice * exchangeRate.PLN * unitsSelected * 12 * discount) / 100;
         setTotal(amount);
       }
       if (planType === 'advance' && subscriptionType === 'month') {
@@ -304,9 +309,10 @@ const BillingInformation = () => {
       }
       if (planType === 'advance' && subscriptionType === 'year') {
         setUnitPrice(advancePrice * exchangeRate.PLN);
-        const amount = advancePrice * exchangeRate.PLN * unitsSelected * 12
-          - (advancePrice * exchangeRate.PLN * unitsSelected * 12 * discount)
-            / 100;
+        const amount =
+          advancePrice * exchangeRate.PLN * unitsSelected * 12 -
+          (advancePrice * exchangeRate.PLN * unitsSelected * 12 * discount) /
+            100;
         setTotal(amount);
       }
     }
@@ -318,8 +324,9 @@ const BillingInformation = () => {
       }
       if (planType === 'basic' && subscriptionType === 'year') {
         setUnitPrice(basicPrice * exchangeRate.GBP);
-        const amount = basicPrice * exchangeRate.GBP * unitsSelected * 12
-          - (basicPrice * exchangeRate.GBP * unitsSelected * 12 * discount) / 100;
+        const amount =
+          basicPrice * exchangeRate.GBP * unitsSelected * 12 -
+          (basicPrice * exchangeRate.GBP * unitsSelected * 12 * discount) / 100;
         setTotal(amount);
       }
       if (planType === 'advance' && subscriptionType === 'month') {
@@ -328,9 +335,10 @@ const BillingInformation = () => {
       }
       if (planType === 'advance' && subscriptionType === 'year') {
         setUnitPrice(advancePrice * exchangeRate.GBP);
-        const amount = advancePrice * exchangeRate.GBP * unitsSelected * 12
-          - (advancePrice * exchangeRate.GBP * unitsSelected * 12 * discount)
-            / 100;
+        const amount =
+          advancePrice * exchangeRate.GBP * unitsSelected * 12 -
+          (advancePrice * exchangeRate.GBP * unitsSelected * 12 * discount) /
+            100;
         setTotal(amount);
       }
     }
@@ -439,8 +447,13 @@ const BillingInformation = () => {
     <Wrapper>
       <Helmet>
         <link rel="icon" href={favicon} />
-        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
       </Helmet>
       {/* <Suspense fallback={<ShowLoader />}> */}
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
@@ -590,20 +603,16 @@ const BillingInformation = () => {
                               <Col span={9} className="total-billing-price">
                                 <Form.Item label="Total Price">
                                   <h2>
-                                    =
-                                    {' '}
+                                    ={' '}
                                     {Math.round(
-                                      (total + Number.EPSILON) * 100,
+                                      (total + Number.EPSILON) * 100
                                     ) / 100 || 0}
                                     <span>
                                       {' '}
                                       {data
                                         ? data.currency
-                                        : currency || ''}
-                                      {' '}
-                                      per
-                                      {' '}
-                                      {subscriptionType}
+                                        : currency || ''}{' '}
+                                      per {subscriptionType}
                                     </span>
                                   </h2>
                                   <p>20% discount if you select Yearly plan</p>
@@ -669,15 +678,9 @@ const BillingInformation = () => {
                           <div className="subscription-plan-list">
                             <ul>
                               <li>
-                                Plan
-                                {' '}
+                                Plan{' '}
                                 <span>
-                                  {data.Amount}
-                                  {' '}
-                                  {data.currency}
-                                  /
-                                  {' '}
-                                  {data.interval}
+                                  {data.Amount} {data.currency}/ {data.interval}
                                 </span>
                               </li>
                               {/* <li>
@@ -686,13 +689,10 @@ const BillingInformation = () => {
                                   <span>305 EUR</span>
                                 </li> */}
                               <li>
-                                Plan Type
-                                {' '}
-                                <span>{data.planType}</span>
+                                Plan Type <span>{data.planType}</span>
                               </li>
                               <li>
-                                Discount
-                                {' '}
+                                Discount{' '}
                                 <span>
                                   {data.planType === 'basic'
                                     ? ''
@@ -704,38 +704,38 @@ const BillingInformation = () => {
                           <Button onClick={handleChangeSubscription}>
                             Upgrade
                           </Button>
-                          {
-                            canDowngrade
-                              ? (
-                                <Button style={{ margin: '50px 30px 20px 10px' }} onClick={handleChangeSubscription}>
-                                  Downgrade
-                                </Button>
-                              )
-                              : (
-                                <Tooltip title="You are utilising all your subscribed units,to downgrade you have to delete some units" color="cyan">
-                                  <Button style={{ margin: '50px 30px 20px 10px' }} disabled>
-                                    downgrade
-                                  </Button>
-                                </Tooltip>
-                              )
-                          }
+                          {canDowngrade ? (
+                            <Button
+                              style={{ margin: '50px 30px 20px 10px' }}
+                              onClick={handleChangeSubscription}
+                            >
+                              Downgrade
+                            </Button>
+                          ) : (
+                            <Tooltip
+                              title="You are utilising all your subscribed units,to downgrade you have to delete some units"
+                              color="gold"
+                            >
+                              <Button
+                                style={{ margin: '50px 30px 20px 10px' }}
+                                disabled
+                              >
+                                downgrade
+                              </Button>
+                            </Tooltip>
+                          )}
                         </Col>
 
                         <Col span={10}>
                           <div className="subscription-plan-list">
                             <p>
-                              Your
-                              {' '}
+                              Your{' '}
                               <span>
                                 {data.interval}
                                 ly Subscription Plan
                               </span>
                             </p>
-                            <p>
-                              will renew on
-                              {' '}
-                              {end}
-                            </p>
+                            <p>will renew on {end}</p>
                           </div>
                           <Button onClick={handleCancelSubscription}>
                             cancel
