@@ -112,9 +112,7 @@ const AddUnitType = () => {
       propertyId: localStorage.getItem('propertyId'),
     };
     const response = await userInstance.post('/getUnit', values);
-    console.log(response);
     const { data } = response;
-    console.log(data);
     if (response.data.code === 200) {
       data.unitData
         .filter((el) => el.unittypeId === parseInt(localStorage.getItem('unittypeId'), 10))

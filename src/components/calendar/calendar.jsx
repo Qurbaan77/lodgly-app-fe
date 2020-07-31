@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './calendar.css';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
@@ -23,7 +23,7 @@ const Calendar = () => {
   const canWrite = calendarWrite;
   const rows = {};
 
-  propertyData.forEach((el, i) => {
+  propertyData.forEach(() => {
     unittypeData.forEach((ele, j) => {
       const uttId = `utt${ele.id.toString()}`;
       if (topNavId > 0) {
@@ -97,10 +97,10 @@ const Calendar = () => {
   reservationData.forEach((element) => {
     const id = element.id.toString();
     const startDate = new Date(
-      element.startDate.split('T', 1).toString()
+      element.startDate.split('T', 1).toString(),
     ).getTime();
     const endDate = new Date(
-      element.endDate.split('T', 1).toString()
+      element.endDate.split('T', 1).toString(),
     ).getTime();
     items[id] = {
       id,
@@ -129,7 +129,7 @@ const Calendar = () => {
 
   const subs = [];
 
-  const getProperty = async () => {
+  const getProperty = useCallback(async () => {
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
@@ -137,9 +137,9 @@ const Calendar = () => {
     if (response.data.code === 200) {
       setPropertyData(data);
     }
-  };
+  }, [userId]);
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     const response = await userInstance.post('/getReservation', {
       affiliateId: userId,
     });
@@ -150,9 +150,9 @@ const Calendar = () => {
         setGuestName(response.data.guestData[0][0].fullname);
       }
     }
-  };
+  }, [userId]);
 
-  const getCalendarData = async () => {
+  const getCalendarData = useCallback(async () => {
     const response = await userInstance.post('/getReservationCalendarData', {
       affiliateId: userId,
     });
@@ -162,13 +162,13 @@ const Calendar = () => {
       setUnittypeData(data0);
       setUnitData(data1);
     }
-  };
+  }, [userId]);
 
   useEffect(() => {
     getData();
     getProperty();
     getCalendarData();
-  }, []);
+  }, [getData, getProperty, getCalendarData]);
 
   useEffect(() => {
     subs.forEach((unsub) => unsub());
@@ -194,50 +194,49 @@ const Calendar = () => {
     subs.push(
       state.subscribe('config.chart.items', () => {
         // console.log('items changed', items);
-      })
+      }),
     );
     subs.push(
       state.subscribe('config.list.rows', () => {
         // console.log('rows changed', rows);
-      })
+      }),
     );
   }
 
-  const btn =
-    isSubUser && canWrite ? (
-      <>
-        <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+  const btn = isSubUser && canWrite ? (
+    <>
+      <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+        Add Reservation
+      </Button>
+      <Button className="border-btn" icon={<TeamOutlined />}>
+        Group Reservation
+      </Button>
+    </>
+  ) : (
+    <>
+      <Tooltip
+        title="You are not authorize for adding reservation"
+        color="gold"
+      >
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={show}
+          disabled="true"
+        >
           Add Reservation
         </Button>
+      </Tooltip>
+      <Tooltip
+        title="You are not authorize for adding reservation"
+        color="gold"
+      >
         <Button className="border-btn" icon={<TeamOutlined />}>
           Group Reservation
         </Button>
-      </>
-    ) : (
-      <>
-        <Tooltip
-          title="You are not authorize for adding reservation"
-          color="gold"
-        >
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={show}
-            disabled="true"
-          >
-            Add Reservation
-          </Button>
-        </Tooltip>
-        <Tooltip
-          title="You are not authorize for adding reservation"
-          color="gold"
-        >
-          <Button className="border-btn" icon={<TeamOutlined />}>
-            Group Reservation
-          </Button>
-        </Tooltip>
-      </>
-    );
+      </Tooltip>
+    </>
+  );
 
   return (
     // <Wrapper onChange={handleChange}>

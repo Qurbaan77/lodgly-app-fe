@@ -215,7 +215,6 @@ const AddReservation = (props) => {
     const data = response.data.servicData;
     const response2 = await userInstance.post('/getUnit', payload);
     const data2 = response2.data.unitData;
-    console.log(response2)
     const response3 = await userInstance.post('/getUnittype', payload);
     const data3 = response3.data.unittypeData;
     if (response.data.code === 200) {
