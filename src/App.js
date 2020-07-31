@@ -1,8 +1,5 @@
 import React, { Suspense } from 'react';
 import { Router, Route } from 'react-router-dom';
-// 'history' is pre installed library of react If I install npm i history
-// then page rendering is not work-->
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { createBrowserHistory } from 'history';
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
