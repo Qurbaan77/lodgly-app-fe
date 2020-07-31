@@ -1,7 +1,5 @@
 import React, { Suspense } from 'react';
-import { Router, Route } from 'react-router-dom';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { createBrowserHistory } from 'history';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
 import Login from './components/login/login';
@@ -35,7 +33,6 @@ import {
   SecureBooking, SecureCalendar, SecureProperty, SecureTeam,
   SecureOwner, SecureInvoice, SecureService, SecureStats, SecureBilling,
 } from './Routes/SecureRoute';
-
 import Owner from './components/owner/owner';
 import Team from './components/team/team';
 import Profile from './components/profile/profile';
@@ -45,8 +42,6 @@ import Stats from './components/stats/stats';
 
 import './responsive.css';
 
-const history = createBrowserHistory();
-
 const App = () => {
   const isSubUser = localStorage.getItem('isSubUser') || false;
   return (
@@ -54,7 +49,7 @@ const App = () => {
       <div className="main-wrapper">
         <>
           <Suspense fallback={null}>
-            <Router history={history}>
+            <Router>
               <Header />
               <main>
                 <div className="main_content">
