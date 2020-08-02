@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import Helmet from 'react-helmet';
 import './invoice.css';
+import { useTranslation } from 'react-i18next';
 import {
   Button,
   Tooltip,
@@ -37,6 +38,7 @@ import DeletePopup from './deletepopup';
 import UserLock from '../userlock/userlock';
 
 const Invoice = () => {
+  const { t } = useTranslation();
   // const { Option } = Select;
   const [topNavId, setTopNavId] = useState(null);
   const [visible, setVisible] = useState(false);
@@ -317,8 +319,8 @@ const Invoice = () => {
           <div className="add-invoice-page">
             <div className="add-invoice">
               <img src={invoice} alt="invoice" />
-              <h4>Invoices</h4>
-              <p>Currently there are no Sub users created</p>
+              <h4>{t('strings.invoices')}</h4>
+              <p>{t('invoice.heading3')}</p>
               {topNavId ? perm : propertySelectButton}
             </div>
           </div>
@@ -338,8 +340,7 @@ const Invoice = () => {
             <div className="page-header">
               <h1>
                 <img src={invoiceIcon} alt="" />
-                {' '}
-                Invoice
+                {t('invoice.label1')}
               </h1>
               {topNavId ? perm : propertySelectButton}
             </div>
@@ -348,13 +349,13 @@ const Invoice = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th>Date</th>
-                      <th>Label</th>
-                      <th>Type</th>
-                      <th>Client</th>
-                      <th>Amount</th>
-                      <th>Status</th>
-                      <th>Action</th>
+                      <th>{t('strings.date')}</th>
+                      <th>{t('strings.label')}</th>
+                      <th>{t('strings.type')}</th>
+                      <th>{t('strings.client')}</th>
+                      <th>{t('strings.amount')}</th>
+                      <th>{t('strings.status')}</th>
+                      <th>{t('strings.action')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -372,18 +373,12 @@ const Invoice = () => {
                             {el.date.slice(0, 10)}
                           </td>
                           <td>
-                            {el.label
-                              || `INVOICE ${
-                                el.id
-                              } - ${new Date().getFullYear()}`}
+                            {el.label ||
+                              `INVOICE ${el.id} - ${new Date().getFullYear()}`}
                           </td>
                           <td>{el.type || 'Invoice'}</td>
                           <td>{el.clientName}</td>
-                          <td>
-                            {el.total}
-                            {' '}
-                            EUR
-                          </td>
+                          <td>{el.total} EUR</td>
                           <td>{el.status}</td>
                           <td>
                             <div className="action-icon">
@@ -428,29 +423,31 @@ const Invoice = () => {
                       value={selectAllCheck}
                       onClick={handleSelectAll}
                     >
-                      Select all
+                      {t('strings.select_all')}
                     </Checkbox>
                     {checkedInvoice.length ? (
-                      <div className="cancel-icon" onClick={handleCancelCheck} role="presentation">
+                      <div
+                        className="cancel-icon"
+                        onClick={handleCancelCheck}
+                        role="presentation"
+                      >
                         <img src={cancelIcon} alt="" />
-                        Cancel
+                        {t('strings.cancel')}
                       </div>
                     ) : (
                       <div className="cancel-icon" hidden>
                         <img src={cancelIcon} alt="" />
-                        Cancel
+                        {t('strings.cancel')}
                       </div>
                     )}
 
                     {checkedInvoice.length ? (
                       <Tag color="#FB4B56">
-                        {checkedInvoice.length}
-                        {' '}
-                        selected
+                        {checkedInvoice.length} {t('strings.selected')}
                       </Tag>
                     ) : (
                       <Tag color="#FB4B56" hidden>
-                        3 selected
+                        3 {t('strings.selected')}
                       </Tag>
                     )}
                     <div className="filter-icons">

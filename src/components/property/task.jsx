@@ -185,8 +185,13 @@ const Task = () => {
     <Wrapper>
       <Helmet>
         <link rel="icon" href={favicon} />
-        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
         <body className="task-page-view" />
       </Helmet>
       <div className="cleaning-group">
@@ -196,7 +201,7 @@ const Task = () => {
             {' '}
             {localStorage.getItem('groupId')
               ? group.groupName
-              : 'No group is Selected'}
+              : t('task.heading')}
           </h1>
 
           <div className="cleaning-button">
@@ -303,9 +308,7 @@ const Task = () => {
           <Form.Item
             label="Task"
             name="taskName"
-            rules={[
-              { required: true, message: 'Please input your Task name!' },
-            ]}
+            rules={[{ required: true, message: t('task.rules') }]}
           >
             <Input />
           </Form.Item>
@@ -313,17 +316,29 @@ const Task = () => {
           <Form.Item
             label="Note"
             name="note"
-            rules={[{ required: true, message: 'Please input your note!' }]}
+            rules={[{ required: true, message: t('task.rules1') }]}
           >
             <Input />
           </Form.Item>
 
           <Form.Item name="tags">
             <Select defaultValue="Select" style={{ width: 120 }}>
-              <Option value="Approved">Approved</Option>
-              <Option value="Waiting">Waiting</Option>
-              <Option value="Decline">Decline</Option>
-              <Option value="In Review">In Review</Option>
+              <Option value="Approved">
+                {' '}
+                {t('task.option1')}
+              </Option>
+              <Option value="Waiting">
+                {' '}
+                {t('task.option2')}
+              </Option>
+              <Option value="Decline">
+                {' '}
+                {t('task.option3')}
+              </Option>
+              <Option value="In Review">
+                {' '}
+                {t('task.option4')}
+              </Option>
             </Select>
           </Form.Item>
 

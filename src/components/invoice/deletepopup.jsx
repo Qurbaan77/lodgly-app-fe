@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import './invoice.css';
 import {
   Button,
@@ -14,6 +15,7 @@ const DeletePopup = (props) => {
   const {
     dataObject, cancel, visible, handleOk, handleCancel,
   } = props;
+    const { t } = useTranslation();
 
   return (
     <Modal
@@ -24,15 +26,15 @@ const DeletePopup = (props) => {
     >
       <div className="delete-popup-box">
         <WarningOutlined />
-        <h5>Delete this object?</h5>
+        <h5>{t('invoice.label15')}</h5>
 
-        <p>Deleting this invoice will permanently remove it from your network.</p>
+        <p>{t('invoice.label16')}</p>
 
         <Button style={{ marginRight: 50 }} onClick={cancel}>
-          Cancel
+          {t('strings.cancel')}
         </Button>
         <Button icon={<DeleteOutlined />} type="primary" onClick={dataObject}>
-          Delete Item
+          {t('invoice.label17')}
         </Button>
       </div>
     </Modal>

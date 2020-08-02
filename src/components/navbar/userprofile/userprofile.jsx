@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import './userprofile.css';
 import { Dropdown, Menu } from 'antd';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { SettingOutlined } from '@ant-design/icons';
 import { userInstance } from '../../../axios/axiosconfig';
 import user from '../../../assets/images/profile_user.jpg';
 
 const UserProfile = (props) => {
+   const { t } = useTranslation();
   const [img, setImg] = useState('');
   const [name, setName] = useState('');
 
@@ -35,10 +37,10 @@ const UserProfile = (props) => {
   const menu = (
     <Menu>
       <Menu.Item>
-        <Link to="/profile">My Profile</Link>
+        <Link to="/profile">{t('userprofile.label1')}</Link>
       </Menu.Item>
       <Menu.Item hidden={billingWrite}>
-        <Link to="/billinginformation">Billing</Link>
+        <Link to="/billinginformation">{t('userprofile.label2')}</Link>
       </Menu.Item>
     </Menu>
   );

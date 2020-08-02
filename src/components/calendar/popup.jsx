@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './calendar.css';
+import { useTranslation } from 'react-i18next';
 import {
   Form,
   Select,
@@ -55,6 +56,7 @@ it can be found as a welcome guest in many households across the world.
 // );
 
 const Popup = () => {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
 
   const show = () => {
@@ -103,7 +105,7 @@ const Popup = () => {
         onClick={show}
         style={{ marginRight: 20 }}
       >
-        Update Guest
+        {t('calendarpop.heading1')}
       </Button>
 
       <Button
@@ -112,7 +114,7 @@ const Popup = () => {
         onClick={show1}
         style={{ marginRight: 20 }}
       >
-        Group Reservation
+        {t('calendarpop.heading2')}
       </Button>
 
       <Button
@@ -121,7 +123,7 @@ const Popup = () => {
         onClick={show2}
         style={{ marginRight: 20 }}
       >
-        Calendar Setting
+        {t('calendarpop.heading3')}
       </Button>
 
       <Button
@@ -130,11 +132,11 @@ const Popup = () => {
         onClick={show3}
         style={{ marginRight: 20 }}
       >
-        Reservation
+        {t('strings.reservat')}
       </Button>
 
       <Modal
-        title="Guest"
+        title={t('strings.guest')}
         visible={visible}
         onCancel={cancel}
         wrapClassName="guest-modal"
@@ -143,7 +145,7 @@ const Popup = () => {
       </Modal>
 
       <Modal
-        title="Add New Group Reservation"
+        title={t('calendarpop.heading4')}
         visible={visible1}
         onCancel={cancel1}
         wrapClassName="create-booking-modal group-reservation"
@@ -152,7 +154,7 @@ const Popup = () => {
       </Modal>
 
       <Modal
-        title="Calendar Setting"
+        title={t('calendarpop.heading3')}
         visible={visible2}
         onCancel={cancel2}
         wrapClassName="create-booking-modal calendar-setting"
@@ -161,7 +163,7 @@ const Popup = () => {
       </Modal>
 
       <Modal
-        title="Reservation"
+        title={t('strings.reservation')}
         visible={visible3}
         onCancel={cancel3}
         wrapClassName="create-booking-modal reservation-setting"
@@ -174,264 +176,276 @@ const Popup = () => {
 
 export default Popup;
 
-const UpdateGuest = () => (
-  <Form name="basic">
-    <Row style={{ alignItems: 'center' }}>
-      <Col span={12}>
-        <Form.Item
-          label="Full Name"
-          name="firstname"
-          style={{ paddingRight: 20 }}
-        >
-          <Input placeholder="Full Name" />
-        </Form.Item>
-      </Col>
+const UpdateGuest = () => {
+  const { t } = useTranslation();
+  return (
+    <Form name="basic">
+      <Row style={{ alignItems: 'center' }}>
+        <Col span={12}>
+          <Form.Item
+            label={t('strings.full')}
+            name="firstname"
+            style={{ paddingRight: 20 }}
+          >
+            <Input placeholder="Full Name" />
+          </Form.Item>
+        </Col>
 
-      <Col span={12}>
-        <Form.Item label="Country of Residence" name="lastname">
-          <Select>
-            <Select.Option value="demo">Holiday House</Select.Option>
-            <Select.Option value="demo">Holiday House</Select.Option>
-          </Select>
-        </Form.Item>
-      </Col>
-    </Row>
+        <Col span={12}>
+          <Form.Item label="Country of Residence" name="lastname">
+            <Select>
+              <Select.Option value="demo">Holiday House</Select.Option>
+              <Select.Option value="demo">Holiday House</Select.Option>
+            </Select>
+          </Form.Item>
+        </Col>
+      </Row>
 
-    <Row style={{ alignItems: 'center' }}>
-      <Col span={12}>
-        <Form.Item label="E-mail" name="email" style={{ paddingRight: 20 }}>
-          <Input placeholder="Email" />
-        </Form.Item>
-      </Col>
+      <Row style={{ alignItems: 'center' }}>
+        <Col span={12}>
+          <Form.Item
+            label={t('strings.email')}
+            name="email"
+            style={{ paddingRight: 20 }}
+          >
+            <Input placeholder={t('strings.email')} />
+          </Form.Item>
+        </Col>
 
-      <Col span={12}>
-        <Form.Item label="Phone" name="phone">
-          <Input placeholder="Phone" />
-        </Form.Item>
-      </Col>
-    </Row>
+        <Col span={12}>
+          <Form.Item label={t('strings.phone')} name="phone">
+            <Input placeholder={t('strings.phone')} />
+          </Form.Item>
+        </Col>
+      </Row>
 
-    <Row style={{ alignItems: 'center' }}>
-      <Col span={12}>
-        <Form.Item
-          name="dob"
-          label="Date of Birth"
-          style={{ paddingRight: 20 }}
-        >
-          <DatePicker />
-        </Form.Item>
-      </Col>
+      <Row style={{ alignItems: 'center' }}>
+        <Col span={12}>
+          <Form.Item
+            name="dob"
+            label={t('calendarpop.label1')}
+            style={{ paddingRight: 20 }}
+          >
+            <DatePicker />
+          </Form.Item>
+        </Col>
 
-      <Col span={12}>
-        <Form.Item name="gender" label="Gender">
+        <Col span={12}>
+          <Form.Item name="gender" label={t('strings.gender')}>
+            <Radio.Group name="radiogroup" defaultValue={1}>
+              <Radio value={1}>M</Radio>
+              <Radio value={2}>F</Radio>
+            </Radio.Group>
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row style={{ alignItems: 'center' }}>
+        <Col span={12}>
+          <Form.Item
+            label={t('calendarpop.label2')}
+            name="document"
+            style={{ paddingRight: 20 }}
+          >
+            <Select>
+              <Select.Option value="demo">Holiday House</Select.Option>
+              <Select.Option value="demo">Holiday House</Select.Option>
+            </Select>
+          </Form.Item>
+        </Col>
+
+        <Col span={12}>
+          <Form.Item label={t('calendarpop.label3')} name="documentnumber">
+            <Input />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row style={{ alignItems: 'center' }}>
+        <Col span={12}>
+          <Form.Item
+            label={t('calendarpop.label5')}
+            name="citizenship"
+            style={{ paddingRight: 20 }}
+          >
+            <Select>
+              <Select.Option value="demo">Holiday House</Select.Option>
+              <Select.Option value="demo">Holiday House</Select.Option>
+            </Select>
+          </Form.Item>
+        </Col>
+
+        <Col span={12}>
+          <Form.Item label={t('calendarpop.label4')} name="documentnumber">
+            <Input />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row style={{ alignItems: 'center' }}>
+        <Col span={24}>
+          <Form.Item label={t('strings.note')} name="notes">
+            <Input.TextArea />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row style={{ alignItems: 'center', textAlign: 'right' }}>
+        <Col span={24}>
+          <Form.Item>
+            <Button style={{ marginRight: 10 }}>Cancel</Button>
+            <Button type="primary" htmlType="submit">
+              {t('strings.update')}
+            </Button>
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form>
+  );
+};
+
+const GroupReservation = () => {
+  const { t } = useTranslation();
+  return (
+    <Form name="basic">
+      <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
+        <Col span={24}>
+          <Form.Item
+            label={t('strings.reservation_date')}
+            name="groupname"
+            style={{ paddingRight: 20 }}
+          >
+            <RangePicker />
+          </Form.Item>
+        </Col>
+
+        <Col span={24}>
           <Radio.Group name="radiogroup" defaultValue={1}>
-            <Radio value={1}>M</Radio>
-            <Radio value={2}>F</Radio>
+            <Radio value={1}>Confirmed</Radio>
+            <Radio value={2}>Option</Radio>
           </Radio.Group>
-        </Form.Item>
-      </Col>
-    </Row>
+        </Col>
 
-    <Row style={{ alignItems: 'center' }}>
-      <Col span={12}>
-        <Form.Item
-          label="Type of Document"
-          name="document"
-          style={{ paddingRight: 20 }}
-        >
-          <Select>
-            <Select.Option value="demo">Holiday House</Select.Option>
-            <Select.Option value="demo">Holiday House</Select.Option>
-          </Select>
-        </Form.Item>
-      </Col>
-
-      <Col span={12}>
-        <Form.Item label="Document Number" name="documentnumber">
-          <Input />
-        </Form.Item>
-      </Col>
-    </Row>
-
-    <Row style={{ alignItems: 'center' }}>
-      <Col span={12}>
-        <Form.Item
-          label="Citizenship"
-          name="citizenship"
-          style={{ paddingRight: 20 }}
-        >
-          <Select>
-            <Select.Option value="demo">Holiday House</Select.Option>
-            <Select.Option value="demo">Holiday House</Select.Option>
-          </Select>
-        </Form.Item>
-      </Col>
-
-      <Col span={12}>
-        <Form.Item label="PLace of Residence" name="documentnumber">
-          <Input />
-        </Form.Item>
-      </Col>
-    </Row>
-
-    <Row style={{ alignItems: 'center' }}>
-      <Col span={24}>
-        <Form.Item label="Notes" name="notes">
-          <Input.TextArea />
-        </Form.Item>
-      </Col>
-    </Row>
-
-    <Row style={{ alignItems: 'center', textAlign: 'right' }}>
-      <Col span={24}>
-        <Form.Item>
-          <Button style={{ marginRight: 10 }}>Cancel</Button>
-          <Button type="primary" htmlType="submit">
-            Update
-          </Button>
-        </Form.Item>
-      </Col>
-    </Row>
-  </Form>
-);
-
-const GroupReservation = () => (
-  <Form name="basic">
-    <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
-      <Col span={24}>
-        <Form.Item
-          label="Reservation Date"
-          name="groupname"
-          style={{ paddingRight: 20 }}
-        >
-          <RangePicker />
-        </Form.Item>
-      </Col>
-
-      <Col span={24}>
-        <Radio.Group name="radiogroup" defaultValue={1}>
-          <Radio value={1}>Confirmed</Radio>
-          <Radio value={2}>Option</Radio>
-        </Radio.Group>
-      </Col>
-
-      <Col span={24}>
-        <div className="availability">
-          <p>Availability is checked automatically</p>
-        </div>
-      </Col>
-    </Row>
-
-    <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
-      <Col span={24}>
-        <Form.Item
-          className="comision"
-          label="Channel, Commission(%)"
-          name="channel"
-        >
-          <Select style={{ width: '70%', display: 'inline-block' }}>
-            <Select.Option value="demo">Holiday House</Select.Option>
-            <Select.Option value="demo">Holiday House</Select.Option>
-          </Select>
-
-          <Input
-            style={{
-              width: '26%',
-              display: 'inline-block',
-              verticalAlign: 'sub',
-              marginLeft: '4%',
-            }}
-          />
-        </Form.Item>
-      </Col>
-    </Row>
-
-    <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
-      <Col span={24}>
-        <div className="reservation-booker">
-          <h4>Reservation Booker</h4>
-
-          <Row>
-            <Col span={12}>
-              <label htmlFor="name">
-                <input hidden />
-                Full Name
-              </label>
-              <p>Name Name</p>
-            </Col>
-
-            <Col span={12}>
-              <label htmlFor="country">
-                <input hidden />
-                Country
-              </label>
-              <p>Germany</p>
-            </Col>
-
-            <Col span={12}>
-              <label htmlFor="email">
-                <input hidden />
-                Email
-              </label>
-              <p>test@gmail.com</p>
-            </Col>
-
-            <Col span={12}>
-              <label htmlFor="phone">
-                <input hidden />
-                Phone
-              </label>
-              <p>+123456789</p>
-            </Col>
-          </Row>
-        </div>
-
-        <div className="add-edit-data">
-          <div>
-            <FormOutlined />
-            {' '}
-            Edit/Additional Data
+        <Col span={24}>
+          <div className="availability">
+            <p>{t('calendarpop.label6')}</p>
           </div>
-        </div>
-      </Col>
-    </Row>
+        </Col>
+      </Row>
 
-    <Row style={{ alignItems: 'center' }}>
-      <Col span={24}>
-        <Form.Item style={{ marginBottom: '0' }}>
-          <Collapse accordion>
-            <Panel
-              icon={<PlusSquareOutlined />}
-              header="Add Guest Details (Optional)"
-              key="1"
-            >
-              {text}
-            </Panel>
-          </Collapse>
-        </Form.Item>
-      </Col>
-    </Row>
+      <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
+        <Col span={24}>
+          <Form.Item
+            className="comision"
+            label={t('strings.channel_commission')}
+            name="channel"
+          >
+            <Select style={{ width: '70%', display: 'inline-block' }}>
+              <Select.Option value="demo">Holiday House</Select.Option>
+              <Select.Option value="demo">Holiday House</Select.Option>
+            </Select>
 
-    <Row
-      style={{
-        alignItems: 'center',
-        background: '#fbfbfc',
-        padding: '0px 20px',
-        paddingTop: '20px',
-      }}
-    >
-      <Col span={24}>
-        <Form.Item style={{ textAlign: 'center' }}>
-          <Button type="primary" htmlType="submit">
-            Save Reservation
-          </Button>
-        </Form.Item>
-      </Col>
-    </Row>
-  </Form>
-);
+            <Input
+              style={{
+                width: '26%',
+                display: 'inline-block',
+                verticalAlign: 'sub',
+                marginLeft: '4%',
+              }}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
+        <Col span={24}>
+          <div className="reservation-booker">
+            <h4>{t('calendarpop.label7')}</h4>
+
+            <Row>
+              <Col span={12}>
+                <label htmlFor="name">
+                  <input hidden />
+                  {t('strings.full')}
+                </label>
+                <p>{t('strings.name')}</p>
+              </Col>
+
+              <Col span={12}>
+                <label htmlFor="country">
+                  <input hidden />
+                  {t('strings.country')}
+                </label>
+                <p>Germany</p>
+              </Col>
+
+              <Col span={12}>
+                <label htmlFor="email">
+                  <input hidden />
+                  {t('strings.email')}
+                </label>
+                <p>test@gmail.com</p>
+              </Col>
+
+              <Col span={12}>
+                <label htmlFor="phone">
+                  <input hidden />
+                  {t('strings.phone')}
+                </label>
+                <p>+123456789</p>
+              </Col>
+            </Row>
+          </div>
+
+          <div className="add-edit-data">
+            <div href="">
+              <FormOutlined />
+              {t('calendarpop.label8')}
+            </div>
+          </div>
+        </Col>
+      </Row>
+
+      <Row style={{ alignItems: 'center' }}>
+        <Col span={24}>
+          <Form.Item style={{ marginBottom: '0' }}>
+            <Collapse accordion>
+              <Panel
+                icon={<PlusSquareOutlined />}
+                header="Add Guest Details (Optional)"
+                key="1"
+              >
+                {text}
+              </Panel>
+            </Collapse>
+          </Form.Item>
+        </Col>
+      </Row>
+
+      <Row
+        style={{
+          alignItems: 'center',
+          background: '#fbfbfc',
+          padding: '0px 20px',
+          paddingTop: '20px',
+        }}
+      >
+        <Col span={24}>
+          <Form.Item style={{ textAlign: 'center' }}>
+            <Button type="primary" htmlType="submit">
+              {t('strings.save')}
+              {' '}
+              {t('strings.reservat')}
+            </Button>
+          </Form.Item>
+        </Col>
+      </Row>
+    </Form>
+  );
+};
 
 const CalendarSetting = () => {
+  const { t } = useTranslation();
   function onChange() {}
 
   return (
@@ -439,7 +453,7 @@ const CalendarSetting = () => {
       <Form name="basic">
         <Row style={{ alignItems: 'center' }}>
           <Col span={24}>
-            <Form.Item label="Show on Reservations" name="property">
+            <Form.Item label={t('calendarpop.label16')} name="property">
               <Select style={{ marginBottom: '10px' }}>
                 <Select.Option value="demo">All Property</Select.Option>
                 <Select.Option value="demo">All Property</Select.Option>
@@ -453,7 +467,7 @@ const CalendarSetting = () => {
           </Col>
 
           <Col span={24}>
-            <Form.Item label="Reservation Color Based On" name="status">
+            <Form.Item label={t('calendarpop.label17')} name="status">
               <Select>
                 <Select.Option value="demo">All Property</Select.Option>
                 <Select.Option value="demo">All Property</Select.Option>
@@ -465,44 +479,44 @@ const CalendarSetting = () => {
             <Form.Item>
               <ul className="filter-list">
                 <li>
-                  <span className="uppercase">Show on Reservation</span>
+                  <span className="uppercase">{t('calendarpop.label16')}</span>
                   <Switch defaultChecked onChange={onChange} />
                 </li>
               </ul>
 
-              <h4>Show/Hide Restrictions</h4>
+              <h4>{t('calendarpop.label9')}</h4>
 
               <ul
                 className="filter-list"
                 style={{ margin: '0', padding: '0', border: 'none' }}
               >
                 <li>
-                  <span>Min Stay</span>
+                  <span>{t('calendarpop.label10')}</span>
                   <Switch defaultChecked onChange={onChange} />
                 </li>
 
                 <li>
-                  <span>Max Stay</span>
+                  <span>{t('calendarpop.label11')}</span>
                   <Switch onChange={onChange} />
                 </li>
 
                 <li>
-                  <span>Min Stay Arrival</span>
+                  <span>{t('calendarpop.label12')}</span>
                   <Switch onChange={onChange} />
                 </li>
 
                 <li>
-                  <span>Max Stay Arrival</span>
+                  <span>{t('calendarpop.label13')}</span>
                   <Switch onChange={onChange} />
                 </li>
 
                 <li>
-                  <span>No Check in</span>
+                  <span>{t('calendarpop.label14')}</span>
                   <Switch onChange={onChange} />
                 </li>
 
                 <li>
-                  <span>No Departure</span>
+                  <span>{t('calendarpop.label15')}</span>
                   <Switch onChange={onChange} />
                 </li>
               </ul>
@@ -515,6 +529,7 @@ const CalendarSetting = () => {
 };
 
 const Reservation = () => {
+  // const { t } = useTranslation();
   function onChange() {}
 
   return (
@@ -530,7 +545,7 @@ const Reservation = () => {
 
         <Col span={12}>
           <div className="paid">
-            <span>Paid</span>
+            <span> </span>
             <Switch onChange={onChange} />
           </div>
         </Col>
@@ -553,7 +568,7 @@ const Reservation = () => {
         </Col>
 
         <Col span={6}>
-          <span>10 Nights</span>
+          <span>10 </span>
         </Col>
 
         <Col span={10}>
@@ -615,7 +630,7 @@ const Reservation = () => {
       <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
         <Col span={24}>
           <div className="add-edit-data">
-            <div>
+            <div href="">
               <FormOutlined />
               {' '}
               Add Note
@@ -626,7 +641,7 @@ const Reservation = () => {
           </div>
 
           <div className="add-edit-data">
-            <div>
+            <div href="">
               <BellOutlined />
               {' '}
               Add Task
@@ -671,7 +686,7 @@ const Reservation = () => {
           </Form.Item>
 
           <Form.Item style={{ textAlign: 'center' }}>
-            <div className="delete-reserv">
+            <div href="" className="delete-reserv">
               <DeleteOutlined />
               {' '}
               Delete this reservation

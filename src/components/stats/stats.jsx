@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
+import { useTranslation } from 'react-i18next';
 import './stats.css';
 import { Row, Col } from 'antd';
 import Chart from 'react-apexcharts';
@@ -12,6 +13,7 @@ import favicon from '../../assets/images/logo-mobile.png';
 import UserLock from '../userlock/userlock';
 
 const Stats = () => {
+  const { t } = useTranslation();
   const [topNavId, setTopNavId] = useState();
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState();
@@ -37,62 +39,65 @@ const Stats = () => {
     <Wrapper fun={setTopNavId}>
       <Helmet>
         <link rel="icon" href={favicon} />
-        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
         <body className="stats-page-view" />
       </Helmet>
-      {
-      hasAccess
-        ? (
-          <div className="stats-page">
-            <div className="page-header">
-              <h1>
-                <img src={statsIcon} alt="statsIcon" />
-                {' '}
-                Stats
-              </h1>
+      {hasAccess ? (
+        <div className="stats-page">
+          <div className="page-header">
+            <h1>
+              <img src={statsIcon} alt="statsIcon" />
+              {' '}
+              {t('stats.label2')}
+            </h1>
+          </div>
+
+          <div className="container">
+            <div className="accomandation-chart">
+              <Row>
+                <Col span={24}>
+                  <AccommodationChart topNavId={topNavId} />
+                </Col>
+              </Row>
             </div>
 
-            <div className="container">
-              <div className="accomandation-chart">
-                <Row>
-                  <Col span={24}>
-                    <AccommodationChart topNavId={topNavId} />
-                  </Col>
-                </Row>
-              </div>
+            <div className="occupancy-chart">
+              <Row>
+                <Col span={24}>
+                  <OccupancyChart topNavId={topNavId} />
+                </Col>
+              </Row>
+            </div>
 
-              <div className="occupancy-chart">
-                <Row>
-                  <Col span={24}>
-                    <OccupancyChart topNavId={topNavId} />
-                  </Col>
-                </Row>
-              </div>
+            <div className="reservation-chart">
+              <Row>
+                <Col span={16} style={{ paddingRight: '20px' }}>
+                  <ReservationCountryChart />
+                </Col>
+                <Col span={8}>
+                  <ReservationChannelChart />
+                </Col>
+              </Row>
+            </div>
 
-              <div className="reservation-chart">
-                <Row>
-                  <Col span={16} style={{ paddingRight: '20px' }}>
-                    <ReservationCountryChart />
-                  </Col>
-                  <Col span={8}>
-                    <ReservationChannelChart />
-                  </Col>
-                </Row>
-              </div>
-
-              <div className="pace-chart">
-                <Row>
-                  <Col span={24}>
-                    <PaceChart topNavId={topNavId} />
-                  </Col>
-                </Row>
-              </div>
+            <div className="pace-chart">
+              <Row>
+                <Col span={24}>
+                  <PaceChart topNavId={topNavId} />
+                </Col>
+              </Row>
             </div>
           </div>
-        )
-        : <UserLock />
-    }
+        </div>
+      ) : (
+        <UserLock />
+      )}
     </Wrapper>
   );
 };
@@ -190,11 +195,11 @@ const AccommodationChart = ({ topNavId }) => {
       },
     },
   };
-
+  const { t } = useTranslation();
   return (
     <div className="chart-body">
       <h3>
-        Accommodation revenue
+        {t('stats.heading1')}
         <img src={qst} alt="qst" />
       </h3>
 
@@ -307,11 +312,11 @@ const OccupancyChart = ({ topNavId }) => {
       },
     },
   };
-
+  const { t } = useTranslation();
   return (
     <div className="chart-body">
       <h3>
-        Occupancy per month
+        {t('stats.label3')}
         {' '}
         <img src={qst} alt="qst" />
       </h3>
@@ -377,11 +382,11 @@ const ReservationCountryChart = () => {
       },
     },
   };
-
+  const { t } = useTranslation();
   return (
     <div className="chart-body">
       <h3>
-        Reservations per country
+        {t('stats.label4')}
         <img src={qst} alt="qst" />
       </h3>
 
@@ -431,11 +436,11 @@ const ReservationChannelChart = () => {
       ],
     },
   };
-
+  const { t } = useTranslation();
   return (
     <div className="chart-body">
       <h3>
-        Reservations per channel
+        {t('stats.label5')}
         <img src={qst} alt="qst" />
       </h3>
 
@@ -535,11 +540,11 @@ const PaceChart = ({ topNavId }) => {
       },
     },
   };
-
+  const { t } = useTranslation();
   return (
     <div className="chart-body">
       <h3>
-        Pace report
+        {t('stats.label6')}
         <img src={qst} alt="qst" />
       </h3>
 

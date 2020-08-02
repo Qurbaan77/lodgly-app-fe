@@ -98,7 +98,7 @@ const PropertyList = () => {
     </Button>
   );
   const disableButton = (
-    <Tooltip title="You are not authorize to create new property" color="gold">
+    <Tooltip title={t('propertylist.heading2')} color="gold">
       <Button
         disabled="true"
         type="primary"
@@ -116,15 +116,12 @@ const PropertyList = () => {
   const trial = OnTrial && daysLeft !== 0;
   const hasAccess = trial || subscribed;
   return (
-    <Wrapper
-      fun={setTopNavId}
-    >
+    <Wrapper fun={setTopNavId}>
       <Helmet>
         <body className="property-page-view" />
       </Helmet>
       {
-      hasAccess
-        ? (
+        hasAccess ? (
           <div className="property-listing">
             <div className="page-header" hidden={!(propertyData.length > 0)}>
               <h1>{t('propertylist.heading')}</h1>
@@ -140,8 +137,8 @@ const PropertyList = () => {
                   lg: 32,
                 }}
               >
-                { propertyData && propertyData.length > 0
-                  ? propertyData.map((el) => (
+                {propertyData && propertyData.length > 0 ? (
+                  propertyData.map((el) => (
                     <Col className="gutter-row" span={8} key={el.id}>
                       <div className="property">
                         <img src={el.image || property1} alt="property" />
@@ -154,35 +151,32 @@ const PropertyList = () => {
                               {' '}
                               {el.noUnitType}
                               {' '}
-                              Unit Types
+                              {t('strings.unit_t')}
                             </li>
                             <li>
                               <HomeOutlined />
                               {' '}
                               {el.noUnit}
                               {' '}
-                              Unit
+                              {t('strings.unit')}
                             </li>
                           </ul>
                         </div>
                       </div>
                     </Col>
                   ))
-                  : (
-                    <Col span={24}>
-                      <NoList
-                        isSubUser={isSubUser}
-                        canWrite={canWrite}
-                      />
-                    </Col>
-                  )}
+                ) : (
+                  <Col span={24}>
+                    <NoList isSubUser={isSubUser} canWrite={canWrite} />
+                  </Col>
+                )}
               </Row>
             </div>
           </div>
+        ) : (
+          <UserLock />
         )
-        : <UserLock />
-        // <NoList />
-}
+      }
     </Wrapper>
   );
 };

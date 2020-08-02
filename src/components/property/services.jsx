@@ -5,15 +5,16 @@ import './property.css';
 import {
   Form, Input, Button, Tooltip, Modal, Table,
 } from 'antd';
+import { useTranslation } from 'react-i18next';
 import { PlusOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import DeletePopup from './deletepopup';
 import favicon from '../../assets/images/logo-mobile.png';
 
 const Services = () => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [visible1, setVisible1] = useState(false);
@@ -47,10 +48,14 @@ const Services = () => {
       render: (record) => (
         <div className="service-margin">
           <div onClick={() => edit(record.id)} role="button" aria-hidden="true">
-            Edit
+            {t('strings.edit')}
           </div>
-          <div onClick={() => delRow(record.id)} role="button" aria-hidden="true">
-            Delete
+          <div
+            onClick={() => delRow(record.id)}
+            role="button"
+            aria-hidden="true"
+          >
+            {t('strings.delete')}
           </div>
         </div>
       ),
@@ -144,22 +149,19 @@ const Services = () => {
 
   const enableButton = (
     <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-      <Link to="/services">Add Services</Link>
+      <Link to="/services">{t('services.heading1')}</Link>
     </Button>
   );
 
   const disableButton = (
-    <Tooltip
-      title="You are not authorize to create create new service"
-      color="gold"
-    >
+    <Tooltip title={t('services.heading2')} color="gold">
       <Button
         type="primary"
         icon={<PlusOutlined />}
         onClick={show}
         disabled="true"
       >
-        <Link to="/services">Add Services</Link>
+        <Link to="/services">{t('services.heading1')}</Link>
       </Button>
     </Tooltip>
   );
@@ -170,27 +172,29 @@ const Services = () => {
     <Wrapper>
       <Helmet>
         <link rel="icon" href={favicon} />
-        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
         <body className="service-page-view" />
       </Helmet>
       <div className="property-listing">
         <div className="page-header">
-          <h1>Services</h1>
+          <h1>{t('services.heading3')}</h1>
 
           {btn2}
         </div>
 
         <div className="services-list">
-          <Table
-            columns={columns}
-            dataSource={serviceData}
-          />
+          <Table columns={columns} dataSource={serviceData} />
         </div>
       </div>
 
       <Modal
-        title="Add Services"
+        title={t('services.heading1')}
         visible={visible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -202,13 +206,13 @@ const Services = () => {
             <Input hidden />
           </Form.Item>
           <Form.Item
-            label="Service Name"
+            label={t('services.heading4')}
             name="servicename"
             style={{ padding: '0px 10px' }}
             rules={[
               {
                 required: true,
-                message: 'please enter service name',
+                message: t('services.heading5'),
               },
             ]}
           >
@@ -216,20 +220,20 @@ const Services = () => {
           </Form.Item>
 
           <Form.Item
-            label="Service Price"
+            label={t('services.heading6')}
             name="serviceprice"
             style={{ padding: '0px 10px' }}
             rules={[
               {
                 required: true,
-                message: 'Please enter price',
+                message: t('services.heading8'),
               },
             ]}
           >
             <Input type="number" />
           </Form.Item>
           <Form.Item
-            label="Standard Quantity"
+            label={t('services.heading9')}
             name="servicequantity"
             style={{ padding: '0px 10px' }}
           >
@@ -243,10 +247,10 @@ const Services = () => {
               }}
               className="border-btn"
             >
-              Cancel
+              {t('strings.cancel')}
             </Button>
             <Button type="primary" htmlType="submit">
-              Save
+              {t('strings.save')}
             </Button>
           </Form.Item>
         </Form>

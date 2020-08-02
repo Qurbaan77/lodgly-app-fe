@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './team.css';
+import { useTranslation } from 'react-i18next';
 import {
   Form, Select, Input, Button, Checkbox, Modal, Row, Col,
 } from 'antd';
@@ -10,6 +11,7 @@ import { userInstance } from '../../axios/axiosconfig';
 const SubUserPopup = ({
   visible, handleOk, handleCancel, close, getData,
 }) => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const [bookingRead, setBookingRead] = useState(false);
   const [bookingWrite, setBookingWrite] = useState(false);
@@ -179,29 +181,33 @@ const SubUserPopup = ({
         <Row style={{ alignItems: 'center' }}>
           <Col span={8}>
             <Form.Item
-              label="E-mail"
+              label={t('strings.email')}
               name="email"
               style={{ paddingRight: 20 }}
               rules={[
                 {
                   type: 'email',
-                  message: 'The input is not valid E-mail!',
+                  message: t('subuserpopup.label1'),
                 },
                 {
                   required: true,
-                  message: 'Please input your E-mail!',
+                  message: t('subuserpopup.label2'),
                 },
               ]}
             >
-              <Input placeholder="Email" />
+              <Input placeholder={t('strings.email')} />
             </Form.Item>
           </Col>
 
           <Col span={8}>
-            <Form.Item label="Role" name="role">
+            <Form.Item label={t('subuserpopup.label25')} name="role">
               <Select onSelect={(value) => handleSelect(value)}>
-                <Select.Option value="subuser">Sub-User</Select.Option>
-                <Select.Option value="fullaccess">Full Access</Select.Option>
+                <Select.Option value="subuser">
+                  {t('subuserpopup.label3')}
+                </Select.Option>
+                <Select.Option value="fullaccess">
+                  {t('subuserpopup.label4')}
+                </Select.Option>
               </Select>
             </Form.Item>
           </Col>
@@ -214,7 +220,7 @@ const SubUserPopup = ({
             <table>
               <thead>
                 <tr>
-                  <th>Booking</th>
+                  <th>{t('subuserpopup.label5')}</th>
                   <th>
                     <Checkbox
                       value={bookingRead}
@@ -229,9 +235,7 @@ const SubUserPopup = ({
                       checked={bookingWrite}
                     />
                   </th>
-                  <th>
-                    Prices and availability that are syncing with connected OTAs
-                  </th>
+                  <th>{t('subuserpopup.label6')}</th>
                 </tr>
               </thead>
             </table>
@@ -243,7 +247,10 @@ const SubUserPopup = ({
             <table>
               <thead>
                 <tr>
-                  <th>Calendar</th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label7')}
+                  </th>
                   <th>
                     <Checkbox
                       value={calendarRead}
@@ -258,13 +265,19 @@ const SubUserPopup = ({
                       checked={calendarWrite}
                     />
                   </th>
-                  <th>Access Description</th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label8')}
+                  </th>
                 </tr>
               </thead>
 
               <tbody>
                 <tr>
-                  <td>Properties</td>
+                  <td>
+                    {' '}
+                    {t('subuserpopup.label9')}
+                  </td>
                   <td>
                     <Checkbox
                       value={propertiesRead}
@@ -279,11 +292,17 @@ const SubUserPopup = ({
                       checked={propertiesWrite}
                     />
                   </td>
-                  <td>Booked dates on calendar</td>
+                  <td>
+                    {' '}
+                    {t('subuserpopup.label10')}
+                  </td>
                 </tr>
 
                 <tr>
-                  <td>Guests</td>
+                  <td>
+                    {' '}
+                    {t('subuserpopup.label11')}
+                  </td>
                   <td>
                     <Checkbox
                       value={guestsRead}
@@ -298,15 +317,14 @@ const SubUserPopup = ({
                       checked={guestsWrite}
                     />
                   </td>
-                  <td>
-                    Guest check-in and checkout-out on Dashboard, sales
-                    channels. eVisitor guest reporting (if eVisitor intregation
-                    is set up). Sales channels and channel manager settings.
-                  </td>
+                  <td>{t('subuserpopup.label12')}</td>
                 </tr>
 
                 <tr>
-                  <td>Team</td>
+                  <td>
+                    {' '}
+                    {t('subuserpopup.label13')}
+                  </td>
                   <td>
                     <Checkbox
                       value={teamRead}
@@ -321,7 +339,10 @@ const SubUserPopup = ({
                       checked={teamWrite}
                     />
                   </td>
-                  <td>Additional services and their settings</td>
+                  <td>
+                    {' '}
+                    {t('subuserpopup.label14')}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -333,16 +354,31 @@ const SubUserPopup = ({
             <table>
               <thead>
                 <tr>
-                  <th>Invoices</th>
-                  <th>Read</th>
-                  <th>Write</th>
-                  <th>Access Description</th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label15')}
+                  </th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label16')}
+                  </th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label17')}
+                  </th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label18')}
+                  </th>
                 </tr>
               </thead>
 
               <tbody>
                 <tr>
-                  <td>Invoices</td>
+                  <td>
+                    {' '}
+                    {t('subuserpopup.label15')}
+                  </td>
                   <td>
                     <Checkbox
                       value={invoicesRead}
@@ -357,7 +393,10 @@ const SubUserPopup = ({
                       checked={invoicesWrite}
                     />
                   </td>
-                  <td>Invoices, offers and invoice setting</td>
+                  <td>
+                    {' '}
+                    {t('subuserpopup.label19')}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -369,7 +408,10 @@ const SubUserPopup = ({
             <table>
               <thead>
                 <tr>
-                  <th>Stats</th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label20')}
+                  </th>
                   <th>
                     <Checkbox
                       value={statsRead}
@@ -384,7 +426,10 @@ const SubUserPopup = ({
                       checked={statsWrite}
                     />
                   </th>
-                  <th>Stats screen</th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label21')}
+                  </th>
                 </tr>
               </thead>
             </table>
@@ -396,7 +441,10 @@ const SubUserPopup = ({
             <table>
               <thead>
                 <tr>
-                  <th>Services</th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label22')}
+                  </th>
                   <th>
                     <Checkbox
                       value={serviceRead}
@@ -411,16 +459,12 @@ const SubUserPopup = ({
                       checked={serviceWrite}
                     />
                   </th>
-                  <th>
-                    Property settings, invoice settings and channel manager
-                    settings
-                  </th>
+                  <th>{t('subuserpopup.label23')}</th>
                 </tr>
               </thead>
             </table>
           </div>
         </Row>
-
         <Row>
           <div className="custom-table subuser-table">
             <table>
@@ -471,9 +515,7 @@ const SubUserPopup = ({
                       checked={billingWrite}
                     />
                   </th>
-                  <th>
-                    Billing, Upgrade/downgrade plans
-                  </th>
+                  <th>Billing, Upgrade/downgrade plans</th>
                 </tr>
               </thead>
             </table>
@@ -490,10 +532,10 @@ const SubUserPopup = ({
           <Col span={24}>
             <Form.Item>
               <Button style={{ marginRight: 10 }} onClick={close}>
-                Cancel
+                {t('strings.cancel')}
               </Button>
               <Button type="primary" htmlType="submit">
-                Save
+                {t('strings.save')}
               </Button>
             </Form.Item>
           </Col>

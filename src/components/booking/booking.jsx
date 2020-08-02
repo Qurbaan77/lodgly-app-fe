@@ -19,6 +19,7 @@ import {
   DownOutlined,
 } from '@ant-design/icons';
 // import { useTranslation } from "react-i18next";
+import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
 import GuestPopup from './guestpopup';
@@ -33,12 +34,12 @@ import editIcon from '../../assets/images/menu/pencil-icon.png';
 import downloadIcon from '../../assets/images/menu/download-icon.png';
 import refreshIcon from '../../assets/images/menu/refresh-icon.png';
 import favicon from '../../assets/images/logo-mobile.png';
-
 // const { Panel } = Collapse;
 // const { MonthPicker, RangePicker } = DatePicker;
 
 const useForceUpdate = () => useState()[1];
 const Booking = () => {
+  const { t } = useTranslation();
   const forceUpdate = useForceUpdate();
   const [form] = Form.useForm();
 
@@ -317,252 +318,274 @@ const Booking = () => {
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
 
   return (
-    <Wrapper
-      fun={setTopNavId}
-    >
+    <Wrapper fun={setTopNavId}>
       <Helmet>
         <link rel="icon" href={favicon} />
-        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
         <body className="booking-page-view" />
       </Helmet>
-      {hasAccess
-        ? (
-          <div className="booking">
-            <div className="container">
-              <Row>
-                <Col span={10}>
-                  <div className="booking-list-conatiner">
-                    <div className="booking-filter-box">
-                      <div className="filter-section">
-                        <label htmlFor="filter">
-                          Filters:
-                          {' '}
-                          <input type="text" hidden />
-                        </label>
-                        <div className="filter-item" id="filters">
-                          <Tag color="default">item 1</Tag>
-                          <Tag color="success">item 2</Tag>
-                          <Tag color="default">item 3</Tag>
-                          <Tag color="error">booked</Tag>
-                        </div>
-                      </div>
-
-                      <div className="filter-icon">
-                        <Button onClick={showfilter}>
-                          {' '}
-                          <img src={filterIcon} alt="filter-icon" />
-                        </Button>
-
+      {hasAccess ? (
+        <div className="booking">
+          <div className="container">
+            <Row>
+              <Col span={10}>
+                <div className="booking-list-conatiner">
+                  <div className="booking-filter-box">
+                    <div className="filter-section">
+                      <label htmlFor="filter">
+                        {t('booking.heading')}
+                        :
+                        <input type="text" hidden />
+                      </label>
+                      <div className="filter-item" id="filters">
+                        <Tag color="default">{t('booking.tag1')}</Tag>
+                        <Tag color="success">{t('booking.tag2')}</Tag>
+                        <Tag color="default">{t('booking.tag3')}</Tag>
+                        <Tag color="error">{t('booking.heading4')}</Tag>
                       </div>
                     </div>
 
-                    {bookingData.map((el, i) => (
-                      <div
-                        role="presentation"
-                        className="booking-list"
-                        onClick={() => selectBooking(el, i)}
-                      >
-                        <div className="detail">
-                          <h3>{el.guest}</h3>
-                          <p>{el.propertyName}</p>
-                          <ul>
-                            <li>{el.created_date}</li>
-                            <li>
-                              {el.nights}
-                              {' '}
-                              <ThunderboltOutlined />
-                            </li>
-                            <li>
-                              {el.noOfGuest}
-                              {' '}
-                              <UserOutlined />
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="detail-info">
-                          <span>{el.created_time}</span>
-                          <span className="green-label">
-                            {' '}
-                            €
-                            {el.totalAmount}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-
-                    <div className="bookin-footer">
-                      <ul>
-                        <li>
-                          <img src={editIcon} alt="edit-icon" />
-                        </li>
-                        <li>
-                          <img src={downloadIcon} alt="download=icon" />
-                        </li>
-                        <li>
-                          <img src={refreshIcon} alt="refresh-icon" />
-                        </li>
-                      </ul>
-                      {btn2}
+                    <div className="filter-icon">
+                      <Button onClick={showfilter}>
+                        {' '}
+                        <img src={filterIcon} alt="filter-icon" />
+                      </Button>
                     </div>
                   </div>
-                </Col>
 
-                <Col span={14}>
-                  <div className="booking-details" hidden={booked}>
-                    <h3>
-                      {currentGuest.length > 0 ? currentGuest[0].fullname : null}
-                    </h3>
+                  {bookingData.map((el, i) => (
+                    <div
+                      role="presentation"
+                      className="booking-list"
+                      onClick={() => selectBooking(el, i)}
+                    >
+                      <div className="detail">
+                        <h3>{el.guest}</h3>
+                        <p>{el.propertyName}</p>
+                        <ul>
+                          <li>{el.created_date}</li>
+                          <li>
+                            {el.nights}
+                            {' '}
+                            <ThunderboltOutlined />
+                          </li>
+                          <li>
+                            {el.noOfGuest}
+                            {' '}
+                            <UserOutlined />
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="detail-info">
+                        <span>{el.created_time}</span>
+                        <span className="green-label">
+                          {' '}
+                          €
+                          {el.totalAmount}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+
+                  <div className="bookin-footer">
                     <ul>
                       <li>
-                        {currentBooking.night}
-                        {' '}
-                        Night - 1 room,
+                        <img src={editIcon} alt="edit-icon" />
                       </li>
                       <li>
-                        {currentBooking.noOfGuest}
-                        {' '}
-                        Guests,
+                        <img src={downloadIcon} alt="download=icon" />
                       </li>
                       <li>
-                        ID:
-                        {currentBooking.id}
+                        <img src={refreshIcon} alt="refresh-icon" />
                       </li>
                     </ul>
+                    {btn2}
+                  </div>
+                </div>
+              </Col>
 
+              <Col span={14}>
+                <div className="booking-details" hidden={booked}>
+                  <h3>
+                    {currentGuest.length > 0 ? currentGuest[0].fullname : null}
+                  </h3>
+                  <ul>
+                    <li>
+                      {currentBooking.night}
+                      {' '}
+                      {t('booking.label1')}
+                    </li>
+                    <li>
+                      {currentBooking.noOfGuest}
+                      {' '}
+                      {t('booking.label2')}
+                    </li>
+                    <li>
+                      {t('booking.label3')}
+                      {currentBooking.id}
+                    </li>
+                  </ul>
+
+                  <div className="booking-box">
+                    <div className="booking-head">
+                      <div className="box-heading">
+                        <h3>{t('booking.heading3')}</h3>
+                      </div>
+
+                      <div
+                        className="box-editing"
+                        onClick={forceUpdate}
+                        role="presentation"
+                      >
+                        {edit2}
+                        <Dropdown overlay={menu}>
+                          <Button>
+                            {t('booking.heading4')}
+                            {' '}
+                            <DownOutlined />
+                          </Button>
+                        </Dropdown>
+                      </div>
+                    </div>
+
+                    <div className="booking-item">
+                      <div className="prorety-box">
+                        <span>{t('strings.property')}</span>
+                        <p>{currentBooking.propertyName}</p>
+                      </div>
+
+                      <div className="prorety-box">
+                        <span>{t('strings.unit')}</span>
+                        <p>{currentBooking.unitName}</p>
+                      </div>
+                    </div>
+
+                    <div className="booking-item-one">
+                      <div className="prorety-box">
+                        <span>{t('booking.heading6')}</span>
+                        <p>
+                          {currentBooking.channel}
+                          {' '}
+                          (
+                          {currentBooking.commission}
+                          )
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="booking-item">
+                      <div className="prorety-box">
+                        <span>{t('strings.guests')}</span>
+                        <p>
+                          {currentBooking.adult}
+                          {t('strings.adults')}
+                        </p>
+                        <p>
+                          {currentBooking.children1}
+                          {' '}
+                          {t('booking.label4')}
+                          {' '}
+                        </p>
+                      </div>
+
+                      <div className="prorety-box">
+                        <span>
+                          {' '}
+                          {t('strings.guests')}
+                          {' '}
+                          {t('strings.date')}
+                        </span>
+                        <p>
+                          {currentBooking.startDate}
+                          /
+                          {currentBooking.endDate}
+                        </p>
+                        <p>
+                          {currentBooking.night}
+                          {' '}
+                          {t('booking.label5')}
+                          {' '}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {currentGuest.map((el) => (
                     <div className="booking-box">
                       <div className="booking-head">
                         <div className="box-heading">
-                          <h3>Booking</h3>
+                          <h3>
+                            {' '}
+                            {t('strings.guests')}
+                          </h3>
                         </div>
 
-                        <div className="box-editing" onClick={forceUpdate} role="presentation">
-                          {edit2}
-                          <Dropdown overlay={menu}>
-                            <Button>
-                              Booked
-                              {' '}
-                              <DownOutlined />
-                            </Button>
-                          </Dropdown>
+                        <div className="box-editing">
+                          <FormOutlined onClick={() => editGuest(el)} />
                         </div>
                       </div>
 
                       <div className="booking-item">
                         <div className="prorety-box">
-                          <span>Property</span>
-                          <p>{currentBooking.propertyName}</p>
+                          <span>{t('strings.full')}</span>
+                          <p>{el.fullname}</p>
                         </div>
 
                         <div className="prorety-box">
-                          <span>Unit</span>
-                          <p>{currentBooking.unitName}</p>
+                          <span>
+                            {' '}
+                            {t('strings.country')}
+                          </span>
+                          <p>
+                            {el.country || 'NA'}
+                            {' '}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="booking-item">
+                        <div className="prorety-box">
+                          <span>{t('strings.email')}</span>
+                          <p>{el.email || 'NA'}</p>
+                        </div>
+
+                        <div className="prorety-box">
+                          <span>{t('strings.phone')}</span>
+                          <p>{el.phone || 'NA'}</p>
                         </div>
                       </div>
 
                       <div className="booking-item-one">
                         <div className="prorety-box">
-                          <span>channel, commission(%)</span>
-                          <p>
-                            {currentBooking.channel}
-                            {' '}
-                            (
-                            {currentBooking.commission}
-                            )
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="booking-item">
-                        <div className="prorety-box">
-                          <span>Guests</span>
-                          <p>
-                            {currentBooking.adult}
-                            {' '}
-                            Adults
-                          </p>
-                          <p>
-                            {currentBooking.children1}
-                            {' '}
-                            Children (0-12 yrs)
-                          </p>
-                        </div>
-
-                        <div className="prorety-box">
-                          <span>Date</span>
-                          <p>
-                            {currentBooking.startDate}
-                            /
-                            {currentBooking.endDate}
-                          </p>
-                          <p>
-                            {currentBooking.night}
-                            {' '}
-                            Nights
-                          </p>
+                          <span>{t('strings.note')}</span>
+                          <p>{el.notes}</p>
                         </div>
                       </div>
                     </div>
+                  ))}
 
-                    {currentGuest.map((el) => (
-                      <div className="booking-box">
-                        <div className="booking-head">
-                          <div className="box-heading">
-                            <h3>Guests</h3>
-                          </div>
-
-                          <div className="box-editing">
-                            <FormOutlined onClick={() => editGuest(el)} />
-                          </div>
-                        </div>
-
-                        <div className="booking-item">
-                          <div className="prorety-box">
-                            <span>Full Name</span>
-                            <p>{el.fullname}</p>
-                          </div>
-
-                          <div className="prorety-box">
-                            <span>Country</span>
-                            <p>
-                              {el.country || 'NA'}
-                              {' '}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="booking-item">
-                          <div className="prorety-box">
-                            <span>Email</span>
-                            <p>{el.email || 'NA'}</p>
-                          </div>
-
-                          <div className="prorety-box">
-                            <span>Phone</span>
-                            <p>{el.phone || 'NA'}</p>
-                          </div>
-                        </div>
-
-                        <div className="booking-item-one">
-                          <div className="prorety-box">
-                            <span>Notes</span>
-                            <p>{el.notes}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-
-                    <div className="additionl-link" onClick={openGuest} role="presentation">
-                      <PlusOutlined />
-                      Add Additional Guest
-                    </div>
+                  <div
+                    className="additionl-link"
+                    onClick={openGuest}
+                    role="presentation"
+                  >
+                    <PlusOutlined />
+                    {t('booking.label6')}
                   </div>
-                </Col>
-              </Row>
-            </div>
+                </div>
+              </Col>
+            </Row>
           </div>
-        )
-        : <UserLock />}
+        </div>
+      ) : (
+        <UserLock />
+      )}
       <GuestPopup
         visible={visibleGuest}
         handleCancel={handleCancel}

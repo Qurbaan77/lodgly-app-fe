@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
+import { useTranslation } from 'react-i18next';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import './profile.css';
 import {
@@ -31,6 +32,7 @@ const normFile = (e) => {
 };
 
 const Profile = () => {
+  const { t } = useTranslation();
   const [form1] = Form.useForm();
   const [form3] = Form.useForm();
   const [form4] = Form.useForm();
@@ -162,316 +164,345 @@ const Profile = () => {
     <Wrapper img={img} name={userName} getUserInfo={getUserInfo}>
       <Helmet>
         <link rel="icon" href={favicon} />
-        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
       </Helmet>
-      {
-      hasAccess
-        ? (
-          <div className="personal-information">
-            <div className="page-header">
-              <h1>
-                <UserOutlined />
-                {' '}
-                Personal Information
-              </h1>
-            </div>
-            <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
+      {hasAccess ? (
+        <div className="personal-information">
+          <div className="page-header">
+            <h1>
+              <UserOutlined />
+              {' '}
+              {t('billingprofile.heading1')}
+            </h1>
+          </div>
+          <Toaster
+            notifyType={notifyType}
+            notifyMsg={notifyMsg}
+            close={close}
+          />
 
-            <div className="profile-container">
-              <Row gutter={[16, 0]}>
-                <Col span={12}>
-                  <Collapse defaultActiveKey={['1']} accordion>
-                    <Panel header="Details" key="1">
-                      <div className="main-info-form">
-                        <h4>Details</h4>
-                        <p>Add or edit your personal information</p>
-                        <Form
-                          form={form1}
-                          name="basic"
-                          onFinish={personalInfoFinish}
-                        >
-                          <Row gutter={[16, 0]}>
-                            <Col span={12}>
-                              <Form.Item>
-                                <Form.Item
-                                  name="dragger"
-                                  valuePropName="fileList"
-                                  getValueFromEvent={normFile}
-                                  noStyle
-                                >
-                                  <Upload.Dragger {...props}>
-                                    <p className="ant-upload-drag-icon">
-                                      <UserOutlined />
-                                    </p>
-                                    <p className="ant-upload-text">
-                                      Drop photos here or
-                                    </p>
-                                    <p className="ant-upload-hint">CHOOSE FILE</p>
-                                  </Upload.Dragger>
-                                </Form.Item>
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={12}>
-                              <Form.Item
-                                label="First Name"
-                                name="fname"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: 'Please enter your first name!',
-                                  },
-                                ]}
-                              >
-                                <Input placeholder="" />
-                              </Form.Item>
-
-                              <Form.Item
-                                label="Last Name"
-                                name="lname"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: 'Please enter your last name!',
-                                  },
-                                ]}
-                              >
-                                <Input placeholder="" />
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={24}>
-                              <Form.Item label="Address" name="address">
-                                <Input placeholder="" />
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={12}>
-                              <Form.Item label="Email" name="email">
-                                <Input placeholder="" />
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={12}>
-                              <Form.Item label="Phone" name="phone">
-                                <Input
-                                  placeholder=""
-                                  type="number"
-                                  minLength="9"
-                                  maxLength="15"
-                                />
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={12}>
-                              <Form.Item>
-                                <Button type="primary" htmlType="submit">
-                                  Save
-                                </Button>
-                              </Form.Item>
-                            </Col>
-                          </Row>
-                        </Form>
-                      </div>
-                    </Panel>
-                  </Collapse>
-
-                  <Collapse defaultActiveKey={['2']} accordion>
-                    <Panel header="Application Settings" key="2">
-                      <div className="main-info-form">
-                        <h4>Application Settings</h4>
-                        <p>Add or edit your personal information</p>
-
+          <div className="profile-container">
+            <Row gutter={[16, 0]}>
+              <Col span={12}>
+                <Collapse defaultActiveKey={['1']} accordion>
+                  <Panel header="Details" key="1">
+                    <div className="main-info-form">
+                      <h4>{t('billingprofile.label1')}</h4>
+                      <p>{t('billingprofile.label2')}</p>
+                      <Form
+                        form={form1}
+                        name="basic"
+                        onFinish={personalInfoFinish}
+                      >
                         <Row gutter={[16, 0]}>
                           <Col span={12}>
-                            <Form.Item label="UI Language">
-                              <Select>
-                                <Select.Option value="demo">English</Select.Option>
-                              </Select>
+                            <Form.Item>
+                              <Form.Item
+                                name="dragger"
+                                valuePropName="fileList"
+                                getValueFromEvent={normFile}
+                                noStyle
+                              >
+                                <Upload.Dragger {...props}>
+                                  <p className="ant-upload-drag-icon">
+                                    <UserOutlined />
+                                  </p>
+                                  <p className="ant-upload-text">
+                                    {t('billingprofile.label3')}
+                                  </p>
+                                  <p className="ant-upload-hint">
+                                    {t('billingprofile.label4')}
+                                  </p>
+                                </Upload.Dragger>
+                              </Form.Item>
                             </Form.Item>
                           </Col>
 
                           <Col span={12}>
-                            <Form.Item label="Timezone">
-                              <Select>
-                                <Select.Option value="demo">
-                                  Europe/Vienna
-                                </Select.Option>
-                              </Select>
+                            <Form.Item
+                              label={t('billingprofile.label5')}
+                              name="fname"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: t('billingprofile.label6'),
+                                },
+                              ]}
+                            >
+                              <Input placeholder="" />
+                            </Form.Item>
+
+                            <Form.Item
+                              label={t('billingprofile.label7')}
+                              name="lname"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: t('billingprofile.label8'),
+                                },
+                              ]}
+                            >
+                              <Input placeholder="" />
+                            </Form.Item>
+                          </Col>
+
+                          <Col span={24}>
+                            <Form.Item
+                              label={t('strings.address')}
+                              name="address"
+                            >
+                              <Input placeholder="" />
+                            </Form.Item>
+                          </Col>
+
+                          <Col span={12}>
+                            <Form.Item label={t('strings.email')} name="email">
+                              <Input placeholder="" />
+                            </Form.Item>
+                          </Col>
+
+                          <Col span={12}>
+                            <Form.Item label={t('strings.phone')} name="phone">
+                              <Input
+                                placeholder=""
+                                type="number"
+                                minLength="9"
+                                maxLength="15"
+                              />
+                            </Form.Item>
+                          </Col>
+
+                          <Col span={12}>
+                            <Form.Item>
+                              <Button type="primary" htmlType="submit">
+                                {t('strings.save')}
+                              </Button>
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                      </Form>
+                    </div>
+                  </Panel>
+                </Collapse>
+
+                <Collapse defaultActiveKey={['2']} accordion>
+                  <Panel header="Application Settings" key="2">
+                    <div className="main-info-form">
+                      <h4>{t('billingprofile.label9')}</h4>
+                      <p>{t('billingprofile.label2')}</p>
+
+                      <Row gutter={[16, 0]}>
+                        <Col span={12}>
+                          <Form.Item label={t('billingprofile.label10')}>
+                            <Select>
+                              <Select.Option value="demo">
+                                English
+                              </Select.Option>
+                            </Select>
+                          </Form.Item>
+                        </Col>
+
+                        <Col span={12}>
+                          <Form.Item label={t('billingprofile.label11')}>
+                            <Select>
+                              <Select.Option value="demo">
+                                Europe/Vienna
+                              </Select.Option>
+                            </Select>
+                          </Form.Item>
+                        </Col>
+
+                        <Col span={24}>
+                          <Form.Item>
+                            <Button>{t('strings.save')}</Button>
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Panel>
+                </Collapse>
+
+                <Collapse defaultActiveKey={['3']} accordion>
+                  <Panel header="Password Change" key="3">
+                    <div className="main-info-form">
+                      <h4>{t('billingprofile.label12')}</h4>
+                      <p>{t('billingprofile.label2')}</p>
+
+                      <Form form={form3} onFinish={passwordFininsh}>
+                        <Row gutter={[16, 0]}>
+                          <Col span={24}>
+                            <Form.Item
+                              name="oldPassword"
+                              label={t('billingprofile.label13')}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: t('billingprofile.label14'),
+                                },
+                              ]}
+                            >
+                              <Input.Password placeholder="" />
+                            </Form.Item>
+                          </Col>
+
+                          <Col span={24}>
+                            <Form.Item
+                              name="newPassword"
+                              label={t('billingprofile.label15')}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: t('billingprofile.label16'),
+                                },
+                              ]}
+                            >
+                              <Input.Password placeholder="" />
+                            </Form.Item>
+                          </Col>
+
+                          <Col span={24}>
+                            <Form.Item
+                              name="confirm"
+                              label={t('billingprofile.label17')}
+                              dependencies={['newPassword']}
+                              hasFeedback
+                              rules={[
+                                {
+                                  required: true,
+                                  message: t('billingprofile.label18'),
+                                },
+                                ({ getFieldValue }) => ({
+                                  validator(rule, value) {
+                                    if (
+                                      !value
+                                      || getFieldValue('newPassword') === value
+                                    ) {
+                                      return Promise.resolve();
+                                    }
+
+                                    return Promise.reject(
+                                      new Error(
+                                        'The two passwords that you entered do not match!',
+                                      ),
+                                    );
+                                  },
+                                }),
+                              ]}
+                            >
+                              <Input.Password placeholder="" />
                             </Form.Item>
                           </Col>
 
                           <Col span={24}>
                             <Form.Item>
-                              <Button>Save</Button>
+                              <Button type="primary" htmlType="submit">
+                                {t('billingprofile.label19')}
+                              </Button>
                             </Form.Item>
                           </Col>
                         </Row>
-                      </div>
-                    </Panel>
-                  </Collapse>
+                      </Form>
+                    </div>
+                  </Panel>
+                </Collapse>
+              </Col>
 
-                  <Collapse defaultActiveKey={['3']} accordion>
-                    <Panel header="Password Change" key="3">
-                      <div className="main-info-form">
-                        <h4>Password Change</h4>
-                        <p>Add or edit your personal information</p>
+              <Col span={12}>
+                <Collapse defaultActiveKey={['4']} accordion>
+                  <Panel header="Company Data" key="4">
+                    <div className="main-info-form">
+                      <h4>
+                        {' '}
+                        {t('billingprofile.label20')}
+                      </h4>
+                      <p>
+                        {' '}
+                        {t('billingprofile.label23')}
+                      </p>
 
-                        <Form form={form3} onFinish={passwordFininsh}>
-                          <Row gutter={[16, 0]}>
-                            <Col span={24}>
-                              <Form.Item
-                                name="oldPassword"
-                                label="Old Password"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: 'Please enter your old password!',
-                                  },
-                                ]}
-                              >
-                                <Input.Password placeholder="" />
-                              </Form.Item>
-                            </Col>
+                      <Form form={form4} onFinish={companyFinsh}>
+                        <Row gutter={[16, 0]}>
+                          <Col span={24}>
+                            <Form.Item
+                              name="name"
+                              label={t('strings.name')}
+                              rules={[
+                                {
+                                  required: true,
+                                  message: t('billingprofile.label21'),
+                                },
+                              ]}
+                            >
+                              <Input />
+                            </Form.Item>
+                          </Col>
 
-                            <Col span={24}>
-                              <Form.Item
-                                name="newPassword"
-                                label="New Password"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: 'Please enter your new password!',
-                                  },
-                                ]}
-                              >
-                                <Input.Password placeholder="" />
-                              </Form.Item>
-                            </Col>
+                          <Col span={24}>
+                            <Form.Item
+                              name="address"
+                              label={t('strings.address')}
+                            >
+                              <Input placeholder="4901 St Anthony Eye" />
+                            </Form.Item>
+                          </Col>
 
-                            <Col span={24}>
-                              <Form.Item
-                                name="confirm"
-                                label="Repeat New Password"
-                                dependencies={['newPassword']}
-                                hasFeedback
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: 'Please confirm your password!',
-                                  },
-                                  ({ getFieldValue }) => ({
-                                    validator(rule, value) {
-                                      if (
-                                        !value
-                                    || getFieldValue('newPassword') === value
-                                      ) {
-                                        return Promise.resolve();
-                                      }
+                          <Col span={12}>
+                            <Form.Item name="country" label="Country">
+                              <CountryDropdown
+                                onChange={(val) => setCountry(val)}
+                              />
+                            </Form.Item>
+                          </Col>
 
-                                      return Promise.reject(new Error('The two passwords that you entered do not match!'));
-                                    },
-                                  }),
-                                ]}
-                              >
-                                <Input.Password placeholder="" />
-                              </Form.Item>
-                            </Col>
+                          <Col span={12}>
+                            <Form.Item name="state" label={t('strings.state')}>
+                              <RegionDropdown country={country} />
+                            </Form.Item>
+                          </Col>
 
-                            <Col span={24}>
-                              <Form.Item>
-                                <Button type="primary" htmlType="submit">
-                                  Change Password
-                                </Button>
-                              </Form.Item>
-                            </Col>
-                          </Row>
-                        </Form>
-                      </div>
-                    </Panel>
-                  </Collapse>
-                </Col>
+                          <Col span={12}>
+                            <Form.Item name="city" label={t('strings.city')}>
+                              <Input />
+                            </Form.Item>
+                          </Col>
 
-                <Col span={12}>
-                  <Collapse defaultActiveKey={['4']} accordion>
-                    <Panel header="Company Data" key="4">
-                      <div className="main-info-form">
-                        <h4>Company Data</h4>
-                        <p>Add or edit your company data</p>
+                          <Col span={12}>
+                            <Form.Item name="zip" label={t('strings.zip')}>
+                              <Input />
+                            </Form.Item>
+                          </Col>
 
-                        <Form form={form4} onFinish={companyFinsh}>
-                          <Row gutter={[16, 0]}>
-                            <Col span={24}>
-                              <Form.Item
-                                name="name"
-                                label="Name"
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: 'Please enter your name!',
-                                  },
-                                ]}
-                              >
-                                <Input />
-                              </Form.Item>
-                            </Col>
+                          <Col span={24}>
+                            <Form.Item name="zip" label="Vat ID">
+                              <Input />
+                            </Form.Item>
+                          </Col>
 
-                            <Col span={24}>
-                              <Form.Item name="address" label="Address">
-                                <Input placeholder="4901 St Anthony Eye" />
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={12}>
-                              <Form.Item name="country" label="Country">
-                                <CountryDropdown onChange={(val) => setCountry(val)} />
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={12}>
-                              <Form.Item name="state" label="State">
-                                <RegionDropdown country={country} />
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={12}>
-                              <Form.Item name="city" label="City">
-                                <Input />
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={12}>
-                              <Form.Item name="zip" label="Zip">
-                                <Input />
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={24}>
-                              <Form.Item name="zip" label="Vat ID">
-                                <Input />
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={24}>
-                              <Form.Item>
-                                <Button type="primary" htmlType="submit">
-                                  Save
-                                </Button>
-                              </Form.Item>
-                            </Col>
-                          </Row>
-                        </Form>
-                      </div>
-                    </Panel>
-                  </Collapse>
-                </Col>
-              </Row>
-            </div>
+                          <Col span={24}>
+                            <Form.Item>
+                              <Button type="primary" htmlType="submit">
+                                {t('strings.save')}
+                              </Button>
+                            </Form.Item>
+                          </Col>
+                        </Row>
+                      </Form>
+                    </div>
+                  </Panel>
+                </Collapse>
+              </Col>
+            </Row>
           </div>
-        )
-        : <UserLock />
-    }
+        </div>
+      ) : (
+        <UserLock />
+      )}
     </Wrapper>
   );
 };

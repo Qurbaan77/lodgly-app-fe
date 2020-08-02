@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import './invoice.css';
 import {
   Form,
@@ -23,6 +24,7 @@ import loader from '../../assets/images/loader.svg';
 import { userInstance } from '../../axios/axiosconfig';
 
 const EditInvoicePopup = (props) => {
+  const { t } = useTranslation();
   const {
     userData, property, invoiceData, invoiceItems, setInvoiceItems, close, visible, handleOk,
     handleCancel,
@@ -275,7 +277,7 @@ const EditInvoicePopup = (props) => {
 
   return (
     <Modal
-      title="Edit invoice"
+      title={t('invoice.heading2')}
       visible={visible}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -314,7 +316,7 @@ const EditInvoicePopup = (props) => {
           <Col span={10}>
             <div className="invoice-date">
               <h4>
-                Invoice
+                {t('invoice.label1')}
                 {' '}
                 {invoiceData.id}
                 -
@@ -325,11 +327,11 @@ const EditInvoicePopup = (props) => {
                 <Col span={12} style={{ marginRight: 10 }}>
                   <Form.Item
                     name="date"
-                    label="Date"
+                    label={t('strings.date')}
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter date',
+                        message: t('invoice.label2'),
                       },
                     ]}
                   >
@@ -346,11 +348,11 @@ const EditInvoicePopup = (props) => {
                 <Col span={9}>
                   <Form.Item
                     name="time"
-                    label="Time"
+                    label={t('strings.time')}
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter time',
+                        message: t('invoice.label3'),
                       },
                     ]}
                   >
@@ -370,11 +372,11 @@ const EditInvoicePopup = (props) => {
                 <Col span={12}>
                   <Form.Item
                     name="deliveryDate"
-                    label="Delivery Date"
+                    label={t('strings.delivery_date')}
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter delivery date',
+                        message: t('invoice.label4'),
                       },
                     ]}
                   >
@@ -408,12 +410,19 @@ const EditInvoicePopup = (props) => {
                   <Form.Item name="paymentType" label="Payment Type">
                     <Select placeholder="Select">
                       <Select.Option value="bank notes">
-                        BANK NOTES
+                        {t('strings.bank_note')}
                       </Select.Option>
-                      <Select.Option value="card">CARD</Select.Option>
-                      <Select.Option value="check">CHECK</Select.Option>
+                      <Select.Option value="card">
+                        {' '}
+                        {t('strings.card')}
+                      </Select.Option>
+                      <Select.Option value="check">
+                        {' '}
+                        {t('strings.check')}
+                        {' '}
+                      </Select.Option>
                       <Select.Option value="bank transfer">
-                        BANKTRANSFER
+                        {t('strings.bank_transfer')}
                       </Select.Option>
                     </Select>
                   </Form.Item>
@@ -426,14 +435,18 @@ const EditInvoicePopup = (props) => {
 
           <Col span={10}>
             <div className="client-info">
-              <h4>Client:</h4>
+              <h4>
+                {t('invoice.label5')}
+                {' '}
+                :
+              </h4>
               <Form.Item
-                label="Full Name"
+                label={t('strings.full')}
                 name="clientName"
                 rules={[
                   {
                     required: true,
-                    message: 'Please enter client name',
+                    message: t('invoice.label6'),
                   },
                 ]}
               >
@@ -443,7 +456,7 @@ const EditInvoicePopup = (props) => {
                 />
               </Form.Item>
 
-              <Form.Item label="Email" name="email">
+              <Form.Item label={t('strings.email')} name="email">
                 <Input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -451,12 +464,12 @@ const EditInvoicePopup = (props) => {
               </Form.Item>
 
               <Form.Item
-                label="Address"
+                label={t('strings.address')}
                 name="address"
                 rules={[
                   {
                     required: true,
-                    message: 'Please enter client address',
+                    message: t('invoice.label7'),
                   },
                 ]}
               >
@@ -483,11 +496,11 @@ const EditInvoicePopup = (props) => {
                 <Col span={6}>
                   <Form.Item
                     name={`itemDescription${j}`}
-                    label="Item Description"
+                    label={t('invoice.label13')}
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter item description',
+                        message: t('invoice.label14'),
                       },
                     ]}
                   >
@@ -502,12 +515,12 @@ const EditInvoicePopup = (props) => {
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter quantity',
+                        message: t('invoice.label9'),
                       },
                     ]}
                   >
                     <Input
-                      // value={quantity}
+                        // value={quantity}
                       onChange={(e) => handleQuantity(e, ele, j)}
                     />
                   </Form.Item>
@@ -516,11 +529,11 @@ const EditInvoicePopup = (props) => {
                 <Col span={3}>
                   <Form.Item
                     name={`price${j}`}
-                    label="Price"
+                    label={t('strings.price')}
                     rules={[
                       {
                         required: true,
-                        message: 'Please enter price',
+                        message: t('invoice.label8'),
                       },
                     ]}
                   >
@@ -536,16 +549,23 @@ const EditInvoicePopup = (props) => {
                     <p>{ele.amount}</p>
                   </div> */}
                   <Form.Item name={`amount${j}`} label="Price">
-                    <Input disabled onChange={(e) => setAmount(e.target.value)} />
+                    <Input
+                      disabled
+                      onChange={(e) => setAmount(e.target.value)}
+                    />
                   </Form.Item>
                 </Col>
 
                 <Col span={2} className="label-hidden">
                   <Form.Item
                     name={`discountPer${j}`}
-                    label="Discount"
+                    label={t('strings.discount')}
                   >
-                    <Input placeholder="%" value={discountPer} onChange={(e) => handleDiscount(e, ele, j)} />
+                    <Input
+                      placeholder="%"
+                      value={discountPer}
+                      onChange={(e) => handleDiscount(e, ele, j)}
+                    />
                   </Form.Item>
                 </Col>
 
@@ -581,17 +601,21 @@ const EditInvoicePopup = (props) => {
 
         <Row style={{ alignItems: 'center' }}>
           <Col span={12}>
-            <div role="presentation" className="additional-add-guest" onClick={addMorePanel}>
+            <div
+              role="presentation"
+              className="additional-add-guest"
+              onClick={addMorePanel}
+            >
               <PlusOutlined />
-              {' '}
-              Add additional guest
+              {t('invoice.label10')}
             </div>
           </Col>
 
           <Col span={12}>
             <div className="total-add">
               <h3>
-                TOTAL:
+                {t('strings.total')}
+                :
                 {' '}
                 <span>
                   {itemState
@@ -636,7 +660,6 @@ const EditInvoicePopup = (props) => {
             marginBottom: '20px',
           }}
         >
-
           <Col
             span={12}
             style={{
@@ -647,7 +670,7 @@ const EditInvoicePopup = (props) => {
               <Button className="print-btn" type="secondry" htmlType="submit">
                 <img src={printIcon} alt="" />
                 {' '}
-                Print
+                {t('strings.print')}
               </Button>
               <Button className="pdf-btn" type="primary" htmlType="submit">
                 <img src={pdfIcon} alt="" />
@@ -658,38 +681,48 @@ const EditInvoicePopup = (props) => {
           </Col>
           <Col span={12}>
             <Form.Item>
-              {
-                invoiceData.status === 'Draft'
-                  ? (
-                    <>
-                      <Button className="delete-btn" icon={<DeleteOutlined />} style={{ marginRight: 10 }} onClick={handleDelete}>
-                        Delete
-                      </Button>
-                      <Button type="primary" htmlType="submit" onClick={handleIssue}>
-                        Issue
-                      </Button>
-                    </>
-                  )
-                  : (
-                    <>
-                      <Button type="primary" onClick={close} style={{ marginRight: 10 }}>
-                        close
-                      </Button>
-                      <Button className="delete-btn" icon={<DeleteOutlined />} style={{ marginRight: 10 }} onClick={handleCancelllation}>
-                        Cancellation
-                      </Button>
-                    </>
-                  )
-              }
+              {invoiceData.status === 'Draft' ? (
+                <>
+                  <Button
+                    className="delete-btn"
+                    icon={<DeleteOutlined />}
+                    style={{ marginRight: 10 }}
+                    onClick={handleDelete}
+                  >
+                    {t('strings.delete')}
+                  </Button>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    onClick={handleIssue}
+                  >
+                    {t('strings.issue')}
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    type="primary"
+                    onClick={close}
+                    style={{ marginRight: 10 }}
+                  >
+                    {t('strings.close')}
+                  </Button>
+                  <Button
+                    className="delete-btn"
+                    icon={<DeleteOutlined />}
+                    style={{ marginRight: 10 }}
+                    onClick={handleCancelllation}
+                  >
+                    {t('strings.cancellation')}
+                  </Button>
+                </>
+              )}
             </Form.Item>
           </Col>
           <Col span={24}>
             <div className="note">
-              <p>
-                NOTE: Issued invoice has an ordinal number assigned to it, and
-                it cannot be changed. Invoice that is saved as draft can be
-                changed afterwards.
-              </p>
+              <p>{t('invoice.label11')}</p>
             </div>
           </Col>
         </Row>

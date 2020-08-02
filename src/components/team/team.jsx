@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import './team.css';
+import { useTranslation } from 'react-i18next';
 import { Button, Tooltip } from 'antd';
 import {
   PlusOutlined,
@@ -19,6 +20,7 @@ import Toaster from '../toaster/toaster';
 import UserLock from '../userlock/userlock';
 
 const TeamListing = () => {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [visibleSubUser, setVisibleSubUser] = useState(false);
   const [subUser, setSubUser] = useState([]);
@@ -118,21 +120,18 @@ const TeamListing = () => {
 
   const enableButton = (
     <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-      Add New Sub-User
+      {t('team.label1')}
     </Button>
   );
   const disabledButton = (
-    <Tooltip
-      title="You are not authorize to add new sub user"
-      color="gold"
-    >
+    <Tooltip title="You are not authorize to add new sub user" color="gold">
       <Button
         type="primary"
         icon={<PlusOutlined />}
         onClick={show}
         disabled="true"
       >
-        Add New Sub-User
+        {t('team.label1')}
       </Button>
     </Tooltip>
   );
@@ -143,21 +142,19 @@ const TeamListing = () => {
 
   const pageContent = (
     <>
-
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       {subUser.length ? (
         <Wrapper>
           <div className="team-page">
-
             <div className="page-header">
               <h1>
                 <PartitionOutlined />
                 {' '}
-                Team
+                {t('team.label2')}
               </h1>
 
               <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                Add New Sub-User
+                {t('team.label1')}
               </Button>
             </div>
 
@@ -166,9 +163,18 @@ const TeamListing = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th>Sub User</th>
-                      <th>Email</th>
-                      <th>Role</th>
+                      <th>
+                        {' '}
+                        {t('team.label3')}
+                      </th>
+                      <th>
+                        {' '}
+                        {t('strings.email')}
+                      </th>
+                      <th>
+                        {' '}
+                        {t('team.label4')}
+                      </th>
                       {/* <th /> */}
                     </tr>
                   </thead>
@@ -183,9 +189,7 @@ const TeamListing = () => {
                             </div>
                             <div className="team-title">
                               <h5>Anthony Cole</h5>
-                              <span>
-                                Job Title | City of London, United Kingdom
-                              </span>
+                              <span>{t('team.label5')}</span>
                             </div>
                           </div>
                         </td>
@@ -231,8 +235,8 @@ const TeamListing = () => {
           <div className="add-team-page">
             <div className="add-subuser">
               <img src={subuser} alt="subuser" />
-              <h4>Sub Users</h4>
-              <p>Currently there are no Sub users created</p>
+              <h4>{t('team.label3')}</h4>
+              <p>{t('team.label6')}</p>
               {btn2}
             </div>
           </div>

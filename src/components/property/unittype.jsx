@@ -144,8 +144,13 @@ const UnitType = () => {
     <Wrapper>
       <Helmet>
         <link rel="icon" href={favicon} />
-        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
         <body className="unit-page-view" />
       </Helmet>
       <div className="unit-type">
@@ -162,7 +167,7 @@ const UnitType = () => {
             <input
               type="text"
               name="name"
-              placeholder="Edit Unit"
+              placeholder={t('unittype.title3')}
               onChange={onChange}
             />
           </div>

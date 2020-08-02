@@ -14,6 +14,7 @@ import {
   CloseCircleOutlined,
   CheckCircleOutlined,
 } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
 import DeletePopup from './deletepopup';
@@ -23,6 +24,7 @@ import GSTC from './GSTC';
 const { RangePicker } = DatePicker;
 
 const AddUnitType = () => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [unittypeNo, setUnittypeNo] = useState(0);
@@ -290,8 +292,13 @@ const AddUnitType = () => {
     <Wrapper>
       <Helmet>
         <link rel="icon" href={favicon} />
-        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
       </Helmet>
       <div className="unit-type">
         <div className="page-header">
@@ -309,14 +316,14 @@ const AddUnitType = () => {
             <Form form={form} onFinish={onFinish}>
               <Row style={{ alignItems: 'center' }}>
                 <Col span={7}>
-                  <Form.Item label="Date" name="groupname">
+                  <Form.Item label={t('strings.date')} name="groupname">
                     <RangePicker />
                   </Form.Item>
                 </Col>
 
                 <Col span={9} className="d-flex">
                   <Form.Item
-                    label="Price per Night"
+                    label={t('addunity.label1')}
                     name="perNight"
                     style={{ padding: '0px 10px' }}
                   >
@@ -324,7 +331,7 @@ const AddUnitType = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Rooms to Sell"
+                    label={t('addunity.label2')}
                     name="roomsToSell"
                     style={{ padding: '0px 10px' }}
                   >
@@ -332,7 +339,7 @@ const AddUnitType = () => {
                   </Form.Item>
 
                   <Form.Item
-                    label="Minimum Stay"
+                    label={t('addunity.label3')}
                     name="minimumStay"
                     style={{ padding: '0px 10px' }}
                   >
@@ -344,7 +351,7 @@ const AddUnitType = () => {
                   <Form.Item name="date-picker" label="DatePicker">
                     <DatePicker />
                   </Form.Item>
-                  <Button type="primary">Update Calendar</Button>
+                  <Button type="primary">{t('addunity.updatebtn')}</Button>
                 </Col>
               </Row>
 
@@ -354,7 +361,9 @@ const AddUnitType = () => {
                 ) : null}
               </div>
               <Form.Item>
-                <Button htmlType="submit" style={{ marginTop: '20px' }}>Save</Button>
+                <Button htmlType="submit" style={{ marginTop: '20px' }}>
+                  {t('strings.save')}
+                </Button>
               </Form.Item>
             </Form>
             <div className="panel-box units editunit" hidden={showPanel}>
@@ -362,7 +371,7 @@ const AddUnitType = () => {
                 <input
                   type="text"
                   name="name"
-                  placeholder="Edit Unit"
+                  placeholder={t('addunity.label4')}
                   onChange={onChange}
                 />
               </div>
@@ -375,7 +384,7 @@ const AddUnitType = () => {
                 >
                   <CloseCircleOutlined />
                   {' '}
-                  Cancel
+                  {t('strings.cancel')}
                 </div>
                 <div
                   className="sav-btn"
@@ -385,27 +394,25 @@ const AddUnitType = () => {
                 >
                   <CheckCircleOutlined />
                   {' '}
-                  Save
+                  {t('strings.save')}
                 </div>
               </div>
             </div>
 
             <div className="assign-unit">
-              <p>Assign Your Units</p>
-              <span>Now add unit to unit type</span>
+              <p>{t('addunity.para1')}</p>
+              <span>{t('addunity.para2')}</span>
               <div className="panel-container">
                 {unitData.map((el, i) => (
                   <div
                     className={
-                        editId === i
-                          ? 'panel-box units editunitname'
-                          : 'panel-box units'
-                      }
+                      editId === i
+                        ? 'panel-box units editunitname'
+                        : 'panel-box units'
+                    }
                   >
                     <div className="group-name">
-                      <h4 hidden={editId === i}>
-                        {el.unitName}
-                      </h4>
+                      <h4 hidden={editId === i}>{el.unitName}</h4>
                       <input
                         type="text"
                         name="name"
@@ -413,7 +420,7 @@ const AddUnitType = () => {
                         onChange={onChange}
                         hidden={editId !== i}
                       />
-                      <span>1 unit are assigned</span>
+                      <span>{t('addunity.para3')}</span>
                     </div>
 
                     {editId === i ? (
@@ -426,7 +433,7 @@ const AddUnitType = () => {
                         >
                           <CloseCircleOutlined />
                           {' '}
-                          Cancel
+                          {t('strings.cancel')}
                         </div>
                         <div
                           className="sav-btn"
@@ -435,8 +442,7 @@ const AddUnitType = () => {
                           aria-hidden="true"
                         >
                           <CheckCircleOutlined />
-                          {' '}
-                          Save
+                          {t('strings.save')}
                         </div>
                       </div>
                     ) : (
@@ -449,12 +455,11 @@ const AddUnitType = () => {
                 ))}
               </div>
               <div>
-                {
-                isOnTrial
-                  ? <Button onClick={() => setShowPanel(false)}>Add unit</Button>
-                  : btn
-              }
-
+                {isOnTrial ? (
+                  <Button onClick={() => setShowPanel(false)}>Add unit</Button>
+                ) : (
+                  btn
+                )}
               </div>
               <Modal
                 visible={visible}

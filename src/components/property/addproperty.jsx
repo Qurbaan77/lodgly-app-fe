@@ -215,7 +215,7 @@ const AddProperty = () => {
                         rules={[
                           {
                             required: true,
-                            message: 'Please enter property name',
+                            message: t('addproperty.rules'),
                             whitespace: true,
                           },
                         ]}
@@ -225,7 +225,10 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item name="propertyType" label={t('addproperty.detail2')}>
+                      <Form.Item
+                        name="propertyType"
+                        label={t('addproperty.detail2')}
+                      >
                         <Select>
                           <Select.Option value="demo">
                             Holiday House
@@ -235,7 +238,10 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item name="address" label={t('addproperty.detail3')}>
+                      <Form.Item
+                        name="address"
+                        label={t('addproperty.detail3')}
+                      >
                         <PlacesAutocomplete
                           value={address}
                           onChange={handleAddressChange}
@@ -289,7 +295,10 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={12}>
-                      <Form.Item name="country" label={t('addproperty.detail5')}>
+                      <Form.Item
+                        name="country"
+                        label={t('addproperty.detail5')}
+                      >
                         <CountryDropdown onChange={(val) => setCountry(val)} />
                       </Form.Item>
                     </Col>
@@ -313,7 +322,10 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item name="website" label={t('addproperty.detail9')}>
+                      <Form.Item
+                        name="website"
+                        label={t('addproperty.detail9')}
+                      >
                         <Input placeholder="www.mywebsite.com" />
                       </Form.Item>
                     </Col>
@@ -343,7 +355,10 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={8}>
-                      <Form.Item name="bedrooms" label={t('addproperty.detail10')}>
+                      <Form.Item
+                        name="bedrooms"
+                        label={t('addproperty.detail10')}
+                      >
                         <Select>
                           <Select.Option value="1">1</Select.Option>
                           <Select.Option value="2">2</Select.Option>
@@ -355,7 +370,10 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={8}>
-                      <Form.Item name="fullBathroom" label={t('addproperty.detail11')}>
+                      <Form.Item
+                        name="fullBathroom"
+                        label={t('addproperty.detail11')}
+                      >
                         <Select>
                           <Select.Option value="1">1</Select.Option>
                           <Select.Option value="2">2</Select.Option>
@@ -365,7 +383,10 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={8}>
-                      <Form.Item name="halfBathroom" label={t('addproperty.detail12')}>
+                      <Form.Item
+                        name="halfBathroom"
+                        label={t('addproperty.detail12')}
+                      >
                         <Select>
                           <Select.Option value="1">1</Select.Option>
                           <Select.Option value="2">2</Select.Option>
@@ -375,7 +396,10 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={8}>
-                      <Form.Item name="sqfoot" label={t('addproperty.detail13')}>
+                      <Form.Item
+                        name="sqfoot"
+                        label={t('addproperty.detail13')}
+                      >
                         <Select>
                           <Select.Option value="demo">Zadar</Select.Option>
                         </Select>
@@ -383,17 +407,17 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item name="description" label={t('addproperty.detail14')}>
+                      <Form.Item
+                        name="description"
+                        label={t('addproperty.detail14')}
+                      >
                         <Input.TextArea />
                       </Form.Item>
                     </Col>
 
                     <Col span={24}>
                       <Form.Item>
-                        <Tooltip
-                          title={t('addproperty.title5')}
-                          color="gold"
-                        >
+                        <Tooltip title={t('addproperty.title5')} color="gold">
                           <Button htmlType="submit" disabled="true">
                             {t('strings.save')}
                           </Button>
@@ -465,10 +489,7 @@ const AddProperty = () => {
                           getValueFromEvent={normFile}
                           noStyle
                         >
-                          <Tooltip
-                            title={t('addproperty.title5')}
-                            color="gold"
-                          >
+                          <Tooltip title={t('addproperty.title5')} color="gold">
                             <Upload.Dragger {...props} disabled>
                               <p className="ant-upload-drag-icon">
                                 <InboxOutlined />
@@ -476,12 +497,12 @@ const AddProperty = () => {
                               <p className="ant-upload-text">
                                 {t('addproperty.detail19')}
                               </p>
-                              <p className="ant-upload-hint">{t('addproperty.detail20')}</p>
+                              <p className="ant-upload-hint">
+                                {t('addproperty.detail20')}
+                              </p>
                             </Upload.Dragger>
                           </Tooltip>
-                          <p>
-                            {t('addproperty.detail21')}
-                          </p>
+                          <p>{t('addproperty.detail21')}</p>
                         </Form.Item>
                       </Form.Item>
                     </Col>

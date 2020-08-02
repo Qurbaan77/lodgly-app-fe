@@ -93,7 +93,7 @@ const BookingFilter = (props) => {
 
   return (
     <Modal
-      title="Filter"
+      title={t('filter.heading1')}
       visible={visible}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -115,10 +115,8 @@ const BookingFilter = (props) => {
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item label="Property" name="property">
-                        <Select
-                          placeholder="Select"
-                        >
+                      <Form.Item label={t('strings.property')} name="property">
+                        <Select placeholder="Select">
                           {propertyData.map((el) => (
                             <Select.Option value={el.id} key={el.id}>
                               {el.propertyName}
@@ -151,17 +149,17 @@ const BookingFilter = (props) => {
                         <div className="inline-form">
                           <label htmlFor="from">
                             <input hidden />
-                            from
+                            {t('strings.from')}
                           </label>
                           <Input type="text" placeholder="1000000" />
                           <label htmlFor="from">
                             <input hidden />
-                            to
+                            {t('strings.to')}
                           </label>
                           <Input type="text" placeholder="1000000" />
                           <label htmlFor="from">
                             <input hidden />
-                            USD
+                            {t('strings.usd')}
                           </label>
                         </div>
                       </Form.Item>
@@ -172,36 +170,28 @@ const BookingFilter = (props) => {
                         <ul className="filter-list">
                           <li>
                             <span>
-                              <RedEnvelopeOutlined />
-                              {' '}
-                              {t('filter.label1')}
+                              <RedEnvelopeOutlined /> {t('filter.label1')}
                             </span>
                             <Switch defaultChecked onChange={onChange} />
                           </li>
 
                           <li>
                             <span>
-                              <MailOutlined />
-                              {' '}
-                              {t('filter.label2')}
+                              <MailOutlined /> {t('filter.label2')}
                             </span>
                             <Switch onChange={onChange} />
                           </li>
 
                           <li>
                             <span>
-                              <ReconciliationOutlined />
-                              {' '}
-                              {t('filter.label3')}
+                              <ReconciliationOutlined /> {t('filter.label3')}
                             </span>
                             <Switch onChange={onChange} />
                           </li>
 
                           <li>
                             <span>
-                              <DeleteOutlined />
-                              {' '}
-                              {t('filter.label4')}
+                              <DeleteOutlined /> {t('filter.label4')}
                             </span>
                             <Switch onChange={onChange} />
                           </li>
@@ -210,7 +200,10 @@ const BookingFilter = (props) => {
                     </Col>
                     <Col span={24}>
                       <Form.Item>
-                        <Button style={{ marginRight: 10 }} onClick={handleCancel}>
+                        <Button
+                          style={{ marginRight: 10 }}
+                          onClick={handleCancel}
+                        >
                           Cancel
                         </Button>
                         <Button type="primary" htmlType="submit">

@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
+import { useTranslation } from 'react-i18next';
 import './owner.css';
 import {
   Form,
@@ -30,6 +31,7 @@ import Toaster from '../toaster/toaster';
 import UserLock from '../userlock/userlock';
 
 const Owner = () => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const { Option } = Select;
   const [visible, setVisible] = useState(false);
@@ -123,7 +125,6 @@ const Owner = () => {
       data3.forEach((filter) => {
         selectedProperty.push(filter.propertyName);
       });
-      console.log('selected property', selectedProperty);
       form.setFieldsValue({
         id: data.id,
         firstname: data.fname,
@@ -210,8 +211,8 @@ const Owner = () => {
         <Wrapper>
           <div className="owner-page">
             <div className="page-header">
-              <h1>Owner</h1>
-              { perm }
+              <h1>{t('owner.heading1')}</h1>
+              {perm}
             </div>
 
             <div className="owner-list">
@@ -219,9 +220,9 @@ const Owner = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th>Sub User</th>
-                      <th>Email</th>
-                      <th>Properties</th>
+                      <th>{t('owner.label1')}</th>
+                      <th>{t('owner.label2')}</th>
+                      <th>{t('owner.label3')}</th>
                     </tr>
                   </thead>
 
@@ -236,8 +237,9 @@ const Owner = () => {
                             <div className="owner-title">
                               <h5>{`${el.fname} ${el.lname}`}</h5>
                               <span>
-                                Job Title |
+                                {t('owner.label4')}
                                 {' '}
+                                |
                                 {el.citizenship}
                                 ,
                                 {' '}
@@ -274,7 +276,7 @@ const Owner = () => {
           </div>
 
           <Modal
-            title="Update Owner"
+            title={t('owner.label19')}
             visible={visible}
             onOk={handleOk}
             onCancel={handleCancel}
@@ -286,40 +288,40 @@ const Owner = () => {
               close={close}
             />
             <Form form={form} name="basic" onFinish={onFinish}>
-              <h4>Owner Information</h4>
+              <h4>{t('owner.label20')}</h4>
               <Row style={{ alignItems: 'center' }}>
                 <Form.Item name="id">
                   <Input hidden />
                 </Form.Item>
                 <Col span={12}>
                   <Form.Item
-                    label="First Name"
+                    label={t('owner.label5')}
                     name="firstname"
                     style={{ paddingRight: 20 }}
                     rules={[
                       {
                         required: true,
-                        message: 'Enter firstname!',
+                        message: t('owner.label6'),
                       },
                     ]}
                   >
-                    <Input placeholder="First Name" />
+                    <Input placeholder={t('owner.label5')} />
                   </Form.Item>
                 </Col>
 
                 <Col span={12}>
                   <Form.Item
-                    label="Second Name"
+                    label={t('owner.label7')}
                     name="secondname"
                     style={{ paddingRight: 20 }}
                     rules={[
                       {
                         required: true,
-                        message: 'Enter secondname!',
+                        message: t('owner.label8'),
                       },
                     ]}
                   >
-                    <Input placeholder="Second Name" />
+                    <Input placeholder={t('owner.label7')} />
                   </Form.Item>
                 </Col>
               </Row>
@@ -327,28 +329,28 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    label="E-mail"
+                    label={t('strings.email')}
                     name="email"
                     style={{ paddingRight: 20 }}
                     rules={[
                       {
                         type: 'email',
-                        message: 'Invalid E-mail!',
+                        message: t('owner.label9'),
                       },
                       {
                         required: true,
-                        message: 'Enter E-mail!',
+                        message: t('owner.label10'),
                       },
                     ]}
                   >
-                    <Input placeholder="Email" />
+                    <Input placeholder={t('strings.email')} />
                   </Form.Item>
                 </Col>
 
                 <Col span={12}>
-                  <Form.Item label="Phone" name="phone">
+                  <Form.Item label={t('strings.phone')} name="phone">
                     <Input
-                      placeholder="Phone"
+                      placeholder={t('strings.phone')}
                       type="number"
                       minLength="9"
                       maxLength="15"
@@ -361,7 +363,7 @@ const Owner = () => {
                 <Col span={12}>
                   <Form.Item
                     name="dob"
-                    label="Date of Birth"
+                    label={t('strings.dob')}
                     style={{ paddingRight: 20 }}
                   >
                     <DatePicker />
@@ -381,7 +383,7 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    label="Country of Residence"
+                    label={t('owner.label11')}
                     name="country"
                     style={{ paddingRight: 20 }}
                   >
@@ -393,7 +395,7 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    label="Citizenship"
+                    label={t('strings.citizenship')}
                     name="citizenship"
                     style={{ paddingRight: 20 }}
                   >
@@ -402,7 +404,7 @@ const Owner = () => {
                 </Col>
 
                 <Col span={12}>
-                  <Form.Item label="PLace of Residence" name="address">
+                  <Form.Item label={t('owner.label12')} name="address">
                     <Input />
                   </Form.Item>
                 </Col>
@@ -411,7 +413,7 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    label="Type of Document"
+                    label={t('owner.label13')}
                     name="document"
                     style={{ paddingRight: 20 }}
                   >
@@ -423,7 +425,7 @@ const Owner = () => {
                 </Col>
 
                 <Col span={12}>
-                  <Form.Item label="Document Number" name="documentnumber">
+                  <Form.Item label={t('owner.label14')} name="documentnumber">
                     <Input />
                   </Form.Item>
                 </Col>
@@ -433,11 +435,11 @@ const Owner = () => {
                 <Form.Item
                   style={{ width: '100%' }}
                   name="properties"
-                  label="Properties"
+                  label={t('owner.label21')}
                   rules={[
                     {
                       required: true,
-                      message: 'Please select your property!',
+                      message: t('owner.label15'),
                       type: 'array',
                     },
                   ]}
@@ -445,7 +447,7 @@ const Owner = () => {
                   <Select
                     mode="multiple"
                     size="large"
-                    placeholder="Please select property"
+                    placeholder={t('owner.label16')}
                   >
                     {propertyData.map((el) => (
                       <Option value={el.id}>{el.propertyName}</Option>
@@ -466,7 +468,7 @@ const Owner = () => {
                 <Col span={24}>
                   <Form.Item>
                     <Button type="primary" htmlType="submit">
-                      Save Owner Property
+                      {t('owner.label17')}
                     </Button>
                   </Form.Item>
                 </Col>
@@ -490,13 +492,13 @@ const Owner = () => {
           <div className="add-team-page">
             <div className="add-subuser">
               <img src={subuser} alt="subuser" />
-              <h4>Owner</h4>
-              <p>Currently there are no Owner created</p>
+              <h4>{t('owner.heading1')}</h4>
+              <p>{t('owner.label18')}</p>
               {perm}
             </div>
           </div>
           <Modal
-            title="Update Owner"
+            title={t('owner.label19')}
             visible={visible}
             onOk={handleOk}
             onCancel={handleCancel}
@@ -508,40 +510,40 @@ const Owner = () => {
               close={close}
             />
             <Form form={form} name="basic" onFinish={onFinish}>
-              <h4>Owner Information</h4>
+              <h4>{t('owner.label20')}</h4>
               <Row style={{ alignItems: 'center' }}>
                 <Form.Item name="id">
                   <Input hidden />
                 </Form.Item>
                 <Col span={12}>
                   <Form.Item
-                    label="First Name"
+                    label={t('owner.label5')}
                     name="firstname"
                     style={{ paddingRight: 20 }}
                     rules={[
                       {
                         required: true,
-                        message: 'Enter firstname!',
+                        message: t('owner.label6'),
                       },
                     ]}
                   >
-                    <Input placeholder="First Name" />
+                    <Input placeholder={t('owner.label5')} />
                   </Form.Item>
                 </Col>
 
                 <Col span={12}>
                   <Form.Item
-                    label="Second Name"
+                    label={t('owner.label7')}
                     name="secondname"
                     style={{ paddingRight: 20 }}
                     rules={[
                       {
                         required: true,
-                        message: 'Enter secondname!',
+                        message: t('owner.label8'),
                       },
                     ]}
                   >
-                    <Input placeholder="Second Name" />
+                    <Input placeholder={t('owner.label7')} />
                   </Form.Item>
                 </Col>
               </Row>
@@ -549,28 +551,28 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    label="E-mail"
+                    label={t('strings.email')}
                     name="email"
                     style={{ paddingRight: 20 }}
                     rules={[
                       {
                         type: 'email',
-                        message: 'Invalid E-mail!',
+                        message: t('owner.label9'),
                       },
                       {
                         required: true,
-                        message: 'Enter E-mail!',
+                        message: t('owner.label10'),
                       },
                     ]}
                   >
-                    <Input placeholder="Email" />
+                    <Input placeholder={t('strings.email')} />
                   </Form.Item>
                 </Col>
 
                 <Col span={12}>
-                  <Form.Item label="Phone" name="phone">
+                  <Form.Item label={t('strings.phone')} name="phone">
                     <Input
-                      placeholder="Phone"
+                      placeholder={t('strings.phone')}
                       type="number"
                       minLength="9"
                       maxLength="15"
@@ -583,7 +585,7 @@ const Owner = () => {
                 <Col span={12}>
                   <Form.Item
                     name="dob"
-                    label="Date of Birth"
+                    label={t('strings.dob')}
                     style={{ paddingRight: 20 }}
                   >
                     <DatePicker />
@@ -591,7 +593,7 @@ const Owner = () => {
                 </Col>
 
                 <Col span={12}>
-                  <Form.Item name="gender" label="Gender">
+                  <Form.Item name="gender" label={t('strings.gender')}>
                     <Radio.Group name="radiogroup">
                       <Radio value="Male">M</Radio>
                       <Radio value="female">F</Radio>
@@ -603,7 +605,7 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    label="Country of Residence"
+                    label={t('owner.label11')}
                     name="country"
                     style={{ paddingRight: 20 }}
                   >
@@ -615,7 +617,7 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    label="Citizenship"
+                    label={t('strings.citizenship')}
                     name="citizenship"
                     style={{ paddingRight: 20 }}
                   >
@@ -624,7 +626,7 @@ const Owner = () => {
                 </Col>
 
                 <Col span={12}>
-                  <Form.Item label="PLace of Residence" name="address">
+                  <Form.Item label={t('owner.label12')} name="address">
                     <Input />
                   </Form.Item>
                 </Col>
@@ -633,7 +635,7 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    label="Type of Document"
+                    label={t('owner.label13')}
                     name="document"
                     style={{ paddingRight: 20 }}
                   >
@@ -645,7 +647,7 @@ const Owner = () => {
                 </Col>
 
                 <Col span={12}>
-                  <Form.Item label="Document Number" name="documentnumber">
+                  <Form.Item label={t('owner.label14')} name="documentnumber">
                     <Input />
                   </Form.Item>
                 </Col>
@@ -655,11 +657,11 @@ const Owner = () => {
                 <Form.Item
                   style={{ width: '100%' }}
                   name="properties"
-                  label="Properties"
+                  label={t('owner.label21')}
                   rules={[
                     {
                       required: true,
-                      message: 'Please select your property!',
+                      message: t('owner.label15'),
                       type: 'array',
                     },
                   ]}
@@ -667,7 +669,7 @@ const Owner = () => {
                   <Select
                     mode="multiple"
                     size="large"
-                    placeholder="Please select property"
+                    placeholder={t('owner.label16')}
                   >
                     {propertyData.map((el) => (
                       <Option value={el.id}>{el.propertyName}</Option>
@@ -678,7 +680,7 @@ const Owner = () => {
 
               <Row style={{ alignItems: 'center' }}>
                 <Col span={24}>
-                  <Form.Item label="Notes" name="notes">
+                  <Form.Item label={t('strings.note')} name="notes">
                     <Input.TextArea />
                   </Form.Item>
                 </Col>
@@ -688,7 +690,7 @@ const Owner = () => {
                 <Col span={24}>
                   <Form.Item>
                     <Button type="primary" htmlType="submit">
-                      Save Owner Property
+                      {t('owner.label17')}
                     </Button>
                   </Form.Item>
                 </Col>

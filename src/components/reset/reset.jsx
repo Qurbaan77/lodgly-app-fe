@@ -3,12 +3,14 @@ import Helmet from 'react-helmet';
 import './reset.css';
 import { Form, Input, Button } from 'antd';
 import queryString from 'query-string';
+import { useTranslation } from 'react-i18next';
 import logo from '../../assets/images/logo.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 
 const Reset = () => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
@@ -37,12 +39,21 @@ const Reset = () => {
     <>
       <Helmet>
         <link rel="icon" href={favicon} />
-        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
       </Helmet>
       <div className="forget">
         <div className="forget-section">
-          <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
+          <Toaster
+            notifyType={notifyType}
+            notifyMsg={notifyMsg}
+            close={close}
+          />
           <div className="container">
             <div classNmae="row">
               <div className="col-md-12">
@@ -50,8 +61,8 @@ const Reset = () => {
                   <img src={logo} alt="Logo" />
                 </div>
                 <div className="forget-form">
-                  <h1>Get a new password</h1>
-                  <p>Enter your email address to reset your password</p>
+                  <h1>{t('reset.heading1')}</h1>
+                  <p>{t('reset.label2')}</p>
                   <div className="forget-box">
                     <div>
                       <Form
@@ -63,50 +74,52 @@ const Reset = () => {
                         onFinish={onFinish}
                       >
                         <Form.Item
-                          label="New Password"
+                          label={t('reset.label7')}
                           name="newpassword"
                           rules={[
                             {
                               required: true,
-                              message: 'Please input your password!',
+                              message: t('reset.label8'),
                             },
                           ]}
                         >
-                          <Input.Password placeholder="New password" />
+                          <Input.Password placeholder={t('reset.label7')} />
                         </Form.Item>
 
                         <Form.Item
-                          label="Confirm Password"
+                          label={t('reset.label9')}
                           name="confirmpassword"
                           dependencies={['newpassword']}
                           hasFeedback
                           rules={[
                             {
                               required: true,
-                              message: 'Please confirm your password!',
+                              message: t('reset.label10'),
                             },
                             ({ getFieldValue }) => ({
                               validator(rule, value) {
                                 if (
                                   !value
-                                || getFieldValue('newpassword') === value
+                                  || getFieldValue('newpassword') === value
                                 ) {
                                   return Promise.resolve();
                                 }
 
                                 return Promise.reject(
-                                  new Error('The two passwords that you entered do not match!'),
+                                  new Error(
+                                    'The two passwords that you entered do not match!',
+                                  ),
                                 );
                               },
                             }),
                           ]}
                         >
-                          <Input.Password placeholder="Confirm Password" />
+                          <Input.Password placeholder={t('reset.label9')} />
                         </Form.Item>
 
                         <Form.Item>
                           <Button className="forget-btn" htmlType="submit">
-                            Change Password
+                            {t('reset.label11')}
                           </Button>
                         </Form.Item>
                       </Form>

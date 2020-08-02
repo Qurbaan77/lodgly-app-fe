@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import './calendar.css';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
+import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
 import GSTC from './GSTC';
@@ -9,6 +10,7 @@ import { userInstance } from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
 
 const Calendar = () => {
+  const { t } = useTranslation();
   const [propertyData, setPropertyData] = useState([]);
   const [reservationData, setReservationData] = useState([]);
   const [guestName, setGuestName] = useState('');
@@ -206,33 +208,27 @@ const Calendar = () => {
   const btn = isSubUser && canWrite ? (
     <>
       <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-        Add Reservation
+        {t('addreservation.heading31')}
       </Button>
       <Button className="border-btn" icon={<TeamOutlined />}>
-        Group Reservation
+        {t('addreservation.heading32')}
       </Button>
     </>
   ) : (
     <>
-      <Tooltip
-        title="You are not authorize for adding reservation"
-        color="gold"
-      >
+      <Tooltip title={t('addreservation.heading33')} color="gold">
         <Button
           type="primary"
           icon={<PlusOutlined />}
           onClick={show}
           disabled="true"
         >
-          Add Reservation
+          {t('addreservation.heading31')}
         </Button>
       </Tooltip>
-      <Tooltip
-        title="You are not authorize for adding reservation"
-        color="gold"
-      >
+      <Tooltip title={t('addreservation.heading33')} color="gold">
         <Button className="border-btn" icon={<TeamOutlined />}>
-          Group Reservation
+          {t('addreservation.heading32')}
         </Button>
       </Tooltip>
     </>
@@ -248,10 +244,10 @@ const Calendar = () => {
           ) : (
             <>
               <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                Add Reservation
+                {t('addreservation.heading31')}
               </Button>
               <Button className="border-btn" icon={<TeamOutlined />}>
-                Group Reservation
+                {t('addreservation.heading32')}
               </Button>
             </>
           )}
@@ -261,7 +257,7 @@ const Calendar = () => {
         </div>
 
         <AddReservation
-          title="Add New Reservation"
+          title={t('addreservation.heading34')}
           visible={visible}
           onOk={handleOk}
           close={handleCancel}
