@@ -96,11 +96,11 @@ const Profile = () => {
       setNotifyType('success');
       setNotifyMsg(msg);
       getUserInfo();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     form1.resetFields();
   };
 
@@ -112,11 +112,11 @@ const Profile = () => {
       setNotifyType('success');
       setNotifyMsg(msg);
       getCompanyInfo();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     form4.resetFields();
   };
 
@@ -126,12 +126,12 @@ const Profile = () => {
     const { msg } = response.data;
     if (statusCode === 200) {
       setNotifyType('success');
-      setNotifyMsg(msg);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setNotifyMsg(msg);      
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     form3.resetFields();
   };
 

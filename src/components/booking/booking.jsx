@@ -27,7 +27,7 @@ import CreateBookingPopup from './createbookingpopup';
 import EditBookingPopup from './editbookingpopup';
 import BookingFilter from './filter';
 import { userInstance } from '../../axios/axiosconfig';
-// import Toaster from '../toaster/toaster';
+import Toaster from '../toaster/toaster';
 import filterIcon from '../../assets/images/menu/filter-icon.png';
 
 import editIcon from '../../assets/images/menu/pencil-icon.png';
@@ -57,8 +57,8 @@ const Booking = () => {
   const [currentService, setCurrentService] = useState([]);
   const [editCurrentGuest, setEditCurrentGuest] = useState([]);
   const [topNavId, setTopNavId] = useState();
-  // const [notifyType, setNotifyType] = useState();
-  // const [notifyMsg, setNotifyMsg] = useState();
+  const [notifyType, setNotifyType] = useState();
+  const [notifyMsg, setNotifyMsg] = useState();
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState();
   const [daysLeft, setDaysLeft] = useState();
@@ -73,6 +73,15 @@ const Booking = () => {
   // const show = () => {
   //   setVisible(true);
   // };
+
+  const toasterMessage = (type, msg) => {
+    setNotifyType(type);
+    setNotifyMsg(msg);
+  };
+
+  const close = () => {
+    setNotifyType('');
+  };
 
   const showfilter = () => {
     setVisibleFilter(true);
@@ -331,6 +340,7 @@ const Booking = () => {
       </Helmet>
       {hasAccess ? (
         <div className="booking">
+          <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
           <div className="container">
             <Row>
               <Col span={10}>
@@ -593,6 +603,7 @@ const Booking = () => {
         editValues={editValues}
         getData={getData}
         setBooked={setBooked}
+        toasterMessage={toasterMessage}
       />
       <CreateBookingPopup
         visible={visible}
@@ -600,6 +611,7 @@ const Booking = () => {
         handleOk={handleOk}
         close={closeBooking}
         getData={getData}
+        toasterMessage={toasterMessage}
       />
 
       <EditBookingPopup
@@ -616,6 +628,7 @@ const Booking = () => {
         currentService={currentService}
         setCurrentService={setCurrentService}
         setBooked={setBooked}
+        toasterMessage={toasterMessage}
       />
 
       <BookingFilter

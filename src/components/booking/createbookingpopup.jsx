@@ -20,7 +20,6 @@ import {
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
-import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
@@ -31,7 +30,7 @@ let j = 1;
 
 const CreateBookingPopup = (props) => {
   const {
-    getData, close, visible, handleOk, handleCancel,
+    getData, close, visible, handleOk, handleCancel, toasterMessage,
   } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
@@ -71,10 +70,6 @@ const CreateBookingPopup = (props) => {
   const [unitData, setUnitData] = useState([]);
   // const [currentUnit, setCurrentUnit] = useState({});
   const [unitTypeData, setUnitTypeData] = useState([]);
-
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
-
   const [propertyData, setPropertyData] = useState([]);
   const [currentPropertyId, setCurrentPropertyId] = useState(null);
   // const history = useHistory();
@@ -173,11 +168,11 @@ const CreateBookingPopup = (props) => {
     const response = await userInstance.post('/addBooking', values);
     const { msg } = response.data;
     if (response.data.code === 200) {
+      toasterMessage('success', msg);
       getData();
       close();
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toasterMessage('error', msg);
     }
 
     form.resetFields();
@@ -382,7 +377,6 @@ const CreateBookingPopup = (props) => {
       onCancel={handleCancel}
       wrapClassName="create-booking-modal"
     >
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={12}>
@@ -965,6 +959,7 @@ CreateBookingPopup.propTypes = {
   handleCancel: PropTypes.func,
   handleOk: PropTypes.func,
   getData: PropTypes.func,
+  toasterMessage: PropTypes.func,
   visible: PropTypes.bool,
 };
 CreateBookingPopup.defaultProps = {
@@ -972,6 +967,7 @@ CreateBookingPopup.defaultProps = {
   handleCancel: () => {},
   handleOk: () => {},
   getData: () => {},
+  toasterMessage: () => {},
   visible: false,
 };
 
