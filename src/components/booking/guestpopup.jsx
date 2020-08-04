@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import './booking.css';
 import { useTranslation } from 'react-i18next';
@@ -13,24 +13,18 @@ import {
   Col,
   Modal,
 } from 'antd';
-import Toaster from '../toaster/toaster';
-
+// import Toaster from '../toaster/toaster';
+import { CountryDropdown } from 'react-country-region-selector';
 import { userInstance } from '../../axios/axiosconfig';
 
 const GuestPopup = (props) => {
     const { t } = useTranslation();
   const {
     editValues, getData, close: close1, setBooked, closeToaster,
-    visible, handleOk, handleCancel,
+    visible, handleOk, handleCancel, toasterMessage
   } = props;
   const [form] = Form.useForm();
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
   const guestData = editValues;
-
-  const close = () => {
-    setNotifyType('');
-  };
 
   form.setFieldsValue({
     id: guestData.id,
@@ -55,14 +49,12 @@ const GuestPopup = (props) => {
     const statusCode = response.data.code;
     const { msg } = response.data;
     if (statusCode === 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
+      toasterMessage('success', msg);
       getData();
       close1();
       setBooked(true);
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toasterMessage('error', msg);
     }
     form.resetFields();
     closeToaster();
@@ -76,7 +68,6 @@ const GuestPopup = (props) => {
        onCancel={handleCancel}
        wrapClassName="guest-modal"
      >
-       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
        <Form form={form} name="basic" onFinish={onFinish}>
          <Row style={{ alignItems: 'center' }}>
            <Form.Item name="id">
@@ -104,10 +95,7 @@ const GuestPopup = (props) => {
                name="country"
                rules={[{ required: true, message: t('guestpopup.label3') }]}
              >
-               <Select>
-                 <Select.Option value="demo">Holiday House</Select.Option>
-                 <Select.Option value="demo">Holiday House</Select.Option>
-               </Select>
+               <CountryDropdown />
              </Form.Item>
            </Col>
          </Row>
@@ -190,10 +178,7 @@ const GuestPopup = (props) => {
                name="citizenShip"
                style={{ paddingRight: 20 }}
              >
-               <Select>
-                 <Select.Option value="demo">Holiday House</Select.Option>
-                 <Select.Option value="demo">Holiday House</Select.Option>
-               </Select>
+               <Input />
              </Form.Item>
            </Col>
 
@@ -238,6 +223,7 @@ GuestPopup.propTypes = {
   visible: PropTypes.bool,
   handleCancel: PropTypes.func,
   handleOk: PropTypes.func,
+  toasterMessage: PropTypes.func,
 };
 GuestPopup.defaultProps = {
   editValues: {},
@@ -248,5 +234,6 @@ GuestPopup.defaultProps = {
   visible: false,
   handleCancel: () => {},
   handleOk: () => {},
+  toasterMessage: () => {},
 };
 export default GuestPopup;

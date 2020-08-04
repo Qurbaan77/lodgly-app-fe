@@ -21,7 +21,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
 import moment from 'moment';
-import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
@@ -45,6 +44,7 @@ const Editbookingpopup = (props) => {
     handleCancel,
     setBooked,
     getData,
+    toasterMessage,
   } = props;
   const [form] = Form.useForm();
   // const [test, setTest] = useState(false);
@@ -88,9 +88,6 @@ const Editbookingpopup = (props) => {
   // const [currentUnit, setCurrentUnit] = useState({});
   const [unitTypeData, setUnitTypeData] = useState([]);
   const [unitId, setUnitId] = useState(null);
-
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
 
   // const [propertyData, setPropertyData] = useState([]);
   const [propertyName, setPropertyName] = useState('');
@@ -267,12 +264,12 @@ const Editbookingpopup = (props) => {
     const response = await userInstance.post('/changeBooking', values);
     const { msg } = response.data;
     if (response.data.code === 200) {
+      toasterMessage('success', msg);
       getData();
       setBooked(true);
       close();
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toasterMessage('error', msg);
     }
 
     form.resetFields();
@@ -413,7 +410,6 @@ const Editbookingpopup = (props) => {
       onCancel={handleCancel}
       wrapClassName="create-booking-modal"
     >
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={12}>
@@ -1116,6 +1112,7 @@ Editbookingpopup.propTypes = {
   handleCancel: PropTypes.func,
   setBooked: PropTypes.func,
   getData: PropTypes.func,
+  toasterMessage: () => {},
 };
 
 Editbookingpopup.defaultProps = {
@@ -1127,6 +1124,7 @@ Editbookingpopup.defaultProps = {
   getData: () => {},
   setEditCurrentGuest: () => {},
   setCurrentService: () => {},
+  toasterMessage: () => {},
   editBookingValues: {},
   editCurrentGuest: [],
   currentService: [],
