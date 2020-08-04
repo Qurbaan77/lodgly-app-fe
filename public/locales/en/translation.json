@@ -126,7 +126,7 @@
   "propertylist": {
     "heading": "All Properties",
     "addbtn": "Add Property",
-    "alert": "Your trail period will end in",
+    "alert": "Your trial period will end in",
     "link-heading": "Subscribe",
     "heading1": "You are not authorize to create new property"
   },
@@ -563,7 +563,7 @@
     "label16": "Deleting this invoice will permanently remove it from your network.",
     "label17": "  Delete Item",
     "heading2": "Edit invoice",
-    "heading3": "Currently there are no Sub users created"
+    "heading3": "Currently there are no invoices created"
   },
   "login": {
     "heading1": "Sign In",

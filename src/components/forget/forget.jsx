@@ -13,6 +13,8 @@ const Forget = () => {
   const [notifyMsg, setNotifyMsg] = useState();
 
   const onFinish = async (values) => {
+    const companyName = window.location.hostname.split('.');
+    values.company = companyName[0];
     const response = await userInstance.post('/resetpassword', values);
     const statusCode = response.data.code;
     const { msg } = response.data;

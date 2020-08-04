@@ -105,6 +105,8 @@ const SubUserPopup = ({
     values.affiliateId = userId;
     values.billingRead = billingRead;
     values.billingWrite = billingWrite;
+    const companyName = window.location.hostname.split('.');
+    values.company = companyName[0];
     const response = await userInstance.post('/addTeam', values);
     if (response.status === 200) {
       getData();

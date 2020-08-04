@@ -457,7 +457,7 @@ const BillingInformation = () => {
 
         <div className="billing-container">
           <Row gutter={[16, 0]}>
-            <Col span={12} hidden={hideBilling}>
+            <Col span={16} hidden={hideBilling}>
               <Collapse defaultActiveKey={['1']} accordion>
                 <Panel header="Active Subscription" key="1">
                   <div className="billing-info-form">
@@ -660,7 +660,7 @@ const BillingInformation = () => {
               </Collapse>
             </Col>
             {data ? (
-              <Col span={12}>
+              <Col span={16}>
                 <Collapse defaultActiveKey={['1']} accordion>
                   <Panel
                     header={`${data.interval}ly Subscription Plan`}

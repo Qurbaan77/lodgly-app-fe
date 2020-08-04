@@ -88,6 +88,11 @@ const PropertyList = () => {
     getData();
   }, [getData]);
 
+  const handlePropertyClick = (id) => {
+    localStorage.setItem('propertyId', id);
+    history.push('/property');
+  };
+
   const enableButton = (
     <Button
       type="primary"
@@ -140,7 +145,7 @@ const PropertyList = () => {
                 {propertyData && propertyData.length > 0 ? (
                   propertyData.map((el) => (
                     <Col className="gutter-row" span={8} key={el.id}>
-                      <div className="property">
+                      <div className="property" onClick={() => handlePropertyClick(el.id)} role="presentation">
                         <img src={el.image || property1} alt="property" />
                         <div className="property-info">
                           <h3>{el.propertyName}</h3>

@@ -138,6 +138,8 @@ const EditSubUserPopup = (props) => {
     copyValues.affiliateId = subUserData.userId;
     copyValues.billingRead = billingRead;
     copyValues.bookingWrite = billingWrite;
+    const companyName = window.location.hostname.split('.');
+    copyValues.company = companyName[0];
     const response = await userInstance.post('/updateSubUser', copyValues);
     if (response.status === 200) {
       getData();
