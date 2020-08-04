@@ -17,8 +17,8 @@ const PropertyList = () => {
   const { t } = useTranslation();
   const [propertyData, setPropertyData] = useState([]);
   const [topNavId, setTopNavId] = useState();
-  const [subscribed, setSubscribed] = useState();
-  const [OnTrial, setOnTrial] = useState();
+  const [subscribed, setSubscribed] = useState(true);
+  const [OnTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
 
   const history = useHistory();

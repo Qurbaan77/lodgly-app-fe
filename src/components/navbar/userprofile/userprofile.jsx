@@ -35,7 +35,7 @@ const UserProfile = (props) => {
   const [{ billingWrite }] = userCred || [{}];
 
   const menu = (
-    <Menu>
+    <Menu className="setting-dropdown">
       <Menu.Item>
         <Link to="/profile">{t('userprofile.label1')}</Link>
       </Menu.Item>

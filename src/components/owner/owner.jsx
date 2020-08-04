@@ -45,6 +45,7 @@ const Owner = () => {
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState();
   const [daysLeft, setDaysLeft] = useState();
+  const [editOpen, setEditOpen] = useState(false);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
 
@@ -112,6 +113,7 @@ const Owner = () => {
   }, [userId]);
 
   const edit = async (data) => {
+    setEditOpen(true);
     const m1 = moment(data.dob);
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
@@ -181,12 +183,12 @@ const Owner = () => {
 
   const enableButton = (
     <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-      Add New Owner
+      {t('owner.button1')}
     </Button>
   );
   const disabledButton = (
     <Tooltip
-      title="You are not authorize to create new owner"
+      title={t('owner.tooltip1')}
       color="gold"
     >
       <Button
@@ -195,7 +197,7 @@ const Owner = () => {
         onClick={show}
         disabled="true"
       >
-        Add New Owner
+        {t('owner.button1')}
       </Button>
     </Tooltip>
   );
@@ -204,6 +206,8 @@ const Owner = () => {
   const perm = isSubUser ? btn : enableButton;
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+
+  const title = editOpen ? t('owner.label19') : t('owner.label22');
 
   const pageContent = (
     <>
@@ -216,6 +220,11 @@ const Owner = () => {
             </div>
 
             <div className="owner-list">
+              <Toaster
+                notifyType={notifyType}
+                notifyMsg={notifyMsg}
+                close={close}
+              />
               <div className="custom-table">
                 <table>
                   <thead>
@@ -223,6 +232,7 @@ const Owner = () => {
                       <th>{t('owner.label1')}</th>
                       <th>{t('owner.label2')}</th>
                       <th>{t('owner.label3')}</th>
+                      <th> </th>
                     </tr>
                   </thead>
 
@@ -276,17 +286,12 @@ const Owner = () => {
           </div>
 
           <Modal
-            title={t('owner.label19')}
+            title={title}
             visible={visible}
             onOk={handleOk}
             onCancel={handleCancel}
             wrapClassName="guest-modal"
           >
-            <Toaster
-              notifyType={notifyType}
-              notifyMsg={notifyMsg}
-              close={close}
-            />
             <Form form={form} name="basic" onFinish={onFinish}>
               <h4>{t('owner.label20')}</h4>
               <Row style={{ alignItems: 'center' }}>
@@ -504,11 +509,6 @@ const Owner = () => {
             onCancel={handleCancel}
             wrapClassName="guest-modal"
           >
-            <Toaster
-              notifyType={notifyType}
-              notifyMsg={notifyMsg}
-              close={close}
-            />
             <Form form={form} name="basic" onFinish={onFinish}>
               <h4>{t('owner.label20')}</h4>
               <Row style={{ alignItems: 'center' }}>
@@ -689,8 +689,11 @@ const Owner = () => {
               <Row style={{ alignItems: 'center', textAlign: 'right' }}>
                 <Col span={24}>
                   <Form.Item>
+                    <Button style={{ marginRight: 10 }} onClick={handleCancel}>
+                      {t('strings.cancel')}
+                    </Button>
                     <Button type="primary" htmlType="submit">
-                      {t('owner.label17')}
+                      {t('strings.save')}
                     </Button>
                   </Form.Item>
                 </Col>

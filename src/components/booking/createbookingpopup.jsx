@@ -460,7 +460,7 @@ const CreateBookingPopup = (props) => {
           <Col span={8}>
             <Form.Item
               className="comision"
-              label={t('strings.select')}
+              label={t('strings.chanel_commission')}
               name="channel"
             >
               <Select
@@ -473,6 +473,7 @@ const CreateBookingPopup = (props) => {
               </Select>
 
               <Input
+                placeholder="0,00"
                 name="commission"
                 style={{
                   width: '26%',
@@ -564,7 +565,9 @@ const CreateBookingPopup = (props) => {
                           onClick={addMore}
                           role="presentation"
                         >
-                          <PlusOutlined /> {t('bookingpop.label12')}
+                          <PlusOutlined />
+                          {' '}
+                          {t('bookingpop.label12')}
                         </div>
                       </Col>
                     </Row>
@@ -631,7 +634,8 @@ const CreateBookingPopup = (props) => {
                     />
                   </Form.Item>
                   <label htmlFor="number">
-                    <input hidden />X
+                    <input hidden />
+                    X
                   </label>
                   <Input
                     type="number"
@@ -642,7 +646,8 @@ const CreateBookingPopup = (props) => {
                     onChange={(e) => setNight(e.target.value)}
                   />
                   <label htmlFor="amount">
-                    <input hidden />=
+                    <input hidden />
+                    =
                   </label>
                   <Input
                     name="totalAAmount"
@@ -677,7 +682,8 @@ const CreateBookingPopup = (props) => {
                     }}
                   />
                   <label htmlFor="discount">
-                    <input hidden />X
+                    <input hidden />
+                    X
                   </label>
                   <Form.Item name="discountType">
                     <Select
@@ -690,7 +696,8 @@ const CreateBookingPopup = (props) => {
                     </Select>
                   </Form.Item>
                   <label htmlFor="equal">
-                    <input hidden />=
+                    <input hidden />
+                    =
                   </label>
                   <Input
                     type="number"
@@ -717,8 +724,15 @@ const CreateBookingPopup = (props) => {
                   <input hidden />
                   {t('bookingpop.label6')}
                 </label>
-                <span>{t('bookingpop.label7')}:</span>
-                <span className="amnt">{accomodation} €</span>
+                <span>
+                  {t('bookingpop.label7')}
+                  :
+                </span>
+                <span className="amnt">
+                  {accomodation}
+                  {' '}
+                  €
+                </span>
               </div>
             </Col>
 
@@ -728,7 +742,9 @@ const CreateBookingPopup = (props) => {
                 onClick={addMoreService}
                 role="presentation"
               >
-                <PlusOutlined /> {t('bookingpop.label8')}
+                <PlusOutlined />
+                {' '}
+                {t('bookingpop.label8')}
               </div>
             </Col>
 
@@ -783,7 +799,8 @@ const CreateBookingPopup = (props) => {
                           </Col>
 
                           <label htmlFor="x">
-                            <input hidden />X
+                            <input hidden />
+                            X
                           </label>
                           <Col span={4}>
                             <Form.Item name={[ele, 'serviceQuantity']}>
@@ -796,7 +813,8 @@ const CreateBookingPopup = (props) => {
                           </Col>
 
                           <label htmlFor="plus">
-                            <input hidden />+
+                            <input hidden />
+                            +
                           </label>
                           <Col span={4}>
                             <Form.Item name={[ele, 'serviceTax']}>
@@ -809,7 +827,8 @@ const CreateBookingPopup = (props) => {
                           </Col>
 
                           <label htmlFor="equal">
-                            <input hidden />=
+                            <input hidden />
+                            =
                           </label>
                           <Col span={4}>
                             <Form.Item name={[ele, 'serviceAmount']}>
@@ -835,9 +854,12 @@ const CreateBookingPopup = (props) => {
             <Col span={24}>
               <div className="amnt-total">
                 <h4>
-                  {t('bookingpop.label10')}:{' '}
-                  {Math.round(total * 100) / 100 +
-                    Math.round(accomodation * 100) / 100}{' '}
+                  {t('bookingpop.label10')}
+                  :
+                  {' '}
+                  {Math.round(total * 100) / 100
+                    + Math.round(accomodation * 100) / 100}
+                  {' '}
                   €
                 </h4>
               </div>
@@ -881,7 +903,9 @@ const CreateBookingPopup = (props) => {
             <Col span={24}>
               <div className="outstanding">
                 <label htmlFor="depo">
-                  {t('bookingpop.label12')}:{' '}
+                  {t('bookingpop.label12')}
+                  :
+                  {' '}
                   <span>
                     {/* {deposit}€ (0,00 %) */}
                     {depositType === '%'
@@ -890,11 +914,13 @@ const CreateBookingPopup = (props) => {
                   </span>
                 </label>
                 <label htmlFor="amount">
-                  {t('bookingpop.label14')}:{' '}
+                  {t('bookingpop.label14')}
+                  :
+                  {' '}
                   <span>
-                    {Math.round(total * 100) / 100 +
-                      Math.round(accomodation * 100) / 100 -
-                      deposit}
+                    {Math.round(total * 100) / 100
+                      + Math.round(accomodation * 100) / 100
+                      - deposit}
                     €
                   </span>
                 </label>
@@ -922,7 +948,9 @@ const CreateBookingPopup = (props) => {
                 {t('strings.cancel')}
               </Button>
               <Button type="primary" htmlType="submit">
-                {t('strings.save')} {t('strings.reservations')}
+                {t('strings.save')}
+                {' '}
+                {t('strings.reservations')}
               </Button>
             </Form.Item>
           </Col>

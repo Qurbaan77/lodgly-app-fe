@@ -159,13 +159,13 @@ const Login = () => {
                 </div>
 
                 <div className="q-links">
-                  <p>
+                  {/* <p>
                     Don
                     <span>&apos;</span>
                     t have an account yet?
                     {' '}
                     <Link to="/register">Register now</Link>
-                  </p>
+                  </p> */}
 
                   <p>
                     Forget your password?

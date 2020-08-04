@@ -143,15 +143,15 @@ const AddUnitType = () => {
       rows: {
         1: {
           id: '1',
-          label: 'Rooms to Sell',
+          label: t('addunity.label2'),
         },
         2: {
           id: '2',
-          label: 'Price per night',
+          label: t('addunity.label1'),
         },
         3: {
           id: '3',
-          label: 'Minimum stay',
+          label: t('addunity.label3'),
         },
       },
       columns: {
@@ -280,11 +280,11 @@ const AddUnitType = () => {
 
   const isLimitReached = totalUnit + 1 > subscribedUnits;
   const normalSaveUnitBtn = (
-    <Button onClick={() => setShowPanel(false)}>Add unit</Button>
+    <Button onClick={() => setShowPanel(false)}>{t('addunity.button1')}</Button>
   );
   const disbledSaveUnitBtn = (
-    <Tooltip title="You are not allowed to create more units, Please upgrade your plan" color="gold">
-      <Button onClick={() => setShowPanel(false)} disabled={isLimitReached}>Add unit</Button>
+    <Tooltip title={t('addunity.tooltip')} color="gold">
+      <Button onClick={() => setShowPanel(false)} disabled={isLimitReached}>{t('addunity.button1')}</Button>
     </Tooltip>
   );
   const btn = isLimitReached ? disbledSaveUnitBtn : normalSaveUnitBtn;

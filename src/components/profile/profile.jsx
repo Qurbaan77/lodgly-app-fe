@@ -96,6 +96,7 @@ const Profile = () => {
       setNotifyType('success');
       setNotifyMsg(msg);
       getUserInfo();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
@@ -111,6 +112,7 @@ const Profile = () => {
       setNotifyType('success');
       setNotifyMsg(msg);
       getCompanyInfo();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
@@ -125,6 +127,7 @@ const Profile = () => {
     if (statusCode === 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
@@ -143,7 +146,7 @@ const Profile = () => {
     action: `${server}/users/photo/${userId}`,
     onChange(info) {
       // if (info.file.status !== 'uploading') {
-      //   console.log(info.file, info.fileList);
+      // console.log(info.file, info.fileList);
       // }
       if (info.file.status === 'done') {
         message.success(`${info.file.name} file uploaded successfully`);
@@ -381,7 +384,7 @@ const Profile = () => {
                                   validator(rule, value) {
                                     if (
                                       !value
-                                      || getFieldValue('newPassword') === value
+|| getFieldValue('newPassword') === value
                                     ) {
                                       return Promise.resolve();
                                     }

@@ -120,7 +120,7 @@ const CheckoutForm = ({
               />
             </Form.Item>
             <Button type="primary" disabled={!stripe} htmlType="submit">
-              submit Details
+              Submit Details
             </Button>
           </Form>
         )

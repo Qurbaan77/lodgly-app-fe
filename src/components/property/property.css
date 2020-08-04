@@ -712,7 +712,7 @@ body {
 .unit-filter .ant-picker-range {
   border: 1.5px solid #eaeaea;
   line-height: 2;
-  padding: 6px 11px 6px;
+  padding: 8px 11px 8px;
 }
 
 .d-flex {
@@ -727,10 +727,10 @@ body {
 .unit-filter .ant-picker {
   border: 1.5px solid #eaeaea;
   line-height: 2;
-  padding: 6px 11px 6px;
+  padding: 8px 11px 8px;
 }
 .update-cal button {
-  margin-top: -4px;
+  margin-top: -6px;
   margin-left: 10px;
   font-size: 14px;
 }

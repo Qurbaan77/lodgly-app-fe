@@ -45,15 +45,14 @@ const Services = () => {
       title: 'Action',
       dataIndex: 'action',
       key: 'x',
-      render: (record) => (
+      render: (text, record) => (
         <div className="service-margin">
-          <div onClick={() => edit(record.id)} role="button" aria-hidden="true">
+          <div onClick={() => edit(record.id)} role="presentation">
             {t('strings.edit')}
           </div>
           <div
             onClick={() => delRow(record.id)}
-            role="button"
-            aria-hidden="true"
+            role="presentation"
           >
             {t('strings.delete')}
           </div>

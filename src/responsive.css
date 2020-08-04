@@ -51,7 +51,6 @@
 
 
 
-
 /********************Sidebar Menu **************/
 
 
@@ -117,6 +116,76 @@
 
 
 
+/*********** 4 AUgust *************/
+
+
+#basic_price * {
+    margin-right: 10px;
+}
+
+
+.filter-select .anticon.anticon-down {
+    position: absolute;
+    top: 13px;
+    right: 10px;
+    color: rgba(0,0,0,.25);
+    font-size: 12px;
+}
+
+.additionl-link {
+    cursor: pointer;
+}
+
+.additionl-link:hover {
+    color: #fab52c;
+}
+.service-margin {
+    display: flex;
+}
+
+.service-margin * {
+    margin: 0px 5px;
+}
+
+.services-list th.ant-table-cell {
+    white-space: nowrap;
+}
+
+.submenu-heading a {
+    color: #999!important;
+}
+
+.submenu-heading:hover .anticon {
+    color: #fab52c!important;
+}
+
+.submenu-heading:hover a {
+    color: #fab52c!important;
+}
+
+
+.property-page-view .ant-menu .property-nav .ant-menu-submenu-arrow:after, .property-page-view .ant-menu .property-nav .ant-menu-submenu-arrow:before {
+    color: #fab52c;
+    background-image: linear-gradient(90deg,#fab52c,#fab52c);
+}
+
+
+
+.property-page-view .ant-menu .property-nav .ant-menu-sub a {
+    color: #999!important;
+}
+
+.property-page-view .ant-menu .property-nav .ant-menu-sub a:hover {
+    color: #fab52c!important;
+}
+
+.property-page-view .ant-menu .property-nav .ant-menu-sub {
+    background: #fbfbfc;
+    position: relative;
+}
+
+
+
 
 
 
@@ -153,8 +222,9 @@
         max-width: 0!important;
         min-width: 0!important;
         opacity: 0;
-        position: absolute;
+        position: fixed;
         top: -1px;
+        bottom: 0;
     }
     
     .wrapper .ant-layout.ant-layout-has-sider > .ant-layout {
@@ -177,6 +247,7 @@
     
     .search-box {
         padding-right: 20px;
+        display: inline-block;
     }
 
     .search-content.search-expand {
@@ -235,7 +306,7 @@
     }
     
     .wrapper.wrapper-expand .side-menu{
-        z-index: 9;
+        z-index: 9999;
     }
     
     .sidebar-logo {
@@ -274,6 +345,15 @@
     
     .ant-modal {
         max-width: calc(100vw - 0px);
+    }
+
+    .page-header {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .page-header h1 {
+        width: 100%;
+        text-align: center;
     }
     
 
@@ -324,8 +404,23 @@
         padding: 15px 0px;
     }
     
+    .booking-list-conatiner {
+        height: auto;
+        margin-bottom: 50px;
+    }
+    .booking-details {
+        padding: 0;
+    }
     
-    
+    .additional-guest .ant-form-item-label>label {
+        font-size: 12px;
+    }
+
+    .accommodation .service-form .ant-select {
+        width: 100%!important;
+    }
+
+
     
     /*********** Property ***********/
     
@@ -359,6 +454,25 @@
         width: 50%;
     }
 
+    .unit-filter [class*=ant-col-] {
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .unit-filter [class*=ant-col-] .ant-row.ant-form-item {
+        padding: 0!important;
+    }
+
+    .unit-filter .ant-picker {
+        padding: 10px 11px;
+        width: 100%;
+    }
+
+    .group-action {
+        width: 30%;
+    }
+
 
      /************ Group **************/
 
@@ -366,6 +480,17 @@
         padding: 8px 11px 8px;
     }
 
+    .group-people {
+        display: none;
+    }
+
+    .panel-box.units.editunitname .group-action {
+        width: 50%;
+    }
+
+    .panel-box {
+        padding: 15px 15px;
+    }
 
     /************ Cleaning Group **************/
 
@@ -462,4 +587,60 @@
         max-width: 100%;
     }
 
+    .apexcharts-canvas {
+        margin: 0px auto;
     }
+
+
+ /************  Invoice **************/
+
+ .add-invoice-popup .invoice-border [class*=ant-col-] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .add-invoice-popup .additional-fields [class*=ant-col-] {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .add-invoice-popup .amount-field {
+        max-width: 100%;
+    }
+
+     /************  Calendar **************/
+
+    .calendar-btn .ant-btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+
+      /************  Team **************/
+
+
+    .custom-table.subuser-table table th {
+        padding: 10px 10px;
+    }
+    .custom-table.subuser-table table td {
+        padding: 10px 10px;
+    }
+
+
+      /************  Owner **************/
+    
+.owner-list .custom-table table th {
+    white-space: nowrap;
+}
+
+.owner-list .custom-table table td {
+    white-space: nowrap;
+}
+
+.owner-list {
+    overflow: auto;
+}
+
+
+
+}

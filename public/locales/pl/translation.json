@@ -1,5 +1,6 @@
 {
   "strings": {
+    "time": "CZAS",
     "days": "Wybierać",
     "name": "Imię",
     "save": "Zapisać",
@@ -291,7 +292,9 @@
     "tag1":"poz.1",
     "tag2":"poz.2",
     "tag3":"poz.3",
-   
+    "tooltip":"Nie masz uprawnień do tworzenia rezerwacji",
+    "tooltip1":"Nie masz uprawnień do edycji rezerwacji",
+    "title1":"Utwórz rezerwację",
     "heading3":"Rezerwować",
     "heading5":" Dodaj dodatkowego gościa",
     "heading4":"  Zarezerwowane",
@@ -312,7 +315,8 @@
 "addunity": {
 
 
-  
+  "tooltip":"Nie możesz tworzyć kolejnych jednostek. Zaktualizuj swój plan",
+    "button1":"Dodaj jednostkę",
   "label1":" Cena za noc",
   "label2":" Pokoje do sprzedaży",
   "label3":"  Minimalny pobyt",
@@ -331,12 +335,13 @@
 
 },
 "property": {
-
-
-  
   "heading1":"Nie masz uprawnień do zapisania nowej właściwości",
   "heading2":"Typ nieruchomości",
   "heading3":"Moja własność demonstracyjna",
+  "heading4":"Informacja główna",
+  "heading5":"Detale",
+  "heading6":"Wymienianie kolejno",
+  "heading7":"Zdjęcie",
   "label1":"Sypialnie",
   "label2":"Pełne łazienki",
   "label3":"Pół łazienki",
@@ -540,7 +545,9 @@
    
 },
 "invoice": {
-
+  "button1":"Dodaj fakturę",
+  "tootltip":"Nie masz uprawnień do tworzenia faktur",
+  "tootltip1":"wybierz właściwość z górnego paska nawigacyjnego",
   "heading1":"Utwórz nową fakturę",
   "label1":" Faktura",
   "label2":" Proszę podać datę",
@@ -584,6 +591,8 @@
   "label14": "Zarejestruj się teraz"
 },
 "owner": {
+  "button1":"  Dodaj nowego właściciela",
+  "tooltip1":"Nie masz uprawnień do tworzenia nowego właściciela",
   "heading1": "Właściciel",
   "label1": " Użytkownik podrzędny",
   "label2": " Email",
@@ -604,8 +613,8 @@
   "label17": "Zapisz własność właściciela",
   "label18": "Obecnie nie utworzono żadnego właściciela",
   "label19": "Zaktualizuj właściciela",
-  "label20": "Informacje o właścicielu"
- 
+  "label20": "Informacje o właścicielu",
+  "label21": "utwórz właściciela"
 },
 "billinghistory": {
   "heading1": "Historia rozliczeń",
@@ -801,7 +810,7 @@
  
 },
 "team": {
-  
+  "tooltip": "Nie masz uprawnień, aby dodać nowego użytkownika podrzędnego",
   "label1": "  Dodaj nowego użytkownika podrzędnego",
   "label2": " Zespół",
   "label3": "Użytkownik podrzędny",
@@ -821,6 +830,14 @@
   
   "label1": "Nie masz aktywnej subskrypcji",
   "label2": "Aktywuj subskrypcję"
+  
+ 
+},
+"nolist": {
+  
+  "button1": "Dodaj właściwość",
+  "tooltip1": "Nie masz uprawnień do tworzenia nowej usługi",
+  "heading1":"Nie ma jeszcze żadnej nieruchomości"
   
  
 }

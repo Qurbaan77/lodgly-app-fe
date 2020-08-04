@@ -268,12 +268,12 @@ const Booking = () => {
         form.resetFields();
       }}
     >
-      Create Booking
+      {t('booking.title1')}
     </Button>
   );
   const disableButton = (
     <Tooltip
-      title="You are not authorize to create booking"
+      title={t('booking.tooltip')}
       color="gold"
     >
       <Button
@@ -287,11 +287,10 @@ const Booking = () => {
           form.resetFields();
         }}
       >
-        Create Booking
+        {t('booking.title1')}
       </Button>
     </Tooltip>
   );
-
   const editButton = (
     <FormOutlined
       onClick={() => editBooking(currentBooking)}
@@ -299,7 +298,7 @@ const Booking = () => {
   );
   const disableEditButton = (
     <Tooltip
-      title="You are not authorize to edit booking"
+      title={t('booking.tooltip1')}
       color="gold"
     >
       <FormOutlined

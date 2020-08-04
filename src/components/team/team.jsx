@@ -124,7 +124,7 @@ const TeamListing = () => {
     </Button>
   );
   const disabledButton = (
-    <Tooltip title="You are not authorize to add new sub user" color="gold">
+    <Tooltip title={t('team.tooltip')} color="gold">
       <Button
         type="primary"
         icon={<PlusOutlined />}

@@ -109,10 +109,15 @@
 
 .subscription-plan-list p {
   font-size: 12px;
-  text-align: right;
+  text-align: left;
   margin: 0;
-  color: #999;
+  color: #fab52c;
 }
+
+.total-billing-price h2 {
+  margin: 0;
+}
+
 
 .billing-page .page-header {
   padding-bottom: 0;
@@ -133,10 +138,12 @@
 }
 
 .amount-field {
-  max-width: 80px;
   border: 1.5px solid #eaeaea !important;
   padding: 8px 15px;
   max-height: 40px;
+}
+.into {
+  margin-top: 30px;
 }
 
 .amount-field p {
@@ -149,4 +156,12 @@
 .stripe-element {
   width: 400px !important;
   margin: 40px 0 40px 0 !important;
+}
+.user-pic-success img {
+  width: 100px;
+  height: 100px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  object-fit: cover;
+  object-position: center;
 }

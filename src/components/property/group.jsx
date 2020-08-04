@@ -257,7 +257,7 @@ const Groups = () => {
               label={t('group.title5')}
               style={{
                 display: 'inline-block',
-                width: 'calc(40% - 5px)',
+                width: 'calc(50% - 5px)',
                 marginRight: 8,
               }}
             >
@@ -267,7 +267,7 @@ const Groups = () => {
             <Form.Item
               name="nextCheck"
               label={t('group.title6')}
-              style={{ display: 'inline-block', width: 'calc(40% - 5px)' }}
+              style={{ display: 'inline-block', width: 'calc(50% - 5px)' }}
             >
               <DatePicker />
             </Form.Item>
@@ -275,6 +275,7 @@ const Groups = () => {
 
           <Form.Item>
             <Button
+              className="border-btn"
               style={{ marginRight: 10 }}
               onClick={() => {
                 setVisible(false);

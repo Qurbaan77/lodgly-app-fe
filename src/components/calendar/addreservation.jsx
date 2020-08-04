@@ -352,7 +352,9 @@ const AddReservation = (props) => {
             <Col span={24}>
               <div className="additional-edit">
                 <div>
-                  <EditOutlined /> {t('addreservation.heading1')}
+                  <EditOutlined />
+                  {' '}
+                  {t('addreservation.heading1')}
                 </div>
               </div>
             </Col>
@@ -557,7 +559,9 @@ const AddReservation = (props) => {
                           onClick={addMore}
                           role="presentation"
                         >
-                          <PlusOutlined /> {t('addreservation.heading12')}
+                          <PlusOutlined />
+                          {' '}
+                          {t('addreservation.heading12')}
                         </div>
                       </Col>
                     </Row>
@@ -624,7 +628,8 @@ const AddReservation = (props) => {
                     />
                   </Form.Item>
                   <label htmlFor="number">
-                    <input hidden />X
+                    <input hidden />
+                    X
                   </label>
                   <Input
                     type="number"
@@ -635,7 +640,8 @@ const AddReservation = (props) => {
                     onChange={(e) => setNight(e.target.value)}
                   />
                   <label htmlFor="amount">
-                    <input hidden />=
+                    <input hidden />
+                    =
                   </label>
                   <Input
                     name="totalAAmount"
@@ -670,7 +676,8 @@ const AddReservation = (props) => {
                     }}
                   />
                   <label htmlFor="discount">
-                    <input hidden />X
+                    <input hidden />
+                    X
                   </label>
                   <Form.Item name="discountType">
                     <Select
@@ -683,7 +690,8 @@ const AddReservation = (props) => {
                     </Select>
                   </Form.Item>
                   <label htmlFor="equal">
-                    <input hidden />=
+                    <input hidden />
+                    =
                   </label>
                   <Input
                     type="number"
@@ -710,8 +718,15 @@ const AddReservation = (props) => {
                   <input hidden />
                   {t('addreservation.heading22')}
                 </label>
-                <span>{t('addreservation.heading23')}:</span>
-                <span className="amnt">{accomodation} €</span>
+                <span>
+                  {t('addreservation.heading23')}
+                  :
+                </span>
+                <span className="amnt">
+                  {accomodation}
+                  {' '}
+                  €
+                </span>
               </div>
             </Col>
 
@@ -721,7 +736,9 @@ const AddReservation = (props) => {
                 onClick={addMoreService}
                 role="presentation"
               >
-                <PlusOutlined /> {t('addreservation.heading24')}
+                <PlusOutlined />
+                {' '}
+                {t('addreservation.heading24')}
               </div>
             </Col>
 
@@ -776,7 +793,8 @@ const AddReservation = (props) => {
                           </Col>
 
                           <label htmlFor="x">
-                            <input hidden />X
+                            <input hidden />
+                            X
                           </label>
                           <Col span={4}>
                             <Form.Item name={[ele, 'serviceQuantity']}>
@@ -789,7 +807,8 @@ const AddReservation = (props) => {
                           </Col>
 
                           <label htmlFor="plus">
-                            <input hidden />+
+                            <input hidden />
+                            +
                           </label>
                           <Col span={4}>
                             <Form.Item name={[ele, 'serviceTax']}>
@@ -802,7 +821,8 @@ const AddReservation = (props) => {
                           </Col>
 
                           <label htmlFor="equal">
-                            <input hidden />=
+                            <input hidden />
+                            =
                           </label>
                           <Col span={4}>
                             <Form.Item name={[ele, 'serviceAmount']}>
@@ -828,9 +848,12 @@ const AddReservation = (props) => {
             <Col span={24}>
               <div className="amnt-total">
                 <h4>
-                  {t('addreservation.heading26')}:{' '}
-                  {Math.round(total * 100) / 100 +
-                    Math.round(accomodation * 100) / 100}{' '}
+                  {t('addreservation.heading26')}
+                  :
+                  {' '}
+                  {Math.round(total * 100) / 100
+                    + Math.round(accomodation * 100) / 100}
+                  {' '}
                   €
                 </h4>
               </div>
@@ -874,7 +897,9 @@ const AddReservation = (props) => {
             <Col span={24}>
               <div className="outstanding">
                 <label htmlFor="depo">
-                  {t('addreservation.heading28')}:{' '}
+                  {t('addreservation.heading28')}
+                  :
+                  {' '}
                   <span>
                     {/* {deposit}€ (0,00 %) */}
                     {depositType === '%'
@@ -883,11 +908,13 @@ const AddReservation = (props) => {
                   </span>
                 </label>
                 <label htmlFor="amount">
-                  {t('addreservation.heading29')}:{' '}
+                  {t('addreservation.heading29')}
+                  :
+                  {' '}
                   <span>
-                    {Math.round(total * 100) / 100 +
-                      Math.round(accomodation * 100) / 100 -
-                      deposit}
+                    {Math.round(total * 100) / 100
+                      + Math.round(accomodation * 100) / 100
+                      - deposit}
                     €
                   </span>
                 </label>
@@ -915,7 +942,9 @@ const AddReservation = (props) => {
                 {t('strings.cancel')}
               </Button>
               <Button type="primary" htmlType="submit">
-                {t('strings.save')} {t('strings.reservation')}
+                {t('strings.save')}
+                {' '}
+                {t('strings.reservat')}
               </Button>
             </Form.Item>
           </Col>

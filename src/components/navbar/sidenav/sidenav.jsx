@@ -26,6 +26,7 @@ import unitIcon from '../../../assets/images/menu/unit-type-icon.png';
 import taskIcon from '../../../assets/images/menu/task-icon.png';
 import channelIcon from '../../../assets/images/menu/channel-icon.png';
 import closeicon from '../../../assets/images/menu/close-icon.png';
+import arrow from '../../../assets/images/Polygon.png';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -216,6 +217,7 @@ const Sidenav = ({
             <div>
               <img src={propertyIcon} alt="property-icon" />
               <Link to="/propertylist">{t('sidebar.menu3')}</Link>
+              <img src={arrow} alt="" className="menu-arrow" hidden={!propertyData.length} />
             </div>
           )}
         >

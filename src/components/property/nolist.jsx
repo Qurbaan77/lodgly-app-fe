@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import { Button, Tooltip } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import propertyplace from '../../assets/images/property-placeholder.png';
 
 const NoList = ({ isSubUser, canWrite }) => {
+  const { t } = useTranslation();
   const history = useHistory();
   const enableButton = (
     <Button
@@ -13,18 +15,18 @@ const NoList = ({ isSubUser, canWrite }) => {
       icon={<PlusOutlined />}
       onClick={() => history.push('/addproperty')}
     >
-      Add Property
+      {t('nolist.button1')}
     </Button>
   );
   const disableButton = (
-    <Tooltip title="You are not authorize to create new property" color="gold">
+    <Tooltip title={t('nolist.tooltip1')} color="gold">
       <Button
         disabled
         type="primary"
         icon={<PlusOutlined />}
         onClick={() => history.push('/addproperty')}
       >
-        Add Property
+        {t('nolist.button1')}
       </Button>
     </Tooltip>
   );
@@ -34,8 +36,8 @@ const NoList = ({ isSubUser, canWrite }) => {
     <div className="add-team-page">
       <div className="add-subuser">
         <img src={propertyplace} alt="subuser" />
-        <h4>Property</h4>
-        <p>There is no property yet</p>
+        <h4>{t('strings.property')}</h4>
+        <p>{t('nolist.heading1')}</p>
         {btn2}
       </div>
     </div>

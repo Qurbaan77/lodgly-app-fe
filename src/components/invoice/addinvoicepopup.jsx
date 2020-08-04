@@ -597,7 +597,7 @@ const AdInvoicePopup = (props) => {
                 htmlType="submit"
                 onClick={handleDraft}
               >
-                {t('strings.save_Draft')}
+                {t('strings.save_draft')}
               </Button>
               <Button type="primary" htmlType="submit">
                 {t('strings.issue')}

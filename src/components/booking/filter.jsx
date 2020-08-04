@@ -201,6 +201,7 @@ const BookingFilter = (props) => {
                     <Col span={24}>
                       <Form.Item>
                         <Button
+                          className="border-btn"
                           style={{ marginRight: 10 }}
                           onClick={handleCancel}
                         >

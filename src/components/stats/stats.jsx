@@ -427,6 +427,7 @@ const ReservationChannelChart = () => {
           options: {
             chart: {
               width: 200,
+              height: 200,
             },
             legend: {
               position: 'bottom',

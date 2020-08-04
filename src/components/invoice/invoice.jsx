@@ -275,30 +275,30 @@ const Invoice = () => {
 
   const enableButton = (
     <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-      Add Invoice
+      {t('invoice.button1')}
     </Button>
   );
   const disabledButton = (
-    <Tooltip title="You are not authorize to create Invoice" color="gold">
+    <Tooltip title={t('invoice.tootltip')} color="gold">
       <Button
         type="primary"
         icon={<PlusOutlined />}
         onClick={show}
         disabled
       >
-        Add Invoice
+        {t('invoice.button1')}
       </Button>
     </Tooltip>
   );
   const propertySelectButton = (
-    <Tooltip title="please select property from top navbar" color="gold">
+    <Tooltip title={t('invoice.tootltip1')} color="gold">
       <Button
         type="primary"
         icon={<PlusOutlined />}
         onClick={show}
         disabled
       >
-        Add Invoice
+        {t('invoice.button1')}
       </Button>
     </Tooltip>
   );
@@ -373,12 +373,16 @@ const Invoice = () => {
                             {el.date.slice(0, 10)}
                           </td>
                           <td>
-                            {el.label ||
-                              `INVOICE ${el.id} - ${new Date().getFullYear()}`}
+                            {el.label
+                              || `INVOICE ${el.id} - ${new Date().getFullYear()}`}
                           </td>
                           <td>{el.type || 'Invoice'}</td>
                           <td>{el.clientName}</td>
-                          <td>{el.total} EUR</td>
+                          <td>
+                            {el.total}
+                            {' '}
+                            EUR
+                          </td>
                           <td>{el.status}</td>
                           <td>
                             <div className="action-icon">
@@ -443,11 +447,15 @@ const Invoice = () => {
 
                     {checkedInvoice.length ? (
                       <Tag color="#FB4B56">
-                        {checkedInvoice.length} {t('strings.selected')}
+                        {checkedInvoice.length}
+                        {' '}
+                        {t('strings.selected')}
                       </Tag>
                     ) : (
                       <Tag color="#FB4B56" hidden>
-                        3 {t('strings.selected')}
+                        3
+                        {' '}
+                        {t('strings.selected')}
                       </Tag>
                     )}
                     <div className="filter-icons">

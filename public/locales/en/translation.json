@@ -1,5 +1,6 @@
 {
   "strings": {
+    "time": "Time",
     "days": "days",
     "name": "Name",
     "save": "Save",
@@ -319,7 +320,9 @@
     "tag1": "item 1",
     "tag2": "item 2",
     "tag3": "item 3",
-
+    "tooltip":"You are not authorize to create booking",
+    "tooltip1":"You are not authorize to edit booking",
+    "title1":"Create Booking",
     "heading3": "Booking",
     "heading5": " Add Additional Guest",
     "heading4": "  Booked",
@@ -333,6 +336,8 @@
     "label6": "  Add Additional Guest"
   },
   "addunity": {
+    "tooltip":"You are not allowed to create more units, Please upgrade your plan",
+    "button1":"Add unit",
     "label1": " Price per Night",
     "label2": " Rooms to Sell",
     "label3": " Minimum Stay",
@@ -380,6 +385,10 @@
     "heading29": "  Accommodation deposit"
   },
   "property": {
+    "heading4":"Main Information",
+    "heading5":"Details",
+    "heading6":"Listing",
+    "heading7":"Photo",
     "heading1": "You are not authorize to save New Property",
     "heading2": "Property Type",
     "heading3": "My Demo Property",
@@ -533,6 +542,9 @@
   },
   "invoice": {
     "heading1": " Create new invoice",
+    "button1":"Add Invoice",
+    "tootltip":"You are not authorize to create Invoice",
+    "tootltip1":"please select property from top navbar",
     "label1": " Invoice",
     "label2": " Please enter date",
     "label3": "Please enter time",
@@ -571,6 +583,8 @@
     "label14": "Register now"
   },
   "owner": {
+    "button1":"  Add New Owner",
+    "tooltip1":"You are not authorize to create new owner",
     "heading1": "Owner",
     "label1": " Sub User",
     "label2": " Email",
@@ -588,11 +602,12 @@
     "label14": "Document Number",
     "label15": "Please select your property!",
     "label16": "Please select property",
-    "label17": "   Save Owner Property",
+    "label17": "Save Owner Property",
     "label18": "Currently there are no Owner created",
     "label19": "Update Owner",
     "label20": "Owner Information",
-    "label21": "Properties"
+    "label21": "Properties",
+    "label22": "Create Owner"
   },
   "billinghistory": {
     "heading1": "Billing History",
@@ -788,12 +803,12 @@
  
 },
 "team": {
-  
-  "label1": "  Add New Sub-User",
-  "label2": " Team",
+  "tooltip":"You are not authorize to add new sub user",
+  "label1": " Add New Sub-User",
+  "label2": "Team",
   "label3": "Sub User",
   "label4": "Role",
-  "label5": " Job Title | City of London, United Kingdom",
+  "label5": "Job Title | City of London, United Kingdom",
   "label6": "Currently there are no Sub users created"
   
 },
@@ -809,6 +824,14 @@
   
   "label1": "You have no active subscription",
   "label2": "Activate subscription"
+  
+ 
+},
+"nolist": {
+  
+  "button1": "Add Property",
+  "tooltip1": "You are not authorize to create new property",
+  "heading1":"There is no property yet"
   
  
 }

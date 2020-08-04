@@ -241,7 +241,7 @@ const Property = () => {
 
         <div className="panel-container">
           <Collapse defaultActiveKey={['1']} accordion>
-            <Panel header="Main Information" key="1">
+            <Panel header={t('property.heading4')} key="1">
               <div className="main-info-form">
                 <Form form={form} onFinish={onFinish}>
                   <Row gutter={[16, 0]}>
@@ -365,7 +365,7 @@ const Property = () => {
               </div>
             </Panel>
 
-            <Panel header="Details" key="2">
+            <Panel header={t('property.heading5')} key="2">
               <div className="main-info-form">
                 <Form form={form} onFinish={onFinish}>
                   <Row gutter={[16, 0]}>
@@ -447,7 +447,7 @@ const Property = () => {
               </div>
             </Panel>
 
-            <Panel header="Listing" key="3">
+            <Panel header={t('property.heading6')} key="3">
               <div className="listing-info-form">
                 <Form>
                   <Row gutter={[16, 0]}>
@@ -495,7 +495,7 @@ const Property = () => {
               </div>
             </Panel>
 
-            <Panel header="Photo" key="4">
+            <Panel header={t('property.heading7')} key="4">
               <div className="main-info-form">
                 <Form>
                   <Row gutter={[16, 0]}>

@@ -120,7 +120,7 @@ top: 12px;
 }
 
 .search-box {
-display: inline-block;
+display: none;
 padding-right: 30px;
 vertical-align: middle;
 }
