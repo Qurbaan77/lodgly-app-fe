@@ -21,8 +21,6 @@ import Wrapper from '../wrapper';
 import DeletePopup from '../property/deletepopup';
 
 import property1 from '../../assets/images/property-1.png';
-import property2 from '../../assets/images/property-2.png';
-import property3 from '../../assets/images/property-3.png';
 import owner from '../../assets/images/profile_user.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
 import subuser from '../../assets/images/subuser.jpg';
@@ -38,14 +36,16 @@ const Owner = () => {
   const [visible2, setVisible2] = useState(false);
   const [country, setCountry] = useState(null);
   const [propertyData, setPropertyData] = useState([]);
-  const [subUserData, setSubUserData] = useState([]);
+  const [ownerData, setOwnerData] = useState([]);
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const [curOwner, setCurOwner] = useState();
   const [subscribed, setSubscribed] = useState();
-  const [onTrial, setOnTrial] = useState();
+  const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
   const [editOpen, setEditOpen] = useState(false);
+  const [selectedPropertyId, setSelectedPropertyId] = useState([]);
+  const [properties, setProperties] = useState([]);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
 
@@ -92,6 +92,7 @@ const Owner = () => {
       affiliateId: userId,
     });
     const data = response.data.propertiesData;
+    setProperties(data);
     const arr = [];
     data
       .filter((el) => el.ownerId === 0)
@@ -108,7 +109,7 @@ const Owner = () => {
       affiliateId: userId,
     });
     if (response.data.code === 200) {
-      setSubUserData(response.data.data);
+      setOwnerData(response.data.data);
     }
   }, [userId]);
 
@@ -123,10 +124,13 @@ const Owner = () => {
       setVisible(true);
       setNotifyType('');
       const selectedProperty = [];
+      const arr = [];
       const data3 = data2.filter((el) => el.ownerId === data.id);
       data3.forEach((filter) => {
         selectedProperty.push(filter.propertyName);
+        arr.push(filter.id);
       });
+      setSelectedPropertyId(arr);
       form.setFieldsValue({
         id: data.id,
         firstname: data.fname,
@@ -146,8 +150,17 @@ const Owner = () => {
     }
   };
 
+  const handlePropertySelect = (e) => {
+    if (selectedPropertyId && selectedPropertyId.length > 0) {
+      setSelectedPropertyId(selectedPropertyId.concat(e));
+    }
+  };
+
   const onFinish = async (values) => {
     const copyValues = values;
+    if (selectedPropertyId && selectedPropertyId.length > 0) {
+      copyValues.properties = selectedPropertyId;
+    }
     copyValues.affiliateId = userId;
     const response = await userInstance.post('/addOwner', copyValues);
     const statusCode = response.data.code;
@@ -211,7 +224,7 @@ const Owner = () => {
 
   const pageContent = (
     <>
-      {subUserData.length ? (
+      {ownerData.length ? (
         <Wrapper>
           <div className="owner-page">
             <div className="page-header">
@@ -237,7 +250,7 @@ const Owner = () => {
                   </thead>
 
                   <tbody>
-                    {subUserData.map((el) => (
+                    {ownerData.map((el) => (
                       <tr>
                         <td>
                           <div className="owner-info">
@@ -263,9 +276,14 @@ const Owner = () => {
 
                         <td>
                           <div className="owner-property">
-                            <img src={property1} alt="property1" />
-                            <img src={property2} alt="property1" />
-                            <img src={property3} alt="property1" />
+                            {
+                              properties.forEach((ele) => {
+                                if (ele.ownerId === el.id) {
+                                  return <img src={property1} alt="property1" />;
+                                }
+                                return null;
+                              })
+                           }
                           </div>
                         </td>
 
@@ -422,10 +440,7 @@ const Owner = () => {
                     name="document"
                     style={{ paddingRight: 20 }}
                   >
-                    <Select>
-                      <Select.Option value="demo">Holiday House</Select.Option>
-                      <Select.Option value="demo">Holiday House</Select.Option>
-                    </Select>
+                    <Input />
                   </Form.Item>
                 </Col>
 
@@ -453,6 +468,7 @@ const Owner = () => {
                     mode="multiple"
                     size="large"
                     placeholder={t('owner.label16')}
+                    onSelect={(e) => handlePropertySelect(e)}
                   >
                     {propertyData.map((el) => (
                       <Option value={el.id}>{el.propertyName}</Option>

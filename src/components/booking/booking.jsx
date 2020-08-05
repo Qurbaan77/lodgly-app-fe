@@ -2,21 +2,13 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import './booking.css';
 import {
-  Form,
-  Button,
-  Row,
-  Col,
-  Tooltip,
-  Menu,
-  Dropdown,
-  Tag,
+  Form, Button, Row, Col, Tooltip, Tag, Select,
 } from 'antd';
 import {
   FormOutlined,
   UserOutlined,
   ThunderboltOutlined,
   PlusOutlined,
-  DownOutlined,
 } from '@ant-design/icons';
 // import { useTranslation } from "react-i18next";
 import { useTranslation } from 'react-i18next';
@@ -59,8 +51,8 @@ const Booking = () => {
   const [topNavId, setTopNavId] = useState();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
-  const [subscribed, setSubscribed] = useState();
-  const [onTrial, setOnTrial] = useState();
+  const [subscribed, setSubscribed] = useState(true);
+  const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
 
   const [editValues, setEditValues] = useState({});
@@ -71,7 +63,7 @@ const Booking = () => {
   const [{ bookingWrite, userId }] = userCred || [{}];
   const canWrite = bookingWrite;
   // const show = () => {
-  //   setVisible(true);
+  // setVisible(true);
   // };
 
   const toasterMessage = (type, msg) => {
@@ -88,7 +80,7 @@ const Booking = () => {
   };
 
   // const showGuest = () => {
-  //   setGuest(true);
+  // setGuest(true);
   // };
 
   const handleOk = () => {
@@ -106,9 +98,7 @@ const Booking = () => {
   const getData = useCallback(async () => {
     const res = await userInstance.get('/getUserSubscriptionStatus');
     if (res.data.code === 200) {
-      const [{
-        days, isOnTrial, isSubscribed,
-      }] = res.data.userSubsDetails;
+      const [{ days, isOnTrial, isSubscribed }] = res.data.userSubsDetails;
       setDaysLeft(parseInt(days, 10));
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
@@ -148,7 +138,7 @@ const Booking = () => {
 
     // bookingdata.filter((el) =>
     // el.propertyId === parseInt(localStorage.getItem('topNavId'), 10)).map((filter) =>
-    //   setBookingData([filter]);
+    // setBookingData([filter]);
     // );
 
     // console.log('guestdata', guestdata);
@@ -157,9 +147,7 @@ const Booking = () => {
       if (topNavId) {
         const arr = [];
         bookingdata
-          .filter(
-            (el) => el.propertyId === parseInt(topNavId, 10),
-          )
+          .filter((el) => el.propertyId === parseInt(topNavId, 10))
           .map((filter) => arr.push(filter));
         setBookingData(arr);
       } else {
@@ -199,7 +187,6 @@ const Booking = () => {
     setCurrentGuest(arr);
     setBooked(false);
   };
-
   const editBooking = (values) => {
     setVisibleEditBooking(true);
     setEditBookingValues(values);
@@ -220,17 +207,17 @@ const Booking = () => {
     setVisibleGuest(true);
   };
 
-  const menu = (
-    <Menu>
-      <Menu.Item key="1">Booked</Menu.Item>
-      <Menu.Item key="2">Open</Menu.Item>
-      <Menu.Item key="3">Set as Tentative</Menu.Item>
-      <Menu.Item key="4">Decline</Menu.Item>
-    </Menu>
-  );
+  // const menu = (
+  //   <Menu>
+  //     <Menu.Item key="1">Booked</Menu.Item>
+  //     <Menu.Item key="2">Open</Menu.Item>
+  //     <Menu.Item key="3">Set as Tentative</Menu.Item>
+  //     <Menu.Item key="4">Decline</Menu.Item>
+  //   </Menu>
+  // );
 
   // const onClick = () => {
-  //   setVisible(true);
+  // setVisible(true);
   // };
 
   const closeGuest = () => {
@@ -255,7 +242,7 @@ const Booking = () => {
       copyBookingData
         .filter(
           (el) => new Date(el.startDate) >= filterValues.groupname[0]._d
-              && new Date(el.startDate) <= filterValues.groupname[1]._d,
+&& new Date(el.startDate) <= filterValues.groupname[1]._d,
         )
         .map((filter) => filterBooked.push(filter));
       setBookingData(filterAgain.length > 0 ? filterAgain : filterBooked);
@@ -281,10 +268,7 @@ const Booking = () => {
     </Button>
   );
   const disableButton = (
-    <Tooltip
-      title={t('booking.tooltip')}
-      color="gold"
-    >
+    <Tooltip title={t('booking.tooltip')} color="gold">
       <Button
         disabled="true"
         type="primary"
@@ -301,15 +285,10 @@ const Booking = () => {
     </Tooltip>
   );
   const editButton = (
-    <FormOutlined
-      onClick={() => editBooking(currentBooking)}
-    />
+    <FormOutlined onClick={() => editBooking(currentBooking)} />
   );
   const disableEditButton = (
-    <Tooltip
-      title={t('booking.tooltip1')}
-      color="gold"
-    >
+    <Tooltip title={t('booking.tooltip1')} color="gold">
       <FormOutlined
         disabled="true"
         onClick={() => editBooking(currentBooking)}
@@ -324,6 +303,18 @@ const Booking = () => {
   const btn2 = isSubUser ? btn1 : enableButton;
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+  const { Option } = Select;
+
+  const addStatus = async (value) => {
+    const payload = {
+      status: value,
+      bookingId: currentBooking.id,
+    };
+    const response = await userInstance.post('/setStatus', payload);
+    if (response.data.code === 200) {
+      getData();
+    }
+  };
 
   return (
     <Wrapper fun={setTopNavId}>
@@ -340,7 +331,11 @@ const Booking = () => {
       </Helmet>
       {hasAccess ? (
         <div className="booking">
-          <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
+          <Toaster
+            notifyType={notifyType}
+            notifyMsg={notifyMsg}
+            close={close}
+          />
           <div className="container">
             <Row>
               <Col span={10}>
@@ -370,10 +365,14 @@ const Booking = () => {
 
                   {bookingData.map((el, i) => (
                     <div
+                      key={el.id}
                       role="presentation"
-                      className="booking-list"
+                      className={`booking-list ${el.statusColour}`}
                       onClick={() => selectBooking(el, i)}
                     >
+                      {/* <div className="filter-checkbox">
+<Checkbox />
+</div> */}
                       <div className="detail">
                         <h3>{el.guest}</h3>
                         <p>{el.propertyName}</p>
@@ -422,7 +421,7 @@ const Booking = () => {
               <Col span={14}>
                 <div className="booking-details" hidden={booked}>
                   <h3>
-                    {currentGuest.length > 0 ? currentGuest[0].fullname : null}
+                    {currentBooking.guest}
                   </h3>
                   <ul>
                     <li>
@@ -453,13 +452,25 @@ const Booking = () => {
                         role="presentation"
                       >
                         {edit2}
-                        <Dropdown overlay={menu}>
-                          <Button>
-                            {t('booking.heading4')}
-                            {' '}
-                            <DownOutlined />
-                          </Button>
-                        </Dropdown>
+                        {/* <Dropdown overlay={menu}>
+<Button>
+{t('booking.heading4')}
+{' '}
+<DownOutlined />
+</Button>
+</Dropdown> */}
+                        <Select
+                          placeholder="Select"
+                          allowClear
+                          className="filter-menu"
+                          dropdownClassName="color-dropdown"
+                          onSelect={addStatus}
+                        >
+                          <Option value="booked">Booked</Option>
+                          <Option value="open">Open</Option>
+                          <Option value="tentative">Set as Tentative</Option>
+                          <Option value="decline">Decline</Option>
+                        </Select>
                       </div>
                     </div>
 

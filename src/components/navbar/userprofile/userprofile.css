@@ -2,6 +2,7 @@
     max-width: 100px;
     margin: 0px auto;
     position: relative;
+    min-height: 100px;
 }
 
 .user-img .anticon-setting {

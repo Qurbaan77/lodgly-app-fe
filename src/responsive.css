@@ -641,6 +641,30 @@
     overflow: auto;
 }
 
+.owner-action {
+    opacity: 1;
+}
 
+.invoice-action {
+    opacity: 1;
+}
+
+.custom-table {
+    overflow-x: auto;
+}
+.team-action {
+    opacity: 1;
+}
+.group-action {
+    opacity: 1;
+}
+
+.panel-box.units .group-action {
+    opacity: 1;
+}
+
+.ant-dropdown.ant-dropdown-placement-bottomLeft {
+    z-index: 9999;
+}
 
 }

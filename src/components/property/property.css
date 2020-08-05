@@ -72,6 +72,9 @@ body {
   margin-right: 12px;
   vertical-align: top;
 }
+.property {
+  cursor: pointer;
+}
 
 .page-header span {
   color: #b7b7b7;

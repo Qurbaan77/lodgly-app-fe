@@ -229,9 +229,8 @@ const Sidenav = ({
                   func(el.id);
                 }}
               >
-                {t('strings.propertyno')}
                 {' '}
-                {el.propertyNo}
+                {el.propertyName}
                 {' '}
               </Link>
             </Menu.Item>

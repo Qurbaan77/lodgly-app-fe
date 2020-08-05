@@ -359,6 +359,7 @@
 .amount-field p {
   margin: 0;
   line-height: 1.4;
+  font-size: small;
 }
 
 .download-img {

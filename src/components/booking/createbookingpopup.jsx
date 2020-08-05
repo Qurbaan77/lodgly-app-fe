@@ -327,7 +327,7 @@ const CreateBookingPopup = (props) => {
                   {countryList()
                     .getData()
                     .map((ele) => (
-                      <Select.Option value={ele.label}>
+                      <Select.Option value={ele.label} key={ele.label}>
                         {ele.label}
                       </Select.Option>
                     ))}
@@ -370,7 +370,7 @@ const CreateBookingPopup = (props) => {
 
   return (
     <Modal
-      title="Create Booking"
+      title={t('bookingpop.heading')}
       name="modal1"
       visible={visible}
       onOk={handleOk}

@@ -61,7 +61,7 @@ const Invoice = () => {
   const [removeId, setDeleteId] = useState(null);
   const [selectAllCheck, setSelectAllCheck] = useState(false);
   const [subscribed, setSubscribed] = useState();
-  const [onTrial, setOnTrial] = useState();
+  const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
 
   function useUpdate() {

@@ -4,6 +4,7 @@ import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
+import UserLock from '../userlock/userlock';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
 import GSTC from './GSTC';
 import { userInstance } from '../../axios/axiosconfig';
@@ -18,6 +19,9 @@ const Calendar = () => {
   const [unitData, setUnitData] = useState([]);
   const [visible, setVisible] = useState(false);
   const [topNavId, setTopNavId] = useState(0);
+  const [subscribed, setSubscribed] = useState();
+  const [onTrial, setOnTrial] = useState(true);
+  const [daysLeft, setDaysLeft] = useState();
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -142,6 +146,15 @@ const Calendar = () => {
   }, [userId]);
 
   const getData = useCallback(async () => {
+    const res = await userInstance.get('/getUserSubscriptionStatus');
+    if (res.data.code === 200) {
+      const [{
+        days, isOnTrial, isSubscribed,
+      }] = res.data.userSubsDetails;
+      setDaysLeft(parseInt(days, 10));
+      setSubscribed(JSON.parse(isSubscribed));
+      setOnTrial(JSON.parse(isOnTrial));
+    }
     const response = await userInstance.post('/getReservation', {
       affiliateId: userId,
     });
@@ -234,37 +247,45 @@ const Calendar = () => {
     </>
   );
 
-  return (
-    // <Wrapper onChange={handleChange}>
-    <Wrapper fun={setTopNavId}>
-      <div className="calendar">
-        <div className="calendar-btn">
-          {isSubUser ? (
-            btn
-          ) : (
-            <>
-              <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                {t('addreservation.heading31')}
-              </Button>
-              <Button className="border-btn" icon={<TeamOutlined />}>
-                {t('addreservation.heading32')}
-              </Button>
-            </>
-          )}
-        </div>
-        <div className="calendar-calendar">
-          <GSTC config={config} onState={onState} />
-        </div>
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
 
-        <AddReservation
-          title={t('addreservation.heading34')}
-          visible={visible}
-          onOk={handleOk}
-          close={handleCancel}
-          wrapClassName="create-booking-modal"
-          getData={getData}
-        />
-      </div>
+  return (
+
+    <Wrapper fun={setTopNavId}>
+      {
+      hasAccess
+        ? (
+          <div className="calendar">
+            <div className="calendar-btn">
+              {isSubUser ? (
+                btn
+              ) : (
+                <>
+                  <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+                    {t('addreservation.heading31')}
+                  </Button>
+                  <Button className="border-btn" icon={<TeamOutlined />}>
+                    {t('addreservation.heading32')}
+                  </Button>
+                </>
+              )}
+            </div>
+            <div className="calendar-calendar">
+              <GSTC config={config} onState={onState} />
+            </div>
+
+            <AddReservation
+              title={t('addreservation.heading34')}
+              visible={visible}
+              onOk={handleOk}
+              close={handleCancel}
+              wrapClassName="create-booking-modal"
+              getData={getData}
+            />
+          </div>
+        )
+        : <UserLock />
+    }
     </Wrapper>
   );
 };

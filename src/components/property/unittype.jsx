@@ -18,6 +18,7 @@ import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
+import UserLock from '../userlock/userlock';
 
 const UnitType = () => {
   const { t } = useTranslation();
@@ -28,6 +29,9 @@ const UnitType = () => {
   const [currUnittype, setCurrUnittype] = useState(0);
   const [name, setName] = useState();
   const [editId, setEditId] = useState(null);
+  const [subscribed, setSubscribed] = useState();
+  const [onTrial, setOnTrial] = useState(true);
+  const [daysLeft, setDaysLeft] = useState();
   const history = useHistory();
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
@@ -76,6 +80,15 @@ const UnitType = () => {
   };
 
   const getData = async () => {
+    const res = await userInstance.get('/getUserSubscriptionStatus');
+    if (res.data.code === 200) {
+      const [{
+        days, isOnTrial, isSubscribed,
+      }] = res.data.userSubsDetails;
+      setDaysLeft(parseInt(days, 10));
+      setSubscribed(JSON.parse(isSubscribed));
+      setOnTrial(JSON.parse(isOnTrial));
+    }
     const values = {
       propertyId: localStorage.getItem('propertyId'),
     };
@@ -140,6 +153,7 @@ const UnitType = () => {
   const btn1 = isSubUser && canWrite ? enableButton : disabledButton;
   const btn2 = isSubUser ? btn1 : enableButton;
 
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
     <Wrapper>
       <Helmet>
@@ -153,84 +167,32 @@ const UnitType = () => {
         />
         <body className="unit-page-view" />
       </Helmet>
-      <div className="unit-type">
-        <div className="page-header">
-          <h1>
-            <HomeOutlined />
-            {' '}
-            {t('unittype.heading')}
-          </h1>
-          {btn2}
-        </div>
-        <div className="panel-box units editunit" hidden={showPanel}>
-          <div className="group-name">
-            <input
-              type="text"
-              name="name"
-              placeholder={t('unittype.title3')}
-              onChange={onChange}
-            />
-          </div>
-          <div className="group-action">
-            <div
-              className="can-btn"
-              onClick={() => setShowPanel(true)}
-              role="button"
-              aria-hidden="true"
-            >
-              <CloseCircleOutlined />
-              {' '}
-              {t('strings.cancel')}
-            </div>
-            <div
-              className="sav-btn"
-              onClick={() => onFinish()}
-              role="button"
-              aria-hidden="true"
-            >
-              <CheckCircleOutlined />
-              {' '}
-              {t('strings.save')}
-            </div>
-          </div>
-        </div>
-        {unittypeData.length ? (
-          <div className="panel-container">
-            {unittypeData.map((el, i) => (
-              <div
-                className={
-                  editId === i
-                    ? 'panel-box units editunitname'
-                    : 'panel-box units'
-                }
-              >
-                <div className="group-name">
-                  <h4
-                    onClick={() => edit(el.id)}
-                    hidden={editId === i}
-                    role="presentation"
-                    aria-hidden="true"
-                  >
-                    {el.unitTypeName}
-                  </h4>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Edit Unit"
-                    onChange={onChange}
-                    hidden={editId !== i}
-                  />
-                  <span>
-                    {el.noOfUnits}
+      {
+        hasAccess
+          ? (
+            <>
+              <div className="unit-type">
+                <div className="page-header">
+                  <h1>
+                    <HomeOutlined />
                     {' '}
-                    {t('unittype.title2')}
-                  </span>
+                    {t('unittype.heading')}
+                  </h1>
+                  {btn2}
                 </div>
-                {editId === i ? (
+                <div className="panel-box units editunit" hidden={showPanel}>
+                  <div className="group-name">
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder={t('unittype.title3')}
+                      onChange={onChange}
+                    />
+                  </div>
                   <div className="group-action">
                     <div
                       className="can-btn"
-                      onClick={() => setEditId(null)}
+                      onClick={() => setShowPanel(true)}
                       role="button"
                       aria-hidden="true"
                     >
@@ -240,7 +202,7 @@ const UnitType = () => {
                     </div>
                     <div
                       className="sav-btn"
-                      onClick={() => onFinish(el.id)}
+                      onClick={() => onFinish()}
                       role="button"
                       aria-hidden="true"
                     >
@@ -249,31 +211,91 @@ const UnitType = () => {
                       {t('strings.save')}
                     </div>
                   </div>
-                ) : (
-                  <div className="group-action">
-                    <FormOutlined onClick={() => editName(i)} />
-                    <DeleteOutlined onClick={() => show(el.id)} />
+                </div>
+                {unittypeData.length ? (
+                  <div className="panel-container">
+                    {unittypeData.map((el, i) => (
+                      <div
+                        className={
+                  editId === i
+                    ? 'panel-box units editunitname'
+                    : 'panel-box units'
+                }
+                      >
+                        <div className="group-name">
+                          <h4
+                            onClick={() => edit(el.id)}
+                            hidden={editId === i}
+                            role="presentation"
+                            aria-hidden="true"
+                          >
+                            {el.unitTypeName}
+                          </h4>
+                          <input
+                            type="text"
+                            name="name"
+                            placeholder="Edit Unit"
+                            onChange={onChange}
+                            hidden={editId !== i}
+                          />
+                          <span>
+                            {el.noOfUnits}
+                            {' '}
+                            {t('unittype.title2')}
+                          </span>
+                        </div>
+                        {editId === i ? (
+                          <div className="group-action">
+                            <div
+                              className="can-btn"
+                              onClick={() => setEditId(null)}
+                              role="button"
+                              aria-hidden="true"
+                            >
+                              <CloseCircleOutlined />
+                              {' '}
+                              {t('strings.cancel')}
+                            </div>
+                            <div
+                              className="sav-btn"
+                              onClick={() => onFinish(el.id)}
+                              role="button"
+                              aria-hidden="true"
+                            >
+                              <CheckCircleOutlined />
+                              {' '}
+                              {t('strings.save')}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="group-action">
+                            <FormOutlined onClick={() => editName(i)} />
+                            <DeleteOutlined onClick={() => show(el.id)} />
+                          </div>
+                        )}
+                      </div>
+                    ))}
                   </div>
+                ) : (
+                  <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} hidden={empty} />
                 )}
               </div>
-            ))}
-          </div>
-        ) : (
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} hidden={empty} />
-        )}
-      </div>
-      {/* <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} hidden={empty} /> */}
-      <Modal
-        visible={visible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        wrapClassName="delete-modal"
-      >
-        <DeletePopup
-          dataObject={() => remove()}
-          cancel={() => handleCancel()}
-        />
-      </Modal>
+              {/* <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} hidden={empty} /> */}
+              <Modal
+                visible={visible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                wrapClassName="delete-modal"
+              >
+                <DeletePopup
+                  dataObject={() => remove()}
+                  cancel={() => handleCancel()}
+                />
+              </Modal>
+            </>
+          )
+          : <UserLock />
+      }
     </Wrapper>
   );
 };

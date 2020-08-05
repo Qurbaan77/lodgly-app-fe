@@ -18,6 +18,7 @@ import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import UserLock from '../userlock/userlock';
+import DeletePopup from './deletepopup';
 
 const TeamListing = () => {
   const { t } = useTranslation();
@@ -28,8 +29,10 @@ const TeamListing = () => {
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const [subscribed, setSubscribed] = useState();
-  const [onTrial, setOnTrial] = useState();
+  const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
+  const [visibleDeletePopup, setVisibleDeletePopup] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -44,11 +47,13 @@ const TeamListing = () => {
 
   const handleOk = () => {
     setVisible(false);
+    setVisibleDeletePopup(true);
   };
 
   const handleCancel = () => {
     setVisible(false);
     setVisibleSubUser(false);
+    setVisibleDeletePopup(true);
   };
 
   const closeSubUser = () => {
@@ -64,16 +69,23 @@ const TeamListing = () => {
     setVisibleSubUser(false);
   };
 
-  const handleDeleteSubUser = async (value) => {
-    const deleteId = value.id;
+  const handleDeleteSubUser = async () => {
+    const payload = {
+      deleteId,
+    };
     // deleting sub user from databse
-    const res = await userInstance.post('/deleteSubUser', { deleteId });
+    const res = await userInstance.post('/deleteSubUser', payload);
     if (res.status === 200) {
+      setVisibleDeletePopup(false);
       // deleting sub user from state
-      const data = subUser.filter((el) => el.id === deleteId);
-      setSubUser([...data]);
+      // const data = subUser.filter((el) => el.id === deleteId);
+      getData();
       setNotifyType('success');
       setNotifyMsg('Sub User Deleted Successfully');
+    } else {
+      setVisibleDeletePopup(false);
+      setNotifyType('error');
+      setNotifyMsg('server error please try again');
     }
   };
 
@@ -96,23 +108,10 @@ const TeamListing = () => {
     }
   }, [userId]);
 
-  // const getData = async () => {
-  //   const response0 = await userInstance.get('/getUserSubscriptionStatus');
-  //   if (response0.data.code === 200) {
-  //     const [{
-  //       days, isOnTrial, isSubscribed,
-  //     }] = response0.data.userSubsDetails;
-  //     setDaysLeft(parseInt(days, 10));
-  //     setSubscribed(JSON.parse(isSubscribed));
-  //     setOnTrial(JSON.parse(isOnTrial));
-  //   }
-  //   const response = await userInstance.post('/getSubUser', {
-  //     affiliateId: userId,
-  //   });
-  //   if (response.status === 200) {
-  //     setSubUser(response.data.subUser);
-  //   }
-  // };
+  const showDeletePopup = (value) => {
+    setVisibleDeletePopup(true);
+    setDeleteId(value.id);
+  };
 
   useEffect(() => {
     getData();
@@ -188,7 +187,11 @@ const TeamListing = () => {
                               <img src={team} alt="team" />
                             </div>
                             <div className="team-title">
-                              <h5>Anthony Cole</h5>
+                              <h5>
+                                Sub User
+                                {' '}
+                                {i + 1}
+                              </h5>
                               <span>{t('team.label5')}</span>
                             </div>
                           </div>
@@ -203,7 +206,7 @@ const TeamListing = () => {
                               onClick={() => showEditSubUser(el, i)}
                             />
                             <DeleteOutlined
-                              onClick={() => handleDeleteSubUser(el, i)}
+                              onClick={() => showDeletePopup(el, i)}
                             />
                           </div>
                         </td>
@@ -228,6 +231,11 @@ const TeamListing = () => {
             close={closeEditSubUser}
             subUserData={currentSubUser}
             getData={getData}
+          />
+          <DeletePopup
+            visible={visibleDeletePopup}
+            dataObject={handleDeleteSubUser}
+            cancel={() => handleCancel()}
           />
         </Wrapper>
       ) : (

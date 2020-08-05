@@ -20,6 +20,7 @@ import favicon from '../../assets/images/logo-mobile.png';
 import DeletePopup from './deletepopup';
 import { userInstance } from '../../axios/axiosconfig';
 import GSTC from './GSTC';
+import UserLock from '../userlock/userlock';
 
 const { RangePicker } = DatePicker;
 
@@ -37,6 +38,9 @@ const AddUnitType = () => {
   const [totalUnit, setTotalUnit] = useState();
   const [isOnTrial, setIsOnTrial] = useState();
   const [subscribedUnits, setSubscribedUnits] = useState();
+  const [subscribed, setSubscribed] = useState();
+  const [onTrial, setOnTrial] = useState(true);
+  const [daysLeft, setDaysLeft] = useState();
   const history = useHistory();
 
   const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
@@ -86,6 +90,15 @@ const AddUnitType = () => {
   };
 
   const getData = async () => {
+    const res = await userInstance.get('/getUserSubscriptionStatus');
+    if (res.data.code === 200) {
+      const [{
+        days, isOnTrial, isSubscribed,
+      }] = res.data.userSubsDetails;
+      setDaysLeft(parseInt(days, 10));
+      setSubscribed(JSON.parse(isSubscribed));
+      setOnTrial(JSON.parse(isOnTrial));
+    }
     const unittypeId = localStorage.getItem('unittypeId');
     const values = {
       propertyId: localStorage.getItem('propertyId'),
@@ -288,6 +301,7 @@ const AddUnitType = () => {
     </Tooltip>
   );
   const btn = isLimitReached ? disbledSaveUnitBtn : normalSaveUnitBtn;
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
     <Wrapper>
       <Helmet>
@@ -300,134 +314,89 @@ const AddUnitType = () => {
           content="Grow your Vacation Rental with Lodgly"
         />
       </Helmet>
-      <div className="unit-type">
-        <div className="page-header">
-          <h1>
-            <HomeOutlined />
-            {' '}
-            {currentUnittype.id
-              ? currentUnittype.unitTypeName
-              : `Unit type ${unittypeNo}`}
-          </h1>
-        </div>
-
-        <div className="panel-container">
-          <div className="unit-filter">
-            <Form form={form} onFinish={onFinish}>
-              <Row style={{ alignItems: 'center' }}>
-                <Col span={7}>
-                  <Form.Item label={t('strings.date')} name="groupname">
-                    <RangePicker />
-                  </Form.Item>
-                </Col>
-
-                <Col span={9} className="d-flex">
-                  <Form.Item
-                    label={t('addunity.label1')}
-                    name="perNight"
-                    style={{ padding: '0px 10px' }}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label={t('addunity.label2')}
-                    name="roomsToSell"
-                    style={{ padding: '0px 10px' }}
-                  >
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    label={t('addunity.label3')}
-                    name="minimumStay"
-                    style={{ padding: '0px 10px' }}
-                  >
-                    <Input />
-                  </Form.Item>
-                </Col>
-
-                <Col span={8} className="d-flex update-cal">
-                  <Form.Item name="date-picker" label="DatePicker">
-                    <DatePicker />
-                  </Form.Item>
-                  <Button type="primary">{t('addunity.updatebtn')}</Button>
-                </Col>
-              </Row>
-
-              <div className="unittype-calendar">
-                {currentUnittype.id ? (
-                  <GSTC config={config} onState={onState} />
-                ) : null}
-              </div>
-              <Form.Item>
-                <Button htmlType="submit" style={{ marginTop: '20px' }}>
-                  {t('strings.save')}
-                </Button>
-              </Form.Item>
-            </Form>
-            <div className="panel-box units editunit" hidden={showPanel}>
-              <div className="group-name">
-                <input
-                  type="text"
-                  name="name"
-                  placeholder={t('addunity.label4')}
-                  onChange={onChange}
-                />
-              </div>
-              <div className="group-action">
-                <div
-                  className="can-btn"
-                  onClick={() => setShowPanel(true)}
-                  role="button"
-                  aria-hidden="true"
-                >
-                  <CloseCircleOutlined />
-                  {' '}
-                  {t('strings.cancel')}
+      {
+        hasAccess
+          ? (
+            <>
+              <div className="unit-type">
+                <div className="page-header">
+                  <h1>
+                    <HomeOutlined />
+                    {' '}
+                    {currentUnittype.id
+                      ? currentUnittype.unitTypeName
+                      : `Unit type ${unittypeNo}`}
+                  </h1>
                 </div>
-                <div
-                  className="sav-btn"
-                  onClick={() => onUnitSave()}
-                  role="button"
-                  aria-hidden="true"
-                >
-                  <CheckCircleOutlined />
-                  {' '}
-                  {t('strings.save')}
-                </div>
-              </div>
-            </div>
 
-            <div className="assign-unit">
-              <p>{t('addunity.para1')}</p>
-              <span>{t('addunity.para2')}</span>
-              <div className="panel-container">
-                {unitData.map((el, i) => (
-                  <div
-                    className={
-                      editId === i
-                        ? 'panel-box units editunitname'
-                        : 'panel-box units'
-                    }
-                  >
-                    <div className="group-name">
-                      <h4 hidden={editId === i}>{el.unitName}</h4>
-                      <input
-                        type="text"
-                        name="name"
-                        placeholder="Edit Unit"
-                        onChange={onChange}
-                        hidden={editId !== i}
-                      />
-                      <span>{t('addunity.para3')}</span>
-                    </div>
+                <div className="panel-container">
+                  <div className="unit-filter">
+                    <Form form={form} onFinish={onFinish}>
+                      <Row style={{ alignItems: 'center' }}>
+                        <Col span={7}>
+                          <Form.Item label={t('strings.date')} name="groupname">
+                            <RangePicker />
+                          </Form.Item>
+                        </Col>
 
-                    {editId === i ? (
+                        <Col span={9} className="d-flex">
+                          <Form.Item
+                            label={t('addunity.label1')}
+                            name="perNight"
+                            style={{ padding: '0px 10px' }}
+                          >
+                            <Input />
+                          </Form.Item>
+
+                          <Form.Item
+                            label={t('addunity.label2')}
+                            name="roomsToSell"
+                            style={{ padding: '0px 10px' }}
+                          >
+                            <Input />
+                          </Form.Item>
+
+                          <Form.Item
+                            label={t('addunity.label3')}
+                            name="minimumStay"
+                            style={{ padding: '0px 10px' }}
+                          >
+                            <Input />
+                          </Form.Item>
+                        </Col>
+
+                        <Col span={8} className="d-flex update-cal">
+                          <Form.Item name="date-picker" label="DatePicker">
+                            <DatePicker />
+                          </Form.Item>
+                          <Button type="primary">{t('addunity.updatebtn')}</Button>
+                        </Col>
+                      </Row>
+
+                      <div className="unittype-calendar">
+                        {currentUnittype.id ? (
+                          <GSTC config={config} onState={onState} />
+                        ) : null}
+                      </div>
+                      <Form.Item>
+                        <Button htmlType="submit" style={{ marginTop: '20px' }}>
+                          {t('strings.save')}
+                        </Button>
+                      </Form.Item>
+                    </Form>
+                    <div className="panel-box units editunit" hidden={showPanel}>
+                      <div className="group-name">
+                        <input
+                          type="text"
+                          name="name"
+                          placeholder={t('addunity.label4')}
+                          onChange={onChange}
+                        />
+                      </div>
                       <div className="group-action">
                         <div
                           className="can-btn"
-                          onClick={() => setEditId(null)}
+                          onClick={() => setShowPanel(true)}
                           role="button"
                           aria-hidden="true"
                         >
@@ -437,45 +406,98 @@ const AddUnitType = () => {
                         </div>
                         <div
                           className="sav-btn"
-                          onClick={() => onUnitSave(el.id)}
+                          onClick={() => onUnitSave()}
                           role="button"
                           aria-hidden="true"
                         >
                           <CheckCircleOutlined />
+                          {' '}
                           {t('strings.save')}
                         </div>
                       </div>
-                    ) : (
-                      <div className="group-action">
-                        <FormOutlined onClick={() => editName(i)} />
-                        <DeleteOutlined onClick={() => show(el.id)} />
+                    </div>
+
+                    <div className="assign-unit">
+                      <p>{t('addunity.para1')}</p>
+                      <span>{t('addunity.para2')}</span>
+                      <div className="panel-container">
+                        {unitData.map((el, i) => (
+                          <div
+                            className={
+                      editId === i
+                        ? 'panel-box units editunitname'
+                        : 'panel-box units'
+                    }
+                          >
+                            <div className="group-name">
+                              <h4 hidden={editId === i}>{el.unitName}</h4>
+                              <input
+                                type="text"
+                                name="name"
+                                placeholder="Edit Unit"
+                                onChange={onChange}
+                                hidden={editId !== i}
+                              />
+                              <span>{t('addunity.para3')}</span>
+                            </div>
+
+                            {editId === i ? (
+                              <div className="group-action">
+                                <div
+                                  className="can-btn"
+                                  onClick={() => setEditId(null)}
+                                  role="button"
+                                  aria-hidden="true"
+                                >
+                                  <CloseCircleOutlined />
+                                  {' '}
+                                  {t('strings.cancel')}
+                                </div>
+                                <div
+                                  className="sav-btn"
+                                  onClick={() => onUnitSave(el.id)}
+                                  role="button"
+                                  aria-hidden="true"
+                                >
+                                  <CheckCircleOutlined />
+                                  {t('strings.save')}
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="group-action">
+                                <FormOutlined onClick={() => editName(i)} />
+                                <DeleteOutlined onClick={() => show(el.id)} />
+                              </div>
+                            )}
+                          </div>
+                        ))}
                       </div>
-                    )}
+                      <div>
+                        {isOnTrial ? (
+                          <Button onClick={() => setShowPanel(false)}>Add unit</Button>
+                        ) : (
+                          btn
+                        )}
+                      </div>
+                      <Modal
+                        visible={visible}
+                        onOk={handleOk}
+                        onCancel={handleCancel}
+                        wrapClassName="delete-modal"
+                      >
+                        <DeletePopup
+                          dataObject={() => remove()}
+                          cancel={() => handleCancel()}
+                        />
+                      </Modal>
+                    </div>
                   </div>
-                ))}
+                </div>
               </div>
-              <div>
-                {isOnTrial ? (
-                  <Button onClick={() => setShowPanel(false)}>Add unit</Button>
-                ) : (
-                  btn
-                )}
-              </div>
-              <Modal
-                visible={visible}
-                onOk={handleOk}
-                onCancel={handleCancel}
-                wrapClassName="delete-modal"
-              >
-                <DeletePopup
-                  dataObject={() => remove()}
-                  cancel={() => handleCancel()}
-                />
-              </Modal>
-            </div>
-          </div>
-        </div>
-      </div>
+            </>
+          )
+          : <UserLock />
+      }
     </Wrapper>
   );
 };

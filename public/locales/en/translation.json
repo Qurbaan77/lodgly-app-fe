@@ -166,7 +166,7 @@
     "heading": "Unit Type",
     "unitbtn": "Add Unit Type",
     "title1": "You are not authorize to create new unit types",
-    "title2": "1 unit are assigned",
+    "title2": "unit are assigned",
     "title3": "Edit Unit"
   },
   "group": {
@@ -345,7 +345,7 @@
     "updatebtn": "Update Calendar",
     "para1": "Assign Your Units",
     "para2": "Now add unit to unit type",
-    "para3": "1 unit are assigned",
+    "para3": "unit are assigned",
     "para4": "Add unit"
   },
   "deletepopup": {
@@ -356,7 +356,7 @@
     "heading1": "Edit Booking",
     "heading2": "Property name is required",
     "heading3": "Unit is required",
-    "heading4": "Channel, Commission(%",
+    "heading4": "Channel, Commission(%)",
     "heading5": "Commission is required",
     "heading6": "Required Field",
     "heading7": "Childrens(0-12yrs)",

@@ -4,6 +4,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import moment from 'moment';
 import './profile.css';
+import { useTranslation } from 'react-i18next';
 import {
   Form, Select, Row, Col, Collapse, Button, Tooltip,
 } from 'antd';
@@ -27,6 +28,7 @@ const stripePromise = loadStripe(STRIPE_APP_KEY);
 const { Panel } = Collapse;
 const { basicPrice, advancePrice, discount } = config.development.Billing;
 const BillingInformation = () => {
+  const { t } = useTranslation();
   const [unitDropDown, setUnitDropDown] = useState([]);
   const [total, setTotal] = useState(0);
   const [unitPrice, setUnitPrice] = useState(basicPrice);
@@ -451,7 +453,7 @@ const BillingInformation = () => {
         <div className="page-header">
           <h1>
             <UserOutlined />
-            Billing Information
+            {t('billinginformation.heading1')}
           </h1>
         </div>
 
@@ -466,12 +468,13 @@ const BillingInformation = () => {
                         <div className="subscription-plan-list">
                           <div className="invoice-warning" hidden>
                             <WarningOutlined />
-                            You have trial period active untill 4.07.2020.
+                            {t('billinginformation.label2')}
+                            {' '}
+                            4.07.2020.
                           </div>
                           <div className="invoice-error" hidden>
                             <CloseCircleOutlined hidden />
-                            Payment method not set. Please update your payment
-                            method.
+                            {t('billinginformation.label3')}
                           </div>
                           <Form>
                             <Row gutter={[16, 0]}>
@@ -483,10 +486,10 @@ const BillingInformation = () => {
                                     onSelect={handlePlanSelect}
                                   >
                                     <Select.Option value="advance">
-                                      Advance
+                                      {t('billinginformation.label4')}
                                     </Select.Option>
                                     <Select.Option value="basic">
-                                      Basic
+                                      {t('billinginformation.label5')}
                                     </Select.Option>
                                   </Select>
                                 </Form.Item>
@@ -494,7 +497,7 @@ const BillingInformation = () => {
 
                               <Col span={5}>
                                 <Form.Item
-                                  label="price Per Unit"
+                                  label={t('billinginformation.label7')}
                                   name="pricePerUnit"
                                 >
                                   <div className="amount-field">
@@ -507,16 +510,16 @@ const BillingInformation = () => {
                               </Col>
                               <Col span={5}>
                                 <Form.Item
-                                  label="Units"
+                                  label={t('billinginformation.label8')}
                                   rules={[
                                     {
                                       required: true,
-                                      message: 'Please select units',
+                                      message: t('billinginformation.label9'),
                                     },
                                   ]}
                                 >
                                   <Select
-                                    placeholder="units"
+                                    placeholder={t('billinginformation.label8')}
                                     onSelect={handleUnitSelect}
                                   >
                                     {unitDropDown.map((el) => (
@@ -528,7 +531,7 @@ const BillingInformation = () => {
                                 </Form.Item>
                               </Col>
                               <Col span={6}>
-                                <Form.Item label="Plan Type">
+                                <Form.Item label={t('billinginformation.label10')}>
                                   <Select
                                     defaultValue="Monthly"
                                     placeholder="Monthly"
@@ -538,10 +541,10 @@ const BillingInformation = () => {
                                       value="month"
                                       disabled={disablePlanType}
                                     >
-                                      Monthly
+                                      {t('billinginformation.label11')}
                                     </Select.Option>
                                     <Select.Option value="year">
-                                      Yearly
+                                      {t('billinginformation.label12')}
                                     </Select.Option>
                                   </Select>
                                 </Form.Item>
@@ -550,16 +553,16 @@ const BillingInformation = () => {
                               <Col span={6}>
                                 <Form.Item
                                   name="currency"
-                                  label="currency"
+                                  label={t('strings.currency')}
                                   rules={[
                                     {
                                       required: true,
-                                      message: 'Please select currency',
+                                      message: t('billinginformation.label13'),
                                     },
                                   ]}
                                 >
                                   <Select
-                                    placeholder="currency"
+                                    placeholder={t('strings.currency')}
                                     onSelect={handleCurrencyChange}
                                   >
                                     <Select.Option
@@ -591,7 +594,7 @@ const BillingInformation = () => {
                               </Col>
 
                               <Col span={9} className="total-billing-price">
-                                <Form.Item label="Total Price">
+                                <Form.Item label={t('billinginformation.label22')}>
                                   <h2>
                                     =
                                     {' '}
@@ -604,12 +607,12 @@ const BillingInformation = () => {
                                         ? data.currency
                                         : currency || ''}
                                       {' '}
-                                      per
+                                      {t('billinginformation.label15')}
                                       {' '}
                                       {subscriptionType}
                                     </span>
                                   </h2>
-                                  <p>20% discount if you select Yearly plan</p>
+                                  <p>{t('billinginformation.label14')}</p>
                                 </Form.Item>
                               </Col>
                               {/* <Col span={9}>
@@ -672,7 +675,7 @@ const BillingInformation = () => {
                           <div className="subscription-plan-list">
                             <ul>
                               <li>
-                                Plan
+                                {t('billinginformation.label16')}
                                 {' '}
                                 <span>
                                   {data.Amount}
@@ -689,12 +692,12 @@ const BillingInformation = () => {
                                   <span>305 EUR</span>
                                 </li> */}
                               <li>
-                                Plan Type
+                                {t('billinginformation.label10')}
                                 {' '}
                                 <span>{data.planType}</span>
                               </li>
                               <li>
-                                Discount
+                                {t('billinginformation.label17')}
                                 {' '}
                                 <span>
                                   {data.planType === 'basic'
@@ -705,7 +708,7 @@ const BillingInformation = () => {
                             </ul>
                           </div>
                           <Button onClick={handleChangeSubscription}>
-                            Upgrade
+                            {t('billinginformation.label18')}
                           </Button>
                           {canDowngrade ? (
                             <Button
@@ -732,20 +735,20 @@ const BillingInformation = () => {
                         <Col span={10}>
                           <div className="subscription-plan-list">
                             <p>
-                              Your
+                              {t('billinginformation.label19')}
                               {' '}
                               <span>
                                 {data.interval}
-                                ly Subscription Plan
+                                {t('billinginformation.label20')}
                               </span>
                             </p>
                             <p>
-                              will renew on
+                              {t('billinginformation.label21')}
                               {end}
                             </p>
                           </div>
                           <Button onClick={handleCancelSubscription}>
-                            cancel
+                            {t('strings.cancel')}
                           </Button>
                         </Col>
                       </Row>

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import './invoice.css';
+import './team.css';
 import {
   Button,
   Modal,
@@ -28,7 +28,7 @@ const DeletePopup = (props) => {
         <WarningOutlined />
         <h5>{t('invoice.label15')}</h5>
 
-        <p>{t('invoice.label16')}</p>
+        {/* <p>{t('invoice.label16')}</p> */}
 
         <Button style={{ marginRight: 50 }} onClick={cancel}>
           {t('strings.cancel')}

@@ -13,8 +13,10 @@ import {
   Col,
   message,
   Collapse,
+  Menu,
+  Dropdown,
 } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, DownOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
@@ -32,7 +34,10 @@ const normFile = (e) => {
 };
 
 const Profile = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const changeLanguage = useCallback((event) => {
+    i18n.changeLanguage(event);
+  }, [i18n]);
   const [form1] = Form.useForm();
   const [form3] = Form.useForm();
   const [form4] = Form.useForm();
@@ -42,7 +47,7 @@ const Profile = () => {
   const [img, setImg] = useState('');
   const [userName, setUserName] = useState('');
   const [subscribed, setSubscribed] = useState();
-  const [onTrial, setOnTrial] = useState();
+  const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
   const [country, setCountry] = useState(null);
 
@@ -126,7 +131,7 @@ const Profile = () => {
     const { msg } = response.data;
     if (statusCode === 200) {
       setNotifyType('success');
-      setNotifyMsg(msg);      
+      setNotifyMsg(msg);
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
@@ -161,6 +166,24 @@ const Profile = () => {
     getUserInfo();
     getCompanyInfo();
   }, [getUserInfo, getCompanyInfo]);
+
+  const english = useCallback(() => {
+    changeLanguage('en');
+  }, [changeLanguage]);
+
+  const polish = useCallback(() => {
+    changeLanguage('pl');
+  }, [changeLanguage]);
+  const language = (
+    <Menu>
+      <Menu.Item key="1" onClick={english}>
+        English
+      </Menu.Item>
+      <Menu.Item key="2" onClick={polish}>
+        Polish
+      </Menu.Item>
+    </Menu>
+  );
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
@@ -302,12 +325,14 @@ const Profile = () => {
 
                       <Row gutter={[16, 0]}>
                         <Col span={12}>
-                          <Form.Item label={t('billingprofile.label10')}>
-                            <Select>
-                              <Select.Option value="demo">
-                                English
-                              </Select.Option>
-                            </Select>
+                          <Form.Item className="lang-box" label={t('billingprofile.label10')}>
+                            <Dropdown overlay={language} overlayClassName="language-dropdown">
+                              <Button>
+                                {localStorage.getItem('i18nextLng') === 'pl' ? 'PL' : 'EN'}
+                                {' '}
+                                <DownOutlined />
+                              </Button>
+                            </Dropdown>
                           </Form.Item>
                         </Col>
 
@@ -391,7 +416,7 @@ const Profile = () => {
 
                                     return Promise.reject(
                                       new Error(
-                                        'The two passwords that you entered do not match!',
+                                        'Password and confirm password are not match!',
                                       ),
                                     );
                                   },

@@ -165,3 +165,24 @@
   object-fit: cover;
   object-position: center;
 }
+.lang-box .ant-btn {
+  background: transparent;
+  width: 100%;
+  border: 1.5px solid #eaeaea !important;
+  height: 40px !important;
+  text-align: left;
+  padding: 10px 20px;
+  line-height: 1;
+  position: relative;
+}
+
+.lang-box .ant-btn span {
+  color: #999;
+}
+
+.lang-box .ant-btn .anticon {
+  position: absolute;
+  right: 14px;
+  font-size: 13px;
+  color: #bbb;
+}

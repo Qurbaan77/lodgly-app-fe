@@ -23,6 +23,7 @@ import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 import { server } from '../../config/keys';
 import favicon from '../../assets/images/logo-mobile.png';
+import UserLock from '../userlock/userlock';
 
 const { Panel } = Collapse;
 
@@ -80,6 +81,9 @@ const Property = () => {
   const [id, setId] = useState([]);
   const [address, setAddress] = useState('');
   const [country, setCountry] = useState(null);
+  const [subscribed, setSubscribed] = useState();
+  const [onTrial, setOnTrial] = useState(true);
+  const [daysLeft, setDaysLeft] = useState();
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -91,6 +95,15 @@ const Property = () => {
   };
 
   const getData = useCallback(async () => {
+    const res = await userInstance.get('/getUserSubscriptionStatus');
+    if (res.data.code === 200) {
+      const [{
+        days, isOnTrial, isSubscribed,
+      }] = res.data.userSubsDetails;
+      setDaysLeft(parseInt(days, 10));
+      setSubscribed(JSON.parse(isSubscribed));
+      setOnTrial(JSON.parse(isOnTrial));
+    }
     setId(localStorage.getItem('userId'));
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
@@ -194,6 +207,8 @@ const Property = () => {
   );
   const btn1 = isSubUser && canWrite ? enableButton : disableButton;
   const btn2 = isSubUser ? btn1 : enableButton;
+
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
     <Wrapper>
       <Helmet>
@@ -207,342 +222,350 @@ const Property = () => {
         />
         <body className="detail-page-view" />
       </Helmet>
-      <div className="add-property">
-        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
-        {currentProperty.map((el) => {
-          form.setFieldsValue({
-            propertyName: el.propertyName,
-            propertyType: el.propertyType,
-            address: el.address,
-            country: el.country,
-            state: el.state,
-            city: el.city,
-            zip: el.zip,
-            website: el.website,
+      {
+        hasAccess
+          ? (
+            <>
+              <div className="add-property">
+                <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
+                {currentProperty.map((el) => {
+                  form.setFieldsValue({
+                    propertyName: el.propertyName,
+                    propertyType: el.propertyType,
+                    address: el.address,
+                    country: el.country,
+                    state: el.state,
+                    city: el.city,
+                    zip: el.zip,
+                    website: el.website,
 
-            bedrooms: el.bedrooms,
-            fullBathroom: el.fullBathroom,
-            halfBathroom: el.halfBathroom,
-            sqfoot: el.sqfoot,
-            description: el.description,
-          });
-          return (
-            <div className="page-header">
-              <h1>
-                <HomeOutlined />
-                {' '}
-                {t('strings.property')}
-                <span>&nbsp;</span>
-                {el.propertyNo}
-              </h1>
-            </div>
-          );
-        })}
+                    bedrooms: el.bedrooms,
+                    fullBathroom: el.fullBathroom,
+                    halfBathroom: el.halfBathroom,
+                    sqfoot: el.sqfoot,
+                    description: el.description,
+                  });
+                  return (
+                    <div className="page-header">
+                      <h1>
+                        <HomeOutlined />
+                        {' '}
+                        {t('strings.property')}
+                        <span>&nbsp;</span>
+                        {el.propertyNo}
+                      </h1>
+                    </div>
+                  );
+                })}
 
-        <div className="panel-container">
-          <Collapse defaultActiveKey={['1']} accordion>
-            <Panel header={t('property.heading4')} key="1">
-              <div className="main-info-form">
-                <Form form={form} onFinish={onFinish}>
-                  <Row gutter={[16, 0]}>
-                    <Col span={24}>
-                      <Form.Item name="propertyName" label="Name">
-                        <Input placeholder={t('property.heading3')} />
-                      </Form.Item>
-                    </Col>
+                <div className="panel-container">
+                  <Collapse defaultActiveKey={['1']} accordion>
+                    <Panel header={t('property.heading4')} key="1">
+                      <div className="main-info-form">
+                        <Form form={form} onFinish={onFinish}>
+                          <Row gutter={[16, 0]}>
+                            <Col span={24}>
+                              <Form.Item name="propertyName" label="Name">
+                                <Input placeholder={t('property.heading3')} />
+                              </Form.Item>
+                            </Col>
 
-                    <Col span={24}>
-                      <Form.Item
-                        name="propertyType"
-                        label={t('property.heading2')}
-                      >
-                        <Select>
-                          <Select.Option value="demo">
-                            Holiday House
-                          </Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
+                            <Col span={24}>
+                              <Form.Item
+                                name="propertyType"
+                                label={t('property.heading2')}
+                              >
+                                <Select>
+                                  <Select.Option value="demo">
+                                    Holiday House
+                                  </Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </Col>
 
-                    <Col span={24}>
-                      <Form.Item name="address" label={t('strings.address')}>
-                        {/* <Input placeholder='4901 St Anthony Eye' /> */}
-                        <PlacesAutocomplete
-                          value={address}
-                          onChange={handleAddressChange}
-                          onSelect={handleAddressSelect}
-                        >
-                          {({
-                            getInputProps,
-                            suggestions,
-                            getSuggestionItemProps,
-                            loading,
-                          }) => (
-                            <div>
-                              <Input
-                                {...getInputProps({
-                                  placeholder: 'Search Places ...',
-                                  className: 'location-search-input',
-                                })}
-                              />
-                              <div className="autocomplete-dropdown-container">
-                                {loading && <div>Loading...</div>}
-                                {suggestions.map((suggestion) => {
-                                  const className = suggestion.active
-                                    ? 'suggestion-item--active'
-                                    : 'suggestion-item';
-                                  // inline style for demonstration purpose
-                                  const style = suggestion.active
-                                    ? {
-                                      backgroundColor: '#fafafa',
-                                      cursor: 'pointer',
-                                    }
-                                    : {
-                                      backgroundColor: '#ffffff',
-                                      cursor: 'pointer',
-                                    };
-                                  return (
-                                    <div
-                                      {...getSuggestionItemProps(suggestion, {
-                                        className,
-                                        style,
-                                      })}
-                                    >
-                                      <span>{suggestion.description}</span>
+                            <Col span={24}>
+                              <Form.Item name="address" label={t('strings.address')}>
+                                {/* <Input placeholder='4901 St Anthony Eye' /> */}
+                                <PlacesAutocomplete
+                                  value={address}
+                                  onChange={handleAddressChange}
+                                  onSelect={handleAddressSelect}
+                                >
+                                  {({
+                                    getInputProps,
+                                    suggestions,
+                                    getSuggestionItemProps,
+                                    loading,
+                                  }) => (
+                                    <div>
+                                      <Input
+                                        {...getInputProps({
+                                          placeholder: 'Search Places ...',
+                                          className: 'location-search-input',
+                                        })}
+                                      />
+                                      <div className="autocomplete-dropdown-container">
+                                        {loading && <div>Loading...</div>}
+                                        {suggestions.map((suggestion) => {
+                                          const className = suggestion.active
+                                            ? 'suggestion-item--active'
+                                            : 'suggestion-item';
+                                          // inline style for demonstration purpose
+                                          const style = suggestion.active
+                                            ? {
+                                              backgroundColor: '#fafafa',
+                                              cursor: 'pointer',
+                                            }
+                                            : {
+                                              backgroundColor: '#ffffff',
+                                              cursor: 'pointer',
+                                            };
+                                          return (
+                                            <div
+                                              {...getSuggestionItemProps(suggestion, {
+                                                className,
+                                                style,
+                                              })}
+                                            >
+                                              <span>{suggestion.description}</span>
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
                                     </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          )}
-                        </PlacesAutocomplete>
-                      </Form.Item>
-                    </Col>
+                                  )}
+                                </PlacesAutocomplete>
+                              </Form.Item>
+                            </Col>
 
-                    <Col span={12}>
-                      <Form.Item name="country" label={t('strings.country')}>
-                        <CountryDropdown onChange={(val) => setCountry(val)} />
-                      </Form.Item>
-                    </Col>
+                            <Col span={12}>
+                              <Form.Item name="country" label={t('strings.country')}>
+                                <CountryDropdown onChange={(val) => setCountry(val)} />
+                              </Form.Item>
+                            </Col>
 
-                    <Col span={12}>
-                      <Form.Item name="state" label={t('strings.state')}>
-                        <RegionDropdown country={country} />
-                      </Form.Item>
-                    </Col>
+                            <Col span={12}>
+                              <Form.Item name="state" label={t('strings.state')}>
+                                <RegionDropdown country={country} />
+                              </Form.Item>
+                            </Col>
 
-                    <Col span={12}>
-                      <Form.Item name="city" label={t('strings.city')}>
-                        <Select>
-                          <Select.Option value="demo">Zadar</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
+                            <Col span={12}>
+                              <Form.Item name="city" label={t('strings.city')}>
+                                <Select>
+                                  <Select.Option value="demo">Zadar</Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </Col>
 
-                    <Col span={12}>
-                      <Form.Item name="zip" label={t('strings.zip')}>
-                        <Select>
-                          <Select.Option value="demo">
-                            {t('strings.choose')}
-                          </Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
+                            <Col span={12}>
+                              <Form.Item name="zip" label={t('strings.zip')}>
+                                <Select>
+                                  <Select.Option value="demo">
+                                    {t('strings.choose')}
+                                  </Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </Col>
 
-                    <Col span={24}>
-                      <Form.Item name="website" label={t('strings.website')}>
-                        <Input placeholder="www.mywebsite.com" />
-                      </Form.Item>
-                    </Col>
+                            <Col span={24}>
+                              <Form.Item name="website" label={t('strings.website')}>
+                                <Input placeholder="www.mywebsite.com" />
+                              </Form.Item>
+                            </Col>
 
-                    <Col span={24}>
-                      <Form.Item>
-                        <Button htmlType="submit">{t('strings.update')}</Button>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </Form>
+                            <Col span={24}>
+                              <Form.Item>
+                                <Button htmlType="submit">{t('strings.update')}</Button>
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                        </Form>
+                      </div>
+                    </Panel>
+
+                    <Panel header={t('property.heading5')} key="2">
+                      <div className="main-info-form">
+                        <Form form={form} onFinish={onFinish}>
+                          <Row gutter={[16, 0]}>
+                            <Col span={24}>
+                              <Form.Item
+                                name="propertyType"
+                                label={t('property.heading2')}
+                              >
+                                <Select>
+                                  <Select.Option value="demo">
+                                    Holiday House
+                                  </Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={8}>
+                              <Form.Item name="bedrooms" label={t('property.label1')}>
+                                <Select>
+                                  <Select.Option value="1">1</Select.Option>
+                                  <Select.Option value="2">2</Select.Option>
+                                  <Select.Option value="3">3</Select.Option>
+                                  <Select.Option value="4">4</Select.Option>
+                                  <Select.Option value="5">5</Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={8}>
+                              <Form.Item
+                                name="fullBathroom"
+                                label={t('property.label2')}
+                              >
+                                <Select>
+                                  <Select.Option value="1">1</Select.Option>
+                                  <Select.Option value="2">2</Select.Option>
+                                  <Select.Option value="3">3</Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={8}>
+                              <Form.Item
+                                name="halfBathroom"
+                                label={t('property.label3')}
+                              >
+                                <Select>
+                                  <Select.Option value="1">1</Select.Option>
+                                  <Select.Option value="2">2</Select.Option>
+                                  <Select.Option value="3">3</Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={8}>
+                              <Form.Item name="sqfoot" label={t('property.label4')}>
+                                <Select>
+                                  <Select.Option value="demo">Zadar</Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={24}>
+                              <Form.Item
+                                name="description"
+                                label={t('property.label5')}
+                              >
+                                <Input.TextArea />
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={24}>
+                              <Form.Item>
+                                <Button htmlType="submit">{t('strings.update')}</Button>
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                        </Form>
+                      </div>
+                    </Panel>
+
+                    <Panel header={t('property.heading6')} key="3">
+                      <div className="listing-info-form">
+                        <Form>
+                          <Row gutter={[16, 0]}>
+                            <Col span={6}>
+                              <Form.Item label={t('property.label6')}>
+                                <Checkbox.Group
+                                  options={petOptions}
+                                  defaultValue={petPolicy}
+                                  onChange={onChange}
+                                />
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={6}>
+                              <Form.Item label={t('property.label7')}>
+                                <Checkbox.Group
+                                  options={featureOptions}
+                                  defaultValue={feature1}
+                                  onChange={onChange1}
+                                />
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={6}>
+                              <Form.Item label={t('property.label7')}>
+                                <Checkbox.Group
+                                  options={featureOptions2}
+                                  defaultValue={feature2}
+                                  onChange={onChange2}
+                                />
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={6}>
+                              <Form.Item label={t('property.label7')}>
+                                <Checkbox.Group
+                                  options={featureOptions3}
+                                  defaultValue={feature3}
+                                  onChange={onChange3}
+                                />
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                        </Form>
+                      </div>
+                    </Panel>
+
+                    <Panel header={t('property.heading7')} key="4">
+                      <div className="main-info-form">
+                        <Form>
+                          <Row gutter={[16, 0]}>
+                            <Col span={24}>
+                              <Form.Item label={t('property.para1')}>
+                                <Form.Item
+                                  name="dragger"
+                                  valuePropName="fileList"
+                                  getValueFromEvent={normFile}
+                                  noStyle
+                                >
+                                  <Upload.Dragger {...props}>
+                                    <p className="ant-upload-drag-icon">
+                                      <InboxOutlined />
+                                    </p>
+                                    <p className="ant-upload-text">
+                                      {t('property.para2')}
+                                    </p>
+                                    <p className="ant-upload-hint">
+                                      {t('property.label9')}
+                                    </p>
+                                  </Upload.Dragger>
+                                  <p>{t('property.para3')}</p>
+                                </Form.Item>
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={24}>
+                              <Form.Item label={t('property.para3')}>
+                                <Input />
+                                <p>
+                                  {' '}
+                                  {t('property.para4')}
+                                </p>
+                              </Form.Item>
+                            </Col>
+
+                            <Col span={24}>
+                              <Form.Item>{btn2}</Form.Item>
+                            </Col>
+                          </Row>
+                        </Form>
+                      </div>
+                    </Panel>
+                  </Collapse>
+                </div>
               </div>
-            </Panel>
-
-            <Panel header={t('property.heading5')} key="2">
-              <div className="main-info-form">
-                <Form form={form} onFinish={onFinish}>
-                  <Row gutter={[16, 0]}>
-                    <Col span={24}>
-                      <Form.Item
-                        name="propertyType"
-                        label={t('property.heading2')}
-                      >
-                        <Select>
-                          <Select.Option value="demo">
-                            Holiday House
-                          </Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                      <Form.Item name="bedrooms" label={t('property.label1')}>
-                        <Select>
-                          <Select.Option value="1">1</Select.Option>
-                          <Select.Option value="2">2</Select.Option>
-                          <Select.Option value="3">3</Select.Option>
-                          <Select.Option value="4">4</Select.Option>
-                          <Select.Option value="5">5</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                      <Form.Item
-                        name="fullBathroom"
-                        label={t('property.label2')}
-                      >
-                        <Select>
-                          <Select.Option value="1">1</Select.Option>
-                          <Select.Option value="2">2</Select.Option>
-                          <Select.Option value="3">3</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                      <Form.Item
-                        name="halfBathroom"
-                        label={t('property.label3')}
-                      >
-                        <Select>
-                          <Select.Option value="1">1</Select.Option>
-                          <Select.Option value="2">2</Select.Option>
-                          <Select.Option value="3">3</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={8}>
-                      <Form.Item name="sqfoot" label={t('property.label4')}>
-                        <Select>
-                          <Select.Option value="demo">Zadar</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={24}>
-                      <Form.Item
-                        name="description"
-                        label={t('property.label5')}
-                      >
-                        <Input.TextArea />
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={24}>
-                      <Form.Item>
-                        <Button htmlType="submit">{t('strings.update')}</Button>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            </Panel>
-
-            <Panel header={t('property.heading6')} key="3">
-              <div className="listing-info-form">
-                <Form>
-                  <Row gutter={[16, 0]}>
-                    <Col span={6}>
-                      <Form.Item label={t('property.label6')}>
-                        <Checkbox.Group
-                          options={petOptions}
-                          defaultValue={petPolicy}
-                          onChange={onChange}
-                        />
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={6}>
-                      <Form.Item label={t('property.label7')}>
-                        <Checkbox.Group
-                          options={featureOptions}
-                          defaultValue={feature1}
-                          onChange={onChange1}
-                        />
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={6}>
-                      <Form.Item label={t('property.label7')}>
-                        <Checkbox.Group
-                          options={featureOptions2}
-                          defaultValue={feature2}
-                          onChange={onChange2}
-                        />
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={6}>
-                      <Form.Item label={t('property.label7')}>
-                        <Checkbox.Group
-                          options={featureOptions3}
-                          defaultValue={feature3}
-                          onChange={onChange3}
-                        />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            </Panel>
-
-            <Panel header={t('property.heading7')} key="4">
-              <div className="main-info-form">
-                <Form>
-                  <Row gutter={[16, 0]}>
-                    <Col span={24}>
-                      <Form.Item label={t('property.para1')}>
-                        <Form.Item
-                          name="dragger"
-                          valuePropName="fileList"
-                          getValueFromEvent={normFile}
-                          noStyle
-                        >
-                          <Upload.Dragger {...props}>
-                            <p className="ant-upload-drag-icon">
-                              <InboxOutlined />
-                            </p>
-                            <p className="ant-upload-text">
-                              {t('property.para2')}
-                            </p>
-                            <p className="ant-upload-hint">
-                              {t('property.label9')}
-                            </p>
-                          </Upload.Dragger>
-                          <p>{t('property.para3')}</p>
-                        </Form.Item>
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={24}>
-                      <Form.Item label={t('property.para3')}>
-                        <Input />
-                        <p>
-                          {' '}
-                          {t('property.para4')}
-                        </p>
-                      </Form.Item>
-                    </Col>
-
-                    <Col span={24}>
-                      <Form.Item>{btn2}</Form.Item>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            </Panel>
-          </Collapse>
-        </div>
-      </div>
+            </>
+          )
+          : <UserLock />
+      }
     </Wrapper>
   );
 };

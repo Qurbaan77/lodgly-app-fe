@@ -228,6 +228,11 @@ const AddProperty = () => {
                       <Form.Item
                         name="propertyType"
                         label={t('addproperty.detail2')}
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
                       >
                         <Select>
                           <Select.Option value="demo">
@@ -241,6 +246,11 @@ const AddProperty = () => {
                       <Form.Item
                         name="address"
                         label={t('addproperty.detail3')}
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
                       >
                         <PlacesAutocomplete
                           value={address}
@@ -298,25 +308,54 @@ const AddProperty = () => {
                       <Form.Item
                         name="country"
                         label={t('addproperty.detail5')}
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
                       >
                         <CountryDropdown onChange={(val) => setCountry(val)} />
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
-                      <Form.Item name="state" label={t('addproperty.detail6')}>
+                      <Form.Item
+                        name="state"
+                        label={t('addproperty.detail6')}
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
+                      >
                         <RegionDropdown country={country} />
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
-                      <Form.Item name="city" label={t('addproperty.detail7')}>
+                      <Form.Item
+                        name="city"
+                        label={t('addproperty.detail7')}
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
+                      >
                         <Input />
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
-                      <Form.Item name="zip" label={t('addproperty.detail8')}>
+                      <Form.Item
+                        name="zip"
+                        label={t('addproperty.detail8')}
+                        rules={[
+                          {
+                            required: true,
+                          },
+                        ]}
+                      >
                         <Input />
                       </Form.Item>
                     </Col>

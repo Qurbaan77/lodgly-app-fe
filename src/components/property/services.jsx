@@ -12,6 +12,7 @@ import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import DeletePopup from './deletepopup';
 import favicon from '../../assets/images/logo-mobile.png';
+import UserLock from '../userlock/userlock';
 
 const Services = () => {
   const { t } = useTranslation();
@@ -22,7 +23,9 @@ const Services = () => {
   const [notifyMsg, setNotifyMsg] = useState();
   const [serviceData, setServiceData] = useState([]);
   const [curRowId, setCurRowId] = useState(0);
-
+  const [subscribed, setSubscribed] = useState();
+  const [onTrial, setOnTrial] = useState(true);
+  const [daysLeft, setDaysLeft] = useState();
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ propertiesWrite }] = userCred || [{}];
@@ -132,6 +135,15 @@ const Services = () => {
   };
 
   const getData = async () => {
+    const res = await userInstance.get('/getUserSubscriptionStatus');
+    if (res.data.code === 200) {
+      const [{
+        days, isOnTrial, isSubscribed,
+      }] = res.data.userSubsDetails;
+      setDaysLeft(parseInt(days, 10));
+      setSubscribed(JSON.parse(isSubscribed));
+      setOnTrial(JSON.parse(isOnTrial));
+    }
     const values = {
       propertyId: localStorage.getItem('propertyId'),
     };
@@ -167,6 +179,7 @@ const Services = () => {
   const btn1 = isSubUser && canWrite ? enableButton : disableButton;
   const btn2 = isSubUser ? btn1 : enableButton;
 
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
     <Wrapper>
       <Helmet>
@@ -180,91 +193,99 @@ const Services = () => {
         />
         <body className="service-page-view" />
       </Helmet>
-      <div className="property-listing">
-        <div className="page-header">
-          <h1>{t('services.heading3')}</h1>
+      {
+        hasAccess
+          ? (
+            <>
+              <div className="property-listing">
+                <div className="page-header">
+                  <h1>{t('services.heading3')}</h1>
 
-          {btn2}
-        </div>
+                  {btn2}
+                </div>
 
-        <div className="services-list">
-          <Table columns={columns} dataSource={serviceData} />
-        </div>
-      </div>
+                <div className="services-list">
+                  <Table columns={columns} dataSource={serviceData} />
+                </div>
+              </div>
 
-      <Modal
-        title={t('services.heading1')}
-        visible={visible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        wrapClassName="group-modal"
-      >
-        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
-        <Form form={form} name="basic" onFinish={onFinish}>
-          <Form.Item name="serviceId">
-            <Input hidden />
-          </Form.Item>
-          <Form.Item
-            label={t('services.heading4')}
-            name="servicename"
-            style={{ padding: '0px 10px' }}
-            rules={[
-              {
-                required: true,
-                message: t('services.heading5'),
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
+              <Modal
+                title={t('services.heading1')}
+                visible={visible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                wrapClassName="group-modal"
+              >
+                <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
+                <Form form={form} name="basic" onFinish={onFinish}>
+                  <Form.Item name="serviceId">
+                    <Input hidden />
+                  </Form.Item>
+                  <Form.Item
+                    label={t('services.heading4')}
+                    name="servicename"
+                    style={{ padding: '0px 10px' }}
+                    rules={[
+                      {
+                        required: true,
+                        message: t('services.heading5'),
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
 
-          <Form.Item
-            label={t('services.heading6')}
-            name="serviceprice"
-            style={{ padding: '0px 10px' }}
-            rules={[
-              {
-                required: true,
-                message: t('services.heading8'),
-              },
-            ]}
-          >
-            <Input type="number" />
-          </Form.Item>
-          <Form.Item
-            label={t('services.heading9')}
-            name="servicequantity"
-            style={{ padding: '0px 10px' }}
-          >
-            <Input type="number" />
-          </Form.Item>
-          <Form.Item className="text-center">
-            <Button
-              style={{ marginRight: 10 }}
-              onClick={() => {
-                setVisible(false);
-              }}
-              className="border-btn"
-            >
-              {t('strings.cancel')}
-            </Button>
-            <Button type="primary" htmlType="submit">
-              {t('strings.save')}
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
-      <Modal
-        visible={visible1}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        wrapClassName="delete-modal"
-      >
-        <DeletePopup
-          dataObject={() => remove()}
-          cancel={() => handleCancel()}
-        />
-      </Modal>
+                  <Form.Item
+                    label={t('services.heading6')}
+                    name="serviceprice"
+                    style={{ padding: '0px 10px' }}
+                    rules={[
+                      {
+                        required: true,
+                        message: t('services.heading8'),
+                      },
+                    ]}
+                  >
+                    <Input type="number" />
+                  </Form.Item>
+                  <Form.Item
+                    label={t('services.heading9')}
+                    name="servicequantity"
+                    style={{ padding: '0px 10px' }}
+                  >
+                    <Input type="number" />
+                  </Form.Item>
+                  <Form.Item className="text-center">
+                    <Button
+                      style={{ marginRight: 10 }}
+                      onClick={() => {
+                        setVisible(false);
+                      }}
+                      className="border-btn"
+                    >
+                      {t('strings.cancel')}
+                    </Button>
+                    <Button type="primary" htmlType="submit">
+                      {t('strings.save')}
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </Modal>
+              <Modal
+                visible={visible1}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                wrapClassName="delete-modal"
+              >
+                <DeletePopup
+                  dataObject={() => remove()}
+                  cancel={() => handleCancel()}
+                />
+              </Modal>
+            </>
+          )
+          : <UserLock />
+      }
     </Wrapper>
   );
 };

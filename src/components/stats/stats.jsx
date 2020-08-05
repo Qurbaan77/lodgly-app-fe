@@ -109,6 +109,7 @@ const AccommodationChart = ({ topNavId }) => {
   const [prevYear, setPrevYear] = useState();
   const [currArr, setCurrArr] = useState();
   const [prevArr, setPrevArr] = useState();
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     async function getData() {
@@ -116,6 +117,11 @@ const AccommodationChart = ({ topNavId }) => {
         propertyId: localStorage.getItem('topNavId'),
       };
       const response = await userInstance.post('/getRevenue', values);
+      const currYearSum = response.data.currYearArr.reduce((a, b) => a + b, 0);
+      const prevYearSum = response.data.currYearArr.reduce((a, b) => a + b, 0);
+      if (currYearSum > 0 || prevYearSum > 0) {
+        setShow(true);
+      }
       setCurrArr(response.data.currYearArr);
       setPrevArr(response.data.prevYearArr);
       setPrevYear(response.data.currYear);
@@ -139,6 +145,9 @@ const AccommodationChart = ({ topNavId }) => {
       chart: {
         type: 'bar',
         height: 350,
+        toolbar: {
+          show,
+        },
       },
       plotOptions: {
         bar: {
@@ -462,6 +471,7 @@ const PaceChart = ({ topNavId }) => {
   const [prevYear, setPrevYear] = useState();
   const [currArr, setCurrArr] = useState([]);
   const [prevArr, setPrevArr] = useState([]);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     const values = {
@@ -469,6 +479,11 @@ const PaceChart = ({ topNavId }) => {
     };
     async function getData() {
       const response = await userInstance.post('/getPace', values);
+      const currYearSum = response.data.currYearArr.reduce((a, b) => a + b, 0);
+      const prevYearSum = response.data.prevYearArr.reduce((a, b) => a + b, 0);
+      if (currYearSum > 0 || prevYearSum > 0) {
+        setShow(true);
+      }
       setPrevArr(response.data.prevYearArr);
       setCurrArr(response.data.currYearArr);
 
@@ -498,6 +513,9 @@ const PaceChart = ({ topNavId }) => {
         },
         animations: {
           enabled: false,
+        },
+        toolbar: {
+          show,
         },
       },
       legend: {

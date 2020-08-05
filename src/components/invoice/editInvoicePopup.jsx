@@ -52,17 +52,20 @@ const EditInvoicePopup = (props) => {
   const updateValues = useCallback(() => {
     if (visible) {
       const date0 = moment(invoiceData.date);
+      const time0 = moment(`${invoiceData.time}:00`, 'HH:mm:ss');
       const deliveryDate0 = moment(invoiceData.deliveryDate);
       const dueDate0 = moment(invoiceData.dueDate);
-      setDate(date0);
+      // setDate(date0);
       setDueDate(dueDate0);
       setDeliveryDate(deliveryDate0);
+      setTime(time0);
       form.setFieldsValue({
         clientName: invoiceData.clientName,
         email: invoiceData.email,
         address: invoiceData.address,
         vat: invoiceData.vat,
         date: date0,
+        time: time0,
         deliveryDate: deliveryDate0,
         dueDate: dueDate0,
         paymentType: invoiceData.paymentType,
@@ -150,6 +153,8 @@ const EditInvoicePopup = (props) => {
       if (issueState) {
         (msg = 'Invoice issued');
         props.toasterMessage(msg);
+      } else {
+        props.toasterMessage('Invoice drafted successfully');
       }
       setShowLoader(true);
     } else {
