@@ -50,7 +50,7 @@ const Owner = () => {
   const isSubUser = localStorage.getItem('isSubUser') || false;
 
   const [{ userId, ownerWrite: canWrite }] = JSON.parse(
-    localStorage.getItem('userCred'),
+    localStorage.getItem('userCred')
   ) || [{}];
 
   const show = () => {
@@ -81,9 +81,9 @@ const Owner = () => {
   const getPropertyData = useCallback(async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
     if (response0.data.code === 200) {
-      const [{
-        days, isOnTrial, isSubscribed,
-      }] = response0.data.userSubsDetails;
+      const [
+        { days, isOnTrial, isSubscribed },
+      ] = response0.data.userSubsDetails;
       setDaysLeft(parseInt(days, 10));
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
@@ -92,6 +92,7 @@ const Owner = () => {
       affiliateId: userId,
     });
     const data = response.data.propertiesData;
+    console.log(data);
     setProperties(data);
     const arr = [];
     data
@@ -200,10 +201,7 @@ const Owner = () => {
     </Button>
   );
   const disabledButton = (
-    <Tooltip
-      title={t('owner.tooltip1')}
-      color="gold"
-    >
+    <Tooltip title={t('owner.tooltip1')} color="gold">
       <Button
         type="primary"
         icon={<PlusOutlined />}
@@ -260,12 +258,7 @@ const Owner = () => {
                             <div className="owner-title">
                               <h5>{`${el.fname} ${el.lname}`}</h5>
                               <span>
-                                {t('owner.label4')}
-                                {' '}
-                                |
-                                {el.citizenship}
-                                ,
-                                {' '}
+                                {t('owner.label4')} |{el.citizenship},{' '}
                                 {el.country}
                               </span>
                             </div>
@@ -276,14 +269,12 @@ const Owner = () => {
 
                         <td>
                           <div className="owner-property">
-                            {
-                              properties.forEach((ele) => {
-                                if (ele.ownerId === el.id) {
-                                  return <img src={property1} alt="property1" />;
-                                }
-                                return null;
-                              })
-                           }
+                            {properties.map((ele) => {
+                              if (ele.ownerId === el.id) {
+                                return <img src={property1} alt="property1" />;
+                              }
+                              return null;
+                            })}
                           </div>
                         </td>
 
@@ -724,16 +715,22 @@ const Owner = () => {
     <>
       <Helmet>
         <link rel="icon" href={favicon} />
-        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
         <body className="owner-page-view" />
       </Helmet>
-      {hasAccess ? pageContent
-        : (
-          <Wrapper>
-            <UserLock />
-          </Wrapper>
-        )}
+      {hasAccess ? (
+        pageContent
+      ) : (
+        <Wrapper>
+          <UserLock />
+        </Wrapper>
+      )}
     </>
   );
 };
