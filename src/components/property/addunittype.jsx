@@ -134,8 +134,7 @@ const AddUnitType = () => {
     if (response.data.code === 200) {
       data.unitData
         .filter(
-          (el) =>
-            el.unittypeId === parseInt(localStorage.getItem('unittypeId'), 10)
+          (el) => el.unittypeId === parseInt(localStorage.getItem('unittypeId'), 10),
         )
         .map((filterUnit) => arr.push(filterUnit));
       setUnitData(arr);
@@ -256,9 +255,11 @@ const AddUnitType = () => {
     const data = response.data.unittypeData;
 
     const [filterData] = data.filter(
-      (el) => el.id === parseInt(unittypeId, 10)
+      (el) => el.id === parseInt(unittypeId, 10),
     );
-    const { startDay, endDay, minimumStay, perNight, roomsToSell } = filterData;
+    const {
+      startDay, endDay, minimumStay, perNight, roomsToSell,
+    } = filterData;
     //
     state.update('config.chart.items.1', (item1) => {
       item1.label = roomsToSell;
@@ -321,7 +322,8 @@ const AddUnitType = () => {
           <div className="unit-type">
             <div className="page-header">
               <h1>
-                <HomeOutlined />{' '}
+                <HomeOutlined />
+                {' '}
                 {currentUnittype.id
                   ? currentUnittype.unitTypeName
                   : `Unit type ${unittypeNo}`}
@@ -404,7 +406,9 @@ const AddUnitType = () => {
                       role="button"
                       aria-hidden="true"
                     >
-                      <CloseCircleOutlined /> {t('strings.cancel')}
+                      <CloseCircleOutlined />
+                      {' '}
+                      {t('strings.cancel')}
                     </div>
                     <div
                       className="sav-btn"
@@ -412,7 +416,9 @@ const AddUnitType = () => {
                       role="button"
                       aria-hidden="true"
                     >
-                      <CheckCircleOutlined /> {t('strings.save')}
+                      <CheckCircleOutlined />
+                      {' '}
+                      {t('strings.save')}
                     </div>
                   </div>
                 </div>
@@ -449,7 +455,9 @@ const AddUnitType = () => {
                               role="button"
                               aria-hidden="true"
                             >
-                              <CloseCircleOutlined /> {t('strings.cancel')}
+                              <CloseCircleOutlined />
+                              {' '}
+                              {t('strings.cancel')}
                             </div>
                             <div
                               className="sav-btn"

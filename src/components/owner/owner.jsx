@@ -50,7 +50,7 @@ const Owner = () => {
   const isSubUser = localStorage.getItem('isSubUser') || false;
 
   const [{ userId, ownerWrite: canWrite }] = JSON.parse(
-    localStorage.getItem('userCred')
+    localStorage.getItem('userCred'),
   ) || [{}];
 
   const show = () => {
@@ -92,7 +92,6 @@ const Owner = () => {
       affiliateId: userId,
     });
     const data = response.data.propertiesData;
-    console.log(data);
     setProperties(data);
     const arr = [];
     data
@@ -258,7 +257,12 @@ const Owner = () => {
                             <div className="owner-title">
                               <h5>{`${el.fname} ${el.lname}`}</h5>
                               <span>
-                                {t('owner.label4')} |{el.citizenship},{' '}
+                                {t('owner.label4')}
+                                {' '}
+                                |
+                                {el.citizenship}
+                                ,
+                                {' '}
                                 {el.country}
                               </span>
                             </div>

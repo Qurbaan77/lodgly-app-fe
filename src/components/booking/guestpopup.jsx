@@ -18,10 +18,10 @@ import { CountryDropdown } from 'react-country-region-selector';
 import { userInstance } from '../../axios/axiosconfig';
 
 const GuestPopup = (props) => {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const {
     editValues, getData, close: close1, setBooked, closeToaster,
-    visible, handleOk, handleCancel, toasterMessage
+    visible, handleOk, handleCancel, toasterMessage,
   } = props;
   const [form] = Form.useForm();
   const guestData = editValues;
@@ -60,158 +60,158 @@ const GuestPopup = (props) => {
     closeToaster();
   };
 
-   return (
-     <Modal
-       title={t('strings.guest')}
-       visible={visible}
-       onOk={handleOk}
-       onCancel={handleCancel}
-       wrapClassName="guest-modal"
-     >
-       <Form form={form} name="basic" onFinish={onFinish}>
-         <Row style={{ alignItems: 'center' }}>
-           <Form.Item name="id">
-             <Input hidden />
-           </Form.Item>
-           <Col span={12}>
-             <Form.Item
-               label={t('strings.full')}
-               name="fullName"
-               style={{ paddingRight: 20 }}
-               rules={[
-                 {
-                   required: true,
-                   message: t('guestpopup.label1'),
-                 },
-               ]}
-             >
-               <Input placeholder={t('strings.full')} />
-             </Form.Item>
-           </Col>
+  return (
+    <Modal
+      title={t('strings.guest')}
+      visible={visible}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      wrapClassName="guest-modal"
+    >
+      <Form form={form} name="basic" onFinish={onFinish}>
+        <Row style={{ alignItems: 'center' }}>
+          <Form.Item name="id">
+            <Input hidden />
+          </Form.Item>
+          <Col span={12}>
+            <Form.Item
+              label={t('strings.full')}
+              name="fullName"
+              style={{ paddingRight: 20 }}
+              rules={[
+                {
+                  required: true,
+                  message: t('guestpopup.label1'),
+                },
+              ]}
+            >
+              <Input placeholder={t('strings.full')} />
+            </Form.Item>
+          </Col>
 
-           <Col span={12}>
-             <Form.Item
-               label={t('guestpopup.label2')}
-               name="country"
-               rules={[{ required: true, message: t('guestpopup.label3') }]}
-             >
-               <CountryDropdown />
-             </Form.Item>
-           </Col>
-         </Row>
+          <Col span={12}>
+            <Form.Item
+              label={t('guestpopup.label2')}
+              name="country"
+              rules={[{ required: true, message: t('guestpopup.label3') }]}
+            >
+              <CountryDropdown />
+            </Form.Item>
+          </Col>
+        </Row>
 
-         <Row style={{ alignItems: 'center' }}>
-           <Col span={12}>
-             <Form.Item
-               label={t('strings.email')}
-               name="email"
-               style={{ paddingRight: 20 }}
-             >
-               <Input placeholder={t('strings.email')} />
-             </Form.Item>
-           </Col>
+        <Row style={{ alignItems: 'center' }}>
+          <Col span={12}>
+            <Form.Item
+              label={t('strings.email')}
+              name="email"
+              style={{ paddingRight: 20 }}
+            >
+              <Input placeholder={t('strings.email')} />
+            </Form.Item>
+          </Col>
 
-           <Col span={12}>
-             <Form.Item label={t('strings.phone')} name="phone">
-               <Input placeholder={t('strings.phone')} type="number" />
-             </Form.Item>
-           </Col>
-         </Row>
+          <Col span={12}>
+            <Form.Item label={t('strings.phone')} name="phone">
+              <Input placeholder={t('strings.phone')} type="number" />
+            </Form.Item>
+          </Col>
+        </Row>
 
-         <Row style={{ alignItems: 'center' }}>
-           <Col span={12}>
-             <Form.Item
-               name="dob"
-               label={t('strings.dob')}
-               style={{ paddingRight: 20 }}
-             >
-               <DatePicker />
-             </Form.Item>
-           </Col>
+        <Row style={{ alignItems: 'center' }}>
+          <Col span={12}>
+            <Form.Item
+              name="dob"
+              label={t('strings.dob')}
+              style={{ paddingRight: 20 }}
+            >
+              <DatePicker />
+            </Form.Item>
+          </Col>
 
-           <Col span={12}>
-             <Form.Item name="gender" label={t('strings.gender')}>
-               <Radio.Group name="radiogroup" defaultValue={1}>
-                 <Radio value={1}>M</Radio>
-                 <Radio value={2}>F</Radio>
-                 <Radio value={3}>Other</Radio>
-               </Radio.Group>
-             </Form.Item>
-           </Col>
-         </Row>
+          <Col span={12}>
+            <Form.Item name="gender" label={t('strings.gender')}>
+              <Radio.Group name="radiogroup" defaultValue={1}>
+                <Radio value={1}>M</Radio>
+                <Radio value={2}>F</Radio>
+                <Radio value={3}>Other</Radio>
+              </Radio.Group>
+            </Form.Item>
+          </Col>
+        </Row>
 
-         <Row style={{ alignItems: 'center' }}>
-           <Col span={12}>
-             <Form.Item
-               label={t('guestpopup.label4')}
-               name="typeOfDoc"
-               style={{ paddingRight: 20 }}
-               rules={[
-                 {
-                   required: true,
-                   message: t('guestpopup.label5'),
-                 },
-               ]}
-             >
-               <Select>
-                 <Select.Option value="demo">Holiday House</Select.Option>
-                 <Select.Option value="demo">Holiday House</Select.Option>
-               </Select>
-             </Form.Item>
-           </Col>
+        <Row style={{ alignItems: 'center' }}>
+          <Col span={12}>
+            <Form.Item
+              label={t('guestpopup.label4')}
+              name="typeOfDoc"
+              style={{ paddingRight: 20 }}
+              rules={[
+                {
+                  required: true,
+                  message: t('guestpopup.label5'),
+                },
+              ]}
+            >
+              <Select>
+                <Select.Option value="demo">Holiday House</Select.Option>
+                <Select.Option value="demo">Holiday House</Select.Option>
+              </Select>
+            </Form.Item>
+          </Col>
 
-           <Col span={12}>
-             <Form.Item
-               label={t('guestpopup.label6')}
-               name="docNo"
-               rules={[{ required: true, message: t('guestpopup.label5') }]}
-             >
-               <Input />
-             </Form.Item>
-           </Col>
-         </Row>
+          <Col span={12}>
+            <Form.Item
+              label={t('guestpopup.label6')}
+              name="docNo"
+              rules={[{ required: true, message: t('guestpopup.label5') }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
 
-         <Row style={{ alignItems: 'center' }}>
-           <Col span={12}>
-             <Form.Item
-               label={t('strings.citizenship')}
-               name="citizenShip"
-               style={{ paddingRight: 20 }}
-             >
-               <Input />
-             </Form.Item>
-           </Col>
+        <Row style={{ alignItems: 'center' }}>
+          <Col span={12}>
+            <Form.Item
+              label={t('strings.citizenship')}
+              name="citizenShip"
+              style={{ paddingRight: 20 }}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
 
-           <Col span={12}>
-             <Form.Item label={t('guestpopup.label8')} name="place">
-               <Input />
-             </Form.Item>
-           </Col>
-         </Row>
+          <Col span={12}>
+            <Form.Item label={t('guestpopup.label8')} name="place">
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
 
-         <Row style={{ alignItems: 'center' }}>
-           <Col span={24}>
-             <Form.Item label={t('strings.note')} name="notes">
-               <Input.TextArea />
-             </Form.Item>
-           </Col>
-         </Row>
+        <Row style={{ alignItems: 'center' }}>
+          <Col span={24}>
+            <Form.Item label={t('strings.note')} name="notes">
+              <Input.TextArea />
+            </Form.Item>
+          </Col>
+        </Row>
 
-         <Row style={{ alignItems: 'center', textAlign: 'right' }}>
-           <Col span={24}>
-             <Form.Item>
-               <Button style={{ marginRight: 10 }} onClick={close1}>
-                 {t('strings.cancel')}
-               </Button>
-               <Button type="primary" htmlType="submit">
-                 {t('strings.save')}
-               </Button>
-             </Form.Item>
-           </Col>
-         </Row>
-       </Form>
-     </Modal>
-   );
+        <Row style={{ alignItems: 'center', textAlign: 'right' }}>
+          <Col span={24}>
+            <Form.Item>
+              <Button style={{ marginRight: 10 }} onClick={close1}>
+                {t('strings.cancel')}
+              </Button>
+              <Button type="primary" htmlType="submit">
+                {t('strings.save')}
+              </Button>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
+    </Modal>
+  );
 };
 
 GuestPopup.propTypes = {

@@ -170,28 +170,36 @@ const BookingFilter = (props) => {
                         <ul className="filter-list">
                           <li>
                             <span>
-                              <RedEnvelopeOutlined /> {t('filter.label1')}
+                              <RedEnvelopeOutlined />
+                              {' '}
+                              {t('filter.label1')}
                             </span>
                             <Switch defaultChecked onChange={onChange} />
                           </li>
 
                           <li>
                             <span>
-                              <MailOutlined /> {t('filter.label2')}
+                              <MailOutlined />
+                              {' '}
+                              {t('filter.label2')}
                             </span>
                             <Switch onChange={onChange} />
                           </li>
 
                           <li>
                             <span>
-                              <ReconciliationOutlined /> {t('filter.label3')}
+                              <ReconciliationOutlined />
+                              {' '}
+                              {t('filter.label3')}
                             </span>
                             <Switch onChange={onChange} />
                           </li>
 
                           <li>
                             <span>
-                              <DeleteOutlined /> {t('filter.label4')}
+                              <DeleteOutlined />
+                              {' '}
+                              {t('filter.label4')}
                             </span>
                             <Switch onChange={onChange} />
                           </li>
