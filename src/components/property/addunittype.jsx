@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Helmet from 'react-helmet';
-import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
   Form,
@@ -46,7 +45,6 @@ const AddUnitType = () => {
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
-  const history = useHistory();
 
   const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
 
@@ -74,7 +72,8 @@ const AddUnitType = () => {
     values.affiliateId = userId;
     const response = await userInstance.post('/addUnitType', values);
     if (response.data.code === 200) {
-      history.push('/unittype');
+      // history.push('/unittype');
+      getData();
     }
   };
 
@@ -156,7 +155,7 @@ const AddUnitType = () => {
   };
 
   const config = {
-    height: 300,
+    height: 250,
     list: {
       rows: {
         1: {
@@ -384,11 +383,6 @@ const AddUnitType = () => {
                       <GSTC config={config} onState={onState} />
                     ) : null}
                   </div>
-                  {/* <Form.Item>
-                    <Button htmlType="submit" style={{ marginTop: '20px' }}>
-                      {t('strings.save')}
-                    </Button>
-                  </Form.Item> */}
                 </Form>
                 <div className="panel-box units editunit" hidden={showPanel}>
                   <div className="group-name">

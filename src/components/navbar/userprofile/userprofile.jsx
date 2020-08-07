@@ -21,8 +21,8 @@ const UserProfile = (props) => {
       } else {
         setImg(user);
       }
-      if (body[0].fname !== null && body[0].lname !== null) {
-        setName(`${body[0].fname} ${body[0].lname}`);
+      if (body[0].fullname !== null) {
+        setName(`${body[0].fullname}`);
       }
     }
   };

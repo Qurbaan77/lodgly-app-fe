@@ -64,12 +64,10 @@ const Profile = () => {
     const response = await userInstance.post('/getuserData');
     const body = response.data.userData;
     if (body.length > 0) {
-      const fullname = `${body[0].fname} ${body[0].lname}`;
       setImg(body[0].image);
-      setUserName(fullname);
+      setUserName(body[0].fullname);
       form1.setFieldsValue({
-        fname: body[0].fname,
-        lname: body[0].lname,
+        fullname: body[0].fullname,
         address: body[0].address,
         email: body[0].email,
         phone: body[0].phone,
@@ -253,7 +251,7 @@ const Profile = () => {
                           <Col span={12}>
                             <Form.Item
                               label={t('billingprofile.label5')}
-                              name="fname"
+                              name="fullname"
                               rules={[
                                 {
                                   required: true,
@@ -263,8 +261,21 @@ const Profile = () => {
                             >
                               <Input placeholder="" />
                             </Form.Item>
+                            <Form.Item 
+                              label={t('strings.email')}
+                              name="email"
+                              rules={[
+                                {
+                                  type: 'email',
+                                  required: true,
+                                  message: 'The input is not valid E-mail!',
+                                },
+                              ]}
+                              >
+                              <Input placeholder="" />
+                            </Form.Item>
 
-                            <Form.Item
+                            {/* <Form.Item
                               label={t('billingprofile.label7')}
                               name="lname"
                               rules={[
@@ -275,7 +286,7 @@ const Profile = () => {
                               ]}
                             >
                               <Input placeholder="" />
-                            </Form.Item>
+                            </Form.Item> */}
                           </Col>
 
                           <Col span={24}>
@@ -287,13 +298,13 @@ const Profile = () => {
                             </Form.Item>
                           </Col>
 
-                          <Col span={12}>
+                          {/* <Col span={12}>
                             <Form.Item label={t('strings.email')} name="email">
                               <Input placeholder="" />
                             </Form.Item>
-                          </Col>
+                          </Col> */}
 
-                          <Col span={12}>
+                          <Col span={24}>
                             <Form.Item label={t('strings.phone')} name="phone">
                               <Input
                                 placeholder=""

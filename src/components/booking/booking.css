@@ -876,5 +876,10 @@
   padding-left: 10px;
   }
   
-  
-  
+  #basic_citizenShip {
+    border: 1.5px solid #eaeaea !important;
+    border-radius: 0;
+    padding: 8px 15px !important;
+    height: auto;
+    width: 100%;
+  }

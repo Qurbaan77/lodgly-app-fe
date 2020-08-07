@@ -586,6 +586,7 @@ body {
   background: #ffffff;
   transition: all 0.5s;
   cursor: pointer;
+  margin-top: 30px;
 }
 
 .panel-box.units:hover {
@@ -915,6 +916,14 @@ margin: 0;
   padding: 8px 15px !important;
   height: auto;
   width: 100%;
+}
+
+.service-margin div:hover {
+  color: #fab52c;
+}
+
+.service-margin div {
+  cursor: pointer;
 }
 
 @media screen and (min-width: 1367px) {

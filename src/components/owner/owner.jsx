@@ -62,11 +62,13 @@ const Owner = () => {
   const handleOk = () => {
     setVisible(false);
     setVisible2(false);
+    setEditOpen(false);
   };
 
   const handleCancel = () => {
     setVisible(false);
     setVisible2(false);
+    setEditOpen(false);
   };
 
   const close = () => {
@@ -218,6 +220,7 @@ const Owner = () => {
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
 
   const title = editOpen ? t('owner.label19') : t('owner.label22');
+  const saveBtn = editOpen ? t('owner.label19') : t('owner.label17');
 
   const pageContent = (
     <>
@@ -484,7 +487,7 @@ const Owner = () => {
                 <Col span={24}>
                   <Form.Item>
                     <Button type="primary" htmlType="submit">
-                      {t('owner.label17')}
+                      {saveBtn}
                     </Button>
                   </Form.Item>
                 </Col>

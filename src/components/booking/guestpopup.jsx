@@ -1,10 +1,9 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import './booking.css';
 import { useTranslation } from 'react-i18next';
 import {
   Form,
-  Select,
   Input,
   Radio,
   DatePicker,
@@ -14,7 +13,7 @@ import {
   Modal,
 } from 'antd';
 // import Toaster from '../toaster/toaster';
-import { CountryDropdown } from 'react-country-region-selector';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { userInstance } from '../../axios/axiosconfig';
 
 const GuestPopup = (props) => {
@@ -25,6 +24,7 @@ const GuestPopup = (props) => {
   } = props;
   const [form] = Form.useForm();
   const guestData = editValues;
+  const [country, setCountry] = useState(null);
 
   form.setFieldsValue({
     id: guestData.id,
@@ -95,7 +95,7 @@ const GuestPopup = (props) => {
               name="country"
               rules={[{ required: true, message: t('guestpopup.label3') }]}
             >
-              <CountryDropdown />
+              <CountryDropdown onChange={(val) => setCountry(val)} />
             </Form.Item>
           </Col>
         </Row>
@@ -153,10 +153,7 @@ const GuestPopup = (props) => {
                 },
               ]}
             >
-              <Select>
-                <Select.Option value="demo">Holiday House</Select.Option>
-                <Select.Option value="demo">Holiday House</Select.Option>
-              </Select>
+              <Input />
             </Form.Item>
           </Col>
 
@@ -178,7 +175,7 @@ const GuestPopup = (props) => {
               name="citizenShip"
               style={{ paddingRight: 20 }}
             >
-              <Input />
+              <RegionDropdown country={country} />
             </Form.Item>
           </Col>
 

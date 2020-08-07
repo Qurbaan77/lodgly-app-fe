@@ -76,6 +76,7 @@ const Booking = () => {
   };
 
   const showfilter = () => {
+    getData();
     setVisibleFilter(true);
   };
 
@@ -165,6 +166,7 @@ const Booking = () => {
   }, [topNavId]);
 
   const selectBooking = (values) => {
+
     values.startDate = values.startDate.slice(0, 10);
     values.endDate = values.endDate.slice(0, 10);
     const d1 = new Date(values.startDate);
@@ -207,19 +209,6 @@ const Booking = () => {
     setVisibleGuest(true);
   };
 
-  // const menu = (
-  //   <Menu>
-  //     <Menu.Item key="1">Booked</Menu.Item>
-  //     <Menu.Item key="2">Open</Menu.Item>
-  //     <Menu.Item key="3">Set as Tentative</Menu.Item>
-  //     <Menu.Item key="4">Decline</Menu.Item>
-  //   </Menu>
-  // );
-
-  // const onClick = () => {
-  // setVisible(true);
-  // };
-
   const closeGuest = () => {
     setVisibleGuest(false);
   };
@@ -233,25 +222,29 @@ const Booking = () => {
     getData();
   }, [getData]);
 
-  const filterValue = useCallback(() => {
-    const copyBookingData = bookingData;
-    const filterBooked = [];
-    const filterAgain = [];
-
-    if (filterValues.groupname !== undefined) {
-      copyBookingData
-        .filter(
-          (el) => new Date(el.startDate) >= filterValues.groupname[0]._d
-&& new Date(el.startDate) <= filterValues.groupname[1]._d,
-        )
-        .map((filter) => filterBooked.push(filter));
-      setBookingData(filterAgain.length > 0 ? filterAgain : filterBooked);
-    }
-  }, [bookingData, filterValues]);
-
   useEffect(() => {
-    filterValue();
-  }, [filterValue]);
+    console.log(filterValues)
+    const copyBookingData = bookingData;
+    const filterData = [];
+    let startDate = 0;
+    let endDate = 0;
+    if(filterValues.groupname) {
+      startDate = filterValues.groupname[0]._d;
+      endDate = filterValues.groupname[1]._d;
+    }
+    copyBookingData
+        .filter(
+          (el) => new Date(el.startDate) >= startDate
+                  || new Date(el.startDate) <= endDate
+                  || el.propertyId === filterValues.property
+                  || el.status === filterValues.status
+                  || el.totalAmount >= filterValues.from 
+                  || el.totalAmount <= filterValues.to,
+        )
+        .map((filter) => filterData.push(filter));
+      
+        setBookingData(filterData);
+  }, [filterValues, bookingData]);
 
   const enableButton = (
     <Button
@@ -261,7 +254,6 @@ const Booking = () => {
         setVisible(true);
         setEditBookingValues({});
         setEditCurrentGuest({});
-        form.resetFields();
       }}
     >
       {t('booking.title1')}
@@ -277,7 +269,6 @@ const Booking = () => {
           setVisible(true);
           setEditBookingValues({});
           setEditCurrentGuest({});
-          form.resetFields();
         }}
       >
         {t('booking.title1')}
@@ -370,9 +361,6 @@ const Booking = () => {
                       className={`booking-list ${el.statusColour}`}
                       onClick={() => selectBooking(el, i)}
                     >
-                      {/* <div className="filter-checkbox">
-<Checkbox />
-</div> */}
                       <div className="detail">
                         <h3>{el.guest}</h3>
                         <p>{el.propertyName}</p>
@@ -452,13 +440,6 @@ const Booking = () => {
                         role="presentation"
                       >
                         {edit2}
-                        {/* <Dropdown overlay={menu}>
-<Button>
-{t('booking.heading4')}
-{' '}
-<DownOutlined />
-</Button>
-</Dropdown> */}
                         <Select
                           placeholder="Select"
                           allowClear
@@ -473,6 +454,7 @@ const Booking = () => {
                         </Select>
                       </div>
                     </div>
+
 
                     <div className="booking-item">
                       <div className="prorety-box">
@@ -646,7 +628,6 @@ const Booking = () => {
         visible={visiblefilter}
         handleCancel={handleCancel}
         handleOk={handleOk}
-        setBookingData={setBookingData}
         setFilterValues={setFilterValues}
       />
     </Wrapper>

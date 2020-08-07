@@ -7,12 +7,9 @@ import {
   Input,
   Switch,
   DatePicker,
-  Checkbox,
   Row,
   Col,
   Modal,
-  Menu,
-  Dropdown,
   Button,
 } from 'antd';
 import {
@@ -20,7 +17,6 @@ import {
   RedEnvelopeOutlined,
   ReconciliationOutlined,
   MailOutlined,
-  DownOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { userInstance } from '../../axios/axiosconfig';
@@ -31,20 +27,6 @@ function onChange() {
   // console.log(`checked = ${e.target.checked}`);
 }
 
-const menu = (
-  <Menu>
-    <Menu.Item key="0">
-      <Checkbox onChange={onChange}>Double Room</Checkbox>
-    </Menu.Item>
-    <Menu.Item key="1">
-      <Checkbox onChange={onChange}>Two Bedroom</Checkbox>
-    </Menu.Item>
-    <Menu.Item key="1">
-      <Checkbox onChange={onChange}>One Bedroom</Checkbox>
-    </Menu.Item>
-  </Menu>
-);
-
 const BookingFilter = (props) => {
   const [form] = Form.useForm();
   const { t } = useTranslation();
@@ -53,33 +35,41 @@ const BookingFilter = (props) => {
   } = props;
   const [propertyData, setPropertyData] = useState([]);
   const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
-  // function onChange(checked) {
-  //   console.log(`switch to ${checked}`);
+  const [fromAmt, setFromAmt] = useState();
+  const [toAmt, setToAmt] = useState();
+
+  
+function fromAmount(evt) {
+  console.log("fromAmount", evt.target.value);
+  setFromAmt(evt.target.value);
+}
+
+function toAmount(evt) {
+  console.log("toAmount", evt.target.value);
+  setToAmt(evt.target.value);
+}
 
   const onFinish = async (values) => {
-    setFilterValues(values);
-    // setPropertyId(values.property);
-    // if (values.groupname !== undefined) {
-    //   const arr2 = Object.values(values.groupname);
-    //   console.log(arr2);
-    //   setRangeDate(values.groupname);
-    // } else {
-    //   const arr2 = [];
-    //   console.log(arr2)
-    //   setRangeDate(arr2);
-    // }
+    const copyValues = values;
+    copyValues.from = fromAmt;
+    copyValues.to = toAmt;
+    setFilterValues(copyValues);
     handleCancel();
-    // const response = await userInstance.post('/filterBooking', {
-    //   affiliateId: userId,
-    // });
-    // const data = response.data.propertiesData;
-    // if (response.data.code === 200) {
-    //   setPropertyData(data);
-    // }
+    form.resetFields();
+  };
+
+  const onCancel = () => {
+    form.resetFields();
+    handleCancel();
+  };
+  
+  const onOk = () => {
+    form.resetFields();
+    handleOk();
   };
 
   useEffect(() => {
-    async function getData() {
+    async function getProperty() {
       const response = await userInstance.post('/fetchProperty', {
         affiliateId: userId,
       });
@@ -88,15 +78,17 @@ const BookingFilter = (props) => {
         setPropertyData(data);
       }
     }
-    getData();
+    getProperty();
   }, [userId]);
+
+  const { Option } = Select;
 
   return (
     <Modal
       title={t('filter.heading1')}
       visible={visible}
-      onOk={handleOk}
-      onCancel={handleCancel}
+      onOk={onOk}
+      onCancel={onCancel}
       wrapClassName="filter-modal"
     >
       <div className="booking-filter">
@@ -128,19 +120,15 @@ const BookingFilter = (props) => {
 
                     <Col span={24}>
                       <Form.Item
-                        className="filter-select"
                         label={t('strings.status')}
                         name="status"
                       >
-                        <Dropdown overlay={menu} trigger={['click']}>
-                          <div
-                            role="presentation"
-                            className="ant-dropdown-link"
-                            onClick={(e) => e.preventDefault()}
-                          >
-                            <DownOutlined />
-                          </div>
-                        </Dropdown>
+                        <Select placeholder="Select">
+                        <Option value="booked">Booked</Option>
+                          <Option value="open">Open</Option>
+                          <Option value="tentative">Set as Tentative</Option>
+                          <Option value="decline">Decline</Option>
+                        </Select>
                       </Form.Item>
                     </Col>
 
@@ -151,13 +139,13 @@ const BookingFilter = (props) => {
                             <input hidden />
                             {t('strings.from')}
                           </label>
-                          <Input type="text" placeholder="1000000" />
-                          <label htmlFor="from">
+                          <Input type="text" placeholder="1000000" onChange={fromAmount}/>
+                          <label htmlFor="to">
                             <input hidden />
                             {t('strings.to')}
                           </label>
-                          <Input type="text" placeholder="1000000" />
-                          <label htmlFor="from">
+                          <Input type="text" placeholder="1000000" onChange={toAmount}/>
+                          <label htmlFor="USD">
                             <input hidden />
                             {t('strings.usd')}
                           </label>
@@ -211,7 +199,7 @@ const BookingFilter = (props) => {
                         <Button
                           className="border-btn"
                           style={{ marginRight: 10 }}
-                          onClick={handleCancel}
+                          onClick={onCancel}
                         >
                           Cancel
                         </Button>
