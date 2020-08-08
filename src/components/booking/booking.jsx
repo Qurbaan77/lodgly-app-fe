@@ -222,11 +222,11 @@ const Booking = () => {
   }, [getData]);
 
   useEffect(() => {
-      const copyBookingData = bookingData;
-      const filterData = [];
-      let startDate = 0;
-      let endDate = 0;
-      if (filterValues.length > 0) {
+    const copyBookingData = bookingData;
+    const filterData = [];
+    let startDate = 0;
+    let endDate = 0;
+    if (filterValues.length > 0) {
       if (filterValues.groupname) {
         startDate = filterValues.groupname[0]._d;
         endDate = filterValues.groupname[1]._d;

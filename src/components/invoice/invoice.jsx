@@ -309,13 +309,13 @@ const Invoice = () => {
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   const pageContent = (
     <>
-      <Toaster
-        notifyType={notifyType}
-        notifyMsg={notifyMsg}
-        close={closeToaster}
-      />
       {page ? (
         <Wrapper fun={setTopNavId}>
+          <Toaster
+            notifyType={notifyType}
+            notifyMsg={notifyMsg}
+            close={closeToaster}
+          />
           <div className="add-invoice-page">
             <div className="add-invoice">
               <img src={invoice} alt="invoice" />
@@ -336,6 +336,11 @@ const Invoice = () => {
         </Wrapper>
       ) : (
         <Wrapper fun={setTopNavId}>
+          <Toaster
+            notifyType={notifyType}
+            notifyMsg={notifyMsg}
+            close={closeToaster}
+          />
           <div className="invoice-listing-page">
             <div className="page-header">
               <h1>

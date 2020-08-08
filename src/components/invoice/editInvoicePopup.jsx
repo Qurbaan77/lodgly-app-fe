@@ -399,7 +399,7 @@ const EditInvoicePopup = (props) => {
 
               <Row>
                 <Col span={12}>
-                  <Form.Item 
+                  <Form.Item
                     name="dueDate"
                     label="Due Date"
                     rules={[
@@ -407,8 +407,7 @@ const EditInvoicePopup = (props) => {
                         required: true,
                       },
                     ]}
-
-                    >
+                  >
                     <DatePicker
                       value={dueDate}
                       onChange={(e) => {
@@ -635,7 +634,7 @@ const EditInvoicePopup = (props) => {
                 <span>
                   {itemState
                     .map((el) => el.itemTotal)
-                    .reduce((a, b) => a + (b || 0), 0)}
+                    .reduce((a, b) => a + (b || 0), 0).toFixed(2)}
                   {' '}
                   €
                 </span>

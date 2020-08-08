@@ -315,7 +315,15 @@ const AdInvoicePopup = (props) => {
 
               <Row>
                 <Col span={12}>
-                  <Form.Item name="dueDate" label="Due Date">
+                  <Form.Item
+                    name="dueDate"
+                    label="Due Date"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+                  >
                     <DatePicker
                       value={dueDate}
                       onChange={(e) => {
@@ -546,7 +554,7 @@ const AdInvoicePopup = (props) => {
                 :
                 {' '}
                 <span>
-                  {itemTotalCopy.reduce((a, b) => a + (b || 0), 0)}
+                  {itemTotalCopy.reduce((a, b) => a + (b || 0), 0).toFixed(2)}
                   {' '}
                   €
                 </span>
