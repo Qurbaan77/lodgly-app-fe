@@ -244,7 +244,7 @@ const Booking = () => {
 
       setBookingData(filterData);
     }
-  }, [filterValues]);
+  }, [filterValues, bookingData]);
 
   const enableButton = (
     <Button
