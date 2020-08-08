@@ -121,11 +121,11 @@ const Profile = () => {
     if (statusCode === 200) {
       setNotifyType('success');
       setNotifyMsg(msg);
-      getCompanyInfo();
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
+    getCompanyInfo();
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form4.resetFields();
   };

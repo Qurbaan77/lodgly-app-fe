@@ -57,7 +57,7 @@ const UserProfile = (props) => {
         </Dropdown>
       </div>
       <h3>{name || 'No Name Added'}</h3>
-      <span>User</span>
+      <span>{userCred ? 'Sub User' : 'User'}</span>
     </div>
   );
 };

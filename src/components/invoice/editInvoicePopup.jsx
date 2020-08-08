@@ -58,7 +58,7 @@ const EditInvoicePopup = (props) => {
       // setDate(date0);
       setDueDate(dueDate0);
       setDeliveryDate(deliveryDate0);
-      setTime(time0);
+      setTime(`${invoiceData.time}:00`);
       form.setFieldsValue({
         clientName: invoiceData.clientName,
         email: invoiceData.email,
@@ -99,6 +99,7 @@ const EditInvoicePopup = (props) => {
   const handleFinish = async (values) => {
     setShowLoader(false);
     const valuesCopy = values;
+    valuesCopy.id = invoiceData.id;
     valuesCopy.date = moment(valuesCopy.date._d).format('YYYY/MM/DD');
     valuesCopy.deliveryDate = moment(valuesCopy.deliveryDate._d).format(
       'YYYY/MM/DD',
@@ -398,7 +399,16 @@ const EditInvoicePopup = (props) => {
 
               <Row>
                 <Col span={12}>
-                  <Form.Item name="dueDate" label="Due Date">
+                  <Form.Item 
+                    name="dueDate"
+                    label="Due Date"
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
+
+                    >
                     <DatePicker
                       value={dueDate}
                       onChange={(e) => {
