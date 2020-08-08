@@ -35,9 +35,12 @@ const normFile = (e) => {
 
 const Profile = () => {
   const { t, i18n } = useTranslation();
-  const changeLanguage = useCallback((event) => {
-    i18n.changeLanguage(event);
-  }, [i18n]);
+  const changeLanguage = useCallback(
+    (event) => {
+      i18n.changeLanguage(event);
+    },
+    [i18n],
+  );
   const [form1] = Form.useForm();
   const [form3] = Form.useForm();
   const [form4] = Form.useForm();
@@ -54,9 +57,9 @@ const Profile = () => {
   const getUserInfo = useCallback(async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
     if (response0.data.code === 200) {
-      const [{
-        days, isOnTrial, isSubscribed,
-      }] = response0.data.userSubsDetails;
+      const [
+        { days, isOnTrial, isSubscribed },
+      ] = response0.data.userSubsDetails;
       setDaysLeft(parseInt(days, 10));
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
@@ -76,7 +79,11 @@ const Profile = () => {
   }, [form1]);
 
   const getCompanyInfo = useCallback(async () => {
-    const response = await userInstance.post('/getCompanyData');
+    const companyName = window.location.hostname.split('.');
+    const payload = {
+      company: companyName[0],
+    };
+    const response = await userInstance.post('/getCompanyData', payload);
     const body = response.data.companyData;
     if (body.length > 0) {
       form4.setFieldsValue({
@@ -237,6 +244,9 @@ const Profile = () => {
                                   <p className="ant-upload-drag-icon">
                                     <UserOutlined />
                                   </p>
+                                  {/* <div className="user-pic-success">
+                                    <img src={user} alt="" />
+                                  </div> */}
                                   <p className="ant-upload-text">
                                     {t('billingprofile.label3')}
                                   </p>
@@ -261,7 +271,7 @@ const Profile = () => {
                             >
                               <Input placeholder="" />
                             </Form.Item>
-                            <Form.Item 
+                            <Form.Item
                               label={t('strings.email')}
                               name="email"
                               rules={[
@@ -271,7 +281,7 @@ const Profile = () => {
                                   message: 'The input is not valid E-mail!',
                                 },
                               ]}
-                              >
+                            >
                               <Input placeholder="" />
                             </Form.Item>
 
@@ -336,10 +346,18 @@ const Profile = () => {
 
                       <Row gutter={[16, 0]}>
                         <Col span={12}>
-                          <Form.Item className="lang-box" label={t('billingprofile.label10')}>
-                            <Dropdown overlay={language} overlayClassName="language-dropdown">
+                          <Form.Item
+                            className="lang-box"
+                            label={t('billingprofile.label10')}
+                          >
+                            <Dropdown
+                              overlay={language}
+                              overlayClassName="language-dropdown"
+                            >
                               <Button>
-                                {localStorage.getItem('i18nextLng') === 'pl' ? 'PL' : 'EN'}
+                                {localStorage.getItem('i18nextLng') === 'pl'
+                                  ? 'PL'
+                                  : 'EN'}
                                 {' '}
                                 <DownOutlined />
                               </Button>
@@ -420,7 +438,7 @@ const Profile = () => {
                                   validator(rule, value) {
                                     if (
                                       !value
-|| getFieldValue('newPassword') === value
+                                      || getFieldValue('newPassword') === value
                                     ) {
                                       return Promise.resolve();
                                     }

@@ -38,16 +38,13 @@ const BookingFilter = (props) => {
   const [fromAmt, setFromAmt] = useState();
   const [toAmt, setToAmt] = useState();
 
-  
-function fromAmount(evt) {
-  console.log("fromAmount", evt.target.value);
-  setFromAmt(evt.target.value);
-}
+  function fromAmount(evt) {
+    setFromAmt(evt.target.value);
+  }
 
-function toAmount(evt) {
-  console.log("toAmount", evt.target.value);
-  setToAmt(evt.target.value);
-}
+  function toAmount(evt) {
+    setToAmt(evt.target.value);
+  }
 
   const onFinish = async (values) => {
     const copyValues = values;
@@ -62,7 +59,7 @@ function toAmount(evt) {
     form.resetFields();
     handleCancel();
   };
-  
+
   const onOk = () => {
     form.resetFields();
     handleOk();
@@ -124,7 +121,7 @@ function toAmount(evt) {
                         name="status"
                       >
                         <Select placeholder="Select">
-                        <Option value="booked">Booked</Option>
+                          <Option value="booked">Booked</Option>
                           <Option value="open">Open</Option>
                           <Option value="tentative">Set as Tentative</Option>
                           <Option value="decline">Decline</Option>
@@ -139,12 +136,12 @@ function toAmount(evt) {
                             <input hidden />
                             {t('strings.from')}
                           </label>
-                          <Input type="text" placeholder="1000000" onChange={fromAmount}/>
+                          <Input type="text" placeholder="1000000" onChange={fromAmount} />
                           <label htmlFor="to">
                             <input hidden />
                             {t('strings.to')}
                           </label>
-                          <Input type="text" placeholder="1000000" onChange={toAmount}/>
+                          <Input type="text" placeholder="1000000" onChange={toAmount} />
                           <label htmlFor="USD">
                             <input hidden />
                             {t('strings.usd')}

@@ -166,7 +166,6 @@ const Booking = () => {
   }, [topNavId]);
 
   const selectBooking = (values) => {
-
     values.startDate = values.startDate.slice(0, 10);
     values.endDate = values.endDate.slice(0, 10);
     const d1 = new Date(values.startDate);
@@ -223,28 +222,29 @@ const Booking = () => {
   }, [getData]);
 
   useEffect(() => {
-    console.log(filterValues)
-    const copyBookingData = bookingData;
-    const filterData = [];
-    let startDate = 0;
-    let endDate = 0;
-    if(filterValues.groupname) {
-      startDate = filterValues.groupname[0]._d;
-      endDate = filterValues.groupname[1]._d;
-    }
-    copyBookingData
+    if (bookingData.length > 0) {
+      const copyBookingData = bookingData;
+      const filterData = [];
+      let startDate = 0;
+      let endDate = 0;
+      if (filterValues.groupname) {
+        startDate = filterValues.groupname[0]._d;
+        endDate = filterValues.groupname[1]._d;
+      }
+      copyBookingData
         .filter(
           (el) => new Date(el.startDate) >= startDate
                   || new Date(el.startDate) <= endDate
                   || el.propertyId === filterValues.property
                   || el.status === filterValues.status
-                  || el.totalAmount >= filterValues.from 
+                  || el.totalAmount >= filterValues.from
                   || el.totalAmount <= filterValues.to,
         )
         .map((filter) => filterData.push(filter));
-      
-        setBookingData(filterData);
-  }, [filterValues, bookingData]);
+
+      setBookingData(filterData);
+    }
+  }, [filterValues]);
 
   const enableButton = (
     <Button
@@ -440,9 +440,9 @@ const Booking = () => {
                         role="presentation"
                       >
                         {edit2}
+
                         <Select
-                          placeholder="Select"
-                          allowClear
+                          value="Select"
                           className="filter-menu"
                           dropdownClassName="color-dropdown"
                           onSelect={addStatus}
@@ -454,7 +454,6 @@ const Booking = () => {
                         </Select>
                       </div>
                     </div>
-
 
                     <div className="booking-item">
                       <div className="prorety-box">
