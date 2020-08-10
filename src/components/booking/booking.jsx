@@ -221,30 +221,43 @@ const Booking = () => {
     getData();
   }, [getData]);
 
-  useEffect(() => {
+  const filter = useCallback(() => {
     const copyBookingData = bookingData;
     const filterData = [];
     let startDate = 0;
     let endDate = 0;
-    if (filterValues.length > 0) {
-      if (filterValues.groupname) {
-        startDate = filterValues.groupname[0]._d;
-        endDate = filterValues.groupname[1]._d;
-      }
-      copyBookingData
-        .filter(
-          (el) => new Date(el.startDate) >= startDate
-                  || new Date(el.startDate) <= endDate
-                  || el.propertyId === filterValues.property
-                  || el.status === filterValues.status
-                  || el.totalAmount >= filterValues.from
-                  || el.totalAmount <= filterValues.to,
-        )
-        .map((filter) => filterData.push(filter));
-
-      setBookingData(filterData);
+    if (filterValues.groupname) {
+      startDate = filterValues.groupname[0]._d;
+      endDate = filterValues.groupname[1]._d;
+      const data = copyBookingData.filter((el) => new Date(el.startDate) >= startDate
+      || new Date(el.startDate) <= endDate);
+      filterData.push(data);
     }
-  }, [filterValues, bookingData]);
+    if (filterValues.property) {
+      const data0 = filterData.length > 0 ? filterData : copyBookingData;
+      const data = data0.filter((el) => el.propertyId === filterValues.property);
+      filterData.length = 0;
+      filterData.push(...data);
+    }
+    if (filterValues.status) {
+      const data0 = filterData.length > 0 ? filterData : copyBookingData;
+      const data = data0.filter((el) => el.status === filterValues.status);
+      filterData.length = 0;
+      filterData.push(...data);
+    }
+    if (filterValues.from && filterValues.to) {
+      const data0 = filterData.length > 0 ? filterData : copyBookingData;
+      const data = data0.filter((el) => el.totalAmount >= filterValues.from
+      && el.totalAmount <= filterValues.to);
+      filterData.length = 0;
+      filterData.push(...data);
+    }
+    setBookingData(filterData);
+  }, [bookingData, filterValues]);
+
+  useEffect(() => {
+    filter();
+  }, [filter]);
 
   const enableButton = (
     <Button

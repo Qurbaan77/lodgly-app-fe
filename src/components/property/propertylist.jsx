@@ -55,7 +55,8 @@ const PropertyList = () => {
     if (response.data.code === 200) {
       setPropertyData(data2.length > 0 ? data2 : data);
     }
-    await userInstance.get('/getSubscriptionStatus');
+    const resp = await userInstance.get('/getSubscriptionStatus');
+    console.log(resp);
   }, [userId, topNavId]);
 
   // const getData = async () => {
@@ -103,7 +104,7 @@ const PropertyList = () => {
     </Button>
   );
   const disableButton = (
-    <Tooltip title={t('propertylist.heading2')} color="gold">
+    <Tooltip title={t('propertylist.heading1')} color="gold">
       <Button
         disabled="true"
         type="primary"

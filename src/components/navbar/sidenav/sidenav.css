@@ -228,3 +228,6 @@ margin-right: 10px;
   right: 0;
   top: 20px;
 }
+.hide-prop {
+  display: none !important
+}

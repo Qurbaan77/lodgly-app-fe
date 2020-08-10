@@ -105,8 +105,6 @@ const Stats = () => {
 export default Stats;
 
 const AccommodationChart = ({ topNavId }) => {
-  const [currYear, setCurrYear] = useState();
-  const [prevYear, setPrevYear] = useState();
   const [currArr, setCurrArr] = useState();
   const [prevArr, setPrevArr] = useState();
   const [show, setShow] = useState(false);
@@ -118,14 +116,12 @@ const AccommodationChart = ({ topNavId }) => {
       };
       const response = await userInstance.post('/getRevenue', values);
       const currYearSum = response.data.currYearArr.reduce((a, b) => a + b, 0);
-      const prevYearSum = response.data.currYearArr.reduce((a, b) => a + b, 0);
+      const prevYearSum = response.data.prevYearArr.reduce((a, b) => a + b, 0);
       if (currYearSum > 0 || prevYearSum > 0) {
         setShow(true);
       }
       setCurrArr(response.data.currYearArr);
       setPrevArr(response.data.prevYearArr);
-      setPrevYear(response.data.currYear);
-      setCurrYear(response.data.prevYear);
     }
     getData();
   }, [topNavId]);
@@ -133,12 +129,12 @@ const AccommodationChart = ({ topNavId }) => {
   const state = {
     series: [
       {
-        name: currYear,
-        data: currArr,
+        name: new Date().getFullYear() - 1,
+        data: prevArr,
       },
       {
-        name: prevYear,
-        data: prevArr,
+        name: new Date().getFullYear(),
+        data: currArr,
       },
     ],
     options: {
@@ -234,6 +230,7 @@ AccommodationChart.defaultProps = {
 const OccupancyChart = ({ topNavId }) => {
   const [currArr, setCurrArr] = useState([]);
   const [prevArr, setPrevArr] = useState([]);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     async function getData() {
@@ -241,6 +238,11 @@ const OccupancyChart = ({ topNavId }) => {
         propertyId: localStorage.getItem('topNavId'),
       };
       const response = await userInstance.post('/getOccupancy', values);
+      const currYearSum = response.data.currYearArr.reduce((a, b) => a + b, 0);
+      const prevYearSum = response.data.prevYearArr.reduce((a, b) => a + b, 0);
+      if (currYearSum > 0 || prevYearSum > 0) {
+        setShow(true);
+      }
       setPrevArr(response.data.prevYearArr);
       setCurrArr(response.data.currYearArr);
     }
@@ -262,31 +264,34 @@ const OccupancyChart = ({ topNavId }) => {
       chart: {
         type: 'bar',
         height: 350,
-        stacked: true,
+        // stacked: true,
         toolbar: {
-          show: false,
-        },
-        zoom: {
-          enabled: false,
+          show,
         },
       },
-      responsive: [
-        {
-          breakpoint: 480,
-          options: {
-            legend: {
-              position: 'bottom',
-              offsetX: -10,
-              offsetY: 0,
-            },
-          },
-        },
-      ],
       plotOptions: {
         bar: {
           horizontal: false,
           columnWidth: '25%',
         },
+      },
+      legend: {
+        position: 'top',
+        markers: {
+          strokeColor: 'transparent',
+          fillColors: ['#82858C', '#FAB52C'],
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent'],
+      },
+      fill: {
+        colors: ['#82858C', '#FAB52C'],
       },
       xaxis: {
         categories: [
@@ -304,20 +309,17 @@ const OccupancyChart = ({ topNavId }) => {
           'Dec',
         ],
       },
-      legend: {
-        position: 'top',
-        offsetX: 0,
-        labels: {
-          colors: ['#82858C', '#7FBD34'],
-          useSeriesColors: false,
-        },
-        markers: {
-          strokeColor: 'transparent',
-          fillColors: ['#82858C', '#7FBD34'],
+      yaxis: {
+        title: {
+          text: '',
         },
       },
-      fill: {
-        colors: ['#82858C', '#7FBD34'],
+      tooltip: {
+        y: {
+          formatter(val) {
+            return `$ ${val} thousands`;
+          },
+        },
       },
     },
   };
@@ -355,6 +357,7 @@ const ReservationCountryChart = () => {
   useEffect(() => {
     async function getData() {
       const response = await userInstance.post('/getCountryReport');
+      console.log(response);
       if (response.data.code === 200) {
         setCountry(response.data.country);
         setAverage(response.data.average);

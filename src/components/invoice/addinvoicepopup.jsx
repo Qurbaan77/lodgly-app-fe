@@ -123,6 +123,8 @@ const AdInvoicePopup = (props) => {
       }
     }
     setShowLoader(true);
+    setItemTotalCopy([]);
+    setAmountCopy([]);
   };
 
   const handleQuantity = (e) => {
@@ -394,6 +396,7 @@ const AdInvoicePopup = (props) => {
                 ]}
               >
                 <Input
+                  type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -417,6 +420,7 @@ const AdInvoicePopup = (props) => {
 
               <Form.Item label="Vat ID" name="vat">
                 <Input
+                  type="number"
                   value={vatId}
                   onChange={(e) => setVatId(e.target.value)}
                 />

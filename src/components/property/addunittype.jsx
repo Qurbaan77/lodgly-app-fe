@@ -226,8 +226,8 @@ const AddUnitType = () => {
           rowId: '4',
           label: 'Item 4',
           time: {
-            start: new Date().getTime() + 10 * 24 * 60 * 60 * 1000,
-            end: new Date().getTime() + 12 * 24 * 60 * 60 * 1000,
+            start: new Date().getTime() + 30 * 24 * 60 * 60 * 1000,
+            end: new Date().getTime() + 30 * 24 * 60 * 60 * 1000,
           },
         },
         5: {
@@ -235,8 +235,8 @@ const AddUnitType = () => {
           rowId: '4',
           label: 'Item 5',
           time: {
-            start: new Date().getTime() + 12 * 24 * 60 * 60 * 1000,
-            end: new Date().getTime() + 14 * 24 * 60 * 60 * 1000,
+            start: new Date().getTime() + 30 * 24 * 60 * 60 * 1000,
+            end: new Date().getTime() + 30 * 24 * 60 * 60 * 1000,
           },
         },
       },
@@ -277,6 +277,18 @@ const AddUnitType = () => {
       item3.time.start = new Date(startDay).getTime();
       item3.time.end = new Date(endDay).getTime();
       return item3;
+    });
+    state.update('config.chart.items.4', (item4) => {
+      item4.label = perNight;
+      item4.time.start = new Date(startDay).getTime();
+      item4.time.end = new Date(endDay).getTime();
+      return item4;
+    });
+    state.update('config.chart.items.5', (item5) => {
+      item5.label = minimumStay;
+      item5.time.start = new Date(startDay).getTime();
+      item5.time.end = new Date(endDay).getTime();
+      return item5;
     });
     subs.push(state.subscribe('config.chart.items', () => {}));
     subs.push(state.subscribe('config.list.rows', () => {}));

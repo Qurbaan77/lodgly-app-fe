@@ -43,6 +43,7 @@ const Sidenav = ({
   const [hideTeam, setHideTeam] = useState(false);
   const [hideStats, setHideStats] = useState(false);
   const [hideService, setHideService] = useState(false);
+  const [hideOwner, setHideOwner] = useState(false);
   const [disableProperties, setDisableProperties] = useState(false);
   // const [disableGuests, setDisableGuests] = useState(false);
   const history = useHistory();
@@ -129,6 +130,21 @@ const Sidenav = ({
     teamRead]);
 
   const getData = useCallback(async () => {
+    const res = await userInstance.get('/getFeature');
+    if (res.data.code === 200) {
+      const { featureData } = res.data;
+      // getFeature(featureData);
+      const [{
+        booking, calendar, properties, team, invoice, owner, stats,
+      }] = featureData;
+      setHideBooking(!booking);
+      setHidecalendar(!calendar);
+      setDisableProperties(!properties);
+      setHideTeam(!team);
+      setHideInvoice(!invoice);
+      setHideOwner(!owner);
+      setHideStats(!stats);
+    }
     const Id = localStorage.getItem('propertyId');
     const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
     const data = response.data.propertiesData;
@@ -209,7 +225,7 @@ const Sidenav = ({
         </Menu.Item>
 
         <SubMenu
-          className="property-nav"
+          className={`${disableProperties ? 'hide-prop' : 'property-nav'}`}
           onClick={() => handleMenu('toggle')}
           key="2"
           disabled={disableProperties}
@@ -262,7 +278,7 @@ const Sidenav = ({
           <Link to="/">{t('sidebar.menu8')}</Link>
         </Menu.Item> */}
 
-        <Menu.Item className="owner-nav">
+        <Menu.Item className="owner-nav" hidden={hideOwner}>
           <img src={ownerIcon} alt="owner-icon" />
           <Link to="/owner">{t('sidebar.menu9')}</Link>
         </Menu.Item>

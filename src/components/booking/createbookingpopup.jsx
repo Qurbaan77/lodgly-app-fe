@@ -302,6 +302,11 @@ const CreateBookingPopup = (props) => {
                 label={t('strings.full')}
                 name={[el, 'fullName']}
                 style={{ paddingRight: 20 }}
+                rules={[
+                  {
+                    required: 'true',
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -312,6 +317,11 @@ const CreateBookingPopup = (props) => {
                 label={t('strings.email')}
                 name={[el, 'email']}
                 style={{ paddingRight: 20 }}
+                rules={[
+                  {
+                    required: 'true',
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -322,6 +332,11 @@ const CreateBookingPopup = (props) => {
                 label={t('strings.country')}
                 name={[el, 'country']}
                 style={{ paddingRight: 20 }}
+                rules={[
+                  {
+                    required: 'true',
+                  },
+                ]}
               >
                 <Select showSearch>
                   {countryList()

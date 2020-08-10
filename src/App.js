@@ -1,5 +1,5 @@
-import React, { Suspense } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import React, { Suspense, useState, useCallback } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
 import Login from './components/login/login';
@@ -39,10 +39,17 @@ import Profile from './components/profile/profile';
 import BillingInformation from './components/profile/billinginformation';
 import Invoice from './components/invoice/invoice';
 import Stats from './components/stats/stats';
-
+import PageNotFound from './components/404/404';
 import './responsive.css';
 
 const App = () => {
+  const [feature, setFeature] = useState({});
+  // const getFeature = (data) => {
+  //   setFeature(data[0]);
+  // };
+  const getFeature = useCallback((data) => {
+    setFeature(data[0]);
+  }, []);
   const isSubUser = localStorage.getItem('isSubUser') || false;
   return (
     <div className="App">
@@ -50,22 +57,24 @@ const App = () => {
         <>
           <Suspense fallback={null}>
             <Router>
-              <Header />
+              <Header getFeature={getFeature} />
               <main>
                 <div className="main_content">
-                  <LoginRoute exact path="/" component={() => <Login />} />
-                  <LoginRoute exact path="/company" component={() => <Company />} />
-                  <LoginRoute exact path="/register" component={() => <Register />} />
-                  <PrivateRoute
-                    exact
-                    path="/sidenav"
-                    component={() => <Sidenav />}
-                  />
-                  {
-                  isSubUser ? <SecureProperty exact path="/addproperty" component={() => <AddProperty />} /> : <PrivateRoute exact path="/addproperty" component={() => <AddProperty />} />
+                  <Switch>
+                    <LoginRoute exact path="/" component={() => <Login />} />
+                    <LoginRoute exact path="/company" component={() => <Company />} />
+                    <LoginRoute exact path="/register" component={() => <Register />} />
+                    <PrivateRoute
+                      exact
+                      path="/sidenav"
+                      component={() => <Sidenav />}
+                    />
+                    {
+                  isSubUser ? <SecureProperty exact path="/addproperty" component={() => <AddProperty />} /> : feature.properties ? <PrivateRoute exact path="/addproperty" component={() => <AddProperty />} feature={feature.properties} />
+                    : <LoginRoute exact path="/" component={() => <Login />} />
                 }
 
-                  {
+                    {
                   isSubUser
                     ? (
                       <SecureProperty
@@ -73,16 +82,17 @@ const App = () => {
                         path="/propertylist"
                         component={() => <PropertyList />}
                       />
-                    ) : (
+                    ) : feature.properties ? (
                       <PrivateRoute
                         exact
                         path="/propertylist"
                         component={() => <PropertyList />}
                       />
                     )
+                      : <LoginRoute exact path="/" component={() => <Login />} />
                 }
 
-                  {
+                    {
                   isSubUser
                     ? (
                       <SecureProperty
@@ -90,37 +100,38 @@ const App = () => {
                         path="/unittype"
                         component={() => <UnitType />}
                       />
-                    ) : (
+                    ) : feature.properties ? (
                       <PrivateRoute
                         exact
                         path="/unittype"
                         component={() => <UnitType />}
                       />
                     )
+                      : <LoginRoute exact path="/" component={() => <Login />} />
                 }
 
-                  <PrivateRoute
-                    exact
-                    path="/groups"
-                    component={() => <Groups />}
-                  />
-                  <PrivateRoute
-                    exact
-                    path="/task"
-                    component={() => <Task />}
-                  />
-                  <PrivateRoute
-                    exact
-                    path="/channelmanager"
-                    component={() => <ChannelManager />}
-                  />
-                  <Route exact path="/admin" component={() => <AdminLogin />} />
-                  <Route
-                    exact
-                    path="/adminsetting"
-                    component={() => <AdminSetting />}
-                  />
-                  {
+                    <PrivateRoute
+                      exact
+                      path="/groups"
+                      component={() => <Groups />}
+                    />
+                    <PrivateRoute
+                      exact
+                      path="/task"
+                      component={() => <Task />}
+                    />
+                    <PrivateRoute
+                      exact
+                      path="/channelmanager"
+                      component={() => <ChannelManager />}
+                    />
+                    <Route exact path="/admin" component={() => <AdminLogin />} />
+                    <Route
+                      exact
+                      path="/adminsetting"
+                      component={() => <AdminSetting />}
+                    />
+                    {
                   isSubUser
                     ? (
                       <SecureBooking
@@ -137,7 +148,7 @@ const App = () => {
                       />
                     )
                 }
-                  {
+                    {
                   isSubUser
                     ? (
                       <SecureBooking
@@ -155,7 +166,7 @@ const App = () => {
                     )
                 }
 
-                  {
+                    {
                   isSubUser
                     ? (
                       <SecureBooking
@@ -164,25 +175,26 @@ const App = () => {
                         component={() => <Booking />}
                       />
                     )
-                    : (
+                    : feature.booking ? (
                       <PrivateRoute
                         exact
                         path="/booking"
                         component={() => <Booking />}
                       />
                     )
+                      : <LoginRoute exact path="/" component={() => <Login />} />
                 }
-                  <PrivateRoute
-                    exact
-                    path="/filter"
-                    component={() => <BookingFilter />}
-                  />
-                  <PrivateRoute
-                    exact
-                    path="/deletepopup"
-                    component={() => <DeletePopup />}
-                  />
-                  {
+                    <PrivateRoute
+                      exact
+                      path="/filter"
+                      component={() => <BookingFilter />}
+                    />
+                    <PrivateRoute
+                      exact
+                      path="/deletepopup"
+                      component={() => <DeletePopup />}
+                    />
+                    {
                   isSubUser
                     ? (
                       <SecureProperty
@@ -191,16 +203,17 @@ const App = () => {
                         component={() => <Property />}
                       />
                     )
-                    : (
+                    : feature.properties ? (
                       <PrivateRoute
                         exact
                         path="/property"
                         component={() => <Property />}
                       />
                     )
+                      : <LoginRoute exact path="/" component={() => <Login />} />
                 }
 
-                  {
+                    {
                   isSubUser
                     ? (
                       <SecureProperty
@@ -209,46 +222,49 @@ const App = () => {
                         component={() => <AddUnitType />}
                       />
                     )
-                    : (
+                    : feature.properties ? (
                       <PrivateRoute
                         exact
                         path="/addunittype"
                         component={() => <AddUnitType />}
                       />
                     )
+                      : <LoginRoute exact path="/" component={() => <Login />} />
                 }
 
-                  <LoginRoute exact path="/forget" component={() => <Forget />} />
-                  <LoginRoute exact path="/reset" component={() => <Reset />} />
-                  <LoginRoute exact path="/thankyou" component={() => <Thankyou />} />
-                  {
-                  isSubUser ? <SecureService exact path="/services" component={() => <Services />} /> : <PrivateRoute exact path="/services" component={() => <Services />} />
+                    <LoginRoute exact path="/forget" component={() => <Forget />} />
+                    <LoginRoute exact path="/reset" component={() => <Reset />} />
+                    <LoginRoute exact path="/thankyou" component={() => <Thankyou />} />
+                    {
+                  isSubUser ? <SecureService exact path="/services" component={() => <Services />} /> : feature.properties ? <PrivateRoute exact path="/services" component={() => <Services />} /> : <LoginRoute exact path="/" component={() => <Login />} />
                 }
 
-                  {
-                  isSubUser ? <SecureCalendar exact path="/calendar" component={() => <Calendar />} /> : (
+                    {
+                  isSubUser ? <SecureCalendar exact path="/calendar" component={() => <Calendar />} /> : feature.calendar ? (
                     <PrivateRoute
                       exact
                       path="/calendar"
                       component={() => <Calendar />}
                     />
                   )
+                    : <LoginRoute exact path="/" component={() => <Login />} />
                 }
 
-                  <PrivateRoute exact path="/popup" component={() => <Popup />} />
+                    <PrivateRoute exact path="/popup" component={() => <Popup />} />
 
-                  {
-                  isSubUser ? <SecureOwner exact path="/owner" component={() => <Owner />} /> : <PrivateRoute exact path="/owner" component={() => <Owner />} />
+                    {
+                  isSubUser ? <SecureOwner exact path="/owner" component={() => <Owner />} /> : feature.owner ? <PrivateRoute exact path="/owner" component={() => <Owner />} /> : <LoginRoute exact path="/" component={() => <Login />} />
                 }
 
-                  {/* Additional Work */}
+                    {/* Additional Work */}
 
-                  {
-                  isSubUser ? <SecureTeam exact path="/team" component={() => <Team />} /> : <PrivateRoute exact path="/team" component={() => <Team />} />
+                    {
+                  isSubUser ? <SecureTeam exact path="/team" component={() => <Team />} /> : feature.team ? <PrivateRoute exact path="/team" component={() => <Team />} />
+                    : <LoginRoute exact path="/" component={() => <Login />} />
                 }
 
-                  <PrivateRoute exact path="/profile" component={() => <Profile />} />
-                  {
+                    <PrivateRoute exact path="/profile" component={() => <Profile />} />
+                    {
                     isSubUser ? (
                       <SecureBilling
                         exact
@@ -264,7 +280,7 @@ const App = () => {
                         />
                       )
                   }
-                  {
+                    {
                     isSubUser ? (
                       <SecureStats
                         exact
@@ -272,17 +288,20 @@ const App = () => {
                         component={() => <Stats />}
                       />
                     )
-                      : (
+                      : feature.stats ? (
                         <PrivateRoute
                           exact
                           path="/stats"
                           component={() => <Stats />}
                         />
                       )
+                        : <LoginRoute exact path="/" component={() => <Login />} />
                   }
-                  {
-                  isSubUser ? <SecureInvoice exact path="/invoice" component={() => <Invoice />} /> : <PrivateRoute exact path="/invoice" component={() => <Invoice />} />
+                    {
+                  isSubUser ? <SecureInvoice exact path="/invoice" component={() => <Invoice />} /> : feature.invoice ? <PrivateRoute exact path="/invoice" component={() => <Invoice />} /> : <LoginRoute exact path="/" component={() => <Login />} />
                 }
+                    <Route component={PageNotFound} />
+                  </Switch>
                 </div>
               </main>
               <Footer />

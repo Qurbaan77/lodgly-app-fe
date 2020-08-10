@@ -21,6 +21,7 @@
       "no-underscore-dangle": "off",
       "no-use-before-define": ["error", { "variables": false }],
       "no-shadow": "off",
-      "react/jsx-props-no-spreading": "off"
+      "react/jsx-props-no-spreading": "off",
+      "no-nested-ternary":"off"
   }
 }

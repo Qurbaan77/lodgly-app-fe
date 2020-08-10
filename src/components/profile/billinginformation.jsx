@@ -53,6 +53,7 @@ const BillingInformation = () => {
   });
   const [showCancelCheckout, setShowCancelCheckout] = useState(false);
   const [canDowngrade, setCanDowngrade] = useState();
+  const [disableBtn, setDisableBtn] = useState(false);
   // const [showCard, setShowCard] = useState(true);
   // const [disablePayNow, setDisablePayNow] = useState(true);
 
@@ -81,7 +82,9 @@ const BillingInformation = () => {
 
   const getUser = async () => {
     const response = await userInstance.get('/transactions');
-    const { code, transactions, endDate } = response.data;
+    const {
+      code, transactions, endDate, status,
+    } = response.data;
     if (code === 200 && transactions != null) {
       const [{ interval }] = transactions;
       if (interval === 'month') {
@@ -95,6 +98,9 @@ const BillingInformation = () => {
         addData(element);
         setCurrentCurrency(element.currency);
       });
+      if (status === 'canceled') {
+        setDisableBtn(true);
+      }
     } else {
       addData('');
       setHideBilling(false);
@@ -707,13 +713,14 @@ const BillingInformation = () => {
                               </li>
                             </ul>
                           </div>
-                          <Button onClick={handleChangeSubscription}>
+                          <Button onClick={handleChangeSubscription} disabled={disableBtn}>
                             {t('billinginformation.label18')}
                           </Button>
                           {canDowngrade ? (
                             <Button
                               style={{ margin: '50px 30px 20px 10px' }}
                               onClick={handleChangeSubscription}
+                              disabled={disableBtn}
                             >
                               Downgrade
                             </Button>
@@ -747,7 +754,7 @@ const BillingInformation = () => {
                               {end}
                             </p>
                           </div>
-                          <Button onClick={handleCancelSubscription}>
+                          <Button onClick={handleCancelSubscription} disabled={disableBtn}>
                             {t('strings.cancel')}
                           </Button>
                         </Col>

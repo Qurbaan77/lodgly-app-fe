@@ -29,6 +29,10 @@ const AlertBox = () => {
     if (location.pathname === '/billinginformation') {
       setHideBanner(true);
     }
+    const isSubUser = localStorage.getItem('isSubUser') || false;
+    if (isSubUser) {
+      setHideBanner(true);
+    }
   }, [location]);
 
   const handleClose = () => {

@@ -234,11 +234,7 @@ const AddProperty = () => {
                           },
                         ]}
                       >
-                        <Select>
-                          <Select.Option value="demo">
-                            Holiday House
-                          </Select.Option>
-                        </Select>
+                        <Input />
                       </Form.Item>
                     </Col>
 
@@ -385,11 +381,7 @@ const AddProperty = () => {
                   <Row gutter={[16, 0]}>
                     <Col span={24}>
                       <Form.Item label={t('addproperty.detail2')}>
-                        <Select>
-                          <Select.Option value="demo">
-                            Holiday House
-                          </Select.Option>
-                        </Select>
+                        <Input />
                       </Form.Item>
                     </Col>
 
