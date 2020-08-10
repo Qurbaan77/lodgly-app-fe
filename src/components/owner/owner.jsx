@@ -653,10 +653,7 @@ const Owner = () => {
                     name="document"
                     style={{ paddingRight: 20 }}
                   >
-                    <Select>
-                      <Select.Option value="demo">Holiday House</Select.Option>
-                      <Select.Option value="demo">Holiday House</Select.Option>
-                    </Select>
+                    <Input />
                   </Form.Item>
                 </Col>
 

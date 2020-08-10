@@ -389,11 +389,7 @@ const Property = () => {
                                 name="propertyType"
                                 label={t('property.heading2')}
                               >
-                                <Select>
-                                  <Select.Option value="demo">
-                                    Holiday House
-                                  </Select.Option>
-                                </Select>
+                                <Input />
                               </Form.Item>
                             </Col>
 

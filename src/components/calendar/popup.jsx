@@ -193,10 +193,7 @@ const UpdateGuest = () => {
 
         <Col span={12}>
           <Form.Item label="Country of Residence" name="lastname">
-            <Select>
-              <Select.Option value="demo">Holiday House</Select.Option>
-              <Select.Option value="demo">Holiday House</Select.Option>
-            </Select>
+            <Input />
           </Form.Item>
         </Col>
       </Row>
@@ -247,10 +244,7 @@ const UpdateGuest = () => {
             name="document"
             style={{ paddingRight: 20 }}
           >
-            <Select>
-              <Select.Option value="demo">Holiday House</Select.Option>
-              <Select.Option value="demo">Holiday House</Select.Option>
-            </Select>
+            <Input />
           </Form.Item>
         </Col>
 
@@ -268,10 +262,7 @@ const UpdateGuest = () => {
             name="citizenship"
             style={{ paddingRight: 20 }}
           >
-            <Select>
-              <Select.Option value="demo">Holiday House</Select.Option>
-              <Select.Option value="demo">Holiday House</Select.Option>
-            </Select>
+            <Input />
           </Form.Item>
         </Col>
 
@@ -340,10 +331,6 @@ const GroupReservation = () => {
             label={t('strings.channel_commission')}
             name="channel"
           >
-            <Select style={{ width: '70%', display: 'inline-block' }}>
-              <Select.Option value="demo">Holiday House</Select.Option>
-              <Select.Option value="demo">Holiday House</Select.Option>
-            </Select>
 
             <Input
               style={{

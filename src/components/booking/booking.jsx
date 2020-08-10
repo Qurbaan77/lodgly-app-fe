@@ -54,6 +54,8 @@ const Booking = () => {
   const [subscribed, setSubscribed] = useState(true);
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
+  const [status, setStatus] = useState('');
+  const [filterArr, setFilterArr] = useState([]);
 
   const [editValues, setEditValues] = useState({});
   const [editBookingValues, setEditBookingValues] = useState({});
@@ -166,6 +168,7 @@ const Booking = () => {
   }, [topNavId]);
 
   const selectBooking = (values) => {
+    setStatus(values.status);
     values.startDate = values.startDate.slice(0, 10);
     values.endDate = values.endDate.slice(0, 10);
     const d1 = new Date(values.startDate);
@@ -229,13 +232,17 @@ const Booking = () => {
     if (filterValues.groupname) {
       startDate = filterValues.groupname[0]._d;
       endDate = filterValues.groupname[1]._d;
-      const data = copyBookingData.filter((el) => new Date(el.startDate) >= startDate
-      || new Date(el.startDate) <= endDate);
+      const data = copyBookingData.filter(
+        (el) => new Date(el.startDate) >= startDate
+          || new Date(el.startDate) <= endDate,
+      );
       filterData.push(data);
     }
     if (filterValues.property) {
       const data0 = filterData.length > 0 ? filterData : copyBookingData;
-      const data = data0.filter((el) => el.propertyId === filterValues.property);
+      const data = data0.filter(
+        (el) => el.propertyId === filterValues.property,
+      );
       filterData.length = 0;
       filterData.push(...data);
     }
@@ -247,13 +254,15 @@ const Booking = () => {
     }
     if (filterValues.from && filterValues.to) {
       const data0 = filterData.length > 0 ? filterData : copyBookingData;
-      const data = data0.filter((el) => el.totalAmount >= filterValues.from
-      && el.totalAmount <= filterValues.to);
+      const data = data0.filter(
+        (el) => el.totalAmount >= filterValues.from
+          && el.totalAmount <= filterValues.to,
+      );
       filterData.length = 0;
       filterData.push(...data);
     }
-    setBookingData(filterData);
-  }, [bookingData, filterValues]);
+    setFilterArr(filterData);
+  }, [filterValues, bookingData]);
 
   useEffect(() => {
     filter();
@@ -317,8 +326,11 @@ const Booking = () => {
     const response = await userInstance.post('/setStatus', payload);
     if (response.data.code === 200) {
       getData();
+      setStatus(value);
     }
   };
+
+  const mapBooking = filterArr && filterArr.length > 0 ? filterArr : bookingData;
 
   return (
     <Wrapper fun={setTopNavId}>
@@ -366,8 +378,7 @@ const Booking = () => {
                       </Button>
                     </div>
                   </div>
-
-                  {bookingData.map((el, i) => (
+                  {mapBooking.map((el, i) => (
                     <div
                       key={el.id}
                       role="presentation"
@@ -421,9 +432,7 @@ const Booking = () => {
 
               <Col span={14}>
                 <div className="booking-details" hidden={booked}>
-                  <h3>
-                    {currentBooking.guest}
-                  </h3>
+                  <h3>{currentBooking.guest}</h3>
                   <ul>
                     <li>
                       {currentBooking.night}
@@ -455,7 +464,7 @@ const Booking = () => {
                         {edit2}
 
                         <Select
-                          value="Select"
+                          value={status}
                           className="filter-menu"
                           dropdownClassName="color-dropdown"
                           onSelect={addStatus}
