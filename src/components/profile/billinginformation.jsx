@@ -424,6 +424,7 @@ const BillingInformation = () => {
         subscriptionId: data.subscriptionId,
       });
       if (response.data.code === 200) {
+        getUser();
         setNotifyType('success');
         setNotifyMsg(response.data.msg);
       }
