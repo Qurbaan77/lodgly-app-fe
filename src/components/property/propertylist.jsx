@@ -55,8 +55,7 @@ const PropertyList = () => {
     if (response.data.code === 200) {
       setPropertyData(data2.length > 0 ? data2 : data);
     }
-    const resp = await userInstance.get('/getSubscriptionStatus');
-    console.log(resp);
+    await userInstance.get('/getSubscriptionStatus');
   }, [userId, topNavId]);
 
   // const getData = async () => {

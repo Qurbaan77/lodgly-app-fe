@@ -510,7 +510,7 @@ const AdInvoicePopup = (props) => {
               <Col span={3}>
                 <Form.Item name={[ele, 'discount']} label="Discount">
                   <Input
-                    // value={discount}
+                    type="number"
                     onBlur={(e) => handleDiscount(e, ele)}
                   />
                 </Form.Item>

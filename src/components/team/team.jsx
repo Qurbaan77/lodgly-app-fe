@@ -174,7 +174,7 @@ const TeamListing = () => {
                         {' '}
                         {t('team.label4')}
                       </th>
-                      {/* <th /> */}
+                      <th> </th>
                     </tr>
                   </thead>
 

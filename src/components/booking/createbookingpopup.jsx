@@ -576,7 +576,7 @@ const CreateBookingPopup = (props) => {
                         >
                           <PlusOutlined />
                           {' '}
-                          {t('bookingpop.label12')}
+                          {t('bookingpop.label2')}
                         </div>
                       </Col>
                     </Row>

@@ -6,7 +6,7 @@ import { userInstance } from '../../axios/axiosconfig';
 const Header = ({ getFeature }) => {
   useEffect(() => {
     const getData = async () => {
-      const res = await userInstance.get('/getFeature');
+      const res = await userInstance.post('/getFeature');
       getFeature(res.data.featureData);
     };
     getData();

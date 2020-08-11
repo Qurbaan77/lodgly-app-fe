@@ -77,6 +77,7 @@ const Groups = () => {
     if (currGroupId) {
       values.id = currGroupId;
     }
+    values.propertyId = localStorage.getItem('propertyId');
     const response = await userInstance.post('/addGroup', values);
     const statusCode = response.data.code;
     const { msg } = response.data;
@@ -102,7 +103,10 @@ const Groups = () => {
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
     }
-    const response = await userInstance.post('/groupList');
+    const values = {
+      propertyId: localStorage.getItem('propertyId'),
+    };
+    const response = await userInstance.post('/groupList', values);
     if (response.data.code === 200) {
       setGroup(response.data.groupDetail);
     }

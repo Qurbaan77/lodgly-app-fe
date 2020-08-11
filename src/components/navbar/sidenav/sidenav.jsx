@@ -130,7 +130,10 @@ const Sidenav = ({
     teamRead]);
 
   const getData = useCallback(async () => {
-    const res = await userInstance.get('/getFeature');
+    const values = {
+      affiliateId: userId,
+    };
+    const res = await userInstance.post('/getFeature', values);
     if (res.data.code === 200) {
       const { featureData } = res.data;
       // getFeature(featureData);

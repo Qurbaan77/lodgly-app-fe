@@ -136,6 +136,7 @@ const Property = () => {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     form.resetFields();
   };
 
@@ -348,9 +349,7 @@ const Property = () => {
 
                             <Col span={12}>
                               <Form.Item name="city" label={t('strings.city')}>
-                                <Select>
-                                  <Select.Option value="demo">Zadar</Select.Option>
-                                </Select>
+                                <Input />
                               </Form.Item>
                             </Col>
 
@@ -433,9 +432,7 @@ const Property = () => {
 
                             <Col span={8}>
                               <Form.Item name="sqfoot" label={t('property.label4')}>
-                                <Select>
-                                  <Select.Option value="demo">Zadar</Select.Option>
-                                </Select>
+                                <Input />
                               </Form.Item>
                             </Col>
 

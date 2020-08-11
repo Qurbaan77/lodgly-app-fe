@@ -162,7 +162,9 @@ const Calendar = () => {
     if (response.data.code === 200) {
       setReservationData(data);
       if (response.data.guestData.length !== 0) {
-        setGuestName(response.data.guestData[0][0].fullname);
+        if (response.data.guestData[0][0].fullname) {
+          setGuestName(response.data.guestData[0][0].fullname);
+        }
       }
     }
   }, [userId]);

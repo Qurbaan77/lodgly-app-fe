@@ -89,6 +89,7 @@ const Task = () => {
   ];
 
   const show = () => {
+    setNotifyType('');
     form.resetFields();
     setVisible(true);
   };
@@ -138,6 +139,9 @@ const Task = () => {
   };
 
   const saveData = async (values) => {
+    if (currTaskId) {
+      values.id = currTaskId;
+    }
     values.groupId = localStorage.getItem('groupId');
     const response = await userInstance.post('/addTask', values);
     const statusCode = response.data.code;
@@ -172,8 +176,8 @@ const Task = () => {
   };
 
   const edit = async (data) => {
+    setNotifyType('');
     form.setFieldsValue({
-      id: data.id,
       taskName: data.taskName,
       note: data.note,
       tags: data.tags,
@@ -319,9 +323,6 @@ const Task = () => {
               >
                 <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
                 <Form form={form} name="basic" onFinish={onFinish}>
-                  <Form.Item label="ID" name="id" hidden>
-                    <Input />
-                  </Form.Item>
 
                   <Form.Item
                     label="Task"
@@ -362,6 +363,7 @@ const Task = () => {
 
                   <Form.Item className="text-center">
                     <Button
+                      className="border-btn"
                       style={{ marginRight: 10 }}
                       onClick={() => {
                         setVisible(false);

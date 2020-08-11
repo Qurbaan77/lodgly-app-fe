@@ -357,7 +357,6 @@ const ReservationCountryChart = () => {
   useEffect(() => {
     async function getData() {
       const response = await userInstance.post('/getCountryReport');
-      console.log(response);
       if (response.data.code === 200) {
         setCountry(response.data.country);
         setAverage(response.data.average);

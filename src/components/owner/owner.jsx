@@ -172,6 +172,7 @@ const Owner = () => {
       setNotifyMsg(msg);
       setVisible(false);
       getSubUserData();
+      getPropertyData();
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);

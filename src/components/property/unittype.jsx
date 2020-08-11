@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Helmet from 'react-helmet';
@@ -79,7 +79,7 @@ const UnitType = () => {
     setEditId(unittypeId);
   };
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     const res = await userInstance.get('/getUserSubscriptionStatus');
     if (res.data.code === 200) {
       const [{
@@ -91,6 +91,7 @@ const UnitType = () => {
     }
     const values = {
       propertyId: localStorage.getItem('propertyId'),
+      affiliateId: userId,
     };
     const response = await userInstance.post('/getUnittype', values);
     const { unittypeData, units } = response.data;
@@ -107,7 +108,7 @@ const UnitType = () => {
       setEmpty(false);
       setUnittypeData(unittypeData);
     }
-  };
+  }, [userId]);
 
   const remove = async () => {
     const values = {
@@ -122,7 +123,7 @@ const UnitType = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [getData]);
 
   const enableButton = (
     <Button

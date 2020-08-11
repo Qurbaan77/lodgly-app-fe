@@ -43,13 +43,14 @@ import PageNotFound from './components/404/404';
 import './responsive.css';
 
 const App = () => {
-  const [feature, setFeature] = useState({});
-  // const getFeature = (data) => {
-  //   setFeature(data[0]);
-  // };
+  const [feature, setFeature] = useState(true);
+
   const getFeature = useCallback((data) => {
-    setFeature(data[0]);
+    if (data) {
+      setFeature(data[0]);
+    }
   }, []);
+
   const isSubUser = localStorage.getItem('isSubUser') || false;
   return (
     <div className="App">

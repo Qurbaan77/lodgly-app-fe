@@ -113,6 +113,7 @@ const AddProperty = () => {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     form.resetFields();
   };
 
@@ -431,9 +432,7 @@ const AddProperty = () => {
                         name="sqfoot"
                         label={t('addproperty.detail13')}
                       >
-                        <Select>
-                          <Select.Option value="demo">Zadar</Select.Option>
-                        </Select>
+                        <Input />
                       </Form.Item>
                     </Col>
 

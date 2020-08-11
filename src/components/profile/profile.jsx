@@ -67,8 +67,12 @@ const Profile = () => {
     const response = await userInstance.post('/getuserData');
     const body = response.data.userData;
     if (body.length > 0) {
-      setImg(body[0].image);
-      setUserName(body[0].fullname);
+      if (body[0].image !== null) {
+        setImg(body[0].image);
+      }
+      if (body[0].fullname !== null) {
+        setUserName(body[0].fullname);
+      }
       form1.setFieldsValue({
         fullname: body[0].fullname,
         address: body[0].address,
