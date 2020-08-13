@@ -180,42 +180,46 @@ const SubUserPopup = ({
         <CloseOutlined onClick={handleCross} />
       </div>
       <Form name="basic" form={form} onFinish={onFinish}>
-        <Row style={{ alignItems: 'center' }}>
-          <Col span={8}>
-            <Form.Item
-              label={t('strings.email')}
-              name="email"
-              style={{ paddingRight: 20 }}
-              rules={[
-                {
-                  type: 'email',
-                  message: t('subuserpopup.label1'),
-                },
-                {
-                  required: true,
-                  message: t('subuserpopup.label2'),
-                },
-              ]}
-            >
-              <Input placeholder={t('strings.email')} />
-            </Form.Item>
-          </Col>
+        <div className="subuser-fields-section">
+          <Row style={{ alignItems: 'center' }}>
+            <Col span={8}>
+              <Form.Item
+                label={t('strings.email')}
+                name="email"
+                style={{ paddingRight: 20 }}
+                rules={[
+                  {
+                    type: 'email',
+                    message: t('subuserpopup.label1'),
+                  },
+                  {
+                    required: true,
+                    message: t('subuserpopup.label2'),
+                  },
+                ]}
+              >
+                <Input placeholder={t('strings.email')} />
+              </Form.Item>
+            </Col>
 
-          <Col span={8}>
-            <Form.Item label={t('subuserpopup.label25')} name="role">
-              <Select onSelect={(value) => handleSelect(value)}>
-                <Select.Option value="subuser">
-                  {t('subuserpopup.label3')}
-                </Select.Option>
-                <Select.Option value="fullaccess">
-                  {t('subuserpopup.label4')}
-                </Select.Option>
-              </Select>
-            </Form.Item>
-          </Col>
-
-          <Col span={8} />
-        </Row>
+            <Col span={8}>
+              <Form.Item label={t('subuserpopup.label25')} name="role">
+                <Select
+                  placeholder={t('subuserpopup.label3')}
+                  onSelect={(value) => handleSelect(value)}
+                >
+                  <Select.Option value="subuser">
+                    {t('subuserpopup.label3')}
+                  </Select.Option>
+                  <Select.Option value="fullaccess">
+                    {t('subuserpopup.label4')}
+                  </Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={8} />
+          </Row>
+        </div>
 
         <Row>
           <div className="custom-table subuser-table">
@@ -531,7 +535,7 @@ const SubUserPopup = ({
             marginTop: '30px',
           }}
         >
-          <Col span={24}>
+          <Col span={24} className="subuser-fields-section">
             <Form.Item>
               <Button style={{ marginRight: 10 }} onClick={close}>
                 {t('strings.cancel')}

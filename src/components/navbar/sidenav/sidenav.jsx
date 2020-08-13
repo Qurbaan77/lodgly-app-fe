@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './sidenav.css';
 import { Layout, Menu } from 'antd';
 import {
   ArrowLeftOutlined,
-  PoweroffOutlined,
   ApartmentOutlined,
 } from '@ant-design/icons';
 import logo from '../../../assets/images/logo.png';
@@ -46,15 +45,6 @@ const Sidenav = ({
   const [hideOwner, setHideOwner] = useState(false);
   const [disableProperties, setDisableProperties] = useState(false);
   // const [disableGuests, setDisableGuests] = useState(false);
-  const history = useHistory();
-
-  const exit = async () => {
-    const response = await userInstance.post('/logout');
-    if (response.status === 200) {
-      localStorage.clear();
-      history.push('/');
-    }
-  };
   const isSubUser = localStorage.getItem('isSubUser');
   const subUserCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{
@@ -128,7 +118,6 @@ const Sidenav = ({
     serviceRead,
     statsRead,
     teamRead]);
-
   const getData = useCallback(async () => {
     const values = {
       affiliateId: userId,
@@ -203,10 +192,22 @@ const Sidenav = ({
   };
 
   return (
-    <Sider theme="light" trigger={null} collapsible className={`side-menu ${menutoggle ? 'menu-show' : ''}`}>
+    <Sider
+      theme="light"
+      trigger={null}
+      collapsible
+      className={`side-menu ${menutoggle ? 'menu-show' : ''}`}
+    >
       <div className="sidebar-logo">
         <img className="logo" src={logo} alt="logo" />
-        <img className="close-icon" src={closeicon} alt="close" onClick={() => handleMenuSide('close')} role="presentation" aria-hidden="true" />
+        <img
+          className="close-icon"
+          src={closeicon}
+          alt="close"
+          onClick={() => handleMenuSide('close')}
+          role="presentation"
+          aria-hidden="true"
+        />
       </div>
 
       <UserProfile img={img} name={name} getUserInfo={getUserInfo} />
@@ -236,7 +237,12 @@ const Sidenav = ({
             <div>
               <img src={propertyIcon} alt="property-icon" />
               <Link to="/propertylist">{t('sidebar.menu3')}</Link>
-              <img src={arrow} alt="" className="menu-arrow" hidden={!propertyData.length} />
+              <img
+                src={arrow}
+                alt=""
+                className="menu-arrow"
+                hidden={!propertyData.length}
+              />
             </div>
           )}
         >
@@ -285,11 +291,6 @@ const Sidenav = ({
           <img src={ownerIcon} alt="owner-icon" />
           <Link to="/owner">{t('sidebar.menu9')}</Link>
         </Menu.Item>
-
-        <Menu.Item className="logout-nav" onClick={() => exit()}>
-          <PoweroffOutlined />
-          <span>{t('sidebar.menu10')}</span>
-        </Menu.Item>
       </Menu>
 
       <Menu
@@ -298,7 +299,11 @@ const Sidenav = ({
         mode="inline"
         style={{ height: '100%' }}
       >
-        <span className="submenu-heading" onClick={() => handleMenu('close')} role="presentation">
+        <span
+          className="submenu-heading"
+          onClick={() => handleMenu('close')}
+          role="presentation"
+        >
           <ArrowLeftOutlined />
           <Link
             to="/propertylist"
@@ -331,6 +336,12 @@ const Sidenav = ({
           <Link to="/services">{t('sidebar.menu15')}</Link>
         </Menu.Item>
       </Menu>
+      <div className="company-ip">
+        <h6>
+          {window.location.host}
+        </h6>
+        {/* <p>1234-5674-3658</p> */}
+      </div>
     </Sider>
   );
 };

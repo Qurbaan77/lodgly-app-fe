@@ -33,10 +33,10 @@ const BillingInformation = () => {
   const [total, setTotal] = useState(0);
   const [unitPrice, setUnitPrice] = useState(basicPrice);
   const [unitsSelected, setUnitsSelected] = useState();
-  const [planType, setPlanType] = useState('');
-  const [subscriptionType, setSubscriptionType] = useState('');
+  const [planType, setPlanType] = useState('basic');
+  const [subscriptionType, setSubscriptionType] = useState('month');
   const [exchangeRate, setExchangeRate] = useState([]);
-  const [currency, setCurrency] = useState('');
+  const [currency, setCurrency] = useState('EUR');
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const [data, addData] = useState();
@@ -62,7 +62,7 @@ const BillingInformation = () => {
       const res = await userInstance.post('/getTotalUnit');
       if (res.data.code === 200 || res.data.code === 404) {
         const units = res.data.totalUnit || 1;
-        const range = Array(units + 50 - units + 1)
+        const range = Array(units + 50000 - units + 1)
           .fill()
           .map((_, idx) => units + idx);
         setUnitDropDown(range);
@@ -492,7 +492,7 @@ const BillingInformation = () => {
                                     placeholder="basic"
                                     onSelect={handlePlanSelect}
                                   >
-                                    <Select.Option value="advance">
+                                    <Select.Option value="advance" hidden>
                                       {t('billinginformation.label4')}
                                     </Select.Option>
                                     <Select.Option value="basic">
@@ -569,7 +569,7 @@ const BillingInformation = () => {
                                   ]}
                                 >
                                   <Select
-                                    placeholder={t('strings.currency')}
+                                    placeholder="EUR"
                                     onSelect={handleCurrencyChange}
                                   >
                                     <Select.Option
@@ -685,7 +685,7 @@ const BillingInformation = () => {
                                 {t('billinginformation.label16')}
                                 {' '}
                                 <span>
-                                  {data.Amount}
+                                  {data.amount}
                                   {' '}
                                   {data.currency}
                                   /
@@ -752,6 +752,7 @@ const BillingInformation = () => {
                             </p>
                             <p>
                               {t('billinginformation.label21')}
+                              {' '}
                               {end}
                             </p>
                           </div>
@@ -770,11 +771,18 @@ const BillingInformation = () => {
           </Row>
         </div>
       </div>
-      <BillingHistory
-        invoiceList={invoiceList}
-        data={data}
-        currency={currentCurrency}
-      />
+      {
+        data
+          ? (
+            <BillingHistory
+              invoiceList={invoiceList}
+              data={data}
+              currency={currentCurrency}
+            />
+          )
+          : ''
+      }
+
       {/* </Suspense> */}
     </Wrapper>
   );

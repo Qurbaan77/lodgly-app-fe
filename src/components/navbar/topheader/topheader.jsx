@@ -52,7 +52,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
             {el.propertyName}
           </Menu.Item>
         ))}
-        <Menu.Item onClick={() => clear()}>All Properties</Menu.Item>
+        <Menu.Item onClick={() => clear()}>{t('header.allproperties')}</Menu.Item>
       </Menu>
     );
 
@@ -157,7 +157,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
           className={`search-content ${searchtoggle ? 'search-expand' : ''}`}
         >
           <Input
-            placeholder="Search guest, reservation, phone number"
+            placeholder={t('header.placeholder1')}
             allowClear
             prefix={<SearchOutlined />}
           />

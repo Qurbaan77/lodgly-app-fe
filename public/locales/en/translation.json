@@ -1,4 +1,7 @@
 {
+  "groupreservation": {
+    "heading1": "Please choose the property from top bar"
+  },
   "strings": {
     "time": "Time",
     "days": "days",
@@ -96,12 +99,18 @@
     "Name": "name",
     "nights": "Nights",
     "dob": "Date of birth",
-    "citizenship": "Citizenship"
+    "citizenship": "Citizenship",
+    "ok":"OK",
+    "searchplaces":"Search Places ...",
+    "currency": "Currency"
+    
   },
 
   "header": {
     "heading": "Header",
-    "searchplaceholder": "Select Property"
+    "searchplaceholder": "Select Property",
+    "allproperties":"All Properties",
+    "placeholder1":"Search guest, reservation, phone number"
   },
   "sidebar": {
     "heading": "Sidebar",
@@ -127,7 +136,7 @@
     "heading": "All Properties",
     "addbtn": "Add Property",
     "alert": "Your trial period will end in",
-    "link-heading": "Subscribe",
+    "link-heading": "Change Your Plan",
     "heading1": "You are not authorize to create new property"
   },
   "addproperty": {
@@ -160,7 +169,15 @@
     "title5": "Please add the property Name",
     "title6": "You are not authorize to save New Property",
     "detail22": "YouTube videos only. Paste your link here",
-    "rules": "Please enter property name"
+    "rules": "Please enter property name",
+    "rules1": "'propertyType' is required",
+    "rules2": "'address' is required",
+    "rules3": "'state' is required",
+    "rules4": " 'city' is required",
+    "rules5": " 'zip' is required",
+    "rules6": " 'country' is required"
+   
+
   },
   "unittype": {
     "heading": "Unit Type",
@@ -414,7 +431,9 @@
     "heading5": "please enter service name",
     "heading6": "Service Price",
     "heading8": "Please enter price",
-    "heading9": "Standard Quantity"
+    "heading9": "Standard Quantity",
+    "heading10":"Action"
+   
   },
   "addreservation": {
     "heading1": "Edit/Additional Data",
@@ -449,7 +468,9 @@
     "heading31": " Add Reservation",
     "heading32": " Group Reservation",
     "heading33": "You are not authorize for adding reservation",
-    "headig34": "Add New Reservation"
+    "headig34": "Add New Reservation",
+    "rule1":"Price per night",
+    "rule2":"Minimum stay"
   },
   "calendarpop": {
     "heading1": " Update Guest",
@@ -519,7 +540,8 @@
     "label3": "  Calendar Setting",
     "label4": "My Properties",
     "label5": "Reports",
-    "label6": "Statistics"
+    "label6": "Statistics",
+    "label7":"Logout"
   },
 
   "adminlogin": {
@@ -563,7 +585,9 @@
     "label16": "Deleting this invoice will permanently remove it from your network.",
     "label17": "  Delete Item",
     "heading2": "Edit invoice",
-    "heading3": "Currently there are no invoices created"
+    "heading3": "Currently there are no invoices created",
+    "rule1":"Invoice Deleted Successfully",
+    "rule2":"some error occured"
   },
   "login": {
     "heading1": "Sign In",
@@ -597,7 +621,7 @@
     "label9": " Invalid E-mail!",
     "label10": "Enter E-mail!",
     "label11": " Country of Residence",
-    "label12": "PLace of Residence",
+    "label12": "Place of Residence",
     "label13": "Type of Document",
     "label14": "Document Number",
     "label15": "Please select your property!",
@@ -614,7 +638,7 @@
     "label2": " Payment Plan",
     "label3": "Total Usage",
     "label4": "Balance",
-    "label5": " ly Subscription",
+    "label5": "Subscription",
     "label6": "Download Invoice"
   },
   "billinginformation": {
@@ -643,7 +667,9 @@
   },
   "checkoutform": {
     "heading1": "Enter Your Card Details",
-    "label1": "  submit Details"
+    "label1": "  submit Details",
+    "tooltip1": "Your Transaction was successful",
+  "tooltip2": "Transaction Failed"
   },
   "billingprofile": {
     "heading1": " Personal Information",
@@ -656,7 +682,6 @@
     "label7": " Last Name",
     "label8": " Please enter your last name!",
     "label9": " Application Settings",
-
     "label10": " UI Language",
     "label11": " Timezone",
     "label12": " Password Change",
@@ -670,7 +695,11 @@
     "label20": "Company Data",
     "label21": "Please enter your name!",
     "label22": "Company Data",
-    "label23": " Add or edit your company data"
+    "label23": " Add or edit your company data",
+    "label24":"The input is not valid E-mail!",
+    "label25":"Password Change Successfully! ",
+    "label26":"file uploaded successfully",
+    "label27":"file upload failed"
   },
 
   "register": {
@@ -835,5 +864,7 @@
   
  
 }
+
+
 }
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import './stats.css';
-import { Row, Col } from 'antd';
+import { Row, Col, Tooltip } from 'antd';
 import Chart from 'react-apexcharts';
 import Wrapper from '../wrapper';
 import { userInstance } from '../../axios/axiosconfig';
@@ -205,7 +205,10 @@ const AccommodationChart = ({ topNavId }) => {
     <div className="chart-body">
       <h3>
         {t('stats.heading1')}
-        <img src={qst} alt="qst" />
+        {' '}
+        <Tooltip title="This is accomodation chart" color="gold">
+          <img src={qst} alt="qst" />
+        </Tooltip>
       </h3>
 
       <div id="chart">
@@ -329,7 +332,9 @@ const OccupancyChart = ({ topNavId }) => {
       <h3>
         {t('stats.label3')}
         {' '}
-        <img src={qst} alt="qst" />
+        <Tooltip title="This is accomodation chart" color="gold">
+          <img src={qst} alt="qst" />
+        </Tooltip>
       </h3>
 
       <div id="chart">
@@ -398,7 +403,10 @@ const ReservationCountryChart = () => {
     <div className="chart-body">
       <h3>
         {t('stats.label4')}
-        <img src={qst} alt="qst" />
+        {' '}
+        <Tooltip title="This is accomodation chart" color="gold">
+          <img src={qst} alt="qst" />
+        </Tooltip>
       </h3>
 
       <div id="chart">
@@ -453,7 +461,10 @@ const ReservationChannelChart = () => {
     <div className="chart-body">
       <h3>
         {t('stats.label5')}
-        <img src={qst} alt="qst" />
+        {' '}
+        <Tooltip title="This is accomodation chart" color="gold">
+          <img src={qst} alt="qst" />
+        </Tooltip>
       </h3>
 
       <div className="donut">
@@ -566,7 +577,10 @@ const PaceChart = ({ topNavId }) => {
     <div className="chart-body">
       <h3>
         {t('stats.label6')}
-        <img src={qst} alt="qst" />
+        {' '}
+        <Tooltip title="This is accomodation chart" color="gold">
+          <img src={qst} alt="qst" />
+        </Tooltip>
       </h3>
 
       <div id="chart">

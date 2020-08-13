@@ -459,6 +459,7 @@ const AdInvoicePopup = (props) => {
                   ]}
                 >
                   <Input
+                    type="number"
                     // value={quantity}
                     onBlur={(e) => handleQuantity(e, ele)}
                   />
@@ -477,6 +478,7 @@ const AdInvoicePopup = (props) => {
                   ]}
                 >
                   <Input
+                    type="number"
                     // value={price}
                     onBlur={(e) => handlePrice(e, ele)}
                   />

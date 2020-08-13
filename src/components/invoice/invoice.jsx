@@ -116,10 +116,10 @@ const Invoice = () => {
       const data = invoiceData.filter((el) => el.id !== deleteId);
       setInvoiceData([...data]);
       setNotifyType('success');
-      setNotifyMsg('Invoice Deleted Successfully');
+      setNotifyMsg(t('invoice.rule1'));
     } else {
       setNotifyType('error');
-      setNotifyMsg('some error occured');
+      setNotifyMsg(t('invoice.rule2'));
     }
   };
 

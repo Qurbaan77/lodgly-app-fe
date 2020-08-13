@@ -5,23 +5,28 @@ import { Button, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
+import nobooking from '../../assets/images/no-booking.png';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
 import GSTC from './GSTC';
 import { userInstance } from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
+import GroupReservation from './groupreservation';
 
 const Calendar = () => {
   const { t } = useTranslation();
   const [propertyData, setPropertyData] = useState([]);
   const [reservationData, setReservationData] = useState([]);
   const [guestName, setGuestName] = useState('');
-  const [unittypeData, setUnittypeData] = useState([]);
+  const [data, setData] = useState([]);
   const [unitData, setUnitData] = useState([]);
+  const [unittypeData, setUnittypeData] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [visibleGroupReserv, setVisibleGroupReserv] = useState(false);
   const [topNavId, setTopNavId] = useState(0);
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
+  const [userData, setUserData] = useState([]);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -33,7 +38,7 @@ const Calendar = () => {
     unittypeData.forEach((ele, j) => {
       const uttId = `utt${ele.id.toString()}`;
       if (topNavId > 0) {
-        if (unittypeData[j].propertyId === topNavId) {
+        if (unittypeData[j].propertyId === parseInt(topNavId, 10)) {
           rows[uttId] = {
             id: uttId,
             label: ele.unitTypeName,
@@ -56,13 +61,13 @@ const Calendar = () => {
         const b = `mt_2${ele.id.toString()}`;
         rows[a] = {
           id: a,
-          label: 'Price per night',
+          label: t('addreservation.rule1'),
           parentId: `utt${ele.id.toString()}`,
           progress: 50,
         };
         rows[b] = {
           id: b,
-          label: 'Minimum stay',
+          label: t('addreservation.rule2'),
           progress: 50,
           parentId: `utt${ele.id.toString()}`,
         };
@@ -139,18 +144,22 @@ const Calendar = () => {
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
+    const data2 = [];
     const data = response.data.propertiesData;
+    data
+      .filter((el) => el.id === parseInt(topNavId, 10))
+      .forEach((filterData) => {
+        data2.push(filterData);
+      });
     if (response.data.code === 200) {
-      setPropertyData(data);
+      setPropertyData(data2.length > 0 ? data2 : data);
     }
-  }, [userId]);
+  }, [userId, topNavId]);
 
   const getData = useCallback(async () => {
     const res = await userInstance.get('/getUserSubscriptionStatus');
     if (res.data.code === 200) {
-      const [{
-        days, isOnTrial, isSubscribed,
-      }] = res.data.userSubsDetails;
+      const [{ days, isOnTrial, isSubscribed }] = res.data.userSubsDetails;
       setDaysLeft(parseInt(days, 10));
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
@@ -195,12 +204,18 @@ const Calendar = () => {
     setVisible(true);
   };
 
+  const showGropuRes = () => {
+    setVisibleGroupReserv(true);
+  };
+
   const handleOk = () => {
     setVisible(false);
+    setVisibleGroupReserv(false);
   };
 
   const handleCancel = () => {
     setVisible(false);
+    setVisibleGroupReserv(false);
   };
 
   function onState(state) {
@@ -249,45 +264,115 @@ const Calendar = () => {
     </>
   );
 
+  const enableButton = (
+    <Button
+      className="border-btn"
+      icon={<TeamOutlined />}
+      onClick={showGropuRes}
+    >
+      {t('addreservation.heading32')}
+    </Button>
+  );
+  const disabledButton = (
+    <Tooltip title={t('groupreservation.heading1')} color="gold">
+      <Button className="border-btn nopadding" icon={<TeamOutlined />} disabled>
+        {t('addreservation.heading32')}
+      </Button>
+    </Tooltip>
+  );
+
+  const getUserInfo = async () => {
+    const response = await userInstance.post('/getuserData');
+    const data = response.data.userData;
+    if (data.length > 0) {
+      setUserData(data);
+    }
+  };
+
+  const availableUnits = useCallback(async () => {
+    const values = {
+      propertyId: topNavId,
+      affiliateId: userId,
+    };
+    const response = await userInstance.post('/getUnittype', values);
+    const { unittypeData, units } = response.data;
+    if (response.data.code === 200) {
+      unittypeData.forEach((el) => {
+        let sum = 0;
+        units.forEach((ele) => {
+          if (el.id === ele.unittypeId) {
+            sum += 1;
+          }
+        });
+        el.noOfUnits = sum;
+      });
+      setData(unittypeData);
+    }
+  }, [topNavId, userId]);
+
+  useEffect(() => {
+    setTopNavId(localStorage.getItem('topNavId'));
+    getUserInfo();
+    availableUnits();
+  }, [topNavId, availableUnits]);
+
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
 
   return (
-
     <Wrapper fun={setTopNavId}>
-      {
-      hasAccess
-        ? (
-          <div className="calendar">
-            <div className="calendar-btn">
-              {isSubUser ? (
-                btn
-              ) : (
-                <>
-                  <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                    {t('addreservation.heading31')}
-                  </Button>
-                  <Button className="border-btn" icon={<TeamOutlined />}>
-                    {t('addreservation.heading32')}
-                  </Button>
-                </>
-              )}
-            </div>
+      {hasAccess ? (
+        <div className="calendar">
+          <div className="calendar-btn">
+            {isSubUser ? (
+              btn
+            ) : (
+              <>
+                <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+                  {t('addreservation.heading31')}
+                </Button>
+                {topNavId ? enableButton : disabledButton}
+              </>
+            )}
+          </div>
+          {reservationData && reservationData.length > 0 ? (
             <div className="calendar-calendar">
               <GSTC config={config} onState={onState} />
             </div>
+          ) : (
+            <div className="add-team-page">
+              <div className="add-subuser">
+                <img src={nobooking} alt="subuser" />
+                <h4>No Calendar</h4>
+                <p>
+                  Currently, you don
+                  <span>&apos;</span>
+                  t have any reservations created
+                </p>
+              </div>
+            </div>
+          )}
 
-            <AddReservation
-              title={t('addreservation.heading34')}
-              visible={visible}
-              onOk={handleOk}
-              close={handleCancel}
-              wrapClassName="create-booking-modal"
-              getData={getData}
-            />
-          </div>
-        )
-        : <UserLock />
-    }
+          <AddReservation
+            title={t('addreservation.heading34')}
+            visible={visible}
+            onOk={handleOk}
+            close={handleCancel}
+            wrapClassName="create-booking-modal"
+            getData={getData}
+          />
+
+          <GroupReservation
+            title={t('calendarpop.heading4')}
+            visible={visibleGroupReserv}
+            onOk={handleOk}
+            close={handleCancel}
+            userData={userData}
+            data={data}
+          />
+        </div>
+      ) : (
+        <UserLock />
+      )}
     </Wrapper>
   );
 };

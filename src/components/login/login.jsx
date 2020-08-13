@@ -47,7 +47,8 @@ const Login = () => {
       localStorage.setItem('userId', payload.userid);
       setNotifyType('success');
       setNotifyMsg(msg);
-      history.push('/propertylist');
+      history.push('/booking');
+      window.location.reload();
     } else {
       setNotifyType('error');
       setNotifyMsg(msg);
@@ -82,8 +83,13 @@ const Login = () => {
     <>
       <Helmet>
         <link rel="icon" href={favicon} />
-        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
       </Helmet>
       <div className="login">
         <div className="login-section">
@@ -93,11 +99,6 @@ const Login = () => {
                 <div className="login-logo">
                   <img src={logo} alt="Logo" />
                 </div>
-                <Toaster
-                  notifyType={notifyType}
-                  notifyMsg={notifyMsg}
-                  close={close}
-                />
                 <div className="login-form">
                   <h1>Sign In</h1>
                   <p>
@@ -146,13 +147,13 @@ const Login = () => {
                         </Button>
                       </Form.Item>
 
-                      <div className="google-login">
+                      {/* <div className="google-login">
                         <p>or connect with</p>
 
                         <Button className="google-btn">
                           <span>Google</span>
                         </Button>
-                      </div>
+                      </div> */}
                     </Form>
                   </div>
                 </div>
@@ -176,6 +177,7 @@ const Login = () => {
             </div>
           </div>
         </div>
+        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       </div>
     </>
   );

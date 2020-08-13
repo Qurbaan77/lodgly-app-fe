@@ -49,6 +49,175 @@
 }
 
 
+/************ 12 Aug ************/
+
+.ant-menu-inline {
+    height: auto!important;
+}
+
+.ant-layout-sider-light {
+    background: #fff;
+    min-height: 100vh;
+}
+
+.login {
+    align-items: center;
+}
+
+.header-property .ant-dropdown-link{
+    cursor: pointer;
+}
+
+.page-header h1 .anticon, .page-header h1 img {
+    margin-right: 10px;
+    display: inline-block;
+}
+
+
+.add-property .panel-container .ant-collapse>.ant-collapse-item>.ant-collapse-header {
+    padding: 20px 40px 20px 20px;
+}
+
+
+.autocomplete-dropdown-container {
+    padding: 5px;
+}
+
+.autocomplete-dropdown-container span {
+   display: block;
+   font-size: 12px;
+   padding: 8px 10px;
+}
+
+
+.team-title span {
+    display: none;
+}
+
+.team-action {
+    text-align: right;
+    cursor: pointer;
+}
+
+
+.sub-user .ant-modal-body {
+    padding: 24px 0px;
+}
+
+.subuser-fields-section{
+    padding: 0px 20px;
+}
+
+
+.custom-table.subuser-table {
+    width: 100%;
+}
+
+.company-ip {
+    padding: 24px 10px 24px 24px;
+    border-top: 1px solid #efefef;
+    position: absolute;
+    bottom: calc(0px - 85px);
+    border-right: 1px solid #efefef;
+    background: #fff;
+    width: 100%;
+    margin-left: 1px;
+}
+
+.company-ip h6 {
+    font-size: 11px;
+    color: rgba(62, 63, 66, 0.7);
+    font-weight: 700;
+}
+
+.company-ip p {
+    font-size: 10px;
+    margin: 0;
+    color: rgba(62, 63, 66, 0.5);
+}
+
+
+.ant-dropdown-menu-item > span {
+    color: #333;
+}
+
+
+
+
+/********** Popup Animation *********/
+
+
+.ant-modal.zoom-enter, .ant-modal.zoom-appear{
+    transform: inherit!important;
+    animation-duration: inherit!important;
+    user-select: inherit!important;
+}
+
+
+.zoom-enter, .zoom-appear {
+    -webkit-transform: inherit!important;
+    transform: inherit!important;
+    opacity: inherit!important;
+    -webkit-animation-timing-function: inherit!important;
+    animation-timing-function: inherit!important;
+}
+
+.zoom-leave {
+    -webkit-animation-duration: inherit!important;
+    animation-duration:inherit!important;
+    -webkit-animation-fill-mode:inherit!important;
+    animation-fill-mode:inherit!important;
+    -webkit-animation-play-state: inherit!important;
+    animation-play-state:inherit!important;
+    -webkit-animation-timing-function:inherit!important;
+    animation-timing-function: inherit!important;
+}
+
+
+.create-booking-modal .ant-modal .ant-modal-body {
+    overflow: auto;
+    width: 100%;
+    height: calc(100% - 64px);
+    position: absolute;
+}
+
+.ant-scrolling-effect .create-booking-modal .ant-modal {
+    right: 0;
+    transition: all 0.5s;
+}
+
+.ant-scrolling-effect .sub-user .ant-modal {
+    right: 0;
+}
+.add-invoice-popup .ant-modal {
+    right: -800px;
+}
+.ant-scrolling-effect .add-invoice-popup .ant-modal {
+    right: 0;
+}
+.add-invoice-popup .ant-modal .ant-modal-body {
+   overflow: auto;
+    width: 100%;
+    height: calc(100% - 64px);
+    position: absolute; 
+}
+.sub-user .ant-modal .ant-modal-body {
+    overflow: auto;
+    width: 100%;
+    height: calc(100% - 64px);
+    position: absolute; 
+}
+.guest-modal .ant-modal .ant-modal-body {
+    overflow: auto;
+    width: 100%;
+    height: calc(100% - 64px);
+    position: absolute; 
+}
+
+.ant-scrolling-effect .guest-modal .ant-modal {
+    right: 0;
+}
+
 
 
 /********************Sidebar Menu **************/
@@ -383,10 +552,7 @@
     }
     
     
-    .create-booking-modal .ant-modal{
-        width: auto!important;
-    }
-    
+
     
     .create-booking-modal .ant-col-12, .create-booking-modal .ant-col-8, .create-booking-modal .ant-col-16 {
         display: block;
@@ -666,5 +832,27 @@
 .ant-dropdown.ant-dropdown-placement-bottomLeft {
     z-index: 9999;
 }
+
+.billing-container .ant-col-16 {
+    -ms-flex: 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+
+/********** Popup Animation *********/
+
+.create-booking-modal .ant-modal .ant-modal-body, .guest-modal .ant-modal .ant-modal-body, .sub-user .ant-modal .ant-modal-body, .add-invoice-popup .ant-modal .ant-modal-body {
+    position: relative;
+}
+
+.create-booking-modal .ant-modal, .guest-modal .ant-modal, .sub-user .ant-modal, .add-invoice-popup .ant-modal{
+    width: auto!important;
+    right: 0;
+    position: absolute;
+}
+
+
+
 
 }

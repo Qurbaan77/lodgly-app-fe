@@ -70,3 +70,6 @@
 .language {
     margin-right: 25px;
 }
+.sb-avatar__text span {
+    color: #fff !important
+}

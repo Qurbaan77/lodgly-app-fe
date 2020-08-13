@@ -133,7 +133,7 @@ body {
 }
 
 .ant-input {
-  border: 1.5px solid #eaeaea !important;
+  border: 1px solid #eaeaea !important;
   border-radius: 0;
   padding: 8px 15px !important;
   height: auto;
@@ -703,7 +703,7 @@ body {
 }
 
 .ant-select-selector {
-  border: 1.5px solid #eaeaea !important;
+  border: 1px solid #eaeaea !important;
   height: 40px !important;
 }
 
@@ -714,7 +714,7 @@ body {
 }
 
 .unit-filter .ant-picker-range {
-  border: 1.5px solid #eaeaea;
+  border: 1px solid #eaeaea;
   line-height: 2;
   padding: 8px 11px 8px;
 }
@@ -729,7 +729,7 @@ body {
 }
 
 .unit-filter .ant-picker {
-  border: 1.5px solid #eaeaea;
+  border: 1px solid #eaeaea;
   line-height: 2;
   padding: 8px 11px 8px;
 }
@@ -903,7 +903,7 @@ margin: 0;
 }
 
 #country {
-  border: 1.5px solid #eaeaea !important;
+  border: 1px solid #eaeaea !important;
   border-radius: 0;
   padding: 8px 15px !important;
   height: auto;
@@ -911,7 +911,7 @@ margin: 0;
 }
 
 #state {
-      border: 1.5px solid #eaeaea !important;
+      border: 1px solid #eaeaea !important;
   border-radius: 0;
   padding: 8px 15px !important;
   height: auto;

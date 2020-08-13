@@ -1,5 +1,9 @@
 .alert-box {
-    padding: 20px;
+    padding: 0px;
+}
+
+.alert-box .ant-alert {
+    margin: 10px;
 }
 
 .alert-box .ant-alert-message {

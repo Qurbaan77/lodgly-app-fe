@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import './team.css';
+import Avatar from 'react-avatar';
 import { useTranslation } from 'react-i18next';
 import { Button, Tooltip } from 'antd';
 import {
@@ -10,7 +11,6 @@ import {
   PartitionOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-import team from '../../assets/images/profile_user.jpg';
 import SubUserPopup from './subuserpopup';
 import EditSubUserPopup from './editsubuserpopup';
 import subuser from '../../assets/images/subuser.jpg';
@@ -141,9 +141,13 @@ const TeamListing = () => {
 
   const pageContent = (
     <>
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       {subUser.length ? (
         <Wrapper>
+          <Toaster
+            notifyType={notifyType}
+            notifyMsg={notifyMsg}
+            close={close}
+          />
           <div className="team-page">
             <div className="page-header">
               <h1>
@@ -184,12 +188,16 @@ const TeamListing = () => {
                         <td>
                           <div className="team-info">
                             <div className="team-pic">
-                              <img src={team} alt="team" />
+                              <Avatar
+                                color="#fab52c"
+                                name={el.role}
+                                round="50px"
+                                size="50px"
+                              />
                             </div>
                             <div className="team-title">
                               <h5>
                                 Sub User
-                                {' '}
                                 {i + 1}
                               </h5>
                               <span>{t('team.label5')}</span>
@@ -198,7 +206,11 @@ const TeamListing = () => {
                         </td>
 
                         <td>{el.email}</td>
-                        <td>{el.role}</td>
+                        <td>
+                          {
+                          el.role === 'fullaccess' ? 'Full Access' : 'Sub User'
+                        }
+                        </td>
 
                         <td>
                           <div className="team-action">
@@ -240,6 +252,11 @@ const TeamListing = () => {
         </Wrapper>
       ) : (
         <Wrapper>
+          <Toaster
+            notifyType={notifyType}
+            notifyMsg={notifyMsg}
+            close={close}
+          />
           <div className="add-team-page">
             <div className="add-subuser">
               <img src={subuser} alt="subuser" />
@@ -271,7 +288,6 @@ const TeamListing = () => {
       hasAccess ? pageContent
         : (
           <Wrapper>
-
             <UserLock />
           </Wrapper>
         )

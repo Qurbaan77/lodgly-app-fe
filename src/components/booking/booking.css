@@ -1,12 +1,13 @@
 .create-booking-modal .ant-modal {
   top: 0;
-  right: 0;
+  right: -700px;
   transform: inherit !important;
   margin: 0;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   padding: 0;
   width: 700px !important;
+  transition: all 0.5s;
   }
   
   .ant-layout.ant-layout-has-sider > .ant-layout {
@@ -43,7 +44,7 @@
   }
   
   .create-booking-modal .ant-picker-range {
-  border: 1.5px solid #eaeaea;
+  border: 1px solid #eaeaea;
   line-height: 2;
   width: 100%;
   padding: 6px 11px 6px;
@@ -121,12 +122,14 @@
   
   .guest-modal .ant-modal {
   top: 0;
-  right: 0;
+  right: -700px;
   transform: inherit !important;
   margin: 0;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   padding: 0;
+  transition: all 0.5s;
+  width: 700px !important;
   }
   
   .guest-modal .ant-modal-content {
@@ -171,7 +174,7 @@
   }
   
   .guest-modal .ant-picker {
-  border: 1.5px solid #eaeaea;
+  border: 1px solid #eaeaea;
   line-height: 2;
   width: 100%;
   padding: 6px 11px 6px;
@@ -340,7 +343,7 @@
   }
   
   .booking-filter .ant-picker-range {
-  border: 1.5px solid #eaeaea;
+  border: 1px solid #eaeaea;
   line-height: 2;
   padding: 6px 11px 6px;
   }
@@ -594,7 +597,7 @@
   .filter-select .ant-form-item-control-input-content {
   position: relative;
   background-color: #fff;
-  border: 1.5px solid #eaeaea !important;
+  border: 1px solid #eaeaea !important;
   border-radius: 0;
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   width: 100%;
@@ -678,7 +681,7 @@
   }
   
   .inline-form .ant-select-selector {
-  border: 1.5px solid #eaeaea !important;
+  border: 1px solid #eaeaea !important;
   height: 35px !important;
   }
   
@@ -877,7 +880,7 @@
   }
   
   #basic_citizenShip {
-    border: 1.5px solid #eaeaea !important;
+    border: 1px solid #eaeaea !important;
     border-radius: 0;
     padding: 8px 15px !important;
     height: auto;

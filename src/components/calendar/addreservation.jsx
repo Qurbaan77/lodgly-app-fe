@@ -31,7 +31,7 @@ let j = 1;
 const AddReservation = (props) => {
   const { t } = useTranslation();
   const {
-    getData, close, visible, handleOk, handleCancel,
+    getData, close, visible, handleOk,
   } = props;
   const [form] = Form.useForm();
   // const [visible1, setVisible1] = useState(false);
@@ -76,6 +76,7 @@ const AddReservation = (props) => {
 
   const [propertyData, setPropertyData] = useState([]);
   const [currentPropertyId, setCurrentPropertyId] = useState(null);
+  const [reservationDate, setReservationDate] = useState(null);
   // const history = useHistory();
 
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -210,6 +211,7 @@ const AddReservation = (props) => {
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
+      reservationDate,
       propertyId: value,
     };
     const response = await userInstance.post('/getService', payload);
@@ -287,6 +289,7 @@ const AddReservation = (props) => {
   };
 
   const fun4 = (value) => {
+    setReservationDate(value);
     if (value) {
       const d1 = new Date(value[0]._d);
       const d2 = new Date(value[1]._d);
@@ -374,7 +377,7 @@ const AddReservation = (props) => {
       name="modal1"
       visible={visible}
       onOk={handleOk}
-      onCancel={handleCancel}
+      onCancel={close}
       wrapClassName="create-booking-modal"
     >
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
@@ -956,14 +959,12 @@ const AddReservation = (props) => {
 
 AddReservation.propTypes = {
   close: PropTypes.func,
-  handleCancel: PropTypes.func,
   handleOk: PropTypes.func,
   getData: PropTypes.func,
   visible: PropTypes.bool,
 };
 AddReservation.defaultProps = {
   close: () => {},
-  handleCancel: () => {},
   handleOk: () => {},
   getData: () => {},
   visible: false,

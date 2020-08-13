@@ -232,6 +232,7 @@ const AddProperty = () => {
                         rules={[
                           {
                             required: true,
+                            message: t('addproperty.rules1'),
                           },
                         ]}
                       >
@@ -246,6 +247,7 @@ const AddProperty = () => {
                         rules={[
                           {
                             required: true,
+                            message: t('addproperty.rules2'),
                           },
                         ]}
                       >
@@ -263,7 +265,7 @@ const AddProperty = () => {
                             <div>
                               <Input
                                 {...getInputProps({
-                                  placeholder: 'Search Places ...',
+                                  placeholder: t('strings.searchplaces'),
                                   className: 'location-search-input',
                                 })}
                               />
@@ -308,6 +310,7 @@ const AddProperty = () => {
                         rules={[
                           {
                             required: true,
+                            message: t('addproperty.rules6'),
                           },
                         ]}
                       >
@@ -322,6 +325,7 @@ const AddProperty = () => {
                         rules={[
                           {
                             required: true,
+                            message: t('addproperty.rules3'),
                           },
                         ]}
                       >
@@ -336,6 +340,7 @@ const AddProperty = () => {
                         rules={[
                           {
                             required: true,
+                            message: t('addproperty.rules4'),
                           },
                         ]}
                       >
@@ -350,6 +355,7 @@ const AddProperty = () => {
                         rules={[
                           {
                             required: true,
+                            message: t('addproperty.rules5'),
                           },
                         ]}
                       >

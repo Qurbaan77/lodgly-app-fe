@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { Form, Button } from 'antd';
+import { useTranslation } from 'react-i18next';
 import { userInstance } from '../../axios/axiosconfig';
 import loader from '../../assets/images/loader.svg';
-
 // Custom styling can be passed to options when creating an Element.
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -69,13 +69,13 @@ const CheckoutForm = ({
         const { code } = response.data;
         if (code === 200) {
           setHideLoader(true);
-          toaster('success', 'Your Transaction was successful');
+          toaster('success', t('checkoutform.tooltip1'));
           hideBilling(true);
           getData();
           getInvoice();
         } else {
           setHideLoader(true);
-          toaster('error', 'Transaction Failed');
+          toaster('error', t('checkoutform.tooltip2'));
         }
       } else {
         setHideLoader(true);
@@ -84,7 +84,7 @@ const CheckoutForm = ({
       }
     }
   };
-
+  const { t } = useTranslation();
   return (
     <div>
       <div className="loader" hidden={hideLoader}>
@@ -97,7 +97,7 @@ const CheckoutForm = ({
         ? (
           <Form onFinish={(e) => submitChange(e)}>
             {' '}
-            <Form.Item label="Enter Your Card Details">
+            <Form.Item label={t('checkoutform.heading1')}>
               <CardElement
                 className="stripe-element"
                 options={CARD_ELEMENT_OPTIONS}
@@ -105,7 +105,7 @@ const CheckoutForm = ({
               />
             </Form.Item>
             <Button type="primary" disabled={!stripe} htmlType="submit">
-              submit Details
+              {t('checkoutform.label1')}
             </Button>
           </Form>
         )
@@ -120,7 +120,7 @@ const CheckoutForm = ({
               />
             </Form.Item>
             <Button type="primary" disabled={!stripe} htmlType="submit">
-              Submit Details
+              {t('checkoutform.label1')}
             </Button>
           </Form>
         )

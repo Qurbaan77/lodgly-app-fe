@@ -227,7 +227,7 @@ const Groups = () => {
                     label={t('group.title2')}
                     name="groupname"
                     rules={[
-                      { required: true, message: 'Please input your group name!' },
+                      { required: true, message: t('group.title8') },
                     ]}
                   >
                     <Input placeholder={t('group.title3')} />

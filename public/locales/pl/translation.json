@@ -1,4 +1,7 @@
 {
+  "groupreservation": {
+    "heading1": "Proszę wybrać właściwość z górnego paska"
+  },
   "strings": {
     "time": "CZAS",
     "days": "Wybierać",
@@ -72,14 +75,27 @@
     "Name": "Imię",
     "nights": "Noce",
     "dob": "Data urodzenia",
-    "citizenship": "Obywatelstwo"
+    "citizenship": "Obywatelstwo",
+    "ok":"dobrze",
+    "searchplaces":"Wyszukaj miejsca...",
+    "currency": "Waluta"
        
        
   },
-
+  "adminheader": {
+    "label1": "Mój profil",
+    "label2": "Oprawa",
+    "label3": "Ustawienie kalendarza",
+    "label4": "Moje właściwości",
+    "label5": "Raporty",
+    "label6": "Statystyka",
+    "label7":"Wyloguj"
+  },
   "header": {
     "heading": "Nagłówek",
-    "searchplaceholder": "Wybierz Właściwość"
+    "searchplaceholder": "Wybierz Właściwość",
+    "allproperties":"Wszystkie właściwości",
+    "placeholder1":"Wyszukaj gościa, rezerwację, numer telefonu"
   },
   "sidebar": {
     "heading": "Pasek boczny",
@@ -136,7 +152,14 @@
     "detail21": " Wymagane jest co najmniej 1 zdjęcie. Maksymalny rozmiar pliku to 30 MB na obraz. Tylko formaty JPG, PNG lub GIF.",
     "title5": "Dodaj nazwę właściwości",
     "title6": "Nie masz uprawnień do zapisania nowej właściwości",
-    "detail22": "Tylko filmy z YouTube. Wklej tutaj swój link"
+    "detail22": "Tylko filmy z YouTube. Wklej tutaj swój link",
+    "rules": "Wprowadź nazwę właściwości",
+    "rules1": "'propertyType 'jest wymagane",
+    "rules2": "'Adres' jest wymagany",
+    "rules3": "'state'jest wymagany",
+    "rules4": " 'city'jest wymagane",
+    "rules5": " 'zip'jest wymagany",
+    "rules6": " 'country'jest wymagany"
   },
   "unittype": {
     "heading": "Typ jednostki",
@@ -563,14 +586,7 @@
 
 
 },
-"adminheader": {
 
-  "label1":"Mój profil",
-  "label2":"Oprawa",
-  "label3":"Ustawienie kalendarza"
-  
-   
-},
 
 
 "adminlogin": {
@@ -623,7 +639,9 @@
   "label16":"Usunięcie tej faktury spowoduje trwałe usunięcie jej z Twojej sieci.",
   "label17":"Usuń przedmiot",
   "heading2":"Edytuj fakturę",
-  "heading3":"Obecnie nie ma utworzonych subużytkowników"
+  "heading3":"Obecnie nie ma utworzonych subużytkowników",
+  "rule1":"Faktura została pomyślnie usunięta",
+    "rule2":"wystąpił jakiś błąd"
   
  
   
@@ -677,7 +695,7 @@
   "label2": "  Plan płatności",
   "label3": "Całkowite wykorzystanie",
   "label4": " Saldo",
-  "label5": " ly Subskrypcja",
+  "label5": "Subskrypcja",
   "label6": " Pobierz fakturę"
 },
 "billinginformation": {
@@ -706,7 +724,9 @@
 },
 "checkoutform": {
   "heading1": " Wprowadź dane swojej karty",
-  "label1": " Prześlij Szczegóły"
+  "label1": " Prześlij Szczegóły",
+  "tooltip1": "Twoja transakcja powiodła się",
+  "tooltip2": "Transakcja nieudana"
 },
 "billingprofile": {
   "heading1": " Informacje osobiste",
@@ -733,7 +753,11 @@
   "label20": "Dane firmy",
   "label21": "Proszę wpisać swoje imię!",
   "label22": "Dane firmy",
-  "label23": " Dodaj lub edytuj dane swojej firmy"
+  "label23": " Dodaj lub edytuj dane swojej firmy",
+  "label24":"Wprowadzone dane są nieprawidłowe. E-mail!",
+    "label25":"Hasło zostało pomyślnie zmienione! ",
+    "label26":"plik został pomyślnie przesłany",
+    "label27":"przesyłanie pliku nie powiodło się"
 },
 
 "register": {

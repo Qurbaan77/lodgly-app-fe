@@ -1,16 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import './userprofile.css';
 import { Dropdown, Menu } from 'antd';
-import { Link } from 'react-router-dom';
+import Avatar from 'react-avatar';
+import { useHistory, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SettingOutlined } from '@ant-design/icons';
 import { userInstance } from '../../../axios/axiosconfig';
-import user from '../../../assets/images/profile_user.jpg';
+// import user from '../../../assets/images/profile_user.jpg';
 
 const UserProfile = (props) => {
   const { t } = useTranslation();
   const [img, setImg] = useState('');
   const [name, setName] = useState('');
+
+  const history = useHistory();
+  const exit = async () => {
+    const response = await userInstance.post('/logout');
+    if (response.status === 200) {
+      localStorage.clear();
+      history.push('/');
+    }
+  };
 
   const getUserInfo = async () => {
     const response = await userInstance.post('/getuserData');
@@ -18,8 +28,6 @@ const UserProfile = (props) => {
     if (body.length > 0) {
       if (body[0].image !== null) {
         setImg(body[0].image);
-      } else {
-        setImg(user);
       }
       if (body[0].fullname !== null) {
         setName(`${body[0].fullname}`);
@@ -42,16 +50,32 @@ const UserProfile = (props) => {
       <Menu.Item hidden={billingWrite}>
         <Link to="/billinginformation">{t('userprofile.label2')}</Link>
       </Menu.Item>
+      <Menu.Item onClick={() => exit()}>
+        <span>{t('sidebar.menu10')}</span>
+      </Menu.Item>
     </Menu>
   );
 
   return (
     <div className="user-profile">
       <div className="user-img">
-        <img src={img} alt="User" />
+        {img ? (
+          <img src={img} alt="User" />
+        ) : (
+          <Avatar
+            color="#fab52c"
+            name={name}
+            round="50px"
+          />
+        )}
 
         <Dropdown overlay={menu}>
-          <div className="ant-dropdown-link" onClick={(e) => e.preventDefault()} role="button" aria-hidden="true">
+          <div
+            className="ant-dropdown-link"
+            onClick={(e) => e.preventDefault()}
+            role="button"
+            aria-hidden="true"
+          >
             <SettingOutlined />
           </div>
         </Dropdown>

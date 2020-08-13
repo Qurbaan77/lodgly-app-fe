@@ -534,6 +534,7 @@ const EditInvoicePopup = (props) => {
                     ]}
                   >
                     <Input
+                      type="number"
                         // value={quantity}
                       onChange={(e) => handleQuantity(e, ele, j)}
                     />
@@ -552,6 +553,7 @@ const EditInvoicePopup = (props) => {
                     ]}
                   >
                     <Input
+                      type="number"
                       value={price}
                       onChange={(e) => handlePrice(e, j, ele)}
                     />
@@ -576,6 +578,7 @@ const EditInvoicePopup = (props) => {
                     label={t('strings.discount')}
                   >
                     <Input
+                      type="number"
                       placeholder="%"
                       value={discountPer}
                       onChange={(e) => handleDiscount(e, ele, j)}

@@ -36,25 +36,6 @@ Known for its loyalty and faithfulness,
 it can be found as a welcome guest in many households across the world.
 `;
 
-// function onChange() {
-// // console.log(`checked = ${e.target.checked}`);
-// }
-
-// const menu = (
-// <Menu>
-// <Menu.Item key="0">
-// <Checkbox onChange={onChange}>Double Room</Checkbox>
-// </Menu.Item>
-// <Menu.Item key="1">
-// <Checkbox onChange={onChange}>Two Bedroom</Checkbox>
-// </Menu.Item>
-// <Menu.Item key="1">
-// <Checkbox onChange={onChange}>One Bedroom</Checkbox>
-// </Menu.Item>
-
-// </Menu>
-// );
-
 const Popup = () => {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);

@@ -100,7 +100,7 @@ border-right: 1px solid #efecec;
 
 
 select#basic_country, select#basic_citizenship {
-    border: 1.5px solid #eaeaea !important;
+    border: 1px solid #eaeaea !important;
     border-radius: 0;
     padding: 8px 15px !important;
     height: auto;
@@ -110,4 +110,23 @@ select#basic_country, select#basic_citizenship {
 
 select#basic_country:focus, select#basic_citizenship:focus {
     outline: none;
+}
+.custom-select {
+    position: relative;
+}
+.custom-select img {
+    position: absolute;
+    right: 15px;
+    top: 17px;
+}
+.guest-modal select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+.custom-select select {
+    padding: 10px;
+    border: 1px solid #eaeaea;
+    width: 100%;
+    height: 40px;
 }

@@ -23,6 +23,7 @@ import DeletePopup from '../property/deletepopup';
 import property1 from '../../assets/images/property-1.png';
 import owner from '../../assets/images/profile_user.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
+import arrow from '../../assets/images/select-arrow.png';
 import subuser from '../../assets/images/subuser.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
@@ -220,7 +221,7 @@ const Owner = () => {
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
 
-  const title = editOpen ? t('owner.label19') : t('owner.label22');
+  const title = editOpen ? t('owner.label19') : t('owner.label17');
   const saveBtn = editOpen ? t('owner.label19') : t('owner.label17');
 
   const pageContent = (
@@ -395,8 +396,8 @@ const Owner = () => {
                 <Col span={12}>
                   <Form.Item name="gender" label="Gender">
                     <Radio.Group name="radiogroup">
-                      <Radio value="Male">M</Radio>
-                      <Radio value="female">F</Radio>
+                      <Radio value="Male">Male</Radio>
+                      <Radio value="female">Female</Radio>
                     </Radio.Group>
                   </Form.Item>
                 </Col>
@@ -518,7 +519,7 @@ const Owner = () => {
             </div>
           </div>
           <Modal
-            title={t('owner.label19')}
+            title={title}
             visible={visible}
             onOk={handleOk}
             onCancel={handleCancel}
@@ -610,8 +611,8 @@ const Owner = () => {
                 <Col span={12}>
                   <Form.Item name="gender" label={t('strings.gender')}>
                     <Radio.Group name="radiogroup">
-                      <Radio value="Male">M</Radio>
-                      <Radio value="female">F</Radio>
+                      <Radio value="Male">Male</Radio>
+                      <Radio value="female">Female</Radio>
                     </Radio.Group>
                   </Form.Item>
                 </Col>
@@ -620,11 +621,13 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
+                    className="custom-select"
                     label={t('owner.label11')}
                     name="country"
                     style={{ paddingRight: 20 }}
                   >
                     <CountryDropdown onChange={(val) => setCountry(val)} />
+                    <img src={arrow} alt="arrow" />
                   </Form.Item>
                 </Col>
               </Row>
@@ -632,11 +635,14 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
+                    className="custom-select"
+
                     label={t('strings.citizenship')}
                     name="citizenship"
                     style={{ paddingRight: 20 }}
                   >
                     <RegionDropdown country={country} />
+                    <img src={arrow} alt="arrow" />
                   </Form.Item>
                 </Col>
 
@@ -667,6 +673,7 @@ const Owner = () => {
 
               <Row style={{ alignItems: 'center' }}>
                 <Form.Item
+                  className="custom-select"
                   style={{ width: '100%' }}
                   name="properties"
                   label={t('owner.label21')}
@@ -687,6 +694,7 @@ const Owner = () => {
                       <Option value={el.id}>{el.propertyName}</Option>
                     ))}
                   </Select>
+                  <img src={arrow} alt="arrow" />
                 </Form.Item>
               </Row>
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { CloseOutlined } from '@ant-design/icons';
 import './toaster.css';
 
 const Toaster = ({
@@ -10,7 +11,7 @@ const Toaster = ({
       <div className="error">
         <p>{notifyMsg}</p>
         <button className="close-btn" onClick={close} type="button">
-          Close
+          <CloseOutlined />
         </button>
       </div>
     )}
@@ -19,7 +20,7 @@ const Toaster = ({
       <div className="success" visiblity="hide">
         <p>{notifyMsg}</p>
         <button className="close-btn" onClick={close} type="button">
-          Close
+          <CloseOutlined />
         </button>
       </div>
     )}
@@ -28,7 +29,7 @@ const Toaster = ({
       <div className="warning">
         <p>{notifyMsg}</p>
         <button className="close-btn" onChange={close} type="button">
-          Close
+          <CloseOutlined />
         </button>
       </div>
     )}
