@@ -176,7 +176,7 @@ const App = () => {
                         component={() => <Booking />}
                       />
                     )
-                    : feature.booking ? (
+                    : feature.booking || true ? (
                       <PrivateRoute
                         exact
                         path="/booking"
