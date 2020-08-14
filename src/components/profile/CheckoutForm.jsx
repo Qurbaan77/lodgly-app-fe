@@ -112,7 +112,7 @@ const CheckoutForm = ({
         : (
           <Form onFinish={(e) => handleSubmit(e)}>
             {' '}
-            <Form.Item label="Enter Your Card Details">
+            <Form.Item label={t('checkoutform.heading1')}>
               <CardElement
                 className="stripe-element"
                 options={CARD_ELEMENT_OPTIONS}

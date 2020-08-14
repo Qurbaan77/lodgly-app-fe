@@ -384,7 +384,11 @@
     "label3":" ID:",
     "label4":" Dzieci (0-12 yrs)",
     "label5":"Noce",
-    "label6":" Dodaj dodatkowego gościa"
+    "label6":" Dodaj dodatkowego gościa",
+    "reservation": "Rezerwacje",
+    "noproperty": "Aby rozpocząć rezerwację, musisz mieć co najmniej jedną nieruchomość",
+    "addproperty": "Dodaj właściwość",
+    "nobooking": "Obecnie nie masz żadnych utworzonych rezerwacji"
 
   
 
@@ -639,7 +643,7 @@
   "label16":"Usunięcie tej faktury spowoduje trwałe usunięcie jej z Twojej sieci.",
   "label17":"Usuń przedmiot",
   "heading2":"Edytuj fakturę",
-  "heading3":"Obecnie nie ma utworzonych subużytkowników",
+  "heading3":"Nie utworzono żadnych faktur",
   "rule1":"Faktura została pomyślnie usunięta",
     "rule2":"wystąpił jakiś błąd"
   
@@ -720,7 +724,10 @@
   "label19": " Twój",
   "label20": " ly Plan abonamentowy",
   "label21": " odnowi się",
-  "label22": "  Cena całkowita"
+  "label22": "  Cena całkowita",
+  "label23":"Aktywna subskrypcja"
+
+
 },
 "checkoutform": {
   "heading1": " Wprowadź dane swojej karty",

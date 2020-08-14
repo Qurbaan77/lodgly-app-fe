@@ -22,9 +22,9 @@ const Stats = () => {
   const getData = async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
     if (response0.data.code === 200) {
-      const [{
-        days, isOnTrial, isSubscribed,
-      }] = response0.data.userSubsDetails;
+      const [
+        { days, isOnTrial, isSubscribed },
+      ] = response0.data.userSubsDetails;
       setDaysLeft(days);
       setSubscribed(isSubscribed);
       setOnTrial(isOnTrial);
@@ -267,34 +267,31 @@ const OccupancyChart = ({ topNavId }) => {
       chart: {
         type: 'bar',
         height: 350,
-        // stacked: true,
+        stacked: true,
         toolbar: {
           show,
         },
+        zoom: {
+          enabled: false,
+        },
       },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom',
+              offsetX: -10,
+              offsetY: 0,
+            },
+          },
+        },
+      ],
       plotOptions: {
         bar: {
           horizontal: false,
           columnWidth: '25%',
         },
-      },
-      legend: {
-        position: 'top',
-        markers: {
-          strokeColor: 'transparent',
-          fillColors: ['#82858C', '#FAB52C'],
-        },
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      stroke: {
-        show: true,
-        width: 2,
-        colors: ['transparent'],
-      },
-      fill: {
-        colors: ['#82858C', '#FAB52C'],
       },
       xaxis: {
         categories: [
@@ -312,29 +309,30 @@ const OccupancyChart = ({ topNavId }) => {
           'Dec',
         ],
       },
-      yaxis: {
-        title: {
-          text: '',
+      legend: {
+        position: 'top',
+        offsetX: 0,
+        labels: {
+          colors: ['#82858C', '#7FBD34'],
+          useSeriesColors: false,
+        },
+        markers: {
+          strokeColor: 'transparent',
+          fillColors: ['#82858C', '#7FBD34'],
         },
       },
-      tooltip: {
-        y: {
-          formatter(val) {
-            return `$ ${val} thousands`;
-          },
-        },
+      fill: {
+        colors: ['#82858C', '#7FBD34'],
       },
     },
   };
-  const { t } = useTranslation();
+
   return (
     <div className="chart-body">
       <h3>
-        {t('stats.label3')}
+        Occupancy per month
         {' '}
-        <Tooltip title="This is accomodation chart" color="gold">
-          <img src={qst} alt="qst" />
-        </Tooltip>
+        <img src={qst} alt="qst" />
       </h3>
 
       <div id="chart">
@@ -355,6 +353,7 @@ OccupancyChart.propTypes = {
 OccupancyChart.defaultProps = {
   topNavId: 0,
 };
+
 const ReservationCountryChart = () => {
   const [country, setCountry] = useState([]);
   const [average, setAverage] = useState([]);
@@ -371,10 +370,11 @@ const ReservationCountryChart = () => {
   }, []);
 
   const state = {
-
-    series: [{
-      data: average,
-    }],
+    series: [
+      {
+        data: average,
+      },
+    ],
 
     options: {
       chart: {
@@ -434,7 +434,6 @@ const ReservationChannelChart = () => {
         markers: {
           strokeColor: 'transparent',
           fillColors: ['#82858C', '#7FBD34', '#FAB52C'],
-
         },
       },
       fill: {
@@ -539,7 +538,6 @@ const PaceChart = ({ topNavId }) => {
         markers: {
           strokeColor: 'transparent',
           fillColors: ['#82858C', '#FAB52C'],
-
         },
       },
       markers: {

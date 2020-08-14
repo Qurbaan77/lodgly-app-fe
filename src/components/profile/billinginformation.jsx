@@ -468,7 +468,7 @@ const BillingInformation = () => {
           <Row gutter={[16, 0]}>
             <Col span={16} hidden={hideBilling}>
               <Collapse defaultActiveKey={['1']} accordion>
-                <Panel header="Active Subscription" key="1">
+                <Panel header={t('billinginformation.label23')} key="1">
                   <div className="billing-info-form">
                     <Row gutter={[16, 0]}>
                       <Col span={24}>
@@ -538,7 +538,9 @@ const BillingInformation = () => {
                                 </Form.Item>
                               </Col>
                               <Col span={6}>
-                                <Form.Item label={t('billinginformation.label10')}>
+                                <Form.Item
+                                  label={t('billinginformation.label10')}
+                                >
                                   <Select
                                     defaultValue="Monthly"
                                     placeholder="Monthly"
@@ -601,7 +603,9 @@ const BillingInformation = () => {
                               </Col>
 
                               <Col span={9} className="total-billing-price">
-                                <Form.Item label={t('billinginformation.label22')}>
+                                <Form.Item
+                                  label={t('billinginformation.label22')}
+                                >
                                   <h2>
                                     =
                                     {' '}
@@ -631,36 +635,38 @@ const BillingInformation = () => {
                                 </Button>
                               </Col> */}
                             </Row>
-                            <Col span={6}>
-                              <div>
-                                <Elements stripe={stripePromise}>
-                                  {showCancelCheckout ? (
-                                    <CheckoutForm
-                                      total={(total + Number.EPSILON) * 100}
-                                      currency={currency}
-                                      unitsSelected={unitsSelected}
-                                      subscriptionType={subscriptionType}
-                                      planType={planType}
-                                      toaster={toasterMessage}
-                                      submitChange={submitChangesubscription}
-                                      showCancelCheckout={showCancelCheckout}
-                                    />
-                                  ) : (
-                                    <CheckoutForm
-                                      total={(total + Number.EPSILON) * 100}
-                                      currency={currency}
-                                      unitsSelected={unitsSelected}
-                                      subscriptionType={subscriptionType}
-                                      planType={planType}
-                                      toaster={toasterMessage}
-                                      hideBilling={setHideBilling}
-                                      getData={getUser}
-                                      getInvoice={getInvoice}
-                                    />
-                                  )}
-                                </Elements>
-                              </div>
-                            </Col>
+                            <Row gutter={[16, 0]}>
+                              <Col span={24}>
+                                <div>
+                                  <Elements stripe={stripePromise}>
+                                    {showCancelCheckout ? (
+                                      <CheckoutForm
+                                        total={(total + Number.EPSILON) * 100}
+                                        currency={currency}
+                                        unitsSelected={unitsSelected}
+                                        subscriptionType={subscriptionType}
+                                        planType={planType}
+                                        toaster={toasterMessage}
+                                        submitChange={submitChangesubscription}
+                                        showCancelCheckout={showCancelCheckout}
+                                      />
+                                    ) : (
+                                      <CheckoutForm
+                                        total={(total + Number.EPSILON) * 100}
+                                        currency={currency}
+                                        unitsSelected={unitsSelected}
+                                        subscriptionType={subscriptionType}
+                                        planType={planType}
+                                        toaster={toasterMessage}
+                                        hideBilling={setHideBilling}
+                                        getData={getUser}
+                                        getInvoice={getInvoice}
+                                      />
+                                    )}
+                                  </Elements>
+                                </div>
+                              </Col>
+                            </Row>
                           </Form>
                         </div>
                       </Col>
@@ -714,7 +720,10 @@ const BillingInformation = () => {
                               </li>
                             </ul>
                           </div>
-                          <Button onClick={handleChangeSubscription} disabled={disableBtn}>
+                          <Button
+                            onClick={handleChangeSubscription}
+                            disabled={disableBtn}
+                          >
                             {t('billinginformation.label18')}
                           </Button>
                           {canDowngrade ? (
@@ -756,7 +765,10 @@ const BillingInformation = () => {
                               {end}
                             </p>
                           </div>
-                          <Button onClick={handleCancelSubscription} disabled={disableBtn}>
+                          <Button
+                            onClick={handleCancelSubscription}
+                            disabled={disableBtn}
+                          >
                             {t('strings.cancel')}
                           </Button>
                         </Col>
@@ -771,17 +783,15 @@ const BillingInformation = () => {
           </Row>
         </div>
       </div>
-      {
-        data
-          ? (
-            <BillingHistory
-              invoiceList={invoiceList}
-              data={data}
-              currency={currentCurrency}
-            />
-          )
-          : ''
-      }
+      {data ? (
+        <BillingHistory
+          invoiceList={invoiceList}
+          data={data}
+          currency={currentCurrency}
+        />
+      ) : (
+        ''
+      )}
 
       {/* </Suspense> */}
     </Wrapper>

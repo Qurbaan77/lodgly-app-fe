@@ -29,13 +29,15 @@ const BillingHistory = ({ invoiceList, data }) => {
                 ? invoiceList.map((el) => (
                   <tr key={el.invoiceId}>
                     <td>{el.start}</td>
-                    <td>
+                    <td className="text-capitalize">
                       {data.interval}
+                      {' '}
                       {t('billinghistory.label5')}
                     </td>
-                    <td>
+                    <td className="text-upppercase">
                       {el.amount}
-                      <span>{el.currency}</span>
+                      {' '}
+                      {el.currency}
                     </td>
                     <td>
                       <a href={el.pdf}>{t('billinghistory.label6')}</a>

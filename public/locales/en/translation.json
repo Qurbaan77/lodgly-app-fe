@@ -350,7 +350,14 @@
     "label3": "  ID:",
     "label4": " Children (0-12 yrs)",
     "label5": "Nights",
-    "label6": "  Add Additional Guest"
+    "label6": "  Add Additional Guest",
+    "reservation": "Reservations",
+    "noproperty": "To start a reservation you must have at least one property",
+    "addproperty": "Add Property",
+    "nobooking": "Currently, you don’t have any reservations created"
+
+
+
   },
   "addunity": {
     "tooltip":"You are not allowed to create more units, Please upgrade your plan",
@@ -585,7 +592,7 @@
     "label16": "Deleting this invoice will permanently remove it from your network.",
     "label17": "  Delete Item",
     "heading2": "Edit invoice",
-    "heading3": "Currently there are no invoices created",
+    "heading3": "There are no invoices created",
     "rule1":"Invoice Deleted Successfully",
     "rule2":"some error occured"
   },
@@ -663,7 +670,10 @@
     "label19": "Your",
     "label20": "ly Subscription Plan",
     "label21": "will renew on",
-    "label22": "Total Price"
+    "label22": "Total Price",
+    "label23":"Active Subscription"
+
+
   },
   "checkoutform": {
     "heading1": "Enter Your Card Details",

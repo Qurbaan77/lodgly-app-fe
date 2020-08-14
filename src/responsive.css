@@ -145,6 +145,11 @@
     text-transform: capitalize;
     }
 
+.ant-motion-collapse-leave .ant-menu-item {
+    height: 0!important;
+    margin: 0!important;
+}
+
 
 /********** Popup Animation *********/
 
@@ -356,6 +361,24 @@
 }
 
 
+
+
+
+
+/******** 14 Aug ********/
+
+
+.amount-field#pricePerUnit {
+    max-width: 100%;
+}
+
+.text-capitalize{
+    text-transform: capitalize;
+}
+
+.text-upppercase{
+    text-transform: uppercase;
+}
 
 
 

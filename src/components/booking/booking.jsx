@@ -22,6 +22,7 @@ import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import filterIcon from '../../assets/images/menu/filter-icon.png';
 import nobooking from '../../assets/images/no-booking.png';
+// import noproperty from '../../assets/images/property-placeholder.png';
 import editIcon from '../../assets/images/menu/pencil-icon.png';
 import downloadIcon from '../../assets/images/menu/download-icon.png';
 import refreshIcon from '../../assets/images/menu/refresh-icon.png';
@@ -608,6 +609,16 @@ const Booking = () => {
               </Row>
             </div>
           ) : (
+            // <div className="add-team-page">
+            //   <div className="add-subuser">
+            //   <img src={noproperty} alt="subuser" />
+            //   <h4>{t('booking.reservation')}</h4>
+            //   <p>{t('booking.noproperty')}</p>
+            //   <Button type="primary" icon={<PlusOutlined />}>
+            //   {t('booking.addproperty')}
+            //   </Button>
+            //   </div>
+            //   </div>
             <div className="add-team-page">
               <div className="add-subuser">
                 <img src={nobooking} alt="subuser" />

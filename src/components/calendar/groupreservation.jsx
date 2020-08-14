@@ -16,9 +16,7 @@ import {
   Modal,
   // Menu,
 } from 'antd';
-import {
-  PlusSquareOutlined,
-} from '@ant-design/icons';
+import { PlusSquareOutlined } from '@ant-design/icons';
 
 const { Panel } = Collapse;
 
@@ -31,6 +29,14 @@ const GroupReservation = (props) => {
   } = props;
   const [form] = Form.useForm();
 
+  const onFinish = (values) => {
+    console.log(values);
+  };
+
+  const onCalendarChange = (values) => {
+    console.log('onCalendarChange', values);
+  };
+
   return (
     <Modal
       title={t('calendarpop.heading4')}
@@ -38,7 +44,7 @@ const GroupReservation = (props) => {
       onCancel={close}
       wrapClassName="create-booking-modal group-reservation"
     >
-      <Form form={form} name="basic">
+      <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={24}>
             <Form.Item
@@ -46,7 +52,7 @@ const GroupReservation = (props) => {
               name="groupname"
               style={{ paddingRight: 20 }}
             >
-              <RangePicker />
+              <RangePicker onCalendarChange={onCalendarChange} />
             </Form.Item>
           </Col>
 
@@ -72,35 +78,29 @@ const GroupReservation = (props) => {
               className="comision"
               label={t('addreservation.heading6')}
               name="channel"
+              style={{ width: '70%', display: 'inline-block' }}
             >
               <Select
                 placeholder="Select"
                 // onSelect={(value, event) => fun5(value, event)}
-                style={{ width: '70%', display: 'inline-block' }}
               >
                 <Select.Option value="Airbnb">Airbnb</Select.Option>
                 <Select.Option value="Booking">Booking</Select.Option>
               </Select>
             </Form.Item>
-          </Col>
-        </Row>
 
-        <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
-          <Col span={24}>
             <Form.Item
               className="comision"
-              label={t('addreservation.heading6')}
               name="commissionPercentage"
+              style={{
+                width: '26%',
+                display: 'inline-block',
+                verticalAlign: 'bottom',
+                marginLeft: '4%',
+              }}
             >
               <Input
                 name="commission"
-                style={{
-                  width: '26%',
-                  display: 'inline-block',
-                  verticalAlign: 'top',
-                  marginLeft: '4%',
-                }}
-
                 rules={[
                   {
                     required: true,
@@ -122,7 +122,7 @@ const GroupReservation = (props) => {
           }}
           // hidden
         >
-          {data.map((el) => (
+          {data.map((el, i) => (
             <Col span={24}>
               <div
                 className="reservation-booker select-unit-reservation"
@@ -131,22 +131,22 @@ const GroupReservation = (props) => {
                 <Row>
                   <Col span={12} className="unit-available">
                     {/* <label>Units</label> */}
-                    <p>dataunitTypeName</p>
-                    <span>Available : el.noOfUnits</span>
+                    <p>{el.unitTypeName}</p>
+                    <span>
+                      Available :
+                      {el.noOfUnits}
+                    </span>
                   </Col>
 
                   <Col span={12}>
-                    <Form.Item label="Number of units" name={[el, 'units']}>
-                      <Input />
-                      {/* <Select style={{ width: '50%', display: 'inline-block' }}>
-                        {Array.from(Array(el.noOfUnits).keys()).map(
-                          (ele, i) => (
-                            <Select.Option value={ele} key={i}>
-                              {ele + 1}
-                            </Select.Option>
-                          )
-                        )}
-                      </Select> */}
+                    <Form.Item label="Number of units" name={`units${i}`}>
+                      <Select style={{ width: '50%', display: 'inline-block' }}>
+                        {Array.from(Array(el.noOfUnits).keys()).map((ele) => (
+                          <Select.Option value={ele} key={ele + 1}>
+                            {ele + 1}
+                          </Select.Option>
+                        ))}
+                      </Select>
                     </Form.Item>
                   </Col>
                 </Row>
@@ -183,50 +183,19 @@ const GroupReservation = (props) => {
                       <span>EUR</span>
                     </Form.Item>
                   </Col>
-
                 </Row>
               </div>
 
-              {/* <div className="price-per-night">
+              <div className="price-per-night">
                 <h4>Price per night</h4>
 
                 <div className="night-container">
                   <div className="night-box">
-                    <label>20.06</label>
-                    <Input />
-                  </div>
-
-                  <div className="night-box">
-                    <label>20.06</label>
-                    <Input />
-                  </div>
-
-                  <div className="night-box">
-                    <label>20.06</label>
-                    <Input />
-                  </div>
-
-                  <div className="night-box">
-                    <label>20.06</label>
-                    <Input />
-                  </div>
-
-                  <div className="night-box">
-                    <label>20.06</label>
-                    <Input />
-                  </div>
-
-                  <div className="night-box">
-                    <label>20.06</label>
-                    <Input />
-                  </div>
-
-                  <div className="night-box">
-                    <label>20.06</label>
+                    {/* <label>20.06</label> */}
                     <Input />
                   </div>
                 </div>
-              </div> */}
+              </div>
             </Col>
           ))}
         </Row>
