@@ -425,7 +425,7 @@
   font-size: 10px;
 }
 .cross-btn {
-  position: absolute;
+  position: fixed;
   right: 10px;
   top: 20px;
 }

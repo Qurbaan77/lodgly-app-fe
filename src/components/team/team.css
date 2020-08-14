@@ -180,7 +180,7 @@ border-right: 1px solid #efecec;
     margin-bottom: 25px;
 }
 .cross-btn {
-    position: absolute;
+    position: fixed;
     right: 10px;
     top: 20px;
 }
