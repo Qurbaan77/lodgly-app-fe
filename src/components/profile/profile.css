@@ -155,7 +155,7 @@
 
 .stripe-element {
   width: 400px !important;
-  margin: 40px 0 40px 0 !important;
+  margin: 20px 0 20px 0 !important;
 }
 .user-pic-success img {
   width: 100px;
@@ -194,3 +194,7 @@
 .amount-field#pricePerUnit {
     justify-content: center;
 }
+.stripe-element {
+  border: 1px solid #eaeaea!important;
+  padding: 10px!important;
+  }
