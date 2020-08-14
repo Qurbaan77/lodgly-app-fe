@@ -141,7 +141,9 @@
     color: #333;
 }
 
-
+.billing-info-form .ant-btn span {
+    text-transform: capitalize;
+    }
 
 
 /********** Popup Animation *********/
@@ -833,12 +835,22 @@
     z-index: 9999;
 }
 
-.billing-container .ant-col-16 {
+.billing-container [class*=ant-col-] {
     -ms-flex: 100%;
     flex: 0 0 100%;
     max-width: 100%;
 }
-
+.stripe-element {
+    width: 100%!important;
+    }
+    .amount-field#pricePerUnit {
+    max-width: 100%;
+    justify-content: flex-start;
+    }
+    
+    .into {
+    display: none;
+    }
 
 /********** Popup Animation *********/
 
