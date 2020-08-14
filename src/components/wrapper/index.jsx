@@ -27,6 +27,7 @@ const Wrapper = ({
 
   return (
     <div className={`wrapper ${menutoggle ? 'wrapper-expand' : ''}`}>
+      <AlertBox />
       <Layout>
         <Sidenav
           menutoggle={menutoggle}
@@ -42,7 +43,6 @@ const Wrapper = ({
             setMenuToggle={setMenuToggle}
             menutoggle={menutoggle}
           />
-          <AlertBox />
           <Content
             className="site-layout-background"
             style={{
