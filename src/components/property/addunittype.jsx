@@ -17,6 +17,7 @@ import {
   FormOutlined,
   CloseCircleOutlined,
   CheckCircleOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
@@ -45,6 +46,7 @@ const AddUnitType = () => {
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
+  const [showEdit, setShowEdit] = useState(false);
 
   const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
 
@@ -120,6 +122,7 @@ const AddUnitType = () => {
   };
 
   const editName = (unitId) => {
+    setShowEdit(true);
     setEditId(unitId);
   };
 
@@ -316,6 +319,13 @@ const AddUnitType = () => {
   );
   const btn = isLimitReached ? disbledSaveUnitBtn : normalSaveUnitBtn;
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+  const escape = (e) => {
+    if (e.keyCode === 27) {
+      setEditId(null);
+      setShowPanel(true);
+      setShowEdit(false);
+    }
+  };
   return (
     <Wrapper>
       <Helmet>
@@ -376,6 +386,11 @@ const AddUnitType = () => {
                         <Input />
                       </Form.Item>
                     </Col>
+                    {/* <div className="year-select">
+              <Button >❮</Button>
+              <span>August</span>
+              <Button >❯</Button>
+            </div> */}
 
                     <Col span={8} className="d-flex update-cal">
                       {/* <Form.Item name="date-picker" label="DatePicker">
@@ -396,38 +411,45 @@ const AddUnitType = () => {
                     ) : null}
                   </div>
                 </Form>
-                <div className="panel-box units editunit" hidden={showPanel}>
-                  <div className="group-name">
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder={t('addunity.label4')}
-                      onChange={onChange}
-                    />
-                  </div>
-                  <div className="group-action">
-                    <div
-                      className="can-btn"
-                      onClick={() => setShowPanel(true)}
-                      role="button"
-                      aria-hidden="true"
-                    >
-                      <CloseCircleOutlined />
-                      {' '}
-                      {t('strings.cancel')}
+                {!showPanel ? (
+                  <div className="panel-box units editunit" hidden={showPanel}>
+                    <div className="group-name">
+                      <Input
+                        autoFocus
+                        type="text"
+                        name="name"
+                        placeholder={t('addunity.label4')}
+                        onChange={onChange}
+                        onPressEnter={() => onUnitSave()}
+                        onKeyDown={escape}
+                      />
                     </div>
-                    <div
-                      className="sav-btn"
-                      onClick={() => onUnitSave()}
-                      role="button"
-                      aria-hidden="true"
-                    >
-                      <CheckCircleOutlined />
-                      {' '}
-                      {t('strings.save')}
+                    <div className="group-action">
+                      <div
+                        className="can-btn"
+                        onClick={() => setShowPanel(true)}
+                        role="button"
+                        aria-hidden="true"
+                      >
+                        <CloseCircleOutlined />
+                        {' '}
+                        {t('strings.cancel')}
+                      </div>
+                      <div
+                        className="sav-btn"
+                        onClick={() => onUnitSave()}
+                        role="button"
+                        aria-hidden="true"
+                      >
+                        <CheckCircleOutlined />
+                        {' '}
+                        {t('strings.save')}
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  ''
+                )}
 
                 <div className="assign-unit">
                   <p>{t('addunity.para1')}</p>
@@ -443,13 +465,22 @@ const AddUnitType = () => {
                       >
                         <div className="group-name">
                           <h4 hidden={editId === i}>{el.unitName}</h4>
-                          <input
-                            type="text"
-                            name="name"
-                            placeholder="Edit Unit"
-                            onChange={onChange}
-                            hidden={editId !== i}
-                          />
+                          {
+                            showEdit
+                              ? (
+                                <Input
+                                  autoFocus={showEdit}
+                                  type="text"
+                                  name="name"
+                                  placeholder="Edit Unit"
+                                  onChange={onChange}
+                                  onPressEnter={() => onUnitSave(el.id)}
+                                  onKeyDown={escape}
+                                  hidden={editId !== i}
+                                />
+                              )
+                              : ''
+                          }
                           <span>{t('addunity.para3')}</span>
                         </div>
 
@@ -486,7 +517,11 @@ const AddUnitType = () => {
                   </div>
                   <div>
                     {isOnTrial ? (
-                      <Button onClick={() => setShowPanel(false)}>
+                      <Button
+                        onClick={() => setShowPanel(false)}
+                        className="add-unit-link"
+                        icon={<PlusOutlined />}
+                      >
                         Add unit
                       </Button>
                     ) : (

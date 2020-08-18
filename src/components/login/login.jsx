@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import './login.css';
 import { Form, Input, Button } from 'antd';
 import queryString from 'query-string';
+import { toast } from 'react-toastify';
 import logo from '../../assets/images/logo.jpg';
-import Toaster from '../toaster/toaster';
+import 'react-toastify/dist/ReactToastify.css';
 import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 
 const Login = () => {
   const [form] = Form.useForm();
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
   const history = useHistory();
 
   const tokenparser = (token) => {
@@ -45,38 +44,45 @@ const Login = () => {
       localStorage.setItem('token', response.data.token);
       const payload = tokenparser(response.data.token);
       localStorage.setItem('userId', payload.userid);
-      setNotifyType('success');
-      setNotifyMsg(msg);
+      toast.success(msg, { containerId: 'B' });
       history.push('/booking');
       window.location.reload();
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toast.error(msg, { containerId: 'B' });
     }
     form.resetFields();
-  };
-
-  const close = () => {
-    setNotifyType('');
   };
 
   useEffect(() => {
     async function fetchData() {
       const values = queryString.parse(window.location.search);
       const forgetHex = values.token;
+
       if (forgetHex !== undefined) {
         const response = await userInstance.get(`/verify/${forgetHex}`);
         const { msg } = response.data;
         if (response.data.code === 200) {
-          setNotifyType('success');
-          setNotifyMsg(msg);
+          toast.success(msg, { containerId: 'B' });
         } else {
-          setNotifyType('error');
-          setNotifyMsg(msg);
+          toast.error(msg, { containerId: 'B' });
         }
       }
     }
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    async function searchCompany() {
+      const companyName = window.location.hostname.split('.');
+      const values = {
+        companyName: companyName[0],
+      };
+      const response = await userInstance.post('/searchComapany', values);
+      if (response.data.code === 404) {
+        window.location.href = 'https://www.lodgly.dev/';
+      }
+    }
+    searchCompany();
   }, []);
 
   return (
@@ -177,7 +183,6 @@ const Login = () => {
             </div>
           </div>
         </div>
-        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       </div>
     </>
   );

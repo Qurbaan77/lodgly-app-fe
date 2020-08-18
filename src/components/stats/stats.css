@@ -20,3 +20,21 @@
 .apexcharts-canvas {
     width: 100%!important;
 }
+
+.accomandation-chart.no-stats-data, .occupancy-chart.no-stats-data, .reservation-chart.no-stats-data, .pace-chart.no-stats-data {
+    position: relative;
+    }
+    
+    
+    .accomandation-chart.no-stats-data::before, .occupancy-chart.no-stats-data::before, .reservation-chart.no-stats-data::before, .pace-chart.no-stats-data::before {
+    content: "";
+    position: absolute;
+    top:0;
+    background: #fffc;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: block;
+    z-index: 9;
+    height: calc(100% - 20px);
+    }

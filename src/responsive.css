@@ -45,7 +45,7 @@
 }
 
 .ant-dropdown-menu.setting-dropdown {
-    margin-left: 68px;
+    margin-left: 50px;
 }
 
 
@@ -381,10 +381,31 @@
 }
 
 
+.stats-page .chart-body h3 img {
+    position: relative;
+    top: -6px;
+    cursor: pointer;
+    left: -3px;
+}
 
 
+.stats-page .apexcharts-toolbar {
+    display: none!important;
+}
 
 
+.stats-page .apexcharts-legend.position-top.apexcharts-align-center {
+    justify-content: flex-end!important;
+}
+
+.booking-list {
+    cursor: pointer;
+}
+
+
+input[type=number]{
+    -moz-appearance:textfield;
+  }
 
 /******************************************************************************************************/
 
@@ -780,6 +801,10 @@
 
     .apexcharts-canvas {
         margin: 0px auto;
+    }
+
+    .no-padding-mbl{
+        padding-right: 0!important;
     }
 
 

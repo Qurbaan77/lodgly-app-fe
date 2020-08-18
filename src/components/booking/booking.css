@@ -86,11 +86,12 @@
   padding-bottom: 5px;
   }
   .booking-list {
-  padding: 20px;
-  border-bottom: 1px solid #efefef;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #efefef;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
   }
   
   .detail-info span {
@@ -387,7 +388,7 @@
   align-items: center;
   }
   
-  / .inline-form {
+  /* .inline-form {
   margin-right: 5px;
   margin-left: 5px;
   } */
@@ -735,28 +736,69 @@
   
   .booking-list .detail {
   position: relative;
+  width: 60%;
   
   }
+
+  .color-dropdown .ant-select-item {
+    padding: 5px 5px;
+}
   
+.box-editing .ant-select-selection-item{
+font-size: 11px
+}
   .ant-select-dropdown.color-dropdown .ant-select-item:nth-child(1) .ant-select-item-option-content{
   color: #FB4B56;
   }
   
+  .box-editing [title^="Booked"]{
+    color: #FB4B56;
+  }
   
+  .ant-select-dropdown.color-dropdown .ant-select-item:first-child .ant-select-item-option-content::before {content: "";background: #fb4b56;width: 5px;height: 5px;display: inline-block;border-radius: 10px; margin-right:5px; vertical-align: middle}
+
+
   .ant-select-dropdown.color-dropdown .ant-select-item:nth-child(2) .ant-select-item-option-content{
   color: #7FBD34;
   }
   
+  .box-editing [title^="Open"]{
+    color: #7FBD34;
+  }
   
+
+  .ant-select-dropdown.color-dropdown .ant-select-item:nth-child(2) .ant-select-item-option-content::before {content: "";background: #7FBD34;width: 5px;height: 5px;display: inline-block;border-radius: 10px; margin-right:5px; vertical-align: middle}
+
+
+
+
   .ant-select-dropdown.color-dropdown .ant-select-item:nth-child(3) .ant-select-item-option-content{
   color: #FEB426;
   }
   
+
+  .box-editing [title^="Set as Tentative"]{
+    color: #FEB426;
+  }
+
+
+  .ant-select-dropdown.color-dropdown .ant-select-item:nth-child(3) .ant-select-item-option-content::before {content: "";background: #FEB426;width: 5px;height: 5px;display: inline-block;border-radius: 10px; margin-right:5px; vertical-align: middle}
+
+
   
   .ant-select-dropdown.color-dropdown .ant-select-item:nth-child(4) .ant-select-item-option-content{
   color: #9EA0A5;
   }
   
+
+  .box-editing [title^="Decline"]{
+    color: #9EA0A5;
+  }
+
+
+  .ant-select-dropdown.color-dropdown .ant-select-item:nth-child(4) .ant-select-item-option-content::before {content: "";background: #9EA0A5;width: 5px;height: 5px;display: inline-block;border-radius: 10px; margin-right:5px; vertical-align: middle}
+
+
   
   .box-editing span.anticon {
   font-size: 20px;
@@ -799,7 +841,7 @@
   }
   
   .filter-menu {
-  width: 120px;
+  width: 130px;
   }
   
   .ant-select-item-option-content {
@@ -813,6 +855,7 @@
   
   .filter-checkbox {
   padding-right: 20px;
+  width:70px;
   }
   
   .booking .ant-checkbox-checked::after {
@@ -886,3 +929,48 @@
     height: auto;
     width: 100%;
   }
+
+  .additional-guest .ant-form-item-explain {
+    position: absolute;
+    bottom: -25px;
+    font-size: 10px;
+}
+
+
+
+.booking-filter-footer {
+  padding-top: 30px;
+}
+
+.booking-filter-footer .invoice-filter-box {
+  justify-content: center;
+}
+
+.booking-filter-footer .invoice-filter-box .ant-checkbox-wrapper, .booking-filter-footer .invoice-filter-box .cancel-icon, .booking-filter-footer .invoice-filter-box .ant-tag, .booking-filter-footer .invoice-filter-box .box-editing {margin: 0px 10px;}
+
+.booking-filter-footer .ant-select-selector {
+  border: none!important;
+}
+
+.booking-filter-footer .filter-menu {
+  width: 150px;
+}
+
+.color-filter .ant-select-item:last-child {
+  color: #fb4b56;
+}
+
+.color-filter .ant-select-item .ant-select-item-option-content::before {content: "";width: 5px;height: 5px;border-radius: 100%;background: #ddd;display: inline-block;margin-right: 5px;}
+
+.booking-filter-footer .ant-select-arrow {
+  position: absolute;
+  top: 50%;
+  right: inherit;
+  left: 50%;
+  transform: translate(-50%, -0%);
+}
+
+.booking-filter-footer .ant-tag {
+  border-radius: 30px;
+  min-width: 40px;
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import './calendar.css';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,8 @@ import {
   // Menu,
 } from 'antd';
 import { PlusSquareOutlined } from '@ant-design/icons';
+import Toaster from '../toaster/toaster';
+import { userInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
 
@@ -25,17 +27,95 @@ const { RangePicker } = DatePicker;
 const GroupReservation = (props) => {
   const { t } = useTranslation();
   const {
-    close, visible, userData, data,
+    close, visible, data, getData,
   } = props;
   const [form] = Form.useForm();
+  const [show, setShow] = useState(true);
+  // const [rangeDate, setRangeDate] = useState(null);
+  const [daysArr, setDaysArr] = useState([]);
+  const [startDate, setStartDate] = useState('');
+  const [startDateMonth, setStartDateMonth] = useState('');
+  const [units, setUnits] = useState(0);
+  // const [price, setPrice] = useState(0);
+  const [night, setNight] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [notifyType, setNotifyType] = useState();
+  const [notifyMsg, setNotifyMsg] = useState();
+  const [currMonthDay, setCurrMonthDay] = useState(0);
 
-  const onFinish = (values) => {
-    console.log(values);
+  const onFinish = async (values) => {
+    const unitType = [];
+    data.forEach((element, i) => {
+      const k = 'array';
+      const arr = [];
+      element.units.forEach((ele, j) => {
+        if (j <= values[k + i].units) {
+          arr.push(ele);
+        }
+      });
+      values[k + i].bookedUnits = arr;
+      unitType.push(values[k + i]);
+    });
+    const copyValues = values;
+    copyValues.availableUnits = data.units;
+    copyValues.unitType = unitType;
+    copyValues.propertyId = localStorage.getItem('topNavId');
+
+    const res = await userInstance.post('/groupReservation', copyValues);
+    const { msg } = res.data;
+    if (res.data.code === 200) {
+      getData();
+      close();
+    } else {
+      setNotifyType('error');
+      setNotifyMsg(msg);
+    }
+
+    form.resetFields();
   };
 
-  const onCalendarChange = (values) => {
-    console.log('onCalendarChange', values);
+  const onCalendarChange = (value) => {
+    if (value[1] !== null) {
+      const now = new Date(value[0]._d);
+      const days = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      setCurrMonthDay(days);
+      // setRangeDate(value);
+      setStartDate(value[0]._d.getDate());
+      setStartDateMonth(value[0]._d.getMonth() + 1);
+      // console.log('value[0]._d.daysInMonth()', value[0]._d.daysInMonth());
+      const d1 = new Date(value[0]._d);
+      //  console.log(d1.daysInMonth());
+      const d2 = new Date(value[1]._d);
+      const diff = Math.abs(d1 - d2);
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+      setNight(day);
+      setDaysArr(Array.from(Array(day).keys()));
+      setShow(false);
+    }
   };
+
+  const priceFunction = useCallback(
+    (value, i) => {
+      form.setFieldsValue({
+        [`array${i}`]: {
+          amount: Math.floor(night * value),
+        },
+      });
+
+      setTotal(0);
+
+      daysArr.forEach((el, j) => {
+        form.setFieldsValue({
+          [`array${i}`]: {
+            [`${j}`]: {
+              everyDayPrice: value,
+            },
+          },
+        });
+      });
+    },
+    [units, daysArr, form, night],
+  );
 
   return (
     <Modal
@@ -44,6 +124,7 @@ const GroupReservation = (props) => {
       onCancel={close}
       wrapClassName="create-booking-modal group-reservation"
     >
+      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={24}>
@@ -58,7 +139,7 @@ const GroupReservation = (props) => {
 
           <Col span={24}>
             <Form.Item name="radiogroup" label="Radio.Group">
-              <Radio.Group>
+              <Radio.Group defaultValue="confirmed">
                 <Radio value="confirmed">Confirmed</Radio>
                 <Radio value="option">Option</Radio>
               </Radio.Group>
@@ -120,17 +201,20 @@ const GroupReservation = (props) => {
             background: '#fbfbfc',
             paddingTop: '20px',
           }}
-          // hidden
+          hidden={show}
         >
           {data.map((el, i) => (
-            <Col span={24}>
+            <Col span={24} className="unit-border">
               <div
                 className="reservation-booker select-unit-reservation"
                 id={el}
               >
                 <Row>
                   <Col span={12} className="unit-available">
-                    {/* <label>Units</label> */}
+                    <label htmlFor="units">
+                      <input hidden />
+                      Units
+                    </label>
                     <p>{el.unitTypeName}</p>
                     <span>
                       Available :
@@ -139,13 +223,25 @@ const GroupReservation = (props) => {
                   </Col>
 
                   <Col span={12}>
-                    <Form.Item label="Number of units" name={`units${i}`}>
-                      <Select style={{ width: '50%', display: 'inline-block' }}>
+                    {/* <Form.Item label="Number of units" name={`units${i}`}> */}
+                    <Form.Item
+                      label="Number of units"
+                      name={[`array${i}`, 'units']}
+                    >
+                      <Select
+                        style={{ width: '50%', display: 'inline-block' }}
+                        onSelect={(value) => setUnits(value + 1)}
+                      >
                         {Array.from(Array(el.noOfUnits).keys()).map((ele) => (
                           <Select.Option value={ele} key={ele + 1}>
                             {ele + 1}
                           </Select.Option>
                         ))}
+                        {/* {el.units.map((ele, k) => (
+                          <Select.Option value={ele} key={k+1}>
+                            {k + 1}
+                          </Select.Option>
+                        ))} */}
                       </Select>
                     </Form.Item>
                   </Col>
@@ -155,7 +251,7 @@ const GroupReservation = (props) => {
                   <Col span={12}>
                     <Form.Item
                       label="Price per night/unit"
-                      name={[el, 'pricePer']}
+                      name={[`array${i}`, 'pricePer']}
                     >
                       <Input
                         style={{
@@ -163,15 +259,15 @@ const GroupReservation = (props) => {
                           display: 'inline-block',
                           marginRight: '10px',
                         }}
+                        onChange={(e) => priceFunction(e.target.value, i)}
                       />
-                      <span>EUR</span>
                     </Form.Item>
                   </Col>
 
                   <Col span={12}>
                     <Form.Item
                       label="Total per unit type"
-                      name={[el, 'amount']}
+                      name={[`array${i}`, 'amount']}
                     >
                       <Input
                         style={{
@@ -180,21 +276,33 @@ const GroupReservation = (props) => {
                           marginRight: '10px',
                         }}
                       />
-                      <span>EUR</span>
                     </Form.Item>
                   </Col>
                 </Row>
               </div>
 
               <div className="price-per-night">
-                <h4>Price per night</h4>
+                <Collapse accordion>
+                  <Panel
+                    icon={<PlusSquareOutlined />}
+                    header="Price per night"
+                    key="11"
+                  >
+                    <div className="night-container">
+                      {daysArr.map((ele, j) => (
+                        <div className="night-box">
+                          <Form.Item
+                            label={startDate + j <= currMonthDay ? `${startDate + j} : ${startDateMonth}` : `${0 + j} : ${startDateMonth + 1}`}
+                            name={[`array${i}`, ele, 'everyDayPrice']}
+                          >
+                            <Input />
+                          </Form.Item>
+                        </div>
+                      ))}
+                    </div>
+                  </Panel>
+                </Collapse>
 
-                <div className="night-container">
-                  <div className="night-box">
-                    {/* <label>20.06</label> */}
-                    <Input />
-                  </div>
-                </div>
               </div>
             </Col>
           ))}
@@ -207,14 +315,24 @@ const GroupReservation = (props) => {
             border: '1px solid #ddd',
             marginBottom: '20px',
           }}
+          hidden={show}
         >
           <Col span={24}>
             <div className="discount-night">
-              <span>Discount (%)</span>
-              <Input />
+              <Form.Item
+                className="comision"
+                label="Discount (%)"
+                name="channel"
+                style={{ width: '70%', display: 'inline-block' }}
+              >
+                <Input />
+              </Form.Item>
 
               <div className="discount-box">
-                <h2>$125</h2>
+                <h2>
+                  $
+                  {total}
+                </h2>
               </div>
             </div>
           </Col>
@@ -225,7 +343,48 @@ const GroupReservation = (props) => {
             <div className="reservation-booker">
               <h4>{t('calendarpop.label7')}</h4>
 
-              <Row>
+              <Row style={{ alignItems: 'center' }}>
+                <Col span={12}>
+                  <Form.Item
+                    label={t('strings.full')}
+                    name="fullName"
+                    style={{ paddingRight: 20 }}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+
+                <Col span={12}>
+                  <Form.Item
+                    label={t('strings.email')}
+                    name="email"
+                    style={{ paddingRight: 20 }}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+
+                <Col span={12}>
+                  <Form.Item
+                    label={t('strings.country')}
+                    name="country"
+                    style={{ paddingRight: 20 }}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+
+                <Col span={12}>
+                  <Form.Item
+                    label={t('strings.phone')}
+                    name="phone"
+                    style={{ paddingRight: 20 }}
+                  >
+                    <Input type="number" minLength="9" maxLength="15" />
+                  </Form.Item>
+                </Col>
+
+                {/* <Row>
                 <Col span={12}>
                   <label htmlFor="name">
                     <input hidden />
@@ -248,7 +407,7 @@ const GroupReservation = (props) => {
                     {t('strings.phone')}
                   </label>
                   <p>{userData.length > 0 ? userData[0].phone : null}</p>
-                </Col>
+                </Col> */}
 
                 {/* <Col span={24}>
               <div className="additional-edit">
@@ -309,15 +468,15 @@ const GroupReservation = (props) => {
 
 GroupReservation.propTypes = {
   close: PropTypes.func,
-  userData: PropTypes.func,
   data: PropTypes.func,
   visible: PropTypes.bool,
+  getData: PropTypes.func,
 };
 GroupReservation.defaultProps = {
   close: () => {},
-  userData: () => {},
   data: () => {},
   visible: false,
+  getData: () => {},
 };
 
 export default GroupReservation;

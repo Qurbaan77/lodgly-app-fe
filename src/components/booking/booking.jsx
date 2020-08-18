@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
+import { toast } from 'react-toastify';
 import './booking.css';
 import {
-  Form, Button, Row, Col, Tooltip, Tag, Select,
+  Form, Button, Row, Col, Tooltip, Tag, Select, Checkbox,
 } from 'antd';
 import {
   FormOutlined,
@@ -12,6 +13,7 @@ import {
 } from '@ant-design/icons';
 // import { useTranslation } from "react-i18next";
 import { useTranslation } from 'react-i18next';
+
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
 import GuestPopup from './guestpopup';
@@ -19,8 +21,8 @@ import CreateBookingPopup from './createbookingpopup';
 import EditBookingPopup from './editbookingpopup';
 import BookingFilter from './filter';
 import { userInstance } from '../../axios/axiosconfig';
-import Toaster from '../toaster/toaster';
 import filterIcon from '../../assets/images/menu/filter-icon.png';
+import cancelIcon from '../../assets/images/menu/cancel-icon.png';
 import nobooking from '../../assets/images/no-booking.png';
 // import noproperty from '../../assets/images/property-placeholder.png';
 import editIcon from '../../assets/images/menu/pencil-icon.png';
@@ -51,13 +53,13 @@ const Booking = () => {
   const [currentService, setCurrentService] = useState([]);
   const [editCurrentGuest, setEditCurrentGuest] = useState([]);
   const [topNavId, setTopNavId] = useState();
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
   const [subscribed, setSubscribed] = useState(true);
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
   const [status, setStatus] = useState('');
   const [filterArr, setFilterArr] = useState([]);
+  const [checkedBooking, setCheckedBooking] = useState([]);
+  const [selectAllCheck, setSelectAllCheck] = useState(false);
 
   const [editValues, setEditValues] = useState({});
   const [editBookingValues, setEditBookingValues] = useState({});
@@ -70,14 +72,11 @@ const Booking = () => {
   // setVisible(true);
   // };
 
-  const toasterMessage = (type, msg) => {
-    setNotifyType(type);
-    setNotifyMsg(msg);
-  };
+  const toasterMessage = () => {};
 
-  const close = () => {
-    setNotifyType('');
-  };
+  // const close = () => {
+  //   // setNotifyType('');
+  // };
 
   const showfilter = () => {
     getData();
@@ -130,6 +129,7 @@ const Booking = () => {
     }
     guestname.push(data.fullname);
     bookingdata.forEach((el, i) => {
+      el[`checked${i}`] = false;
       const d1 = new Date(el.startDate);
       const d2 = new Date(el.endDate);
       const diff = Math.abs(d1 - d2);
@@ -334,6 +334,71 @@ const Booking = () => {
 
   const mapBooking = filterArr && filterArr.length > 0 ? filterArr : bookingData;
 
+  const handleSelectAll = (e) => {
+    if (e.currentTarget.value === 'true') {
+      setSelectAllCheck(false);
+      bookingData.forEach((element) => {
+        element[Object.keys(element)[32]] = false;
+      });
+      setBookingData(bookingData);
+      setCheckedBooking([]);
+    } else {
+      setSelectAllCheck(true);
+      bookingData.forEach((el) => {
+        el[Object.keys(el)[32]] = true;
+      });
+      const data = bookingData.filter((el) => el[Object.keys(el)[32]] !== false);
+      setBookingData(bookingData);
+      setCheckedBooking(data);
+    }
+  };
+
+  const handleCheck = (el) => {
+    bookingData.forEach((element) => {
+      if (el.id === element.id && element[Object.keys(el)[32]] === true) {
+        element[Object.keys(el)[32]] = false;
+      } else if (el.id === element.id && element[Object.keys(el)[32]] === false) {
+        element[Object.keys(el)[32]] = true;
+      }
+    });
+    setBookingData(bookingData);
+    const filterFromArray = checkedBooking.filter((ele) => ele.id === el.id);
+    if (filterFromArray.length === 0) {
+      setCheckedBooking([...checkedBooking, el]);
+    } else {
+      const [{ id }] = filterFromArray;
+      setCheckedBooking(checkedBooking.filter((ele) => ele.id !== id));
+    }
+  };
+
+  const handleCancelCheck = () => {
+    setSelectAllCheck(false);
+    bookingData.forEach((el) => {
+      el[Object.keys(el)[32]] = false;
+    });
+    setBookingData(bookingData);
+    setCheckedBooking([]);
+  };
+
+  const handleDelete = async (e) => {
+    if (e === 'trash') {
+      const id = [];
+      checkedBooking.forEach((el) => {
+        id.push(el.id);
+      });
+      const values = {
+        bookings: id,
+      };
+      const response = await userInstance.post('/deleteBookings', values);
+      const { msg } = response.data;
+      if (response.data.code === 200) {
+        toast.success(msg, { containerId: 'B' });
+        getData();
+      } else {
+        toast.error(msg, { containerId: 'B' });
+      }
+    }
+  };
   return (
     <Wrapper fun={setTopNavId}>
       <Helmet>
@@ -349,11 +414,6 @@ const Booking = () => {
       </Helmet>
       {hasAccess ? (
         <div className="booking">
-          <Toaster
-            notifyType={notifyType}
-            notifyMsg={notifyMsg}
-            close={close}
-          />
           {mapBooking && mapBooking.length > 0 ? (
             <div className="container">
               <Row>
@@ -388,6 +448,12 @@ const Booking = () => {
                         className={`booking-list ${el.statusColour}`}
                         onClick={() => selectBooking(el, i)}
                       >
+                        <div className="filter-checkbox">
+                          <Checkbox
+                            checked={el[Object.keys(el)[32]]}
+                            onClick={() => handleCheck(el, i)}
+                          />
+                        </div>
                         <div className="detail">
                           <h3>{el.guest}</h3>
                           <p>{el.propertyName}</p>
@@ -415,7 +481,50 @@ const Booking = () => {
                         </div>
                       </div>
                     ))}
+                    <div className="booking-filter-footer">
+                      <div className="invoice-filter-box">
+                        <Checkbox
+                          checked={selectAllCheck}
+                          value={selectAllCheck}
+                          onClick={handleSelectAll}
+                        >
+                          {t('strings.select_all')}
+                        </Checkbox>
+                        {checkedBooking && checkedBooking.length > 0 ? (
+                          <div
+                            className="cancel-icon"
+                            onClick={handleCancelCheck}
+                            role="presentation"
+                          >
+                            <img src={cancelIcon} alt="" />
+                            {t('strings.cancel')}
+                          </div>
+                        ) : (
+                          <div className="cancel-icon" hidden>
+                            <img src={cancelIcon} alt="" />
+                            {t('strings.cancel')}
+                          </div>
+                        )}
+                        {
+                            checkedBooking && checkedBooking.length > 0 ? <Tag color="#FB4B56">{checkedBooking.length}</Tag> : ''
+                          }
 
+                        <div className="box-editing" role="presentation">
+                          <Select
+                            className="filter-menu"
+                            placeholder="Mark as"
+                            dropdownClassName="color-filter"
+                            onSelect={handleDelete}
+                          >
+                            <Option value="read">Mark as read</Option>
+                            <Option value="open">Mark as unread</Option>
+                            <Option value="replied">Mark as replied</Option>
+                            <Option value="unreplied">Mark as unreplied</Option>
+                            <Option value="trash">Move to trash</Option>
+                          </Select>
+                        </div>
+                      </div>
+                    </div>
                     <div className="bookin-footer">
                       <ul>
                         <li>
@@ -522,8 +631,6 @@ const Booking = () => {
 
                         <div className="prorety-box">
                           <span>
-                            {' '}
-                            {t('strings.guests')}
                             {' '}
                             {t('strings.date')}
                           </span>

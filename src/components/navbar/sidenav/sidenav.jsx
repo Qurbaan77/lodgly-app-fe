@@ -304,11 +304,13 @@ const Sidenav = ({
           onClick={() => handleMenu('close')}
           role="presentation"
         >
-          <ArrowLeftOutlined />
+
           <Link
             to="/propertylist"
             onClick={() => localStorage.removeItem('propertyId')}
           >
+            <ArrowLeftOutlined />
+            {' '}
             Property
             {' '}
             {currProperty}

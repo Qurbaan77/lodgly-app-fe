@@ -274,8 +274,37 @@ color: orange;
     padding-right: 10px;
 }
 
+.price-per-night .ant-collapse {
+    background: transparent;
+    border: none;
+}
+
+.price-per-night .ant-collapse-item {
+    border: none;
+}
+
+.price-per-night .ant-collapse .ant-collapse-header {
+    padding: 13px 0px!important;
+}
+
+.price-per-night .ant-collapse-content > .ant-collapse-content-box {
+    background: transparent;
+    padding: 0;
+}
+
+.price-per-night .ant-collapse-content {
+    background: transparent;
+    border: none;
+}
 
 
+.select-unit-reservation {
+    padding-top: 30px;
+}
+
+.unit-border{
+    border-bottom: 1px solid #aeaeae;
+}
 
 @media screen and (min-width:1367px){
     .calendar-calendar {

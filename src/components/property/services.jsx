@@ -246,7 +246,7 @@ const Services = () => {
                       },
                     ]}
                   >
-                    <Input type="number" />
+                    <Input autoFocus type="number" />
                   </Form.Item>
                   <Form.Item
                     label={t('services.heading9')}

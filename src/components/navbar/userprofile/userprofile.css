@@ -12,8 +12,19 @@
     background: #fff;
     padding: 6px;
     border-radius: 100px;
+    cursor: pointer;
 }
 
+.ant-dropdown-menu.setting-dropdown .anticon{
+    margin-right: 3px;
+}
+.ant-dropdown-menu.setting-dropdown .anticon:first-child {
+    margin-right: 3px;
+}
+
+.ant-dropdown-menu.setting-dropdown li:last-child {
+    border-top: 1px solid #f3f3f3;
+}
 
 .user-profile img {
     width: 100px;

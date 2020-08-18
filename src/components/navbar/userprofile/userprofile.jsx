@@ -4,7 +4,9 @@ import { Dropdown, Menu } from 'antd';
 import Avatar from 'react-avatar';
 import { useHistory, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { SettingOutlined } from '@ant-design/icons';
+import {
+  SettingOutlined, UserOutlined, FileTextOutlined, PoweroffOutlined,
+} from '@ant-design/icons';
 import { userInstance } from '../../../axios/axiosconfig';
 // import user from '../../../assets/images/profile_user.jpg';
 
@@ -45,13 +47,25 @@ const UserProfile = (props) => {
   const menu = (
     <Menu className="setting-dropdown">
       <Menu.Item>
-        <Link to="/profile">{t('userprofile.label1')}</Link>
+        <Link to="/profile">
+          <UserOutlined />
+          {' '}
+          {t('userprofile.label1')}
+        </Link>
       </Menu.Item>
       <Menu.Item hidden={billingWrite}>
-        <Link to="/billinginformation">{t('userprofile.label2')}</Link>
+        <Link to="/billinginformation">
+          <FileTextOutlined />
+          {' '}
+          {t('userprofile.label2')}
+        </Link>
       </Menu.Item>
       <Menu.Item onClick={() => exit()}>
-        <span>{t('sidebar.menu10')}</span>
+        <span>
+          <PoweroffOutlined />
+          {' '}
+          {t('sidebar.menu10')}
+        </span>
       </Menu.Item>
     </Menu>
   );

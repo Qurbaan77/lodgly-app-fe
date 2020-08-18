@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 // import { useHistory } from 'react-router-dom';
 import './booking.css';
+import { toast } from 'react-toastify';
 import {
   Form,
   Select,
@@ -168,9 +169,10 @@ const CreateBookingPopup = (props) => {
     const response = await userInstance.post('/addBooking', values);
     const { msg } = response.data;
     if (response.data.code === 200) {
-      toasterMessage('success', msg);
+      // toasterMessage('success', msg);
       getData();
       close();
+      toast.success('Booking created successfully!', { containerId: 'B' });
     } else {
       toasterMessage('error', msg);
     }

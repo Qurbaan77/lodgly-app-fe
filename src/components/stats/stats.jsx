@@ -16,8 +16,19 @@ const Stats = () => {
   const { t } = useTranslation();
   const [topNavId, setTopNavId] = useState();
   const [subscribed, setSubscribed] = useState();
-  const [onTrial, setOnTrial] = useState();
+  const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
+  const [accomodationHasData, setAccomodationHasData] = useState(
+    'no-stats-data',
+  );
+  const [occupancyHasData, setOccupancyHasData] = useState('no-stats-data');
+  const [reservationCountryHasData, setReservationCountryHasData] = useState(
+    'no-stats-data',
+  );
+  const [reservationChannelHasData, setReservationChannelHasData] = useState(
+    'no-stats-data',
+  );
+  const [paceHasData, setPaceHasData] = useState('no-stats-data');
 
   const getData = async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
@@ -59,40 +70,63 @@ const Stats = () => {
           </div>
 
           <div className="container">
-            <div className="accomandation-chart">
-              <Row>
-                <Col span={24}>
-                  <AccommodationChart topNavId={topNavId} />
-                </Col>
-              </Row>
-            </div>
+            <Row>
+              <Col span={24}>
+                <div className={`accomandation-chart ${accomodationHasData}`}>
+                  <AccommodationChart
+                    topNavId={topNavId}
+                    setAccomodationHasData={setAccomodationHasData}
+                  />
+                </div>
+              </Col>
+            </Row>
 
-            <div className="occupancy-chart">
-              <Row>
-                <Col span={24}>
-                  <OccupancyChart topNavId={topNavId} />
-                </Col>
-              </Row>
-            </div>
+            <Row>
+              <Col span={24}>
+                <div className={`occupancy-chart ${occupancyHasData}`}>
+                  <OccupancyChart
+                    topNavId={topNavId}
+                    setOccupancyHasData={setOccupancyHasData}
+                  />
+                </div>
+              </Col>
+            </Row>
 
-            <div className="reservation-chart">
-              <Row>
-                <Col span={16} style={{ paddingRight: '20px' }}>
-                  <ReservationCountryChart />
-                </Col>
-                <Col span={8}>
-                  <ReservationChannelChart />
-                </Col>
-              </Row>
-            </div>
+            <Row>
+              <Col
+                span={16}
+                className="no-padding-mbl"
+                style={{ paddingRight: '20px' }}
+              >
+                <div
+                  className={`reservation-chart ${reservationCountryHasData}`}
+                >
+                  <ReservationCountryChart
+                    setReservationCountryHasData={setReservationCountryHasData}
+                  />
+                </div>
+              </Col>
+              <Col span={8}>
+                <div
+                  className={`reservation-chart ${reservationChannelHasData}`}
+                >
+                  <ReservationChannelChart
+                    setReservationChannelHasData={setReservationChannelHasData}
+                  />
+                </div>
+              </Col>
+            </Row>
 
-            <div className="pace-chart">
-              <Row>
-                <Col span={24}>
-                  <PaceChart topNavId={topNavId} />
-                </Col>
-              </Row>
-            </div>
+            <Row>
+              <Col span={24}>
+                <div className={`pace-chart ${paceHasData}`}>
+                  <PaceChart
+                    topNavId={topNavId}
+                    setPaceHasData={setPaceHasData}
+                  />
+                </div>
+              </Col>
+            </Row>
           </div>
         </div>
       ) : (
@@ -104,7 +138,7 @@ const Stats = () => {
 
 export default Stats;
 
-const AccommodationChart = ({ topNavId }) => {
+const AccommodationChart = ({ topNavId, setAccomodationHasData }) => {
   const [currArr, setCurrArr] = useState();
   const [prevArr, setPrevArr] = useState();
   const [show, setShow] = useState(false);
@@ -119,6 +153,7 @@ const AccommodationChart = ({ topNavId }) => {
       const prevYearSum = response.data.prevYearArr.reduce((a, b) => a + b, 0);
       if (currYearSum > 0 || prevYearSum > 0) {
         setShow(true);
+        setAccomodationHasData('');
       }
       setCurrArr(response.data.currYearArr);
       setPrevArr(response.data.prevYearArr);
@@ -225,12 +260,14 @@ const AccommodationChart = ({ topNavId }) => {
 
 AccommodationChart.propTypes = {
   topNavId: PropTypes.number,
+  setAccomodationHasData: PropTypes.string,
 };
 AccommodationChart.defaultProps = {
   topNavId: 0,
+  setAccomodationHasData: '',
 };
 
-const OccupancyChart = ({ topNavId }) => {
+const OccupancyChart = ({ topNavId, setOccupancyHasData }) => {
   const [currArr, setCurrArr] = useState([]);
   const [prevArr, setPrevArr] = useState([]);
   const [show, setShow] = useState(false);
@@ -245,6 +282,7 @@ const OccupancyChart = ({ topNavId }) => {
       const prevYearSum = response.data.prevYearArr.reduce((a, b) => a + b, 0);
       if (currYearSum > 0 || prevYearSum > 0) {
         setShow(true);
+        setOccupancyHasData('');
       }
       setPrevArr(response.data.prevYearArr);
       setCurrArr(response.data.currYearArr);
@@ -349,12 +387,14 @@ const OccupancyChart = ({ topNavId }) => {
 
 OccupancyChart.propTypes = {
   topNavId: PropTypes.number,
+  setOccupancyHasData: PropTypes.string,
 };
 OccupancyChart.defaultProps = {
   topNavId: 0,
+  setOccupancyHasData: '',
 };
 
-const ReservationCountryChart = () => {
+const ReservationCountryChart = ({ setReservationCountryHasData }) => {
   const [country, setCountry] = useState([]);
   const [average, setAverage] = useState([]);
 
@@ -362,6 +402,12 @@ const ReservationCountryChart = () => {
     async function getData() {
       const response = await userInstance.post('/getCountryReport');
       if (response.data.code === 200) {
+        if (
+          response.data.country.length > 0
+          && response.data.average.length > 0
+        ) {
+          setReservationCountryHasData('');
+        }
         setCountry(response.data.country);
         setAverage(response.data.average);
       }
@@ -421,6 +467,13 @@ const ReservationCountryChart = () => {
   );
 };
 
+ReservationCountryChart.propTypes = {
+  setReservationCountryHasData: PropTypes.string,
+};
+ReservationCountryChart.defaultProps = {
+  setReservationCountryHasData: '',
+};
+
 const ReservationChannelChart = () => {
   const state = {
     series: [20, 30, 50],
@@ -478,7 +531,7 @@ const ReservationChannelChart = () => {
   );
 };
 
-const PaceChart = ({ topNavId }) => {
+const PaceChart = ({ topNavId, setPaceHasData }) => {
   const [currYear, setCurrYear] = useState();
   const [prevYear, setPrevYear] = useState();
   const [currArr, setCurrArr] = useState([]);
@@ -495,6 +548,7 @@ const PaceChart = ({ topNavId }) => {
       const prevYearSum = response.data.prevYearArr.reduce((a, b) => a + b, 0);
       if (currYearSum > 0 || prevYearSum > 0) {
         setShow(true);
+        setPaceHasData('');
       }
       setPrevArr(response.data.prevYearArr);
       setCurrArr(response.data.currYearArr);
@@ -596,7 +650,9 @@ const PaceChart = ({ topNavId }) => {
 
 PaceChart.propTypes = {
   topNavId: PropTypes.number,
+  setPaceHasData: PropTypes.string,
 };
 PaceChart.defaultProps = {
   topNavId: 0,
+  setPaceHasData: '',
 };

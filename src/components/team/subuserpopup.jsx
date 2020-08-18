@@ -226,6 +226,27 @@ const SubUserPopup = ({
             <table>
               <thead>
                 <tr>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label15')}
+                  </th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label16')}
+                  </th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label17')}
+                  </th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label18')}
+                  </th>
+
+                </tr>
+              </thead>
+              <thead>
+                <tr>
                   <th>{t('subuserpopup.label5')}</th>
                   <th>
                     <Checkbox
@@ -358,6 +379,7 @@ const SubUserPopup = ({
         <Row>
           <div className="custom-table subuser-table">
             <table>
+
               <thead>
                 <tr>
                   <th>
@@ -365,46 +387,25 @@ const SubUserPopup = ({
                     {t('subuserpopup.label15')}
                   </th>
                   <th>
-                    {' '}
-                    {t('subuserpopup.label16')}
-                  </th>
-                  <th>
-                    {' '}
-                    {t('subuserpopup.label17')}
-                  </th>
-                  <th>
-                    {' '}
-                    {t('subuserpopup.label18')}
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr>
-                  <td>
-                    {' '}
-                    {t('subuserpopup.label15')}
-                  </td>
-                  <td>
                     <Checkbox
                       value={invoicesRead}
                       onChange={(e) => handleInvoicesRead(e)}
                       checked={invoicesRead}
                     />
-                  </td>
-                  <td>
+                  </th>
+                  <th>
                     <Checkbox
                       value={invoicesWrite}
                       onChange={(e) => handleInvoicesWrite(e)}
                       checked={invoicesWrite}
                     />
-                  </td>
-                  <td>
+                  </th>
+                  <th>
                     {' '}
                     {t('subuserpopup.label19')}
-                  </td>
+                  </th>
                 </tr>
-              </tbody>
+              </thead>
             </table>
           </div>
         </Row>

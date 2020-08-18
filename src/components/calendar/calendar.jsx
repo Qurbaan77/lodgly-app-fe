@@ -299,12 +299,15 @@ const Calendar = () => {
     if (response.data.code === 200) {
       unittypeData.forEach((el) => {
         let sum = 0;
+        const arr = [];
         units.forEach((ele) => {
           if (el.id === ele.unittypeId) {
             sum += 1;
+            arr.push(ele.id);
           }
         });
         el.noOfUnits = sum;
+        el.units = arr;
       });
       setData(unittypeData);
     }
@@ -368,6 +371,7 @@ const Calendar = () => {
             close={handleCancel}
             userData={userData}
             data={data}
+            getData={getData}
           />
         </div>
       ) : (

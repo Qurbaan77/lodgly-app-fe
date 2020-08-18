@@ -13,7 +13,6 @@ import {
   Row,
   Col,
   message,
-  Tooltip,
   Collapse,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -85,10 +84,10 @@ const Property = () => {
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
 
-  const isSubUser = localStorage.getItem('isSubUser') || false;
+  // const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  const [{ propertiesWrite, userId }] = userCred || [{}];
-  const canWrite = propertiesWrite;
+  const [{ userId }] = userCred || [{}];
+  // const canWrite = propertiesWrite;
 
   const close = () => {
     setNotifyType('');
@@ -200,14 +199,14 @@ const Property = () => {
     getData();
   }, [getData]);
 
-  const enableButton = <Button>Save</Button>;
-  const disableButton = (
-    <Tooltip title="You are not authorize to save New Property" color="gold">
-      <Button disabled="true">Save</Button>
-    </Tooltip>
-  );
-  const btn1 = isSubUser && canWrite ? enableButton : disableButton;
-  const btn2 = isSubUser ? btn1 : enableButton;
+  // const enableButton = <Button>Save</Button>;
+  // const disableButton = (
+  //   <Tooltip title="You are not authorize to save New Property" color="gold">
+  //     <Button disabled="true">Save</Button>
+  //   </Tooltip>
+  // );
+  // const btn1 = isSubUser && canWrite ? enableButton : disableButton;
+  // const btn2 = isSubUser ? btn1 : enableButton;
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
@@ -276,7 +275,27 @@ const Property = () => {
                                 name="propertyType"
                                 label={t('property.heading2')}
                               >
-                                <Input />
+                                <Select>
+                                  <Select.Option value="Holiday House">Holiday House</Select.Option>
+                                  <Select.Option value="Holiday Apartment">Holiday Apartment</Select.Option>
+                                  <Select.Option value="Bed and Breakfast">Bed and Breakfast</Select.Option>
+                                  <Select.Option value="Boat House">Boat House</Select.Option>
+                                  <Select.Option value="Bungalow">Bungalow</Select.Option>
+                                  <Select.Option value="Cabin">Cabin</Select.Option>
+                                  <Select.Option value="Agritourism">Agritourism</Select.Option>
+                                  <Select.Option value="Mobile House">Mobile House</Select.Option>
+                                  <Select.Option value="Villa">Villa</Select.Option>
+                                  <Select.Option value="Room">Room</Select.Option>
+                                  <Select.Option value="Hotel">Hotel</Select.Option>
+                                  <Select.Option value="Camping">Camping</Select.Option>
+                                  <Select.Option value="Student Housing">Student Housing</Select.Option>
+                                  <Select.Option value="Resort">Resort</Select.Option>
+                                  <Select.Option value="Inn">Inn</Select.Option>
+                                  <Select.Option value="Hostel">Hostel</Select.Option>
+                                  <Select.Option value="Motel">Motel</Select.Option>
+                                  <Select.Option value="Hospital">Hospital</Select.Option>
+                                  <Select.Option value="Pousada">Pousada</Select.Option>
+                                </Select>
                               </Form.Item>
                             </Col>
 
@@ -541,9 +560,9 @@ const Property = () => {
                               </Form.Item>
                             </Col>
 
-                            <Col span={24}>
+                            {/* <Col span={24}>
                               <Form.Item>{btn2}</Form.Item>
-                            </Col>
+                            </Col> */}
                           </Row>
                         </Form>
                       </div>
