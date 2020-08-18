@@ -1,0 +1,315 @@
+.calendar-calendar {
+    max-width: 1069px;
+    border: 1px solid #efefef;
+    background: #fff;
+}
+
+.calendar-btn {
+    margin-bottom: 50px;
+}
+
+.calendar-btn .border-btn {
+    background: none!important;
+    border: 1px solid #d9d9d9!important;
+    padding: 9px 20px;
+    color: #555;
+}
+
+.calendar-btn .border-btn span{
+    color: #555;
+}
+
+
+.calendar-btn .ant-btn {
+    border-radius: 0;
+}
+
+
+
+
+
+.create-booking-modal.group-reservation .ant-modal {
+    width: 400px!important;
+}
+
+.availability {
+    padding: 15px 0px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+}
+
+.availability p {
+    margin: 0;
+    font-size: 12px;
+    color: #999;
+}
+
+
+.add-edit-data a{
+color: orange;
+}
+
+
+.add-edit-data {
+    padding-bottom: 20px;
+}
+
+
+.reservation-booker h4 {
+    text-transform: uppercase;
+    color: #444;
+    padding-bottom: 15px;
+}
+
+.reservation-booker label {
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #999;
+}
+
+.reservation-booker p {
+    margin-bottom: 20px;
+}
+
+
+
+
+
+.create-booking-modal.calendar-setting .ant-modal {
+    width: 400px!important;
+}
+
+
+.calendar-setting .filter-box h4 {
+    text-transform: uppercase;
+    padding: 20px 0px;
+}
+
+.calendar-setting .filter-box .filter-list {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0px;
+}
+
+
+.uppercase{
+    text-transform: uppercase;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.create-booking-modal.reservation-setting .ant-modal {
+    width: 400px!important;
+}
+
+.create-booking-modal.reservation-setting .add-edit-data {
+    text-align: right;
+    font-size: 12px;
+}
+
+.create-booking-modal.reservation-setting .add-edit-data .ant-row.ant-form-item {
+    margin: 0;
+}
+
+.create-booking-modal.reservation-setting .ant-btn, .create-booking-modal.reservation-setting .ant-btn:hover, .create-booking-modal.reservation-setting .ant-btn:focus {
+    background: #fab52c;
+    border: #fab52c;
+}
+
+.create-booking-modal.reservation-setting .ant-btn span {
+    color: #fff;
+}
+
+.create-booking-modal.reservation-setting .ant-btn-primary, .create-booking-modal.reservation-setting .ant-btn-primary:hover, .create-booking-modal.reservation-setting .ant-btn-primary:focus {
+    background: #7FBD34;
+    border: #7FBD34;
+    border: 1px solid #7FBD34;
+}
+
+
+
+
+.reserv-id {
+    background: #f1f1f1;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    display: inline-block;
+}
+
+.reservation-info {
+    padding: 20px 0px;
+}
+
+.reserv-tag {
+    border: 1px solid #ddd;
+    font-size: 12px;
+    padding: 2px 5px;
+    border-radius: 2px;
+}
+
+.paid {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.paid span {
+    padding-right: 10px;
+}
+
+.reservation-info h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.reservation-info span {
+    font-size: 12px;
+}
+
+
+.user-box {
+    text-align: center;
+    margin-right: 20px;
+}
+
+.user-box p {
+    font-size: 12px;
+    padding-top: 10px;
+}
+.reservation-user {
+    border-bottom: 1px solid #ddd;
+}
+
+.delete-reserv {
+    color: red!important;
+    font-size: 12px;
+}
+
+
+.reservation-info .ant-col:first-child span {
+    color: #000;
+}
+
+.calendar-btn .nopadding {
+    padding: 0;
+}
+
+/*********** Group Reservation *****************/
+
+
+.unit-available p {
+    margin: 0;
+}
+
+.unit-available span {
+    font-size: 11px;
+}
+
+.unit-available label {
+    display: block;
+    height: 32px;
+}
+
+
+.select-unit-reservation .ant-row {
+    margin-bottom: 20px;
+}
+
+.select-unit-reservation label, .select-unit-reservation .ant-form-item-label {
+    margin-bottom: 5px;
+}
+
+.night-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-bottom: 20px;
+}
+
+.night-box {
+    width: 25%;
+    padding: 5px 0px;
+    text-align: center;
+    padding-right: 20px;
+}
+
+.discount-night {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.discount-night .ant-input {
+    width: 50px;
+    margin-right: 10px;
+}
+
+.discount-box h2 {
+    margin: 0;
+}
+
+.discount-box {
+    background: #f6f6f7;
+    padding: 20px 50px;
+}
+
+.discount-night span {
+    padding-right: 10px;
+}
+
+.price-per-night .ant-collapse {
+    background: transparent;
+    border: none;
+}
+
+.price-per-night .ant-collapse-item {
+    border: none;
+}
+
+.price-per-night .ant-collapse .ant-collapse-header {
+    padding: 13px 0px!important;
+}
+
+.price-per-night .ant-collapse-content > .ant-collapse-content-box {
+    background: transparent;
+    padding: 0;
+}
+
+.price-per-night .ant-collapse-content {
+    background: transparent;
+    border: none;
+}
+
+
+.select-unit-reservation {
+    padding-top: 30px;
+}
+
+.unit-border{
+    border-bottom: 1px solid #aeaeae;
+}
+
+@media screen and (min-width:1367px){
+    .calendar-calendar {
+        max-width: 1400px;
+    }
+    
+    
+}

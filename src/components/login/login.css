@@ -1,7 +1,6 @@
 .login {
     display: flex;
     justify-content: center;
-    align-items: center;
     min-height: 100vh;
     flex-wrap: wrap;
 }
@@ -38,7 +37,7 @@
 .login-form p {
     color: #999;
     margin: 0;
-    padding-bottom: 30px;
+    padding-bottom: 24px;
     font-size: 14px;
 }
 
@@ -49,9 +48,9 @@
 }
 
 .login-box input {
-    border: 1.5px solid #eaeaea;
+    border: 1px solid #eaeaea;
     border-radius: 0;
-    padding: 8px 15px;
+    padding: 8px 15px!important;
     height: auto;
 }
 
@@ -63,41 +62,43 @@
     padding-top: 30px;
 }
 
-.login-btn {
+.ant-btn.login-btn {
     width: 100%;
     border-radius: 0;
     padding: 8px 10px;
     background: #fab52c;
     border-color: #fab52c;
+    height: auto;
+    color: #fff;
 }
 
-.login-btn:hover, .login-btn:focus {
+.ant-btn.login-btn:hover, .ant-btn.login-btn:focus {
     background: #eaa51d;
     border-color: #eaa51d;
     outline: none;
     box-shadow: none;
+    color: #fff;
 }
 
-.login-button {
-    padding-bottom: 30px;
-}
+
 
 .google-login {
     text-align: center;
 }
 
-.google-btn {
+.ant-btn.google-btn {
     width: 100%;
     border-radius: 0;
     padding: 8px 10px;
     background: transparent;
-    border: 1.5px solid #eaeaea;
+    border: 1px solid #eaeaea;
     color: #999;
+    height: auto;
 }
 
-.google-btn:hover, .google-btn:focus {
+.ant-btn.google-btn:hover, .ant-btn.google-btn:focus {
     background: transparent;
-    border: 1.5px solid #e2e2e2;
+    border: 1px solid #e2e2e2;
     outline: none;
     box-shadow: none;
     color: #525252;
@@ -109,11 +110,11 @@
     margin-bottom: 10px;
 }
 
-.google-btn span{
+.ant-btn.google-btn span{
     position: relative;
 }
 
-.google-btn span:before{
+.ant-btn.google-btn span:before{
     content: "";
     background: url(../../assets/images/google-icon.png);
     width: 25px;
@@ -125,7 +126,7 @@
     margin-right: 10px;
 }
 
-.google-btn:hover span:before{
+.ant-btn.google-btn:hover span:before{
     content: "";
     background: url(../../assets/images/google-icon-color.png);
     width: 25px;
@@ -136,3 +137,52 @@
     vertical-align: bottom;
     margin-right: 10px;
 }
+
+.login-box .ant-input-suffix {
+    margin-left: 4px;
+    position: absolute;
+    right: 14px;
+    top: 14px;
+}
+
+.ant-form .ant-input-affix-wrapper {
+    padding: 0;
+
+}
+
+.ant-row.ant-form-item {
+    flex-flow: column;
+}
+.ant-form-item-label > label {
+    color: #999!important;
+}
+
+.ant-form-horizontal .ant-form-item-label {
+    text-align: left;
+}
+
+.ant-btn.google-btn span {
+    color: #999;
+}
+
+.ant-input:focus{
+    box-shadow: none;
+    outline: none;
+}
+
+.ant-form-item-has-error .ant-input:focus{
+    box-shadow: none;
+    outline: none;
+    border: 1px solid red!important;
+
+}
+
+.login-form .ant-form-item-explain {
+    font-size: 10px!important;
+}
+
+
+/* .login-form .ant-form-item-has-error .ant-form-item-explain, .login-form .ant-form-item-has-error .ant-form-item-split {
+   visibility: hidden;
+} */
+

@@ -1,0 +1,233 @@
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+#components-layout-demo-custom-trigger .logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
+}
+
+.site-layout .site-layout-background {
+  background: #fff;
+}
+
+.site-layout .ant-layout-content.site-layout-background {
+  background: transparent;
+  border-left: none;
+}
+
+.ant-menu-inline{
+border-right: none!important;
+}
+
+.ant-layout-sider-light {
+border-right: 1px solid #efefef;
+}
+.sidenav .ant-layout{
+    min-height: 100vh;
+}
+
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background-color: #fffaf0!important;
+}
+
+.ant-menu-sub.ant-menu-inline > .ant-menu-item a {
+color: rgba(0, 0, 0, 0.65)!important;
+font-size: 13px;
+}
+
+.ant-menu-sub.ant-menu-inline > .ant-menu-item a:hover {
+color: #fab52c!important;
+}
+
+
+.ant-layout{
+background: transparent!important;
+}
+
+.site-layout .ant-layout-header.site-layout-background {
+background: #fff;
+border-bottom: 1px solid #efefef;
+}
+
+.ant-menu-inline .ant-menu-item::after{
+left: 0;
+right: inherit!important;
+border-right: 3px solid #fab52c!important;
+}
+.main-menu .ant-menu-item-selected a, .main-menu .ant-menu-item-selected span{
+color: #fab52c!important;
+}
+
+.ant-menu-item:hover, .ant-menu-item-active, .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open, .ant-menu-submenu-active, .ant-menu-submenu-title:hover {
+color: #fab52c!important;
+}
+
+.ant-menu-submenu-inline > .ant-menu-submenu-title:hover .ant-menu-submenu-arrow::before, .ant-menu-submenu-inline > .ant-menu-submenu-title:hover .ant-menu-submenu-arrow::after{
+background: linear-gradient(to right, #fab52c, #fab52c)!important;
+}
+
+
+.sidebar-logo {
+text-align: center;
+padding: 10px 10px;
+border-bottom: 1px solid #efefef;
+min-height: 65px;
+}
+
+.sidebar-logo img {
+width: 50px;
+}
+
+
+.ant-layout-header {
+display: flex;
+justify-content: flex-end;
+align-items: center;
+position: relative;
+}
+
+.header-property .ant-dropdown-link {
+  border: 1px solid #e6e6e6;
+  padding: 10px 150px 10px 15px;
+  color: #a5a5a5!important;
+  position: relative;
+  line-height: 1.5;
+}
+
+.header-property {
+  padding-right: 30px;
+  max-width: 400px;
+  width: 100%;
+  text-align: right;
+  display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.header-property .ant-dropdown-link span {
+position: absolute;
+right: 10px;
+top: 12px;
+}
+
+.search-box {
+display: none;
+padding-right: 30px;
+vertical-align: middle;
+}
+
+.search-box span {
+  font-size: 18px;
+  color: #d6d6d6;
+  cursor: pointer;
+}
+
+.ant-menu.main-menu-mbl {
+display: none;
+}
+
+.ant-menu.main-menu.hide {
+display: none;
+}
+
+.ant-menu.main-menu-mbl.show {
+display: block;
+}
+
+
+.submenu-heading {
+display: flex;
+align-items: center;
+cursor: pointer;
+padding: 10px 25px;
+padding-bottom: 35px;
+font-size: 15px;
+color: #999;
+}
+
+.submenu-heading .anticon {
+margin-right: 10px;
+}
+
+.main-menu li img {
+  width: 18px;
+  margin-right: 10px;
+}
+
+.main-menu .ant-menu-item .anticon {
+  color: #cacaca;
+}
+
+.main-menu li a, .main-menu li span {
+  color: #999!important;
+}
+
+.main-menu li a:hover, .main-menu li span:hover {
+  color: #fab52c!important;
+}
+
+.main-menu-mbl li img {
+  width: 18px;
+  margin-right: 10px;
+}
+
+.main-menu-mbl li a {
+  color: #b5b5b5!important;
+}
+
+.main-menu-mbl li .anticon {
+  color: #b5b5b5;
+}
+
+
+
+.ant-btn.menu-btn {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  position: absolute;
+  left: 0;
+  display: none;
+}
+
+
+.ant-btn.menu-btn:hover, .ant-btn.menu-btn:focus {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.close-icon{
+  display: none;
+}
+
+
+.mobile-logo{
+  display: none;
+}
+
+.property-mbl{
+  display: none;
+}
+
+.ant-menu-submenu .ant-menu-submenu-arrow {
+  display: none;
+}
+.main-menu li .menu-arrow {
+  width: 11px;
+  position: absolute;
+  right: 0;
+  top: 20px;
+}
+.hide-prop {
+  display: none !important
+}

@@ -54,12 +54,16 @@
 .close-btn {
     background: transparent;
     color: #fff;
-    border: 1px solid #fff;
+    border: none;
     padding: 8px 20px;
     font-size: 15px;
+    cursor: pointer;
 }
 
-
+.close-btn:focus, .close-btn:hover {
+    border: none;
+    outline: none;
+}
 
 
 

@@ -1,32 +1,51 @@
-import React, { useEffect } from "react";
-import "./toaster.css";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { CloseOutlined } from '@ant-design/icons';
+import './toaster.css';
 
+const Toaster = ({
+  show, notifyType, notifyMsg, close,
+}) => (
+  <div className="toster" hidden={show}>
+    {notifyType === 'error' && (
+      <div className="error">
+        <p>{notifyMsg}</p>
+        <button className="close-btn" onClick={close} type="button">
+          <CloseOutlined />
+        </button>
+      </div>
+    )}
 
+    {notifyType === 'success' && (
+      <div className="success" visiblity="hide">
+        <p>{notifyMsg}</p>
+        <button className="close-btn" onClick={close} type="button">
+          <CloseOutlined />
+        </button>
+      </div>
+    )}
 
+    {notifyType === 'warning' && (
+      <div className="warning">
+        <p>{notifyMsg}</p>
+        <button className="close-btn" onChange={close} type="button">
+          <CloseOutlined />
+        </button>
+      </div>
+    )}
+  </div>
+);
 
-const Toaster = () => {
-    return (
-        <div className="toster">
-          
-          <div className="error">
-                <p>Your limit of applications has been reached!</p>
-                <button className="close-btn">Close</button>
-          </div>
-
-
-          {/* <div className="success">
-                <p>Your have successfully login!</p>
-                <button className="close-btn">Close</button>
-          </div>
-
-
-          <div className="warning">
-                <p>Your have one warning!</p>
-                <button className="close-btn">Close</button>
-          </div> */}
-          
-        </div>
-    );
-  };
-  
-  export default Toaster;
+Toaster.propTypes = {
+  show: PropTypes.func,
+  notifyType: PropTypes.string,
+  notifyMsg: PropTypes.string,
+  close: PropTypes.func,
+};
+Toaster.defaultProps = {
+  show: () => {},
+  notifyType: '',
+  notifyMsg: '',
+  close: () => {},
+};
+export default Toaster;
