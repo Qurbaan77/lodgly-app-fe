@@ -1,16 +1,6 @@
-import React, { useEffect } from "react";
-import "./footer.css";
+import React from 'react';
+import './footer.css';
 
+const Footer = () => <div className="footer" />;
 
-
-
-const Footer = () => {
-    return (
-        <div className="footer">
-          
-          
-        </div>
-    );
-  };
-  
-  export default Footer;
+export default Footer;

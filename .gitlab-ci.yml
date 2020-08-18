@@ -1,7 +1,11 @@
 image: node:latest
 
 variables:
-  DIST_PATH: build/
+  DIST_PATH: "build/"
+  STAGING_S3_BUCKET: s3://lodgly.dev-eu-west-1/
+  STAGING_DISTRIBUTION_ID: E39IRLN1DWL849
+  PRODUCTION_S3_BUCKET: s3://lodgly.com-eu-west-1/
+  PRODUCTION_DISTRIBUTION_ID: E3ED1A1BZOP2XM
 
 stages:
   - build
@@ -11,31 +15,52 @@ cache:
   key: $CI_COMMIT_REF_SLUG
   paths:
     - node_modules/
+    - .cache/
+    - $DIST_PATH
 
 build:
   stage: build
   script:
     - npm prune
-    - npm install --quiet
+    - npm install --production
     - npm run build
-  environment:
-    name: staging
   artifacts:
     when: on_success
     paths:
-      - build/
+      - $DIST_PATH
     expire_in: 20 mins
+  only:
+    - staging
+    - master
 
 staging:
   image: python:latest
   stage: deploy
+  dependencies:
+    - build
   before_script:
     - pip install awscli
   script:
-    - aws s3 sync $DIST_PATH s3://${S3_BUCKET_NAME}/${CI_COMMIT_REF_SLUG} --acl public-read --delete
-    - aws cloudfront create-invalidation --distribution-id ${CF_DISTRIBUTION_ID} --paths /*
+    - aws s3 sync $DIST_PATH $STAGING_S3_BUCKET --delete
+    - INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id ${STAGING_DISTRIBUTION_ID} --paths /* --query 'Invalidation.Id' --output text) && aws cloudfront wait invalidation-completed --id ${INVALIDATION_ID} --distribution-id ${STAGING_DISTRIBUTION_ID}
   environment:
     name: staging
-    url: http://${S3_BUCKET_NAME}.s3-website.${AWS_DEFAULT_REGION}.amazonaws.com/${CI_COMMIT_REF_SLUG}
+    url: https://eliteapartments.lodgly.dev
   only:
     - staging
+
+production:
+  image: python:latest
+  stage: deploy
+  dependencies:
+    - build
+  before_script:
+    - pip install awscli
+  script:
+    - aws s3 sync $DIST_PATH $PRODUCTION_S3_BUCKET --delete
+    - INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id ${PRODUCTION_DISTRIBUTION_ID} --paths /* --query 'Invalidation.Id' --output text) && aws cloudfront wait invalidation-completed --id ${INVALIDATION_ID} --distribution-id ${PRODUCTION_DISTRIBUTION_ID}
+  environment:
+    name: production
+    url: https://eliteapartments.lodgly.com
+  only:
+    - master

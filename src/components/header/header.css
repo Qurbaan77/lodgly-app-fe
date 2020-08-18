@@ -1,0 +1,43 @@
+.alert-box {
+    padding: 0px;
+}
+
+.alert-box .ant-alert {
+    background: #007eff;
+    border: none;
+    border-radius: 0;
+    margin: 0;
+}
+
+.alert-box .ant-alert-message {
+    color: #fff;
+}
+
+.alert-box .ant-alert-close-icon .anticon-close, .alert-box .ant-alert-close-icon .anticon-close:hover {
+    color: #fff;
+}
+
+.alert-box .ant-alert-with-description .ant-alert-description {
+    display: inline-block;
+    padding-left: 20px;
+}
+
+.alert-box .ant-alert-with-description .ant-alert-message {
+    display: inline-block;
+    margin-bottom: 0px;
+    color: #fff;
+    font-size: 14px;
+}
+
+.alert-box .ant-alert-with-description .ant-alert-description a {
+    text-decoration: underline!important;
+    color: #fff!important;
+}
+
+.ant-alert-warning .ant-alert-icon{
+    color: #fff!important;
+}
+
+.ant-alert-with-description .ant-alert-close-icon{
+    top: 19px!important;
+}

@@ -1,0 +1,50 @@
+{
+  "development": {
+    "Webserver": {
+      "clientPath": "http://localhost:3000",
+      "serverPath": "http://localhost:8080",
+      "translationBucketPath": "https://s3-eu-west-1.amazonaws.com/i18n.lodgly.dev-eu-west-1",
+      "STRIPE_APP_KEY": "pk_test_KSRGeFdFSK0045OpMX5UhJXF00GVaQ12hl"
+    },
+    "Billing": {
+      "basicPrice": "4",
+      "advancePrice": "8",
+      "discount": "20"
+    },
+    "sentry": {
+      "sentryDsn": "https://4a5a7e0c86a64bafabf7c4819b87b615@o317016.ingest.sentry.io/1832149"
+    }
+  },
+  "staging": {
+    "Webserver": {
+      "clientPath": "https://app.lodgly.dev",
+      "serverPath": "https://api.lodgly.dev",
+      "translationBucketPath": "https://s3-eu-west-1.amazonaws.com/i18n.lodgly.dev-eu-west-1",
+      "STRIPE_APP_KEY": "pk_test_KSRGeFdFSK0045OpMX5UhJXF00GVaQ12hl"
+    },
+    "Billing": {
+      "basicPrice": "4",
+      "advancePrice": "8",
+      "discount": "20"
+    },
+    "sentry": {
+      "sentryDsn": "https://4a5a7e0c86a64bafabf7c4819b87b615@o317016.ingest.sentry.io/1832149"
+    }
+  },
+  "production": {
+    "Webserver": {
+      "clientPath": "https://app.lodgly.dev",
+      "serverPath": "https://api.lodgly.dev",
+      "translationBucketPath": "https://s3-eu-west-1.amazonaws.com/i18n.lodgly.dev-eu-west-1",
+      "STRIPE_APP_KEY": "pk_test_KSRGeFdFSK0045OpMX5UhJXF00GVaQ12hl"
+    },
+    "Billing": {
+      "basicPrice": "4",
+      "advancePrice": "8",
+      "discount": "20"
+    },
+    "sentry": {
+      "sentryDsn": "https://4a5a7e0c86a64bafabf7c4819b87b615@o317016.ingest.sentry.io/1832149"
+    }
+  }
+}

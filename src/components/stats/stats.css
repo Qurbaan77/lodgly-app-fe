@@ -1,0 +1,40 @@
+.ant-layout.ant-layout-has-sider > .ant-layout {
+    width: calc(100% - 200px);
+}
+
+
+.chart-body {
+    background: #fff;
+    padding: 30px;
+    border: 1px solid #eaeaea;
+    margin-bottom: 20px;
+}
+
+.chart-body h3 {
+    font-weight: 600;
+    font-size: 15px;
+    margin: 0;
+    padding-bottom: 20px;
+}
+
+.apexcharts-canvas {
+    width: 100%!important;
+}
+
+.accomandation-chart.no-stats-data, .occupancy-chart.no-stats-data, .reservation-chart.no-stats-data, .pace-chart.no-stats-data {
+    position: relative;
+    }
+    
+    
+    .accomandation-chart.no-stats-data::before, .occupancy-chart.no-stats-data::before, .reservation-chart.no-stats-data::before, .pace-chart.no-stats-data::before {
+    content: "";
+    position: absolute;
+    top:0;
+    background: #fffc;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: block;
+    z-index: 9;
+    height: calc(100% - 20px);
+    }

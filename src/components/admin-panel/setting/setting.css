@@ -1,0 +1,58 @@
+.seting-container {
+    max-width: 1200px;
+    margin: 0px auto;
+    padding: 20px 0px;
+}
+
+.setttng-box {
+    display: flex;
+    background: #fff;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.setttng-box .user-profile {
+    width: 40%;
+    border: none;
+}
+
+.setting-form {
+    width: 70%;
+}
+
+
+.setttng-box .change-icon {
+    width: 40%;
+}
+
+.setting-form .register-form {
+    border: none;
+}
+
+.admin-setting-container .page-header {
+    padding-bottom: 10px;
+}
+
+
+
+.admin-setting-container .change-icon h3 {
+    font-weight: 700;
+    text-align: center;
+}
+
+.admin-setting-container .change-icon span {
+    display: block;
+    padding-bottom: 10px;
+}
+
+.admin-setting-container .ant-btn.register-btn {
+    background: #7FBD34;
+    border-color: #7FBD34;
+    max-width: 175px;
+    float: right;
+}
+
+.admin-setting-container .ant-btn.register-btn:hover {
+    background: #7FBD34;
+    border-color: #7FBD34;
+}

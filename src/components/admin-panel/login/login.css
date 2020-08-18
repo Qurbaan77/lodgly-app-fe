@@ -1,0 +1,40 @@
+.admin-bg{
+    background: url(../../../assets/images/admin-login-bg.jpg);
+    height: 100vh;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.admin-login-container {
+    display: flex;
+    align-items: center;
+    background: #fff;
+}
+
+.left {
+    width: 50%;
+}
+.right {
+    width: 50%;
+}
+
+.admin-login-container .login-form {
+    border: none;
+    max-width: 400px;
+    padding: 20px 50px;
+}
+
+.admin-login-container .q-links {
+    padding-top: 0;
+}
+
+.admin-login-container .login-form h1 {
+    padding-bottom: 5px;
+    font-size: 30px;
+}
+
+.admin-login-container .login-form p {
+    font-size: 13px;
+    padding-bottom: 30px;
+}

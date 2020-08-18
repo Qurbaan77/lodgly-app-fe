@@ -1,0 +1,918 @@
+
+
+.clean-filter {
+    padding-top: 30px;
+}
+
+
+.ant-btn.border-btn {
+    background: transparent;
+    border: 1px solid #c1c1c1;
+    padding: 9px 20px;
+  }
+  
+  .ant-btn.border-btn span {
+    color: #999;
+  }
+  
+
+  .filter-box form {
+    padding: 0;
+}
+
+
+.filter-box h2 {
+    display: none;
+}
+
+
+.search-content .ant-input {
+    border: none!important;
+}
+
+.search-content {
+    padding: 0px 10px;
+    margin-top: -15px;
+    display: none;
+}
+
+.search-content .ant-input-affix-wrapper {
+    border: none;
+}
+
+.apexcharts-menu {
+    min-width: 130px!important;
+}
+
+.ant-dropdown-menu.setting-dropdown {
+    margin-left: 50px;
+}
+
+
+/************ 12 Aug ************/
+
+.ant-menu-inline {
+    height: auto!important;
+}
+
+.ant-layout-sider-light {
+    background: #fff;
+    min-height: 100vh;
+}
+
+.login {
+    align-items: center;
+}
+
+.header-property .ant-dropdown-link{
+    cursor: pointer;
+}
+
+.page-header h1 .anticon, .page-header h1 img {
+    margin-right: 10px;
+    display: inline-block;
+}
+
+
+.add-property .panel-container .ant-collapse>.ant-collapse-item>.ant-collapse-header {
+    padding: 20px 40px 20px 20px;
+}
+
+
+.autocomplete-dropdown-container {
+    padding: 5px;
+}
+
+.autocomplete-dropdown-container span {
+   display: block;
+   font-size: 12px;
+   padding: 8px 10px;
+}
+
+
+.team-title span {
+    display: none;
+}
+
+.team-action {
+    text-align: right;
+    cursor: pointer;
+}
+
+
+.sub-user .ant-modal-body {
+    padding: 24px 0px;
+}
+
+.subuser-fields-section{
+    padding: 0px 20px;
+}
+
+
+.custom-table.subuser-table {
+    width: 100%;
+}
+
+.company-ip {
+    padding: 24px 10px 24px 24px;
+    border-top: 1px solid #efefef;
+    position: absolute;
+    bottom: calc(0px - 85px);
+    border-right: 1px solid #efefef;
+    background: #fff;
+    width: 100%;
+    margin-left: 1px;
+}
+
+.company-ip h6 {
+    font-size: 11px;
+    color: rgba(62, 63, 66, 0.7);
+    font-weight: 700;
+}
+
+.company-ip p {
+    font-size: 10px;
+    margin: 0;
+    color: rgba(62, 63, 66, 0.5);
+}
+
+
+.ant-dropdown-menu-item > span {
+    color: #333;
+}
+
+.billing-info-form .ant-btn span {
+    text-transform: capitalize;
+    }
+
+.ant-motion-collapse-leave .ant-menu-item {
+    height: 0!important;
+    margin: 0!important;
+}
+
+
+/********** Popup Animation *********/
+
+
+.ant-modal.zoom-enter, .ant-modal.zoom-appear{
+    transform: inherit!important;
+    animation-duration: inherit!important;
+    user-select: inherit!important;
+}
+
+
+.zoom-enter, .zoom-appear {
+    -webkit-transform: inherit!important;
+    transform: inherit!important;
+    opacity: inherit!important;
+    -webkit-animation-timing-function: inherit!important;
+    animation-timing-function: inherit!important;
+}
+
+.zoom-leave {
+    -webkit-animation-duration: inherit!important;
+    animation-duration:inherit!important;
+    -webkit-animation-fill-mode:inherit!important;
+    animation-fill-mode:inherit!important;
+    -webkit-animation-play-state: inherit!important;
+    animation-play-state:inherit!important;
+    -webkit-animation-timing-function:inherit!important;
+    animation-timing-function: inherit!important;
+}
+
+
+.create-booking-modal .ant-modal .ant-modal-body {
+    overflow: auto;
+    width: 100%;
+    height: calc(100% - 64px);
+    position: absolute;
+}
+
+.ant-scrolling-effect .create-booking-modal .ant-modal {
+    right: 0;
+    transition: all 0.5s;
+}
+
+.ant-scrolling-effect .sub-user .ant-modal {
+    right: 0;
+}
+.add-invoice-popup .ant-modal {
+    right: -800px;
+}
+.ant-scrolling-effect .add-invoice-popup .ant-modal {
+    right: 0;
+}
+.add-invoice-popup .ant-modal .ant-modal-body {
+   overflow: auto;
+    width: 100%;
+    height: calc(100% - 64px);
+    position: absolute; 
+}
+.sub-user .ant-modal .ant-modal-body {
+    overflow: auto;
+    width: 100%;
+    height: calc(100% - 64px);
+    position: absolute; 
+}
+.guest-modal .ant-modal .ant-modal-body {
+    overflow: auto;
+    width: 100%;
+    height: calc(100% - 64px);
+    position: absolute; 
+}
+
+.ant-scrolling-effect .guest-modal .ant-modal {
+    right: 0;
+}
+
+
+
+/********************Sidebar Menu **************/
+
+
+.ant-menu .ant-menu-item, .ant-menu .ant-menu-submenu {
+    position: relative;
+}
+
+
+
+.booking-page-view .ant-menu .booking-nav,
+.calendar-page-view .ant-menu .calendar-nav,
+.team-page-view .ant-menu .team-nav,
+.stats-page-view .ant-menu .stats-nav,
+.property-page-view .ant-menu .property-nav,
+.owner-page-view .ant-menu .owner-nav,
+.invoice-page-view .ant-menu .invoice-nav,
+.service-page-view .ant-menu .service-nav,
+.task-page-view .ant-menu .task-nav,
+.unit-page-view .ant-menu .unit-nav,
+.channel-page-view .ant-menu .channel-nav,
+.group-page-view .ant-menu .group-nav,
+.detail-page-view .ant-menu .detail-nav   {
+    background-color: #fffaf0!important;
+}
+
+.booking-page-view .ant-menu .booking-nav a,
+.calendar-page-view .ant-menu .calendar-nav a,
+.team-page-view .ant-menu .team-nav a,
+.stats-page-view .ant-menu .stats-nav a,
+.property-page-view .ant-menu .property-nav a,
+.owner-page-view .ant-menu .owner-nav a,
+.invoice-page-view .ant-menu .invoice-nav a,
+.service-page-view .ant-menu .service-nav a,
+.task-page-view .ant-menu .task-nav a,
+.unit-page-view .ant-menu .unit-nav a,
+.channel-page-view .ant-menu .channel-nav a,
+.group-page-view .ant-menu .group-nav a,
+.detail-page-view .ant-menu .detail-nav a  {
+    color: #fab52c!important;
+}
+
+
+.booking-page-view .ant-menu .booking-nav:before,
+.calendar-page-view .ant-menu .calendar-nav:before,
+.team-page-view .ant-menu .team-nav:before,
+.stats-page-view .ant-menu .stats-nav:before,
+.property-page-view .ant-menu .property-nav:before,
+.owner-page-view .ant-menu .owner-nav:before,
+.invoice-page-view .ant-menu .invoice-nav:before,
+.service-page-view .ant-menu .service-nav:before,
+.task-page-view .ant-menu .task-nav:before,
+.unit-page-view .ant-menu .unit-nav:before,
+.channel-page-view .ant-menu .channel-nav:before,
+.group-page-view .ant-menu .group-nav:before,
+.detail-page-view .ant-menu .detail-nav:before {
+    content: "";
+    position: absolute;
+    width: 3px;
+    height: 100%;
+    left: 0;
+    background: #fab52c;
+}
+
+
+
+/*********** 4 AUgust *************/
+
+
+#basic_price * {
+    margin-right: 10px;
+}
+
+
+.filter-select .anticon.anticon-down {
+    position: absolute;
+    top: 13px;
+    right: 10px;
+    color: rgba(0,0,0,.25);
+    font-size: 12px;
+}
+
+.additionl-link {
+    cursor: pointer;
+}
+
+.additionl-link:hover {
+    color: #fab52c;
+}
+.service-margin {
+    display: flex;
+}
+
+.service-margin * {
+    margin: 0px 5px;
+}
+
+.services-list th.ant-table-cell {
+    white-space: nowrap;
+}
+
+.submenu-heading a {
+    color: #999!important;
+}
+
+.submenu-heading:hover .anticon {
+    color: #fab52c!important;
+}
+
+.submenu-heading:hover a {
+    color: #fab52c!important;
+}
+
+
+.property-page-view .ant-menu .property-nav .ant-menu-submenu-arrow:after, .property-page-view .ant-menu .property-nav .ant-menu-submenu-arrow:before {
+    color: #fab52c;
+    background-image: linear-gradient(90deg,#fab52c,#fab52c);
+}
+
+
+
+.property-page-view .ant-menu .property-nav .ant-menu-sub a {
+    color: #999!important;
+}
+
+.property-page-view .ant-menu .property-nav .ant-menu-sub a:hover {
+    color: #fab52c!important;
+}
+
+.property-page-view .ant-menu .property-nav .ant-menu-sub {
+    background: #fbfbfc;
+    position: relative;
+}
+
+
+
+
+
+
+/******** 14 Aug ********/
+
+
+.amount-field#pricePerUnit {
+    max-width: 100%;
+}
+
+.text-capitalize{
+    text-transform: capitalize;
+}
+
+.text-upppercase{
+    text-transform: uppercase;
+}
+
+
+.stats-page .chart-body h3 img {
+    position: relative;
+    top: -6px;
+    cursor: pointer;
+    left: -3px;
+}
+
+
+.stats-page .apexcharts-toolbar {
+    display: none!important;
+}
+
+
+.stats-page .apexcharts-legend.position-top.apexcharts-align-center {
+    justify-content: flex-end!important;
+}
+
+.booking-list {
+    cursor: pointer;
+}
+
+
+input[type=number]{
+    -moz-appearance:textfield;
+  }
+
+/******************************************************************************************************/
+
+                                /*********** Media Query ***********/   
+
+/******************************************************************************************************/
+
+
+
+
+
+
+
+
+
+@media screen and (max-width:767px){
+
+
+    /*********** Global ***********/   
+    
+    
+    .profile-container .ant-collapse-header {
+        display: block;
+    }
+    
+    .wrapper .side-menu {
+        width: 0!important;
+        flex: 0!important;
+        max-width: 0!important;
+        min-width: 0!important;
+        opacity: 0;
+        position: fixed;
+        top: -1px;
+        bottom: 0;
+    }
+    
+    .wrapper .ant-layout.ant-layout-has-sider > .ant-layout {
+        width: calc(100% - 0px);
+    }
+    
+    
+    .header-property .ant-dropdown-link {
+        display: none;
+    }
+    
+    .ant-btn.menu-btn {
+        display: block;
+        top:12px;
+    }
+
+    .ant-layout-header {
+        height: auto;
+    }
+    
+    .search-box {
+        padding-right: 20px;
+        display: inline-block;
+    }
+
+    .search-content.search-expand {
+        display: block;
+        width: 100%;
+    }
+
+    .search-content .ant-input-suffix {
+        right: 10px;
+        top: 13px;
+    }  
+
+    .search-content .ant-input-affix-wrapper:focus {
+        box-shadow: none;
+        outline: none;
+    }
+    
+    .search-content .anticon {
+        font-size: 20px;
+        color: #d6d6d6;
+        cursor: pointer;
+    }
+    
+    .header-property {
+        padding-right: 0;
+        max-width: 100%;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    
+    .language {
+        display: none;
+    }
+    
+    
+    .wrapper.wrapper-expand .side-menu {
+        width: 200px!important;
+        flex: 0 0 200px!important;
+        max-width: 200px!important;
+        min-width: 200px!important;
+        opacity: 1;
+    }
+    
+    .wrapper.wrapper-expand .ant-layout.ant-layout-has-sider > .ant-layout {
+        width: calc(100% - 200px);
+    }
+    
+    .sidebar-logo .logo{
+        display: none;
+    }
+    
+    .close-icon{
+        display: block;
+        width: 18px!important;
+        cursor: pointer;
+    }
+    
+    .wrapper.wrapper-expand .side-menu{
+        z-index: 9999;
+    }
+    
+    .sidebar-logo {
+        text-align: left;
+        border-bottom: none;
+        min-height: auto;
+    }
+    
+    .site-layout .ant-layout-content.site-layout-background{
+        margin: 0!important;
+    }
+    
+    
+    .mobile-logo{
+        display: block;
+        position: absolute;
+        left: 50%;
+        top: 0px;
+        transform: translateX(-50%);
+    }
+    
+    .web-property{
+        display: none;
+    }
+    
+    .property-mbl{
+        display: inline-block;
+        padding-right: 20px;
+    }
+    
+    .search-box span {
+       font-size: 22px;
+       position: relative;
+       top: 4px;
+    }
+    
+    .ant-modal {
+        max-width: calc(100vw - 0px);
+    }
+
+    .page-header {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .page-header h1 {
+        width: 100%;
+        text-align: center;
+    }
+    
+
+    /*********** Login, Register, Forget ***********/
+
+    .login-form {
+        padding: 50px 30px;
+
+    }
+
+    .register-form {
+        padding: 50px 30px;
+    }
+
+    .forget-form {
+        padding: 50px 30px;
+    }
+    
+    /*********** Booking ***********/
+    
+    
+    .booking .ant-col-10, .booking .ant-col-14{
+        display: block;
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    
+
+    
+    .create-booking-modal .ant-col-12, .create-booking-modal .ant-col-8, .create-booking-modal .ant-col-16 {
+        display: block;
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    
+    .create-booking-modal .ant-row.ant-form-item {
+        padding-right: 0!important;
+    }
+    
+    .create-booking-modal .ant-modal-body {
+        padding: 15px 0px;
+    }
+    
+    .booking-list-conatiner {
+        height: auto;
+        margin-bottom: 50px;
+    }
+    .booking-details {
+        padding: 0;
+    }
+    
+    .additional-guest .ant-form-item-label>label {
+        font-size: 12px;
+    }
+
+    .accommodation .service-form .ant-select {
+        width: 100%!important;
+    }
+
+
+    
+    /*********** Property ***********/
+    
+    .listing-info-form [class*= ant-col-] {
+        display: block;
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    
+    .listing-info-form .ant-form-item-label > label {
+        color: #000!important;
+    }
+    
+    .main-info-form .ant-col-8 {
+        display: block;
+        -ms-flex: 0 0 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+          
+    .panel-container .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+        padding-left: 20px;
+    }    
+    
+    
+    /************ Unit Type **************/
+
+    .panel-box.units.editunit .group-action {
+        width: 50%;
+    }
+
+    .unit-filter [class*=ant-col-] {
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    
+    .unit-filter [class*=ant-col-] .ant-row.ant-form-item {
+        padding: 0!important;
+    }
+
+    .unit-filter .ant-picker {
+        padding: 10px 11px;
+        width: 100%;
+    }
+
+    .group-action {
+        width: 30%;
+    }
+
+
+     /************ Group **************/
+
+    .group-modal .ant-picker{
+        padding: 8px 11px 8px;
+    }
+
+    .group-people {
+        display: none;
+    }
+
+    .panel-box.units.editunitname .group-action {
+        width: 50%;
+    }
+
+    .panel-box {
+        padding: 15px 15px;
+    }
+
+    /************ Cleaning Group **************/
+
+    .cleaning-group .page-header {
+        flex-wrap: wrap;
+    }
+
+    .cleaning-button {
+        justify-content: space-between;
+        padding-top: 20px;
+    }
+
+    .clean-filter {
+        padding-top: 50px;
+    }
+    
+    .clean-filter .ant-col-12 {
+        display: block;
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .cleaning-group .ant-picker{
+        padding: 8px 11px 8px;
+    }
+
+
+/************ Channel Manager **************/
+
+
+    .our-client .ant-col-6 {
+        display: block;
+        -ms-flex: 0 0 33.33333333%;
+        flex: 0 0 33.33333333%;
+        max-width: 33.33333333%;
+    }
+
+    .step-box {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        padding-bottom: 30px;
+    }
+
+    .channel-step {
+        flex-wrap: wrap;
+        padding-bottom: 0;
+    }
+
+    .step-box span{
+        padding-left: 15px;
+    }
+
+    .step-box::after {
+        width: 30px;
+        height: 9px;
+        right: inherit;
+        top: 50%;
+        transform: rotate(90deg);
+        margin-top: 15px;
+        left: 5px;
+    }
+
+    .step-box img {
+        max-width: 40px;
+    }
+    
+
+
+    /************ Profile **************/
+    .profile-container .ant-col-12 {
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+
+ /************ Property List **************/
+    .property-listing .ant-col-8 {
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+
+
+ /************  Stats**************/
+
+
+    .stats-page .ant-col-16, .stats-page .ant-col-8, .stats-page .ant-col-24 {
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .apexcharts-canvas {
+        margin: 0px auto;
+    }
+
+    .no-padding-mbl{
+        padding-right: 0!important;
+    }
+
+
+ /************  Invoice **************/
+
+ .add-invoice-popup .invoice-border [class*=ant-col-] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .add-invoice-popup .additional-fields [class*=ant-col-] {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+
+    .add-invoice-popup .amount-field {
+        max-width: 100%;
+    }
+
+     /************  Calendar **************/
+
+    .calendar-btn .ant-btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+
+      /************  Team **************/
+
+
+    .custom-table.subuser-table table th {
+        padding: 10px 10px;
+    }
+    .custom-table.subuser-table table td {
+        padding: 10px 10px;
+    }
+
+
+      /************  Owner **************/
+    
+.owner-list .custom-table table th {
+    white-space: nowrap;
+}
+
+.owner-list .custom-table table td {
+    white-space: nowrap;
+}
+
+.owner-list {
+    overflow: auto;
+}
+
+.owner-action {
+    opacity: 1;
+}
+
+.invoice-action {
+    opacity: 1;
+}
+
+.custom-table {
+    overflow-x: auto;
+}
+.team-action {
+    opacity: 1;
+}
+.group-action {
+    opacity: 1;
+}
+
+.panel-box.units .group-action {
+    opacity: 1;
+}
+
+.ant-dropdown.ant-dropdown-placement-bottomLeft {
+    z-index: 9999;
+}
+
+.billing-container [class*=ant-col-] {
+    -ms-flex: 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+.stripe-element {
+    width: 100%!important;
+    }
+    .amount-field#pricePerUnit {
+    max-width: 100%;
+    justify-content: flex-start;
+    }
+    
+    .into {
+    display: none;
+    }
+
+/********** Popup Animation *********/
+
+.create-booking-modal .ant-modal .ant-modal-body, .guest-modal .ant-modal .ant-modal-body, .sub-user .ant-modal .ant-modal-body, .add-invoice-popup .ant-modal .ant-modal-body {
+    position: relative;
+}
+
+.create-booking-modal .ant-modal, .guest-modal .ant-modal, .sub-user .ant-modal, .add-invoice-popup .ant-modal{
+    width: auto!important;
+    right: 0;
+    position: absolute;
+}
+
+
+
+
+}
