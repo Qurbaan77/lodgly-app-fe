@@ -243,7 +243,7 @@
 
 .invoice-date .ant-picker:hover,
 .ant-picker-focused {
-  border-right-width: 1.5px !important;
+  border-right-width: 1px !important;
 }
 
 .label-hidden label {
@@ -351,7 +351,7 @@
 
 .amount-field {
   max-width: 80px;
-  border: 1.5px solid #eaeaea !important;
+  border: 1px solid #eaeaea !important;
   padding: 8px 15px;
   min-height: 38px;
 }
@@ -359,6 +359,7 @@
 .amount-field p {
   margin: 0;
   line-height: 1.4;
+  font-size: small;
 }
 
 .download-img {
@@ -423,3 +424,44 @@
 .additional-fields .ant-form-item-explain {
   font-size: 10px;
 }
+.cross-btn {
+  position: fixed;
+  right: 10px;
+  top: 20px;
+}
+
+.cross-btn .anticon {
+  font-size: 20px;
+  color: #999;
+}
+
+.amount-field p {
+  flex-wrap: wrap;
+  line-height: 1;
+  font-size: 12px;
+  }
+  
+  .amount-field {
+  display: flex;
+  overflow-x: auto;
+  line-height: 1;
+  }
+  
+  .amount-field::-webkit-scrollbar {
+  width: 5px;
+  }
+  
+  
+  .amount-field::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  }
+  
+  
+  .amount-field::-webkit-scrollbar-thumb {
+  background: #e8e8e8;
+  }
+  
+  
+  .amount-field::-webkit-scrollbar-thumb:hover {
+  background: #f1f1f1;
+  }

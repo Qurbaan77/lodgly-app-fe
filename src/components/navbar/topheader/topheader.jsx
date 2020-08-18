@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Dropdown, Layout, Menu, Button, Input,
@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import {
   SearchOutlined,
   VerticalAlignMiddleOutlined,
-  DownOutlined,
 } from '@ant-design/icons';
 import { userInstance } from '../../../axios/axiosconfig';
 import menuicon from '../../../assets/images/menu/menu-icon.png';
@@ -17,11 +16,11 @@ import propertymbl from '../../../assets/images/property-mbl.png';
 const { Header } = Layout;
 
 const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
-  const changeLanguage = useCallback((event) => {
-    i18n.changeLanguage(event);
-  }, [i18n]);
+  // const changeLanguage = useCallback((event) => {
+  //   i18n.changeLanguage(event);
+  // }, [i18n]);
   const [propertyData, setPropertyData] = useState([]);
   const [propertyName, setPropertyName] = useState();
   const [menu, setMenu] = useState();
@@ -53,7 +52,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
             {el.propertyName}
           </Menu.Item>
         ))}
-        <Menu.Item onClick={() => clear()}>All Properties</Menu.Item>
+        <Menu.Item onClick={() => clear()}>{t('header.allproperties')}</Menu.Item>
       </Menu>
     );
 
@@ -81,24 +80,24 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
     getData();
   }, [userId]);
 
-  const english = useCallback(() => {
-    changeLanguage('en');
-  }, [changeLanguage]);
+  // const english = useCallback(() => {
+  //   changeLanguage('en');
+  // }, [changeLanguage]);
 
-  const polish = useCallback(() => {
-    changeLanguage('pl');
-  }, [changeLanguage]);
+  // const polish = useCallback(() => {
+  //   changeLanguage('pl');
+  // }, [changeLanguage]);
 
-  const language = (
-    <Menu>
-      <Menu.Item key="1" onClick={english}>
-        English
-      </Menu.Item>
-      <Menu.Item key="2" onClick={polish}>
-        Polish
-      </Menu.Item>
-    </Menu>
-  );
+  // const language = (
+  //   <Menu>
+  //     <Menu.Item key="1" onClick={english}>
+  //       English
+  //     </Menu.Item>
+  //     <Menu.Item key="2" onClick={polish}>
+  //       Polish
+  //     </Menu.Item>
+  //   </Menu>
+  // );
 
   const [searchtoggle, setSearchToggle] = useState(false);
   // const handleMenu = (e) => {
@@ -158,14 +157,14 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
           className={`search-content ${searchtoggle ? 'search-expand' : ''}`}
         >
           <Input
-            placeholder="Search guest, reservation, phone number"
+            placeholder={t('header.placeholder1')}
             allowClear
             prefix={<SearchOutlined />}
           />
         </div>
       </div>
 
-      <div className="language">
+      {/* <div className="language">
         <Dropdown overlay={language}>
           <Button>
             {localStorage.getItem('i18nextLng') === 'pl' ? 'PL' : 'EN'}
@@ -173,7 +172,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
             <DownOutlined />
           </Button>
         </Dropdown>
-      </div>
+      </div> */}
     </Header>
   );
 };

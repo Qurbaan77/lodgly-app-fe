@@ -17,7 +17,7 @@ import {
   PlusOutlined,
   EditOutlined, DeleteOutlined,
 } from '@ant-design/icons';
-
+import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
@@ -29,8 +29,9 @@ let i = 1;
 let j = 1;
 
 const AddReservation = (props) => {
+  const { t } = useTranslation();
   const {
-    getData, close, visible, handleOk, handleCancel,
+    getData, close, visible, handleOk,
   } = props;
   const [form] = Form.useForm();
   // const [visible1, setVisible1] = useState(false);
@@ -75,6 +76,7 @@ const AddReservation = (props) => {
 
   const [propertyData, setPropertyData] = useState([]);
   const [currentPropertyId, setCurrentPropertyId] = useState(null);
+  const [reservationDate, setReservationDate] = useState(null);
   // const history = useHistory();
 
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -168,7 +170,7 @@ const AddReservation = (props) => {
     values.commission = channelCommission;
     values.unitName = unitName;
     values.affiliateId = userId;
-    const response = await userInstance.post('/addBooking', values);
+    const response = await userInstance.post('/addReservation', values);
     const { msg } = response.data;
     if (response.data.code === 200) {
       getData();
@@ -209,6 +211,7 @@ const AddReservation = (props) => {
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
+      reservationDate,
       propertyId: value,
     };
     const response = await userInstance.post('/getService', payload);
@@ -286,6 +289,7 @@ const AddReservation = (props) => {
   };
 
   const fun4 = (value) => {
+    setReservationDate(value);
     if (value) {
       const d1 = new Date(value[0]._d);
       const d2 = new Date(value[1]._d);
@@ -302,7 +306,7 @@ const AddReservation = (props) => {
           <Row style={{ alignItems: 'center' }}>
             <Col span={6}>
               <Form.Item
-                label="Full Name"
+                label={t('strings.full')}
                 name={[el, 'fullName']}
                 style={{ paddingRight: 20 }}
               >
@@ -312,7 +316,7 @@ const AddReservation = (props) => {
 
             <Col span={6}>
               <Form.Item
-                label="Email"
+                label={t('strings.email')}
                 name={[el, 'email']}
                 style={{ paddingRight: 20 }}
               >
@@ -322,7 +326,7 @@ const AddReservation = (props) => {
 
             <Col span={6}>
               <Form.Item
-                label="Country"
+                label={t('strings.country')}
                 name={[el, 'country']}
                 style={{ paddingRight: 20 }}
               >
@@ -340,15 +344,11 @@ const AddReservation = (props) => {
 
             <Col span={6}>
               <Form.Item
-                label="Phone"
+                label={t('strings.phone')}
                 name={[el, 'phone']}
                 style={{ paddingRight: 20 }}
               >
-                <Input
-                  type="number"
-                  minLength="9"
-                  maxLength="15"
-                />
+                <Input type="number" minLength="9" maxLength="15" />
               </Form.Item>
             </Col>
 
@@ -357,7 +357,7 @@ const AddReservation = (props) => {
                 <div>
                   <EditOutlined />
                   {' '}
-                  Edit/Additional Data
+                  {t('addreservation.heading1')}
                 </div>
               </div>
             </Col>
@@ -373,11 +373,11 @@ const AddReservation = (props) => {
 
   return (
     <Modal
-      title="Create Booking"
+      title={t('addreservation.heading15')}
       name="modal1"
       visible={visible}
       onOk={handleOk}
-      onCancel={handleCancel}
+      onCancel={close}
       wrapClassName="create-booking-modal"
     >
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
@@ -385,14 +385,14 @@ const AddReservation = (props) => {
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={12}>
             <Form.Item
-              label="Reservation Date"
+              label={t('addreservation.heading2')}
               name="groupname"
               style={{ paddingRight: 20 }}
               onChange={fun4}
               rules={[
                 {
                   required: true,
-                  message: 'Reservation date is required',
+                  message: t('addreservation.heading3'),
                 },
               ]}
             >
@@ -401,12 +401,9 @@ const AddReservation = (props) => {
           </Col>
 
           <Col span={12}>
-            <Radio.Group
-              name="radiogroup"
-              defaultValue={1}
-            >
-              <Radio value={1}>Confirmed</Radio>
-              <Radio value={2}>Option</Radio>
+            <Radio.Group name="radiogroup" defaultValue={1}>
+              <Radio value={1}>{t('strings.confirmed')}</Radio>
+              <Radio value={2}>{t('strings.option')}</Radio>
             </Radio.Group>
           </Col>
         </Row>
@@ -414,24 +411,22 @@ const AddReservation = (props) => {
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={8}>
             <Form.Item
-              label="Property"
+              label={t('strings.property')}
               name="property"
               style={{ paddingRight: 20 }}
               rules={[
                 {
                   required: true,
-                  message: 'Property name is required',
+                  message: t('addreservation.heading4'),
                 },
               ]}
             >
               <Select
-                placeholder="Select"
+                placeholder={t('strings.select')}
                 onSelect={(value, event) => fun1(value, event)}
               >
                 {propertyData.map((el) => (
-                  <Select.Option value={el.id}>
-                    {el.propertyName}
-                  </Select.Option>
+                  <Select.Option value={el.id}>{el.propertyName}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -439,18 +434,18 @@ const AddReservation = (props) => {
 
           <Col span={8}>
             <Form.Item
-              label="Unit"
+              label={t('strings.unit')}
               name="unit"
               style={{ paddingRight: 20 }}
               rules={[
                 {
                   required: true,
-                  message: 'Unit is required',
+                  message: t('addreservation.heading5'),
                 },
               ]}
             >
               <Select
-                placeholder="Select"
+                placeholder={t('strings.select')}
                 onSelect={(value, event) => fun3(value, event)}
               >
                 {unitData.map((el) => (
@@ -463,7 +458,7 @@ const AddReservation = (props) => {
           <Col span={8}>
             <Form.Item
               className="comision"
-              label="Channel, Commission(%)"
+              label={t('addreservation.heading6')}
               name="channel"
             >
               <Select
@@ -488,7 +483,7 @@ const AddReservation = (props) => {
                 rules={[
                   {
                     required: true,
-                    message: 'Commission is required',
+                    message: t('addreservation.heading8'),
                   },
                 ]}
               />
@@ -499,17 +494,17 @@ const AddReservation = (props) => {
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={8}>
             <Form.Item
-              label="Adults"
+              label={t('strings.adults')}
               name="adult"
               style={{ paddingRight: 20 }}
               rules={[
                 {
                   required: true,
-                  message: 'Required Field',
+                  message: t('addreservation.heading9'),
                 },
               ]}
             >
-              <Select placeholder="Select">
+              <Select placeholder={t('strings.select')}>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -521,11 +516,11 @@ const AddReservation = (props) => {
 
           <Col span={8}>
             <Form.Item
-              label="Childrens(0-12yrs)"
+              label={t('addreservation.heading10')}
               name="children1"
               style={{ paddingRight: 20 }}
             >
-              <Select placeholder="Select">
+              <Select placeholder={t('strings.select')}>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -536,7 +531,7 @@ const AddReservation = (props) => {
           </Col>
 
           <Col span={8}>
-            <Form.Item label="Childrens(12+ yrs)" name="children2">
+            <Form.Item label={t('addreservation.heading11')} name="children2">
               <Select placeholder="Select">
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
@@ -562,10 +557,14 @@ const AddReservation = (props) => {
 
                     <Row>
                       <Col span={24}>
-                        <div className="additional-add" onClick={addMore} role="presentation">
+                        <div
+                          className="additional-add"
+                          onClick={addMore}
+                          role="presentation"
+                        >
                           <PlusOutlined />
                           {' '}
-                          Add additional guest
+                          {t('addreservation.heading12')}
                         </div>
                       </Col>
                     </Row>
@@ -605,7 +604,7 @@ const AddReservation = (props) => {
           <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
             <Col span={8}>
               <Form.Item>
-                <p>Accommodation</p>
+                <p>{t('addreservation.heading18')}</p>
               </Form.Item>
             </Col>
 
@@ -614,7 +613,7 @@ const AddReservation = (props) => {
                 <div className="inline-form">
                   <label htmlFor="abc">
                     <input hidden />
-                    Average price per night
+                    {t('addreservation.heading19')}
                   </label>
                   <Form.Item name="perNight">
                     <Input
@@ -625,7 +624,7 @@ const AddReservation = (props) => {
                       rules={[
                         {
                           required: true,
-                          message: 'Required Field',
+                          message: t('addreservation.heading9'),
                         },
                       ]}
                       onChange={(e) => setPrice(e.target.value)}
@@ -637,7 +636,7 @@ const AddReservation = (props) => {
                   </label>
                   <Input
                     type="number"
-                    placeholder="0 nights"
+                    placeholder={t('addreservation.heading30')}
                     name="nights"
                     value={night}
                     disabled="true"
@@ -664,7 +663,7 @@ const AddReservation = (props) => {
                 <div className="inline-form">
                   <label htmlFor="discount">
                     <input hidden />
-                    Discount
+                    {t('addreservation.heading20')}
                   </label>
                   <Input
                     type="number"
@@ -685,7 +684,7 @@ const AddReservation = (props) => {
                   </label>
                   <Form.Item name="discountType">
                     <Select
-                      placeholder="Discount type"
+                      placeholder={t('addreservation.heading21')}
                       onSelect={(value) => handleDiscount(value)}
                       defaultValue="%"
                     >
@@ -720,9 +719,12 @@ const AddReservation = (props) => {
               <div className="per-night">
                 <label htmlFor="night">
                   <input hidden />
-                  Per Night
+                  {t('addreservation.heading22')}
                 </label>
-                <span>Accommondation cost:</span>
+                <span>
+                  {t('addreservation.heading23')}
+                  :
+                </span>
                 <span className="amnt">
                   {accomodation}
                   {' '}
@@ -732,10 +734,14 @@ const AddReservation = (props) => {
             </Col>
 
             <Col span={24}>
-              <div className="srvice-heading" onClick={addMoreService} role="presentation">
+              <div
+                className="srvice-heading"
+                onClick={addMoreService}
+                role="presentation"
+              >
                 <PlusOutlined />
                 {' '}
-                Add Services
+                {t('addreservation.heading24')}
               </div>
             </Col>
 
@@ -797,7 +803,7 @@ const AddReservation = (props) => {
                             <Form.Item name={[ele, 'serviceQuantity']}>
                               <Input
                                 type="number"
-                                placeholder="Quantity"
+                                placeholder={t('addreservation.heading25')}
                                 onChange={(e) => setServiceAmt(e.target.value)}
                               />
                             </Form.Item>
@@ -845,7 +851,8 @@ const AddReservation = (props) => {
             <Col span={24}>
               <div className="amnt-total">
                 <h4>
-                  Total:
+                  {t('addreservation.heading26')}
+                  :
                   {' '}
                   {Math.round(total * 100) / 100
                     + Math.round(accomodation * 100) / 100}
@@ -857,13 +864,13 @@ const AddReservation = (props) => {
               <div className="deposit">
                 <label htmlFor="discount">
                   <input hidden />
-                  Deposit
+                  {t('addreservation.heading27')}
                 </label>
 
                 <div className="inline-form">
                   <label htmlFor="deposit">
                     <input hidden />
-                    Accommodation deposit
+                    {t('addreservation.heading28')}
                   </label>
 
                   <Input
@@ -893,7 +900,8 @@ const AddReservation = (props) => {
             <Col span={24}>
               <div className="outstanding">
                 <label htmlFor="depo">
-                  Accommodation deposit:
+                  {t('addreservation.heading28')}
+                  :
                   {' '}
                   <span>
                     {/* {deposit}€ (0,00 %) */}
@@ -903,7 +911,8 @@ const AddReservation = (props) => {
                   </span>
                 </label>
                 <label htmlFor="amount">
-                  Outstanding amount:
+                  {t('addreservation.heading29')}
+                  :
                   {' '}
                   <span>
                     {Math.round(total * 100) / 100
@@ -933,10 +942,12 @@ const AddReservation = (props) => {
                   close();
                 }}
               >
-                Cancel
+                {t('strings.cancel')}
               </Button>
               <Button type="primary" htmlType="submit">
-                Save Reservation
+                {t('strings.save')}
+                {' '}
+                {t('strings.reservat')}
               </Button>
             </Form.Item>
           </Col>
@@ -948,14 +959,12 @@ const AddReservation = (props) => {
 
 AddReservation.propTypes = {
   close: PropTypes.func,
-  handleCancel: PropTypes.func,
   handleOk: PropTypes.func,
   getData: PropTypes.func,
   visible: PropTypes.bool,
 };
 AddReservation.defaultProps = {
   close: () => {},
-  handleCancel: () => {},
   handleOk: () => {},
   getData: () => {},
   visible: false,

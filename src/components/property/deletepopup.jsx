@@ -1,24 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import './property.css';
 import { Button } from 'antd';
 import { WarningOutlined, DeleteOutlined } from '@ant-design/icons';
 
-const DeletePopup = ({ dataObject, cancel }) => (
-  <div className="delete-popup-box">
-    <WarningOutlined />
-    <h5>Delete this object?</h5>
+const DeletePopup = ({ dataObject, cancel }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="delete-popup-box">
+      <WarningOutlined />
+      <h5>{t('deletepopup.heading1')}</h5>
 
-    <p>Deleting this items will permanently remove it from your network.</p>
+      <p>{t('deletepopup.heading2')}</p>
 
-    <Button style={{ marginRight: 50 }} onClick={cancel}>
-      Cancel
-    </Button>
-    <Button icon={<DeleteOutlined />} type="primary" onClick={dataObject}>
-      Delete Item
-    </Button>
-  </div>
-);
+      <Button style={{ marginRight: 50 }} onClick={cancel}>
+        {t('strings.cancel')}
+        {' '}
+      </Button>
+      <Button icon={<DeleteOutlined />} type="primary" onClick={dataObject}>
+        {t('strings.delete_item')}
+      </Button>
+    </div>
+  );
+};
 
 DeletePopup.propTypes = {
   dataObject: PropTypes.func,

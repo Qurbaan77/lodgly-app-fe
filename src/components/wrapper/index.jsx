@@ -15,7 +15,7 @@ const Wrapper = ({
   };
 
   const [menutoggle, setMenuToggle] = useState(false);
-  const handleMenu = (e) => {
+  const handleMenuSide = (e) => {
     if (e === 'open') {
       setMenuToggle(true);
     } else if (e === 'close') {
@@ -27,12 +27,13 @@ const Wrapper = ({
 
   return (
     <div className={`wrapper ${menutoggle ? 'wrapper-expand' : ''}`}>
+      <AlertBox />
       <Layout>
         <Sidenav
           menutoggle={menutoggle}
           img={img}
           name={name}
-          handleMenu={handleMenu}
+          handleMenuSide={handleMenuSide}
           getUserInfo={getUserInfo}
         />
         <Layout className="site-layout">
@@ -42,7 +43,6 @@ const Wrapper = ({
             setMenuToggle={setMenuToggle}
             menutoggle={menutoggle}
           />
-          <AlertBox />
           <Content
             className="site-layout-background"
             style={{

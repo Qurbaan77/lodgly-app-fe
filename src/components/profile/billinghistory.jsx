@@ -1,52 +1,58 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import './profile.css';
 
-const BillingHistory = ({ invoiceList, data }) => (
-  <div className="billing-page">
-    <div className="page-header">
-      <h1>Billing History</h1>
-    </div>
+const BillingHistory = ({ invoiceList, data }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="billing-page">
+      <div className="page-header">
+        <h1>{t('billinghistory.heading1')}</h1>
+      </div>
 
-    <div className="billing-list">
-      <div className="custom-table">
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Payment Plan</th>
-              <th style={{ width: '50%' }}>Total Usage</th>
-              <th>Balance</th>
-            </tr>
-          </thead>
+      <div className="billing-list">
+        <div className="custom-table">
+          <table>
+            <thead>
+              <tr>
+                <th>{t('strings.date')}</th>
+                <th>{t('billinghistory.label2')}</th>
+                <th style={{ width: '50%' }}>{t('billinghistory.label3')}</th>
+                <th>{t('billinghistory.label4')}</th>
+              </tr>
+            </thead>
 
-          <tbody>
-            {
+            <tbody>
+              {
               invoiceList && invoiceList.length > 0
                 ? invoiceList.map((el) => (
                   <tr key={el.invoiceId}>
                     <td>{el.start}</td>
-                    <td>
+                    <td className="text-capitalize">
                       {data.interval}
-                      ly Subscription
+                      {' '}
+                      {t('billinghistory.label5')}
                     </td>
-                    <td>
+                    <td className="text-upppercase">
                       {el.amount}
-                      <span>{el.currency}</span>
+                      {' '}
+                      {el.currency}
                     </td>
                     <td>
-                      <a href={el.pdf}>Download Invoice</a>
+                      <a href={el.pdf}>{t('billinghistory.label6')}</a>
                     </td>
                   </tr>
                 ))
                 : ''
             }
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 BillingHistory.propTypes = {
   invoiceList: PropTypes.objectOf(PropTypes.array),

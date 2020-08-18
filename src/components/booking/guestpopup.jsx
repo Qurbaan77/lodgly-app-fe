@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './booking.css';
+import { useTranslation } from 'react-i18next';
 import {
   Form,
-  Select,
   Input,
   Radio,
   DatePicker,
@@ -12,23 +12,19 @@ import {
   Col,
   Modal,
 } from 'antd';
-import Toaster from '../toaster/toaster';
-
+// import Toaster from '../toaster/toaster';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import { userInstance } from '../../axios/axiosconfig';
 
 const GuestPopup = (props) => {
+  const { t } = useTranslation();
   const {
     editValues, getData, close: close1, setBooked, closeToaster,
-    visible, handleOk, handleCancel,
+    visible, handleOk, handleCancel, toasterMessage,
   } = props;
   const [form] = Form.useForm();
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
   const guestData = editValues;
-
-  const close = () => {
-    setNotifyType('');
-  };
+  const [country, setCountry] = useState(null);
 
   form.setFieldsValue({
     id: guestData.id,
@@ -53,14 +49,12 @@ const GuestPopup = (props) => {
     const statusCode = response.data.code;
     const { msg } = response.data;
     if (statusCode === 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
+      toasterMessage('success', msg);
       getData();
       close1();
       setBooked(true);
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toasterMessage('error', msg);
     }
     form.resetFields();
     closeToaster();
@@ -68,13 +62,12 @@ const GuestPopup = (props) => {
 
   return (
     <Modal
-      title="Guest"
+      title={t('strings.guest')}
       visible={visible}
       onOk={handleOk}
       onCancel={handleCancel}
       wrapClassName="guest-modal"
     >
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center' }}>
           <Form.Item name="id">
@@ -82,44 +75,45 @@ const GuestPopup = (props) => {
           </Form.Item>
           <Col span={12}>
             <Form.Item
-              label="Full Name"
+              label={t('strings.full')}
               name="fullName"
               style={{ paddingRight: 20 }}
               rules={[
                 {
                   required: true,
-                  message: 'Please enter name',
+                  message: t('guestpopup.label1'),
                 },
               ]}
             >
-              <Input placeholder="Full Name" />
+              <Input placeholder={t('strings.full')} />
             </Form.Item>
           </Col>
 
           <Col span={12}>
             <Form.Item
-              label="Country of Residence"
+              label={t('guestpopup.label2')}
               name="country"
-              rules={[{ required: true, message: 'Please enter country' }]}
+              rules={[{ required: true, message: t('guestpopup.label3') }]}
             >
-              <Select>
-                <Select.Option value="demo">Holiday House</Select.Option>
-                <Select.Option value="demo">Holiday House</Select.Option>
-              </Select>
+              <CountryDropdown onChange={(val) => setCountry(val)} />
             </Form.Item>
           </Col>
         </Row>
 
         <Row style={{ alignItems: 'center' }}>
           <Col span={12}>
-            <Form.Item label="E-mail" name="email" style={{ paddingRight: 20 }}>
-              <Input placeholder="Email" />
+            <Form.Item
+              label={t('strings.email')}
+              name="email"
+              style={{ paddingRight: 20 }}
+            >
+              <Input placeholder={t('strings.email')} />
             </Form.Item>
           </Col>
 
           <Col span={12}>
-            <Form.Item label="Phone" name="phone">
-              <Input placeholder="Phone" type="number" />
+            <Form.Item label={t('strings.phone')} name="phone">
+              <Input placeholder={t('strings.phone')} type="number" />
             </Form.Item>
           </Col>
         </Row>
@@ -128,7 +122,7 @@ const GuestPopup = (props) => {
           <Col span={12}>
             <Form.Item
               name="dob"
-              label="Date of Birth"
+              label={t('strings.dob')}
               style={{ paddingRight: 20 }}
             >
               <DatePicker />
@@ -136,7 +130,7 @@ const GuestPopup = (props) => {
           </Col>
 
           <Col span={12}>
-            <Form.Item name="gender" label="Gender">
+            <Form.Item name="gender" label={t('strings.gender')}>
               <Radio.Group name="radiogroup" defaultValue={1}>
                 <Radio value={1}>M</Radio>
                 <Radio value={2}>F</Radio>
@@ -149,28 +143,25 @@ const GuestPopup = (props) => {
         <Row style={{ alignItems: 'center' }}>
           <Col span={12}>
             <Form.Item
-              label="Type of Document"
+              label={t('guestpopup.label4')}
               name="typeOfDoc"
               style={{ paddingRight: 20 }}
               rules={[
                 {
                   required: true,
-                  message: 'required field',
+                  message: t('guestpopup.label5'),
                 },
               ]}
             >
-              <Select>
-                <Select.Option value="demo">Holiday House</Select.Option>
-                <Select.Option value="demo">Holiday House</Select.Option>
-              </Select>
+              <Input />
             </Form.Item>
           </Col>
 
           <Col span={12}>
             <Form.Item
-              label="Document Number"
+              label={t('guestpopup.label6')}
               name="docNo"
-              rules={[{ required: true, message: 'required field' }]}
+              rules={[{ required: true, message: t('guestpopup.label5') }]}
             >
               <Input />
             </Form.Item>
@@ -180,19 +171,16 @@ const GuestPopup = (props) => {
         <Row style={{ alignItems: 'center' }}>
           <Col span={12}>
             <Form.Item
-              label="Citizenship"
+              label={t('strings.citizenship')}
               name="citizenShip"
               style={{ paddingRight: 20 }}
             >
-              <Select>
-                <Select.Option value="demo">Holiday House</Select.Option>
-                <Select.Option value="demo">Holiday House</Select.Option>
-              </Select>
+              <RegionDropdown country={country} />
             </Form.Item>
           </Col>
 
           <Col span={12}>
-            <Form.Item label="PLace of Residence" name="place">
+            <Form.Item label={t('guestpopup.label8')} name="place">
               <Input />
             </Form.Item>
           </Col>
@@ -200,7 +188,7 @@ const GuestPopup = (props) => {
 
         <Row style={{ alignItems: 'center' }}>
           <Col span={24}>
-            <Form.Item label="Notes" name="notes">
+            <Form.Item label={t('strings.note')} name="notes">
               <Input.TextArea />
             </Form.Item>
           </Col>
@@ -210,10 +198,10 @@ const GuestPopup = (props) => {
           <Col span={24}>
             <Form.Item>
               <Button style={{ marginRight: 10 }} onClick={close1}>
-                Cancel
+                {t('strings.cancel')}
               </Button>
               <Button type="primary" htmlType="submit">
-                Save
+                {t('strings.save')}
               </Button>
             </Form.Item>
           </Col>
@@ -232,6 +220,7 @@ GuestPopup.propTypes = {
   visible: PropTypes.bool,
   handleCancel: PropTypes.func,
   handleOk: PropTypes.func,
+  toasterMessage: PropTypes.func,
 };
 GuestPopup.defaultProps = {
   editValues: {},
@@ -242,5 +231,6 @@ GuestPopup.defaultProps = {
   visible: false,
   handleCancel: () => {},
   handleOk: () => {},
+  toasterMessage: () => {},
 };
 export default GuestPopup;

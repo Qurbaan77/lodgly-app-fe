@@ -1,26 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
+import { useTranslation } from 'react-i18next';
 import './stats.css';
-import { Row, Col } from 'antd';
+import { Row, Col, Tooltip } from 'antd';
 import Chart from 'react-apexcharts';
 import Wrapper from '../wrapper';
 import { userInstance } from '../../axios/axiosconfig';
 import statsIcon from '../../assets/images/menu/stats-icon.png';
 import qst from '../../assets/images/menu/qst.png';
+import favicon from '../../assets/images/logo-mobile.png';
 import UserLock from '../userlock/userlock';
 
 const Stats = () => {
+  const { t } = useTranslation();
   const [topNavId, setTopNavId] = useState();
   const [subscribed, setSubscribed] = useState();
-  const [onTrial, setOnTrial] = useState();
+  const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
+  const [accomodationHasData, setAccomodationHasData] = useState(
+    'no-stats-data',
+  );
+  const [occupancyHasData, setOccupancyHasData] = useState('no-stats-data');
+  const [reservationCountryHasData, setReservationCountryHasData] = useState(
+    'no-stats-data',
+  );
+  const [reservationChannelHasData, setReservationChannelHasData] = useState(
+    'no-stats-data',
+  );
+  const [paceHasData, setPaceHasData] = useState('no-stats-data');
 
   const getData = async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
     if (response0.data.code === 200) {
-      const [{
-        days, isOnTrial, isSubscribed,
-      }] = response0.data.userSubsDetails;
+      const [
+        { days, isOnTrial, isSubscribed },
+      ] = response0.data.userSubsDetails;
       setDaysLeft(days);
       setSubscribed(isSubscribed);
       setOnTrial(isOnTrial);
@@ -33,69 +48,100 @@ const Stats = () => {
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
     <Wrapper fun={setTopNavId}>
-      {
-      hasAccess
-        ? (
-          <div className="stats-page">
-            <div className="page-header">
-              <h1>
-                <img src={statsIcon} alt="statsIcon" />
-                {' '}
-                Stats
-              </h1>
-            </div>
-
-            <div className="container">
-              <div className="accomandation-chart">
-                <Row>
-                  <Col span={24}>
-                    <AccommodationChart topNavId={topNavId} />
-                  </Col>
-                </Row>
-              </div>
-
-              <div className="occupancy-chart">
-                <Row>
-                  <Col span={24}>
-                    <OccupancyChart topNavId={topNavId} />
-                  </Col>
-                </Row>
-              </div>
-
-              <div className="reservation-chart">
-                <Row>
-                  <Col span={16} style={{ paddingRight: '20px' }}>
-                    <ReservationCountryChart />
-                  </Col>
-                  <Col span={8}>
-                    <ReservationChannelChart />
-                  </Col>
-                </Row>
-              </div>
-
-              <div className="pace-chart">
-                <Row>
-                  <Col span={24}>
-                    <PaceChart topNavId={topNavId} />
-                  </Col>
-                </Row>
-              </div>
-            </div>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
+        <body className="stats-page-view" />
+      </Helmet>
+      {hasAccess ? (
+        <div className="stats-page">
+          <div className="page-header">
+            <h1>
+              <img src={statsIcon} alt="statsIcon" />
+              {' '}
+              {t('stats.label2')}
+            </h1>
           </div>
-        )
-        : <UserLock />
-    }
+
+          <div className="container">
+            <Row>
+              <Col span={24}>
+                <div className={`accomandation-chart ${accomodationHasData}`}>
+                  <AccommodationChart
+                    topNavId={topNavId}
+                    setAccomodationHasData={setAccomodationHasData}
+                  />
+                </div>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col span={24}>
+                <div className={`occupancy-chart ${occupancyHasData}`}>
+                  <OccupancyChart
+                    topNavId={topNavId}
+                    setOccupancyHasData={setOccupancyHasData}
+                  />
+                </div>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col
+                span={16}
+                className="no-padding-mbl"
+                style={{ paddingRight: '20px' }}
+              >
+                <div
+                  className={`reservation-chart ${reservationCountryHasData}`}
+                >
+                  <ReservationCountryChart
+                    setReservationCountryHasData={setReservationCountryHasData}
+                  />
+                </div>
+              </Col>
+              <Col span={8}>
+                <div
+                  className={`reservation-chart ${reservationChannelHasData}`}
+                >
+                  <ReservationChannelChart
+                    setReservationChannelHasData={setReservationChannelHasData}
+                  />
+                </div>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col span={24}>
+                <div className={`pace-chart ${paceHasData}`}>
+                  <PaceChart
+                    topNavId={topNavId}
+                    setPaceHasData={setPaceHasData}
+                  />
+                </div>
+              </Col>
+            </Row>
+          </div>
+        </div>
+      ) : (
+        <UserLock />
+      )}
     </Wrapper>
   );
 };
 
 export default Stats;
 
-const AccommodationChart = ({ topNavId }) => {
-  const [currYear, setCurrYear] = useState();
-  const [prevYear, setPrevYear] = useState();
+const AccommodationChart = ({ topNavId, setAccomodationHasData }) => {
   const [currArr, setCurrArr] = useState();
   const [prevArr, setPrevArr] = useState();
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     async function getData() {
@@ -103,29 +149,36 @@ const AccommodationChart = ({ topNavId }) => {
         propertyId: localStorage.getItem('topNavId'),
       };
       const response = await userInstance.post('/getRevenue', values);
+      const currYearSum = response.data.currYearArr.reduce((a, b) => a + b, 0);
+      const prevYearSum = response.data.prevYearArr.reduce((a, b) => a + b, 0);
+      if (currYearSum > 0 || prevYearSum > 0) {
+        setShow(true);
+        setAccomodationHasData('');
+      }
       setCurrArr(response.data.currYearArr);
       setPrevArr(response.data.prevYearArr);
-      setPrevYear(response.data.currYear);
-      setCurrYear(response.data.prevYear);
     }
     getData();
-  }, [topNavId]);
+  }, [topNavId, setAccomodationHasData]);
 
   const state = {
     series: [
       {
-        name: currYear,
-        data: currArr,
+        name: new Date().getFullYear() - 1,
+        data: prevArr,
       },
       {
-        name: prevYear,
-        data: prevArr,
+        name: new Date().getFullYear(),
+        data: currArr,
       },
     ],
     options: {
       chart: {
         type: 'bar',
         height: 350,
+        toolbar: {
+          show,
+        },
       },
       plotOptions: {
         bar: {
@@ -182,12 +235,15 @@ const AccommodationChart = ({ topNavId }) => {
       },
     },
   };
-
+  const { t } = useTranslation();
   return (
     <div className="chart-body">
       <h3>
-        Accommodation revenue
-        <img src={qst} alt="qst" />
+        {t('stats.heading1')}
+        {' '}
+        <Tooltip title="This is accomodation chart" color="gold">
+          <img src={qst} alt="qst" />
+        </Tooltip>
       </h3>
 
       <div id="chart">
@@ -203,12 +259,18 @@ const AccommodationChart = ({ topNavId }) => {
 };
 
 AccommodationChart.propTypes = {
-  topNavId: PropTypes.number.isRequired,
+  topNavId: PropTypes.number,
+  setAccomodationHasData: PropTypes.string,
+};
+AccommodationChart.defaultProps = {
+  topNavId: 0,
+  setAccomodationHasData: '',
 };
 
-const OccupancyChart = ({ topNavId }) => {
+const OccupancyChart = ({ topNavId, setOccupancyHasData }) => {
   const [currArr, setCurrArr] = useState([]);
   const [prevArr, setPrevArr] = useState([]);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     async function getData() {
@@ -216,11 +278,17 @@ const OccupancyChart = ({ topNavId }) => {
         propertyId: localStorage.getItem('topNavId'),
       };
       const response = await userInstance.post('/getOccupancy', values);
+      const currYearSum = response.data.currYearArr.reduce((a, b) => a + b, 0);
+      const prevYearSum = response.data.prevYearArr.reduce((a, b) => a + b, 0);
+      if (currYearSum > 0 || prevYearSum > 0) {
+        setShow(true);
+        setOccupancyHasData('');
+      }
       setPrevArr(response.data.prevYearArr);
       setCurrArr(response.data.currYearArr);
     }
     getData();
-  }, [topNavId]);
+  }, [topNavId, setOccupancyHasData]);
 
   const state = {
     series: [
@@ -239,7 +307,7 @@ const OccupancyChart = ({ topNavId }) => {
         height: 350,
         stacked: true,
         toolbar: {
-          show: false,
+          show,
         },
         zoom: {
           enabled: false,
@@ -318,10 +386,15 @@ const OccupancyChart = ({ topNavId }) => {
 };
 
 OccupancyChart.propTypes = {
-  topNavId: PropTypes.number.isRequired,
+  topNavId: PropTypes.number,
+  setOccupancyHasData: PropTypes.string,
+};
+OccupancyChart.defaultProps = {
+  topNavId: 0,
+  setOccupancyHasData: '',
 };
 
-const ReservationCountryChart = () => {
+const ReservationCountryChart = ({ setReservationCountryHasData }) => {
   const [country, setCountry] = useState([]);
   const [average, setAverage] = useState([]);
 
@@ -329,18 +402,25 @@ const ReservationCountryChart = () => {
     async function getData() {
       const response = await userInstance.post('/getCountryReport');
       if (response.data.code === 200) {
+        if (
+          response.data.country.length > 0
+          && response.data.average.length > 0
+        ) {
+          setReservationCountryHasData('');
+        }
         setCountry(response.data.country);
         setAverage(response.data.average);
       }
     }
     getData();
-  }, []);
+  }, [setReservationCountryHasData]);
 
   const state = {
-
-    series: [{
-      data: average,
-    }],
+    series: [
+      {
+        data: average,
+      },
+    ],
 
     options: {
       chart: {
@@ -364,12 +444,15 @@ const ReservationCountryChart = () => {
       },
     },
   };
-
+  const { t } = useTranslation();
   return (
     <div className="chart-body">
       <h3>
-        Reservations per country
-        <img src={qst} alt="qst" />
+        {t('stats.label4')}
+        {' '}
+        <Tooltip title="This is accomodation chart" color="gold">
+          <img src={qst} alt="qst" />
+        </Tooltip>
       </h3>
 
       <div id="chart">
@@ -382,6 +465,13 @@ const ReservationCountryChart = () => {
       </div>
     </div>
   );
+};
+
+ReservationCountryChart.propTypes = {
+  setReservationCountryHasData: PropTypes.string,
+};
+ReservationCountryChart.defaultProps = {
+  setReservationCountryHasData: '',
 };
 
 const ReservationChannelChart = () => {
@@ -397,7 +487,6 @@ const ReservationChannelChart = () => {
         markers: {
           strokeColor: 'transparent',
           fillColors: ['#82858C', '#7FBD34', '#FAB52C'],
-
         },
       },
       fill: {
@@ -409,6 +498,7 @@ const ReservationChannelChart = () => {
           options: {
             chart: {
               width: 200,
+              height: 200,
             },
             legend: {
               position: 'bottom',
@@ -418,12 +508,15 @@ const ReservationChannelChart = () => {
       ],
     },
   };
-
+  const { t } = useTranslation();
   return (
     <div className="chart-body">
       <h3>
-        Reservations per channel
-        <img src={qst} alt="qst" />
+        {t('stats.label5')}
+        {' '}
+        <Tooltip title="This is accomodation chart" color="gold">
+          <img src={qst} alt="qst" />
+        </Tooltip>
       </h3>
 
       <div className="donut">
@@ -438,11 +531,12 @@ const ReservationChannelChart = () => {
   );
 };
 
-const PaceChart = ({ topNavId }) => {
+const PaceChart = ({ topNavId, setPaceHasData }) => {
   const [currYear, setCurrYear] = useState();
   const [prevYear, setPrevYear] = useState();
   const [currArr, setCurrArr] = useState([]);
   const [prevArr, setPrevArr] = useState([]);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     const values = {
@@ -450,6 +544,12 @@ const PaceChart = ({ topNavId }) => {
     };
     async function getData() {
       const response = await userInstance.post('/getPace', values);
+      const currYearSum = response.data.currYearArr.reduce((a, b) => a + b, 0);
+      const prevYearSum = response.data.prevYearArr.reduce((a, b) => a + b, 0);
+      if (currYearSum > 0 || prevYearSum > 0) {
+        setShow(true);
+        setPaceHasData('');
+      }
       setPrevArr(response.data.prevYearArr);
       setCurrArr(response.data.currYearArr);
 
@@ -457,7 +557,7 @@ const PaceChart = ({ topNavId }) => {
       setCurrYear(response.data.prevYear);
     }
     getData();
-  }, [topNavId]);
+  }, [topNavId, setPaceHasData]);
 
   const state = {
     series: [
@@ -480,6 +580,9 @@ const PaceChart = ({ topNavId }) => {
         animations: {
           enabled: false,
         },
+        toolbar: {
+          show,
+        },
       },
       legend: {
         labels: {
@@ -489,7 +592,6 @@ const PaceChart = ({ topNavId }) => {
         markers: {
           strokeColor: 'transparent',
           fillColors: ['#82858C', '#FAB52C'],
-
         },
       },
       markers: {
@@ -522,12 +624,15 @@ const PaceChart = ({ topNavId }) => {
       },
     },
   };
-
+  const { t } = useTranslation();
   return (
     <div className="chart-body">
       <h3>
-        Pace report
-        <img src={qst} alt="qst" />
+        {t('stats.label6')}
+        {' '}
+        <Tooltip title="This is accomodation chart" color="gold">
+          <img src={qst} alt="qst" />
+        </Tooltip>
       </h3>
 
       <div id="chart">
@@ -544,5 +649,10 @@ const PaceChart = ({ topNavId }) => {
 };
 
 PaceChart.propTypes = {
-  topNavId: PropTypes.number.isRequired,
+  topNavId: PropTypes.number,
+  setPaceHasData: PropTypes.string,
+};
+PaceChart.defaultProps = {
+  topNavId: 0,
+  setPaceHasData: '',
 };

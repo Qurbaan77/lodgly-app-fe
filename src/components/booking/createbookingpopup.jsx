@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 // import { useHistory } from 'react-router-dom';
 import './booking.css';
+import { toast } from 'react-toastify';
 import {
   Form,
   Select,
@@ -20,7 +21,6 @@ import {
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
-import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
@@ -31,7 +31,7 @@ let j = 1;
 
 const CreateBookingPopup = (props) => {
   const {
-    getData, close, visible, handleOk, handleCancel,
+    getData, close, visible, handleOk, handleCancel, toasterMessage,
   } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
@@ -71,10 +71,6 @@ const CreateBookingPopup = (props) => {
   const [unitData, setUnitData] = useState([]);
   // const [currentUnit, setCurrentUnit] = useState({});
   const [unitTypeData, setUnitTypeData] = useState([]);
-
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
-
   const [propertyData, setPropertyData] = useState([]);
   const [currentPropertyId, setCurrentPropertyId] = useState(null);
   // const history = useHistory();
@@ -173,11 +169,12 @@ const CreateBookingPopup = (props) => {
     const response = await userInstance.post('/addBooking', values);
     const { msg } = response.data;
     if (response.data.code === 200) {
+      // toasterMessage('success', msg);
       getData();
       close();
+      toast.success('Booking created successfully!', { containerId: 'B' });
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toasterMessage('error', msg);
     }
 
     form.resetFields();
@@ -307,6 +304,11 @@ const CreateBookingPopup = (props) => {
                 label={t('strings.full')}
                 name={[el, 'fullName']}
                 style={{ paddingRight: 20 }}
+                rules={[
+                  {
+                    required: 'true',
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -317,6 +319,11 @@ const CreateBookingPopup = (props) => {
                 label={t('strings.email')}
                 name={[el, 'email']}
                 style={{ paddingRight: 20 }}
+                rules={[
+                  {
+                    required: 'true',
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -327,12 +334,17 @@ const CreateBookingPopup = (props) => {
                 label={t('strings.country')}
                 name={[el, 'country']}
                 style={{ paddingRight: 20 }}
+                rules={[
+                  {
+                    required: 'true',
+                  },
+                ]}
               >
                 <Select showSearch>
                   {countryList()
                     .getData()
                     .map((ele) => (
-                      <Select.Option value={ele.label}>
+                      <Select.Option value={ele.label} key={ele.label}>
                         {ele.label}
                       </Select.Option>
                     ))}
@@ -375,14 +387,13 @@ const CreateBookingPopup = (props) => {
 
   return (
     <Modal
-      title="Create Booking"
+      title={t('bookingpop.heading')}
       name="modal1"
       visible={visible}
       onOk={handleOk}
       onCancel={handleCancel}
       wrapClassName="create-booking-modal"
     >
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={12}>
@@ -394,7 +405,7 @@ const CreateBookingPopup = (props) => {
               rules={[
                 {
                   required: true,
-                  message: 'Reservation date is required',
+                  message: t('bookingpop.rule1'),
                 },
               ]}
             >
@@ -403,10 +414,7 @@ const CreateBookingPopup = (props) => {
           </Col>
 
           <Col span={12}>
-            <Radio.Group
-              name="radiogroup"
-              defaultValue={1}
-            >
+            <Radio.Group name="radiogroup" defaultValue={1}>
               <Radio value={1}>{t('strings.confirmed')}</Radio>
               <Radio value={2}>{t('strings.option')}</Radio>
             </Radio.Group>
@@ -422,7 +430,7 @@ const CreateBookingPopup = (props) => {
               rules={[
                 {
                   required: true,
-                  message: 'Property name is required',
+                  message: t('bookingpop.rule2'),
                 },
               ]}
             >
@@ -431,9 +439,7 @@ const CreateBookingPopup = (props) => {
                 onSelect={(value, event) => fun1(value, event)}
               >
                 {propertyData.map((el) => (
-                  <Select.Option value={el.id}>
-                    {el.propertyName}
-                  </Select.Option>
+                  <Select.Option value={el.id}>{el.propertyName}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -447,7 +453,7 @@ const CreateBookingPopup = (props) => {
               rules={[
                 {
                   required: true,
-                  message: 'Unit is required',
+                  message: t('bookingpop.rule3'),
                 },
               ]}
             >
@@ -465,7 +471,7 @@ const CreateBookingPopup = (props) => {
           <Col span={8}>
             <Form.Item
               className="comision"
-              label={t('strings.select')}
+              label={t('strings.chanel_commission')}
               name="channel"
             >
               <Select
@@ -478,6 +484,7 @@ const CreateBookingPopup = (props) => {
               </Select>
 
               <Input
+                placeholder="0,00"
                 name="commission"
                 style={{
                   width: '26%',
@@ -490,7 +497,7 @@ const CreateBookingPopup = (props) => {
                 rules={[
                   {
                     required: true,
-                    message: 'Commission is required',
+                    message: t('bookingpop.rule4'),
                   },
                 ]}
               />
@@ -507,7 +514,7 @@ const CreateBookingPopup = (props) => {
               rules={[
                 {
                   required: true,
-                  message: 'Required Field',
+                  message: t('bookingpop.rule5'),
                 },
               ]}
             >
@@ -564,10 +571,14 @@ const CreateBookingPopup = (props) => {
 
                     <Row>
                       <Col span={24}>
-                        <div className="additional-add" onClick={addMore} role="presentation">
+                        <div
+                          className="additional-add"
+                          onClick={addMore}
+                          role="presentation"
+                        >
                           <PlusOutlined />
                           {' '}
-                          {t('bookingpop.label12')}
+                          {t('bookingpop.label2')}
                         </div>
                       </Col>
                     </Row>
@@ -627,7 +638,7 @@ const CreateBookingPopup = (props) => {
                       rules={[
                         {
                           required: true,
-                          message: 'Required Field',
+                          message: t('bookingpop.rule5'),
                         },
                       ]}
                       onChange={(e) => setPrice(e.target.value)}
@@ -687,7 +698,7 @@ const CreateBookingPopup = (props) => {
                   </label>
                   <Form.Item name="discountType">
                     <Select
-                      placeholder="Discount type"
+                      placeholder={t('bookingpop.rule6')}
                       onSelect={(value) => handleDiscount(value)}
                       defaultValue="%"
                     >
@@ -737,7 +748,11 @@ const CreateBookingPopup = (props) => {
             </Col>
 
             <Col span={24}>
-              <div className="srvice-heading" onClick={addMoreService} role="presentation">
+              <div
+                className="srvice-heading"
+                onClick={addMoreService}
+                role="presentation"
+              >
                 <PlusOutlined />
                 {' '}
                 {t('bookingpop.label8')}
@@ -768,7 +783,7 @@ const CreateBookingPopup = (props) => {
                             <Form.Item name={[ele, 'serviceName']}>
                               <Select
                                 style={{ width: '100px' }}
-                                placeholder="Select Service"
+                                placeholder={t('bookingpop.rule7')}
                                 onSelect={(value, event) => fun2(value, event)}
                               >
                                 {serviceData.map((element) => (
@@ -782,7 +797,7 @@ const CreateBookingPopup = (props) => {
                           <Col span={4}>
                             <Form.Item name={[ele, 'servicePrice']}>
                               <Select
-                                placeholder="Rate"
+                                placeholder={t('bookingpop.rule9')}
                                 onSelect={(value) => setServicePrice(value)}
                               >
                                 <Select.Option
@@ -802,7 +817,7 @@ const CreateBookingPopup = (props) => {
                             <Form.Item name={[ele, 'serviceQuantity']}>
                               <Input
                                 type="number"
-                                placeholder="Quantity"
+                                placeholder={t('bookingpop.rule8')}
                                 onChange={(e) => setServiceAmt(e.target.value)}
                               />
                             </Form.Item>
@@ -961,6 +976,7 @@ CreateBookingPopup.propTypes = {
   handleCancel: PropTypes.func,
   handleOk: PropTypes.func,
   getData: PropTypes.func,
+  toasterMessage: PropTypes.func,
   visible: PropTypes.bool,
 };
 CreateBookingPopup.defaultProps = {
@@ -968,6 +984,7 @@ CreateBookingPopup.defaultProps = {
   handleCancel: () => {},
   handleOk: () => {},
   getData: () => {},
+  toasterMessage: () => {},
   visible: false,
 };
 

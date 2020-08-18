@@ -1,8 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import * as Sentry from '@sentry/react';
 import './index.css';
 import App from './App';
 import './i18n';
+import { SENTRY_DSN } from './config/keys';
+
+Sentry.init({ dsn: SENTRY_DSN });
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

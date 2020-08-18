@@ -120,7 +120,7 @@ top: 12px;
 }
 
 .search-box {
-display: inline-block;
+display: none;
 padding-right: 30px;
 vertical-align: middle;
 }
@@ -221,4 +221,13 @@ margin-right: 10px;
 
 .ant-menu-submenu .ant-menu-submenu-arrow {
   display: none;
+}
+.main-menu li .menu-arrow {
+  width: 11px;
+  position: absolute;
+  right: 0;
+  top: 20px;
+}
+.hide-prop {
+  display: none !important
 }

@@ -47,6 +47,7 @@ body {
 .property-info ul {
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
 .property-info ul li {
@@ -60,7 +61,7 @@ body {
   font-size: 12px;
 }
 .property-info h3 {
-  padding-bottom: 20px;
+  padding-bottom: 5px;
 }
 
 .property-info ul span {
@@ -71,6 +72,9 @@ body {
   color: #999;
   margin-right: 12px;
   vertical-align: top;
+}
+.property {
+  cursor: pointer;
 }
 
 .page-header span {
@@ -130,7 +134,7 @@ body {
 }
 
 .ant-input {
-  border: 1.5px solid #eaeaea !important;
+  border: 1px solid #eaeaea !important;
   border-radius: 0;
   padding: 8px 15px !important;
   height: auto;
@@ -534,10 +538,12 @@ body {
 
 .group-icon {
   width: 10%;
+  text-align: right;
 }
 
 .group-name {
-  width: 50%;
+  width: 85%;
+  padding-left: 15px;
 }
 
 .group-people {
@@ -545,8 +551,8 @@ body {
 }
 
 .group-action {
-  width: 10%;
-  text-align: center;
+  width: 15%;
+  text-align: right;
 }
 
 .group-action .anticon-bell {
@@ -566,8 +572,12 @@ body {
 }
 
 .panel-box.units .group-action span {
-  padding: 0px 6px;
+  padding: 0px 10px;
   font-size: 20px;
+}
+
+.panel-box.units:hover input {
+  background: #f7f7f7;
 }
 
 .panel-box.units .group-action {
@@ -583,6 +593,20 @@ body {
   background: #ffffff;
   transition: all 0.5s;
   cursor: pointer;
+  margin-top: 30px;
+  position: relative;
+}
+
+.panel-box.units:before {
+  content: "";
+  width: 15px;
+  height: 15px;
+  background: #ddd;
+  border-radius: 100%;
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .panel-box.units:hover {
@@ -591,8 +615,9 @@ body {
 
 
 .panel-box.units.editunit input {
-  border: none;
+  border: none!important;
   transition: all 0.5s;
+  padding:0!important;
 }
 
 .panel-box.units.editunit:hover input {
@@ -601,7 +626,7 @@ body {
 
 
 .panel-box.units.editunit input:focus {
-  border: none;
+  border: none!important;;
   outline: none;
 }
 
@@ -699,7 +724,7 @@ body {
 }
 
 .ant-select-selector {
-  border: 1.5px solid #eaeaea !important;
+  border: 1px solid #eaeaea !important;
   height: 40px !important;
 }
 
@@ -710,9 +735,9 @@ body {
 }
 
 .unit-filter .ant-picker-range {
-  border: 1.5px solid #eaeaea;
+  border: 1px solid #eaeaea;
   line-height: 2;
-  padding: 6px 11px 6px;
+  padding: 8px 11px 8px;
 }
 
 .d-flex {
@@ -725,12 +750,12 @@ body {
 }
 
 .unit-filter .ant-picker {
-  border: 1.5px solid #eaeaea;
+  border: 1px solid #eaeaea;
   line-height: 2;
-  padding: 6px 11px 6px;
+  padding: 8px 11px 8px;
 }
 .update-cal button {
-  margin-top: -4px;
+  margin-top: -6px;
   margin-left: 10px;
   font-size: 14px;
 }
@@ -750,7 +775,7 @@ body {
 }
 
 .unittype-calendar {
-  max-width: 1069px;
+  max-width: 100%;
   border: 1px solid #efefef;
   background: #fff;
 }
@@ -773,6 +798,7 @@ body {
 .services-list {
   background: #fff;
   padding: 20px;
+  overflow-x: auto;
 }
 
 .service-margin a{
@@ -839,7 +865,8 @@ body {
 
 
 .panel-box.units input {
-  border: none;
+  border: none!important;
+  padding: 0!important
 }
 
 .panel-box.units input + span {
@@ -847,7 +874,7 @@ body {
 }
 
 .panel-box.units input:focus {
-  border: none;
+  border: none!important;
   box-shadow: none;
   outline: none;
 }
@@ -872,11 +899,12 @@ margin: 0;
   width: 15%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 .editunitname .can-btn {
   color: #8ea7f1;
+  margin-right: 20px;
 }
 
 .editunitname .sav-btn {
@@ -898,7 +926,7 @@ margin: 0;
 }
 
 #country {
-  border: 1.5px solid #eaeaea !important;
+  border: 1px solid #eaeaea !important;
   border-radius: 0;
   padding: 8px 15px !important;
   height: auto;
@@ -906,16 +934,48 @@ margin: 0;
 }
 
 #state {
-      border: 1.5px solid #eaeaea !important;
+      border: 1px solid #eaeaea !important;
   border-radius: 0;
   padding: 8px 15px !important;
   height: auto;
   width: 100%;
 }
 
+.service-margin div:hover {
+  color: #fab52c;
+}
+
+.service-margin div {
+  cursor: pointer;
+}
+
+
+.add-unit-link {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.add-unit-link span {
+  color: #fab52c;
+}
+
+.add-unit-link:hover, .add-unit-link:focus {
+  background: transparent;
+  box-shadow: none;
+}
+
+.year-select .ant-btn {
+  border: none;
+  color: #f9b42b;
+  box-shadow: none;
+}
+
+
 @media screen and (min-width: 1367px) {
   .unittype-calendar {
-    max-width: 1400px;
+    max-width: 100%;
   }
 }
 

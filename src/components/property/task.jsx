@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Helmet from 'react-helmet';
 import './property.css';
 import {
   Form,
@@ -19,11 +20,12 @@ import {
   PlusOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-
+import UserLock from '../userlock/userlock';
 import people1 from '../../assets/images/people-1.png';
 import people2 from '../../assets/images/people-2.png';
 import people3 from '../../assets/images/people-3.jpg';
 import people4 from '../../assets/images/people-4.jpg';
+import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import DeletePopup from './deletepopup';
@@ -41,6 +43,9 @@ const Task = () => {
   const [group, setGroup] = useState([]);
   const [currTaskId, setCurrTaskId] = useState(0);
   const [isGroup, sertIsGroup] = useState(true);
+  const [subscribed, setSubscribed] = useState();
+  const [onTrial, setOnTrial] = useState(true);
+  const [daysLeft, setDaysLeft] = useState();
 
   const columns = [
     {
@@ -84,6 +89,7 @@ const Task = () => {
   ];
 
   const show = () => {
+    setNotifyType('');
     form.resetFields();
     setVisible(true);
   };
@@ -99,6 +105,15 @@ const Task = () => {
   };
 
   const getData = async () => {
+    const res = await userInstance.get('/getUserSubscriptionStatus');
+    if (res.data.code === 200) {
+      const [{
+        days, isOnTrial, isSubscribed,
+      }] = res.data.userSubsDetails;
+      setDaysLeft(parseInt(days, 10));
+      setSubscribed(JSON.parse(isSubscribed));
+      setOnTrial(JSON.parse(isOnTrial));
+    }
     const values = {
       groupId: localStorage.getItem('groupId'),
     };
@@ -124,6 +139,9 @@ const Task = () => {
   };
 
   const saveData = async (values) => {
+    if (currTaskId) {
+      values.id = currTaskId;
+    }
     values.groupId = localStorage.getItem('groupId');
     const response = await userInstance.post('/addTask', values);
     const statusCode = response.data.code;
@@ -158,8 +176,8 @@ const Task = () => {
   };
 
   const edit = async (data) => {
+    setNotifyType('');
     form.setFieldsValue({
-      id: data.id,
       taskName: data.taskName,
       note: data.note,
       tags: data.tags,
@@ -179,172 +197,201 @@ const Task = () => {
     getGroupData();
   }, []);
 
+  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+
   return (
     <Wrapper>
-      <div className="cleaning-group">
-        <div className="page-header">
-          <h1>
-            <HomeOutlined />
-            {' '}
-            {localStorage.getItem('groupId')
-              ? group.groupName
-              : 'No group is Selected'}
-          </h1>
-
-          <div className="cleaning-button">
-            <div className="user-avatar">
-              <PlusOutlined />
-              <img src={people1} alt="people1" />
-              <img src={people2} alt="people2" />
-              <img src={people3} alt="people3" />
-              <img src={people4} alt="people4" />
-            </div>
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={show}
-              disabled={isGroup}
-            >
-              {t('task.groupbtn')}
-            </Button>
-          </div>
-        </div>
-
-        <div className="panel-container">
-          <Table columns={columns} dataSource={tasks} />
-        </div>
-
-        <div className="clean-filter">
-          <Row>
-            <Col span={12}>
-              <Form.Item
-                label={t('task.title1')}
-                style={{ marginBottom: 0, textAlign: 'left' }}
-              >
-                <Form.Item
-                  name="year"
-                  style={{
-                    display: 'inline-block',
-                    width: 'calc(10% - 5px)',
-                    marginRight: 8,
-                  }}
-                >
-                  <Input placeholder="" />
-                </Form.Item>
-                <Form.Item
-                  name="month"
-                  style={{
-                    display: 'inline-block',
-                    width: 'calc(30% - 5px)',
-                    marginRight: 8,
-                  }}
-                >
-                  <Select placeholder={t('strings.day')}>
-                    <Option value="Day">{t('strings.day')}</Option>
-                    <Option value="Week">{t('strings.week')}</Option>
-                    <Option value="Month">{t('strings.month')}</Option>
-                  </Select>
-                </Form.Item>
-
-                <Form.Item name="month" style={{ display: 'inline-block' }}>
-                  <Checkbox>{t('task.title4')}</Checkbox>
-                </Form.Item>
-              </Form.Item>
-            </Col>
-
-            <Col span={12}>
-              <Form.Item>
-                <Form.Item
-                  name="date-picker"
-                  label={t('task.title5')}
-                  style={{
-                    display: 'inline-block',
-                    width: 'calc(40% - 5px)',
-                    marginRight: 8,
-                  }}
-                >
-                  <DatePicker />
-                </Form.Item>
-
-                <Form.Item
-                  name="date-picker"
-                  label={t('task.title6')}
-                  style={{ display: 'inline-block', width: 'calc(40% - 5px)' }}
-                >
-                  <DatePicker />
-                </Form.Item>
-              </Form.Item>
-            </Col>
-          </Row>
-        </div>
-      </div>
-
-      <Modal
-        title={t('task.title7')}
-        visible={visible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        wrapClassName="task-modal"
-      >
-        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
-        <Form form={form} name="basic" onFinish={onFinish}>
-          <Form.Item label="ID" name="id" hidden>
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Task"
-            name="taskName"
-            rules={[
-              { required: true, message: 'Please input your Task name!' },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label="Note"
-            name="note"
-            rules={[{ required: true, message: 'Please input your note!' }]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item name="tags">
-            <Select defaultValue="Select" style={{ width: 120 }}>
-              <Option value="Approved">Approved</Option>
-              <Option value="Waiting">Waiting</Option>
-              <Option value="Decline">Decline</Option>
-              <Option value="In Review">In Review</Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item className="text-center">
-            <Button
-              style={{ marginRight: 10 }}
-              onClick={() => {
-                setVisible(false);
-              }}
-            >
-              {t('strings.cancel')}
-            </Button>
-            <Button type="primary" htmlType="submit">
-              {t('strings.save')}
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
-      <Modal
-        visible={visible2}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        wrapClassName="delete-modal"
-      >
-        <DeletePopup
-          dataObject={() => remove()}
-          cancel={() => handleCancel()}
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
         />
-      </Modal>
+        <body className="task-page-view" />
+      </Helmet>
+      {
+        hasAccess
+          ? (
+            <>
+              <div className="cleaning-group">
+                <div className="page-header">
+                  <h1>
+                    <HomeOutlined />
+                    {' '}
+                    {localStorage.getItem('groupId')
+                      ? group.groupName
+                      : t('task.heading')}
+                  </h1>
+
+                  <div className="cleaning-button">
+                    <div className="user-avatar">
+                      <PlusOutlined />
+                      <img src={people1} alt="people1" />
+                      <img src={people2} alt="people2" />
+                      <img src={people3} alt="people3" />
+                      <img src={people4} alt="people4" />
+                    </div>
+                    <Button
+                      type="primary"
+                      icon={<PlusOutlined />}
+                      onClick={show}
+                      disabled={isGroup}
+                    >
+                      {t('task.groupbtn')}
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="panel-container">
+                  <Table columns={columns} dataSource={tasks} />
+                </div>
+
+                <div className="clean-filter">
+                  <Row>
+                    <Col span={12}>
+                      <Form.Item
+                        label={t('task.title1')}
+                        style={{ marginBottom: 0, textAlign: 'left' }}
+                      >
+                        <Form.Item
+                          name="year"
+                          style={{
+                            display: 'inline-block',
+                            width: 'calc(10% - 5px)',
+                            marginRight: 8,
+                          }}
+                        >
+                          <Input placeholder="" />
+                        </Form.Item>
+                        <Form.Item
+                          name="month"
+                          style={{
+                            display: 'inline-block',
+                            width: 'calc(30% - 5px)',
+                            marginRight: 8,
+                          }}
+                        >
+                          <Select placeholder={t('strings.day')}>
+                            <Option value="Day">{t('strings.day')}</Option>
+                            <Option value="Week">{t('strings.week')}</Option>
+                            <Option value="Month">{t('strings.month')}</Option>
+                          </Select>
+                        </Form.Item>
+
+                        <Form.Item name="month" style={{ display: 'inline-block' }}>
+                          <Checkbox>{t('task.title4')}</Checkbox>
+                        </Form.Item>
+                      </Form.Item>
+                    </Col>
+
+                    <Col span={12}>
+                      <Form.Item>
+                        <Form.Item
+                          name="date-picker"
+                          label={t('task.title5')}
+                          style={{
+                            display: 'inline-block',
+                            width: 'calc(40% - 5px)',
+                            marginRight: 8,
+                          }}
+                        >
+                          <DatePicker />
+                        </Form.Item>
+
+                        <Form.Item
+                          name="date-picker"
+                          label={t('task.title6')}
+                          style={{ display: 'inline-block', width: 'calc(40% - 5px)' }}
+                        >
+                          <DatePicker />
+                        </Form.Item>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </div>
+              </div>
+
+              <Modal
+                title={t('task.title7')}
+                visible={visible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                wrapClassName="task-modal"
+              >
+                <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
+                <Form form={form} name="basic" onFinish={onFinish}>
+
+                  <Form.Item
+                    label="Task"
+                    name="taskName"
+                    rules={[{ required: true, message: t('task.rules') }]}
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="Note"
+                    name="note"
+                    rules={[{ required: true, message: t('task.rules1') }]}
+                  >
+                    <Input />
+                  </Form.Item>
+
+                  <Form.Item name="tags">
+                    <Select defaultValue="Select" style={{ width: 120 }}>
+                      <Option value="Approved">
+                        {' '}
+                        {t('task.option1')}
+                      </Option>
+                      <Option value="Waiting">
+                        {' '}
+                        {t('task.option2')}
+                      </Option>
+                      <Option value="Decline">
+                        {' '}
+                        {t('task.option3')}
+                      </Option>
+                      <Option value="In Review">
+                        {' '}
+                        {t('task.option4')}
+                      </Option>
+                    </Select>
+                  </Form.Item>
+
+                  <Form.Item className="text-center">
+                    <Button
+                      className="border-btn"
+                      style={{ marginRight: 10 }}
+                      onClick={() => {
+                        setVisible(false);
+                      }}
+                    >
+                      {t('strings.cancel')}
+                    </Button>
+                    <Button type="primary" htmlType="submit">
+                      {t('strings.save')}
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </Modal>
+              <Modal
+                visible={visible2}
+                onOk={handleOk}
+                onCancel={handleCancel}
+                wrapClassName="delete-modal"
+              >
+                <DeletePopup
+                  dataObject={() => remove()}
+                  cancel={() => handleCancel()}
+                />
+              </Modal>
+            </>
+          )
+          : <UserLock />
+      }
     </Wrapper>
   );
 };

@@ -49,7 +49,7 @@
 }
 
 .forget-box input {
-    border: 1.5px solid #eaeaea!important;
+    border: 1px solid #eaeaea!important;
     border-radius: 0;
     padding: 8px 15px!important;
     height: auto;
@@ -92,14 +92,14 @@
     border-radius: 0;
     padding: 8px 10px;
     background: transparent;
-    border: 1.5px solid #eaeaea;
+    border: 1px solid #eaeaea;
     color: #999;
     height: auto;
 }
 
 .ant-btn.google-btn:hover, .ant-btn.google-btn:focus {
     background: transparent;
-    border: 1.5px solid #e2e2e2;
+    border: 1px solid #e2e2e2;
     outline: none;
     box-shadow: none;
     color: #525252;

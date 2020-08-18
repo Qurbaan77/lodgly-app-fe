@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import './forget.css';
 import { Form, Input, Button } from 'antd';
+import { useTranslation } from 'react-i18next';
 import logo from '../../assets/images/logo.jpg';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 
 const Forget = () => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
 
   const onFinish = async (values) => {
+    const companyName = window.location.hostname.split('.');
+    values.company = companyName[0];
     const response = await userInstance.post('/resetpassword', values);
     const statusCode = response.data.code;
     const { msg } = response.data;
@@ -39,8 +43,13 @@ const Forget = () => {
                 <img src={logo} alt="Logo" />
               </div>
               <div className="forget-form">
-                <h1>Get a new password</h1>
-                <p>Enter your email address to reset your password</p>
+                <h1>
+                  {' '}
+                  {t('forget.heading1')}
+                </h1>
+                <p>
+                  {t('forget.label2')}
+                </p>
                 <div className="forget-box">
                   <div>
                     <Form
@@ -52,16 +61,16 @@ const Forget = () => {
                       onFinish={onFinish}
                     >
                       <Form.Item
-                        label="E-mail Address"
+                        label={t('forget.label3')}
                         name="email"
                         rules={[
                           {
                             type: 'email',
-                            message: 'The input is not valid E-mail!',
+                            message: t('forget.label5'),
                           },
                           {
                             required: true,
-                            message: 'Please enter your E-mail Address!',
+                            message: t('forget.label4'),
                           },
                         ]}
                       >
@@ -74,7 +83,7 @@ const Forget = () => {
                           className="forget-btn"
                           htmlType="submit"
                         >
-                          Submit
+                          {t('forget.label6')}
                         </Button>
                       </Form.Item>
                     </Form>

@@ -1,7 +1,9 @@
 import React, {
   useEffect, useState, useCallback,
 } from 'react';
+import Helmet from 'react-helmet';
 import './invoice.css';
+import { useTranslation } from 'react-i18next';
 import {
   Button,
   Tooltip,
@@ -15,6 +17,7 @@ import {
   PlusOutlined, DeleteOutlined, FormOutlined, MoreOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
+import favicon from '../../assets/images/logo-mobile.png';
 
 // import { Table } from 'antd';
 import invoice from '../../assets/images/invoice.jpg';
@@ -35,6 +38,7 @@ import DeletePopup from './deletepopup';
 import UserLock from '../userlock/userlock';
 
 const Invoice = () => {
+  const { t } = useTranslation();
   // const { Option } = Select;
   const [topNavId, setTopNavId] = useState(null);
   const [visible, setVisible] = useState(false);
@@ -57,7 +61,7 @@ const Invoice = () => {
   const [removeId, setDeleteId] = useState(null);
   const [selectAllCheck, setSelectAllCheck] = useState(false);
   const [subscribed, setSubscribed] = useState();
-  const [onTrial, setOnTrial] = useState();
+  const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
 
   function useUpdate() {
@@ -112,10 +116,10 @@ const Invoice = () => {
       const data = invoiceData.filter((el) => el.id !== deleteId);
       setInvoiceData([...data]);
       setNotifyType('success');
-      setNotifyMsg('Invoice Deleted Successfully');
+      setNotifyMsg(t('invoice.rule1'));
     } else {
       setNotifyType('error');
-      setNotifyMsg('some error occured');
+      setNotifyMsg(t('invoice.rule2'));
     }
   };
 
@@ -271,30 +275,30 @@ const Invoice = () => {
 
   const enableButton = (
     <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-      Add Invoice
+      {t('invoice.button1')}
     </Button>
   );
   const disabledButton = (
-    <Tooltip title="You are not authorize to create Invoice" color="gold">
+    <Tooltip title={t('invoice.tootltip')} color="gold">
       <Button
         type="primary"
         icon={<PlusOutlined />}
         onClick={show}
         disabled
       >
-        Add Invoice
+        {t('invoice.button1')}
       </Button>
     </Tooltip>
   );
   const propertySelectButton = (
-    <Tooltip title="please select property from top navbar" color="gold">
+    <Tooltip title={t('invoice.tootltip1')} color="gold">
       <Button
         type="primary"
         icon={<PlusOutlined />}
         onClick={show}
         disabled
       >
-        Add Invoice
+        {t('invoice.button1')}
       </Button>
     </Tooltip>
   );
@@ -305,18 +309,18 @@ const Invoice = () => {
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   const pageContent = (
     <>
-      <Toaster
-        notifyType={notifyType}
-        notifyMsg={notifyMsg}
-        close={closeToaster}
-      />
       {page ? (
         <Wrapper fun={setTopNavId}>
+          <Toaster
+            notifyType={notifyType}
+            notifyMsg={notifyMsg}
+            close={closeToaster}
+          />
           <div className="add-invoice-page">
             <div className="add-invoice">
               <img src={invoice} alt="invoice" />
-              <h4>Invoices</h4>
-              <p>Currently there are no Sub users created</p>
+              <h4>{t('strings.invoices')}</h4>
+              <p>{t('invoice.heading3')}</p>
               {topNavId ? perm : propertySelectButton}
             </div>
           </div>
@@ -332,12 +336,16 @@ const Invoice = () => {
         </Wrapper>
       ) : (
         <Wrapper fun={setTopNavId}>
+          <Toaster
+            notifyType={notifyType}
+            notifyMsg={notifyMsg}
+            close={closeToaster}
+          />
           <div className="invoice-listing-page">
             <div className="page-header">
               <h1>
                 <img src={invoiceIcon} alt="" />
-                {' '}
-                Invoice
+                {t('invoice.label1')}
               </h1>
               {topNavId ? perm : propertySelectButton}
             </div>
@@ -346,13 +354,13 @@ const Invoice = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th>Date</th>
-                      <th>Label</th>
-                      <th>Type</th>
-                      <th>Client</th>
-                      <th>Amount</th>
-                      <th>Status</th>
-                      <th>Action</th>
+                      <th>{t('strings.date')}</th>
+                      <th>{t('strings.label')}</th>
+                      <th>{t('strings.type')}</th>
+                      <th>{t('strings.client')}</th>
+                      <th>{t('strings.amount')}</th>
+                      <th>{t('strings.status')}</th>
+                      <th>{t('strings.action')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -371,9 +379,7 @@ const Invoice = () => {
                           </td>
                           <td>
                             {el.label
-                              || `INVOICE ${
-                                el.id
-                              } - ${new Date().getFullYear()}`}
+                              || `INVOICE ${el.id} - ${new Date().getFullYear()}`}
                           </td>
                           <td>{el.type || 'Invoice'}</td>
                           <td>{el.clientName}</td>
@@ -426,17 +432,21 @@ const Invoice = () => {
                       value={selectAllCheck}
                       onClick={handleSelectAll}
                     >
-                      Select all
+                      {t('strings.select_all')}
                     </Checkbox>
                     {checkedInvoice.length ? (
-                      <div className="cancel-icon" onClick={handleCancelCheck} role="presentation">
+                      <div
+                        className="cancel-icon"
+                        onClick={handleCancelCheck}
+                        role="presentation"
+                      >
                         <img src={cancelIcon} alt="" />
-                        Cancel
+                        {t('strings.cancel')}
                       </div>
                     ) : (
                       <div className="cancel-icon" hidden>
                         <img src={cancelIcon} alt="" />
-                        Cancel
+                        {t('strings.cancel')}
                       </div>
                     )}
 
@@ -444,16 +454,18 @@ const Invoice = () => {
                       <Tag color="#FB4B56">
                         {checkedInvoice.length}
                         {' '}
-                        selected
+                        {t('strings.selected')}
                       </Tag>
                     ) : (
                       <Tag color="#FB4B56" hidden>
-                        3 selected
+                        3
+                        {' '}
+                        {t('strings.selected')}
                       </Tag>
                     )}
                     <div className="filter-icons">
                       <ul>
-                        <li>
+                        <li hidden={!checkedInvoice.length}>
                           <img
                             role="presentation"
                             className="download-img"
@@ -527,6 +539,12 @@ const Invoice = () => {
   );
   return (
     <>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <body className="invoice-page-view" />
+      </Helmet>
       {
       hasAccess ? pageContent
         : (

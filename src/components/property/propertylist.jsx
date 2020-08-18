@@ -6,17 +6,19 @@ import {
 } from 'antd';
 import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import Helmet from 'react-helmet';
 import Wrapper from '../wrapper';
 import property1 from '../../assets/images/property-1.png';
 import UserLock from '../userlock/userlock';
 import { userInstance } from '../../axios/axiosconfig';
+import NoList from './nolist';
 
 const PropertyList = () => {
   const { t } = useTranslation();
   const [propertyData, setPropertyData] = useState([]);
   const [topNavId, setTopNavId] = useState();
-  const [subscribed, setSubscribed] = useState();
-  const [OnTrial, setOnTrial] = useState();
+  const [subscribed, setSubscribed] = useState(true);
+  const [OnTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
 
   const history = useHistory();
@@ -86,6 +88,11 @@ const PropertyList = () => {
     getData();
   }, [getData]);
 
+  const handlePropertyClick = (id) => {
+    localStorage.setItem('propertyId', id);
+    history.push('/property');
+  };
+
   const enableButton = (
     <Button
       type="primary"
@@ -96,7 +103,7 @@ const PropertyList = () => {
     </Button>
   );
   const disableButton = (
-    <Tooltip title="You are not authorize to create new property" color="gold">
+    <Tooltip title={t('propertylist.heading1')} color="gold">
       <Button
         disabled="true"
         type="primary"
@@ -114,14 +121,14 @@ const PropertyList = () => {
   const trial = OnTrial && daysLeft !== 0;
   const hasAccess = trial || subscribed;
   return (
-    <Wrapper
-      fun={setTopNavId}
-    >
+    <Wrapper fun={setTopNavId}>
+      <Helmet>
+        <body className="property-page-view" />
+      </Helmet>
       {
-      hasAccess
-        ? (
+        hasAccess ? (
           <div className="property-listing">
-            <div className="page-header">
+            <div className="page-header" hidden={!(propertyData.length > 0)}>
               <h1>{t('propertylist.heading')}</h1>
               {btn2}
             </div>
@@ -135,39 +142,46 @@ const PropertyList = () => {
                   lg: 32,
                 }}
               >
-                {propertyData.map((el) => (
-                  <Col className="gutter-row" span={8}>
-                    <div className="property">
-                      <img src={el.image || property1} alt="property" />
-                      <div className="property-info">
-                        <h3>{el.propertyName}</h3>
-                        <span>{el.created_at.split('T', 1)}</span>
-                        <ul>
-                          <li>
-                            <HomeOutlined />
-                            {' '}
-                            {el.noUnitType}
-                            {' '}
-                            Unit Types
-                          </li>
-                          <li>
-                            <HomeOutlined />
-                            {' '}
-                            {el.noUnit}
-                            {' '}
-                            Unit
-                          </li>
-                        </ul>
+                {propertyData && propertyData.length > 0 ? (
+                  propertyData.map((el) => (
+                    <Col className="gutter-row" span={8} key={el.id}>
+                      <div className="property" onClick={() => handlePropertyClick(el.id)} role="presentation">
+                        <img src={el.image || property1} alt="property" />
+                        <div className="property-info">
+                          <h3>{el.propertyName}</h3>
+                          <span>{el.created_at.split('T', 1)}</span>
+                          <ul>
+                            <li>
+                              <HomeOutlined />
+                              {' '}
+                              {el.noUnitType}
+                              {' '}
+                              {t('strings.unit_t')}
+                            </li>
+                            <li>
+                              <HomeOutlined />
+                              {' '}
+                              {el.noUnit}
+                              {' '}
+                              {t('strings.unit')}
+                            </li>
+                          </ul>
+                        </div>
                       </div>
-                    </div>
+                    </Col>
+                  ))
+                ) : (
+                  <Col span={24}>
+                    <NoList isSubUser={isSubUser} canWrite={canWrite} />
                   </Col>
-                ))}
+                )}
               </Row>
             </div>
           </div>
+        ) : (
+          <UserLock />
         )
-        : <UserLock />
-}
+      }
     </Wrapper>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Helmet from 'react-helmet';
 import './property.css';
 import {
   Button, Row, Col, Modal,
@@ -24,6 +25,7 @@ import client14 from '../../assets/images/item-14.jpg';
 import client15 from '../../assets/images/item-15.jpg';
 import client16 from '../../assets/images/item-16.jpg';
 import client17 from '../../assets/images/item-17.jpg';
+import favicon from '../../assets/images/logo-mobile.png';
 
 const ChannelManager = () => {
   const { t } = useTranslation();
@@ -43,6 +45,12 @@ const ChannelManager = () => {
 
   return (
     <Wrapper>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <body className="channel-page-view" />
+      </Helmet>
       <div className="channel-container">
         <div className="page-header">
           <h1>{t('channel.heading')}</h1>

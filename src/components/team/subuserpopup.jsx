@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './team.css';
+import { useTranslation } from 'react-i18next';
 import {
   Form, Select, Input, Button, Checkbox, Modal, Row, Col,
 } from 'antd';
-
+import { CloseOutlined } from '@ant-design/icons';
 import { userInstance } from '../../axios/axiosconfig';
 
 const SubUserPopup = ({
   visible, handleOk, handleCancel, close, getData,
 }) => {
+  const { t } = useTranslation();
   const [form] = Form.useForm();
   const [bookingRead, setBookingRead] = useState(false);
   const [bookingWrite, setBookingWrite] = useState(false);
@@ -29,6 +31,8 @@ const SubUserPopup = ({
   const [serviceWrite, setServiceWrite] = useState(false);
   const [ownerRead, setOwnerRead] = useState(false);
   const [ownerWrite, setOwnerWrite] = useState(false);
+  const [billingRead, setBillingRead] = useState(false);
+  const [billingWrite, setBillingWrite] = useState(false);
 
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ userId }] = userCred || [{}];
@@ -53,6 +57,8 @@ const SubUserPopup = ({
       setServiceWrite(true);
       setOwnerRead(true);
       setOwnerWrite(true);
+      setBillingRead(true);
+      setBillingWrite(true);
     } else {
       setBookingRead(false);
       setBookingWrite(false);
@@ -72,6 +78,8 @@ const SubUserPopup = ({
       setServiceWrite(false);
       setOwnerRead(false);
       setOwnerWrite(false);
+      setBillingRead(false);
+      setBillingWrite(false);
     }
   };
 
@@ -95,6 +103,10 @@ const SubUserPopup = ({
     values.ownerRead = ownerRead;
     values.ownerWrite = ownerWrite;
     values.affiliateId = userId;
+    values.billingRead = billingRead;
+    values.billingWrite = billingWrite;
+    const companyName = window.location.hostname.split('.');
+    values.company = companyName[0];
     const response = await userInstance.post('/addTeam', values);
     if (response.status === 200) {
       getData();
@@ -118,6 +130,8 @@ const SubUserPopup = ({
       setServiceWrite(false);
       setOwnerRead(false);
       setOwnerWrite(false);
+      setBillingRead(false);
+      setBillingWrite(false);
     }
   };
 
@@ -147,6 +161,13 @@ const SubUserPopup = ({
     ? setServiceWrite(false) : setServiceWrite(true));
   const handleOwnerRead = (e) => (e.target.value ? setOwnerRead(false) : setOwnerRead(true));
   const handleOwnerWrite = (e) => (e.target.value ? setOwnerWrite(false) : setOwnerWrite(true));
+  const handleBillingRead = (e) => (e.target.value ? setBillingRead(false) : setBillingRead(true));
+  const handleBillingWrite = (e) => (e.target.value ? setBillingWrite(false)
+    : setBillingWrite(true));
+
+  const handleCross = () => {
+    close();
+  };
   return (
     <Modal
       title="Add New Sub-User"
@@ -155,46 +176,78 @@ const SubUserPopup = ({
       onCancel={handleCancel}
       wrapClassName="guest-modal sub-user"
     >
+      <div className="cross-btn">
+        <CloseOutlined onClick={handleCross} />
+      </div>
       <Form name="basic" form={form} onFinish={onFinish}>
-        <Row style={{ alignItems: 'center' }}>
-          <Col span={8}>
-            <Form.Item
-              label="E-mail"
-              name="email"
-              style={{ paddingRight: 20 }}
-              rules={[
-                {
-                  type: 'email',
-                  message: 'The input is not valid E-mail!',
-                },
-                {
-                  required: true,
-                  message: 'Please input your E-mail!',
-                },
-              ]}
-            >
-              <Input placeholder="Email" />
-            </Form.Item>
-          </Col>
+        <div className="subuser-fields-section">
+          <Row style={{ alignItems: 'center' }}>
+            <Col span={8}>
+              <Form.Item
+                label={t('strings.email')}
+                name="email"
+                style={{ paddingRight: 20 }}
+                rules={[
+                  {
+                    type: 'email',
+                    message: t('subuserpopup.label1'),
+                  },
+                  {
+                    required: true,
+                    message: t('subuserpopup.label2'),
+                  },
+                ]}
+              >
+                <Input placeholder={t('strings.email')} />
+              </Form.Item>
+            </Col>
 
-          <Col span={8}>
-            <Form.Item label="Role" name="role">
-              <Select onSelect={(value) => handleSelect(value)}>
-                <Select.Option value="subuser">Sub-User</Select.Option>
-                <Select.Option value="fullaccess">Full Access</Select.Option>
-              </Select>
-            </Form.Item>
-          </Col>
-
-          <Col span={8} />
-        </Row>
+            <Col span={8}>
+              <Form.Item label={t('subuserpopup.label25')} name="role">
+                <Select
+                  placeholder={t('subuserpopup.label3')}
+                  onSelect={(value) => handleSelect(value)}
+                >
+                  <Select.Option value="subuser">
+                    {t('subuserpopup.label3')}
+                  </Select.Option>
+                  <Select.Option value="fullaccess">
+                    {t('subuserpopup.label4')}
+                  </Select.Option>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={8} />
+          </Row>
+        </div>
 
         <Row>
           <div className="custom-table subuser-table">
             <table>
               <thead>
                 <tr>
-                  <th>Booking</th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label15')}
+                  </th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label16')}
+                  </th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label17')}
+                  </th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label18')}
+                  </th>
+
+                </tr>
+              </thead>
+              <thead>
+                <tr>
+                  <th>{t('subuserpopup.label5')}</th>
                   <th>
                     <Checkbox
                       value={bookingRead}
@@ -209,9 +262,7 @@ const SubUserPopup = ({
                       checked={bookingWrite}
                     />
                   </th>
-                  <th>
-                    Prices and availability that are syncing with connected OTAs
-                  </th>
+                  <th>{t('subuserpopup.label6')}</th>
                 </tr>
               </thead>
             </table>
@@ -223,7 +274,10 @@ const SubUserPopup = ({
             <table>
               <thead>
                 <tr>
-                  <th>Calendar</th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label7')}
+                  </th>
                   <th>
                     <Checkbox
                       value={calendarRead}
@@ -238,13 +292,19 @@ const SubUserPopup = ({
                       checked={calendarWrite}
                     />
                   </th>
-                  <th>Access Description</th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label8')}
+                  </th>
                 </tr>
               </thead>
 
               <tbody>
                 <tr>
-                  <td>Properties</td>
+                  <td>
+                    {' '}
+                    {t('subuserpopup.label9')}
+                  </td>
                   <td>
                     <Checkbox
                       value={propertiesRead}
@@ -259,11 +319,17 @@ const SubUserPopup = ({
                       checked={propertiesWrite}
                     />
                   </td>
-                  <td>Booked dates on calendar</td>
+                  <td>
+                    {' '}
+                    {t('subuserpopup.label10')}
+                  </td>
                 </tr>
 
                 <tr>
-                  <td>Guests</td>
+                  <td>
+                    {' '}
+                    {t('subuserpopup.label11')}
+                  </td>
                   <td>
                     <Checkbox
                       value={guestsRead}
@@ -278,15 +344,14 @@ const SubUserPopup = ({
                       checked={guestsWrite}
                     />
                   </td>
-                  <td>
-                    Guest check-in and checkout-out on Dashboard, sales
-                    channels. eVisitor guest reporting (if eVisitor intregation
-                    is set up). Sales channels and channel manager settings.
-                  </td>
+                  <td>{t('subuserpopup.label12')}</td>
                 </tr>
 
                 <tr>
-                  <td>Team</td>
+                  <td>
+                    {' '}
+                    {t('subuserpopup.label13')}
+                  </td>
                   <td>
                     <Checkbox
                       value={teamRead}
@@ -301,7 +366,10 @@ const SubUserPopup = ({
                       checked={teamWrite}
                     />
                   </td>
-                  <td>Additional services and their settings</td>
+                  <td>
+                    {' '}
+                    {t('subuserpopup.label14')}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -311,35 +379,33 @@ const SubUserPopup = ({
         <Row>
           <div className="custom-table subuser-table">
             <table>
+
               <thead>
                 <tr>
-                  <th>Invoices</th>
-                  <th>Read</th>
-                  <th>Write</th>
-                  <th>Access Description</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr>
-                  <td>Invoices</td>
-                  <td>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label15')}
+                  </th>
+                  <th>
                     <Checkbox
                       value={invoicesRead}
                       onChange={(e) => handleInvoicesRead(e)}
                       checked={invoicesRead}
                     />
-                  </td>
-                  <td>
+                  </th>
+                  <th>
                     <Checkbox
                       value={invoicesWrite}
                       onChange={(e) => handleInvoicesWrite(e)}
                       checked={invoicesWrite}
                     />
-                  </td>
-                  <td>Invoices, offers and invoice setting</td>
+                  </th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label19')}
+                  </th>
                 </tr>
-              </tbody>
+              </thead>
             </table>
           </div>
         </Row>
@@ -349,7 +415,10 @@ const SubUserPopup = ({
             <table>
               <thead>
                 <tr>
-                  <th>Stats</th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label20')}
+                  </th>
                   <th>
                     <Checkbox
                       value={statsRead}
@@ -364,7 +433,10 @@ const SubUserPopup = ({
                       checked={statsWrite}
                     />
                   </th>
-                  <th>Stats screen</th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label21')}
+                  </th>
                 </tr>
               </thead>
             </table>
@@ -376,7 +448,10 @@ const SubUserPopup = ({
             <table>
               <thead>
                 <tr>
-                  <th>Services</th>
+                  <th>
+                    {' '}
+                    {t('subuserpopup.label22')}
+                  </th>
                   <th>
                     <Checkbox
                       value={serviceRead}
@@ -391,16 +466,12 @@ const SubUserPopup = ({
                       checked={serviceWrite}
                     />
                   </th>
-                  <th>
-                    Property settings, invoice settings and channel manager
-                    settings
-                  </th>
+                  <th>{t('subuserpopup.label23')}</th>
                 </tr>
               </thead>
             </table>
           </div>
         </Row>
-
         <Row>
           <div className="custom-table subuser-table">
             <table>
@@ -431,6 +502,33 @@ const SubUserPopup = ({
           </div>
         </Row>
 
+        <Row>
+          <div className="custom-table subuser-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Billing</th>
+                  <th>
+                    <Checkbox
+                      value={billingRead}
+                      onChange={(e) => handleBillingRead(e)}
+                      checked={billingRead}
+                    />
+                  </th>
+                  <th>
+                    <Checkbox
+                      value={billingWrite}
+                      onChange={(e) => handleBillingWrite(e)}
+                      checked={billingWrite}
+                    />
+                  </th>
+                  <th>Billing, Upgrade/downgrade plans</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </Row>
+
         <Row
           style={{
             alignItems: 'center',
@@ -438,13 +536,13 @@ const SubUserPopup = ({
             marginTop: '30px',
           }}
         >
-          <Col span={24}>
+          <Col span={24} className="subuser-fields-section">
             <Form.Item>
               <Button style={{ marginRight: 10 }} onClick={close}>
-                Cancel
+                {t('strings.cancel')}
               </Button>
               <Button type="primary" htmlType="submit">
-                Save
+                {t('strings.save')}
               </Button>
             </Form.Item>
           </Col>

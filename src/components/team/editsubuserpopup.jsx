@@ -1,14 +1,17 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import './team.css';
+import { useTranslation } from 'react-i18next';
 import {
   Form, Select, Input, Button, Checkbox, Modal, Row, Col,
 } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 // import team from '../../assets/images/profile_user.jpg';
 
 import { userInstance } from '../../axios/axiosconfig';
 
 const EditSubUserPopup = (props) => {
+  const { t } = useTranslation();
   const {
     subUserData, getData, close, handleOk, handleCancel, visible,
   } = props;
@@ -31,6 +34,8 @@ const EditSubUserPopup = (props) => {
   const [serviceWrite, setServiceWrite] = useState(false);
   const [ownerRead, setOwnerRead] = useState(false);
   const [ownerWrite, setOwnerWrite] = useState(false);
+  const [billingRead, setBillingRead] = useState(false);
+  const [billingWrite, setBillingWrite] = useState(false);
 
   const updateValues = useCallback(() => {
     form.setFieldsValue({
@@ -55,6 +60,8 @@ const EditSubUserPopup = (props) => {
     setServiceWrite(subUserData.serviceWrite);
     setOwnerRead(subUserData.ownerRead);
     setOwnerWrite(subUserData.ownerWrite);
+    setBillingWrite(subUserData.billingWrite);
+    setBillingRead(subUserData.billingRead);
   }, [subUserData, form]);
 
   useEffect(() => {
@@ -81,6 +88,8 @@ const EditSubUserPopup = (props) => {
       setServiceWrite(true);
       setOwnerRead(true);
       setOwnerWrite(true);
+      setBillingRead(true);
+      setBillingWrite(true);
     } else {
       setBookingRead(subUserData.bookingRead);
       setBookingWrite(subUserData.bookingWrite);
@@ -100,6 +109,8 @@ const EditSubUserPopup = (props) => {
       setServiceWrite(subUserData.serviceWrite);
       setOwnerRead(subUserData.ownerRead);
       setOwnerWrite(subUserData.ownerWrite);
+      setBillingRead(subUserData.billingRead);
+      setBillingWrite(subUserData.billingWrite);
     }
   };
 
@@ -125,6 +136,10 @@ const EditSubUserPopup = (props) => {
     copyValues.ownerRead = ownerRead;
     copyValues.ownerWrite = ownerWrite;
     copyValues.affiliateId = subUserData.userId;
+    copyValues.billingRead = billingRead;
+    copyValues.bookingWrite = billingWrite;
+    const companyName = window.location.hostname.split('.');
+    copyValues.company = companyName[0];
     const response = await userInstance.post('/updateSubUser', copyValues);
     if (response.status === 200) {
       getData();
@@ -161,42 +176,54 @@ const EditSubUserPopup = (props) => {
     ? setServiceWrite(false) : setServiceWrite(true));
   const handleOwnerRead = (e) => (e.target.value ? setOwnerRead(false) : setOwnerRead(true));
   const handleOwnerWrite = (e) => (e.target.value ? setOwnerWrite(false) : setOwnerWrite(true));
+  const handleBillingRead = (e) => (e.target.value ? setBillingRead(false) : setBillingRead(true));
+  const handleBillingWrite = (e) => (e.target.value ? setBillingWrite(false)
+    : setBillingWrite(true));
+
+  const handleCross = () => close();
 
   return (
     <Modal
-      title="Edit Sub-User"
+      title={t('editsubuserpopup.heading1')}
       visible={visible}
       onOk={handleOk}
       onCancel={handleCancel}
       wrapClassName="guest-modal sub-user"
     >
+      <div className="cross-btn">
+        <CloseOutlined onClick={handleCross} />
+      </div>
       <Form name="basic" form={form} onFinish={onFinish}>
         <Row style={{ alignItems: 'center' }}>
           <Col span={8}>
             <Form.Item
-              label="E-mail"
+              label={t('strings.email')}
               name="email"
               style={{ paddingRight: 20 }}
               rules={[
                 {
                   type: 'email',
-                  message: 'The input is not valid E-mail!',
+                  message: t('editsubuserpopup.label2'),
                 },
                 {
                   required: true,
-                  message: 'Please input your E-mail!',
+                  message: t('editsubuserpopup.label3'),
                 },
               ]}
             >
-              <Input placeholder="Email" />
+              <Input placeholder={t('strings.email')} />
             </Form.Item>
           </Col>
 
           <Col span={8}>
-            <Form.Item label="Role" name="role">
+            <Form.Item label={t('editsubuserpopup.label26')} name="role">
               <Select onSelect={(value) => handleSelect(value)}>
-                <Select.Option value="subuser">Sub-User</Select.Option>
-                <Select.Option value="fullaccess">Full Access</Select.Option>
+                <Select.Option value="subuser">
+                  {t('editsubuserpopup.label4')}
+                </Select.Option>
+                <Select.Option value="fullaccess">
+                  {t('editsubuserpopup.label5')}
+                </Select.Option>
               </Select>
             </Form.Item>
           </Col>
@@ -209,7 +236,7 @@ const EditSubUserPopup = (props) => {
             <table>
               <thead>
                 <tr>
-                  <th>Booking</th>
+                  <th>{t('editsubuserpopup.label6')}</th>
                   <th>
                     <Checkbox
                       value={bookingRead}
@@ -224,9 +251,7 @@ const EditSubUserPopup = (props) => {
                       checked={bookingWrite}
                     />
                   </th>
-                  <th>
-                    Prices and availability that are syncing with connected OTAs
-                  </th>
+                  <th>{t('editsubuserpopup.label7')}</th>
                 </tr>
               </thead>
             </table>
@@ -238,7 +263,7 @@ const EditSubUserPopup = (props) => {
             <table>
               <thead>
                 <tr>
-                  <th>Calendar</th>
+                  <th>{t('editsubuserpopup.label8')}</th>
                   <th>
                     <Checkbox
                       value={calendarRead}
@@ -253,13 +278,13 @@ const EditSubUserPopup = (props) => {
                       checked={calendarWrite}
                     />
                   </th>
-                  <th>Access Description</th>
+                  <th>{t('editsubuserpopup.label9')}</th>
                 </tr>
               </thead>
 
               <tbody>
                 <tr>
-                  <td>Properties</td>
+                  <td>{t('editsubuserpopup.label10')}</td>
                   <td>
                     <Checkbox
                       value={propertiesRead}
@@ -274,11 +299,11 @@ const EditSubUserPopup = (props) => {
                       checked={propertiesWrite}
                     />
                   </td>
-                  <td>Booked dates on calendar</td>
+                  <td>{t('editsubuserpopup.label11')}</td>
                 </tr>
 
                 <tr>
-                  <td>Guests</td>
+                  <td>{t('editsubuserpopup.label12')}</td>
                   <td>
                     <Checkbox
                       value={guestsRead}
@@ -293,15 +318,11 @@ const EditSubUserPopup = (props) => {
                       checked={guestsWrite}
                     />
                   </td>
-                  <td>
-                    Guest check-in and checkout-out on Dashboard, sales
-                    channels. eVisitor guest reporting (if eVisitor intregation
-                    is set up). Sales channels and channel manager settings.
-                  </td>
+                  <td>{t('editsubuserpopup.label13')}</td>
                 </tr>
 
                 <tr>
-                  <td>Team</td>
+                  <td>{t('editsubuserpopup.label14')}</td>
                   <td>
                     <Checkbox
                       value={teamRead}
@@ -316,7 +337,7 @@ const EditSubUserPopup = (props) => {
                       checked={teamWrite}
                     />
                   </td>
-                  <td>Additional services and their settings</td>
+                  <td>{t('editsubuserpopup.label15')}</td>
                 </tr>
               </tbody>
             </table>
@@ -328,16 +349,16 @@ const EditSubUserPopup = (props) => {
             <table>
               <thead>
                 <tr>
-                  <th>Invoices</th>
-                  <th>Read</th>
-                  <th>Write</th>
-                  <th>Access Description</th>
+                  <th>{t('editsubuserpopup.label16')}</th>
+                  <th>{t('editsubuserpopup.label17')}</th>
+                  <th>{t('editsubuserpopup.label18')}</th>
+                  <th>{t('editsubuserpopup.label9')}</th>
                 </tr>
               </thead>
 
               <tbody>
                 <tr>
-                  <td>Invoices</td>
+                  <td>{t('editsubuserpopup.label16')}</td>
                   <td>
                     <Checkbox
                       value={invoicesRead}
@@ -352,7 +373,7 @@ const EditSubUserPopup = (props) => {
                       checked={invoicesWrite}
                     />
                   </td>
-                  <td>Invoices, offers and invoice setting</td>
+                  <td>{t('editsubuserpopup.label21')}</td>
                 </tr>
               </tbody>
             </table>
@@ -364,7 +385,7 @@ const EditSubUserPopup = (props) => {
             <table>
               <thead>
                 <tr>
-                  <th>Stats</th>
+                  <th>{t('editsubuserpopup.label22')}</th>
                   <th>
                     <Checkbox
                       value={statsRead}
@@ -379,7 +400,7 @@ const EditSubUserPopup = (props) => {
                       checked={statsWrite}
                     />
                   </th>
-                  <th>Stats screen</th>
+                  <th>{t('editsubuserpopup.label23')}</th>
                 </tr>
               </thead>
             </table>
@@ -391,7 +412,7 @@ const EditSubUserPopup = (props) => {
             <table>
               <thead>
                 <tr>
-                  <th>Services</th>
+                  <th>{t('editsubuserpopup.label24')}</th>
                   <th>
                     <Checkbox
                       value={serviceRead}
@@ -406,10 +427,7 @@ const EditSubUserPopup = (props) => {
                       checked={serviceWrite}
                     />
                   </th>
-                  <th>
-                    Property settings, invoice settings and channel manager
-                    settings
-                  </th>
+                  <th>{t('editsubuserpopup.label25')}</th>
                 </tr>
               </thead>
             </table>
@@ -421,7 +439,7 @@ const EditSubUserPopup = (props) => {
             <table>
               <thead>
                 <tr>
-                  <th>Owner</th>
+                  <th>{t('editsubuserpopup.label26')}</th>
                   <th>
                     <Checkbox
                       value={ownerRead}
@@ -436,10 +454,34 @@ const EditSubUserPopup = (props) => {
                       checked={ownerWrite}
                     />
                   </th>
+                  <th>{t('editsubuserpopup.label25')}</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </Row>
+
+        <Row>
+          <div className="custom-table subuser-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Billing</th>
                   <th>
-                    Property settings, invoice settings and channel manager
-                    settings
+                    <Checkbox
+                      value={billingRead}
+                      onChange={(e) => handleBillingRead(e)}
+                      checked={billingRead}
+                    />
                   </th>
+                  <th>
+                    <Checkbox
+                      value={billingWrite}
+                      onChange={(e) => handleBillingWrite(e)}
+                      checked={billingWrite}
+                    />
+                  </th>
+                  <th>Billing, Upgrade/downgrade plans</th>
                 </tr>
               </thead>
             </table>
@@ -456,10 +498,10 @@ const EditSubUserPopup = (props) => {
           <Col span={24}>
             <Form.Item>
               <Button style={{ marginRight: 10 }} onClick={close}>
-                Cancel
+                {t('strings.cancel')}
               </Button>
               <Button type="primary" htmlType="submit">
-                Save
+                {t('strings.save')}
               </Button>
             </Form.Item>
           </Col>

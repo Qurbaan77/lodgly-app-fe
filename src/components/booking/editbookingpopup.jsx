@@ -18,10 +18,9 @@ import {
   PlusOutlined,
   EditOutlined, DeleteOutlined,
 } from '@ant-design/icons';
-
+import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
 import moment from 'moment';
-import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
@@ -32,6 +31,7 @@ const { RangePicker } = DatePicker;
 let i = 1;
 
 const Editbookingpopup = (props) => {
+  const { t } = useTranslation();
   const {
     editBookingValues,
     editCurrentGuest,
@@ -44,6 +44,7 @@ const Editbookingpopup = (props) => {
     handleCancel,
     setBooked,
     getData,
+    toasterMessage,
   } = props;
   const [form] = Form.useForm();
   // const [test, setTest] = useState(false);
@@ -87,9 +88,6 @@ const Editbookingpopup = (props) => {
   // const [currentUnit, setCurrentUnit] = useState({});
   const [unitTypeData, setUnitTypeData] = useState([]);
   const [unitId, setUnitId] = useState(null);
-
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
 
   // const [propertyData, setPropertyData] = useState([]);
   const [propertyName, setPropertyName] = useState('');
@@ -266,12 +264,12 @@ const Editbookingpopup = (props) => {
     const response = await userInstance.post('/changeBooking', values);
     const { msg } = response.data;
     if (response.data.code === 200) {
+      toasterMessage('success', msg);
       getData();
       setBooked(true);
       close();
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toasterMessage('error', msg);
     }
 
     form.resetFields();
@@ -405,26 +403,25 @@ const Editbookingpopup = (props) => {
   // const handlename = (event, value) => console.log(event.target, value);
   return (
     <Modal
-      title="Edit Booking"
+      title={t('editbookingpopup.heading1')}
       name="modal2"
       visible={visible}
       onOk={handleOk}
       onCancel={handleCancel}
       wrapClassName="create-booking-modal"
     >
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={12}>
             <Form.Item
-              label="Reservation Date"
+              label={t('editbookingpopup.heading16')}
               name="groupname"
               style={{ paddingRight: 20 }}
               onChange={fun4}
               rules={[
                 {
                   required: true,
-                  message: 'Reservation date is required',
+                  message: t('editbookingpopup.heading17'),
                 },
               ]}
             >
@@ -438,8 +435,8 @@ const Editbookingpopup = (props) => {
               defaultValue={1}
               // onChange={(e) => setRadio(e.target.value)}
             >
-              <Radio value={1}>Confirmed</Radio>
-              <Radio value={2}>Option</Radio>
+              <Radio value={1}>{t('strings.confirmed')}</Radio>
+              <Radio value={2}>{t('strings.option')}</Radio>
             </Radio.Group>
           </Col>
         </Row>
@@ -447,13 +444,13 @@ const Editbookingpopup = (props) => {
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={8}>
             <Form.Item
-              label="Property"
+              label={t('strings.property')}
               name="property"
               style={{ paddingRight: 20 }}
               rules={[
                 {
                   required: true,
-                  message: 'Property name is required',
+                  message: t('editbookingpopup.heading2'),
                 },
               ]}
             >
@@ -463,23 +460,25 @@ const Editbookingpopup = (props) => {
 
           <Col span={8}>
             <Form.Item
-              label="Unit"
+              label={t('strings.unit')}
               name="unit"
               style={{ paddingRight: 20 }}
               rules={[
                 {
                   required: true,
-                  message: 'Unit is required',
+                  message: t('editbookingpopup.heading3'),
                 },
               ]}
             >
               <Select
-                placeholder="Select"
+                placeholder={t('strings.select')}
                 onSelect={(value, event) => fun3(value, event)}
                 value={unitName}
               >
                 {unitData.map((el) => (
-                  <Select.Option value={el.unitName}>{el.unitName}</Select.Option>
+                  <Select.Option value={el.unitName}>
+                    {el.unitName}
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -488,11 +487,11 @@ const Editbookingpopup = (props) => {
           <Col span={8}>
             <Form.Item
               className="comision"
-              label="Channel, Commission(%)"
+              label={t('editbookingpopup.heading4')}
               name="channel"
             >
               <Select
-                placeholder="Select"
+                placeholder={t('strings.select')}
                 onSelect={(value, event) => fun5(value, event)}
                 value={channel}
                 style={{ width: '70%', display: 'inline-block' }}
@@ -514,7 +513,7 @@ const Editbookingpopup = (props) => {
                 rules={[
                   {
                     required: true,
-                    message: 'Commission is required',
+                    message: t('editbookingpopup.heading5'),
                   },
                 ]}
               />
@@ -525,18 +524,18 @@ const Editbookingpopup = (props) => {
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={8}>
             <Form.Item
-              label="Adults"
+              label={t('strings.adults')}
               name="adult"
               style={{ paddingRight: 20 }}
               rules={[
                 {
                   required: true,
-                  message: 'Required Field',
+                  message: t('editbookingpopup.heading6'),
                 },
               ]}
             >
               <Select
-                placeholder="Select"
+                placeholder={t('strings.select')}
                 value={adult}
                 onSelect={(e) => handleAdult(e)}
               >
@@ -551,12 +550,12 @@ const Editbookingpopup = (props) => {
 
           <Col span={8}>
             <Form.Item
-              label="Childrens(0-12yrs)"
+              label={t('editbookingpopup.heading7')}
               name="children1"
               style={{ paddingRight: 20 }}
             >
               <Select
-                placeholder="Select"
+                placeholder={t('strings.select')}
                 value={children1}
                 onSelect={(e) => handleChildren1(e)}
               >
@@ -570,9 +569,9 @@ const Editbookingpopup = (props) => {
           </Col>
 
           <Col span={8}>
-            <Form.Item label="Childrens(12+ yrs)" name="children2">
+            <Form.Item label={t('editbookingpopup.heading8')} name="children2">
               <Select
-                placeholder="Select"
+                placeholder={t('strings.select')}
                 value={children2}
                 onSelect={(e) => handleChildren2(e)}
               >
@@ -592,7 +591,7 @@ const Editbookingpopup = (props) => {
               <Collapse accordion defaultActiveKey={['1']}>
                 <Panel
                   icon={<PlusSquareOutlined />}
-                  header="Add Guest Details (Optional)"
+                  header={t('editbookingpopup.heading9')}
                   key="1"
                 >
                   <div className="additional-guest">
@@ -603,14 +602,12 @@ const Editbookingpopup = (props) => {
                             <Col span={6}>
                               <Form.Item
                                 id={el.id}
-                                label="Full Name"
+                                label={t('strings.full')}
                                 name={`fullName${j}`}
                                 style={{ paddingRight: 20 }}
                               >
                                 <Input
                                   defaultValue={el.fullname}
-                                  // value={fullName}
-                                  // onChange={(event, value) => handlename(event, value)}
                                 />
                               </Form.Item>
                             </Col>
@@ -618,7 +615,7 @@ const Editbookingpopup = (props) => {
                             <Col span={6}>
                               <Form.Item
                                 id={el.id}
-                                label="Email"
+                                label={t('strings.email')}
                                 name={`email${i}`}
                                 style={{ paddingRight: 20 }}
                               >
@@ -629,7 +626,7 @@ const Editbookingpopup = (props) => {
                             <Col span={6}>
                               <Form.Item
                                 id={el.id}
-                                label="Country"
+                                label={t('strings.country')}
                                 name={`country${i}`}
                                 style={{ paddingRight: 20 }}
                               >
@@ -647,12 +644,12 @@ const Editbookingpopup = (props) => {
 
                             <Col span={6}>
                               <Form.Item
-                                label="Phone"
+                                label={t('strings.phone')}
                                 name={`phone${i}`}
                                 style={{ paddingRight: 20 }}
                               >
                                 <Input
-                                  // onChange={(e) => setPhone(e.target.value)}
+                                    // onChange={(e) => setPhone(e.target.value)}
                                   type="number"
                                   minLength="9"
                                   maxLength="15"
@@ -672,9 +669,7 @@ const Editbookingpopup = (props) => {
                           </Row>
 
                           <div className="delete-data" data-key={i}>
-                            <DeleteOutlined
-                              onClick={(e) => removePanel(e)}
-                            />
+                            <DeleteOutlined onClick={(e) => removePanel(e)} />
                           </div>
                         </div>
                       ))
@@ -682,10 +677,14 @@ const Editbookingpopup = (props) => {
 
                     <Row>
                       <Col span={24}>
-                        <div role="presentation" className="additional-add" onClick={addMore}>
+                        <div
+                          role="presentation"
+                          className="additional-add"
+                          onClick={addMore}
+                        >
                           <PlusOutlined />
                           {' '}
-                          Add additional guest
+                          {t('editbookingpopup.heading11')}
                         </div>
                       </Col>
                     </Row>
@@ -694,7 +693,7 @@ const Editbookingpopup = (props) => {
 
                 <Panel
                   icon={<PlusSquareOutlined />}
-                  header="Add Notes (Optional)"
+                  header={t('editbookingpopup.heading12')}
                   key="2"
                 >
                   <div className="add-notes">
@@ -706,7 +705,7 @@ const Editbookingpopup = (props) => {
 
                 <Panel
                   icon={<PlusSquareOutlined />}
-                  header="Add Internal Notes (Optional)"
+                  header={t('editbookingpopup.heading13')}
                   key="3"
                   name="notes"
                 >
@@ -725,7 +724,7 @@ const Editbookingpopup = (props) => {
           <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
             <Col span={8}>
               <Form.Item>
-                <p>Accommodation</p>
+                <p>{t('editbookingpopup.heading15')}</p>
               </Form.Item>
             </Col>
 
@@ -734,7 +733,7 @@ const Editbookingpopup = (props) => {
                 <div className="inline-form">
                   <label htmlFor="price">
                     <input hidden />
-                    Average price per night
+                    {t('editbookingpopup.heading14')}
                   </label>
                   <Form.Item name="perNight">
                     <Input
@@ -745,7 +744,7 @@ const Editbookingpopup = (props) => {
                       rules={[
                         {
                           required: true,
-                          message: 'Required Field',
+                          message: t('editbookingpopup.heading6'),
                         },
                       ]}
                       onChange={(e) => setPrice(e.target.value)}
@@ -757,7 +756,7 @@ const Editbookingpopup = (props) => {
                   </label>
                   <Input
                     type="number"
-                    placeholder="0 nights"
+                    placeholder={t('editbookingpopup.heading27')}
                     name="nights"
                     value={night}
                     disabled="true"
@@ -784,7 +783,7 @@ const Editbookingpopup = (props) => {
                 <div className="inline-form">
                   <label htmlFor="dis">
                     <input hidden />
-                    Discount
+                    {t('editbookingpopup.heading18')}
                   </label>
                   <Form.Item name="discount">
                     <Input
@@ -808,7 +807,7 @@ const Editbookingpopup = (props) => {
                   </label>
                   <Form.Item name="discountType">
                     <Select
-                      placeholder="Discount type"
+                      placeholder={t('editbookingpopup.heading28')}
                       onSelect={(value) => handleDiscount(value)}
                       defaultValue={discountType}
                     >
@@ -830,7 +829,6 @@ const Editbookingpopup = (props) => {
                       }
                       onBlur={(e) => setAccomodation(e.target.value)}
                     />
-
                   </Form.Item>
                   <label htmlFor="dis">
                     <input hidden />
@@ -846,9 +844,12 @@ const Editbookingpopup = (props) => {
               <div className="per-night">
                 <label htmlFor="dis">
                   <input hidden />
-                  Per Night
+                  {t('editbookingpopup.heading19')}
                 </label>
-                <span>Accommondation cost:</span>
+                <span>
+                  {t('editbookingpopup.heading20')}
+                  :
+                </span>
                 <span className="amnt">
                   {accomodation}
                   {' '}
@@ -858,10 +859,14 @@ const Editbookingpopup = (props) => {
             </Col>
 
             <Col span={24}>
-              <div role="presentation" className="srvice-heading" onClick={addMoreService}>
+              <div
+                role="presentation"
+                className="srvice-heading"
+                onClick={addMoreService}
+              >
                 <PlusOutlined />
                 {' '}
-                Add Services
+                {t('editbookingpopup.heading21')}
               </div>
             </Col>
 
@@ -894,9 +899,7 @@ const Editbookingpopup = (props) => {
                                   onSelect={(value, event) => fun2(value, event)}
                                 >
                                   {serviceData.map((ele) => (
-                                    <Select.Option
-                                      value={ele.serviceName}
-                                    >
+                                    <Select.Option value={ele.serviceName}>
                                       {ele.serviceName}
                                     </Select.Option>
                                   ))}
@@ -1003,13 +1006,13 @@ const Editbookingpopup = (props) => {
               <div className="deposit">
                 <label htmlFor="deposit">
                   <input hidden />
-                  Deposit
+                  {t('editbookingpopup.heading23')}
                 </label>
 
                 <div className="inline-form">
                   <label htmlFor="depo">
                     <input hidden />
-                    Accommodation deposit
+                    {t('editbookingpopup.heading29')}
                   </label>
 
                   <Input
@@ -1024,7 +1027,7 @@ const Editbookingpopup = (props) => {
                   />
                   <Form.Item name="depositType">
                     <Select
-                      placeholder="Deposit type"
+                      placeholder={t('editbookingpopup.heading24')}
                       onSelect={(value) => handleDeposit(value)}
                       defaultValue="€"
                     >
@@ -1039,7 +1042,8 @@ const Editbookingpopup = (props) => {
             <Col span={24}>
               <div className="outstanding">
                 <label htmlFor="acco">
-                  Accommodation deposit:
+                  {t('editbookingpopup.heading29')}
+                  :
                   {' '}
                   <span>
                     {/* {deposit}€ (0,00 %) */}
@@ -1049,7 +1053,8 @@ const Editbookingpopup = (props) => {
                   </span>
                 </label>
                 <label htmlFor="amou">
-                  Outstanding amount:
+                  {t('editbookingpopup.heading25')}
+                  :
                   {' '}
                   <span>
                     {Math.round(total * 100) / 100
@@ -1081,10 +1086,12 @@ const Editbookingpopup = (props) => {
                   setdiscountAmount(0);
                 }}
               >
-                Cancel
+                {t('strings.cancel')}
               </Button>
               <Button type="primary" htmlType="submit">
-                Save Reservation
+                {t('strings.save')}
+                {' '}
+                {t('strings.reservat')}
               </Button>
             </Form.Item>
           </Col>
@@ -1105,6 +1112,7 @@ Editbookingpopup.propTypes = {
   handleCancel: PropTypes.func,
   setBooked: PropTypes.func,
   getData: PropTypes.func,
+  toasterMessage: () => {},
 };
 
 Editbookingpopup.defaultProps = {
@@ -1116,6 +1124,7 @@ Editbookingpopup.defaultProps = {
   getData: () => {},
   setEditCurrentGuest: () => {},
   setCurrentService: () => {},
+  toasterMessage: () => {},
   editBookingValues: {},
   editCurrentGuest: [],
   currentService: [],

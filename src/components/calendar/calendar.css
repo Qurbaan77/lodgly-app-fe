@@ -206,9 +206,105 @@ color: orange;
     color: #000;
 }
 
+.calendar-btn .nopadding {
+    padding: 0;
+}
+
+/*********** Group Reservation *****************/
 
 
+.unit-available p {
+    margin: 0;
+}
 
+.unit-available span {
+    font-size: 11px;
+}
+
+.unit-available label {
+    display: block;
+    height: 32px;
+}
+
+
+.select-unit-reservation .ant-row {
+    margin-bottom: 20px;
+}
+
+.select-unit-reservation label, .select-unit-reservation .ant-form-item-label {
+    margin-bottom: 5px;
+}
+
+.night-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-bottom: 20px;
+}
+
+.night-box {
+    width: 25%;
+    padding: 5px 0px;
+    text-align: center;
+    padding-right: 20px;
+}
+
+.discount-night {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.discount-night .ant-input {
+    width: 50px;
+    margin-right: 10px;
+}
+
+.discount-box h2 {
+    margin: 0;
+}
+
+.discount-box {
+    background: #f6f6f7;
+    padding: 20px 50px;
+}
+
+.discount-night span {
+    padding-right: 10px;
+}
+
+.price-per-night .ant-collapse {
+    background: transparent;
+    border: none;
+}
+
+.price-per-night .ant-collapse-item {
+    border: none;
+}
+
+.price-per-night .ant-collapse .ant-collapse-header {
+    padding: 13px 0px!important;
+}
+
+.price-per-night .ant-collapse-content > .ant-collapse-content-box {
+    background: transparent;
+    padding: 0;
+}
+
+.price-per-night .ant-collapse-content {
+    background: transparent;
+    border: none;
+}
+
+
+.select-unit-reservation {
+    padding-top: 30px;
+}
+
+.unit-border{
+    border-bottom: 1px solid #aeaeae;
+}
 
 @media screen and (min-width:1367px){
     .calendar-calendar {

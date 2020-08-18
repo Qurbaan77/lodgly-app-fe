@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import PlacesAutocomplete from 'react-places-autocomplete';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import './property.css';
 import {
   Form,
@@ -17,7 +18,6 @@ import {
 } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { HomeOutlined, InboxOutlined } from '@ant-design/icons';
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import Wrapper from '../wrapper';
 import { server } from '../../config/keys';
 import { userInstance } from '../../axios/axiosconfig';
@@ -76,10 +76,10 @@ const AddProperty = () => {
   const [country, setCountry] = useState(null);
   const history = useHistory();
 
-  const isSubUser = localStorage.getItem('isSubUser') || false;
+  // const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  const [{ propertiesWrite, userId }] = userCred || [{}];
-  const canWrite = propertiesWrite;
+  const [{ userId }] = userCred || [{}];
+  // const canWrite = propertiesWrite;
 
   useEffect(() => {
     async function getData() {
@@ -113,6 +113,7 @@ const AddProperty = () => {
       setNotifyType('error');
       setNotifyMsg(msg);
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     form.resetFields();
   };
 
@@ -179,15 +180,15 @@ const AddProperty = () => {
     });
   };
 
-  const enableButton = <Button>{t('strings.save')}</Button>;
-  const disabledButton = (
-    <Tooltip title={t('addproperty.title6')} color="gold">
-      <Button disabled="true">{t('strings.save')}</Button>
-    </Tooltip>
-  );
+  // const enableButton = <Button>{t('strings.save')}</Button>;
+  // const disabledButton = (
+  //   <Tooltip title={t('addproperty.title6')} color="gold">
+  //     <Button disabled="true">{t('strings.save')}</Button>
+  //   </Tooltip>
+  // );
 
-  const btn1 = isSubUser && canWrite ? enableButton : disabledButton;
-  const btn2 = isSubUser ? btn1 : enableButton;
+  // const btn1 = isSubUser && canWrite ? enableButton : disabledButton;
+  // const btn2 = isSubUser ? btn1 : enableButton;
 
   return (
     <Wrapper>
@@ -215,7 +216,7 @@ const AddProperty = () => {
                         rules={[
                           {
                             required: true,
-                            message: 'Please enter property name',
+                            message: t('addproperty.rules'),
                             whitespace: true,
                           },
                         ]}
@@ -225,17 +226,51 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item name="propertyType" label={t('addproperty.detail2')}>
+                      <Form.Item
+                        name="propertyType"
+                        label={t('addproperty.detail2')}
+                        rules={[
+                          {
+                            required: true,
+                            message: t('addproperty.rules1'),
+                          },
+                        ]}
+                      >
                         <Select>
-                          <Select.Option value="demo">
-                            Holiday House
-                          </Select.Option>
+                          <Select.Option value="Holiday House">Holiday House</Select.Option>
+                          <Select.Option value="Holiday Apartment">Holiday Apartment</Select.Option>
+                          <Select.Option value="Bed and Breakfast">Bed and Breakfast</Select.Option>
+                          <Select.Option value="Boat House">Boat House</Select.Option>
+                          <Select.Option value="Bungalow">Bungalow</Select.Option>
+                          <Select.Option value="Cabin">Cabin</Select.Option>
+                          <Select.Option value="Agritourism">Agritourism</Select.Option>
+                          <Select.Option value="Mobile House">Mobile House</Select.Option>
+                          <Select.Option value="Villa">Villa</Select.Option>
+                          <Select.Option value="Room">Room</Select.Option>
+                          <Select.Option value="Hotel">Hotel</Select.Option>
+                          <Select.Option value="Camping">Camping</Select.Option>
+                          <Select.Option value="Student Housing">Student Housing</Select.Option>
+                          <Select.Option value="Resort">Resort</Select.Option>
+                          <Select.Option value="Inn">Inn</Select.Option>
+                          <Select.Option value="Hostel">Hostel</Select.Option>
+                          <Select.Option value="Motel">Motel</Select.Option>
+                          <Select.Option value="Hospital">Hospital</Select.Option>
+                          <Select.Option value="Pousada">Pousada</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item name="address" label={t('addproperty.detail3')}>
+                      <Form.Item
+                        name="address"
+                        label={t('addproperty.detail3')}
+                        rules={[
+                          {
+                            required: true,
+                            message: t('addproperty.rules2'),
+                          },
+                        ]}
+                      >
                         <PlacesAutocomplete
                           value={address}
                           onChange={handleAddressChange}
@@ -250,7 +285,7 @@ const AddProperty = () => {
                             <div>
                               <Input
                                 {...getInputProps({
-                                  placeholder: 'Search Places ...',
+                                  placeholder: t('strings.searchplaces'),
                                   className: 'location-search-input',
                                 })}
                               />
@@ -289,31 +324,70 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={12}>
-                      <Form.Item name="country" label={t('addproperty.detail5')}>
+                      <Form.Item
+                        name="country"
+                        label={t('addproperty.detail5')}
+                        rules={[
+                          {
+                            required: true,
+                            message: t('addproperty.rules6'),
+                          },
+                        ]}
+                      >
                         <CountryDropdown onChange={(val) => setCountry(val)} />
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
-                      <Form.Item name="state" label={t('addproperty.detail6')}>
+                      <Form.Item
+                        name="state"
+                        label={t('addproperty.detail6')}
+                        rules={[
+                          {
+                            required: true,
+                            message: t('addproperty.rules3'),
+                          },
+                        ]}
+                      >
                         <RegionDropdown country={country} />
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
-                      <Form.Item name="city" label={t('addproperty.detail7')}>
+                      <Form.Item
+                        name="city"
+                        label={t('addproperty.detail7')}
+                        rules={[
+                          {
+                            required: true,
+                            message: t('addproperty.rules4'),
+                          },
+                        ]}
+                      >
                         <Input />
                       </Form.Item>
                     </Col>
 
                     <Col span={12}>
-                      <Form.Item name="zip" label={t('addproperty.detail8')}>
+                      <Form.Item
+                        name="zip"
+                        label={t('addproperty.detail8')}
+                        rules={[
+                          {
+                            required: true,
+                            message: t('addproperty.rules5'),
+                          },
+                        ]}
+                      >
                         <Input />
                       </Form.Item>
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item name="website" label={t('addproperty.detail9')}>
+                      <Form.Item
+                        name="website"
+                        label={t('addproperty.detail9')}
+                      >
                         <Input placeholder="www.mywebsite.com" />
                       </Form.Item>
                     </Col>
@@ -334,16 +408,15 @@ const AddProperty = () => {
                   <Row gutter={[16, 0]}>
                     <Col span={24}>
                       <Form.Item label={t('addproperty.detail2')}>
-                        <Select>
-                          <Select.Option value="demo">
-                            Holiday House
-                          </Select.Option>
-                        </Select>
+                        <Input />
                       </Form.Item>
                     </Col>
 
                     <Col span={8}>
-                      <Form.Item name="bedrooms" label={t('addproperty.detail10')}>
+                      <Form.Item
+                        name="bedrooms"
+                        label={t('addproperty.detail10')}
+                      >
                         <Select>
                           <Select.Option value="1">1</Select.Option>
                           <Select.Option value="2">2</Select.Option>
@@ -355,7 +428,10 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={8}>
-                      <Form.Item name="fullBathroom" label={t('addproperty.detail11')}>
+                      <Form.Item
+                        name="fullBathroom"
+                        label={t('addproperty.detail11')}
+                      >
                         <Select>
                           <Select.Option value="1">1</Select.Option>
                           <Select.Option value="2">2</Select.Option>
@@ -365,7 +441,10 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={8}>
-                      <Form.Item name="halfBathroom" label={t('addproperty.detail12')}>
+                      <Form.Item
+                        name="halfBathroom"
+                        label={t('addproperty.detail12')}
+                      >
                         <Select>
                           <Select.Option value="1">1</Select.Option>
                           <Select.Option value="2">2</Select.Option>
@@ -375,25 +454,26 @@ const AddProperty = () => {
                     </Col>
 
                     <Col span={8}>
-                      <Form.Item name="sqfoot" label={t('addproperty.detail13')}>
-                        <Select>
-                          <Select.Option value="demo">Zadar</Select.Option>
-                        </Select>
+                      <Form.Item
+                        name="sqfoot"
+                        label={t('addproperty.detail13')}
+                      >
+                        <Input />
                       </Form.Item>
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item name="description" label={t('addproperty.detail14')}>
+                      <Form.Item
+                        name="description"
+                        label={t('addproperty.detail14')}
+                      >
                         <Input.TextArea />
                       </Form.Item>
                     </Col>
 
                     <Col span={24}>
                       <Form.Item>
-                        <Tooltip
-                          title={t('addproperty.title5')}
-                          color="gold"
-                        >
+                        <Tooltip title={t('addproperty.title5')} color="gold">
                           <Button htmlType="submit" disabled="true">
                             {t('strings.save')}
                           </Button>
@@ -465,10 +545,7 @@ const AddProperty = () => {
                           getValueFromEvent={normFile}
                           noStyle
                         >
-                          <Tooltip
-                            title={t('addproperty.title5')}
-                            color="gold"
-                          >
+                          <Tooltip title={t('addproperty.title5')} color="gold">
                             <Upload.Dragger {...props} disabled>
                               <p className="ant-upload-drag-icon">
                                 <InboxOutlined />
@@ -476,12 +553,12 @@ const AddProperty = () => {
                               <p className="ant-upload-text">
                                 {t('addproperty.detail19')}
                               </p>
-                              <p className="ant-upload-hint">{t('addproperty.detail20')}</p>
+                              <p className="ant-upload-hint">
+                                {t('addproperty.detail20')}
+                              </p>
                             </Upload.Dragger>
                           </Tooltip>
-                          <p>
-                            {t('addproperty.detail21')}
-                          </p>
+                          <p>{t('addproperty.detail21')}</p>
                         </Form.Item>
                       </Form.Item>
                     </Col>
@@ -493,9 +570,9 @@ const AddProperty = () => {
                       </Form.Item>
                     </Col>
 
-                    <Col span={24}>
+                    {/* <Col span={24}>
                       <Form.Item>{btn2}</Form.Item>
-                    </Col>
+                    </Col> */}
                   </Row>
                 </Form>
               </div>

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import Helmet from 'react-helmet';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import moment from 'moment';
 import './profile.css';
+import { useTranslation } from 'react-i18next';
 import {
   Form, Select, Row, Col, Collapse, Button, Tooltip,
 } from 'antd';
@@ -14,24 +16,27 @@ import {
 import Wrapper from '../wrapper';
 
 import BillingHistory from './billinghistory';
-import { basicPrice, advancePrice, discount } from '../../config/keys';
+import { STRIPE_APP_KEY } from '../../config/keys';
+import config from '../../config/config.json';
 import { userInstance } from '../../axios/axiosconfig';
-import keys from '../../config/default';
 import CheckoutForm from './CheckoutForm';
+import favicon from '../../assets/images/logo-mobile.png';
+// import loader from '../../assets/images/loader.svg';
 import Toaster from '../toaster/toaster';
 
-const stripePromise = loadStripe(keys.development.webserver.stripeApiKey);
+const stripePromise = loadStripe(STRIPE_APP_KEY);
 const { Panel } = Collapse;
-
+const { basicPrice, advancePrice, discount } = config.development.Billing;
 const BillingInformation = () => {
+  const { t } = useTranslation();
   const [unitDropDown, setUnitDropDown] = useState([]);
   const [total, setTotal] = useState(0);
   const [unitPrice, setUnitPrice] = useState(basicPrice);
   const [unitsSelected, setUnitsSelected] = useState();
   const [planType, setPlanType] = useState('basic');
-  const [subscriptionType, setSubscriptionType] = useState('');
+  const [subscriptionType, setSubscriptionType] = useState('month');
   const [exchangeRate, setExchangeRate] = useState([]);
-  const [currency, setCurrency] = useState('');
+  const [currency, setCurrency] = useState('EUR');
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const [data, addData] = useState();
@@ -48,13 +53,16 @@ const BillingInformation = () => {
   });
   const [showCancelCheckout, setShowCancelCheckout] = useState(false);
   const [canDowngrade, setCanDowngrade] = useState();
+  const [disableBtn, setDisableBtn] = useState(false);
+  // const [showCard, setShowCard] = useState(true);
+  // const [disablePayNow, setDisablePayNow] = useState(true);
 
   useEffect(() => {
     const getData = async () => {
       const res = await userInstance.post('/getTotalUnit');
-      if (res.data.code === 200) {
-        const units = res.data.totalUnit;
-        const range = Array(units + 50 - units + 1)
+      if (res.data.code === 200 || res.data.code === 404) {
+        const units = res.data.totalUnit || 1;
+        const range = Array(units + 50000 - units + 1)
           .fill()
           .map((_, idx) => units + idx);
         setUnitDropDown(range);
@@ -74,14 +82,25 @@ const BillingInformation = () => {
 
   const getUser = async () => {
     const response = await userInstance.get('/transactions');
-    const { code, transactions, startDate } = response.data;
+    const {
+      code, transactions, endDate, status,
+    } = response.data;
     if (code === 200 && transactions != null) {
-      const renewDate = moment(new Date(startDate)).add(1, 'M');
-      setEnd(renewDate._d.toDateString());
+      const [{ interval }] = transactions;
+      if (interval === 'month') {
+        const renewDate = moment(endDate);
+        setEnd(renewDate._d.toDateString());
+      } else {
+        const renewDate = moment(endDate);
+        setEnd(renewDate._d.toDateString());
+      }
       transactions.forEach((element) => {
         addData(element);
         setCurrentCurrency(element.currency);
       });
+      if (status === 'canceled') {
+        setDisableBtn(true);
+      }
     } else {
       addData('');
       setHideBilling(false);
@@ -323,6 +342,12 @@ const BillingInformation = () => {
     }
   };
 
+  // const disablebtn = () => {
+  //   if (!unitsSelected && !subscriptionType && !currency && !planType) {
+  //     setDisablePayNow(false);
+  //     console.log('shgsgs');
+  //   }
+  // };
   /* ----------------------------- All payment handling functions here -------------------------- */
 
   const handleChangeSubscription = async () => {
@@ -399,6 +424,7 @@ const BillingInformation = () => {
         subscriptionId: data.subscriptionId,
       });
       if (response.data.code === 200) {
+        getUser();
         setNotifyType('success');
         setNotifyMsg(response.data.msg);
       }
@@ -408,34 +434,54 @@ const BillingInformation = () => {
     }
   };
 
+  // const ShowLoader = (
+  //   <div className="loader">
+  //     <div className="loader-box">
+  //       <img src={loader} alt="loader" />
+  //     </div>
+  //   </div>
+  // );
+
   return (
     <Wrapper>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
+      </Helmet>
+      {/* <Suspense fallback={<ShowLoader />}> */}
       <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <div className="billing-information">
         <div className="page-header">
           <h1>
             <UserOutlined />
-            Billing Information
+            {t('billinginformation.heading1')}
           </h1>
         </div>
 
         <div className="billing-container">
           <Row gutter={[16, 0]}>
-            <Col span={12} hidden={hideBilling}>
+            <Col span={16} hidden={hideBilling}>
               <Collapse defaultActiveKey={['1']} accordion>
-                <Panel header="Active Subscription" key="1">
+                <Panel header={t('billinginformation.label23')} key="1">
                   <div className="billing-info-form">
                     <Row gutter={[16, 0]}>
                       <Col span={24}>
                         <div className="subscription-plan-list">
                           <div className="invoice-warning" hidden>
                             <WarningOutlined />
-                            You have trial period active untill 4.07.2020.
+                            {t('billinginformation.label2')}
+                            {' '}
+                            4.07.2020.
                           </div>
                           <div className="invoice-error" hidden>
                             <CloseCircleOutlined hidden />
-                            Payment method not set. Please update your payment
-                            method.
+                            {t('billinginformation.label3')}
                           </div>
                           <Form>
                             <Row gutter={[16, 0]}>
@@ -446,11 +492,11 @@ const BillingInformation = () => {
                                     placeholder="basic"
                                     onSelect={handlePlanSelect}
                                   >
-                                    <Select.Option value="advance">
-                                      Advance
+                                    <Select.Option value="advance" hidden>
+                                      {t('billinginformation.label4')}
                                     </Select.Option>
                                     <Select.Option value="basic">
-                                      Basic
+                                      {t('billinginformation.label5')}
                                     </Select.Option>
                                   </Select>
                                 </Form.Item>
@@ -458,7 +504,7 @@ const BillingInformation = () => {
 
                               <Col span={5}>
                                 <Form.Item
-                                  label="price Per Unit"
+                                  label={t('billinginformation.label7')}
                                   name="pricePerUnit"
                                 >
                                   <div className="amount-field">
@@ -471,16 +517,16 @@ const BillingInformation = () => {
                               </Col>
                               <Col span={5}>
                                 <Form.Item
-                                  label="Units"
+                                  label={t('billinginformation.label8')}
                                   rules={[
                                     {
                                       required: true,
-                                      message: 'Please select units',
+                                      message: t('billinginformation.label9'),
                                     },
                                   ]}
                                 >
                                   <Select
-                                    placeholder="units"
+                                    placeholder={t('billinginformation.label8')}
                                     onSelect={handleUnitSelect}
                                   >
                                     {unitDropDown.map((el) => (
@@ -492,7 +538,9 @@ const BillingInformation = () => {
                                 </Form.Item>
                               </Col>
                               <Col span={6}>
-                                <Form.Item label="Plan Type">
+                                <Form.Item
+                                  label={t('billinginformation.label10')}
+                                >
                                   <Select
                                     defaultValue="Monthly"
                                     placeholder="Monthly"
@@ -502,10 +550,10 @@ const BillingInformation = () => {
                                       value="month"
                                       disabled={disablePlanType}
                                     >
-                                      Monthly
+                                      {t('billinginformation.label11')}
                                     </Select.Option>
                                     <Select.Option value="year">
-                                      Yearly
+                                      {t('billinginformation.label12')}
                                     </Select.Option>
                                   </Select>
                                 </Form.Item>
@@ -514,16 +562,16 @@ const BillingInformation = () => {
                               <Col span={6}>
                                 <Form.Item
                                   name="currency"
-                                  label="currency"
+                                  label={t('strings.currency')}
                                   rules={[
                                     {
                                       required: true,
-                                      message: 'Please select currency',
+                                      message: t('billinginformation.label13'),
                                     },
                                   ]}
                                 >
                                   <Select
-                                    placeholder="currency"
+                                    placeholder="EUR"
                                     onSelect={handleCurrencyChange}
                                   >
                                     <Select.Option
@@ -555,7 +603,9 @@ const BillingInformation = () => {
                               </Col>
 
                               <Col span={9} className="total-billing-price">
-                                <Form.Item label="Total Price">
+                                <Form.Item
+                                  label={t('billinginformation.label22')}
+                                >
                                   <h2>
                                     =
                                     {' '}
@@ -568,44 +618,55 @@ const BillingInformation = () => {
                                         ? data.currency
                                         : currency || ''}
                                       {' '}
-                                      per
+                                      {t('billinginformation.label15')}
                                       {' '}
                                       {subscriptionType}
                                     </span>
                                   </h2>
-                                  <p>20% discount if you select Yearly plan</p>
+                                  <p>{t('billinginformation.label14')}</p>
                                 </Form.Item>
                               </Col>
+                              {/* <Col span={9}>
+                                <Button
+                                  onClick={disablebtn}
+                                  disabled={disablePayNow}
+                                >
+                                  Pay Now
+                                </Button>
+                              </Col> */}
                             </Row>
-                            <Col span={6}>
-                              <div>
-                                <Elements stripe={stripePromise}>
-                                  {showCancelCheckout ? (
-                                    <CheckoutForm
-                                      total={(total + Number.EPSILON) * 100}
-                                      currency={currency}
-                                      unitsSelected={unitsSelected}
-                                      subscriptionType={subscriptionType}
-                                      planType={planType}
-                                      toaster={toasterMessage}
-                                      submitChange={submitChangesubscription}
-                                      showCancelCheckout={showCancelCheckout}
-                                    />
-                                  ) : (
-                                    <CheckoutForm
-                                      total={(total + Number.EPSILON) * 100}
-                                      currency={currency}
-                                      unitsSelected={unitsSelected}
-                                      subscriptionType={subscriptionType}
-                                      planType={planType}
-                                      toaster={toasterMessage}
-                                      hideBilling={setHideBilling}
-                                      getData={getUser}
-                                    />
-                                  )}
-                                </Elements>
-                              </div>
-                            </Col>
+                            <Row gutter={[16, 0]}>
+                              <Col span={24}>
+                                <div>
+                                  <Elements stripe={stripePromise}>
+                                    {showCancelCheckout ? (
+                                      <CheckoutForm
+                                        total={(total + Number.EPSILON) * 100}
+                                        currency={currency}
+                                        unitsSelected={unitsSelected}
+                                        subscriptionType={subscriptionType}
+                                        planType={planType}
+                                        toaster={toasterMessage}
+                                        submitChange={submitChangesubscription}
+                                        showCancelCheckout={showCancelCheckout}
+                                      />
+                                    ) : (
+                                      <CheckoutForm
+                                        total={(total + Number.EPSILON) * 100}
+                                        currency={currency}
+                                        unitsSelected={unitsSelected}
+                                        subscriptionType={subscriptionType}
+                                        planType={planType}
+                                        toaster={toasterMessage}
+                                        hideBilling={setHideBilling}
+                                        getData={getUser}
+                                        getInvoice={getInvoice}
+                                      />
+                                    )}
+                                  </Elements>
+                                </div>
+                              </Col>
+                            </Row>
                           </Form>
                         </div>
                       </Col>
@@ -615,7 +676,7 @@ const BillingInformation = () => {
               </Collapse>
             </Col>
             {data ? (
-              <Col span={12}>
+              <Col span={16}>
                 <Collapse defaultActiveKey={['1']} accordion>
                   <Panel
                     header={`${data.interval}ly Subscription Plan`}
@@ -627,10 +688,10 @@ const BillingInformation = () => {
                           <div className="subscription-plan-list">
                             <ul>
                               <li>
-                                Plan
+                                {t('billinginformation.label16')}
                                 {' '}
                                 <span>
-                                  {data.Amount}
+                                  {data.amount}
                                   {' '}
                                   {data.currency}
                                   /
@@ -644,12 +705,12 @@ const BillingInformation = () => {
                                   <span>305 EUR</span>
                                 </li> */}
                               <li>
-                                Plan Type
+                                {t('billinginformation.label10')}
                                 {' '}
                                 <span>{data.planType}</span>
                               </li>
                               <li>
-                                Discount
+                                {t('billinginformation.label17')}
                                 {' '}
                                 <span>
                                   {data.planType === 'basic'
@@ -659,44 +720,56 @@ const BillingInformation = () => {
                               </li>
                             </ul>
                           </div>
-                          <Button onClick={handleChangeSubscription}>
-                            Upgrade
+                          <Button
+                            onClick={handleChangeSubscription}
+                            disabled={disableBtn}
+                          >
+                            {t('billinginformation.label18')}
                           </Button>
-                          {
-                            canDowngrade
-                              ? (
-                                <Button style={{ margin: '50px 30px 20px 10px' }} onClick={handleChangeSubscription}>
-                                  Downgrade
-                                </Button>
-                              )
-                              : (
-                                <Tooltip title="You are utilising all your subscribed units,to downgrade you have to delete some units" color="cyan">
-                                  <Button style={{ margin: '50px 30px 20px 10px' }} disabled>
-                                    downgrade
-                                  </Button>
-                                </Tooltip>
-                              )
-                          }
+                          {canDowngrade ? (
+                            <Button
+                              style={{ margin: '50px 30px 20px 10px' }}
+                              onClick={handleChangeSubscription}
+                              disabled={disableBtn}
+                            >
+                              Downgrade
+                            </Button>
+                          ) : (
+                            <Tooltip
+                              title="You are utilising all your subscribed units,to downgrade you have to delete some units"
+                              color="gold"
+                            >
+                              <Button
+                                style={{ margin: '50px 30px 20px 10px' }}
+                                disabled
+                              >
+                                downgrade
+                              </Button>
+                            </Tooltip>
+                          )}
                         </Col>
 
                         <Col span={10}>
                           <div className="subscription-plan-list">
                             <p>
-                              Your
+                              {t('billinginformation.label19')}
                               {' '}
                               <span>
                                 {data.interval}
-                                ly Subscription Plan
+                                {t('billinginformation.label20')}
                               </span>
                             </p>
                             <p>
-                              will renew on
+                              {t('billinginformation.label21')}
                               {' '}
                               {end}
                             </p>
                           </div>
-                          <Button onClick={handleCancelSubscription}>
-                            cancel
+                          <Button
+                            onClick={handleCancelSubscription}
+                            disabled={disableBtn}
+                          >
+                            {t('strings.cancel')}
                           </Button>
                         </Col>
                       </Row>
@@ -710,11 +783,17 @@ const BillingInformation = () => {
           </Row>
         </div>
       </div>
-      <BillingHistory
-        invoiceList={invoiceList}
-        data={data}
-        currency={currentCurrency}
-      />
+      {data ? (
+        <BillingHistory
+          invoiceList={invoiceList}
+          data={data}
+          currency={currentCurrency}
+        />
+      ) : (
+        ''
+      )}
+
+      {/* </Suspense> */}
     </Wrapper>
   );
 };

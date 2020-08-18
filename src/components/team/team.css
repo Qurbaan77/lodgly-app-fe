@@ -179,3 +179,13 @@ border-right: 1px solid #efecec;
     font-size: 12px;
     margin-bottom: 25px;
 }
+.cross-btn {
+    position: fixed;
+    right: 10px;
+    top: 20px;
+}
+
+.cross-btn .anticon {
+    font-size: 20px;
+    color: #999;
+}

@@ -196,7 +196,7 @@ margin: 0;
 }
 
 .react-tel-input input.form-control {
-    border: 1.5px solid #eaeaea;
+    border: 1px solid #eaeaea;
     border-radius: 0;
     padding: 8px 15px!important;
     height: auto;

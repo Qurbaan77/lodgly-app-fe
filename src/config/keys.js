@@ -1,17 +1,13 @@
-import keys from './default';
-// Local services
-// export const client = keys.development.webserver.clientPath;
-// export const server = keys.development.webserver.serverPath;
+import config from './config.json';
 
-// export const { basicPrice } = keys.development.webserver;
-// export const { advancePrice } = keys.development.webserver;
-// export const { discount } = keys.development.webserver;
-
-// Live Services
-export const client = keys.staging.webserver.clientPath;
-export const server = keys.staging.webserver.serverPath;
+const configData = config[process.env.REACT_APP_ENV] || config.staging;
+export const translationBucket = configData.Webserver.translationBucketPath;
+export const server = configData.Webserver.serverPath;
+export const client = configData.Webserver.clientPath;
+export const { STRIPE_APP_KEY } = configData.Webserver;
+export const SENTRY_DSN = configData.sentry.sentryDsn;
 
 // price and discount for billing
-export const basicPrice = keys.staging.webserver.basicPrice;
-export const advancePrice = keys.staging.webserver.advancePrice;
-export const discount = keys.staging.webserver.discount;
+export const { basicPrice } = configData.Billing.basicPrice;
+export const { advancePrice } = configData.Billing.advancePrice;
+export const { discount } = configData.Billing.discount;

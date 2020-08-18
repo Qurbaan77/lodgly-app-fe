@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import Helmet from 'react-helmet';
 import './team.css';
+import Avatar from 'react-avatar';
+import { useTranslation } from 'react-i18next';
 import { Button, Tooltip } from 'antd';
 import {
   PlusOutlined,
@@ -8,15 +11,17 @@ import {
   PartitionOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-import team from '../../assets/images/profile_user.jpg';
 import SubUserPopup from './subuserpopup';
 import EditSubUserPopup from './editsubuserpopup';
 import subuser from '../../assets/images/subuser.jpg';
+import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import UserLock from '../userlock/userlock';
+import DeletePopup from './deletepopup';
 
 const TeamListing = () => {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [visibleSubUser, setVisibleSubUser] = useState(false);
   const [subUser, setSubUser] = useState([]);
@@ -24,8 +29,10 @@ const TeamListing = () => {
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const [subscribed, setSubscribed] = useState();
-  const [onTrial, setOnTrial] = useState();
+  const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
+  const [visibleDeletePopup, setVisibleDeletePopup] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -40,11 +47,13 @@ const TeamListing = () => {
 
   const handleOk = () => {
     setVisible(false);
+    setVisibleDeletePopup(true);
   };
 
   const handleCancel = () => {
     setVisible(false);
     setVisibleSubUser(false);
+    setVisibleDeletePopup(true);
   };
 
   const closeSubUser = () => {
@@ -60,16 +69,23 @@ const TeamListing = () => {
     setVisibleSubUser(false);
   };
 
-  const handleDeleteSubUser = async (value) => {
-    const deleteId = value.id;
+  const handleDeleteSubUser = async () => {
+    const payload = {
+      deleteId,
+    };
     // deleting sub user from databse
-    const res = await userInstance.post('/deleteSubUser', { deleteId });
+    const res = await userInstance.post('/deleteSubUser', payload);
     if (res.status === 200) {
+      setVisibleDeletePopup(false);
       // deleting sub user from state
-      const data = subUser.filter((el) => el.id === deleteId);
-      setSubUser([...data]);
+      // const data = subUser.filter((el) => el.id === deleteId);
+      getData();
       setNotifyType('success');
       setNotifyMsg('Sub User Deleted Successfully');
+    } else {
+      setVisibleDeletePopup(false);
+      setNotifyType('error');
+      setNotifyMsg('server error please try again');
     }
   };
 
@@ -92,23 +108,10 @@ const TeamListing = () => {
     }
   }, [userId]);
 
-  // const getData = async () => {
-  //   const response0 = await userInstance.get('/getUserSubscriptionStatus');
-  //   if (response0.data.code === 200) {
-  //     const [{
-  //       days, isOnTrial, isSubscribed,
-  //     }] = response0.data.userSubsDetails;
-  //     setDaysLeft(parseInt(days, 10));
-  //     setSubscribed(JSON.parse(isSubscribed));
-  //     setOnTrial(JSON.parse(isOnTrial));
-  //   }
-  //   const response = await userInstance.post('/getSubUser', {
-  //     affiliateId: userId,
-  //   });
-  //   if (response.status === 200) {
-  //     setSubUser(response.data.subUser);
-  //   }
-  // };
+  const showDeletePopup = (value) => {
+    setVisibleDeletePopup(true);
+    setDeleteId(value.id);
+  };
 
   useEffect(() => {
     getData();
@@ -116,21 +119,18 @@ const TeamListing = () => {
 
   const enableButton = (
     <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-      Add New Sub-User
+      {t('team.label1')}
     </Button>
   );
   const disabledButton = (
-    <Tooltip
-      title="You are not authorize to add new sub user"
-      color="gold"
-    >
+    <Tooltip title={t('team.tooltip')} color="gold">
       <Button
         type="primary"
         icon={<PlusOutlined />}
         onClick={show}
         disabled="true"
       >
-        Add New Sub-User
+        {t('team.label1')}
       </Button>
     </Tooltip>
   );
@@ -141,19 +141,23 @@ const TeamListing = () => {
 
   const pageContent = (
     <>
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       {subUser.length ? (
         <Wrapper>
+          <Toaster
+            notifyType={notifyType}
+            notifyMsg={notifyMsg}
+            close={close}
+          />
           <div className="team-page">
             <div className="page-header">
               <h1>
                 <PartitionOutlined />
                 {' '}
-                Team
+                {t('team.label2')}
               </h1>
 
               <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                Add New Sub-User
+                {t('team.label1')}
               </Button>
             </div>
 
@@ -162,10 +166,19 @@ const TeamListing = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th>Sub User</th>
-                      <th>Email</th>
-                      <th>Role</th>
-                      {/* <th /> */}
+                      <th>
+                        {' '}
+                        {t('team.label3')}
+                      </th>
+                      <th>
+                        {' '}
+                        {t('strings.email')}
+                      </th>
+                      <th>
+                        {' '}
+                        {t('team.label4')}
+                      </th>
+                      <th> </th>
                     </tr>
                   </thead>
 
@@ -175,19 +188,29 @@ const TeamListing = () => {
                         <td>
                           <div className="team-info">
                             <div className="team-pic">
-                              <img src={team} alt="team" />
+                              <Avatar
+                                color="#fab52c"
+                                name={el.role}
+                                round="50px"
+                                size="50px"
+                              />
                             </div>
                             <div className="team-title">
-                              <h5>Anthony Cole</h5>
-                              <span>
-                                Job Title | City of London, United Kingdom
-                              </span>
+                              <h5>
+                                Sub User
+                                {i + 1}
+                              </h5>
+                              <span>{t('team.label5')}</span>
                             </div>
                           </div>
                         </td>
 
                         <td>{el.email}</td>
-                        <td>{el.role}</td>
+                        <td>
+                          {
+                          el.role === 'fullaccess' ? 'Full Access' : 'Sub User'
+                        }
+                        </td>
 
                         <td>
                           <div className="team-action">
@@ -195,7 +218,7 @@ const TeamListing = () => {
                               onClick={() => showEditSubUser(el, i)}
                             />
                             <DeleteOutlined
-                              onClick={() => handleDeleteSubUser(el, i)}
+                              onClick={() => showDeletePopup(el, i)}
                             />
                           </div>
                         </td>
@@ -221,14 +244,24 @@ const TeamListing = () => {
             subUserData={currentSubUser}
             getData={getData}
           />
+          <DeletePopup
+            visible={visibleDeletePopup}
+            dataObject={handleDeleteSubUser}
+            cancel={() => handleCancel()}
+          />
         </Wrapper>
       ) : (
         <Wrapper>
+          <Toaster
+            notifyType={notifyType}
+            notifyMsg={notifyMsg}
+            close={close}
+          />
           <div className="add-team-page">
             <div className="add-subuser">
               <img src={subuser} alt="subuser" />
-              <h4>Sub Users</h4>
-              <p>Currently there are no Sub users created</p>
+              <h4>{t('team.label3')}</h4>
+              <p>{t('team.label6')}</p>
               {btn2}
             </div>
           </div>
@@ -245,6 +278,12 @@ const TeamListing = () => {
   );
   return (
     <>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
+        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <body className="team-page-view" />
+      </Helmet>
       {
       hasAccess ? pageContent
         : (
