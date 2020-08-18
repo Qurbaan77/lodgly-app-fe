@@ -159,7 +159,7 @@ const AccommodationChart = ({ topNavId, setAccomodationHasData }) => {
       setPrevArr(response.data.prevYearArr);
     }
     getData();
-  }, [topNavId]);
+  }, [topNavId, setAccomodationHasData]);
 
   const state = {
     series: [
@@ -288,7 +288,7 @@ const OccupancyChart = ({ topNavId, setOccupancyHasData }) => {
       setCurrArr(response.data.currYearArr);
     }
     getData();
-  }, [topNavId]);
+  }, [topNavId, setOccupancyHasData]);
 
   const state = {
     series: [
@@ -413,7 +413,7 @@ const ReservationCountryChart = ({ setReservationCountryHasData }) => {
       }
     }
     getData();
-  }, []);
+  }, [setReservationCountryHasData]);
 
   const state = {
     series: [
@@ -557,7 +557,7 @@ const PaceChart = ({ topNavId, setPaceHasData }) => {
       setCurrYear(response.data.prevYear);
     }
     getData();
-  }, [topNavId]);
+  }, [topNavId, setPaceHasData]);
 
   const state = {
     series: [

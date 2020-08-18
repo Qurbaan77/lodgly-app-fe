@@ -35,7 +35,7 @@ const GroupReservation = (props) => {
   const [daysArr, setDaysArr] = useState([]);
   const [startDate, setStartDate] = useState('');
   const [startDateMonth, setStartDateMonth] = useState('');
-  const [units, setUnits] = useState(0);
+  // const [units, setUnits] = useState(0);
   // const [price, setPrice] = useState(0);
   const [night, setNight] = useState(0);
   const [total, setTotal] = useState(0);
@@ -114,7 +114,7 @@ const GroupReservation = (props) => {
         });
       });
     },
-    [units, daysArr, form, night],
+    [daysArr, form, night],
   );
 
   return (
@@ -230,7 +230,7 @@ const GroupReservation = (props) => {
                     >
                       <Select
                         style={{ width: '50%', display: 'inline-block' }}
-                        onSelect={(value) => setUnits(value + 1)}
+                        // onSelect={(value) => setUnits(value + 1)}
                       >
                         {Array.from(Array(el.noOfUnits).keys()).map((ele) => (
                           <Select.Option value={ele} key={ele + 1}>
