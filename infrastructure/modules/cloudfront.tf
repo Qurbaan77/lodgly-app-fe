@@ -1,24 +1,24 @@
-data "aws_lambda_function" "headers" {
-  function_name = "cloudfront-headers-${var.environment}"
-  qualifier     = "5"
-  provider      = aws.us_east_1
+data "aws_lambda_function" "cloudfront_headers" {
+  function_name = "lambda-edge-${var.environment}-cloudfront-headers"
+  qualifier     = var.lambda_versions.cloudfront_headers
+  provider      = aws.global
 }
 
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
-  comment = "access-identity-${var.bucket}.s3.amazonaws.com"
+  comment = "access-identity-${local.bucket}.s3.amazonaws.com"
 }
 
-resource "aws_cloudfront_distribution" "lodgly_dev" {
+resource "aws_cloudfront_distribution" "this" {
   enabled             = true
   is_ipv6_enabled     = true
   wait_for_deployment = false
   default_root_object = "index.html"
   price_class         = "PriceClass_All"
-  comment             = "[${var.environment}] ${var.description}"
+  comment             = "[${var.environment}] ${var.name} ${var.description}"
 
   origin {
-    domain_name = aws_s3_bucket.lodgly_dev.bucket_domain_name
-    origin_id   = "S3-${var.bucket}"
+    domain_name = aws_s3_bucket.this.bucket_domain_name
+    origin_id   = "S3-${local.bucket}"
 
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path
@@ -26,7 +26,7 @@ resource "aws_cloudfront_distribution" "lodgly_dev" {
   }
 
   aliases = [
-    var.domain
+    "*.${var.domain}"
   ]
 
   custom_error_response {
@@ -47,7 +47,7 @@ resource "aws_cloudfront_distribution" "lodgly_dev" {
     allowed_methods  = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods   = ["GET", "HEAD", "OPTIONS"]
     compress         = true
-    target_origin_id = "S3-${var.bucket}"
+    target_origin_id = "S3-${local.bucket}"
 
     forwarded_values {
       query_string = true
@@ -66,7 +66,7 @@ resource "aws_cloudfront_distribution" "lodgly_dev" {
     lambda_function_association {
       event_type   = "origin-response"
       include_body = false
-      lambda_arn   = data.aws_lambda_function.headers.qualified_arn
+      lambda_arn   = data.aws_lambda_function.cloudfront_headers.qualified_arn
     }
   }
 
@@ -77,10 +77,10 @@ resource "aws_cloudfront_distribution" "lodgly_dev" {
   }
 
   viewer_certificate {
-    acm_certificate_arn      = data.aws_acm_certificate.lodgly_dev.arn
+    acm_certificate_arn      = data.aws_acm_certificate.this.arn
     minimum_protocol_version = "TLSv1.2_2019"
     ssl_support_method       = "sni-only"
   }
 
-  tags = var.tags
+  tags = local.tags
 }
