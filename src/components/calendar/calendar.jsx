@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import './calendar.css';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router-dom';
 import { Button, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
 import nobooking from '../../assets/images/no-booking.png';
+import propertyplace from '../../assets/images/property-placeholder.png';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
 import GSTC from './GSTC';
 import { userInstance } from '../../axios/axiosconfig';
@@ -14,6 +16,7 @@ import GroupReservation from './groupreservation';
 
 const Calendar = () => {
   const { t } = useTranslation();
+  const history = useHistory();
   const [propertyData, setPropertyData] = useState([]);
   const [reservationData, setReservationData] = useState([]);
   const [guestName, setGuestName] = useState('');
@@ -320,6 +323,27 @@ const Calendar = () => {
   }, [topNavId, availableUnits]);
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+
+  if (propertyData.length < 1) {
+    return (
+      <Wrapper>
+        <div className="add-team-page">
+          <div className="add-subuser">
+            <img src={propertyplace} alt="subuser" />
+            <h4>{t('strings.property')}</h4>
+            <p>{t('nolist.heading1')}</p>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => history.push('/addproperty')}
+            >
+              {t('nolist.button1')}
+            </Button>
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
 
   return (
     <Wrapper fun={setTopNavId}>

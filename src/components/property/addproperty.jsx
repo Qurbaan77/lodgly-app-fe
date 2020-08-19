@@ -74,6 +74,7 @@ const AddProperty = () => {
   const [notifyMsg, setNotifyMsg] = useState();
   const [address, setAddress] = useState('');
   const [country, setCountry] = useState(null);
+  const organizationid = localStorage.getItem('organizationid');
   const history = useHistory();
 
   // const isSubUser = localStorage.getItem('isSubUser') || false;
@@ -157,7 +158,8 @@ const AddProperty = () => {
   const props = {
     name: 'file',
     // action: `http://localhost:3001/users/propertyPicture${props2}`,
-    action: `${server}/users/propertyPicture${props2}`,
+    // action: `${server}/users/propertyPicture${props2}`,
+    action: `${server}/users/propertyPicture?propertyid=${props2}&organizationid=${organizationid}`,
     headers: {
       authorization: 'authorization-text',
     },

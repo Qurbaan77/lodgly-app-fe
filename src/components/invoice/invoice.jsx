@@ -2,6 +2,7 @@ import React, {
   useEffect, useState, useCallback,
 } from 'react';
 import Helmet from 'react-helmet';
+import { useHistory } from 'react-router-dom';
 import './invoice.css';
 import { useTranslation } from 'react-i18next';
 import {
@@ -29,6 +30,7 @@ import refreshIcon from '../../assets/images/menu/refresh-icon.png';
 import settingIcon from '../../assets/images/menu/setting-icon.png';
 import printIcon from '../../assets/images/menu/print-icon.png';
 import cancelIcon from '../../assets/images/menu/cancel-icon.png';
+import propertyplace from '../../assets/images/property-placeholder.png';
 // import loader from '../../assets/images/loader.svg';
 import AdInvoicePopup from './addinvoicepopup';
 import EditInvoicePopup from './editInvoicePopup';
@@ -40,6 +42,9 @@ import UserLock from '../userlock/userlock';
 const Invoice = () => {
   const { t } = useTranslation();
   // const { Option } = Select;
+  const history = useHistory();
+  const [propertyData, setPropertyData] = useState([]);
+
   const [topNavId, setTopNavId] = useState(null);
   const [visible, setVisible] = useState(false);
   const [userInfo, setUserInfo] = useState([]);
@@ -155,6 +160,22 @@ const Invoice = () => {
   const [{ invoiceWrite, userId }] = userCred || [{}];
   const canWrite = invoiceWrite;
 
+  const getProperty = useCallback(async () => {
+    const response = await userInstance.post('/fetchProperty', {
+      affiliateId: userId,
+    });
+    const data2 = [];
+    const data = response.data.propertiesData;
+    data
+      .filter((el) => el.id === parseInt(topNavId, 10))
+      .forEach((filterData) => {
+        data2.push(filterData);
+      });
+    if (response.data.code === 200) {
+      setPropertyData(data2.length > 0 ? data2 : data);
+    }
+  }, [userId, topNavId]);
+
   const getData = useCallback(async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
     if (response0.data.code === 200) {
@@ -211,7 +232,8 @@ const Invoice = () => {
 
   useEffect(() => {
     getData();
-  }, [getData]);
+    getProperty();
+  }, [getData, getProperty]);
 
   const handleDownload = () => {
     const urls = [];
@@ -537,6 +559,26 @@ const Invoice = () => {
       )}
     </>
   );
+  if (propertyData.length < 1) {
+    return (
+      <Wrapper>
+        <div className="add-team-page">
+          <div className="add-subuser">
+            <img src={propertyplace} alt="subuser" />
+            <h4>{t('strings.property')}</h4>
+            <p>{t('nolist.heading1')}</p>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => history.push('/addproperty')}
+            >
+              {t('nolist.button1')}
+            </Button>
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
   return (
     <>
       <Helmet>

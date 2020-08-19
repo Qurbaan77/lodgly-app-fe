@@ -1,8 +1,9 @@
 {
   "development": {
     "Webserver": {
-      "clientPath": "http://localhost:3000",
-      "serverPath": "http://localhost:3001",
+      "clientPath": "http://localhost:3002",
+      "serverPath": "http://localhost:8080",
+      "marketingPath": "https://www.lodgly.dev/",
       "translationBucketPath": "https://s3-eu-west-1.amazonaws.com/i18n.lodgly.dev-eu-west-1",
       "STRIPE_APP_KEY": "pk_test_KSRGeFdFSK0045OpMX5UhJXF00GVaQ12hl"
     },
@@ -19,6 +20,7 @@
     "Webserver": {
       "clientPath": "https://app.lodgly.dev",
       "serverPath": "https://api.lodgly.dev",
+      "marketingPath": "https://www.lodgly.dev/",
       "translationBucketPath": "https://s3-eu-west-1.amazonaws.com/i18n.lodgly.dev-eu-west-1",
       "STRIPE_APP_KEY": "pk_test_KSRGeFdFSK0045OpMX5UhJXF00GVaQ12hl"
     },
@@ -35,6 +37,7 @@
     "Webserver": {
       "clientPath": "https://app.lodgly.com",
       "serverPath": "https://api.lodgly.com",
+      "marketingPath": "https://www.lodgly.com/",
       "translationBucketPath": "https://s3-eu-west-1.amazonaws.com/i18n.lodgly.com-eu-west-1",
       "STRIPE_APP_KEY": "pk_live_3UbPs2Tohz1uZSv4sqxWzBrA00qQGdoQYV"
     },

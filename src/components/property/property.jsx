@@ -78,6 +78,7 @@ const Property = () => {
   const [feature2, setFeature2] = useState([]);
   const [feature3, setFeature3] = useState([]);
   const [id, setId] = useState([]);
+  const organizationid = localStorage.getItem('organizationid');
   const [address, setAddress] = useState('');
   const [country, setCountry] = useState(null);
   const [subscribed, setSubscribed] = useState();
@@ -103,7 +104,7 @@ const Property = () => {
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
     }
-    setId(localStorage.getItem('userId'));
+    // setId(localStorage.getItem('userId'));
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
@@ -185,7 +186,8 @@ const Property = () => {
     name: 'file',
     multiple: false,
     // action: `http://localhost:3001/users/propertyPicture/${id}`,
-    action: `${server}/users/propertyPicture/${id}`,
+    // action: `${server}/users/propertyPicture/${id}`,
+    action: `${server}/users/propertyPicture?propertyid=${id}&organizationid=${organizationid}`,
     onChange(info) {
       if (info.file.status === 'done') {
         message.success(`${info.file.name} file uploaded successfully`);

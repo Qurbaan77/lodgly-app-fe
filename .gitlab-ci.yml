@@ -24,8 +24,11 @@ build:
     - npm prune
     - npm install --production
     - |
-      [ "$CI_COMMIT_REF_NAME" == "master" ] && REACT_APP_ENV="production" || REACT_APP_ENV="staging"
-      npm run build
+      if [ "$CI_COMMIT_REF_NAME" == "master" ]; then 
+        REACT_APP_ENV=production npm run build
+      else
+        REACT_APP_ENV=staging npm run build
+      fi
   artifacts:
     when: on_success
     paths:
