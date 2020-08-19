@@ -36,7 +36,7 @@
       "clientPath": "https://app.lodgly.com",
       "serverPath": "https://api.lodgly.com",
       "translationBucketPath": "https://s3-eu-west-1.amazonaws.com/i18n.lodgly.com-eu-west-1",
-      "STRIPE_APP_KEY": "pk_test_KSRGeFdFSK0045OpMX5UhJXF00GVaQ12hl"
+      "STRIPE_APP_KEY": "pk_live_3UbPs2Tohz1uZSv4sqxWzBrA00qQGdoQYV"
     },
     "Billing": {
       "basicPrice": "4",
