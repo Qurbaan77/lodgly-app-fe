@@ -1,19 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import './stats.css';
-import { Row, Col, Tooltip } from 'antd';
+import {
+  Button,
+  Tooltip,
+  Row,
+  Col,
+} from 'antd';
+import {
+  PlusOutlined,
+} from '@ant-design/icons';
 import Chart from 'react-apexcharts';
 import Wrapper from '../wrapper';
 import { userInstance } from '../../axios/axiosconfig';
 import statsIcon from '../../assets/images/menu/stats-icon.png';
 import qst from '../../assets/images/menu/qst.png';
 import favicon from '../../assets/images/logo-mobile.png';
+import propertyplace from '../../assets/images/property-placeholder.png';
 import UserLock from '../userlock/userlock';
 
 const Stats = () => {
   const { t } = useTranslation();
+
+  const history = useHistory();
+  const [propertyData, setPropertyData] = useState([]);
+
   const [topNavId, setTopNavId] = useState();
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
@@ -29,6 +43,25 @@ const Stats = () => {
     'no-stats-data',
   );
   const [paceHasData, setPaceHasData] = useState('no-stats-data');
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+
+  const [{ userId }] = userCred || [{}];
+
+  const getProperty = useCallback(async () => {
+    const response = await userInstance.post('/fetchProperty', {
+      affiliateId: userId,
+    });
+    const data2 = [];
+    const data = response.data.propertiesData;
+    data
+      .filter((el) => el.id === parseInt(topNavId, 10))
+      .forEach((filterData) => {
+        data2.push(filterData);
+      });
+    if (response.data.code === 200) {
+      setPropertyData(data2.length > 0 ? data2 : data);
+    }
+  }, [userId, topNavId]);
 
   const getData = async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
@@ -44,8 +77,32 @@ const Stats = () => {
   useEffect(() => {
     setTopNavId(localStorage.getItem('topNavId'));
     getData();
-  }, []);
+    getProperty();
+  }, [getProperty]);
+
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+
+  if (propertyData.length < 1) {
+    return (
+      <Wrapper>
+        <div className="add-team-page">
+          <div className="add-subuser">
+            <img src={propertyplace} alt="subuser" />
+            <h4>{t('strings.property')}</h4>
+            <p>{t('nolist.heading1')}</p>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => history.push('/addproperty')}
+            >
+              {t('nolist.button1')}
+            </Button>
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper fun={setTopNavId}>
       <Helmet>

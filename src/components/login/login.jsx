@@ -5,6 +5,7 @@ import './login.css';
 import { Form, Input, Button } from 'antd';
 import queryString from 'query-string';
 import { toast } from 'react-toastify';
+import { marketingPath } from '../../config/keys';
 import logo from '../../assets/images/logo.jpg';
 import 'react-toastify/dist/ReactToastify.css';
 import favicon from '../../assets/images/logo-mobile.png';
@@ -44,6 +45,7 @@ const Login = () => {
       localStorage.setItem('token', response.data.token);
       const payload = tokenparser(response.data.token);
       localStorage.setItem('userId', payload.userid);
+      localStorage.setItem('organizationid', payload.organizationid);
       toast.success(msg, { containerId: 'B' });
       history.push('/booking');
       window.location.reload();
@@ -79,7 +81,7 @@ const Login = () => {
       };
       const response = await userInstance.post('/searchComapany', values);
       if (response.data.code === 404) {
-        window.location.href = 'https://www.lodgly.dev/';
+        window.location.href = marketingPath;
       }
     }
     searchCompany();

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import { toast } from 'react-toastify';
+import { useHistory } from 'react-router-dom';
 import './booking.css';
 import {
   Form, Button, Row, Col, Tooltip, Tag, Select, Checkbox,
@@ -25,6 +26,7 @@ import filterIcon from '../../assets/images/menu/filter-icon.png';
 import cancelIcon from '../../assets/images/menu/cancel-icon.png';
 import nobooking from '../../assets/images/no-booking.png';
 // import noproperty from '../../assets/images/property-placeholder.png';
+import propertyplace from '../../assets/images/property-placeholder.png';
 import editIcon from '../../assets/images/menu/pencil-icon.png';
 import downloadIcon from '../../assets/images/menu/download-icon.png';
 import refreshIcon from '../../assets/images/menu/refresh-icon.png';
@@ -38,6 +40,9 @@ const Booking = () => {
   const { t } = useTranslation();
   const forceUpdate = useForceUpdate();
   const [form] = Form.useForm();
+
+  const history = useHistory();
+  const [propertyData, setPropertyData] = useState([]);
 
   const [visible, setVisible] = useState(false);
   const [visibleGuest, setVisibleGuest] = useState(false);
@@ -98,6 +103,22 @@ const Booking = () => {
     setVisibleGuest(false);
     setVisibleFilter(false);
   };
+
+  const getProperty = useCallback(async () => {
+    const response = await userInstance.post('/fetchProperty', {
+      affiliateId: userId,
+    });
+    const data2 = [];
+    const data = response.data.propertiesData;
+    data
+      .filter((el) => el.id === parseInt(topNavId, 10))
+      .forEach((filterData) => {
+        data2.push(filterData);
+      });
+    if (response.data.code === 200) {
+      setPropertyData(data2.length > 0 ? data2 : data);
+    }
+  }, [userId, topNavId]);
 
   const getData = useCallback(async () => {
     const res = await userInstance.get('/getUserSubscriptionStatus');
@@ -224,7 +245,8 @@ const Booking = () => {
 
   useEffect(() => {
     getData();
-  }, [getData]);
+    getProperty();
+  }, [getData, getProperty]);
 
   const filter = useCallback(() => {
     const copyBookingData = bookingData;
@@ -399,6 +421,28 @@ const Booking = () => {
       }
     }
   };
+
+  if (propertyData.length < 1) {
+    return (
+      <Wrapper>
+        <div className="add-team-page">
+          <div className="add-subuser">
+            <img src={propertyplace} alt="subuser" />
+            <h4>{t('strings.property')}</h4>
+            <p>{t('nolist.heading1')}</p>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => history.push('/addproperty')}
+            >
+              {t('nolist.button1')}
+            </Button>
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper fun={setTopNavId}>
       <Helmet>
@@ -716,16 +760,6 @@ const Booking = () => {
               </Row>
             </div>
           ) : (
-            // <div className="add-team-page">
-            //   <div className="add-subuser">
-            //   <img src={noproperty} alt="subuser" />
-            //   <h4>{t('booking.reservation')}</h4>
-            //   <p>{t('booking.noproperty')}</p>
-            //   <Button type="primary" icon={<PlusOutlined />}>
-            //   {t('booking.addproperty')}
-            //   </Button>
-            //   </div>
-            //   </div>
             <div className="add-team-page">
               <div className="add-subuser">
                 <img src={nobooking} alt="subuser" />

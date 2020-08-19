@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import './owner.css';
 import {
   Form,
@@ -19,7 +20,7 @@ import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import moment from 'moment';
 import Wrapper from '../wrapper';
 import DeletePopup from '../property/deletepopup';
-
+import propertyplace from '../../assets/images/property-placeholder.png';
 import property1 from '../../assets/images/property-1.png';
 import owner from '../../assets/images/profile_user.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
@@ -31,6 +32,7 @@ import UserLock from '../userlock/userlock';
 
 const Owner = () => {
   const { t } = useTranslation();
+  const history = useHistory();
   const [form] = Form.useForm();
   const { Option } = Select;
   const [visible, setVisible] = useState(false);
@@ -724,6 +726,26 @@ const Owner = () => {
       )}
     </>
   );
+  if (propertyData.length < 1) {
+    return (
+      <Wrapper>
+        <div className="add-team-page">
+          <div className="add-subuser">
+            <img src={propertyplace} alt="subuser" />
+            <h4>{t('strings.property')}</h4>
+            <p>{t('nolist.heading1')}</p>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => history.push('/addproperty')}
+            >
+              {t('nolist.button1')}
+            </Button>
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
   return (
     <>
       <Helmet>

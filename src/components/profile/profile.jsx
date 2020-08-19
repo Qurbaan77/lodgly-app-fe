@@ -47,6 +47,7 @@ const Profile = () => {
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
   const userId = localStorage.getItem('userId');
+  const organizationid = localStorage.getItem('organizationid');
   const [img, setImg] = useState('');
   const [userName, setUserName] = useState('');
   const [subscribed, setSubscribed] = useState();
@@ -157,7 +158,7 @@ const Profile = () => {
     name: 'file',
     multiple: false,
     // action: `http://localhost:8080/users/photo/${userId}`,
-    action: `${server}/users/photo/${userId}`,
+    action: `${server}/users/photo?userid=${userId}&organizationid=${organizationid}`,
     onChange(info) {
       // if (info.file.status !== 'uploading') {
       // console.log(info.file, info.fileList);

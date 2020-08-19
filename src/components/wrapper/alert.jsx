@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, Redirect } from 'react-router-dom';
 import { Alert } from 'antd';
 import { userInstance } from '../../axios/axiosconfig';
 
 const AlertBox = () => {
   const { t } = useTranslation();
   const location = useLocation();
+
   const [daysLeft, setDaysLeft] = useState(14);
   const [hideBanner, setHideBanner] = useState(false);
+  const [redirect, setRedirect] = useState(false);
 
   const getDays = async () => {
     const res = await userInstance.post('/trialDays');
     if (res.data.code === 400) {
       localStorage.clear();
-      window.location.reload();
+      setRedirect(true);
     }
-    if (!JSON.parse(res.data.isOnTrial)) {
+    if (!res.data.isOnTrial) {
       localStorage.setItem('collapse', 1);
     }
     setDaysLeft(res.data.remainingDays);
@@ -40,9 +42,13 @@ const AlertBox = () => {
   };
 
   const isCollapsed = localStorage.getItem('collapse') || false;
+
+  if (redirect) {
+    return <Redirect to="/" />;
+  }
   return (
     <>
-      {!isCollapsed ? (
+      {!parseInt(isCollapsed, 10) ? (
         <div className="alert-box" hidden={hideBanner}>
           <Alert
             message={`${t('propertylist.alert')} ${daysLeft} ${t(
