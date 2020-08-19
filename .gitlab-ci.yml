@@ -23,7 +23,9 @@ build:
   script:
     - npm prune
     - npm install --production
-    - npm run build
+    - |
+      [ "$CI_COMMIT_REF_NAME" == "master" ] && REACT_APP_ENV="production" || REACT_APP_ENV="staging"
+      npm run build
   artifacts:
     when: on_success
     paths:
