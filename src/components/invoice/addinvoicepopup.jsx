@@ -424,7 +424,6 @@ const AdInvoicePopup = (props) => {
 
               <Form.Item label="Vat ID" name="vat">
                 <Input
-                  type="number"
                   value={vatId}
                   onChange={(e) => setVatId(e.target.value)}
                 />
@@ -464,6 +463,7 @@ const AdInvoicePopup = (props) => {
                 >
                   <Input
                     type="number"
+                    onkeydown="return event.keyCode !== 69"
                     // value={quantity}
                     onBlur={(e) => handleQuantity(e, ele)}
                   />
@@ -483,6 +483,7 @@ const AdInvoicePopup = (props) => {
                 >
                   <Input
                     type="number"
+                    onkeydown="return event.keyCode !== 69"
                     // value={price}
                     onBlur={(e) => handlePrice(e, ele)}
                   />
@@ -517,6 +518,7 @@ const AdInvoicePopup = (props) => {
                 <Form.Item name={[ele, 'discount']} label="Discount">
                   <Input
                     type="number"
+                    onkeydown="return event.keyCode !== 69"
                     onBlur={(e) => handleDiscount(e, ele)}
                   />
                 </Form.Item>

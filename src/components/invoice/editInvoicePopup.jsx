@@ -539,6 +539,7 @@ const EditInvoicePopup = (props) => {
                   >
                     <Input
                       type="number"
+                      onkeydown="return event.keyCode !== 69"
                         // value={quantity}
                       onChange={(e) => handleQuantity(e, ele, j)}
                     />
@@ -558,6 +559,7 @@ const EditInvoicePopup = (props) => {
                   >
                     <Input
                       type="number"
+                      onkeydown="return event.keyCode !== 69"
                       value={price}
                       onChange={(e) => handlePrice(e, j, ele)}
                     />
@@ -583,6 +585,7 @@ const EditInvoicePopup = (props) => {
                   >
                     <Input
                       type="number"
+                      onkeydown="return event.keyCode !== 69"
                       placeholder="%"
                       value={discountPer}
                       onChange={(e) => handleDiscount(e, ele, j)}
