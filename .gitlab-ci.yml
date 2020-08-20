@@ -25,9 +25,9 @@ build:
     - npm install --production
     - |
       if [ "$CI_COMMIT_REF_NAME" == "master" ]; then 
-        REACT_APP_ENV=production npm run build
+        npm run build:prod
       else
-        REACT_APP_ENV=staging npm run build
+        npm run build:staging
       fi
   artifacts:
     when: on_success
