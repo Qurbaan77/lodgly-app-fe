@@ -4,6 +4,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import moment from 'moment';
 import './profile.css';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import {
   Form, Select, Row, Col, Collapse, Button, Tooltip,
@@ -22,7 +23,6 @@ import { userInstance } from '../../axios/axiosconfig';
 import CheckoutForm from './CheckoutForm';
 import favicon from '../../assets/images/logo-mobile.png';
 // import loader from '../../assets/images/loader.svg';
-import Toaster from '../toaster/toaster';
 
 const stripePromise = loadStripe(STRIPE_APP_KEY);
 const { Panel } = Collapse;
@@ -37,8 +37,6 @@ const BillingInformation = () => {
   const [subscriptionType, setSubscriptionType] = useState('month');
   const [exchangeRate, setExchangeRate] = useState([]);
   const [currency, setCurrency] = useState('EUR');
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
   const [data, addData] = useState();
   const [invoiceList, setInvoiceList] = useState([]);
   const [end, setEnd] = useState('');
@@ -119,15 +117,6 @@ const BillingInformation = () => {
     getUser();
     getInvoice();
   }, []);
-
-  const close = () => {
-    setNotifyType('');
-  };
-
-  const toasterMessage = (type, msg) => {
-    setNotifyType(type);
-    setNotifyMsg(msg);
-  };
 
   /* ------------------------------- All input handling functions here -------------------------- */
 
@@ -392,8 +381,7 @@ const BillingInformation = () => {
 
   const submitChangesubscription = async () => {
     if (!unitsSelected && !subscriptionType && !currency) {
-      setNotifyType('error');
-      setNotifyMsg('Please select everything properly');
+      toast.error('Please select everything properly', { containerId: 'B' });
     }
     const payload = {
       subscriptionId: data.subscriptionId,
@@ -407,14 +395,12 @@ const BillingInformation = () => {
     };
     const res = await userInstance.post('/changeSubscription', payload);
     if (res.data.code === 200) {
-      setNotifyType('success');
-      setNotifyMsg(res.data.msg);
+      toast.success('subscription changed successfully', { containerId: 'B' });
       getUser();
       getInvoice();
       setHideBilling(true);
     } else {
-      setNotifyType('error');
-      setNotifyMsg('Unable to change your plan please try after some time');
+      toast.error('server error please try again', { containerId: 'B' });
     }
   };
 
@@ -425,12 +411,10 @@ const BillingInformation = () => {
       });
       if (response.data.code === 200) {
         getUser();
-        setNotifyType('success');
-        setNotifyMsg(response.data.msg);
+        toast.success('subscription cancelled', { containerId: 'B' });
       }
     } catch (error) {
-      setNotifyType('error');
-      setNotifyMsg(error.msg);
+      toast.error('server error please try again', { containerId: 'B' });
     }
   };
 
@@ -455,7 +439,6 @@ const BillingInformation = () => {
         />
       </Helmet>
       {/* <Suspense fallback={<ShowLoader />}> */}
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <div className="billing-information">
         <div className="page-header">
           <h1>
@@ -646,7 +629,6 @@ const BillingInformation = () => {
                                         unitsSelected={unitsSelected}
                                         subscriptionType={subscriptionType}
                                         planType={planType}
-                                        toaster={toasterMessage}
                                         submitChange={submitChangesubscription}
                                         showCancelCheckout={showCancelCheckout}
                                       />
@@ -657,7 +639,6 @@ const BillingInformation = () => {
                                         unitsSelected={unitsSelected}
                                         subscriptionType={subscriptionType}
                                         planType={planType}
-                                        toaster={toasterMessage}
                                         hideBilling={setHideBilling}
                                         getData={getUser}
                                         getInvoice={getInvoice}

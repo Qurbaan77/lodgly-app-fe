@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import Helmet from 'react-helmet';
 import './property.css';
 import {
-  Button, Tooltip, Modal, Empty, Input,
+  Button, Tooltip, Modal, Form, Input,
 } from 'antd';
 import {
-  HomeOutlined,
   PlusOutlined,
   DeleteOutlined,
   FormOutlined,
@@ -16,15 +16,17 @@ import {
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
+import unitIcon from '../../assets/images/menu/unit-type-icon.png';
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 import UserLock from '../userlock/userlock';
+import nounit from '../../assets/images/no-unit.png';
 
 const UnitType = () => {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [showPanel, setShowPanel] = useState(true);
-  const [empty, setEmpty] = useState(true);
+  // const [empty, setEmpty] = useState(true);
   const [unittypeData, setUnittypeData] = useState([]);
   const [currUnittype, setCurrUnittype] = useState(0);
   const [name, setName] = useState();
@@ -71,10 +73,15 @@ const UnitType = () => {
       affiliateId: userId,
     };
     const response = await userInstance.post('/addUnitType', values);
+    const { msg } = response.data;
     if (response.data.code === 200) {
+      toast.success(msg, { containerId: 'B' });
       setEditId(null);
       setShowPanel(true);
       getData();
+    } else {
+      toast.error(msg, { containerId: 'B' });
+      setShowPanel(true);
     }
   };
 
@@ -114,7 +121,7 @@ const UnitType = () => {
         });
         el.noOfUnits = sum;
       });
-      setEmpty(false);
+      // setEmpty(false);
       setUnittypeData(unittypeData);
     }
   }, [userId]);
@@ -173,6 +180,28 @@ const UnitType = () => {
     }
   };
 
+  const checkSpace = (rule, value) => {
+    if (value.replace(/\s/g, '').length === 0) {
+      return Promise.resolve('Name should not only contains whitespace');
+    }
+    return true;
+  };
+
+  if (!unittypeData.length) {
+    return (
+      <Wrapper>
+        <div className="add-team-page">
+          <div className="add-subuser">
+            <img src={nounit} alt="nounit" />
+            <h4>{t('nounit.heading')}</h4>
+            <p>{t('nounit.text')}</p>
+            {btn2}
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper>
       <Helmet>
@@ -193,7 +222,7 @@ const UnitType = () => {
               <div className="unit-type">
                 <div className="page-header">
                   <h1>
-                    <HomeOutlined />
+                    <img src={unitIcon} alt="unit" />
                     {' '}
                     {t('unittype.heading')}
                   </h1>
@@ -204,16 +233,23 @@ const UnitType = () => {
                     ? (
                       <div className="panel-box units editunit" hidden={showPanel}>
                         <div className="group-name">
-                          <Input
-                            autoFocus
-                            type="text"
-                            id="name"
-                            name="name"
-                            placeholder={t('unittype.title3')}
-                            onChange={onChange}
-                            onPressEnter={() => onFinish()}
-                            onKeyDown={escape}
-                          />
+                          <Form>
+                            <Form.Item
+                              name="unit-type-name"
+                              rules={[{ validator: checkSpace }]}
+                            >
+                              <Input
+                                autoFocus
+                                type="text"
+                                id="name"
+                                name="name"
+                                placeholder={t('unittype.title3')}
+                                onChange={onChange}
+                                onPressEnter={() => onFinish()}
+                                onKeyDown={escape}
+                              />
+                            </Form.Item>
+                          </Form>
                         </div>
                         <div className="group-action">
                           <div
@@ -227,6 +263,7 @@ const UnitType = () => {
                             {t('strings.cancel')}
                           </div>
                           <div
+                            disabled
                             className="sav-btn"
                             onClick={() => onFinish()}
                             role="button"
@@ -241,25 +278,24 @@ const UnitType = () => {
                     )
                     : ''
                 }
-                {unittypeData.length ? (
-                  <div className="panel-container">
-                    {unittypeData.map((el, i) => (
-                      <div
-                        className={
+                <div className="panel-container">
+                  {unittypeData.map((el, i) => (
+                    <div
+                      className={
                   editId === i
                     ? 'panel-box units editunitname'
                     : 'panel-box units'
                 }
-                      >
-                        <div className="group-name" onClick={() => edit(el.id)} role="presentation">
-                          <h4
-                            hidden={editId === i}
-                            role="presentation"
-                            aria-hidden="true"
-                          >
-                            {el.unitTypeName}
-                          </h4>
-                          {
+                    >
+                      <div className="group-name" onClick={() => edit(el.id)} role="presentation">
+                        <h4
+                          hidden={editId === i}
+                          role="presentation"
+                          aria-hidden="true"
+                        >
+                          {el.unitTypeName}
+                        </h4>
+                        {
                             showEdit
                               ? (
                                 <Input
@@ -275,47 +311,44 @@ const UnitType = () => {
                               )
                               : ''
                         }
-                          <span>
-                            {el.noOfUnits}
-                            {' '}
-                            {t('unittype.title2')}
-                          </span>
-                        </div>
-                        {editId === i ? (
-                          <div className="group-action">
-                            <div
-                              className="can-btn"
-                              onClick={() => setEditId(null)}
-                              role="button"
-                              aria-hidden="true"
-                            >
-                              <CloseCircleOutlined />
-                              {' '}
-                              {t('strings.cancel')}
-                            </div>
-                            <div
-                              className="sav-btn"
-                              onClick={() => onFinish(el.id)}
-                              role="button"
-                              aria-hidden="true"
-                            >
-                              <CheckCircleOutlined />
-                              {' '}
-                              {t('strings.save')}
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="group-action">
-                            <FormOutlined onClick={() => editName(i)} />
-                            <DeleteOutlined onClick={() => show(el.id)} />
-                          </div>
-                        )}
+                        <span>
+                          {el.noOfUnits}
+                          {' '}
+                          {t('unittype.title2')}
+                        </span>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} hidden={empty} />
-                )}
+                      {editId === i ? (
+                        <div className="group-action">
+                          <div
+                            className="can-btn"
+                            onClick={() => setEditId(null)}
+                            role="button"
+                            aria-hidden="true"
+                          >
+                            <CloseCircleOutlined />
+                            {' '}
+                            {t('strings.cancel')}
+                          </div>
+                          <div
+                            className="sav-btn"
+                            onClick={() => onFinish(el.id)}
+                            role="button"
+                            aria-hidden="true"
+                          >
+                            <CheckCircleOutlined />
+                            {' '}
+                            {t('strings.save')}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="group-action">
+                          <FormOutlined onClick={() => editName(i)} />
+                          <DeleteOutlined onClick={() => show(el.id)} />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
               {/* <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} hidden={empty} /> */}
               <Modal

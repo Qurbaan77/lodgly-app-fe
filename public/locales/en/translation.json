@@ -105,7 +105,11 @@
     "currency": "Currency"
     
   },
-
+  "nounit": {
+    "heading": "UNIT TYPES",
+    "text": "There are no unit types created",
+    "button":"Add Unit Type"
+  },
   "header": {
     "heading": "Header",
     "searchplaceholder": "Select Property",

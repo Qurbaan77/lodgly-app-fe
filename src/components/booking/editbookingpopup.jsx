@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 // import { useHistory } from 'react-router-dom';
 import './booking.css';
+import { toast } from 'react-toastify';
 import {
   Form,
   Select,
@@ -44,7 +45,6 @@ const Editbookingpopup = (props) => {
     handleCancel,
     setBooked,
     getData,
-    toasterMessage,
   } = props;
   const [form] = Form.useForm();
   // const [test, setTest] = useState(false);
@@ -262,14 +262,13 @@ const Editbookingpopup = (props) => {
     const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
     values.affiliateId = userId;
     const response = await userInstance.post('/changeBooking', values);
-    const { msg } = response.data;
     if (response.data.code === 200) {
-      toasterMessage('success', msg);
       getData();
       setBooked(true);
       close();
+      toast.success('booking changed successfully', { containerId: 'B' });
     } else {
-      toasterMessage('error', msg);
+      toast.error('some error occurred!', { containerId: 'B' });
     }
 
     form.resetFields();
@@ -1112,7 +1111,6 @@ Editbookingpopup.propTypes = {
   handleCancel: PropTypes.func,
   setBooked: PropTypes.func,
   getData: PropTypes.func,
-  toasterMessage: () => {},
 };
 
 Editbookingpopup.defaultProps = {
@@ -1124,7 +1122,6 @@ Editbookingpopup.defaultProps = {
   getData: () => {},
   setEditCurrentGuest: () => {},
   setCurrentService: () => {},
-  toasterMessage: () => {},
   editBookingValues: {},
   editCurrentGuest: [],
   currentService: [],
