@@ -191,8 +191,13 @@ const Services = () => {
             <>
               <div className="property-listing">
                 <div className="page-header">
-                 
-                  <h1> <ApartmentOutlined /> {t('services.heading3')}</h1>
+
+                  <h1>
+                    {' '}
+                    <ApartmentOutlined />
+                    {' '}
+                    {t('services.heading3')}
+                  </h1>
 
                   {btn2}
                 </div>

@@ -14,10 +14,10 @@ const NoUnit = () => {
         <h4>{t('nounit.heading')}</h4>
         <p>{t('nounit.text')}</p>
         <Button
-        type="primary"
-        icon={<PlusOutlined />}
+          type="primary"
+          icon={<PlusOutlined />}
         >
-        {t('nounit.button')}
+          {t('nounit.button')}
         </Button>
       </div>
     </div>

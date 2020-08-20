@@ -17,7 +17,6 @@ import {
 import {
   DeleteOutlined,
   FormOutlined,
-  HomeOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
@@ -209,7 +208,7 @@ const Task = () => {
               <div className="cleaning-group">
                 <div className="page-header">
                   <h1>
-                  <img src={taskIcon} alt="task" />
+                    <img src={taskIcon} alt="task" />
                     {' '}
                     {localStorage.getItem('groupId')
                       ? group.groupName

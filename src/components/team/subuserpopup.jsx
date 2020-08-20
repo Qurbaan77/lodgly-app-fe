@@ -117,6 +117,39 @@ const SubUserPopup = ({
       setBillingRead(false);
       setBillingWrite(false);
       setBillingDelete(false);
+    } else {
+      setHideWrite(true);
+      setHideDelete(true);
+      setBookingRead(false);
+      setBookingWrite(false);
+      setBookingDelete(false);
+      setPropertiesRead(false);
+      setPropertiesWrite(false);
+      setPropertiesDelete(false);
+      setCalendarRead(false);
+      setCalendarWrite(false);
+      setCalendarDelete(false);
+      setGuestsRead(false);
+      setGuestsWrite(false);
+      setGuestsDelete(false);
+      setTeamRead(false);
+      setTeamWrite(false);
+      setTeamDelete(false);
+      setInvoicesRead(false);
+      setInvoicesWrite(false);
+      setInvoicesDelete(false);
+      setStatsRead(false);
+      setStatsWrite(false);
+      setStatsDelete(false);
+      setServiceRead(false);
+      setServiceWrite(false);
+      setServiceDelete(false);
+      setOwnerRead(false);
+      setOwnerWrite(false);
+      setOwnerDelete(false);
+      setBillingRead(false);
+      setBillingWrite(false);
+      setBillingDelete(false);
     }
   };
 

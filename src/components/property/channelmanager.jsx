@@ -28,7 +28,6 @@ import client17 from '../../assets/images/item-17.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
 import channelIcon from '../../assets/images/menu/channel-icon.png';
 
-
 const ChannelManager = () => {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
@@ -55,7 +54,11 @@ const ChannelManager = () => {
       </Helmet>
       <div className="channel-container">
         <div className="page-header">
-          <h1><img src={channelIcon} alt="channel" /> {t('channel.heading')}</h1>
+          <h1>
+            <img src={channelIcon} alt="channel" />
+            {' '}
+            {t('channel.heading')}
+          </h1>
         </div>
 
         <div className="channel-content">

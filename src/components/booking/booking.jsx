@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
-import moment from 'moment';
+// import moment from 'moment';
 import './booking.css';
 import {
   Form, Button, Row, Col, Tooltip, Tag, Select, Checkbox,
@@ -192,10 +192,9 @@ const Booking = () => {
   }, [topNavId]);
 
   const selectBooking = (values) => {
-    console.log(values.startDate);
     setStatus(values.status);
-    values.startDate = moment(values.startDate).format('DD MMMM');
-    values.endDate = values.endDate;
+    values.startDate = values.startDate.slice(0, 10);
+    values.endDate = values.endDate.slice(0, 10);
     const d1 = new Date(values.startDate);
     const d2 = new Date(values.endDate);
     const diff = Math.abs(d1 - d2);

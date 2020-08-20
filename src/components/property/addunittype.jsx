@@ -12,7 +12,6 @@ import {
   Tooltip,
 } from 'antd';
 import {
-  HomeOutlined,
   DeleteOutlined,
   FormOutlined,
   CloseCircleOutlined,
@@ -345,7 +344,7 @@ const AddUnitType = () => {
           <div className="unit-type">
             <div className="page-header">
               <h1>
-              <img src={unitIcon} alt="unit" />
+                <img src={unitIcon} alt="unit" />
                 {' '}
                 {currentUnittype.id
                   ? currentUnittype.unitTypeName

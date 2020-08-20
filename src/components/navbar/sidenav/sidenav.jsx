@@ -338,10 +338,12 @@ const Sidenav = ({
           <Link to="/services">{t('sidebar.menu15')}</Link>
         </Menu.Item>
       </Menu>
-      
+
       <div className="company-ip">
         <h6>
-          Page: {window.location.host}
+          Page:
+          {' '}
+          {window.location.host}
         </h6>
         {/* <p>1234-5674-3658</p> */}
       </div>

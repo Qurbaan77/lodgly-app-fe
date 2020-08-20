@@ -16,7 +16,7 @@ import {
   Collapse,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { HomeOutlined, InboxOutlined } from '@ant-design/icons';
+import { InboxOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
@@ -251,7 +251,7 @@ const Property = () => {
                   return (
                     <div className="page-header">
                       <h1>
-                      <img src={propertyDetailIcon} alt="property" />
+                        <img src={propertyDetailIcon} alt="property" />
                         {' '}
                         {t('strings.property')}
                         <span>&nbsp;</span>

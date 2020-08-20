@@ -14,7 +14,6 @@ import {
   DeleteOutlined,
   FormOutlined,
   BellOutlined,
-  HomeOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
@@ -148,7 +147,7 @@ const Groups = () => {
               <div className="group">
                 <div className="page-header">
                   <h1>
-                  <img src={taskIcon} alt="task" />
+                    <img src={taskIcon} alt="task" />
                     {' '}
                     {t('group.heading')}
                   </h1>
