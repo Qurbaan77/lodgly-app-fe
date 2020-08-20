@@ -1,6 +1,6 @@
 import config from './config.json';
 
-const configData = config[process.env.REACT_APP_ENV] || config.staging;
+const configData = config[process.env.REACT_APP_ENV];
 export const translationBucket = configData.Webserver.translationBucketPath;
 export const server = configData.Webserver.serverPath;
 export const client = configData.Webserver.clientPath;
