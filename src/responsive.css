@@ -407,10 +407,6 @@ input[type=number]{
     -moz-appearance:textfield;
   }
 
-
-
-
-
 .Toastify__toast {
     align-items: center!important;
     border-radius: 4px!important;
@@ -427,13 +423,6 @@ input[type=number]{
 .Toastify__close-button>svg {
     margin-top: 5px!important;
 }
-
-
-
-
-
-
-
 /******************************************************************************************************/
 
                                 /*********** Media Query ***********/   

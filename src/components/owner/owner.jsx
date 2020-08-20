@@ -3,6 +3,7 @@ import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import './owner.css';
+import { toast } from 'react-toastify';
 import {
   Form,
   Select,
@@ -27,7 +28,6 @@ import favicon from '../../assets/images/logo-mobile.png';
 import arrow from '../../assets/images/select-arrow.png';
 import subuser from '../../assets/images/subuser.jpg';
 import { userInstance } from '../../axios/axiosconfig';
-import Toaster from '../toaster/toaster';
 import UserLock from '../userlock/userlock';
 
 const Owner = () => {
@@ -40,8 +40,6 @@ const Owner = () => {
   const [country, setCountry] = useState(null);
   const [propertyData, setPropertyData] = useState([]);
   const [ownerData, setOwnerData] = useState([]);
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
   const [curOwner, setCurOwner] = useState();
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
@@ -59,7 +57,6 @@ const Owner = () => {
   const show = () => {
     form.resetFields();
     setVisible(true);
-    setNotifyType('');
   };
 
   const handleOk = () => {
@@ -72,10 +69,6 @@ const Owner = () => {
     setVisible(false);
     setVisible2(false);
     setEditOpen(false);
-  };
-
-  const close = () => {
-    setNotifyType('');
   };
 
   const showDeletePopUP = (unitId) => {
@@ -127,7 +120,6 @@ const Owner = () => {
     if (response.data.code === 200) {
       const data2 = response.data.propertiesData;
       setVisible(true);
-      setNotifyType('');
       const selectedProperty = [];
       const arr = [];
       const data3 = data2.filter((el) => el.ownerId === data.id);
@@ -169,16 +161,13 @@ const Owner = () => {
     copyValues.affiliateId = userId;
     const response = await userInstance.post('/addOwner', copyValues);
     const statusCode = response.data.code;
-    const { msg } = response.data;
     if (statusCode === 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
+      toast.success('owner added successfully', { containerId: 'B' });
       setVisible(false);
       getSubUserData();
       getPropertyData();
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toast.error('server error please try again', { containerId: 'B' });
     }
     form.resetFields();
   };
@@ -192,6 +181,9 @@ const Owner = () => {
       setVisible2(false);
       getPropertyData();
       getSubUserData();
+      toast.success('successfully deleted owner', { containerId: 'B' });
+    } else {
+      toast.error('server error please try again', { containerId: 'B' });
     }
   };
 
@@ -237,11 +229,6 @@ const Owner = () => {
             </div>
 
             <div className="owner-list">
-              <Toaster
-                notifyType={notifyType}
-                notifyMsg={notifyMsg}
-                close={close}
-              />
               <div className="custom-table">
                 <table>
                   <thead>

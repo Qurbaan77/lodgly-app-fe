@@ -4,6 +4,7 @@ import React, {
 import Helmet from 'react-helmet';
 import { useHistory } from 'react-router-dom';
 import './invoice.css';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -35,7 +36,6 @@ import propertyplace from '../../assets/images/property-placeholder.png';
 import AdInvoicePopup from './addinvoicepopup';
 import EditInvoicePopup from './editInvoicePopup';
 import { userInstance } from '../../axios/axiosconfig';
-import Toaster from '../toaster/toaster';
 import DeletePopup from './deletepopup';
 import UserLock from '../userlock/userlock';
 
@@ -60,8 +60,6 @@ const Invoice = () => {
   const [currentInvoiceItems, setCurrentInvoiceItems] = useState([]);
   const [invoiceCurrentPropertyInfo, setInvoicePropertyInfo] = useState([]);
   const [pagination, setPagination] = useState({ minValue: 0, maxValue: 7 });
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
   const [visibleDeletePopup, setVisibleDeletePopup] = useState(false);
   const [removeId, setDeleteId] = useState(null);
   const [selectAllCheck, setSelectAllCheck] = useState(false);
@@ -81,10 +79,6 @@ const Invoice = () => {
 
   const show = () => {
     setVisible(true);
-  };
-
-  const closeToaster = () => {
-    setNotifyType('');
   };
 
   const close = () => {
@@ -120,17 +114,10 @@ const Invoice = () => {
       // deleting sub user from state
       const data = invoiceData.filter((el) => el.id !== deleteId);
       setInvoiceData([...data]);
-      setNotifyType('success');
-      setNotifyMsg(t('invoice.rule1'));
+      toast.success(t('invoice.rule1'), { containerId: 'B' });
     } else {
-      setNotifyType('error');
-      setNotifyMsg(t('invoice.rule2'));
+      toast.error('server error please try again', { containerId: 'B' });
     }
-  };
-
-  const toasterMessage = (msg) => {
-    setNotifyType('success');
-    setNotifyMsg(msg);
   };
 
   const handlePagination = (value) => {
@@ -333,11 +320,6 @@ const Invoice = () => {
     <>
       {page ? (
         <Wrapper fun={setTopNavId}>
-          <Toaster
-            notifyType={notifyType}
-            notifyMsg={notifyMsg}
-            close={closeToaster}
-          />
           <div className="add-invoice-page">
             <div className="add-invoice">
               <img src={invoice} alt="invoice" />
@@ -358,11 +340,6 @@ const Invoice = () => {
         </Wrapper>
       ) : (
         <Wrapper fun={setTopNavId}>
-          <Toaster
-            notifyType={notifyType}
-            notifyMsg={notifyMsg}
-            close={closeToaster}
-          />
           <div className="invoice-listing-page">
             <div className="page-header">
               <h1>
@@ -534,7 +511,6 @@ const Invoice = () => {
             property={currentPropertyInfo}
             label={label}
             close={close}
-            toasterMessage={toasterMessage}
           />
 
           <EditInvoicePopup
@@ -547,7 +523,6 @@ const Invoice = () => {
             invoiceItems={currentInvoiceItems}
             setInvoiceItems={setCurrentInvoiceItems}
             showDeleteWarning={showpopup}
-            toasterMessage={toasterMessage}
           />
 
           <DeletePopup

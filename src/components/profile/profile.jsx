@@ -3,6 +3,7 @@ import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import './profile.css';
+import { toast } from 'react-toastify';
 import {
   Form,
   Select,
@@ -18,7 +19,6 @@ import {
 } from 'antd';
 import { UserOutlined, DownOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
 import favicon from '../../assets/images/logo-mobile.png';
@@ -44,8 +44,6 @@ const Profile = () => {
   const [form1] = Form.useForm();
   const [form3] = Form.useForm();
   const [form4] = Form.useForm();
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
   const userId = localStorage.getItem('userId');
   const organizationid = localStorage.getItem('organizationid');
   const [img, setImg] = useState('');
@@ -106,14 +104,11 @@ const Profile = () => {
   const personalInfoFinish = async (values) => {
     const response = await userInstance.post('/updatePersonalInfo', values);
     const statusCode = response.data.code;
-    const { msg } = response.data;
     if (statusCode === 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
+      toast.success('Data updated successfully', { containerId: 'B' });
       getUserInfo();
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toast.error('server error please try again', { containerId: 'B' });
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form1.resetFields();
@@ -122,13 +117,10 @@ const Profile = () => {
   const companyFinsh = async (values) => {
     const response = await userInstance.post('/updateOrganisation', values);
     const statusCode = response.data.code;
-    const { msg } = response.data;
     if (statusCode === 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
+      toast.success('Data updated successfully', { containerId: 'B' });
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toast.error('server error please try again', { containerId: 'B' });
     }
     getCompanyInfo();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -138,20 +130,13 @@ const Profile = () => {
   const passwordFininsh = async (values) => {
     const response = await userInstance.post('/changePassword', values);
     const statusCode = response.data.code;
-    const { msg } = response.data;
     if (statusCode === 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
+      toast.success('Password changed successfully', { containerId: 'B' });
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toast.error('server error please try again', { containerId: 'B' });
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form3.resetFields();
-  };
-
-  const close = () => {
-    setNotifyType('');
   };
 
   const props = {
@@ -217,12 +202,6 @@ const Profile = () => {
               {t('billingprofile.heading1')}
             </h1>
           </div>
-          <Toaster
-            notifyType={notifyType}
-            notifyMsg={notifyMsg}
-            close={close}
-          />
-
           <div className="profile-container">
             <Row gutter={[16, 0]}>
               <Col span={12}>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import './team.css';
+import { toast } from 'react-toastify';
 import Avatar from 'react-avatar';
 import { useTranslation } from 'react-i18next';
 import { Button, Tooltip } from 'antd';
@@ -16,7 +17,6 @@ import EditSubUserPopup from './editsubuserpopup';
 import subuser from '../../assets/images/subuser.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
-import Toaster from '../toaster/toaster';
 import UserLock from '../userlock/userlock';
 import DeletePopup from './deletepopup';
 
@@ -26,8 +26,8 @@ const TeamListing = () => {
   const [visibleSubUser, setVisibleSubUser] = useState(false);
   const [subUser, setSubUser] = useState([]);
   const [currentSubUser, setCurrentSubUser] = useState(false);
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
+  // const [notifyType, setNotifyType] = useState();
+  // const [notifyMsg, setNotifyMsg] = useState();
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
@@ -41,9 +41,9 @@ const TeamListing = () => {
   const show = () => {
     setVisible(true);
   };
-  const close = () => {
-    setNotifyType('');
-  };
+  // const close = () => {
+  //   setNotifyType('');
+  // };
 
   const handleOk = () => {
     setVisible(false);
@@ -80,12 +80,10 @@ const TeamListing = () => {
       // deleting sub user from state
       // const data = subUser.filter((el) => el.id === deleteId);
       getData();
-      setNotifyType('success');
-      setNotifyMsg('Sub User Deleted Successfully');
+      toast.success('Successfully Deleted', { containerId: 'B' });
     } else {
       setVisibleDeletePopup(false);
-      setNotifyType('error');
-      setNotifyMsg('server error please try again');
+      toast.error('server error please try again', { containerId: 'B' });
     }
   };
 
@@ -143,11 +141,6 @@ const TeamListing = () => {
     <>
       {subUser.length ? (
         <Wrapper>
-          <Toaster
-            notifyType={notifyType}
-            notifyMsg={notifyMsg}
-            close={close}
-          />
           <div className="team-page">
             <div className="page-header">
               <h1>
@@ -252,11 +245,6 @@ const TeamListing = () => {
         </Wrapper>
       ) : (
         <Wrapper>
-          <Toaster
-            notifyType={notifyType}
-            notifyMsg={notifyMsg}
-            close={close}
-          />
           <div className="add-team-page">
             <div className="add-subuser">
               <img src={subuser} alt="subuser" />

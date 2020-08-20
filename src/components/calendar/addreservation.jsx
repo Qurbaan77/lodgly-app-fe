@@ -19,7 +19,7 @@ import {
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
-import Toaster from '../toaster/toaster';
+import { toast } from 'react-toastify';
 import { userInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
@@ -70,9 +70,6 @@ const AddReservation = (props) => {
   const [unitData, setUnitData] = useState([]);
   // const [currentUnit, setCurrentUnit] = useState({});
   const [unitTypeData, setUnitTypeData] = useState([]);
-
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
 
   const [propertyData, setPropertyData] = useState([]);
   const [currentPropertyId, setCurrentPropertyId] = useState(null);
@@ -171,13 +168,12 @@ const AddReservation = (props) => {
     values.unitName = unitName;
     values.affiliateId = userId;
     const response = await userInstance.post('/addReservation', values);
-    const { msg } = response.data;
     if (response.data.code === 200) {
       getData();
       close();
+      toast.success('successfully added reservation', { containerId: 'B' });
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toast.error('server error please try again', { containerId: 'B' });
     }
 
     form.resetFields();
@@ -380,7 +376,6 @@ const AddReservation = (props) => {
       onCancel={close}
       wrapClassName="create-booking-modal"
     >
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={12}>

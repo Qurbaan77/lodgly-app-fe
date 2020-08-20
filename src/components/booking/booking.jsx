@@ -78,7 +78,7 @@ const Booking = () => {
   // setVisible(true);
   // };
 
-  const toasterMessage = () => {};
+  // const toasterMessage = () => {};
 
   // const close = () => {
   //   // setNotifyType('');
@@ -353,6 +353,9 @@ const Booking = () => {
     if (response.data.code === 200) {
       getData();
       setStatus(value);
+      toast.success('successfully updated status', { containerId: 'B' });
+    } else {
+      toast.error('some error occurred!', { containerId: 'B' });
     }
   };
 
@@ -785,7 +788,6 @@ const Booking = () => {
         editValues={editValues}
         getData={getData}
         setBooked={setBooked}
-        toasterMessage={toasterMessage}
       />
       <CreateBookingPopup
         visible={visible}
@@ -793,7 +795,6 @@ const Booking = () => {
         handleOk={handleOk}
         close={closeBooking}
         getData={getData}
-        toasterMessage={toasterMessage}
       />
 
       <EditBookingPopup
@@ -810,7 +811,6 @@ const Booking = () => {
         currentService={currentService}
         setCurrentService={setCurrentService}
         setBooked={setBooked}
-        toasterMessage={toasterMessage}
       />
 
       <BookingFilter

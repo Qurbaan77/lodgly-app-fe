@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { Form, Button } from 'antd';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { userInstance } from '../../axios/axiosconfig';
 import loader from '../../assets/images/loader.svg';
@@ -24,7 +25,7 @@ const CARD_ELEMENT_OPTIONS = {
   },
 };
 const CheckoutForm = ({
-  total, currency, unitsSelected, subscriptionType, planType, toaster,
+  total, currency, unitsSelected, subscriptionType, planType,
   submitChange, showCancelCheckout, hideBilling, getData, getInvoice,
 }) => {
   const stripe = useStripe();
@@ -33,9 +34,7 @@ const CheckoutForm = ({
   // Handle real-time validation errors from the card Element.
   const handleChange = (event) => {
     if (event.error) {
-      toaster('error', event.error.message);
-    } else {
-      toaster('', '');
+      toast.error(event.error.message, { containerId: 'B' });
     }
   };
 
@@ -49,11 +48,7 @@ const CheckoutForm = ({
     }
     const card = elements.getElement(CardElement);
     const result = await stripe.createToken(card);
-    if (result.error) {
-      // Inform the user if there was an error.
-      toaster('error', event.error.message);
-    } else {
-      toaster('', '');
+    if (!result.error) {
       // Send the token to your server.
       if (total !== 0) {
         setHideLoader(false);
@@ -69,19 +64,22 @@ const CheckoutForm = ({
         const { code } = response.data;
         if (code === 200) {
           setHideLoader(true);
-          toaster('success', t('checkoutform.tooltip1'));
+          toast.success(t('checkoutform.tooltip1'), { containerId: 'B' });
           hideBilling(true);
           getData();
           getInvoice();
         } else {
           setHideLoader(true);
-          toaster('error', t('checkoutform.tooltip2'));
+          toast.error(t('checkoutform.tooltip2'), { containerId: 'B' });
         }
       } else {
         setHideLoader(true);
         const err = 'Amount Is Empty';
-        toaster('error', err);
+        toast.error(err, { containerId: 'B' });
       }
+    } else {
+      // Inform the user if there was an error.
+      toast.error(event.error.message, { containerId: 'B' });
     }
   };
   const { t } = useTranslation();
@@ -135,7 +133,6 @@ CheckoutForm.propTypes = {
   unitsSelected: PropTypes.number,
   subscriptionType: PropTypes.string,
   planType: PropTypes.string,
-  toaster: PropTypes.func,
   submitChange: PropTypes.string,
   showCancelCheckout: PropTypes.bool,
   hideBilling: PropTypes.func,
@@ -148,7 +145,6 @@ CheckoutForm.defaultProps = {
   unitsSelected: 0,
   subscriptionType: '',
   planType: '',
-  toaster: () => {},
   submitChange: '',
   showCancelCheckout: false,
   hideBilling: () => {},
