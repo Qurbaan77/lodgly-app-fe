@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Helmet from 'react-helmet';
 import './property.css';
+import { toast } from 'react-toastify';
 import {
   Form,
   Select,
@@ -27,7 +28,6 @@ import people3 from '../../assets/images/people-3.jpg';
 import people4 from '../../assets/images/people-4.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
-import Toaster from '../toaster/toaster';
 import DeletePopup from './deletepopup';
 
 const { Option } = Select;
@@ -38,8 +38,6 @@ const Task = () => {
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
   const [tasks, setTasks] = useState([]);
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
   const [group, setGroup] = useState([]);
   const [currTaskId, setCurrTaskId] = useState(0);
   const [isGroup, sertIsGroup] = useState(true);
@@ -89,7 +87,6 @@ const Task = () => {
   ];
 
   const show = () => {
-    setNotifyType('');
     form.resetFields();
     setVisible(true);
   };
@@ -145,15 +142,12 @@ const Task = () => {
     values.groupId = localStorage.getItem('groupId');
     const response = await userInstance.post('/addTask', values);
     const statusCode = response.data.code;
-    const { msg } = response.data;
     if (statusCode === 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
+      toast.success('task added successfully', { containerId: 'B' });
       setVisible(false);
       getData();
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toast.error('server error please try again', { containerId: 'B' });
     }
     form.resetFields();
   };
@@ -176,17 +170,12 @@ const Task = () => {
   };
 
   const edit = async (data) => {
-    setNotifyType('');
     form.setFieldsValue({
       taskName: data.taskName,
       note: data.note,
       tags: data.tags,
     });
     setVisible(true);
-  };
-
-  const close = () => {
-    setNotifyType('');
   };
 
   useEffect(() => {
@@ -321,7 +310,6 @@ const Task = () => {
                 onCancel={handleCancel}
                 wrapClassName="task-modal"
               >
-                <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
                 <Form form={form} name="basic" onFinish={onFinish}>
 
                   <Form.Item

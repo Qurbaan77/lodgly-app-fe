@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './booking.css';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import {
   Form,
   Input,
@@ -20,7 +21,7 @@ const GuestPopup = (props) => {
   const { t } = useTranslation();
   const {
     editValues, getData, close: close1, setBooked, closeToaster,
-    visible, handleOk, handleCancel, toasterMessage,
+    visible, handleOk, handleCancel,
   } = props;
   const [form] = Form.useForm();
   const guestData = editValues;
@@ -47,14 +48,13 @@ const GuestPopup = (props) => {
     values.affiliateId = userId;
     const response = await userInstance.post('/addGuest', values);
     const statusCode = response.data.code;
-    const { msg } = response.data;
     if (statusCode === 200) {
-      toasterMessage('success', msg);
+      toast.success('Data added successfully', { containerId: 'B' });
       getData();
       close1();
       setBooked(true);
     } else {
-      toasterMessage('error', msg);
+      toast.error('some error occurred!', { containerId: 'B' });
     }
     form.resetFields();
     closeToaster();
@@ -220,7 +220,6 @@ GuestPopup.propTypes = {
   visible: PropTypes.bool,
   handleCancel: PropTypes.func,
   handleOk: PropTypes.func,
-  toasterMessage: PropTypes.func,
 };
 GuestPopup.defaultProps = {
   editValues: {},
@@ -231,6 +230,5 @@ GuestPopup.defaultProps = {
   visible: false,
   handleCancel: () => {},
   handleOk: () => {},
-  toasterMessage: () => {},
 };
 export default GuestPopup;

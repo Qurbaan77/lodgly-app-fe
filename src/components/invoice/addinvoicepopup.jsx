@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './invoice.css';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import {
   Form,
@@ -97,7 +98,7 @@ const AdInvoicePopup = (props) => {
       valuesCopy.status = 'Issued';
       const res = await userInstance.post('/invoicedraft', valuesCopy);
       setShowLoader(true);
-      if (res.status === 200) {
+      if (res.data.code === 200) {
         const element = document.createElement('a');
         element.setAttribute('href', `${res.data.url}`);
         element.setAttribute('download', `${clientName}.pdf`);
@@ -106,8 +107,9 @@ const AdInvoicePopup = (props) => {
         element.click();
         props.getData();
         props.close();
-        props.toasterMessage('successfully issued invoice');
+        toast.success('Invoice issued successfully', { containerId: 'B' });
       } else {
+        toast.error('server error please try again', { containerId: 'B' });
         setShowLoader(true);
       }
     } else {
@@ -118,8 +120,9 @@ const AdInvoicePopup = (props) => {
         setShowLoader(true);
         props.close();
         props.getData();
-        props.toasterMessage('successfully drafted invoice');
+        toast.success('Invoice drafted successfully', { containerId: 'B' });
       } else {
+        toast.error('server error please try again', { containerId: 'B' });
         setShowLoader(true);
       }
     }
@@ -637,7 +640,6 @@ AdInvoicePopup.propTypes = {
   visible: PropTypes.bool,
   handleOk: PropTypes.func,
   handleCancel: PropTypes.func,
-  toasterMessage: PropTypes.objectOf(PropTypes.Function),
   getData: PropTypes.func,
   label: PropTypes.number,
 };
@@ -648,7 +650,6 @@ AdInvoicePopup.defaultProps = {
   visible: false,
   handleOk: () => {},
   handleCancel: () => {},
-  toasterMessage: () => {},
   getData: () => {},
   label: 0,
 };

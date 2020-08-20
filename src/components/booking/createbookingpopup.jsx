@@ -31,7 +31,7 @@ let j = 1;
 
 const CreateBookingPopup = (props) => {
   const {
-    getData, close, visible, handleOk, handleCancel, toasterMessage,
+    getData, close, visible, handleOk, handleCancel,
   } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
@@ -167,14 +167,12 @@ const CreateBookingPopup = (props) => {
     values.unitName = unitName;
     values.affiliateId = userId;
     const response = await userInstance.post('/addBooking', values);
-    const { msg } = response.data;
     if (response.data.code === 200) {
-      // toasterMessage('success', msg);
       getData();
       close();
       toast.success('Booking created successfully!', { containerId: 'B' });
     } else {
-      toasterMessage('error', msg);
+      toast.error('Some error occurred!', { containerId: 'B' });
     }
 
     form.resetFields();
@@ -976,7 +974,6 @@ CreateBookingPopup.propTypes = {
   handleCancel: PropTypes.func,
   handleOk: PropTypes.func,
   getData: PropTypes.func,
-  toasterMessage: PropTypes.func,
   visible: PropTypes.bool,
 };
 CreateBookingPopup.defaultProps = {
@@ -984,7 +981,6 @@ CreateBookingPopup.defaultProps = {
   handleCancel: () => {},
   handleOk: () => {},
   getData: () => {},
-  toasterMessage: () => {},
   visible: false,
 };
 

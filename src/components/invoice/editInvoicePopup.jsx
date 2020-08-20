@@ -15,6 +15,7 @@ import {
 
 import { PlusOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import moment from 'moment';
+import { toast } from 'react-toastify';
 import propertyIcon from '../../assets/images/menu/property-icon-orange.png';
 import printIcon from '../../assets/images/menu/print-white.png';
 import pdfIcon from '../../assets/images/menu/pdf-white.png';
@@ -153,12 +154,13 @@ const EditInvoicePopup = (props) => {
       let msg;
       if (issueState) {
         (msg = 'Invoice issued');
-        props.toasterMessage(msg);
+        toast.success(msg, { containerId: 'B' });
       } else {
-        props.toasterMessage('Invoice drafted successfully');
+        toast.success('Invoice drafted successfully', { containerId: 'B' });
       }
       setShowLoader(true);
     } else {
+      toast.error('server error please try again', { containerId: 'B' });
       setShowLoader(true);
     }
     setShowLoader(true);
@@ -264,7 +266,9 @@ const EditInvoicePopup = (props) => {
       if (cancel.data.code === 200) {
         props.close();
         props.getData();
-        props.toasterMessage(cancel.data.msg);
+        toast.success('Invoice cancelled successfully', { containerId: 'B' });
+      } else {
+        toast.error('server error please try again', { containerId: 'B' });
       }
     }
   };
@@ -760,7 +764,6 @@ EditInvoicePopup.propTypes = {
   handleOk: PropTypes.func,
   handleCancel: PropTypes.func,
   showDeleteWarning: PropTypes.func,
-  toasterMessage: PropTypes.func,
   getData: PropTypes.func,
 };
 EditInvoicePopup.defaultProps = {
@@ -775,7 +778,6 @@ EditInvoicePopup.defaultProps = {
   handleOk: () => {},
   handleCancel: () => {},
   showDeleteWarning: () => {},
-  toasterMessage: () => {},
   getData: () => {},
 };
 export default EditInvoicePopup;

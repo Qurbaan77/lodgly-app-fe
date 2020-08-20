@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import './team.css';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import {
   Form, Select, Input, Button, Checkbox, Modal, Row, Col,
@@ -144,6 +145,9 @@ const EditSubUserPopup = (props) => {
     if (response.status === 200) {
       getData();
       close();
+      toast.success('Details updated successfully', { containerId: 'B' });
+    } else {
+      toast.error('some error occurred!', { containerId: 'B' });
     }
   };
   const handleBookingRead = (e) => (e.target.value ? setBookingRead(false) : setBookingRead(true));

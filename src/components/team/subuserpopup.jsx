@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './team.css';
+import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import {
   Form, Select, Input, Button, Checkbox, Modal, Row, Col,
@@ -111,6 +112,7 @@ const SubUserPopup = ({
     if (response.status === 200) {
       getData();
       close();
+      toast.success('Successfully added in team', { containerId: 'B' });
       form.resetFields();
       setBookingRead(false);
       setBookingWrite(false);
@@ -132,6 +134,8 @@ const SubUserPopup = ({
       setOwnerWrite(false);
       setBillingRead(false);
       setBillingWrite(false);
+    } else {
+      toast.error('some error occurred!', { containerId: 'B' });
     }
   };
 
