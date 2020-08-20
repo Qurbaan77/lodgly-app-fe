@@ -46,7 +46,6 @@ const Login = () => {
       const payload = tokenparser(response.data.token);
       localStorage.setItem('userId', payload.userid);
       localStorage.setItem('organizationid', payload.organizationid);
-      toast.success(msg, { containerId: 'B' });
       history.push('/booking');
       window.location.reload();
     } else {

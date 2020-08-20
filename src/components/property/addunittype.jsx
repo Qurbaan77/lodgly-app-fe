@@ -12,7 +12,6 @@ import {
   Tooltip,
 } from 'antd';
 import {
-  HomeOutlined,
   DeleteOutlined,
   FormOutlined,
   CloseCircleOutlined,
@@ -21,6 +20,7 @@ import {
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
+import unitIcon from '../../assets/images/menu/unit-type-icon.png';
 import favicon from '../../assets/images/logo-mobile.png';
 import DeletePopup from './deletepopup';
 import { userInstance } from '../../axios/axiosconfig';
@@ -337,13 +337,14 @@ const AddUnitType = () => {
           name="description"
           content="Grow your Vacation Rental with Lodgly"
         />
+        <body className="unit-page-view" />
       </Helmet>
       {hasAccess ? (
         <>
           <div className="unit-type">
             <div className="page-header">
               <h1>
-                <HomeOutlined />
+                <img src={unitIcon} alt="unit" />
                 {' '}
                 {currentUnittype.id
                   ? currentUnittype.unitTypeName

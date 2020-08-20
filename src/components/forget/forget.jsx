@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './forget.css';
 import { Form, Input, Button } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { marketingPath } from '../../config/keys';
 import logo from '../../assets/images/logo.jpg';
 import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
@@ -31,6 +32,20 @@ const Forget = () => {
   const close = () => {
     setNotifyType('');
   };
+
+  useEffect(() => {
+    async function searchCompany() {
+      const companyName = window.location.hostname.split('.');
+      const values = {
+        companyName: companyName[0],
+      };
+      const response = await userInstance.post('/searchComapany', values);
+      if (response.data.code === 404) {
+        window.location.href = marketingPath;
+      }
+    }
+    searchCompany();
+  }, []);
 
   return (
     <div className="forget">

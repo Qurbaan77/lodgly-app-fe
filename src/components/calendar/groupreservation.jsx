@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import './calendar.css';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import {
   Form,
   Select,
@@ -17,7 +18,6 @@ import {
   // Menu,
 } from 'antd';
 import { PlusSquareOutlined } from '@ant-design/icons';
-import Toaster from '../toaster/toaster';
 import { userInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
@@ -39,8 +39,6 @@ const GroupReservation = (props) => {
   // const [price, setPrice] = useState(0);
   const [night, setNight] = useState(0);
   const [total, setTotal] = useState(0);
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
   const [currMonthDay, setCurrMonthDay] = useState(0);
 
   const onFinish = async (values) => {
@@ -62,13 +60,12 @@ const GroupReservation = (props) => {
     copyValues.propertyId = localStorage.getItem('topNavId');
 
     const res = await userInstance.post('/groupReservation', copyValues);
-    const { msg } = res.data;
     if (res.data.code === 200) {
       getData();
       close();
+      toast.success('successfully added group reservation', { containerId: 'B' });
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toast.error('server error please try again', { containerId: 'B' });
     }
 
     form.resetFields();
@@ -124,7 +121,6 @@ const GroupReservation = (props) => {
       onCancel={close}
       wrapClassName="create-booking-modal group-reservation"
     >
-      <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={24}>

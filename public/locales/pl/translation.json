@@ -91,6 +91,11 @@
     "label6": "Statystyka",
     "label7":"Wyloguj"
   },
+  "nounit": {
+    "heading": "RODZAJE JEDNOSTEK",
+    "text": "Nie utworzono żadnych typów jednostek",
+    "button":"Dodaj typ jednostki"
+  },
   "header": {
     "heading": "Nagłówek",
     "searchplaceholder": "Wybierz Właściwość",

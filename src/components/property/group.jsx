@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import moment from 'moment';
 import Helmet from 'react-helmet';
 import './property.css';
+import { toast } from 'react-toastify';
 import {
   Form, Select, Input, DatePicker, Button, Checkbox,
   Modal,
@@ -13,11 +14,9 @@ import {
   DeleteOutlined,
   FormOutlined,
   BellOutlined,
-  HomeOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-import Toaster from '../toaster/toaster';
 
 import people1 from '../../assets/images/people-1.png';
 import people2 from '../../assets/images/people-2.png';
@@ -27,6 +26,7 @@ import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 import UserLock from '../userlock/userlock';
+import taskIcon from '../../assets/images/menu/task-icon.png';
 
 const { Option } = Select;
 
@@ -36,8 +36,6 @@ const Groups = () => {
   const [visible, setVisible] = useState(false);
   const [visible2, setVisible2] = useState(false);
   const [group, setGroup] = useState([]);
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
   const [currGroupId, setCurrGroupId] = useState(null);
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
@@ -49,7 +47,6 @@ const Groups = () => {
   }, []);
 
   const show = () => {
-    setNotifyType('');
     form.resetFields();
     setVisible(true);
   };
@@ -69,10 +66,6 @@ const Groups = () => {
     setVisible2(false);
   };
 
-  const close = () => {
-    setNotifyType('');
-  };
-
   const onFinish = async (values) => {
     if (currGroupId) {
       values.id = currGroupId;
@@ -80,15 +73,12 @@ const Groups = () => {
     values.propertyId = localStorage.getItem('propertyId');
     const response = await userInstance.post('/addGroup', values);
     const statusCode = response.data.code;
-    const { msg } = response.data;
     if (statusCode === 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
+      toast.success('group added successfully', { containerId: 'B' });
       setVisible(false);
       getData();
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toast.error('server error please try again', { containerId: 'B' });
     }
     form.resetFields();
   };
@@ -157,7 +147,7 @@ const Groups = () => {
               <div className="group">
                 <div className="page-header">
                   <h1>
-                    <HomeOutlined />
+                    <img src={taskIcon} alt="task" />
                     {' '}
                     {t('group.heading')}
                   </h1>
@@ -168,7 +158,6 @@ const Groups = () => {
                 </div>
 
                 <div className="panel-container">
-                  <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
                   {group.map((el) => (
                     <div className="panel-box groups">
                       <div className="group-icon">

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Helmet from 'react-helmet';
 import './reset.css';
 import { Form, Input, Button } from 'antd';
 import queryString from 'query-string';
 import { useTranslation } from 'react-i18next';
+import { marketingPath } from '../../config/keys';
 import logo from '../../assets/images/logo.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
 import Toaster from '../toaster/toaster';
@@ -34,6 +35,20 @@ const Reset = () => {
   const close = () => {
     setNotifyType('');
   };
+
+  useEffect(() => {
+    async function searchCompany() {
+      const companyName = window.location.hostname.split('.');
+      const values = {
+        companyName: companyName[0],
+      };
+      const response = await userInstance.post('/searchComapany', values);
+      if (response.data.code === 404) {
+        window.location.href = marketingPath;
+      }
+    }
+    searchCompany();
+  }, []);
 
   return (
     <>

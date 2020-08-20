@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
+// import moment from 'moment';
 import './booking.css';
 import {
   Form, Button, Row, Col, Tooltip, Tag, Select, Checkbox,
@@ -77,7 +78,7 @@ const Booking = () => {
   // setVisible(true);
   // };
 
-  const toasterMessage = () => {};
+  // const toasterMessage = () => {};
 
   // const close = () => {
   //   // setNotifyType('');
@@ -351,6 +352,9 @@ const Booking = () => {
     if (response.data.code === 200) {
       getData();
       setStatus(value);
+      toast.success('successfully updated status', { containerId: 'B' });
+    } else {
+      toast.error('some error occurred!', { containerId: 'B' });
     }
   };
 
@@ -596,7 +600,7 @@ const Booking = () => {
                         {t('booking.label1')}
                       </li>
                       <li>
-                        {currentBooking.noOfGuest}
+                        {currentBooking.noOfGuest || 0}
                         {' '}
                         {t('booking.label2')}
                       </li>
@@ -651,9 +655,7 @@ const Booking = () => {
                           <p>
                             {currentBooking.channel}
                             {' '}
-                            (
                             {currentBooking.commission}
-                            )
                           </p>
                         </div>
                       </div>
@@ -680,7 +682,7 @@ const Booking = () => {
                           </span>
                           <p>
                             {currentBooking.startDate}
-                            /
+                            -
                             {currentBooking.endDate}
                           </p>
                           <p>
@@ -785,7 +787,6 @@ const Booking = () => {
         editValues={editValues}
         getData={getData}
         setBooked={setBooked}
-        toasterMessage={toasterMessage}
       />
       <CreateBookingPopup
         visible={visible}
@@ -793,7 +794,6 @@ const Booking = () => {
         handleOk={handleOk}
         close={closeBooking}
         getData={getData}
-        toasterMessage={toasterMessage}
       />
 
       <EditBookingPopup
@@ -810,7 +810,6 @@ const Booking = () => {
         currentService={currentService}
         setCurrentService={setCurrentService}
         setBooked={setBooked}
-        toasterMessage={toasterMessage}
       />
 
       <BookingFilter

@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import PlacesAutocomplete from 'react-places-autocomplete';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import './property.css';
+import { toast } from 'react-toastify';
 import {
   Form,
   Select,
@@ -21,7 +22,6 @@ import { HomeOutlined, InboxOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import { server } from '../../config/keys';
 import { userInstance } from '../../axios/axiosconfig';
-import Toaster from '../toaster/toaster';
 
 const { Panel } = Collapse;
 
@@ -70,8 +70,6 @@ const AddProperty = () => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [No, setNo] = useState(0);
-  const [notifyType, setNotifyType] = useState();
-  const [notifyMsg, setNotifyMsg] = useState();
   const [address, setAddress] = useState('');
   const [country, setCountry] = useState(null);
   const organizationid = localStorage.getItem('organizationid');
@@ -96,23 +94,16 @@ const AddProperty = () => {
     getData();
   }, [userId]);
 
-  const close = () => {
-    setNotifyType('');
-  };
-
   const onFinish = async (values) => {
     values.propertyNo = No;
     values.affiliateId = userId;
     const response = await userInstance.post('/addProperty', values);
     const statusCode = response.data.code;
-    const { msg } = response.data;
     if (statusCode === 200) {
-      setNotifyType('success');
-      setNotifyMsg(msg);
+      toast.success('property added successfully', { containerId: 'B' });
       history.push('/propertylist');
     } else {
-      setNotifyType('error');
-      setNotifyMsg(msg);
+      toast.error('server error please try again', { containerId: 'B' });
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form.resetFields();
@@ -195,7 +186,6 @@ const AddProperty = () => {
   return (
     <Wrapper>
       <div className="add-property">
-        <Toaster notifyType={notifyType} notifyMsg={notifyMsg} close={close} />
         <div className="page-header">
           <h1>
             <HomeOutlined />
