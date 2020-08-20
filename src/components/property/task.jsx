@@ -29,6 +29,7 @@ import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
 import DeletePopup from './deletepopup';
+import taskIcon from '../../assets/images/menu/task-icon.png';
 
 const { Option } = Select;
 
@@ -219,7 +220,7 @@ const Task = () => {
               <div className="cleaning-group">
                 <div className="page-header">
                   <h1>
-                    <HomeOutlined />
+                  <img src={taskIcon} alt="task" />
                     {' '}
                     {localStorage.getItem('groupId')
                       ? group.groupName

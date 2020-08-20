@@ -27,21 +27,19 @@ body {
   border: #fab52c;
 }
 
-.property-info {
-  background: #fff;
-  padding: 20px;
-}
+
 
 .property-info {
   background: #fff;
-  padding: 20px;
+  padding: 15px;
   position: relative;
   border: 1px solid #efefef;
-  margin-bottom: 30px;
 }
 
 .property img {
   width: 100%;
+  height: 125px;
+  object-fit: cover;
 }
 
 .property-info ul {
@@ -51,32 +49,52 @@ body {
 }
 
 .property-info ul li {
-  padding: 10px 0px;
+  padding-top: 10px;
+}
+
+
+.property .property-info img {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
 }
 
 .property-info span {
   position: absolute;
-  right: 20px;
-  top: 25px;
-  font-size: 12px;
-}
-.property-info h3 {
-  padding-bottom: 5px;
+  right: 10px;
+  top: 5px;
+  font-size: 11px;
+  color: #999;
 }
 
+.property-info h3 {
+  padding-top: 10px;
+  margin: 0;
+  line-height: 1.2;
+  padding-bottom: 5px;
+}
 .property-info ul span {
   position: relative;
   top: inherit;
   right: inherit;
-  font-size: 20px;
+  font-size: 16px;
   color: #999;
   margin-right: 12px;
-  vertical-align: top;
-}
-.property {
-  cursor: pointer;
+  vertical-align: middle;
 }
 
+.property {
+  margin-bottom: 2%;
+  cursor: pointer;
+  max-width: 220px;
+  display: inline-block;
+  margin-right: 2%;
+  width: 100%;
+}
+
+.property-img-boxproperty-img-box{
+  background: #dddddd;
+}  
 .page-header span {
   color: #b7b7b7;
 }
@@ -497,7 +515,7 @@ body {
   padding: 15px 30px;
   align-items: center;
   border: 1px solid #efefef;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .group-people img {
@@ -543,7 +561,6 @@ body {
 
 .group-name {
   width: 85%;
-  padding-left: 15px;
 }
 
 .group-people {
@@ -593,7 +610,6 @@ body {
   background: #ffffff;
   transition: all 0.5s;
   cursor: pointer;
-  margin-top: 30px;
   position: relative;
 }
 
@@ -607,6 +623,7 @@ body {
   left: 15px;
   top: 50%;
   transform: translateY(-50%);
+  display: none;
 }
 
 .panel-box.units:hover {
@@ -972,6 +989,17 @@ margin: 0;
   box-shadow: none;
 }
 
+.property-img-box {
+  background: #ddd;
+}
+
+.editunitname .group-name {
+  pointer-events: none;
+}
+
+.panel-box.units.editunitname {
+  cursor: default;
+}
 
 @media screen and (min-width: 1367px) {
   .unittype-calendar {

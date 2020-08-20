@@ -27,6 +27,7 @@ import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 import UserLock from '../userlock/userlock';
+import taskIcon from '../../assets/images/menu/task-icon.png';
 
 const { Option } = Select;
 
@@ -157,7 +158,7 @@ const Groups = () => {
               <div className="group">
                 <div className="page-header">
                   <h1>
-                    <HomeOutlined />
+                  <img src={taskIcon} alt="task" />
                     {' '}
                     {t('group.heading')}
                   </h1>

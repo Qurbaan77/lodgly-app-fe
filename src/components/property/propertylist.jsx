@@ -8,7 +8,10 @@ import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import Helmet from 'react-helmet';
 import Wrapper from '../wrapper';
-import property1 from '../../assets/images/property-1.png';
+import property1 from '../../assets/images/placeholder.svg';
+import uniticon from '../../assets/images/property-unit-icon.png';
+import homeicon from '../../assets/images/property-home-icon.png';
+import propertyicon from '../../assets/images/menu/property-icon.png';
 import UserLock from '../userlock/userlock';
 import { userInstance } from '../../axios/axiosconfig';
 import NoList from './nolist';
@@ -129,37 +132,31 @@ const PropertyList = () => {
         hasAccess ? (
           <div className="property-listing">
             <div className="page-header" hidden={!(propertyData.length > 0)}>
-              <h1>{t('propertylist.heading')}</h1>
+              <h1><img src={propertyicon} alt="Property" /> {t('propertylist.heading')}</h1>
               {btn2}
             </div>
 
             <div className="property-list">
-              <Row
-                gutter={{
-                  xs: 8,
-                  sm: 16,
-                  md: 24,
-                  lg: 32,
-                }}
-              >
+
                 {propertyData && propertyData.length > 0 ? (
                   propertyData.map((el) => (
-                    <Col className="gutter-row" span={8} key={el.id}>
                       <div className="property" onClick={() => handlePropertyClick(el.id)} role="presentation">
+                        <div className="property-img-box">
                         <img src={el.image || property1} alt="property" />
+                        </div>
                         <div className="property-info">
                           <h3>{el.propertyName}</h3>
                           <span>{el.created_at.split('T', 1)}</span>
                           <ul>
                             <li>
-                              <HomeOutlined />
+                              <img src={uniticon} alt="Unit" />
                               {' '}
                               {el.noUnitType}
                               {' '}
                               {t('strings.unit_t')}
                             </li>
                             <li>
-                              <HomeOutlined />
+                             <img src={homeicon} alt="Unit" />
                               {' '}
                               {el.noUnit}
                               {' '}
@@ -168,14 +165,22 @@ const PropertyList = () => {
                           </ul>
                         </div>
                       </div>
-                    </Col>
                   ))
                 ) : (
+                  <Row
+                  gutter={{
+                    xs: 8,
+                    sm: 16,
+                    md: 24,
+                    lg: 32,
+                  }}
+                >
                   <Col span={24}>
                     <NoList isSubUser={isSubUser} canWrite={canWrite} />
                   </Col>
+                  </Row>
                 )}
-              </Row>
+             
             </div>
           </div>
         ) : (

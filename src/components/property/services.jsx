@@ -6,7 +6,7 @@ import {
   Form, Input, Button, Tooltip, Modal, Table,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, ApartmentOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import { userInstance } from '../../axios/axiosconfig';
 import Toaster from '../toaster/toaster';
@@ -199,7 +199,8 @@ const Services = () => {
             <>
               <div className="property-listing">
                 <div className="page-header">
-                  <h1>{t('services.heading3')}</h1>
+                 
+                  <h1> <ApartmentOutlined /> {t('services.heading3')}</h1>
 
                   {btn2}
                 </div>
