@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'antd';
-import {useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { LockOutlined } from '@ant-design/icons';
 import './userlock.css';
 import { useTranslation } from 'react-i18next';

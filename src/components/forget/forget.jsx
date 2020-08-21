@@ -59,7 +59,10 @@ const Forget = () => {
                 <img src={logo} alt="Logo" />
               </div>
               <div className="forget-form">
-                <h1> {t('forget.heading1')}</h1>
+                <h1>
+                  {' '}
+                  {t('forget.heading1')}
+                </h1>
                 <p>{t('forget.label2')}</p>
                 <div className="forget-box">
                   <div>
@@ -103,7 +106,9 @@ const Forget = () => {
               </div>
               <div className="q-links">
                 <p>
-                  Go to Login! <Link to="/">Login</Link>
+                  Go to Login!
+                  {' '}
+                  <Link to="/">Login</Link>
                 </p>
               </div>
             </div>
