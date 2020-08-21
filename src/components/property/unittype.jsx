@@ -20,7 +20,7 @@ import unitIcon from '../../assets/images/menu/unit-type-icon.png';
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 import UserLock from '../userlock/userlock';
-import nounit from '../../assets/images/no-unit.png';
+// import nounit from '../../assets/images/no-unit.png';
 
 const UnitType = () => {
   const { t } = useTranslation();

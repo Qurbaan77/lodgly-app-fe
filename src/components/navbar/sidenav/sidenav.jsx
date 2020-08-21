@@ -22,7 +22,7 @@ import statsIcon from '../../../assets/images/menu/stats-icon.png';
 import ownerIcon from '../../../assets/images/menu/owner-icon.png';
 import propertyDetailIcon from '../../../assets/images/menu/property-detail-icon.png';
 import unitIcon from '../../../assets/images/menu/unit-type-icon.png';
-import taskIcon from '../../../assets/images/menu/task-icon.png';
+// import taskIcon from '../../../assets/images/menu/task-icon.png';
 import channelIcon from '../../../assets/images/menu/channel-icon.png';
 import closeicon from '../../../assets/images/menu/close-icon.png';
 // import arrow from '../../../assets/images/Polygon.png';
