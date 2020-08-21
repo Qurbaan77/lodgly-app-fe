@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import './forget.css';
 import { Form, Input, Button } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -58,13 +59,8 @@ const Forget = () => {
                 <img src={logo} alt="Logo" />
               </div>
               <div className="forget-form">
-                <h1>
-                  {' '}
-                  {t('forget.heading1')}
-                </h1>
-                <p>
-                  {t('forget.label2')}
-                </p>
+                <h1> {t('forget.heading1')}</h1>
+                <p>{t('forget.label2')}</p>
                 <div className="forget-box">
                   <div>
                     <Form
@@ -104,6 +100,11 @@ const Forget = () => {
                     </Form>
                   </div>
                 </div>
+              </div>
+              <div className="q-links">
+                <p>
+                  Go to Login! <Link to="/">Login</Link>
+                </p>
               </div>
             </div>
           </div>

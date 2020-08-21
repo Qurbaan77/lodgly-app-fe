@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './userprofile.css';
 import { Dropdown, Menu } from 'antd';
 import Avatar from 'react-avatar';
@@ -24,7 +24,7 @@ const UserProfile = (props) => {
     }
   };
 
-  const getUserInfo = async () => {
+  const getUserInfo = useCallback(async () => {
     const response = await userInstance.post('/getuserData');
     const body = response.data.userData;
     if (body.length > 0) {
@@ -34,12 +34,15 @@ const UserProfile = (props) => {
       if (body[0].fullname !== null) {
         setName(`${body[0].fullname}`);
       }
+    } else {
+      localStorage.clear();
+      history.push('/');
     }
-  };
+  }, [history]);
 
   useEffect(() => {
     getUserInfo();
-  }, [props]);
+  }, [props, getUserInfo]);
 
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ billingWrite }] = userCred || [{}];

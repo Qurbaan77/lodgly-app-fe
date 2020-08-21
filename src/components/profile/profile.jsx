@@ -105,7 +105,7 @@ const Profile = () => {
     const response = await userInstance.post('/updatePersonalInfo', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
-      toast.success('Data updated successfully', { containerId: 'B' });
+      toast.success('Profile Updated Successfully', { containerId: 'B' });
       getUserInfo();
     } else {
       toast.error('server error please try again', { containerId: 'B' });
@@ -118,7 +118,7 @@ const Profile = () => {
     const response = await userInstance.post('/updateOrganisation', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
-      toast.success('Data updated successfully', { containerId: 'B' });
+      toast.success('Company Data Saved Successfully', { containerId: 'B' });
     } else {
       toast.error('server error please try again', { containerId: 'B' });
     }
