@@ -799,10 +799,12 @@
 },
 "subuserpopup": {
   "heading1": "Add New Sub-User",
- 
+  
   "label1": "The input is not valid E-mail!",
   "label2": "Please input your E-mail!",
-  "label3": "Sub-User",
+  "label3": "Choose a Role",
+  "delete": "Delete",
+  "name": "Name",
   "label4": "Full Access",
   "label5": "Booking",
   "label6": "Prices and availability that are syncing with connected OTAs",
@@ -852,8 +854,8 @@
   "label3": "Sub User",
   "label4": "Role",
   "label5": "Job Title | City of London, United Kingdom",
-  "label6": "Currently there are no Sub users created"
-  
+  "label6": "Currently there are no Sub users created",
+  "status":"Status"
 },
 "thankyou": {
   

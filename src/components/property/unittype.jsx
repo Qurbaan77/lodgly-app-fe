@@ -39,7 +39,7 @@ const UnitType = () => {
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  const [{ propertiesWrite, userId }] = userCred || [{}];
+  const [{ propertiesWrite, userId, propertiesDelete }] = userCred || [{}];
   const canWrite = propertiesWrite;
 
   const showUnitPanel = () => {
@@ -132,6 +132,7 @@ const UnitType = () => {
     };
     const response = await userInstance.post('/deleteUnitType', values);
     if (response.data.code === 200) {
+      toast.success('Unit Type removed successfully!', { containerId: 'B' });
       setVisible(false);
       getData();
     }
@@ -187,7 +188,7 @@ const UnitType = () => {
     return true;
   };
 
-  if (!unittypeData.length) {
+  if (!unittypeData.length && showPanel) {
     return (
       <Wrapper>
         <div className="add-team-page">
@@ -343,7 +344,11 @@ const UnitType = () => {
                       ) : (
                         <div className="group-action">
                           <FormOutlined onClick={() => editName(i)} />
-                          <DeleteOutlined onClick={() => show(el.id)} />
+                          <DeleteOutlined
+                            hidden={isSubUser ? !propertiesDelete : false}
+                            onClick={() => show(el.id)}
+
+                          />
                         </div>
                       )}
                     </div>

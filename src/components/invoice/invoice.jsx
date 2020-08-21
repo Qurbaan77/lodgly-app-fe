@@ -144,8 +144,8 @@ const Invoice = () => {
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
 
-  const [{ invoiceWrite, userId }] = userCred || [{}];
-  const canWrite = invoiceWrite;
+  const [{ invoicesWrite, invoicesDelete, userId }] = userCred || [{}];
+  const canWrite = invoicesWrite;
 
   const getProperty = useCallback(async () => {
     const response = await userInstance.post('/fetchProperty', {
@@ -173,7 +173,7 @@ const Invoice = () => {
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
     }
-    const inb = await userInstance.post('getInvoice');
+    const inb = await userInstance.post('getInvoice', { affiliateId: userId });
     if (inb.data.code === 200) {
       inb.data.invoiceData.forEach((el, i) => {
         el[`checked${i}`] = false;
@@ -398,6 +398,7 @@ const Invoice = () => {
                                 onClick={() => showEditInvoice(el, i)}
                               />
                               <DeleteOutlined
+                                hidden={isSubUser ? !invoicesDelete : false}
                                 onClick={() => showpopup(el, i)}
                               />
                             </div>

@@ -48,8 +48,9 @@ const Sidenav = ({
   const isSubUser = localStorage.getItem('isSubUser');
   const subUserCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{
-    bookingRead, calendarRead, guestsRead, invoicesRead,
+    bookingRead, calendarRead, invoicesRead,
     propertiesRead, serviceRead, statsRead, teamRead, userId,
+    ownerRead,
   }] = subUserCred || [{}];
 
   const getSubUser = useCallback(() => {
@@ -103,21 +104,21 @@ const Sidenav = ({
       setHideTeam(true);
     }
     if (!isSubUser) {
-      // setDisableGuests(false);
-    } else if (guestsRead) {
-      // setDisableGuests(false);
+      setHideOwner(false);
+    } else if (ownerRead) {
+      setHideOwner(false);
     } else {
-      // setDisableGuests(true);
+      setHideOwner(true);
     }
   }, [bookingRead,
     calendarRead,
-    guestsRead,
     invoicesRead,
     isSubUser,
     propertiesRead,
     serviceRead,
     statsRead,
-    teamRead]);
+    teamRead,
+    ownerRead]);
   const getData = useCallback(async () => {
     const values = {
       affiliateId: userId,
@@ -129,13 +130,13 @@ const Sidenav = ({
       const [{
         booking, calendar, properties, team, invoice, owner, stats,
       }] = featureData;
-      setHideBooking(!booking);
-      setHidecalendar(!calendar);
-      setDisableProperties(!properties);
-      setHideTeam(!team);
-      setHideInvoice(!invoice);
-      setHideOwner(!owner);
-      setHideStats(!stats);
+      setHideBooking(isSubUser ? !bookingRead : !booking);
+      setHidecalendar(isSubUser ? !calendarRead : !calendar);
+      setDisableProperties(!isSubUser ? !properties : !propertiesRead);
+      setHideTeam(!isSubUser ? !team : !teamRead);
+      setHideInvoice(!isSubUser ? !invoice : !invoicesRead);
+      setHideOwner(!isSubUser ? !owner : !ownerRead);
+      setHideStats(!isSubUser ? !stats : !statsRead);
     }
     const Id = localStorage.getItem('propertyId');
     const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
@@ -149,7 +150,8 @@ const Sidenav = ({
         setCurrProperty(curProperty[0].propertyNo);
       }
     }
-  }, [userId]);
+  }, [userId, bookingRead, calendarRead, propertiesRead, teamRead, invoicesRead, ownerRead,
+    statsRead, isSubUser]);
 
   const [nav, setNav] = useState(false);
   const changeMenu = useCallback(() => {

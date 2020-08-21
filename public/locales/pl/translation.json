@@ -859,7 +859,9 @@
  
   "label1": "Wprowadzone dane są nieprawidłowe. E-mail!",
   "label2": "Wpisz swój adres e-mail!",
-  "label3": "Podużytkownik",
+  "label3": "Wybierz rolę",
+  "delete": "Usunąć",
+  "name": "Imię",
   "label4": "Pełny dostęp",
   "label5": "Rezerwować",
   "label6": "Ceny i dostępność synchronizowane z połączonymi OTA",
@@ -909,8 +911,8 @@
   "label3": "Użytkownik podrzędny",
   "label4": "Rola",
   "label5": " Stanowisko | City of London, Wielka Brytania",
-  "label6": "Obecnie nie ma utworzonych subużytkowników"
-  
+  "label6": "Obecnie nie ma utworzonych subużytkowników",
+  "status": "Status"
 },
 "thankyou": {
   
