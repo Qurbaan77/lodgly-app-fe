@@ -26,7 +26,7 @@ const Services = () => {
   const [daysLeft, setDaysLeft] = useState();
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  const [{ propertiesWrite }] = userCred || [{}];
+  const [{ propertiesWrite, propertiesDelete }] = userCred || [{}];
   const canWrite = propertiesWrite;
 
   const columns = [
@@ -52,6 +52,7 @@ const Services = () => {
             {t('strings.edit')}
           </div>
           <div
+            hidden={isSubUser ? !propertiesDelete : false}
             onClick={() => delRow(record.id)}
             role="presentation"
           >

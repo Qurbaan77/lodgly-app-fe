@@ -15,8 +15,8 @@ const [
     teamWrite,
     ownerRead,
     ownerWrite,
-    invoiceRead,
-    invoiceWrite,
+    invoicesRead,
+    invoicesWrite,
     serviceRead,
     serviceWrite,
     statsRead,
@@ -84,7 +84,7 @@ export const SecureOwner = ({ component: Component, ...rest }) => (
 export const SecureInvoice = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={(props) => (invoiceRead || invoiceWrite ? (
+    render={(props) => (invoicesRead || invoicesWrite ? (
       <Component {...props} {...rest} />
     ) : (
       <Redirect to="/" />

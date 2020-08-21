@@ -50,7 +50,7 @@ const Owner = () => {
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
 
-  const [{ userId, ownerWrite: canWrite }] = JSON.parse(
+  const [{ userId, ownerWrite: canWrite, ownerDelete }] = JSON.parse(
     localStorage.getItem('userCred'),
   ) || [{}];
 
@@ -280,6 +280,7 @@ const Owner = () => {
                           <div className="owner-action">
                             <FormOutlined onClick={() => edit(el)} />
                             <DeleteOutlined
+                              hidden={isSubUser ? !ownerDelete : false}
                               onClick={() => showDeletePopUP(el.id)}
                             />
                           </div>

@@ -87,67 +87,67 @@ const SubUserPopup = ({
     } else if (value === 'write') {
       setHideWrite(false);
       setHideDelete(true);
-      setBookingRead(false);
-      setBookingWrite(false);
+      setBookingRead(true);
+      setBookingWrite(true);
       setBookingDelete(false);
-      setPropertiesRead(false);
-      setPropertiesWrite(false);
+      setPropertiesRead(true);
+      setPropertiesWrite(true);
       setPropertiesDelete(false);
-      setCalendarRead(false);
-      setCalendarWrite(false);
+      setCalendarRead(true);
+      setCalendarWrite(true);
       setCalendarDelete(false);
-      setGuestsRead(false);
-      setGuestsWrite(false);
+      setGuestsRead(true);
+      setGuestsWrite(true);
       setGuestsDelete(false);
-      setTeamRead(false);
-      setTeamWrite(false);
+      setTeamRead(true);
+      setTeamWrite(true);
       setTeamDelete(false);
-      setInvoicesRead(false);
-      setInvoicesWrite(false);
+      setInvoicesRead(true);
+      setInvoicesWrite(true);
       setInvoicesDelete(false);
-      setStatsRead(false);
-      setStatsWrite(false);
+      setStatsRead(true);
+      setStatsWrite(true);
       setStatsDelete(false);
-      setServiceRead(false);
-      setServiceWrite(false);
+      setServiceRead(true);
+      setServiceWrite(true);
       setServiceDelete(false);
-      setOwnerRead(false);
-      setOwnerWrite(false);
+      setOwnerRead(true);
+      setOwnerWrite(true);
       setOwnerDelete(false);
-      setBillingRead(false);
-      setBillingWrite(false);
+      setBillingRead(true);
+      setBillingWrite(true);
       setBillingDelete(false);
     } else {
       setHideWrite(true);
       setHideDelete(true);
-      setBookingRead(false);
+      setBookingRead(true);
       setBookingWrite(false);
       setBookingDelete(false);
-      setPropertiesRead(false);
+      setPropertiesRead(true);
       setPropertiesWrite(false);
       setPropertiesDelete(false);
-      setCalendarRead(false);
+      setCalendarRead(true);
       setCalendarWrite(false);
       setCalendarDelete(false);
-      setGuestsRead(false);
+      setGuestsRead(true);
       setGuestsWrite(false);
       setGuestsDelete(false);
-      setTeamRead(false);
+      setTeamRead(true);
       setTeamWrite(false);
       setTeamDelete(false);
-      setInvoicesRead(false);
+      setInvoicesRead(true);
       setInvoicesWrite(false);
       setInvoicesDelete(false);
-      setStatsRead(false);
+      setStatsRead(true);
       setStatsWrite(false);
       setStatsDelete(false);
-      setServiceRead(false);
+      setServiceRead(true);
       setServiceWrite(false);
       setServiceDelete(false);
-      setOwnerRead(false);
+      setOwnerRead(true);
       setOwnerWrite(false);
       setOwnerDelete(false);
-      setBillingRead(false);
+      setBillingRead(true);
       setBillingWrite(false);
       setBillingDelete(false);
     }
@@ -188,7 +188,7 @@ const SubUserPopup = ({
     const companyName = window.location.hostname.split('.');
     values.company = companyName[0];
     const response = await userInstance.post('/addTeam', values);
-    if (response.status === 200) {
+    if (response.data.code === 200) {
       getData();
       close();
       toast.success('Successfully added in team', { containerId: 'B' });
@@ -223,6 +223,8 @@ const SubUserPopup = ({
       setBillingRead(false);
       setBillingWrite(false);
       setBillingDelete(false);
+    } else if (response.data.code === 400) {
+      toast.error('Email already exists!', { containerId: 'B' });
     } else {
       toast.error('some error occurred!', { containerId: 'B' });
     }
@@ -295,7 +297,7 @@ const SubUserPopup = ({
       <Form name="basic" form={form} onFinish={onFinish}>
         <div className="subuser-fields-section">
           <Row style={{ alignItems: 'center' }}>
-            <Col span={8}>
+            <Col span={10}>
               <Form.Item
                 label={t('strings.email')}
                 name="email"
@@ -315,25 +317,19 @@ const SubUserPopup = ({
               </Form.Item>
             </Col>
 
-            <Col span={8}>
+            <Col span={10}>
               <Form.Item label={t('subuserpopup.label25')} name="role">
                 <Select
                   placeholder={t('subuserpopup.label3')}
                   onSelect={(value) => handleSelect(value)}
                 >
-                  <Select.Option value="read">
-                    Read
-                  </Select.Option>
-                  <Select.Option value="write">
-                    Write
-                  </Select.Option>
-                  <Select.Option value="fullaccess">
-                    Full Access
-                  </Select.Option>
+                  <Select.Option value="read">Read</Select.Option>
+                  <Select.Option value="write">Write</Select.Option>
+                  <Select.Option value="fullaccess">Full Access</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
-            <Col span={8} />
+            <Col span={4} />
           </Row>
         </div>
 
@@ -344,7 +340,7 @@ const SubUserPopup = ({
                 <tr>
                   <th>
                     {' '}
-                    {t('subuserpopup.label15')}
+                    {t('subuserpopup.name')}
                   </th>
                   <th>
                     {' '}
@@ -356,9 +352,12 @@ const SubUserPopup = ({
                   </th>
                   <th>
                     {' '}
+                    {t('subuserpopup.delete')}
+                  </th>
+                  <th>
+                    {' '}
                     {t('subuserpopup.label18')}
                   </th>
-
                 </tr>
               </thead>
               <thead>
@@ -371,15 +370,17 @@ const SubUserPopup = ({
                       checked={bookingRead}
                     />
                   </th>
-                  <th hidden={hideWrite}>
+                  <th>
                     <Checkbox
+                      disabled={hideWrite}
                       value={bookingWrite}
                       onChange={(e) => handleBookingWrite(e)}
                       checked={bookingWrite}
                     />
                   </th>
-                  <th hidden={hideDelete}>
+                  <th>
                     <Checkbox
+                      disabled={hideDelete}
                       value={bookingDelete}
                       onChange={(e) => handleBookingDelete(e)}
                       checked={bookingDelete}
@@ -408,15 +409,17 @@ const SubUserPopup = ({
                       checked={calendarRead}
                     />
                   </th>
-                  <th hidden={hideWrite}>
+                  <th>
                     <Checkbox
+                      disabled={hideWrite}
                       value={calendarWrite}
                       onChange={(e) => handleCalendarWrite(e)}
                       checked={calendarWrite}
                     />
                   </th>
-                  <th hidden={hideDelete}>
+                  <th>
                     <Checkbox
+                      disabled={hideDelete}
                       value={calendarDelete}
                       onChange={(e) => handleCalendarDelete(e)}
                       checked={calendarDelete}
@@ -442,15 +445,17 @@ const SubUserPopup = ({
                       checked={propertiesRead}
                     />
                   </td>
-                  <td hidden={hideWrite}>
+                  <td>
                     <Checkbox
+                      disabled={hideWrite}
                       value={propertiesWrite}
                       onChange={(e) => handlePropertiesWrite(e)}
                       checked={propertiesWrite}
                     />
                   </td>
-                  <td hidden={hideDelete}>
+                  <td>
                     <Checkbox
+                      disabled={hideDelete}
                       value={propertiesDelete}
                       onChange={(e) => handlePropertiesDelete(e)}
                       checked={propertiesDelete}
@@ -474,15 +479,17 @@ const SubUserPopup = ({
                       checked={guestsRead}
                     />
                   </td>
-                  <td hidden={hideWrite}>
+                  <td>
                     <Checkbox
+                      disabled={hideWrite}
                       value={guestsWrite}
                       onChange={(e) => handleGuestsWrite(e)}
                       checked={guestsWrite}
                     />
                   </td>
-                  <td hidden={hideDelete}>
+                  <td>
                     <Checkbox
+                      disabled={hideDelete}
                       value={guestsDelete}
                       onChange={(e) => handleGuestsDelete(e)}
                       checked={guestsDelete}
@@ -503,15 +510,17 @@ const SubUserPopup = ({
                       checked={teamRead}
                     />
                   </td>
-                  <td hidden={hideWrite}>
+                  <td>
                     <Checkbox
+                      disabled={hideWrite}
                       value={teamWrite}
                       onClick={(e) => handleTeamWrite(e)}
                       checked={teamWrite}
                     />
                   </td>
-                  <td hidden={hideDelete}>
+                  <td>
                     <Checkbox
+                      disabled={hideDelete}
                       value={teamDelete}
                       onClick={(e) => handleTeamDelete(e)}
                       checked={teamDelete}
@@ -530,7 +539,6 @@ const SubUserPopup = ({
         <Row>
           <div className="custom-table subuser-table">
             <table>
-
               <thead>
                 <tr>
                   <th>
@@ -544,15 +552,17 @@ const SubUserPopup = ({
                       checked={invoicesRead}
                     />
                   </th>
-                  <th hidden={hideWrite}>
+                  <th>
                     <Checkbox
+                      disabled={hideWrite}
                       value={invoicesWrite}
                       onChange={(e) => handleInvoicesWrite(e)}
                       checked={invoicesWrite}
                     />
                   </th>
-                  <th hidden={hideDelete}>
+                  <th>
                     <Checkbox
+                      disabled={hideDelete}
                       value={invoicesDelete}
                       onChange={(e) => handleInvoicesDelete(e)}
                       checked={invoicesDelete}
@@ -584,15 +594,17 @@ const SubUserPopup = ({
                       checked={statsRead}
                     />
                   </th>
-                  <th hidden={hideWrite}>
+                  <th>
                     <Checkbox
+                      disabled={hideWrite}
                       value={statsWrite}
                       onChange={(e) => handleStatsWrite(e)}
                       checked={statsWrite}
                     />
                   </th>
-                  <th hidden={hideDelete}>
+                  <th>
                     <Checkbox
+                      disabled={hideDelete}
                       value={statsDelete}
                       onChange={(e) => handleStatsDelete(e)}
                       checked={statsDelete}
@@ -624,15 +636,17 @@ const SubUserPopup = ({
                       checked={serviceRead}
                     />
                   </th>
-                  <th hidden={hideWrite}>
+                  <th>
                     <Checkbox
+                      disabled={hideWrite}
                       value={serviceWrite}
                       onChange={(e) => handleServiceWrite(e)}
                       checked={serviceWrite}
                     />
                   </th>
-                  <th hidden={hideDelete}>
+                  <th>
                     <Checkbox
+                      disabled={hideDelete}
                       value={serviceDelete}
                       onChange={(e) => handleServiceDelete(e)}
                       checked={serviceDelete}
@@ -657,15 +671,17 @@ const SubUserPopup = ({
                       checked={ownerRead}
                     />
                   </th>
-                  <th hidden={hideWrite}>
+                  <th>
                     <Checkbox
+                      disabled={hideWrite}
                       value={ownerWrite}
                       onChange={(e) => handleOwnerWrite(e)}
                       checked={ownerWrite}
                     />
                   </th>
-                  <th hidden={hideDelete}>
+                  <th>
                     <Checkbox
+                      disabled={hideDelete}
                       value={ownerDelete}
                       onChange={(e) => handleOwnerDelete(e)}
                       checked={ownerDelete}
@@ -682,7 +698,7 @@ const SubUserPopup = ({
         </Row>
 
         <Row>
-          <div className="custom-table subuser-table">
+          <div className="custom-table subuser-table border-bottom">
             <table>
               <thead>
                 <tr>
@@ -694,15 +710,17 @@ const SubUserPopup = ({
                       checked={billingRead}
                     />
                   </th>
-                  <th hidden={hideWrite}>
+                  <th>
                     <Checkbox
+                      disabled={hideWrite}
                       value={billingWrite}
                       onChange={(e) => handleBillingWrite(e)}
                       checked={billingWrite}
                     />
                   </th>
-                  <th hidden={hideDelete}>
+                  <th>
                     <Checkbox
+                      disabled={hideDelete}
                       value={billingDelete}
                       onChange={(e) => handleBillingDelete(e)}
                       checked={billingDelete}
