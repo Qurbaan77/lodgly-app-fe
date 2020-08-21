@@ -187,20 +187,20 @@ const UnitType = () => {
     return true;
   };
 
-  if (!unittypeData.length) {
-    return (
-      <Wrapper>
-        <div className="add-team-page">
-          <div className="add-subuser">
-            <img src={nounit} alt="nounit" />
-            <h4>{t('nounit.heading')}</h4>
-            <p>{t('nounit.text')}</p>
-            {btn2}
-          </div>
-        </div>
-      </Wrapper>
-    );
-  }
+  // if (!unittypeData.length) {
+  //   return (
+  //     <Wrapper>
+  //       <div className="add-team-page">
+  //         <div className="add-subuser">
+  //           <img src={nounit} alt="nounit" />
+  //           <h4>{t('nounit.heading')}</h4>
+  //           <p>{t('nounit.text')}</p>
+  //           {btn2}
+  //         </div>
+  //       </div>
+  //     </Wrapper>
+  //   );
+  // }
 
   return (
     <Wrapper>

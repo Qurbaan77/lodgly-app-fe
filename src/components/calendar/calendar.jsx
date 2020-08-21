@@ -361,23 +361,10 @@ const Calendar = () => {
               </>
             )}
           </div>
-          {reservationData && reservationData.length > 0 ? (
+          
             <div className="calendar-calendar">
               <GSTC config={config} onState={onState} />
             </div>
-          ) : (
-            <div className="add-team-page">
-              <div className="add-subuser">
-                <img src={nobooking} alt="subuser" />
-                <h4>No Calendar</h4>
-                <p>
-                  Currently, you don
-                  <span>&apos;</span>
-                  t have any reservations created
-                </p>
-              </div>
-            </div>
-          )}
 
           <AddReservation
             title={t('addreservation.heading34')}
