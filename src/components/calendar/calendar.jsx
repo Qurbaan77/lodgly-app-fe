@@ -6,7 +6,7 @@ import { Button, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
-import nobooking from '../../assets/images/no-booking.png';
+// import nobooking from '../../assets/images/no-booking.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
 import GSTC from './GSTC';
@@ -361,23 +361,10 @@ const Calendar = () => {
               </>
             )}
           </div>
-          {reservationData && reservationData.length > 0 ? (
-            <div className="calendar-calendar">
-              <GSTC config={config} onState={onState} />
-            </div>
-          ) : (
-            <div className="add-team-page">
-              <div className="add-subuser">
-                <img src={nobooking} alt="subuser" />
-                <h4>No Calendar</h4>
-                <p>
-                  Currently, you don
-                  <span>&apos;</span>
-                  t have any reservations created
-                </p>
-              </div>
-            </div>
-          )}
+
+          <div className="calendar-calendar">
+            <GSTC config={config} onState={onState} />
+          </div>
 
           <AddReservation
             title={t('addreservation.heading34')}

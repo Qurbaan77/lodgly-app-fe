@@ -22,10 +22,10 @@ import statsIcon from '../../../assets/images/menu/stats-icon.png';
 import ownerIcon from '../../../assets/images/menu/owner-icon.png';
 import propertyDetailIcon from '../../../assets/images/menu/property-detail-icon.png';
 import unitIcon from '../../../assets/images/menu/unit-type-icon.png';
-import taskIcon from '../../../assets/images/menu/task-icon.png';
+// import taskIcon from '../../../assets/images/menu/task-icon.png';
 import channelIcon from '../../../assets/images/menu/channel-icon.png';
 import closeicon from '../../../assets/images/menu/close-icon.png';
-import arrow from '../../../assets/images/Polygon.png';
+// import arrow from '../../../assets/images/Polygon.png';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -34,7 +34,7 @@ const Sidenav = ({
   img, name, getUserInfo, handleMenuSide, menutoggle,
 }) => {
   const { t } = useTranslation();
-  const [propertyData, setPropertyData] = useState([]);
+  // const [propertyData, setPropertyData] = useState([]);
   const [currProperty, setCurrProperty] = useState(0);
   const [hideBooking, setHideBooking] = useState(false);
   const [hideCalendar, setHidecalendar] = useState(false);
@@ -142,7 +142,7 @@ const Sidenav = ({
     const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
-      setPropertyData(data);
+      // setPropertyData(data);
       if (Id) {
         const curProperty = data.filter(
           (el) => el.id === parseInt(Id, 10),
@@ -179,10 +179,11 @@ const Sidenav = ({
     }
   }, [getData, getSubUser]);
 
-  const func = (id) => {
-    localStorage.setItem('propertyId', id);
-    changeMenu();
-  };
+  // const func = (id) => {
+  //   localStorage.setItem('propertyId', id);
+  //   changeMenu();
+  // };
+
   const handleMenu = (e) => {
     if (e === 'open') {
       setNav(true);
@@ -239,16 +240,16 @@ const Sidenav = ({
             <div>
               <img src={propertyIcon} alt="property-icon" />
               <Link to="/propertylist">{t('sidebar.menu3')}</Link>
-              <img
+              {/* <img
                 src={arrow}
                 alt=""
                 className="menu-arrow"
                 hidden={!propertyData.length}
-              />
+              /> */}
             </div>
           )}
         >
-          {propertyData.map((el) => (
+          {/* {propertyData.map((el) => (
             <Menu.Item key={el.propertyNo}>
               <Link
                 to="/property"
@@ -258,10 +259,10 @@ const Sidenav = ({
               >
                 {' '}
                 {el.propertyName}
-                {' '}
+                {' '}j
               </Link>
             </Menu.Item>
-          ))}
+          ))} */}
         </SubMenu>
 
         {/* <Menu.Item className="guest-nav" disabled={disableGuests}>
@@ -326,10 +327,10 @@ const Sidenav = ({
           <img src={unitIcon} alt="unit" />
           <Link to="/unittype">{t('sidebar.menu12')}</Link>
         </Menu.Item>
-        <Menu.Item className="group-nav">
+        {/* <Menu.Item className="group-nav">
           <img src={taskIcon} alt="task" />
           <Link to="/groups">{t('sidebar.menu13')}</Link>
-        </Menu.Item>
+        </Menu.Item> */}
         <Menu.Item className="channel-nav">
           <img src={channelIcon} alt="channel" />
           <Link to="/channelmanager">{t('sidebar.menu14')}</Link>
