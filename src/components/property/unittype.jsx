@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import Helmet from 'react-helmet';
 import './property.css';
 import {
-  Button, Tooltip, Modal, Form, Input,
+  Button, Tooltip, Modal, Form, Input, Spin,
 } from 'antd';
 import {
   PlusOutlined,
@@ -35,6 +35,7 @@ const UnitType = () => {
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
   const [showEdit, setShowEdit] = useState(false);
+  const [loading, setLoading] = useState(true);
   const history = useHistory();
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
@@ -112,6 +113,7 @@ const UnitType = () => {
     const response = await userInstance.post('/getUnittype', values);
     const { unittypeData, units } = response.data;
     if (response.data.code === 200) {
+      setLoading(false);
       unittypeData.forEach((el) => {
         let sum = 0;
         units.forEach((ele) => {
@@ -187,6 +189,14 @@ const UnitType = () => {
     }
     return true;
   };
+
+  if (loading) {
+    return (
+      <Wrapper>
+        <Spin size="large" />
+      </Wrapper>
+    );
+  }
 
   if (!unittypeData.length && showPanel) {
     return (

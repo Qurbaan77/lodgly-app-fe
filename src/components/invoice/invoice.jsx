@@ -14,6 +14,7 @@ import {
   Col,
   Pagination,
   Tag,
+  Spin,
 } from 'antd';
 import {
   PlusOutlined, DeleteOutlined, FormOutlined, MoreOutlined,
@@ -66,6 +67,7 @@ const Invoice = () => {
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
+  const [loading, setLoading] = useState(true);
 
   function useUpdate() {
     const [, setTick] = useState(0);
@@ -175,6 +177,7 @@ const Invoice = () => {
     }
     const inb = await userInstance.post('getInvoice', { affiliateId: userId });
     if (inb.data.code === 200) {
+      setLoading(false);
       inb.data.invoiceData.forEach((el, i) => {
         el[`checked${i}`] = false;
       });
@@ -186,6 +189,7 @@ const Invoice = () => {
       affiliateId: userId,
     });
     if (res.data.code === 200) {
+      setLoading(false);
       setPropertyInfo(res.data.propertiesData);
     }
     const response = await userInstance.post('/getInfo', {
@@ -316,6 +320,13 @@ const Invoice = () => {
   const perm = isSubUser ? btn : enableButton;
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+  if (loading) {
+    return (
+      <Wrapper>
+        <Spin size="large" />
+      </Wrapper>
+    );
+  }
   const pageContent = (
     <>
       {page ? (

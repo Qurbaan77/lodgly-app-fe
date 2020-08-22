@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
-  Button, Tooltip, Row, Col,
+  Button, Tooltip, Row, Col, Spin,
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +23,7 @@ const PropertyList = () => {
   const [subscribed, setSubscribed] = useState(true);
   const [OnTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
+  const [loading, setLoading] = useState(true);
 
   const history = useHistory();
   const isSubUser = localStorage.getItem('isSubUser') || false;
@@ -56,6 +57,7 @@ const PropertyList = () => {
         data2.push(filterData);
       });
     if (response.data.code === 200) {
+      setLoading(false);
       setPropertyData(data2.length > 0 ? data2 : data);
     }
     await userInstance.get('/getSubscriptionStatus');
@@ -123,6 +125,14 @@ const PropertyList = () => {
 
   const trial = OnTrial && daysLeft !== 0;
   const hasAccess = trial || subscribed;
+
+  if (loading) {
+    return (
+      <Wrapper>
+        <Spin size="large" />
+      </Wrapper>
+    );
+  }
   return (
     <Wrapper fun={setTopNavId}>
       <Helmet>

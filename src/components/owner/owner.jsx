@@ -15,6 +15,7 @@ import {
   Modal,
   Row,
   Col,
+  Spin,
 } from 'antd';
 import { PlusOutlined, DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -47,6 +48,7 @@ const Owner = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState([]);
   const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
 
@@ -98,6 +100,7 @@ const Owner = () => {
         arr.push(filterData);
       });
     if (response.data.code === 200) {
+      setLoading(false);
       setPropertyData(arr);
     }
   }, [userId]);
@@ -108,6 +111,7 @@ const Owner = () => {
     });
     if (response.data.code === 200) {
       setOwnerData(response.data.data);
+      setLoading(false);
     }
   }, [userId]);
 
@@ -220,7 +224,7 @@ const Owner = () => {
 
   const pageContent = (
     <>
-      {ownerData.length ? (
+      {ownerData.length > 0 ? (
         <Wrapper>
           <div className="owner-page">
             <div className="page-header">
@@ -714,7 +718,15 @@ const Owner = () => {
       )}
     </>
   );
-  if (propertyData.length < 1) {
+  if (loading) {
+    return (
+      <Wrapper>
+        <Spin size="large" />
+      </Wrapper>
+    );
+  }
+
+  if (!propertyData && propertyData.length < 1) {
     return (
       <Wrapper>
         <div className="add-team-page">

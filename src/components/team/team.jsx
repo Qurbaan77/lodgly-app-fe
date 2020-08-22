@@ -4,7 +4,7 @@ import './team.css';
 import { toast } from 'react-toastify';
 import Avatar from 'react-avatar';
 import { useTranslation } from 'react-i18next';
-import { Button, Tooltip } from 'antd';
+import { Button, Tooltip, Spin } from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -33,6 +33,7 @@ const TeamListing = () => {
   const [daysLeft, setDaysLeft] = useState();
   const [visibleDeletePopup, setVisibleDeletePopup] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -102,6 +103,7 @@ const TeamListing = () => {
       affiliateId: userId,
     });
     if (response.status === 200) {
+      setLoading(false);
       setSubUser(response.data.subUser);
     }
   }, [userId]);
@@ -136,6 +138,14 @@ const TeamListing = () => {
   const btn2 = isSubUser ? btn1 : enableButton;
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+
+  if (loading) {
+    return (
+      <Wrapper>
+        <Spin size="large" />
+      </Wrapper>
+    );
+  }
 
   const pageContent = (
     <>
@@ -206,7 +216,7 @@ const TeamListing = () => {
                         <td>
                           {el.role === 'fullaccess'
                             ? 'Full Access'
-                            : 'Sub User'}
+                            : el.role === 'read' ? 'Read' : 'Write'}
                         </td>
                         <td>
                           {el.status === 0 ? 'Pending' : 'Accepted'}
