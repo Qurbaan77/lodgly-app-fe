@@ -157,6 +157,9 @@ const Profile = () => {
     },
   };
 
+  const handleApplication = () => {
+    toast.success('Application settings saved successfully!', { containerId: 'B' });
+  };
   useEffect(() => {
     getUserInfo();
     getCompanyInfo();
@@ -350,18 +353,97 @@ const Profile = () => {
                         </Col>
 
                         <Col span={12}>
-                          <Form.Item label={t('billingprofile.label11')}>
+                          <Form.Item label={t('billingprofile.label11')} name="timezone">
                             <Select>
-                              <Select.Option value="demo">
-                                Europe/Vienna
-                              </Select.Option>
+                              <Select.Option value="Etc/GMT+12">(GMT-12:00) International Date Line West</Select.Option>
+                              <Select.Option value="Pacific/Midway">(GMT-11:00) Midway Island, Samoa</Select.Option>
+                              <Select.Option value="Pacific/Honolulu">(GMT-10:00) Hawaii</Select.Option>
+                              <Select.Option value="US/Alaska">(GMT-09:00) Alaska</Select.Option>
+                              <Select.Option value="America/Los_Angeles">(GMT-08:00) Pacific Time (US & Canada)</Select.Option>
+                              <Select.Option value="America/Tijuana">(GMT-08:00) Tijuana, Baja California</Select.Option>
+                              <Select.Option value="US/Arizona">(GMT-07:00) Arizona</Select.Option>
+                              <Select.Option value="America/Chihuahua">(GMT-07:00) Chihuahua, La Paz, Mazatlan</Select.Option>
+                              <Select.Option value="US/Mountain">(GMT-07:00) Mountain Time (US & Canada)</Select.Option>
+                              <Select.Option value="America/Managua">(GMT-06:00) Central America</Select.Option>
+                              <Select.Option value="US/Central">(GMT-06:00) Central Time (US & Canada)</Select.Option>
+                              <Select.Option value="America/Mexico_City">(GMT-06:00) Guadalajara, Mexico City, Monterrey</Select.Option>
+                              <Select.Option value="Canada/Saskatchewan">(GMT-06:00) Saskatchewan</Select.Option>
+                              <Select.Option value="America/Bogota">(GMT-05:00) Bogota, Lima, Quito, Rio Branco</Select.Option>
+                              <Select.Option value="US/Eastern">(GMT-05:00) Eastern Time (US & Canada)</Select.Option>
+                              <Select.Option value="US/East-Indiana">(GMT-05:00) Indiana (East)</Select.Option>
+                              <Select.Option value="Canada/Atlantic">(GMT-04:00) Atlantic Time (Canada)</Select.Option>
+                              <Select.Option value="America/Caracas">(GMT-04:00) Caracas, La Paz</Select.Option>
+                              <Select.Option value="America/Manaus">(GMT-04:00) Manaus</Select.Option>
+                              <Select.Option value="America/Santiago">(GMT-04:00) Santiago</Select.Option>
+                              <Select.Option value="Canada/Newfoundland">(GMT-03:30) Newfoundland</Select.Option>
+                              <Select.Option value="America/Sao_Paulo">(GMT-03:00) Brasilia</Select.Option>
+                              <Select.Option value="America/Argentina/Buenos_Aires">(GMT-03:00) Buenos Aires, Georgetown</Select.Option>
+                              <Select.Option value="America/Godthab">(GMT-03:00) Greenland</Select.Option>
+                              <Select.Option value="America/Montevideo">(GMT-03:00) Montevideo</Select.Option>
+                              <Select.Option value="America/Noronha">(GMT-02:00) Mid-Atlantic</Select.Option>
+                              <Select.Option value="Atlantic/Cape_Verde">(GMT-01:00) Cape Verde Is.</Select.Option>
+                              <Select.Option value="Atlantic/Azores">(GMT-01:00) Azores</Select.Option>
+                              <Select.Option value="Africa/Casablanca">(GMT+00:00) Casablanca, Monrovia, Reykjavik</Select.Option>
+                              <Select.Option value="Etc/Greenwich">(GMT+00:00) Greenwich Mean Time : Dublin, Edinburgh, Lisbon, London</Select.Option>
+                              <Select.Option value="Europe/Amsterdam">(GMT+01:00) Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna</Select.Option>
+                              <Select.Option value="Europe/Belgrade">(GMT+01:00) Belgrade, Bratislava, Budapest, Ljubljana, Prague</Select.Option>
+                              <Select.Option value="Europe/Brussels">(GMT+01:00) Brussels, Copenhagen, Madrid, Paris</Select.Option>
+                              <Select.Option value="Europe/Sarajevo">(GMT+01:00) Sarajevo, Skopje, Warsaw, Zagreb</Select.Option>
+                              <Select.Option value="Africa/Lagos">(GMT+01:00) West Central Africa</Select.Option>
+                              <Select.Option value="Asia/Amman">(GMT+02:00) Amman</Select.Option>
+                              <Select.Option value="Europe/Athens">(GMT+02:00) Athens, Bucharest, Istanbul</Select.Option>
+                              <Select.Option value="Asia/Beirut">(GMT+02:00) Beirut</Select.Option>
+                              <Select.Option value="Africa/Cairo">(GMT+02:00) Cairo</Select.Option>
+                              <Select.Option value="Africa/Harare">(GMT+02:00) Harare, Pretoria</Select.Option>
+                              <Select.Option value="Europe/Helsinki">(GMT+02:00) Helsinki, Kyiv, Riga, Sofia, Tallinn, Vilnius</Select.Option>
+                              <Select.Option value="Asia/Jerusalem">(GMT+02:00) Jerusalem</Select.Option>
+                              <Select.Option value="Europe/Minsk">(GMT+02:00) Minsk</Select.Option>
+                              <Select.Option value="Africa/Windhoek">(GMT+02:00) Windhoek</Select.Option>
+                              <Select.Option value="Asia/Kuwait">(GMT+03:00) Kuwait, Riyadh, Baghdad</Select.Option>
+                              <Select.Option value="Europe/Moscow">(GMT+03:00) Moscow, St. Petersburg, Volgograd</Select.Option>
+                              <Select.Option value="Africa/Nairobi">(GMT+03:00) Nairobi</Select.Option>
+                              <Select.Option value="Asia/Tbilisi">(GMT+03:00) Tbilisi</Select.Option>
+                              <Select.Option value="Asia/Tehran">(GMT+03:30) Tehran</Select.Option>
+                              <Select.Option value="Asia/Muscat">(GMT+04:00) Abu Dhabi, Muscat</Select.Option>
+                              <Select.Option value="Asia/Baku">(GMT+04:00) Baku</Select.Option>
+                              <Select.Option value="Asia/Yerevan">(GMT+04:00) Yerevan</Select.Option>
+                              <Select.Option value="Asia/Kabul">(GMT+04:30) Kabul</Select.Option>
+                              <Select.Option value="Asia/Yekaterinburg">(GMT+05:00) Yekaterinburg</Select.Option>
+                              <Select.Option value="Asia/Karachi">(GMT+05:00) Islamabad, Karachi, Tashkent</Select.Option>
+                              <Select.Option value="Asia/Calcutta">(GMT+05:30) Chennai, Kolkata, Mumbai, New Delhi</Select.Option>
+                              <Select.Option value="Asia/SriLanka">(GMT+05:30) Sri Jayawardenapura</Select.Option>
+                              <Select.Option value="Asia/Katmandu">(GMT+05:45) Kathmandu</Select.Option>
+                              <Select.Option value="Asia/Almaty">(GMT+06:00) Almaty, Novosibirsk</Select.Option>
+                              <Select.Option value="Asia/Dhaka">(GMT+06:00) Astana, Dhaka</Select.Option>
+                              <Select.Option value="Asia/Rangoon">(GMT+06:30) Yangon (Rangoon)</Select.Option>
+                              <Select.Option value="Asia/Bangkok">(GMT+07:00) Bangkok, Hanoi, Jakarta</Select.Option>
+                              <Select.Option value="Asia/Krasnoyarsk">(GMT+07:00) Krasnoyarsk</Select.Option>
+                              <Select.Option value="Asia/Hong_Kong">(GMT+08:00) Beijing, Chongqing, Hong Kong, Urumqi</Select.Option>
+                              <Select.Option value="Asia/Kuala_Lumpur">(GMT+08:00) Kuala Lumpur, Singapore</Select.Option>
+                              <Select.Option value="Asia/Irkutsk">(GMT+08:00) Irkutsk, Ulaan Bataar</Select.Option>
+                              <Select.Option value="Australia/Perth">(GMT+08:00) Perth</Select.Option>
+                              <Select.Option value="Asia/Taipei">(GMT+08:00) Taipei</Select.Option>
+                              <Select.Option value="Asia/Tokyo">(GMT+09:00) Osaka, Sapporo, Tokyo</Select.Option>
+                              <Select.Option value="Asia/Seoul">(GMT+09:00) Seoul</Select.Option>
+                              <Select.Option value="Asia/Yakutsk">(GMT+09:00) Yakutsk</Select.Option>
+                              <Select.Option value="Australia/Adelaide">(GMT+09:30) Adelaide</Select.Option>
+                              <Select.Option value="Australia/Darwin">(GMT+09:30) Darwin</Select.Option>
+                              <Select.Option value="Australia/Brisbane">(GMT+10:00) Brisbane</Select.Option>
+                              <Select.Option value="Australia/Canberra">(GMT+10:00) Canberra, Melbourne, Sydney</Select.Option>
+                              <Select.Option value="Australia/Hobart">(GMT+10:00) Hobart</Select.Option>
+                              <Select.Option value="Pacific/Guam">(GMT+10:00) Guam, Port Moresby</Select.Option>
+                              <Select.Option value="Asia/Vladivostok">(GMT+10:00) Vladivostok</Select.Option>
+                              <Select.Option value="Asia/Magadan">(GMT+11:00) Magadan, Solomon Is., New Caledonia</Select.Option>
+                              <Select.Option value="Pacific/Auckland">(GMT+12:00) Auckland, Wellington</Select.Option>
+                              <Select.Option value="Pacific/Fiji">(GMT+12:00) Fiji, Kamchatka, Marshall Is.</Select.Option>
+                              <Select.Option value="Pacific/Tongatapu">(GMT+13:00) Nukualofa</Select.Option>
                             </Select>
                           </Form.Item>
                         </Col>
 
                         <Col span={24}>
                           <Form.Item>
-                            <Button>{t('strings.save')}</Button>
+                            <Button onClick={handleApplication}>{t('strings.save')}</Button>
                           </Form.Item>
                         </Col>
                       </Row>
