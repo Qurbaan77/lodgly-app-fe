@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import './reset.css';
 import { Form, Input, Button } from 'antd';
@@ -140,6 +141,13 @@ const Reset = () => {
                       </Form>
                     </div>
                   </div>
+                </div>
+                <div className="q-links">
+                  <p>
+                    Go to Login!
+                    {' '}
+                    <Link to="/">Login</Link>
+                  </p>
                 </div>
               </div>
             </div>
