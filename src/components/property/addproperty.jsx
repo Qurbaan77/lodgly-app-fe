@@ -18,10 +18,11 @@ import {
   Collapse,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { HomeOutlined, InboxOutlined } from '@ant-design/icons';
+import { InboxOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import { server } from '../../config/keys';
 import { userInstance } from '../../axios/axiosconfig';
+import propertyDetailIcon from '../../assets/images/menu/property-detail-icon.png';
 
 const { Panel } = Collapse;
 
@@ -188,7 +189,8 @@ const AddProperty = () => {
       <div className="add-property">
         <div className="page-header">
           <h1>
-            <HomeOutlined />
+            <img src={propertyDetailIcon} alt="property" />
+            {' '}
             {t('addproperty.heading')}
             {' '}
             {No}

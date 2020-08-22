@@ -543,9 +543,9 @@ ReservationCountryChart.defaultProps = {
 
 const ReservationChannelChart = () => {
   const state = {
-    series: [20, 30, 50],
+    series: [], // put data for show in statistics
     options: {
-      labels: ['Airbnb', 'Booking', 'Booking'],
+      labels: [], // put name of labels for show in statistics
       chart: {
         type: 'donut',
       },
