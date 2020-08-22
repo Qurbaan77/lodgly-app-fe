@@ -131,7 +131,8 @@ const EditInvoicePopup = (props) => {
     }
     valuesCopy.itemData = itemData;
     valuesCopy.phone = userData[0].phone;
-    valuesCopy.email = userData[0].email;
+    valuesCopy.userEmail = userData[0].email;
+    valuesCopy.email = email;
     const { clientName } = valuesCopy;
     valuesCopy.total = total;
     valuesCopy.propertyName = property[0].propertyName;
