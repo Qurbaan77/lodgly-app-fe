@@ -185,7 +185,7 @@ const UnitType = () => {
 
   const checkSpace = (rule, value) => {
     if (value.replace(/\s/g, '').length === 0) {
-      return Promise.resolve('Name should not only contains whitespace');
+      return Promise.reject(new Error('Name should not only contains whitespace'));
     }
     return true;
   };
@@ -274,7 +274,6 @@ const UnitType = () => {
                             {t('strings.cancel')}
                           </div>
                           <div
-                            disabled
                             className="sav-btn"
                             onClick={() => onFinish()}
                             role="button"

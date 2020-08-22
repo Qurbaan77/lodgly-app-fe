@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
+import moment from 'moment';
 import { toast } from 'react-toastify';
 import { useHistory } from 'react-router-dom';
 // import moment from 'moment';
@@ -533,7 +534,7 @@ const Booking = () => {
                         <h3>{el.guest}</h3>
                         <p>{el.propertyName}</p>
                         <ul>
-                          <li>{el.created_date}</li>
+                          <li>{moment(new Date(el.created_date)).format('DD MMM YYYY')}</li>
                           <li>
                             {el.nights}
                             {' '}
@@ -708,9 +709,9 @@ const Booking = () => {
                           {t('strings.date')}
                         </span>
                         <p>
-                          {currentBooking.startDate}
+                          {moment(new Date(currentBooking.startDate)).format('DD MMM YY')}
                           -
-                          {currentBooking.endDate}
+                          {moment(new Date(currentBooking.endDate)).format('DD MMM YY')}
                         </p>
                         <p>
                           {currentBooking.night}
