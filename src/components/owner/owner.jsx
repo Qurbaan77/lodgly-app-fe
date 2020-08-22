@@ -255,12 +255,7 @@ const Owner = () => {
                             <div className="owner-title">
                               <h5>{`${el.fname} ${el.lname}`}</h5>
                               <span>
-                                {t('owner.label4')}
-                                {' '}
-                                |
-                                {el.citizenship}
-                                ,
-                                {' '}
+                                {t('owner.label4')} |{el.citizenship},{' '}
                                 {el.country}
                               </span>
                             </div>
@@ -603,7 +598,7 @@ const Owner = () => {
                 </Col>
 
                 <Col span={12}>
-                  <Form.Item name="gender" label={t('strings.gender')}>
+                  <Form.Item name="gender" label="Gender">
                     <Radio.Group name="radiogroup">
                       <Radio value="Male">Male</Radio>
                       <Radio value="female">Female</Radio>
@@ -615,13 +610,11 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    className="custom-select"
                     label={t('owner.label11')}
                     name="country"
                     style={{ paddingRight: 20 }}
                   >
                     <CountryDropdown onChange={(val) => setCountry(val)} />
-                    <img src={arrow} alt="arrow" />
                   </Form.Item>
                 </Col>
               </Row>
@@ -629,14 +622,11 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    className="custom-select"
-
                     label={t('strings.citizenship')}
                     name="citizenship"
                     style={{ paddingRight: 20 }}
                   >
                     <RegionDropdown country={country} />
-                    <img src={arrow} alt="arrow" />
                   </Form.Item>
                 </Col>
 
@@ -667,7 +657,6 @@ const Owner = () => {
 
               <Row style={{ alignItems: 'center' }}>
                 <Form.Item
-                  className="custom-select"
                   style={{ width: '100%' }}
                   name="properties"
                   label={t('owner.label21')}
@@ -683,18 +672,18 @@ const Owner = () => {
                     mode="multiple"
                     size="large"
                     placeholder={t('owner.label16')}
+                    onSelect={(e) => handlePropertySelect(e)}
                   >
                     {propertyData.map((el) => (
                       <Option value={el.id}>{el.propertyName}</Option>
                     ))}
                   </Select>
-                  <img src={arrow} alt="arrow" />
                 </Form.Item>
               </Row>
 
               <Row style={{ alignItems: 'center' }}>
                 <Col span={24}>
-                  <Form.Item label={t('strings.note')} name="notes">
+                  <Form.Item label="Notes" name="notes">
                     <Input.TextArea />
                   </Form.Item>
                 </Col>
@@ -703,11 +692,8 @@ const Owner = () => {
               <Row style={{ alignItems: 'center', textAlign: 'right' }}>
                 <Col span={24}>
                   <Form.Item>
-                    <Button style={{ marginRight: 10 }} onClick={handleCancel}>
-                      {t('strings.cancel')}
-                    </Button>
                     <Button type="primary" htmlType="submit">
-                      {t('strings.save')}
+                      {saveBtn}
                     </Button>
                   </Form.Item>
                 </Col>
@@ -726,7 +712,7 @@ const Owner = () => {
     );
   }
 
-  if (!propertyData && propertyData.length < 1) {
+  if (!properties && properties.length < 1) {
     return (
       <Wrapper>
         <div className="add-team-page">
