@@ -300,12 +300,7 @@ const Profile = () => {
 
                           <Col span={24}>
                             <Form.Item label={t('strings.phone')} name="phone">
-                              <Input
-                                placeholder=""
-                                type="number"
-                                minLength="9"
-                                maxLength="15"
-                              />
+                              <Input />
                             </Form.Item>
                           </Col>
 
