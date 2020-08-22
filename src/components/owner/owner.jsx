@@ -26,7 +26,7 @@ import propertyplace from '../../assets/images/property-placeholder.png';
 import property1 from '../../assets/images/property-1.png';
 import owner from '../../assets/images/profile_user.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
-import arrow from '../../assets/images/select-arrow.png';
+// import arrow from '../../assets/images/select-arrow.png';
 import subuser from '../../assets/images/subuser.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
@@ -255,7 +255,12 @@ const Owner = () => {
                             <div className="owner-title">
                               <h5>{`${el.fname} ${el.lname}`}</h5>
                               <span>
-                                {t('owner.label4')} |{el.citizenship},{' '}
+                                {t('owner.label4')}
+                                {' '}
+                                |
+                                {el.citizenship}
+                                ,
+                                {' '}
                                 {el.country}
                               </span>
                             </div>
