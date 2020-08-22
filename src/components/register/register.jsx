@@ -5,8 +5,8 @@ import './register.css';
 import {
   Form, Input, Row, Col, Checkbox, Button,
 } from 'antd';
-import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css';
+// import PhoneInput from 'react-phone-input-2';
+// import 'react-phone-input-2/lib/style.css';
 import logo from '../../assets/images/logo.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
 import Toaster from '../toaster/toaster';
@@ -16,7 +16,7 @@ const Register = () => {
   const [form] = Form.useForm();
   const [notifyType, setNotifyType] = useState();
   const [notifyMsg, setNotifyMsg] = useState();
-  const [phone, setPhone] = useState(null);
+  // const [phone, setPhone] = useState(null);
   const history = useHistory();
 
   const onFinish = async (values) => {
@@ -38,9 +38,9 @@ const Register = () => {
     setNotifyType('');
   };
 
-  const handleChange = (value) => {
-    setPhone(value);
-  };
+  // const handleChange = (value) => {
+  //   setPhone(value);
+  // };
 
   return (
     <>
@@ -194,11 +194,11 @@ const Register = () => {
                               },
                             ]}
                           >
-                            <PhoneInput
+                            {/* <PhoneInput
                               country="us"
                               value={phone}
                               onChange={(value) => handleChange(value)}
-                            />
+                            /> */}
                           </Form.Item>
                         </Col>
                       </Row>

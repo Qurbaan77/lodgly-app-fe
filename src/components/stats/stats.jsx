@@ -9,6 +9,7 @@ import {
   Tooltip,
   Row,
   Col,
+  Spin,
 } from 'antd';
 import {
   PlusOutlined,
@@ -43,6 +44,7 @@ const Stats = () => {
     'no-stats-data',
   );
   const [paceHasData, setPaceHasData] = useState('no-stats-data');
+  const [loading, setLoading] = useState(true);
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
 
   const [{ userId }] = userCred || [{}];
@@ -59,6 +61,7 @@ const Stats = () => {
         data2.push(filterData);
       });
     if (response.data.code === 200) {
+      setLoading(false);
       setPropertyData(data2.length > 0 ? data2 : data);
     }
   }, [userId, topNavId]);
@@ -81,6 +84,13 @@ const Stats = () => {
   }, [getProperty]);
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+  if (loading) {
+    return (
+      <Wrapper>
+        <Spin size="large" />
+      </Wrapper>
+    );
+  }
 
   if (propertyData.length < 1) {
     return (

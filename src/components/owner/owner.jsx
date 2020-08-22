@@ -15,6 +15,7 @@ import {
   Modal,
   Row,
   Col,
+  Spin,
 } from 'antd';
 import { PlusOutlined, DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -25,7 +26,7 @@ import propertyplace from '../../assets/images/property-placeholder.png';
 import property1 from '../../assets/images/property-1.png';
 import owner from '../../assets/images/profile_user.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
-import arrow from '../../assets/images/select-arrow.png';
+// import arrow from '../../assets/images/select-arrow.png';
 import subuser from '../../assets/images/subuser.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
@@ -47,6 +48,7 @@ const Owner = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState([]);
   const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
 
@@ -98,6 +100,7 @@ const Owner = () => {
         arr.push(filterData);
       });
     if (response.data.code === 200) {
+      setLoading(false);
       setPropertyData(arr);
     }
   }, [userId]);
@@ -108,6 +111,7 @@ const Owner = () => {
     });
     if (response.data.code === 200) {
       setOwnerData(response.data.data);
+      setLoading(false);
     }
   }, [userId]);
 
@@ -220,7 +224,7 @@ const Owner = () => {
 
   const pageContent = (
     <>
-      {ownerData.length ? (
+      {ownerData.length > 0 ? (
         <Wrapper>
           <div className="owner-page">
             <div className="page-header">
@@ -599,7 +603,7 @@ const Owner = () => {
                 </Col>
 
                 <Col span={12}>
-                  <Form.Item name="gender" label={t('strings.gender')}>
+                  <Form.Item name="gender" label="Gender">
                     <Radio.Group name="radiogroup">
                       <Radio value="Male">Male</Radio>
                       <Radio value="female">Female</Radio>
@@ -611,13 +615,11 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    className="custom-select"
                     label={t('owner.label11')}
                     name="country"
                     style={{ paddingRight: 20 }}
                   >
                     <CountryDropdown onChange={(val) => setCountry(val)} />
-                    <img src={arrow} alt="arrow" />
                   </Form.Item>
                 </Col>
               </Row>
@@ -625,14 +627,11 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    className="custom-select"
-
                     label={t('strings.citizenship')}
                     name="citizenship"
                     style={{ paddingRight: 20 }}
                   >
                     <RegionDropdown country={country} />
-                    <img src={arrow} alt="arrow" />
                   </Form.Item>
                 </Col>
 
@@ -663,7 +662,6 @@ const Owner = () => {
 
               <Row style={{ alignItems: 'center' }}>
                 <Form.Item
-                  className="custom-select"
                   style={{ width: '100%' }}
                   name="properties"
                   label={t('owner.label21')}
@@ -679,18 +677,18 @@ const Owner = () => {
                     mode="multiple"
                     size="large"
                     placeholder={t('owner.label16')}
+                    onSelect={(e) => handlePropertySelect(e)}
                   >
                     {propertyData.map((el) => (
                       <Option value={el.id}>{el.propertyName}</Option>
                     ))}
                   </Select>
-                  <img src={arrow} alt="arrow" />
                 </Form.Item>
               </Row>
 
               <Row style={{ alignItems: 'center' }}>
                 <Col span={24}>
-                  <Form.Item label={t('strings.note')} name="notes">
+                  <Form.Item label="Notes" name="notes">
                     <Input.TextArea />
                   </Form.Item>
                 </Col>
@@ -699,11 +697,8 @@ const Owner = () => {
               <Row style={{ alignItems: 'center', textAlign: 'right' }}>
                 <Col span={24}>
                   <Form.Item>
-                    <Button style={{ marginRight: 10 }} onClick={handleCancel}>
-                      {t('strings.cancel')}
-                    </Button>
                     <Button type="primary" htmlType="submit">
-                      {t('strings.save')}
+                      {saveBtn}
                     </Button>
                   </Form.Item>
                 </Col>
@@ -714,7 +709,15 @@ const Owner = () => {
       )}
     </>
   );
-  if (propertyData.length < 1) {
+  if (loading) {
+    return (
+      <Wrapper>
+        <Spin size="large" />
+      </Wrapper>
+    );
+  }
+
+  if (!properties && properties.length < 1) {
     return (
       <Wrapper>
         <div className="add-team-page">

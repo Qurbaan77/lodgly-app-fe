@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 // import moment from 'moment';
 import './booking.css';
 import {
-  Form, Button, Row, Col, Tooltip, Tag, Select, Checkbox,
+  Form, Button, Row, Col, Tooltip, Tag, Select, Checkbox, Spin,
 } from 'antd';
 import {
   FormOutlined,
@@ -15,7 +15,6 @@ import {
 } from '@ant-design/icons';
 // import { useTranslation } from "react-i18next";
 import { useTranslation } from 'react-i18next';
-
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
 import GuestPopup from './guestpopup';
@@ -66,7 +65,7 @@ const Booking = () => {
   const [filterArr, setFilterArr] = useState([]);
   const [checkedBooking, setCheckedBooking] = useState([]);
   const [selectAllCheck, setSelectAllCheck] = useState(false);
-
+  const [loading, setLoading] = useState(true);
   const [editValues, setEditValues] = useState({});
   const [editBookingValues, setEditBookingValues] = useState({});
   const [filterValues, setFilterValues] = useState({});
@@ -117,6 +116,7 @@ const Booking = () => {
         data2.push(filterData);
       });
     if (response.data.code === 200) {
+      setLoading(false);
       setPropertyData(data2.length > 0 ? data2 : data);
     }
   }, [userId, topNavId]);
@@ -132,6 +132,9 @@ const Booking = () => {
     const response = await userInstance.post('/getBooking', {
       affiliateId: userId,
     });
+    if (response.data.code === 200) {
+      setLoading(false);
+    }
     const bookingdata = response.data.bookingData;
     const guestdata = response.data.guestData;
     const servicedata = response.data.serviceData;
@@ -426,6 +429,14 @@ const Booking = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <Wrapper>
+        <Spin size="large" />
+      </Wrapper>
+    );
+  }
+
   if (propertyData.length < 1) {
     return (
       <Wrapper>
@@ -447,6 +458,23 @@ const Booking = () => {
     );
   }
 
+  if (mapBooking.length < 1) {
+    return (
+      <Wrapper>
+        <div className="add-team-page">
+          <div className="add-subuser">
+            <img src={nobooking} alt="subuser" />
+            <h4>Booking</h4>
+            <p>
+              Currently, you do not have any booking created
+            </p>
+            {btn2}
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper fun={setTopNavId}>
       <Helmet>
@@ -462,319 +490,304 @@ const Booking = () => {
       </Helmet>
       {hasAccess ? (
         <div className="booking">
-          {mapBooking && mapBooking.length > 0 ? (
-            <div className="container">
-              <Row>
-                <Col span={10}>
-                  <div className="booking-list-conatiner">
-                    <div className="booking-filter-box">
-                      <div className="filter-section">
-                        <label htmlFor="filter">
-                          {t('booking.heading')}
-                          :
-                          <input type="text" hidden />
-                        </label>
-                        <div className="filter-item" id="filters">
-                          <Tag color="default">{t('booking.tag1')}</Tag>
-                          <Tag color="success">{t('booking.tag2')}</Tag>
-                          <Tag color="default">{t('booking.tag3')}</Tag>
-                          <Tag color="error">{t('booking.heading4')}</Tag>
-                        </div>
-                      </div>
-
-                      <div className="filter-icon">
-                        <Button onClick={showfilter}>
-                          {' '}
-                          <img src={filterIcon} alt="filter-icon" />
-                        </Button>
+          <div className="container">
+            <Row>
+              <Col span={10}>
+                <div className="booking-list-conatiner">
+                  <div className="booking-filter-box">
+                    <div className="filter-section">
+                      <label htmlFor="filter">
+                        {t('booking.heading')}
+                        :
+                        <input type="text" hidden />
+                      </label>
+                      <div className="filter-item" id="filters">
+                        <Tag color="default">{t('booking.tag1')}</Tag>
+                        <Tag color="success">{t('booking.tag2')}</Tag>
+                        <Tag color="default">{t('booking.tag3')}</Tag>
+                        <Tag color="error">{t('booking.heading4')}</Tag>
                       </div>
                     </div>
-                    {mapBooking.map((el, i) => (
-                      <div
-                        key={el.id}
-                        role="presentation"
-                        className={`booking-list ${el.statusColour}`}
-                        onClick={() => selectBooking(el, i)}
-                      >
-                        <div className="filter-checkbox">
-                          <Checkbox
-                            checked={el[Object.keys(el)[32]]}
-                            onClick={() => handleCheck(el, i)}
-                          />
-                        </div>
-                        <div className="detail">
-                          <h3>{el.guest}</h3>
-                          <p>{el.propertyName}</p>
-                          <ul>
-                            <li>{el.created_date}</li>
-                            <li>
-                              {el.nights}
-                              {' '}
-                              <ThunderboltOutlined />
-                            </li>
-                            <li>
-                              {el.noOfGuest}
-                              {' '}
-                              <UserOutlined />
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="detail-info">
-                          <span>{el.created_time}</span>
-                          <span className="green-label">
-                            {' '}
-                            €
-                            {el.totalAmount}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                    <div className="booking-filter-footer">
-                      <div className="invoice-filter-box">
+
+                    <div className="filter-icon">
+                      <Button onClick={showfilter}>
+                        {' '}
+                        <img src={filterIcon} alt="filter-icon" />
+                      </Button>
+                    </div>
+                  </div>
+                  {mapBooking.map((el, i) => (
+                    <div
+                      key={el.id}
+                      role="presentation"
+                      className={`booking-list ${el.statusColour}`}
+                      onClick={() => selectBooking(el, i)}
+                    >
+                      <div className="filter-checkbox">
                         <Checkbox
-                          checked={selectAllCheck}
-                          value={selectAllCheck}
-                          onClick={handleSelectAll}
+                          checked={el[Object.keys(el)[32]]}
+                          onClick={() => handleCheck(el, i)}
+                        />
+                      </div>
+                      <div className="detail">
+                        <h3>{el.guest}</h3>
+                        <p>{el.propertyName}</p>
+                        <ul>
+                          <li>{el.created_date}</li>
+                          <li>
+                            {el.nights}
+                            {' '}
+                            <ThunderboltOutlined />
+                          </li>
+                          <li>
+                            {el.noOfGuest}
+                            {' '}
+                            <UserOutlined />
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="detail-info">
+                        <span>{el.created_time}</span>
+                        <span className="green-label">
+                          {' '}
+                          €
+                          {el.totalAmount}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="booking-filter-footer">
+                    <div className="invoice-filter-box">
+                      <Checkbox
+                        checked={selectAllCheck}
+                        value={selectAllCheck}
+                        onClick={handleSelectAll}
+                      >
+                        {t('strings.select_all')}
+                      </Checkbox>
+                      {checkedBooking && checkedBooking.length > 0 ? (
+                        <div
+                          className="cancel-icon"
+                          onClick={handleCancelCheck}
+                          role="presentation"
                         >
-                          {t('strings.select_all')}
-                        </Checkbox>
-                        {checkedBooking && checkedBooking.length > 0 ? (
-                          <div
-                            className="cancel-icon"
-                            onClick={handleCancelCheck}
-                            role="presentation"
-                          >
-                            <img src={cancelIcon} alt="" />
-                            {t('strings.cancel')}
-                          </div>
-                        ) : (
-                          <div className="cancel-icon" hidden>
-                            <img src={cancelIcon} alt="" />
-                            {t('strings.cancel')}
-                          </div>
-                        )}
-                        {
+                          <img src={cancelIcon} alt="" />
+                          {t('strings.cancel')}
+                        </div>
+                      ) : (
+                        <div className="cancel-icon" hidden>
+                          <img src={cancelIcon} alt="" />
+                          {t('strings.cancel')}
+                        </div>
+                      )}
+                      {
                             checkedBooking && checkedBooking.length > 0 ? <Tag color="#FB4B56">{checkedBooking.length}</Tag> : ''
                           }
 
-                        <div className="box-editing" role="presentation">
-                          <Select
-                            className="filter-menu"
-                            placeholder="Mark as"
-                            dropdownClassName="color-filter"
-                            onSelect={handleDelete}
-                          >
-                            <Option value="read">Mark as read</Option>
-                            <Option value="open">Mark as unread</Option>
-                            <Option value="replied">Mark as replied</Option>
-                            <Option value="unreplied">Mark as unreplied</Option>
-                            <Option value="trash">Move to trash</Option>
-                          </Select>
-                        </div>
+                      <div className="box-editing" role="presentation">
+                        <Select
+                          className="filter-menu"
+                          placeholder="Mark as"
+                          dropdownClassName="color-filter"
+                          onSelect={handleDelete}
+                        >
+                          <Option value="read">Mark as read</Option>
+                          <Option value="open">Mark as unread</Option>
+                          <Option value="replied">Mark as replied</Option>
+                          <Option value="unreplied">Mark as unreplied</Option>
+                          <Option value="trash">Move to trash</Option>
+                        </Select>
                       </div>
                     </div>
-                    <div className="bookin-footer">
-                      <ul>
-                        <li>
-                          <img src={editIcon} alt="edit-icon" />
-                        </li>
-                        <li>
-                          <img src={downloadIcon} alt="download=icon" />
-                        </li>
-                        <li>
-                          <img src={refreshIcon} alt="refresh-icon" />
-                        </li>
-                      </ul>
-                      {btn2}
-                    </div>
                   </div>
-                </Col>
-
-                <Col span={14}>
-                  <div className="booking-details" hidden={booked}>
-                    <h3>{currentBooking.guest}</h3>
+                  <div className="bookin-footer">
                     <ul>
                       <li>
-                        {currentBooking.night}
-                        {' '}
-                        {t('booking.label1')}
+                        <img src={editIcon} alt="edit-icon" />
                       </li>
                       <li>
-                        {currentBooking.noOfGuest || 0}
-                        {' '}
-                        {t('booking.label2')}
+                        <img src={downloadIcon} alt="download=icon" />
                       </li>
                       <li>
-                        {t('booking.label3')}
-                        {currentBooking.id}
+                        <img src={refreshIcon} alt="refresh-icon" />
                       </li>
                     </ul>
+                    {btn2}
+                  </div>
+                </div>
+              </Col>
 
+              <Col span={14}>
+                <div className="booking-details" hidden={booked}>
+                  <h3>{currentBooking.guest}</h3>
+                  <ul>
+                    <li>
+                      {currentBooking.night}
+                      {' '}
+                      {t('booking.label1')}
+                    </li>
+                    <li>
+                      {currentBooking.noOfGuest || 0}
+                      {' '}
+                      {t('booking.label2')}
+                    </li>
+                    <li>
+                      {t('booking.label3')}
+                      {currentBooking.id}
+                    </li>
+                  </ul>
+
+                  <div className="booking-box">
+                    <div className="booking-head">
+                      <div className="box-heading">
+                        <h3>{t('booking.heading3')}</h3>
+                      </div>
+
+                      <div
+                        className="box-editing"
+                        onClick={forceUpdate}
+                        role="presentation"
+                      >
+                        {edit2}
+
+                        <Select
+                          value={status}
+                          className="filter-menu"
+                          dropdownClassName="color-dropdown"
+                          onSelect={addStatus}
+                        >
+                          <Option value="booked">Booked</Option>
+                          <Option value="open">Open</Option>
+                          <Option value="tentative">Set as Tentative</Option>
+                          <Option value="decline">Decline</Option>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="booking-item">
+                      <div className="prorety-box">
+                        <span>{t('strings.property')}</span>
+                        <p>{currentBooking.propertyName}</p>
+                      </div>
+
+                      <div className="prorety-box">
+                        <span>{t('strings.unit')}</span>
+                        <p>{currentBooking.unitName}</p>
+                      </div>
+                    </div>
+
+                    <div className="booking-item-one">
+                      <div className="prorety-box">
+                        <span>{t('booking.heading6')}</span>
+                        <p>
+                          {currentBooking.channel}
+                          {' '}
+                          {currentBooking.commission}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="booking-item">
+                      <div className="prorety-box">
+                        <span>{t('strings.guests')}</span>
+                        <p>
+                          {currentBooking.adult}
+                          {t('strings.adults')}
+                        </p>
+                        <p>
+                          {currentBooking.children1}
+                          {' '}
+                          {t('booking.label4')}
+                          {' '}
+                        </p>
+                      </div>
+
+                      <div className="prorety-box">
+                        <span>
+                          {' '}
+                          {t('strings.date')}
+                        </span>
+                        <p>
+                          {currentBooking.startDate}
+                          -
+                          {currentBooking.endDate}
+                        </p>
+                        <p>
+                          {currentBooking.night}
+                          {' '}
+                          {t('booking.label5')}
+                          {' '}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {currentGuest.map((el) => (
                     <div className="booking-box">
                       <div className="booking-head">
                         <div className="box-heading">
-                          <h3>{t('booking.heading3')}</h3>
+                          <h3>
+                            {' '}
+                            {t('strings.guests')}
+                          </h3>
                         </div>
 
-                        <div
-                          className="box-editing"
-                          onClick={forceUpdate}
-                          role="presentation"
-                        >
-                          {edit2}
-
-                          <Select
-                            value={status}
-                            className="filter-menu"
-                            dropdownClassName="color-dropdown"
-                            onSelect={addStatus}
-                          >
-                            <Option value="booked">Booked</Option>
-                            <Option value="open">Open</Option>
-                            <Option value="tentative">Set as Tentative</Option>
-                            <Option value="decline">Decline</Option>
-                          </Select>
+                        <div className="box-editing">
+                          <FormOutlined onClick={() => editGuest(el)} />
                         </div>
                       </div>
 
                       <div className="booking-item">
                         <div className="prorety-box">
-                          <span>{t('strings.property')}</span>
-                          <p>{currentBooking.propertyName}</p>
-                        </div>
-
-                        <div className="prorety-box">
-                          <span>{t('strings.unit')}</span>
-                          <p>{currentBooking.unitName}</p>
-                        </div>
-                      </div>
-
-                      <div className="booking-item-one">
-                        <div className="prorety-box">
-                          <span>{t('booking.heading6')}</span>
-                          <p>
-                            {currentBooking.channel}
-                            {' '}
-                            {currentBooking.commission}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="booking-item">
-                        <div className="prorety-box">
-                          <span>{t('strings.guests')}</span>
-                          <p>
-                            {currentBooking.adult}
-                            {t('strings.adults')}
-                          </p>
-                          <p>
-                            {currentBooking.children1}
-                            {' '}
-                            {t('booking.label4')}
-                            {' '}
-                          </p>
+                          <span>{t('strings.full')}</span>
+                          <p>{el.fullname}</p>
                         </div>
 
                         <div className="prorety-box">
                           <span>
                             {' '}
-                            {t('strings.date')}
+                            {t('strings.country')}
                           </span>
                           <p>
-                            {currentBooking.startDate}
-                            -
-                            {currentBooking.endDate}
-                          </p>
-                          <p>
-                            {currentBooking.night}
-                            {' '}
-                            {t('booking.label5')}
+                            {el.country || 'NA'}
                             {' '}
                           </p>
                         </div>
                       </div>
-                    </div>
 
-                    {currentGuest.map((el) => (
-                      <div className="booking-box">
-                        <div className="booking-head">
-                          <div className="box-heading">
-                            <h3>
-                              {' '}
-                              {t('strings.guests')}
-                            </h3>
-                          </div>
-
-                          <div className="box-editing">
-                            <FormOutlined onClick={() => editGuest(el)} />
-                          </div>
+                      <div className="booking-item">
+                        <div className="prorety-box">
+                          <span>{t('strings.email')}</span>
+                          <p>{el.email || 'NA'}</p>
                         </div>
 
-                        <div className="booking-item">
-                          <div className="prorety-box">
-                            <span>{t('strings.full')}</span>
-                            <p>{el.fullname}</p>
-                          </div>
-
-                          <div className="prorety-box">
-                            <span>
-                              {' '}
-                              {t('strings.country')}
-                            </span>
-                            <p>
-                              {el.country || 'NA'}
-                              {' '}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="booking-item">
-                          <div className="prorety-box">
-                            <span>{t('strings.email')}</span>
-                            <p>{el.email || 'NA'}</p>
-                          </div>
-
-                          <div className="prorety-box">
-                            <span>{t('strings.phone')}</span>
-                            <p>{el.phone || 'NA'}</p>
-                          </div>
-                        </div>
-
-                        <div className="booking-item-one">
-                          <div className="prorety-box">
-                            <span>{t('strings.note')}</span>
-                            <p>{el.notes}</p>
-                          </div>
+                        <div className="prorety-box">
+                          <span>{t('strings.phone')}</span>
+                          <p>{el.phone || 'NA'}</p>
                         </div>
                       </div>
-                    ))}
 
-                    <div
-                      className="additionl-link"
-                      onClick={openGuest}
-                      role="presentation"
-                    >
-                      <PlusOutlined />
-                      {t('booking.label6')}
+                      <div className="booking-item-one">
+                        <div className="prorety-box">
+                          <span>{t('strings.note')}</span>
+                          <p>{el.notes}</p>
+                        </div>
+                      </div>
                     </div>
+                  ))}
+
+                  <div
+                    className="additionl-link"
+                    onClick={openGuest}
+                    role="presentation"
+                  >
+                    <PlusOutlined />
+                    {t('booking.label6')}
                   </div>
-                </Col>
-              </Row>
-            </div>
-          ) : (
-            <div className="add-team-page">
-              <div className="add-subuser">
-                <img src={nobooking} alt="subuser" />
-                <h4>Booking</h4>
-                <p>
-                  Currently, you don
-                  <span>&apos;</span>
-                  t have any booking created
-                </p>
-                {btn2}
-              </div>
-            </div>
-          )}
+                </div>
+              </Col>
+            </Row>
+          </div>
         </div>
       ) : (
         <UserLock />
