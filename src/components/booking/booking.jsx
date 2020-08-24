@@ -423,6 +423,7 @@ const Booking = () => {
       const { msg } = response.data;
       if (response.data.code === 200) {
         toast.success(msg, { containerId: 'B' });
+        setSelectAllCheck(false);
         getData();
       } else {
         toast.error(msg, { containerId: 'B' });
@@ -472,6 +473,45 @@ const Booking = () => {
             {btn2}
           </div>
         </div>
+        <GuestPopup
+          visible={visibleGuest}
+          handleCancel={handleCancel}
+          handleOk={handleOk}
+          close={closeGuest}
+          editValues={editValues}
+          getData={getData}
+          setBooked={setBooked}
+        />
+        <CreateBookingPopup
+          visible={visible}
+          handleCancel={handleCancel}
+          handleOk={handleOk}
+          close={closeBooking}
+          getData={getData}
+        />
+
+        <EditBookingPopup
+          visible={visibleEditBooking}
+          handleCancel={handleCancel}
+          handleOk={handleOk}
+          close={closeBooking}
+          editBookingValues={editBookingValues}
+          setEditBookingValues={setEditBookingValues}
+          getData={getData}
+          currentBooking={currentBooking}
+          editCurrentGuest={editCurrentGuest}
+          setEditCurrentGuest={setEditCurrentGuest}
+          currentService={currentService}
+          setCurrentService={setCurrentService}
+          setBooked={setBooked}
+        />
+
+        <BookingFilter
+          visible={visiblefilter}
+          handleCancel={handleCancel}
+          handleOk={handleOk}
+          setFilterValues={setFilterValues}
+        />
       </Wrapper>
     );
   }

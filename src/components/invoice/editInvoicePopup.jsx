@@ -49,7 +49,7 @@ const EditInvoicePopup = (props) => {
   const [deleteInvoiceItemId, setDeleteInvoiecItemId] = useState(null);
   const [itemState, setItemState] = useState([]);
   const [issueState, setIssueState] = useState(false);
-  console.log(invoiceData);
+
   const updateValues = useCallback(() => {
     if (visible) {
       const date0 = moment(invoiceData.date);

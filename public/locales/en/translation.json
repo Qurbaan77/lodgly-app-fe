@@ -33,7 +33,7 @@
     "balcony": "Balcony",
     "garden": "Garden",
     "wheelchair": "Wheelchair accessible",
-    "property": "Property",
+    "property": "No Property",
     "propertyno": "Property No",
     "edit_unit": "Edit Unit",
     "day": "Day",
@@ -876,7 +876,7 @@
   
   "button1": "Add Property",
   "tooltip1": "You are not authorize to create new property",
-  "heading1":"There is no property yet"
+  "heading1":"Currently you don't have any properties"
   
  
 }
