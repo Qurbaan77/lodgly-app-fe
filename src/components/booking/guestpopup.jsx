@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
 import './booking.css';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -68,6 +69,9 @@ const GuestPopup = (props) => {
       onCancel={handleCancel}
       wrapClassName="guest-modal"
     >
+      <Helmet>
+        <body className={visible ? 'ant-scrolling-effect' : ''} />
+      </Helmet>
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center' }}>
           <Form.Item name="id">

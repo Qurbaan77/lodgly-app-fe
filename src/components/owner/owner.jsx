@@ -304,6 +304,9 @@ const Owner = () => {
             onCancel={handleCancel}
             wrapClassName="guest-modal"
           >
+            <Helmet>
+              <body className={visible ? 'ant-scrolling-effect' : ''} />
+            </Helmet>
             <Form form={form} name="basic" onFinish={onFinish}>
               <h4>{t('owner.label20')}</h4>
               <Row style={{ alignItems: 'center' }}>
@@ -519,6 +522,9 @@ const Owner = () => {
             onCancel={handleCancel}
             wrapClassName="guest-modal"
           >
+            <Helmet>
+              <body className={visible ? 'ant-scrolling-effect' : ''} />
+            </Helmet>
             <Form form={form} name="basic" onFinish={onFinish}>
               <h4>{t('owner.label20')}</h4>
               <Row style={{ alignItems: 'center' }}>
