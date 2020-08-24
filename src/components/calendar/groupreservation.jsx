@@ -132,6 +132,11 @@ const GroupReservation = (props) => {
               label={t('strings.reservation_date')}
               name="groupname"
               style={{ paddingRight: 20 }}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
             >
               <RangePicker onCalendarChange={onCalendarChange} />
             </Form.Item>
@@ -160,6 +165,11 @@ const GroupReservation = (props) => {
               label={t('addreservation.heading6')}
               name="channel"
               style={{ width: '70%', display: 'inline-block' }}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
             >
               <Select
                 placeholder="Select"
@@ -179,6 +189,7 @@ const GroupReservation = (props) => {
                 verticalAlign: 'bottom',
                 marginLeft: '4%',
               }}
+
             >
               <Input
                 name="commission"
@@ -227,6 +238,11 @@ const GroupReservation = (props) => {
                     <Form.Item
                       label="Number of units"
                       name={[`array${i}`, 'units']}
+                      rules={[
+                        {
+                          required: true,
+                        },
+                      ]}
                     >
                       <Select
                         style={{ width: '50%', display: 'inline-block' }}
@@ -252,6 +268,11 @@ const GroupReservation = (props) => {
                     <Form.Item
                       label="Price per night/unit"
                       name={[`array${i}`, 'pricePer']}
+                      rules={[
+                        {
+                          required: true,
+                        },
+                      ]}
                     >
                       <Input
                         style={{

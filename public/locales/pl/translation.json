@@ -9,7 +9,7 @@
     "save": "Zapisać",
     "choose": "Choose",
     "cancel": "Anuluj",
-    "property": "Własność",
+    "property": "Brak własności",
     "propertyno": "Właściwość",
     "edit_unit": "Edytuj jednostkę",
     "day": "Dzień",
@@ -931,7 +931,7 @@
   
   "button1": "Dodaj właściwość",
   "tooltip1": "Nie masz uprawnień do tworzenia nowej usługi",
-  "heading1":"Nie ma jeszcze żadnej nieruchomości"
+  "heading1":"Obecnie nie masz żadnych nieruchomości"
   
  
 }

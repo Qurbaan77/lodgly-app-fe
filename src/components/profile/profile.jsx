@@ -89,8 +89,12 @@ const Profile = () => {
     const response = await userInstance.post('/getCompanyData', payload);
     const body = response.data.companyData;
     if (body.length > 0) {
+      form1.setFieldsValue({
+        subdomain: body[0].name,
+      });
+
       form4.setFieldsValue({
-        name: body[0].name,
+        companyName: body[0].companyName,
         address: body[0].address,
         country: body[0].country,
         state: body[0].state,
@@ -99,10 +103,13 @@ const Profile = () => {
         vatId: body[0].vatId,
       });
     }
-  }, [form4]);
+  }, [form4, form1]);
 
   const personalInfoFinish = async (values) => {
-    const response = await userInstance.post('/updatePersonalInfo', values);
+    const copyValues = values;
+    const companyName = window.location.hostname.split('.');
+    copyValues.name = companyName[0];
+    const response = await userInstance.post('/updatePersonalInfo', copyValues);
     const statusCode = response.data.code;
     if (statusCode === 200) {
       toast.success('Profile Updated Successfully', { containerId: 'B' });
@@ -247,6 +254,18 @@ const Profile = () => {
 
                           <Col span={12}>
                             <Form.Item
+                              label="Subdomain"
+                              name="subdomain"
+                              rules={[
+                                {
+                                  required: true,
+                                  message: t('billingprofile.label8'),
+                                },
+                              ]}
+                            >
+                              <Input disabled placeholder="" />
+                            </Form.Item>
+                            <Form.Item
                               label={t('billingprofile.label5')}
                               name="fullname"
                               rules={[
@@ -258,6 +277,9 @@ const Profile = () => {
                             >
                               <Input placeholder="" />
                             </Form.Item>
+                          </Col>
+
+                          <Col span={24}>
                             <Form.Item
                               label={t('strings.email')}
                               name="email"
@@ -271,19 +293,6 @@ const Profile = () => {
                             >
                               <Input placeholder="" />
                             </Form.Item>
-
-                            {/* <Form.Item
-                              label={t('billingprofile.label7')}
-                              name="lname"
-                              rules={[
-                                {
-                                  required: true,
-                                  message: t('billingprofile.label8'),
-                                },
-                              ]}
-                            >
-                              <Input placeholder="" />
-                            </Form.Item> */}
                           </Col>
 
                           <Col span={24}>
@@ -294,12 +303,6 @@ const Profile = () => {
                               <Input placeholder="" />
                             </Form.Item>
                           </Col>
-
-                          {/* <Col span={12}>
-                            <Form.Item label={t('strings.email')} name="email">
-                              <Input placeholder="" />
-                            </Form.Item>
-                          </Col> */}
 
                           <Col span={24}>
                             <Form.Item label={t('strings.phone')} name="phone">
@@ -548,8 +551,8 @@ const Profile = () => {
                         <Row gutter={[16, 0]}>
                           <Col span={24}>
                             <Form.Item
-                              name="name"
-                              label={t('strings.name')}
+                              name="companyName"
+                              label="company name"
                               rules={[
                                 {
                                   required: true,

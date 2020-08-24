@@ -177,7 +177,7 @@ const Calendar = () => {
       setLoading(false);
       setReservationData(data);
       if (response.data.guestData.length !== 0) {
-        if (response.data.guestData[0][0].fullname) {
+        if (response.data.guestData[0][0].fullname !== undefined) {
           setGuestName(response.data.guestData[0][0].fullname);
         }
       }

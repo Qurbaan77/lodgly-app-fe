@@ -423,6 +423,7 @@ const Booking = () => {
       const { msg } = response.data;
       if (response.data.code === 200) {
         toast.success(msg, { containerId: 'B' });
+        setSelectAllCheck(false);
         getData();
       } else {
         toast.error(msg, { containerId: 'B' });
