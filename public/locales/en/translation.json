@@ -675,9 +675,8 @@
     "label20": "ly Subscription Plan",
     "label21": "will renew on",
     "label22": "Total Price",
-    "label23":"Active Subscription"
-
-
+    "label23":"Active Subscription",
+    "label24": "Your Free"
   },
   "checkoutform": {
     "heading1": "Enter Your Card Details",

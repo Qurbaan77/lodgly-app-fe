@@ -52,6 +52,8 @@ const BillingInformation = () => {
   const [showCancelCheckout, setShowCancelCheckout] = useState(false);
   const [canDowngrade, setCanDowngrade] = useState();
   const [disableBtn, setDisableBtn] = useState(false);
+  const [onFreePlan, setOnFreePlan] = useState(false);
+  const [freePlanEnd, setFreePlanEnd] = useState();
   // const [showCard, setShowCard] = useState(true);
   // const [disablePayNow, setDisablePayNow] = useState(true);
 
@@ -80,6 +82,12 @@ const BillingInformation = () => {
 
   const getUser = async () => {
     const response = await userInstance.get('/transactions');
+    if (response.data.code === 200 && response.data.onFreePlan) {
+      setHideBilling(true);
+      setOnFreePlan(true);
+      const renewDate = moment(response.data.createdAt).add(1, 'year').format('DD/MM/YYYY');
+      setFreePlanEnd(renewDate);
+    }
     const {
       code, transactions, endDate, status,
     } = response.data;
@@ -449,167 +457,170 @@ const BillingInformation = () => {
 
         <div className="billing-container">
           <Row gutter={[16, 0]}>
-            <Col span={16} hidden={hideBilling}>
-              <Collapse defaultActiveKey={['1']} accordion>
-                <Panel header={t('billinginformation.label23')} key="1">
-                  <div className="billing-info-form">
-                    <Row gutter={[16, 0]}>
-                      <Col span={24}>
-                        <div className="subscription-plan-list">
-                          <div className="invoice-warning" hidden>
-                            <WarningOutlined />
-                            {t('billinginformation.label2')}
-                            {' '}
-                            4.07.2020.
-                          </div>
-                          <div className="invoice-error" hidden>
-                            <CloseCircleOutlined hidden />
-                            {t('billinginformation.label3')}
-                          </div>
-                          <Form>
-                            <Row gutter={[16, 0]}>
-                              <Col span={6}>
-                                <Form.Item label="Subscription Type">
-                                  <Select
-                                    defaultValue="basic"
-                                    placeholder="basic"
-                                    onSelect={handlePlanSelect}
-                                  >
-                                    <Select.Option value="advance" hidden>
-                                      {t('billinginformation.label4')}
-                                    </Select.Option>
-                                    <Select.Option value="basic">
-                                      {t('billinginformation.label5')}
-                                    </Select.Option>
-                                  </Select>
-                                </Form.Item>
-                              </Col>
+            {
+            !onFreePlan
+              ? (
+                <Col span={16} hidden={hideBilling}>
+                  <Collapse defaultActiveKey={['1']} accordion>
+                    <Panel header={t('billinginformation.label23')} key="1">
+                      <div className="billing-info-form">
+                        <Row gutter={[16, 0]}>
+                          <Col span={24}>
+                            <div className="subscription-plan-list">
+                              <div className="invoice-warning" hidden>
+                                <WarningOutlined />
+                                {t('billinginformation.label2')}
+                                {' '}
+                                4.07.2020.
+                              </div>
+                              <div className="invoice-error" hidden>
+                                <CloseCircleOutlined hidden />
+                                {t('billinginformation.label3')}
+                              </div>
+                              <Form>
+                                <Row gutter={[16, 0]}>
+                                  <Col span={6}>
+                                    <Form.Item label="Subscription Type">
+                                      <Select
+                                        defaultValue="basic"
+                                        placeholder="basic"
+                                        onSelect={handlePlanSelect}
+                                      >
+                                        <Select.Option value="advance" hidden>
+                                          {t('billinginformation.label4')}
+                                        </Select.Option>
+                                        <Select.Option value="basic">
+                                          {t('billinginformation.label5')}
+                                        </Select.Option>
+                                      </Select>
+                                    </Form.Item>
+                                  </Col>
 
-                              <Col span={5}>
-                                <Form.Item
-                                  label={t('billinginformation.label7')}
-                                  name="pricePerUnit"
-                                >
-                                  <div className="amount-field">
-                                    <p>{unitPrice}</p>
-                                  </div>
-                                </Form.Item>
-                              </Col>
-                              <Col span={1}>
-                                <div className="into">X</div>
-                              </Col>
-                              <Col span={5}>
-                                <Form.Item
-                                  label={t('billinginformation.label8')}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message: t('billinginformation.label9'),
-                                    },
-                                  ]}
-                                >
-                                  <Select
-                                    placeholder={t('billinginformation.label8')}
-                                    onSelect={handleUnitSelect}
-                                  >
-                                    {unitDropDown.map((el) => (
-                                      <Select.Option value={el} key={el}>
-                                        {el}
-                                      </Select.Option>
-                                    ))}
-                                  </Select>
-                                </Form.Item>
-                              </Col>
-                              <Col span={6}>
-                                <Form.Item
-                                  label={t('billinginformation.label10')}
-                                >
-                                  <Select
-                                    defaultValue="Monthly"
-                                    placeholder="Monthly"
-                                    onSelect={handlePlanType}
-                                  >
-                                    <Select.Option
-                                      value="month"
-                                      disabled={disablePlanType}
+                                  <Col span={5}>
+                                    <Form.Item
+                                      label={t('billinginformation.label7')}
+                                      name="pricePerUnit"
                                     >
-                                      {t('billinginformation.label11')}
-                                    </Select.Option>
-                                    <Select.Option value="year">
-                                      {t('billinginformation.label12')}
-                                    </Select.Option>
-                                  </Select>
-                                </Form.Item>
-                              </Col>
+                                      <div className="amount-field">
+                                        <p>{unitPrice}</p>
+                                      </div>
+                                    </Form.Item>
+                                  </Col>
+                                  <Col span={1}>
+                                    <div className="into">X</div>
+                                  </Col>
+                                  <Col span={5}>
+                                    <Form.Item
+                                      label={t('billinginformation.label8')}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: t('billinginformation.label9'),
+                                        },
+                                      ]}
+                                    >
+                                      <Select
+                                        placeholder={t('billinginformation.label8')}
+                                        onSelect={handleUnitSelect}
+                                      >
+                                        {unitDropDown.map((el) => (
+                                          <Select.Option value={el} key={el}>
+                                            {el}
+                                          </Select.Option>
+                                        ))}
+                                      </Select>
+                                    </Form.Item>
+                                  </Col>
+                                  <Col span={6}>
+                                    <Form.Item
+                                      label={t('billinginformation.label10')}
+                                    >
+                                      <Select
+                                        defaultValue="Monthly"
+                                        placeholder="Monthly"
+                                        onSelect={handlePlanType}
+                                      >
+                                        <Select.Option
+                                          value="month"
+                                          disabled={disablePlanType}
+                                        >
+                                          {t('billinginformation.label11')}
+                                        </Select.Option>
+                                        <Select.Option value="year">
+                                          {t('billinginformation.label12')}
+                                        </Select.Option>
+                                      </Select>
+                                    </Form.Item>
+                                  </Col>
 
-                              <Col span={6}>
-                                <Form.Item
-                                  name="currency"
-                                  label={t('strings.currency')}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message: t('billinginformation.label13'),
-                                    },
-                                  ]}
-                                >
-                                  <Select
-                                    placeholder="EUR"
-                                    onSelect={handleCurrencyChange}
-                                  >
-                                    <Select.Option
-                                      value="EUR"
-                                      disabled={disableCurrency.eur}
+                                  <Col span={6}>
+                                    <Form.Item
+                                      name="currency"
+                                      label={t('strings.currency')}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: t('billinginformation.label13'),
+                                        },
+                                      ]}
                                     >
-                                      EUR
-                                    </Select.Option>
-                                    <Select.Option
-                                      value="CHF"
-                                      disabled={disableCurrency.chf}
-                                    >
-                                      CHF
-                                    </Select.Option>
-                                    <Select.Option
-                                      value="PLN"
-                                      disabled={disableCurrency.pln}
-                                    >
-                                      PLN
-                                    </Select.Option>
-                                    <Select.Option
-                                      value="GBP"
-                                      disabled={disableCurrency.gbp}
-                                    >
-                                      GBP
-                                    </Select.Option>
-                                  </Select>
-                                </Form.Item>
-                              </Col>
+                                      <Select
+                                        placeholder="EUR"
+                                        onSelect={handleCurrencyChange}
+                                      >
+                                        <Select.Option
+                                          value="EUR"
+                                          disabled={disableCurrency.eur}
+                                        >
+                                          EUR
+                                        </Select.Option>
+                                        <Select.Option
+                                          value="CHF"
+                                          disabled={disableCurrency.chf}
+                                        >
+                                          CHF
+                                        </Select.Option>
+                                        <Select.Option
+                                          value="PLN"
+                                          disabled={disableCurrency.pln}
+                                        >
+                                          PLN
+                                        </Select.Option>
+                                        <Select.Option
+                                          value="GBP"
+                                          disabled={disableCurrency.gbp}
+                                        >
+                                          GBP
+                                        </Select.Option>
+                                      </Select>
+                                    </Form.Item>
+                                  </Col>
 
-                              <Col span={9} className="total-billing-price">
-                                <Form.Item
-                                  label={t('billinginformation.label22')}
-                                >
-                                  <h2>
-                                    =
-                                    {' '}
-                                    {Math.round(
-                                      (total + Number.EPSILON) * 100,
-                                    ) / 100 || 0}
-                                    <span>
-                                      {' '}
-                                      {data
-                                        ? data.currency
-                                        : currency || ''}
-                                      {' '}
-                                      {t('billinginformation.label15')}
-                                      {' '}
-                                      {subscriptionType}
-                                    </span>
-                                  </h2>
-                                  <p>{t('billinginformation.label14')}</p>
-                                </Form.Item>
-                              </Col>
-                              {/* <Col span={9}>
+                                  <Col span={9} className="total-billing-price">
+                                    <Form.Item
+                                      label={t('billinginformation.label22')}
+                                    >
+                                      <h2>
+                                        =
+                                        {' '}
+                                        {Math.round(
+                                          (total + Number.EPSILON) * 100,
+                                        ) / 100 || 0}
+                                        <span>
+                                          {' '}
+                                          {data
+                                            ? data.currency
+                                            : currency || ''}
+                                          {' '}
+                                          {t('billinginformation.label15')}
+                                          {' '}
+                                          {subscriptionType}
+                                        </span>
+                                      </h2>
+                                      <p>{t('billinginformation.label14')}</p>
+                                    </Form.Item>
+                                  </Col>
+                                  {/* <Col span={9}>
                                 <Button
                                   onClick={disablebtn}
                                   disabled={disablePayNow}
@@ -617,45 +628,48 @@ const BillingInformation = () => {
                                   Pay Now
                                 </Button>
                               </Col> */}
-                            </Row>
-                            <Row gutter={[16, 0]}>
-                              <Col span={24}>
-                                <div>
-                                  <Elements stripe={stripePromise}>
-                                    {showCancelCheckout ? (
-                                      <CheckoutForm
-                                        total={(total + Number.EPSILON) * 100}
-                                        currency={currency}
-                                        unitsSelected={unitsSelected}
-                                        subscriptionType={subscriptionType}
-                                        planType={planType}
-                                        submitChange={submitChangesubscription}
-                                        showCancelCheckout={showCancelCheckout}
-                                      />
-                                    ) : (
-                                      <CheckoutForm
-                                        total={(total + Number.EPSILON) * 100}
-                                        currency={currency}
-                                        unitsSelected={unitsSelected}
-                                        subscriptionType={subscriptionType}
-                                        planType={planType}
-                                        hideBilling={setHideBilling}
-                                        getData={getUser}
-                                        getInvoice={getInvoice}
-                                      />
-                                    )}
-                                  </Elements>
-                                </div>
-                              </Col>
-                            </Row>
-                          </Form>
-                        </div>
-                      </Col>
-                    </Row>
-                  </div>
-                </Panel>
-              </Collapse>
-            </Col>
+                                </Row>
+                                <Row gutter={[16, 0]}>
+                                  <Col span={24}>
+                                    <div>
+                                      <Elements stripe={stripePromise}>
+                                        {showCancelCheckout ? (
+                                          <CheckoutForm
+                                            total={(total + Number.EPSILON) * 100}
+                                            currency={currency}
+                                            unitsSelected={unitsSelected}
+                                            subscriptionType={subscriptionType}
+                                            planType={planType}
+                                            submitChange={submitChangesubscription}
+                                            showCancelCheckout={showCancelCheckout}
+                                          />
+                                        ) : (
+                                          <CheckoutForm
+                                            total={(total + Number.EPSILON) * 100}
+                                            currency={currency}
+                                            unitsSelected={unitsSelected}
+                                            subscriptionType={subscriptionType}
+                                            planType={planType}
+                                            hideBilling={setHideBilling}
+                                            getData={getUser}
+                                            getInvoice={getInvoice}
+                                          />
+                                        )}
+                                      </Elements>
+                                    </div>
+                                  </Col>
+                                </Row>
+                              </Form>
+                            </div>
+                          </Col>
+                        </Row>
+                      </div>
+                    </Panel>
+                  </Collapse>
+                </Col>
+              )
+              : ''
+          }
             {data ? (
               <Col span={16}>
                 <Collapse defaultActiveKey={['1']} accordion>
@@ -758,9 +772,46 @@ const BillingInformation = () => {
                   </Panel>
                 </Collapse>
               </Col>
-            ) : (
-              ''
-            )}
+            ) : onFreePlan ? (
+              <Col span={16}>
+                <Collapse defaultActiveKey={['1']} accordion>
+                  <Panel
+                    header="Free yearly Subscription Plan"
+                    key="1"
+                  >
+                    <div className="billing-info-form">
+                      <Row gutter={[16, 0]}>
+                        <Col span={14}>
+                          <div className="subscription-plan-list">
+                            <li>
+                              <span>Advance Plan</span>
+                            </li>
+                          </div>
+                        </Col>
+
+                        <Col span={10}>
+                          <div className="subscription-plan-list">
+                            <p>
+                              {t('billinginformation.label24')}
+                              {' '}
+                              <span>
+                                Year
+                                {t('billinginformation.label20')}
+                              </span>
+                            </p>
+                            <p>
+                              {t('billinginformation.label21')}
+                              {' '}
+                              {freePlanEnd}
+                            </p>
+                          </div>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Panel>
+                </Collapse>
+              </Col>
+            ) : ''}
           </Row>
         </div>
       </div>
