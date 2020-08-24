@@ -472,6 +472,13 @@ const Booking = () => {
             {btn2}
           </div>
         </div>
+        <CreateBookingPopup
+          visible={visible}
+          handleCancel={handleCancel}
+          handleOk={handleOk}
+          close={closeBooking}
+          getData={getData}
+        />
       </Wrapper>
     );
   }

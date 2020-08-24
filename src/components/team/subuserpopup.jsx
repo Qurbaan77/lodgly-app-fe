@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './team.css';
+import Helmet from 'react-helmet';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import {
@@ -46,11 +47,19 @@ const SubUserPopup = ({
   const [billingDelete, setBillingDelete] = useState(false);
   const [hideWrite, setHideWrite] = useState(true);
   const [hideDelete, setHideDelete] = useState(true);
+  const [clickedOnRead, setClickedOnRead] = useState(true);
 
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ userId }] = userCred || [{}];
 
   const handleSelect = (value) => {
+    if (value === 'read') {
+      if (clickedOnRead) {
+        setClickedOnRead(false);
+      } else {
+        setClickedOnRead(true);
+      }
+    }
     if (value === 'fullaccess') {
       setHideDelete(false);
       setHideWrite(false);
@@ -117,40 +126,77 @@ const SubUserPopup = ({
       setBillingRead(true);
       setBillingWrite(true);
       setBillingDelete(false);
-    } else {
-      setHideWrite(true);
-      setHideDelete(true);
-      setBookingRead(true);
-      setBookingWrite(false);
-      setBookingDelete(false);
-      setPropertiesRead(true);
-      setPropertiesWrite(false);
-      setPropertiesDelete(false);
-      setCalendarRead(true);
-      setCalendarWrite(false);
-      setCalendarDelete(false);
-      setGuestsRead(true);
-      setGuestsWrite(false);
-      setGuestsDelete(false);
-      setTeamRead(true);
-      setTeamWrite(false);
-      setTeamDelete(false);
-      setInvoicesRead(true);
-      setInvoicesWrite(false);
-      setInvoicesDelete(false);
-      setStatsRead(true);
-      setStatsWrite(false);
-      setStatsDelete(false);
-      setServiceRead(true);
-      setServiceWrite(false);
-      setServiceDelete(false);
-      setOwnerRead(true);
-      setOwnerWrite(false);
-      setOwnerDelete(false);
-      setBillingRead(true);
-      setBillingWrite(false);
-      setBillingDelete(false);
+    } else if (value === 'read') {
+      if (clickedOnRead) {
+        setHideWrite(true);
+        setHideDelete(true);
+        setBookingRead(true);
+        setBookingWrite(false);
+        setBookingDelete(false);
+        setPropertiesRead(true);
+        setPropertiesWrite(false);
+        setPropertiesDelete(false);
+        setCalendarRead(true);
+        setCalendarWrite(false);
+        setCalendarDelete(false);
+        setGuestsRead(true);
+        setGuestsWrite(false);
+        setGuestsDelete(false);
+        setTeamRead(true);
+        setTeamWrite(false);
+        setTeamDelete(false);
+        setInvoicesRead(true);
+        setInvoicesWrite(false);
+        setInvoicesDelete(false);
+        setStatsRead(true);
+        setStatsWrite(false);
+        setStatsDelete(false);
+        setServiceRead(true);
+        setServiceWrite(false);
+        setServiceDelete(false);
+        setOwnerRead(true);
+        setOwnerWrite(false);
+        setOwnerDelete(false);
+        setBillingRead(true);
+        setBillingWrite(false);
+        setBillingDelete(false);
+      } else {
+        makeEverythingUncheck();
+      }
     }
+  };
+
+  const makeEverythingUncheck = () => {
+    setBookingRead(false);
+    setBookingWrite(false);
+    setBookingDelete(false);
+    setPropertiesRead(false);
+    setPropertiesWrite(false);
+    setPropertiesDelete(false);
+    setCalendarRead(false);
+    setCalendarWrite(false);
+    setCalendarDelete(false);
+    setGuestsRead(false);
+    setGuestsWrite(false);
+    setGuestsDelete(false);
+    setTeamRead(false);
+    setTeamWrite(false);
+    setTeamDelete(false);
+    setInvoicesRead(false);
+    setInvoicesWrite(false);
+    setInvoicesDelete(false);
+    setStatsRead(false);
+    setStatsWrite(false);
+    setStatsDelete(false);
+    setServiceRead(false);
+    setServiceWrite(false);
+    setServiceDelete(false);
+    setOwnerRead(false);
+    setOwnerWrite(false);
+    setOwnerDelete(false);
+    setBillingRead(false);
+    setBillingWrite(false);
+    setBillingDelete(false);
   };
 
   const onFinish = async (values) => {
@@ -193,36 +239,7 @@ const SubUserPopup = ({
       close();
       toast.success('Successfully added in team', { containerId: 'B' });
       form.resetFields();
-      setBookingRead(false);
-      setBookingWrite(false);
-      setBookingDelete(false);
-      setPropertiesRead(false);
-      setPropertiesWrite(false);
-      setPropertiesDelete(false);
-      setCalendarRead(false);
-      setCalendarWrite(false);
-      setCalendarDelete(false);
-      setGuestsRead(false);
-      setGuestsWrite(false);
-      setGuestsDelete(false);
-      setTeamRead(false);
-      setTeamWrite(false);
-      setTeamDelete(false);
-      setInvoicesRead(false);
-      setInvoicesWrite(false);
-      setInvoicesDelete(false);
-      setStatsRead(false);
-      setStatsWrite(false);
-      setStatsDelete(false);
-      setServiceRead(false);
-      setServiceWrite(false);
-      setServiceDelete(false);
-      setOwnerRead(false);
-      setOwnerWrite(false);
-      setOwnerDelete(false);
-      setBillingRead(false);
-      setBillingWrite(false);
-      setBillingDelete(false);
+      makeEverythingUncheck();
     } else if (response.data.code === 400) {
       toast.error('Email already exists!', { containerId: 'B' });
     } else {
@@ -291,6 +308,9 @@ const SubUserPopup = ({
       onCancel={handleCancel}
       wrapClassName="guest-modal sub-user"
     >
+      <Helmet>
+        <body className={visible ? 'ant-scrolling-effect' : ''} />
+      </Helmet>
       <div className="cross-btn">
         <CloseOutlined onClick={handleCross} />
       </div>

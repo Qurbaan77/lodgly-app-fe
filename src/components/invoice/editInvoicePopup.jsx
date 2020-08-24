@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import Helmet from 'react-helmet';
 import './invoice.css';
 import {
   Form,
@@ -49,7 +50,6 @@ const EditInvoicePopup = (props) => {
   const [deleteInvoiceItemId, setDeleteInvoiecItemId] = useState(null);
   const [itemState, setItemState] = useState([]);
   const [issueState, setIssueState] = useState(false);
-  console.log(invoiceData);
   const updateValues = useCallback(() => {
     if (visible) {
       const date0 = moment(invoiceData.date);
@@ -294,6 +294,9 @@ const EditInvoicePopup = (props) => {
       onCancel={handleCancel}
       wrapClassName="guest-modal add-invoice-popup"
     >
+      <Helmet>
+        <body className={visible ? 'ant-scrolling-effect' : ''} />
+      </Helmet>
       <div className="cross-btn">
         <CloseOutlined onClick={handleCross} />
       </div>

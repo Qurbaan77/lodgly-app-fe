@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './invoice.css';
 import { toast } from 'react-toastify';
+import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import {
   Form,
@@ -209,6 +210,9 @@ const AdInvoicePopup = (props) => {
       wrapClassName="guest-modal add-invoice-popup"
       destroyOnClose
     >
+      <Helmet>
+        <body className={visible ? 'ant-scrolling-effect' : ''} />
+      </Helmet>
       <div className="cross-btn">
         <CloseOutlined onClick={handleCross} />
       </div>

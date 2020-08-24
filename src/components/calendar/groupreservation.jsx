@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
 import './calendar.css';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -121,6 +122,9 @@ const GroupReservation = (props) => {
       onCancel={close}
       wrapClassName="create-booking-modal group-reservation"
     >
+      <Helmet>
+        <body className={visible ? 'ant-scrolling-effect' : ''} />
+      </Helmet>
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={24}>
