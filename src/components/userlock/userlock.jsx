@@ -8,12 +8,15 @@ import { useTranslation } from 'react-i18next';
 const UserLock = () => {
   const history = useHistory();
   const { t } = useTranslation();
+  const handleClick = () => {
+    history.push('/billinginformation');
+  };
   return (
     <div className="user-lock">
       <div className="user-lock-content">
         <LockOutlined />
         <p>{t('userlock.label1')}</p>
-        <Button onClick={history.push('/billinginformation')}>{t('userlock.label2')}</Button>
+        <Button onClick={handleClick}>{t('userlock.label2')}</Button>
       </div>
     </div>
   );

@@ -7,7 +7,7 @@ import './profile.css';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import {
-  Form, Select, Row, Col, Collapse, Button, Tooltip,
+  Form, Select, Row, Col, Collapse, Button, Tooltip, Input,
 } from 'antd';
 import {
   UserOutlined,
@@ -29,7 +29,6 @@ const { Panel } = Collapse;
 const { basicPrice, advancePrice, discount } = config.development.Billing;
 const BillingInformation = () => {
   const { t } = useTranslation();
-  const [unitDropDown, setUnitDropDown] = useState([]);
   const [total, setTotal] = useState(0);
   const [unitPrice, setUnitPrice] = useState(basicPrice);
   const [unitsSelected, setUnitsSelected] = useState();
@@ -54,6 +53,7 @@ const BillingInformation = () => {
   const [disableBtn, setDisableBtn] = useState(false);
   const [onFreePlan, setOnFreePlan] = useState(false);
   const [freePlanEnd, setFreePlanEnd] = useState();
+  const [coupon, setCoupon] = useState('');
   // const [showCard, setShowCard] = useState(true);
   // const [disablePayNow, setDisablePayNow] = useState(true);
 
@@ -61,11 +61,11 @@ const BillingInformation = () => {
     const getData = async () => {
       const res = await userInstance.post('/getTotalUnit');
       if (res.data.code === 200 || res.data.code === 404) {
-        const units = res.data.totalUnit || 1;
-        const range = Array(units + 50000 - units + 1)
-          .fill()
-          .map((_, idx) => units + idx);
-        setUnitDropDown(range);
+        // const units = res.data.totalUnit || 1;
+        // const range = Array(units + 50000 - units + 1)
+        //   .fill()
+        //   .map((_, idx) => units + idx);
+        // setUnitDropDown(range);
         setCanDowngrade(res.data.totalUnit < res.data.units);
       }
       const response = await userInstance.post('/getRate');
@@ -195,7 +195,8 @@ const BillingInformation = () => {
       }
     }
   };
-  const handleUnitSelect = (e) => {
+  const handleUnitChange = (event) => {
+    const e = event.target.value;
     setUnitsSelected(e);
     setTotal(e * unitPrice);
     if (currency === 'CHF' || currency === 'GBP' || currency === 'PLN') {
@@ -337,6 +338,17 @@ const BillingInformation = () => {
         setTotal(amount);
       }
     }
+  };
+
+  const handleCouponCode = (e) => {
+    setCoupon(e.target.value);
+  };
+
+  const checkCoupon = (rule, value) => {
+    if (value !== 'YEARLY20') {
+      return Promise.reject(new Error('Invalid coupon code'));
+    }
+    return true;
   };
 
   // const disablebtn = () => {
@@ -519,7 +531,11 @@ const BillingInformation = () => {
                                         },
                                       ]}
                                     >
-                                      <Select
+                                      <Input
+                                        placeholder={t('billinginformation.label8')}
+                                        onChange={handleUnitChange}
+                                      />
+                                      {/* <Select
                                         placeholder={t('billinginformation.label8')}
                                         onSelect={handleUnitSelect}
                                       >
@@ -528,7 +544,7 @@ const BillingInformation = () => {
                                             {el}
                                           </Select.Option>
                                         ))}
-                                      </Select>
+                                      </Select> */}
                                     </Form.Item>
                                   </Col>
                                   <Col span={6}>
@@ -577,18 +593,21 @@ const BillingInformation = () => {
                                         <Select.Option
                                           value="CHF"
                                           disabled={disableCurrency.chf}
+                                          hidden
                                         >
                                           CHF
                                         </Select.Option>
                                         <Select.Option
                                           value="PLN"
                                           disabled={disableCurrency.pln}
+                                          hidden
                                         >
                                           PLN
                                         </Select.Option>
                                         <Select.Option
                                           value="GBP"
                                           disabled={disableCurrency.gbp}
+                                          hidden
                                         >
                                           GBP
                                         </Select.Option>
@@ -620,14 +639,16 @@ const BillingInformation = () => {
                                       <p>{t('billinginformation.label14')}</p>
                                     </Form.Item>
                                   </Col>
-                                  {/* <Col span={9}>
-                                <Button
-                                  onClick={disablebtn}
-                                  disabled={disablePayNow}
-                                >
-                                  Pay Now
-                                </Button>
-                              </Col> */}
+                                  <Form.Item
+                                    name="coupon"
+                                    rules={[{ validator: checkCoupon }]}
+                                    style={{ maxWidth: '50%', marginTop: '20px' }}
+                                  >
+                                    <Input
+                                      placeholder="Enter coupon code here"
+                                      onChange={handleCouponCode}
+                                    />
+                                  </Form.Item>
                                 </Row>
                                 <Row gutter={[16, 0]}>
                                   <Col span={24}>
@@ -642,6 +663,7 @@ const BillingInformation = () => {
                                             planType={planType}
                                             submitChange={submitChangesubscription}
                                             showCancelCheckout={showCancelCheckout}
+                                            coupon={coupon}
                                           />
                                         ) : (
                                           <CheckoutForm
@@ -653,6 +675,7 @@ const BillingInformation = () => {
                                             hideBilling={setHideBilling}
                                             getData={getUser}
                                             getInvoice={getInvoice}
+                                            coupon={coupon}
                                           />
                                         )}
                                       </Elements>
