@@ -321,6 +321,7 @@
 .cancel-icon {
   text-transform: uppercase;
   font-size: 13px;
+  cursor: pointer;
 }
 
 .invoice-filter-box span {

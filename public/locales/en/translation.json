@@ -3,6 +3,7 @@
     "heading1": "Please choose the property from top bar"
   },
   "strings": {
+    "close": "close",
     "time": "Time",
     "days": "days",
     "name": "Name",
