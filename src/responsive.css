@@ -429,6 +429,9 @@ input[type=number]{
 .Toastify__close-button>svg {
     margin-top: 5px!important;
 }
+.ant-modal-wrap {
+    z-index: 9999999999;
+}
 /******************************************************************************************************/
 
                                 /*********** Media Query ***********/   

@@ -26,8 +26,6 @@ const TeamListing = () => {
   const [visibleSubUser, setVisibleSubUser] = useState(false);
   const [subUser, setSubUser] = useState([]);
   const [currentSubUser, setCurrentSubUser] = useState(false);
-  // const [notifyType, setNotifyType] = useState();
-  // const [notifyMsg, setNotifyMsg] = useState();
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
@@ -51,10 +49,13 @@ const TeamListing = () => {
     setVisibleDeletePopup(true);
   };
 
+  const handleDeleteCancel = () => {
+    setVisibleDeletePopup(false);
+  };
+
   const handleCancel = () => {
     setVisible(false);
     setVisibleSubUser(false);
-    setVisibleDeletePopup(true);
   };
 
   const closeSubUser = () => {
@@ -192,7 +193,7 @@ const TeamListing = () => {
                   <tbody>
                     {subUser.map((el, i) => (
                       <tr key={el.id}>
-                        <td>
+                        <td onClick={() => showEditSubUser(el, i)} role="presentation">
                           <div className="team-info">
                             <div className="team-pic">
                               <Avatar
@@ -258,7 +259,7 @@ const TeamListing = () => {
           <DeletePopup
             visible={visibleDeletePopup}
             dataObject={handleDeleteSubUser}
-            cancel={() => handleCancel()}
+            cancel={handleDeleteCancel}
           />
         </Wrapper>
       ) : (

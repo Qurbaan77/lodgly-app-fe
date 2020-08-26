@@ -247,6 +247,12 @@ const SubUserPopup = ({
     }
   };
 
+  const handleCustomCheck = () => {
+    form.setFieldsValue({
+      role: 'Custom',
+    });
+  };
+
   const handleBookingRead = (e) => (e.target.value ? setBookingRead(false) : setBookingRead(true));
   const handleBookingWrite = (e) => (e.target.value
     ? setBookingWrite(false) : setBookingWrite(true));
@@ -346,6 +352,7 @@ const SubUserPopup = ({
                   <Select.Option value="read">Read</Select.Option>
                   <Select.Option value="write">Write</Select.Option>
                   <Select.Option value="fullaccess">Full Access</Select.Option>
+                  <Select.Option value="fullaccess" hidden>custom</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -388,6 +395,7 @@ const SubUserPopup = ({
                       value={bookingRead}
                       onChange={(e) => handleBookingRead(e)}
                       checked={bookingRead}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -396,6 +404,7 @@ const SubUserPopup = ({
                       value={bookingWrite}
                       onChange={(e) => handleBookingWrite(e)}
                       checked={bookingWrite}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -404,6 +413,7 @@ const SubUserPopup = ({
                       value={bookingDelete}
                       onChange={(e) => handleBookingDelete(e)}
                       checked={bookingDelete}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>{t('subuserpopup.label6')}</th>
@@ -427,6 +437,7 @@ const SubUserPopup = ({
                       value={calendarRead}
                       onChange={(e) => handleCalendarRead(e)}
                       checked={calendarRead}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -435,6 +446,7 @@ const SubUserPopup = ({
                       value={calendarWrite}
                       onChange={(e) => handleCalendarWrite(e)}
                       checked={calendarWrite}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -443,6 +455,7 @@ const SubUserPopup = ({
                       value={calendarDelete}
                       onChange={(e) => handleCalendarDelete(e)}
                       checked={calendarDelete}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -463,6 +476,7 @@ const SubUserPopup = ({
                       value={propertiesRead}
                       onChange={(e) => handlePropertiesRead(e)}
                       checked={propertiesRead}
+                      onClick={handleCustomCheck}
                     />
                   </td>
                   <td>
@@ -471,6 +485,7 @@ const SubUserPopup = ({
                       value={propertiesWrite}
                       onChange={(e) => handlePropertiesWrite(e)}
                       checked={propertiesWrite}
+                      onClick={handleCustomCheck}
                     />
                   </td>
                   <td>
@@ -479,6 +494,7 @@ const SubUserPopup = ({
                       value={propertiesDelete}
                       onChange={(e) => handlePropertiesDelete(e)}
                       checked={propertiesDelete}
+                      onClick={handleCustomCheck}
                     />
                   </td>
                   <td>
@@ -497,6 +513,7 @@ const SubUserPopup = ({
                       value={guestsRead}
                       onChange={(e) => handleGuestsRead(e)}
                       checked={guestsRead}
+                      onClick={handleCustomCheck}
                     />
                   </td>
                   <td>
@@ -505,6 +522,7 @@ const SubUserPopup = ({
                       value={guestsWrite}
                       onChange={(e) => handleGuestsWrite(e)}
                       checked={guestsWrite}
+                      onClick={handleCustomCheck}
                     />
                   </td>
                   <td>
@@ -513,6 +531,7 @@ const SubUserPopup = ({
                       value={guestsDelete}
                       onChange={(e) => handleGuestsDelete(e)}
                       checked={guestsDelete}
+                      onClick={handleCustomCheck}
                     />
                   </td>
                   <td>{t('subuserpopup.label12')}</td>
@@ -528,6 +547,7 @@ const SubUserPopup = ({
                       value={teamRead}
                       onClick={(e) => handleTeamRead(e)}
                       checked={teamRead}
+                      onChange={handleCustomCheck}
                     />
                   </td>
                   <td>
@@ -536,6 +556,7 @@ const SubUserPopup = ({
                       value={teamWrite}
                       onClick={(e) => handleTeamWrite(e)}
                       checked={teamWrite}
+                      onChange={handleCustomCheck}
                     />
                   </td>
                   <td>
@@ -544,6 +565,7 @@ const SubUserPopup = ({
                       value={teamDelete}
                       onClick={(e) => handleTeamDelete(e)}
                       checked={teamDelete}
+                      onChange={handleCustomCheck}
                     />
                   </td>
                   <td>
@@ -570,6 +592,7 @@ const SubUserPopup = ({
                       value={invoicesRead}
                       onChange={(e) => handleInvoicesRead(e)}
                       checked={invoicesRead}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -578,6 +601,7 @@ const SubUserPopup = ({
                       value={invoicesWrite}
                       onChange={(e) => handleInvoicesWrite(e)}
                       checked={invoicesWrite}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -586,6 +610,7 @@ const SubUserPopup = ({
                       value={invoicesDelete}
                       onChange={(e) => handleInvoicesDelete(e)}
                       checked={invoicesDelete}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -612,6 +637,7 @@ const SubUserPopup = ({
                       value={statsRead}
                       onChange={(e) => handleStatsRead(e)}
                       checked={statsRead}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -620,6 +646,7 @@ const SubUserPopup = ({
                       value={statsWrite}
                       onChange={(e) => handleStatsWrite(e)}
                       checked={statsWrite}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -628,6 +655,7 @@ const SubUserPopup = ({
                       value={statsDelete}
                       onChange={(e) => handleStatsDelete(e)}
                       checked={statsDelete}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -654,6 +682,7 @@ const SubUserPopup = ({
                       value={serviceRead}
                       onChange={(e) => handleServiceRead(e)}
                       checked={serviceRead}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -662,6 +691,7 @@ const SubUserPopup = ({
                       value={serviceWrite}
                       onChange={(e) => handleServiceWrite(e)}
                       checked={serviceWrite}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -670,6 +700,7 @@ const SubUserPopup = ({
                       value={serviceDelete}
                       onChange={(e) => handleServiceDelete(e)}
                       checked={serviceDelete}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>{t('subuserpopup.label23')}</th>
@@ -689,6 +720,7 @@ const SubUserPopup = ({
                       value={ownerRead}
                       onChange={(e) => handleOwnerRead(e)}
                       checked={ownerRead}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -697,6 +729,7 @@ const SubUserPopup = ({
                       value={ownerWrite}
                       onChange={(e) => handleOwnerWrite(e)}
                       checked={ownerWrite}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -705,6 +738,7 @@ const SubUserPopup = ({
                       value={ownerDelete}
                       onChange={(e) => handleOwnerDelete(e)}
                       checked={ownerDelete}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -728,6 +762,7 @@ const SubUserPopup = ({
                       value={billingRead}
                       onChange={(e) => handleBillingRead(e)}
                       checked={billingRead}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -736,6 +771,7 @@ const SubUserPopup = ({
                       value={billingWrite}
                       onChange={(e) => handleBillingWrite(e)}
                       checked={billingWrite}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>
@@ -744,6 +780,7 @@ const SubUserPopup = ({
                       value={billingDelete}
                       onChange={(e) => handleBillingDelete(e)}
                       checked={billingDelete}
+                      onClick={handleCustomCheck}
                     />
                   </th>
                   <th>Billing, Upgrade/downgrade plans</th>
