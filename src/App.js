@@ -29,6 +29,9 @@ import Services from './components/property/services';
 import Calendar from './components/calendar/calendar';
 import Popup from './components/calendar/popup';
 import Company from './components/company/company';
+import Rates from './components/property/rates';
+import SeasonRates from './components/property/seasonrates';
+
 import { PrivateRoute, LoginRoute } from './Routes/PrivateRoute';
 import {
   SecureBooking,
@@ -390,7 +393,11 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
+
+                    <Route exact path="/rates" component={() => <Rates />} />
+                    <Route exact path="/seasonrates" component={() => <SeasonRates />} />
                     <Route component={PageNotFound} />
+
                   </Switch>
                 </div>
               </main>

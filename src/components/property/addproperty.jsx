@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+// import PlacesAutocomplete from 'react-places-autocomplete';
 import PlacesAutocomplete from 'react-places-autocomplete';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import './property.css';
@@ -164,11 +165,46 @@ const AddProperty = () => {
     },
   };
 
+  // const getAddress = (latitude, longitude) => new Promise((resolve, reject) => {
+  //   const request = new XMLHttpRequest();
+
+  //   const method = 'GET';
+  //   const url = `http://maps.googleapis.com/maps/api/geocode/json?latlng=${
+  //     latitude
+  //   },${
+  //     longitude
+  //   }&sensor=true`;
+  //   const async = true;
+
+  //   request.open(method, url, async);
+  //   request.onreadystatechange = function () {
+  //     if (request.readyState === 4) {
+  //       if (request.status === 200) {
+  //         const data = JSON.parse(request.responseText);
+  //         const address = data.results[0];
+  //         resolve(address);
+  //       } else {
+  //         reject(request.status);
+  //       }
+  //     }
+  //   };
+  //   request.send();
+  // });
+
   const handleAddressChange = (address) => {
     setAddress(...address);
   };
 
   const handleAddressSelect = (address) => {
+    // console.log('Address', address);
+    // geocodeByAddress(address)
+    //   .then((results) => getLatLng(results[0]))
+    //   .then((latLng) => {
+    //     console.log('Success', latLng);
+    //     getAddress(latLng.lat, latLng.lng).then(console.log).catch(console.error);
+    //   })
+    //   .catch((error) => console.error('Error', error));
+
     form.setFieldsValue({
       address,
     });
@@ -231,24 +267,42 @@ const AddProperty = () => {
                         ]}
                       >
                         <Select>
-                          <Select.Option value="Holiday House">Holiday House</Select.Option>
-                          <Select.Option value="Holiday Apartment">Holiday Apartment</Select.Option>
-                          <Select.Option value="Bed and Breakfast">Bed and Breakfast</Select.Option>
-                          <Select.Option value="Boat House">Boat House</Select.Option>
-                          <Select.Option value="Bungalow">Bungalow</Select.Option>
+                          <Select.Option value="Holiday House">
+                            Holiday House
+                          </Select.Option>
+                          <Select.Option value="Holiday Apartment">
+                            Holiday Apartment
+                          </Select.Option>
+                          <Select.Option value="Bed and Breakfast">
+                            Bed and Breakfast
+                          </Select.Option>
+                          <Select.Option value="Boat House">
+                            Boat House
+                          </Select.Option>
+                          <Select.Option value="Bungalow">
+                            Bungalow
+                          </Select.Option>
                           <Select.Option value="Cabin">Cabin</Select.Option>
-                          <Select.Option value="Agritourism">Agritourism</Select.Option>
-                          <Select.Option value="Mobile House">Mobile House</Select.Option>
+                          <Select.Option value="Agritourism">
+                            Agritourism
+                          </Select.Option>
+                          <Select.Option value="Mobile House">
+                            Mobile House
+                          </Select.Option>
                           <Select.Option value="Villa">Villa</Select.Option>
                           <Select.Option value="Room">Room</Select.Option>
                           <Select.Option value="Hotel">Hotel</Select.Option>
                           <Select.Option value="Camping">Camping</Select.Option>
-                          <Select.Option value="Student Housing">Student Housing</Select.Option>
+                          <Select.Option value="Student Housing">
+                            Student Housing
+                          </Select.Option>
                           <Select.Option value="Resort">Resort</Select.Option>
                           <Select.Option value="Inn">Inn</Select.Option>
                           <Select.Option value="Hostel">Hostel</Select.Option>
                           <Select.Option value="Motel">Motel</Select.Option>
-                          <Select.Option value="Hospital">Hospital</Select.Option>
+                          <Select.Option value="Hospital">
+                            Hospital
+                          </Select.Option>
                           <Select.Option value="Pousada">Pousada</Select.Option>
                         </Select>
                       </Form.Item>

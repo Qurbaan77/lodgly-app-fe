@@ -248,7 +248,9 @@
 .unit-page-view .ant-menu .unit-nav,
 .channel-page-view .ant-menu .channel-nav,
 .group-page-view .ant-menu .group-nav,
-.detail-page-view .ant-menu .detail-nav   {
+.detail-page-view .ant-menu .detail-nav,
+.rates-page-view .ant-menu .rates-nav,
+.season-page-view .ant-menu .season-nav    {
     background-color: #fffaf0!important;
 }
 
@@ -264,7 +266,9 @@
 .unit-page-view .ant-menu .unit-nav a,
 .channel-page-view .ant-menu .channel-nav a,
 .group-page-view .ant-menu .group-nav a,
-.detail-page-view .ant-menu .detail-nav a  {
+.detail-page-view .ant-menu .detail-nav a,
+.rates-page-view .ant-menu .rates-nav a,
+.season-page-view .ant-menu .season-nav a  {
     color: #fab52c!important;
 }
 
@@ -281,7 +285,9 @@
 .unit-page-view .ant-menu .unit-nav:before,
 .channel-page-view .ant-menu .channel-nav:before,
 .group-page-view .ant-menu .group-nav:before,
-.detail-page-view .ant-menu .detail-nav:before {
+.detail-page-view .ant-menu .detail-nav:before,
+.rates-page-view .ant-menu .rates-nav:before,
+.season-page-view .ant-menu .season-nav:before {
     content: "";
     position: absolute;
     width: 3px;

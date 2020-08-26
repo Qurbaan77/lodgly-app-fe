@@ -12,7 +12,6 @@ import {
   Upload,
   Row,
   Col,
-  message,
   Collapse,
   Menu,
   Dropdown,
@@ -152,14 +151,11 @@ const Profile = () => {
     // action: `http://localhost:8080/users/photo/${userId}`,
     action: `${server}/users/photo?userid=${userId}&organizationid=${organizationid}`,
     onChange(info) {
-      // if (info.file.status !== 'uploading') {
-      // console.log(info.file, info.fileList);
-      // }
       if (info.file.status === 'done') {
-        message.success(`${info.file.name} {t('billingprofile.label26')}`);
+        toast.success(`${info.file.name} ${t('billingprofile.label26')}`, { containerId: 'B' });
         getUserInfo();
       } else if (info.file.status === 'error') {
-        message.error(`${info.file.name}  {t('billingprofile.label27')}`);
+        toast.error(`${info.file.name}  ${t('billingprofile.label27')}`, { containerId: 'B' });
       }
     },
   };
