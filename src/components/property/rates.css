@@ -1,0 +1,281 @@
+.rates-content {
+    background: #fff;
+    max-width: 800px;
+    border: 1px solid #eaeaea;
+}
+
+.rate-first-section {
+    padding: 50px 50px 25px 50px;
+}
+
+.rate-first-section h3 {
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.rate-second-section {
+    padding: 50px 50px 25px 50px;
+    border-top: 1px solid #eaeaea;
+}
+
+.rate-second-section h3 {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.rate-second-section p {
+    padding-bottom: 20px;
+}
+
+.toggle-box-section {
+    padding: 50px 50px 25px 50px;
+    border-top: 1px solid #eaeaea;
+}
+
+.toggle-box-section h3 {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.toggle-box-section p {
+    padding-bottom: 20px;
+}
+
+.toggle-content {
+    height: 0;
+    overflow: hidden;
+    transition: all .5s;
+}
+
+.toggle-content.show {
+    height: auto;
+}
+
+.toggle-box-section h3 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.custom-period .ant-form-item-control-input-content {
+    display: flex;
+    align-items: center;
+}
+
+.custom-period .ant-form-item-control-input-content .ant-input {
+    max-width: 100px;
+    margin: 0px 20px;
+}
+
+.weekend-input {
+    display: flex;
+    align-items: center;
+}
+
+.weekend-input .ant-form-item {
+    margin: 0px 5px;
+}
+
+.weekend-input .ant-form-item label {
+    text-align: center!important;
+}
+
+.weekend-input .ant-form-item-label > label::after {
+    display: none;
+}
+
+.weekend-input span {
+    margin-top: 30px;
+    display: block;
+}
+
+
+.occupancy-input .ant-form-item-control-input-content {
+    display: flex;
+    align-items: center;
+}
+
+.occupancy-input .ant-form-item-control-input-content span {
+    margin-left: 10px;
+}
+
+.stay-input .ant-form-item-control-input-content {
+    display: flex;
+    align-items: center;
+}
+
+.stay-input .ant-form-item-control-input-content .ant-input {
+    max-width: 100px;
+}
+
+.stay-input .ant-form-item-control-input-content span {
+    min-width: 230px;
+    display: block;
+}
+
+.sales-text span {
+    display: block;
+}
+
+
+.toggle-box-button {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    padding: .9375em;
+    width: 100%;
+    background: #f5f5f5;
+    border-top: 1px solid #eaeaea;
+}
+
+.toggle-box-button .ant-btn {
+    width: 50%;
+    border-radius: 0;
+    padding: 15px 20px;
+    font-size: 16px;
+}
+
+
+.toggle-box-button .ant-btn.gray-btn {
+    background: #e2e2e2;
+}
+
+.toggle-box-button .ant-btn.gray-btn span {
+    color: #333;
+}
+
+.ql-container .ql-editor {
+    min-height: 150px;
+}
+
+.checkin-box {
+    display: flex;
+    align-items: center;
+}
+
+.checkin-box .ant-form-item-label > label {
+    height: auto;
+    text-align: center!important;
+}
+
+.checkin-box span.checkin-label {
+    min-width: 120px;
+}
+
+.checkin-box .ant-form-item-label > label::after {
+    display: none;
+}
+
+.checkin-box .ant-row.ant-form-item {
+    margin: 0;
+}
+
+.checkin-box .ant-row.ant-form-item {
+    margin: 0;
+    max-width: 35px;
+    width: 100%;
+    text-align: center;
+}
+
+.checkin-box .ant-row.ant-form-item.check-selectall {
+    max-width: 70px;
+    width: 100%;
+    margin-left: 30px;
+}
+
+
+
+.rate-modal .rate-footer {
+    position: absolute;
+    bottom: 50%;
+    width: 100%;
+    margin: 0;
+    left: 0;
+    right:0;
+}
+
+
+
+.rate-modal {
+    z-index: 9999999999;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/********************** Season Rate ****************************/
+
+
+
+
+
+
+
+
+.season-rates-content {
+    background: #fff;
+    max-width: 800px;
+    border: 1px solid #eaeaea;
+}
+
+.season-first-section {
+    padding: 50px 50px 25px 50px;
+}
+
+.season-first-section h3 {
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.season-first-section p {
+    padding-bottom: 20px;
+    padding-top: 25px;
+}
+
+.season-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.season-table {
+    height: 332px;
+    overflow: auto;
+}
+
+
+.season-table .ant-table table{
+    border: 1px solid #f0f0f0;
+}
+
+.season-table .anticon {
+    color: #333;
+}
+
+
+
+
+
+/************* Add Season **********/
+
+
+
+
+.add-season-popup .ant-modal-footer {
+    display: none;
+}
+

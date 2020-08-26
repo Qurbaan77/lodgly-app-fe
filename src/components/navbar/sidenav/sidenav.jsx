@@ -4,10 +4,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './sidenav.css';
 import { Layout, Menu } from 'antd';
-import {
-  ArrowLeftOutlined,
-  ApartmentOutlined,
-} from '@ant-design/icons';
+import { ArrowLeftOutlined, ApartmentOutlined } from '@ant-design/icons';
 import logo from '../../../assets/images/logo.png';
 import UserProfile from '../userprofile/userprofile';
 import { userInstance } from '../../../axios/axiosconfig';
@@ -35,7 +32,7 @@ const Sidenav = ({
 }) => {
   const { t } = useTranslation();
   // const [propertyData, setPropertyData] = useState([]);
-  const [currProperty, setCurrProperty] = useState(0);
+  const [currProperty, setCurrProperty] = useState('');
   const [hideBooking, setHideBooking] = useState(false);
   const [hideCalendar, setHidecalendar] = useState(false);
   const [hideInvoice, setHideInvoice] = useState(false);
@@ -47,11 +44,19 @@ const Sidenav = ({
   // const [disableGuests, setDisableGuests] = useState(false);
   const isSubUser = localStorage.getItem('isSubUser');
   const subUserCred = JSON.parse(localStorage.getItem('subUserCred'));
-  const [{
-    bookingRead, calendarRead, invoicesRead,
-    propertiesRead, serviceRead, statsRead, teamRead, userId,
-    ownerRead,
-  }] = subUserCred || [{}];
+  const [
+    {
+      bookingRead,
+      calendarRead,
+      invoicesRead,
+      propertiesRead,
+      serviceRead,
+      statsRead,
+      teamRead,
+      userId,
+      ownerRead,
+    },
+  ] = subUserCred || [{}];
 
   const getSubUser = useCallback(() => {
     if (!isSubUser) {
@@ -110,7 +115,8 @@ const Sidenav = ({
     } else {
       setHideOwner(true);
     }
-  }, [bookingRead,
+  }, [
+    bookingRead,
     calendarRead,
     invoicesRead,
     isSubUser,
@@ -118,7 +124,8 @@ const Sidenav = ({
     serviceRead,
     statsRead,
     teamRead,
-    ownerRead]);
+    ownerRead,
+  ]);
   const getData = useCallback(async () => {
     const values = {
       affiliateId: userId,
@@ -127,9 +134,11 @@ const Sidenav = ({
     if (res.data.code === 200) {
       const { featureData } = res.data;
       // getFeature(featureData);
-      const [{
-        booking, calendar, properties, team, invoice, owner, stats,
-      }] = featureData;
+      const [
+        {
+          booking, calendar, properties, team, invoice, owner, stats,
+        },
+      ] = featureData;
       setHideBooking(isSubUser ? !bookingRead : !booking);
       setHidecalendar(isSubUser ? !calendarRead : !calendar);
       setDisableProperties(!isSubUser ? !properties : !propertiesRead);
@@ -139,38 +148,62 @@ const Sidenav = ({
       setHideStats(!isSubUser ? !stats : !statsRead);
     }
     const Id = localStorage.getItem('propertyId');
-    const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
+    const response = await userInstance.post('/fetchProperty', {
+      affiliateId: userId,
+    });
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
       // setPropertyData(data);
       if (Id) {
-        const curProperty = data.filter(
-          (el) => el.id === parseInt(Id, 10),
-        );
-        setCurrProperty(curProperty[0].propertyNo);
+        const curProperty = data.filter((el) => el.id === parseInt(Id, 10));
+        setCurrProperty(curProperty[0].propertyName);
       }
     }
-  }, [userId, bookingRead, calendarRead, propertiesRead, teamRead, invoicesRead, ownerRead,
-    statsRead, isSubUser]);
+  }, [
+    userId,
+    bookingRead,
+    calendarRead,
+    propertiesRead,
+    teamRead,
+    invoicesRead,
+    ownerRead,
+    statsRead,
+    isSubUser,
+  ]);
 
   const [nav, setNav] = useState(false);
+  const [ratesNav, setRatesNav] = useState(false);
   const changeMenu = useCallback(() => {
     const { pathname } = window.location;
     if (
       (pathname === '/property'
-      || pathname === '/unittype'
-      || pathname === '/addunittype'
-      || pathname === '/channelmanager'
-      || pathname === '/services'
-      || pathname === '/groups'
-      || pathname === '/task')
+        || pathname === '/unittype'
+        || pathname === '/channelmanager'
+        || pathname === '/services'
+        || pathname === '/groups'
+        || pathname === '/task')
       && nav === false
-    ) { setNav(true); }
+    ) {
+      setNav(true);
+    }
   }, [nav]);
+
+  const changeMenuUnitTypes = useCallback(() => {
+    const { pathname } = window.location;
+    if (
+      (pathname === '/addunittype'
+        || pathname === '/rates'
+        || pathname === '/seasonrates')
+      && ratesNav === false
+    ) {
+      setRatesNav(true);
+    }
+  }, [ratesNav]);
 
   useEffect(() => {
     changeMenu();
-  }, [changeMenu]);
+    changeMenuUnitTypes();
+  }, [changeMenu, changeMenuUnitTypes]);
 
   useEffect(() => {
     getData();
@@ -178,11 +211,6 @@ const Sidenav = ({
       getSubUser();
     }
   }, [getData, getSubUser]);
-
-  // const func = (id) => {
-  //   localStorage.setItem('propertyId', id);
-  //   changeMenu();
-  // };
 
   const handleMenu = (e) => {
     if (e === 'open') {
@@ -216,7 +244,7 @@ const Sidenav = ({
       <UserProfile img={img} name={name} getUserInfo={getUserInfo} />
 
       <Menu
-        className={`main-menu ${nav ? 'hide' : ''}`}
+        className={`main-menu ${nav || ratesNav ? 'hide' : ''}`}
         theme="light"
         mode="inline"
         style={{ height: '100%' }}
@@ -307,14 +335,11 @@ const Sidenav = ({
           onClick={() => handleMenu('close')}
           role="presentation"
         >
-
           <Link
             to="/propertylist"
             onClick={() => localStorage.removeItem('propertyId')}
           >
             <ArrowLeftOutlined />
-            {' '}
-            Property
             {' '}
             {currProperty}
           </Link>
@@ -342,10 +367,45 @@ const Sidenav = ({
         </Menu.Item>
       </Menu>
 
+      <Menu
+        className={`main-menu-mbl ${ratesNav ? 'show' : ''}`}
+        theme="light"
+        mode="inline"
+        style={{ height: '100%' }}
+      >
+        <span
+          className="submenu-heading"
+          onClick={() => handleMenu('close')}
+          role="presentation"
+        >
+          <Link
+            to="/unittype"
+            onClick={() => localStorage.removeItem('unittype')}
+          >
+            <ArrowLeftOutlined />
+            {' '}
+            Unit Types
+          </Link>
+        </span>
+        <Menu.Item className="unit-nav">
+          <img src={propertyDetailIcon} alt="property" />
+          <Link to="/addunittype">Units</Link>
+        </Menu.Item>
+
+        <Menu.Item className="rates-nav">
+          <img src={unitIcon} alt="unit" />
+          <Link to="/rates">Rates</Link>
+        </Menu.Item>
+
+        <Menu.Item className="season-nav">
+          <img src={channelIcon} alt="channel" />
+          <Link to="/seasonrates">Season Rates</Link>
+        </Menu.Item>
+      </Menu>
+
       <div className="company-ip">
         <h6>
           Page:
-          {' '}
           {window.location.host}
         </h6>
         {/* <p>1234-5674-3658</p> */}
