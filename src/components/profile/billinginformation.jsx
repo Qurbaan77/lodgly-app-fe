@@ -235,8 +235,7 @@ const BillingInformation = () => {
     if (e === 'month') {
       setTotal(unitsSelected * unitPrice);
     } else {
-      const amount = unitsSelected * unitPrice * 12
-        - (unitsSelected * unitPrice * 12 * discount) / 100;
+      const amount = unitsSelected * unitPrice * 12;
       setTotal(amount);
     }
   };
@@ -402,25 +401,27 @@ const BillingInformation = () => {
   const submitChangesubscription = async () => {
     if (!unitsSelected && !subscriptionType && !currency) {
       toast.error('Please select everything properly', { containerId: 'B' });
-    }
-    const payload = {
-      subscriptionId: data.subscriptionId,
-      planId: data.planId,
-      productId: data.productId,
-      amount: total,
-      interval: subscriptionType,
-      noOfUnits: unitsSelected,
-      currency,
-      planType,
-    };
-    const res = await userInstance.post('/changeSubscription', payload);
-    if (res.data.code === 200) {
-      toast.success('subscription changed successfully', { containerId: 'B' });
-      getUser();
-      getInvoice();
-      setHideBilling(true);
     } else {
-      toast.error('server error please try again', { containerId: 'B' });
+      const payload = {
+        subscriptionId: data.subscriptionId,
+        planId: data.planId,
+        productId: data.productId,
+        amount: total,
+        interval: subscriptionType,
+        noOfUnits: unitsSelected,
+        currency,
+        planType,
+        coupon,
+      };
+      const res = await userInstance.post('/changeSubscription', payload);
+      if (res.data.code === 200) {
+        toast.success('subscription changed successfully', { containerId: 'B' });
+        getUser();
+        getInvoice();
+        setHideBilling(true);
+      } else {
+        toast.error('server error please try again', { containerId: 'B' });
+      }
     }
   };
 
