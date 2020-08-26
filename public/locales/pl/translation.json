@@ -731,9 +731,8 @@
   "label20": " ly Plan abonamentowy",
   "label21": " odnowi się",
   "label22": "  Cena całkowita",
-  "label23":"Aktywna subskrypcja"
-
-
+  "label23":"Aktywna subskrypcja",
+  "label24": "Dodaj zadanie"
 },
 "checkoutform": {
   "heading1": " Wprowadź dane swojej karty",
