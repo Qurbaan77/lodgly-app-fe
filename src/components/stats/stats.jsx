@@ -9,7 +9,6 @@ import {
   Tooltip,
   Row,
   Col,
-  Spin,
 } from 'antd';
 import {
   PlusOutlined,
@@ -22,6 +21,7 @@ import qst from '../../assets/images/menu/qst.png';
 import favicon from '../../assets/images/logo-mobile.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
 import UserLock from '../userlock/userlock';
+import loader from '../../assets/images/cliploader.gif';
 
 const Stats = () => {
   const { t } = useTranslation();
@@ -87,7 +87,11 @@ const Stats = () => {
   if (loading) {
     return (
       <Wrapper>
-        <Spin size="large" />
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
       </Wrapper>
     );
   }

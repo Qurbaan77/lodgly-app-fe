@@ -381,7 +381,7 @@ const EditSubUserPopup = (props) => {
                   },
                 ]}
               >
-                <Input placeholder={t('strings.email')} />
+                <Input placeholder={t('strings.email')} disabled />
               </Form.Item>
             </Col>
 

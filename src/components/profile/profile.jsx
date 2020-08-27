@@ -21,6 +21,7 @@ import Wrapper from '../wrapper';
 import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
 import favicon from '../../assets/images/logo-mobile.png';
+import arrow from '../../assets/images/select-arrow.png';
 import { server } from '../../config/keys';
 
 const { Panel } = Collapse;
@@ -51,6 +52,7 @@ const Profile = () => {
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
   const [country, setCountry] = useState(null);
+  // const [image, setImage] = useState('');
 
   const getUserInfo = useCallback(async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
@@ -148,10 +150,10 @@ const Profile = () => {
   const props = {
     name: 'file',
     multiple: false,
-    // action: `http://localhost:8080/users/photo/${userId}`,
     action: `${server}/users/photo?userid=${userId}&organizationid=${organizationid}`,
     onChange(info) {
       if (info.file.status === 'done') {
+        // setImage(info.file.response.image);
         toast.success(`${info.file.name} ${t('billingprofile.label26')}`, { containerId: 'B' });
         getUserInfo();
       } else if (info.file.status === 'error') {
@@ -159,7 +161,6 @@ const Profile = () => {
       }
     },
   };
-
   const handleApplication = () => {
     toast.success('Application settings saved successfully!', { containerId: 'B' });
   };
@@ -231,18 +232,31 @@ const Profile = () => {
                                 noStyle
                               >
                                 <Upload.Dragger {...props}>
-                                  <p className="ant-upload-drag-icon">
-                                    <UserOutlined />
-                                  </p>
-                                  {/* <div className="user-pic-success">
-                                    <img src={user} alt="" />
-                                  </div> */}
-                                  <p className="ant-upload-text">
-                                    {t('billingprofile.label3')}
-                                  </p>
-                                  <p className="ant-upload-hint">
-                                    {t('billingprofile.label4')}
-                                  </p>
+                                  {
+                                    img
+                                      ? (
+                                        <div className="user-pic-success">
+                                          <img src={img} alt="" />
+                                          <span>
+                                            {t('billingprofile.label3')}
+                                            {t('billingprofile.label4')}
+                                          </span>
+                                        </div>
+                                      )
+                                      : (
+                                        <>
+                                          <p className="ant-upload-drag-icon">
+                                            <UserOutlined />
+                                          </p>
+                                          <p className="ant-upload-text">
+                                            {t('billingprofile.label3')}
+                                          </p>
+                                          <p className="ant-upload-hint">
+                                            {t('billingprofile.label4')}
+                                          </p>
+                                        </>
+                                      )
+                                }
                                 </Upload.Dragger>
                               </Form.Item>
                             </Form.Item>
@@ -570,16 +584,18 @@ const Profile = () => {
                           </Col>
 
                           <Col span={12}>
-                            <Form.Item name="country" label="Country">
+                            <Form.Item name="country" label="Country" className="custom-select">
                               <CountryDropdown
                                 onChange={(val) => setCountry(val)}
                               />
+                              <img src={arrow} alt="" />
                             </Form.Item>
                           </Col>
 
                           <Col span={12}>
-                            <Form.Item name="state" label={t('strings.state')}>
+                            <Form.Item name="state" label={t('strings.state')} className="custom-select">
                               <RegionDropdown country={country} />
+                              <img src={arrow} alt="" />
                             </Form.Item>
                           </Col>
 

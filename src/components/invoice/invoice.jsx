@@ -14,14 +14,13 @@ import {
   Col,
   Pagination,
   Tag,
-  Spin,
 } from 'antd';
 import {
   PlusOutlined, DeleteOutlined, FormOutlined, MoreOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
-
+import loader from '../../assets/images/cliploader.gif';
 // import { Table } from 'antd';
 import invoice from '../../assets/images/invoice.jpg';
 import invoiceIcon from '../../assets/images/menu/invoice-icon.png';
@@ -323,7 +322,11 @@ const Invoice = () => {
   if (loading) {
     return (
       <Wrapper>
-        <Spin size="large" />
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
       </Wrapper>
     );
   }

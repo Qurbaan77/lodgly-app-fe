@@ -128,7 +128,7 @@
 }
 
 .billing-container .ant-collapse-item:last-child > .ant-collapse-content {
-  min-height: 225px;
+  min-height: 308px;
 }
 
 .main-info-form .ant-upload-list-item-card-actions-btn {
@@ -158,12 +158,15 @@
   margin: 20px 0 20px 0 !important;
 }
 .user-pic-success img {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 160px;
   border-radius: 5px;
-  margin-bottom: 10px;
+  margin-bottom: 0;
   object-fit: cover;
   object-position: center;
+}
+.ant-upload.ant-upload-drag .ant-upload {
+  padding: 0 !important;
 }
 .lang-box .ant-btn {
   background: transparent;
@@ -198,3 +201,51 @@
   border: 1px solid #eaeaea!important;
   padding: 10px!important;
   }
+.ant-upload-drag-icon {
+    padding-top: 20px !important;
+}
+
+.ant-upload-hint {
+    padding-bottom: 20px !important;
+}
+.user-pic-success {
+  position: relative;
+}
+
+.user-pic-success span {
+  background: #acacc5b0;
+  position: absolute;
+  top: 0;
+  cursor: pointer;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  line-height: 150px;
+  color: #fff;
+  opacity: 0;
+  transition: all 0.5s;
+}
+
+.user-pic-success:hover span {
+  opacity: 1;
+}
+.payment-method-icon {
+  position: absolute;
+  right: 35px;
+  top: 15px;
+}
+.main-info-form h4 {
+  padding-bottom: 11px;
+}
+.custom-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.billing-action-buttons {
+  padding-top: 50px;
+}
+
+.billing-action-buttons .ant-btn {
+  margin-right: 20px;
+}

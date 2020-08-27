@@ -4,7 +4,7 @@ import './team.css';
 import { toast } from 'react-toastify';
 import Avatar from 'react-avatar';
 import { useTranslation } from 'react-i18next';
-import { Button, Tooltip, Spin } from 'antd';
+import { Button, Tooltip } from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -19,6 +19,7 @@ import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
 import DeletePopup from './deletepopup';
+import loader from '../../assets/images/cliploader.gif';
 
 const TeamListing = () => {
   const { t } = useTranslation();
@@ -26,8 +27,6 @@ const TeamListing = () => {
   const [visibleSubUser, setVisibleSubUser] = useState(false);
   const [subUser, setSubUser] = useState([]);
   const [currentSubUser, setCurrentSubUser] = useState(false);
-  // const [notifyType, setNotifyType] = useState();
-  // const [notifyMsg, setNotifyMsg] = useState();
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
@@ -51,10 +50,13 @@ const TeamListing = () => {
     setVisibleDeletePopup(true);
   };
 
+  const handleDeleteCancel = () => {
+    setVisibleDeletePopup(false);
+  };
+
   const handleCancel = () => {
     setVisible(false);
     setVisibleSubUser(false);
-    setVisibleDeletePopup(true);
   };
 
   const closeSubUser = () => {
@@ -142,7 +144,11 @@ const TeamListing = () => {
   if (loading) {
     return (
       <Wrapper>
-        <Spin size="large" />
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
       </Wrapper>
     );
   }
@@ -192,7 +198,7 @@ const TeamListing = () => {
                   <tbody>
                     {subUser.map((el, i) => (
                       <tr key={el.id}>
-                        <td>
+                        <td onClick={() => showEditSubUser(el, i)} role="presentation">
                           <div className="team-info">
                             <div className="team-pic">
                               <Avatar
@@ -258,7 +264,7 @@ const TeamListing = () => {
           <DeletePopup
             visible={visibleDeletePopup}
             dataObject={handleDeleteSubUser}
-            cancel={() => handleCancel()}
+            cancel={handleDeleteCancel}
           />
         </Wrapper>
       ) : (

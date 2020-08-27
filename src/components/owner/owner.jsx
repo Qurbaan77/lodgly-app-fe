@@ -15,7 +15,6 @@ import {
   Modal,
   Row,
   Col,
-  Spin,
 } from 'antd';
 import { PlusOutlined, DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -26,7 +25,8 @@ import propertyplace from '../../assets/images/property-placeholder.png';
 import property1 from '../../assets/images/property-1.png';
 import owner from '../../assets/images/profile_user.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
-// import arrow from '../../assets/images/select-arrow.png';
+import loader from '../../assets/images/cliploader.gif';
+import arrow from '../../assets/images/select-arrow.png';
 import subuser from '../../assets/images/subuser.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
@@ -624,8 +624,10 @@ const Owner = () => {
                     label={t('owner.label11')}
                     name="country"
                     style={{ paddingRight: 20 }}
+                    className="custom-select"
                   >
                     <CountryDropdown onChange={(val) => setCountry(val)} />
+                    <img src={arrow} alt="" />
                   </Form.Item>
                 </Col>
               </Row>
@@ -636,8 +638,10 @@ const Owner = () => {
                     label={t('strings.citizenship')}
                     name="citizenship"
                     style={{ paddingRight: 20 }}
+                    className="custom-select"
                   >
                     <RegionDropdown country={country} />
+                    <img src={arrow} alt="" />
                   </Form.Item>
                 </Col>
 
@@ -671,6 +675,7 @@ const Owner = () => {
                   style={{ width: '100%' }}
                   name="properties"
                   label={t('owner.label21')}
+                  className="custom-select"
                   rules={[
                     {
                       required: true,
@@ -689,6 +694,7 @@ const Owner = () => {
                       <Option value={el.id}>{el.propertyName}</Option>
                     ))}
                   </Select>
+                  <img src={arrow} alt="" />
                 </Form.Item>
               </Row>
 
@@ -718,7 +724,11 @@ const Owner = () => {
   if (loading) {
     return (
       <Wrapper>
-        <Spin size="large" />
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
       </Wrapper>
     );
   }

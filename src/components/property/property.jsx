@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import PlacesAutocomplete from 'react-places-autocomplete';
+import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import Helmet from 'react-helmet';
 import './property.css';
@@ -166,9 +166,16 @@ const Property = () => {
     setAddress(...address);
   };
 
-  const handleAddressSelect = (address) => {
+  const handleAddressSelect = async (address) => {
+    const geocodeAddress = await geocodeByAddress(address);
+    const addressComponent = geocodeAddress[0].address_components.reverse();
+    const zip = addressComponent[0].long_name;
+    const country = addressComponent[1].long_name;
+    const state = addressComponent[2].long_name;
+    const city = addressComponent[3].long_name;
+    setCountry(country);
     form.setFieldsValue({
-      address,
+      address, country, state, zip, city,
     });
   };
 

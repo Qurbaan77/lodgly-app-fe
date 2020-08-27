@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
-  Button, Tooltip, Row, Col, Spin,
+  Button, Tooltip, Row, Col,
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,7 @@ import uniticon from '../../assets/images/property-unit-icon.png';
 import homeicon from '../../assets/images/property-home-icon.png';
 import propertyicon from '../../assets/images/menu/property-icon.png';
 import UserLock from '../userlock/userlock';
+import loader from '../../assets/images/cliploader.gif';
 import { userInstance } from '../../axios/axiosconfig';
 import NoList from './nolist';
 
@@ -129,7 +130,11 @@ const PropertyList = () => {
   if (loading) {
     return (
       <Wrapper>
-        <Spin size="large" />
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
       </Wrapper>
     );
   }

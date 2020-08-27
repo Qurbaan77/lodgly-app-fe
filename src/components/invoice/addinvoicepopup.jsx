@@ -468,7 +468,8 @@ const AdInvoicePopup = (props) => {
                   <Input
                     type="number"
                     onkeydown="return event.keyCode !== 69"
-                    // value={quantity}
+                   // value={quantity}
+                   // onChange={(e) => setQuantity(e.target.value.replace(/\D/, ''))}
                     onBlur={(e) => handleQuantity(e, ele)}
                   />
                 </Form.Item>

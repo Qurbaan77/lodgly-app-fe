@@ -15,6 +15,8 @@ const UserProfile = (props) => {
   const [img, setImg] = useState('');
   const [name, setName] = useState('');
 
+  const isSubUser = localStorage.getItem('isSubUser') || false;
+
   const history = useHistory();
   const exit = async () => {
     const response = await userInstance.post('/logout');
@@ -45,8 +47,7 @@ const UserProfile = (props) => {
   }, [props, getUserInfo]);
 
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  const [{ billingWrite }] = userCred || [{}];
-
+  const [{ email, billingWrite }] = userCred || [{}];
   const menu = (
     <Menu className="setting-dropdown">
       <Menu.Item>
@@ -97,8 +98,8 @@ const UserProfile = (props) => {
           </div>
         </Dropdown>
       </div>
-      <h3>{name || 'No Name Added'}</h3>
-      <span>{userCred ? 'Sub User' : 'Owner'}</span>
+      <h3>{isSubUser ? email : name }</h3>
+      <span>{isSubUser ? 'Sub User' : 'Owner'}</span>
     </div>
   );
 };
