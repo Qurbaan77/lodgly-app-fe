@@ -231,3 +231,22 @@ margin-right: 10px;
 .hide-prop {
   display: none !important
 }
+
+.submenu-heading {
+  position: relative;
+}
+
+.submenu-heading .anticon {
+  position: absolute;
+  left: 8px;
+  top: 14px;
+}
+
+.submenu-heading a {
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.submenu-heading {
+  padding: 10px 10px 10px 28px;
+}

@@ -1,0 +1,249 @@
+.guest-table .custom-table table {
+    width: 100%;
+}
+
+.guest-table .custom-table table {
+    background: #fff;
+}
+
+.guest-table .custom-table table td {
+    padding: 30px 20px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.guest-table .custom-table table tr:hover td {
+    background: #fff!important;
+}
+
+.guest-table .custom-table table tr {
+border-left: none;
+border-right: 1px solid #efecec;
+}
+
+.guest-table .custom-table table thead tr {
+    border: none;
+}
+
+
+.guest-table .custom-table table th {
+    padding: 10px 20px;
+}
+
+.guest-table .custom-table table thead {
+    background: #fbfbfc;
+}
+
+.guest-table .custom-table .ant-table table {
+    border-collapse: collapse;
+}
+
+.guest-table .custom-table table th:last-child {
+    width: 30%;
+    text-align: right;
+    padding: 10px 40px;
+}
+
+.guest-table .custom-table table tr td:last-child {
+    text-align: right;
+    padding: 10px 40px;
+}
+
+
+.guest-table .custom-table table tr:hover .edit-delete {
+    opacity: 1;
+}
+
+
+.guest-list .page-header {
+    padding-bottom: 0;
+    padding: 20px;
+}
+
+
+.guest-list .page-header h1 {
+    font-size: 20px;
+}
+
+.guest-info-table h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.guest-info-table span {
+    color: #888787;
+}
+
+.guest-info-table p {
+    color: #b3b3b3;
+    margin: 0;
+    font-size: 12px;
+}
+
+.guest-info-table i {
+    margin: 0px 5px;
+    background: #b3b3b3;
+    width: 5px;
+    height: 5px;
+    display: inline-block;
+    border-radius: 100%;
+}
+
+.guest-info-table img {
+    margin-right: 10px;
+    vertical-align: unset;
+}
+
+.guest-contact-table p {
+    margin: 0;
+}
+
+.guest-spent-table p {
+    margin: 0;
+}
+
+.edit-delete{
+    opacity: 0;
+}
+
+
+.edit-delete img {
+    margin: 0px 10px;
+}
+
+
+
+.guest-modal.add-company-modal .ant-modal{
+    width: 500px !important;
+}
+
+
+.invoice-filter-box{
+    max-width: 500px;
+}
+
+.guest-list .invoice-filter-box {
+    max-width: 450px;
+}
+
+.guest-list .filter-invoice ul li {
+    margin: 15px 0px;
+    margin-right: 15px;
+    line-height: 36px;
+    cursor: pointer;
+}
+
+.guest-info-table {
+    display: flex;
+    align-items: center;
+}
+
+.guest-checkbox {
+    margin-right: 10px;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+    background-color: #fab52c;
+    border-color: #fab52c;
+}
+
+.ant-checkbox:hover .ant-checkbox-inner, .ant-checkbox-input:focus + .ant-checkbox-inner{
+    border-color: #fab52c;
+}
+
+.cancel-icon {
+    cursor: pointer;
+}
+
+
+.guest-list .filter-invoice, .guest-list .invoice-filter-box {
+    padding: 0px 20px;
+}
+
+.guest-list .ant-table-pagination.ant-pagination {
+    margin: 16px 20px;
+}
+
+.guest-filter .filter-box h2 {
+    display: block;
+    padding: 50px 20px;
+    margin-bottom: 0px;
+    font-size: 16px;
+    color: #444;
+    cursor: pointer;
+}
+
+.guest-filter .filter-box form {
+    padding: 20px 20px;
+}
+
+.guest-filter .inline-form label {
+    margin: 0px 10px;
+}
+
+.guest-wrapper {
+    display: flex;
+}
+
+.guest-filter {
+    overflow: hidden;
+    background: #fff;
+    width: 0;
+    border-bottom: 1px solid #efefef;
+    border-right: 1px solid #efefef;
+    transition: all 0.5s;
+    opacity: 0;
+
+}
+
+.guest-wrapper-expand .guest-filter {
+    overflow: auto;
+    width: 300px;
+    border-bottom: 1px solid #efefef;
+    border-right: 1px solid #efefef;
+    transition: all 0.5s;
+    opacity: 1;
+    background: #fff;
+
+}
+
+.guest-list {
+    width: calc(100% - 0px);
+}
+
+.guest-wrapper-expand .guest-list {
+    width: calc(100% - 300px);
+}
+
+
+.guest-filter .ant-picker-input > input {
+    padding: 5px 12px;
+}
+
+.guest-filter .ant-picker {
+    border: 1px solid #eaeaea;
+}
+
+.guest-page-view .ant-layout-content{
+    margin: 0!important;
+    padding: 0!important;
+}
+
+.guest-filter-button{
+    padding-top: 50px;
+}
+
+.guest-filter-button .ant-btn-primary {
+    background: #7FBD34;
+    border-color: #7FBD34;
+}
+
+.guest-filter-checkbox{
+    font-size: 12px;
+    margin-bottom: 20px;
+}
+
+.guest-filter .filter-box h2 img {
+    margin-top: -4px;
+}

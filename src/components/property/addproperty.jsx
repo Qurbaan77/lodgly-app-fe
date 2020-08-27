@@ -618,9 +618,11 @@ const AddProperty = () => {
                       </Form.Item>
                     </Col>
 
-                    {/* <Col span={24}>
-                      <Form.Item>{btn2}</Form.Item>
-                    </Col> */}
+                    <Col span={24}>
+                      <Form.Item>
+                        <Button htmlType="submit">Save</Button>
+                      </Form.Item>
+                    </Col>
                   </Row>
                 </Form>
               </div>

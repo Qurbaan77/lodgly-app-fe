@@ -11,7 +11,7 @@ import { userInstance } from '../../../axios/axiosconfig';
 import bookingIcon from '../../../assets/images/menu/booking-icon.png';
 import calenderIcon from '../../../assets/images/menu/calendar-icon.png';
 import propertyIcon from '../../../assets/images/menu/property-icon.png';
-// import guestIcon from '../../../assets/images/menu/guest-icon.png';
+import guestIcon from '../../../assets/images/menu/guest-icon.png';
 import teamIcon from '../../../assets/images/menu/team-icon.png';
 import invoiceIcon from '../../../assets/images/menu/invoice-icon.png';
 import statsIcon from '../../../assets/images/menu/stats-icon.png';
@@ -193,7 +193,8 @@ const Sidenav = ({
     if (
       (pathname === '/addunittype'
         || pathname === '/rates'
-        || pathname === '/seasonrates')
+        || pathname === '/seasonrates'
+        || pathname === '/createseasonrates')
       && ratesNav === false
     ) {
       setRatesNav(true);
@@ -293,10 +294,23 @@ const Sidenav = ({
           ))} */}
         </SubMenu>
 
-        {/* <Menu.Item className="guest-nav" disabled={disableGuests}>
-          <img src={guestIcon} alt="guest-icon" />
-          <Link to="/">{t('sidebar.menu4')}</Link>
-        </Menu.Item> */}
+        <SubMenu
+          title={(
+            <div>
+              <img src={guestIcon} alt="guest-icon" />
+              <Link to="/">{t('sidebar.menu4')}</Link>
+            </div>
+          )}
+        >
+          <Menu.Item className="guest-nav">
+            <img src={guestIcon} alt="guest-icon" />
+            <Link to="/guests">{t('sidebar.menu4')}</Link>
+          </Menu.Item>
+          <Menu.Item className="guest-nav">
+            <img src={guestIcon} alt="guest-icon" />
+            <Link to="/companylist">Companies</Link>
+          </Menu.Item>
+        </SubMenu>
 
         <Menu.Item className="team-nav" hidden={hideTeam}>
           <img src={teamIcon} alt="team" />

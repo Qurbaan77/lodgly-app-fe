@@ -197,9 +197,7 @@
 
 
 
-.rate-modal {
-    z-index: 9999999999;
-}
+
 
 
 
@@ -267,7 +265,18 @@
 }
 
 
+.create-season-rate .ant-picker {
+    padding: 8px 11px;
+}
 
+.create-season-rate .ant-picker {
+    border: 1px solid #eaeaea !important;
+}
+
+.go-back {
+    padding-bottom: 50px;
+    color: #a9a9a9;
+}
 
 
 /************* Add Season **********/

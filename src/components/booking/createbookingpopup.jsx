@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 // import { useHistory } from 'react-router-dom';
+import moment from 'moment';
 import Helmet from 'react-helmet';
 import './booking.css';
 import { toast } from 'react-toastify';
@@ -13,12 +14,14 @@ import {
   Button,
   Row,
   Col,
-  Collapse, Modal,
+  Collapse,
+  Modal,
 } from 'antd';
 import {
   PlusSquareOutlined,
   PlusOutlined,
-  EditOutlined, DeleteOutlined,
+  EditOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
@@ -62,6 +65,7 @@ const CreateBookingPopup = (props) => {
   const [depositType, setDepositType] = useState('€');
   const [depositAmount, setDepositAmount] = useState(null);
   const [discountAmount, setdiscountAmount] = useState(null);
+  const [selectDate, setSelectDate] = useState({});
 
   // const [fullname, setFullname] = useState({});
   // const [email, setEmail] = useState({});
@@ -71,7 +75,7 @@ const CreateBookingPopup = (props) => {
   const [currentService, setCurrentService] = useState({});
   const [unitData, setUnitData] = useState([]);
   // const [currentUnit, setCurrentUnit] = useState({});
-  const [unitTypeData, setUnitTypeData] = useState([]);
+  // const [unitTypeData, setUnitTypeData] = useState([]);
   const [propertyData, setPropertyData] = useState([]);
   const [currentPropertyId, setCurrentPropertyId] = useState(null);
   // const history = useHistory();
@@ -79,21 +83,10 @@ const CreateBookingPopup = (props) => {
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ userId }] = userCred || [{}];
 
-  // const show = () => {
-  //   setVisible(true);
-  // };
-
-  // const close = () => {
-  //   setNotifyType('');
-  // };
-
-  // const Ok = () => {
-  //   setVisible1(false);
-  // };
-
-  // const Cancel = () => {
-  //   setVisible(false);
-  // };
+  const hidePopUp = () => {
+    close();
+    form.resetFields();
+  };
 
   const addMore = () => {
     i += 1;
@@ -184,7 +177,9 @@ const CreateBookingPopup = (props) => {
   // };
 
   const getPropertyData = useCallback(async () => {
-    const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
+    const response = await userInstance.post('/fetchProperty', {
+      affiliateId: userId,
+    });
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
       setPropertyData(data);
@@ -203,7 +198,7 @@ const CreateBookingPopup = (props) => {
     setTotal(sum);
   };
 
-  const fun1 = async (value, event) => {
+  const onSelectProperty = async (value, event) => {
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
@@ -213,8 +208,8 @@ const CreateBookingPopup = (props) => {
     const data = response.data.servicData;
     const response2 = await userInstance.post('/getUnit', payload);
     const data2 = response2.data.unitData;
-    const response3 = await userInstance.post('/getUnittype', payload);
-    const data3 = response3.data.unittypeData;
+    await userInstance.post('/getUnittype', payload);
+    // const data3 = response3.data.unittypeData;
     if (response.data.code === 200) {
       setServiceData(data);
     }
@@ -223,12 +218,12 @@ const CreateBookingPopup = (props) => {
       setUnitData(data2);
     }
 
-    if (response3.data.code === 200) {
-      setUnitTypeData(data3);
-    }
+    // if (response3.data.code === 200) {
+    //   setUnitTypeData(data3);
+    // }
   };
 
-  const fun2 = (value) => {
+  const onSelectServices = (value) => {
     serviceData
       .filter((el) => el.serviceName === value)
       .map((filterService) => setCurrentService(filterService));
@@ -238,19 +233,69 @@ const CreateBookingPopup = (props) => {
     //   .map((filterUnit) => setCurrentUnit(filterUnit));
   };
 
-  const fun3 = (value, event) => {
+  const onSelectUnit = async (value, event) => {
     const unitname = event.children;
     const [unit] = unitData
       .filter((el) => el.unitName === unitname)
       .map((el) => el.unittypeId);
-    unitTypeData.forEach((el) => {
-      if (el.id === unit) {
-        setPrice(el.perNight);
-        form.setFieldsValue({ perNight: el.perNight });
-        setAmt(night * el.perNight);
-        setAccomodation(night * el.perNight);
+
+    const payload = {
+      unittypeId: unit,
+    };
+
+    const response = await userInstance.post('/getRates', payload);
+    const ratesData = response.data.ratesData[0];
+    const { seasonRatesData } = response.data;
+
+    seasonRatesData.forEach((el) => {
+      const selectStartDate = moment(selectDate[0]._d);
+      const selectEndDate = moment(selectDate[1]._d);
+      const startDate = moment(el.startDate);
+      const endDate = moment(el.endDate);
+      const firstDate = (selectStartDate.isBefore(endDate)
+          && selectStartDate.isAfter(startDate))
+        || selectStartDate.isSame(startDate)
+        || selectStartDate.isSame(endDate);
+      const secondDate = (selectEndDate.isBefore(endDate) && selectEndDate.isAfter(startDate))
+        || selectEndDate.isSame(startDate)
+        || selectEndDate.isSame(endDate);
+      if (firstDate && secondDate) {
+        // console.log('dono date range me hai');
+      } else if (firstDate) {
+        // console.log('Pehli date aati hai range me');
+      } else if (secondDate) {
+        // console.log('Dusri date aati hai range me');
+      } else {
+        setPrice(ratesData.price_per_night);
+        form.setFieldsValue({ perNight: ratesData.price_per_night });
+        setAmt(night * ratesData.price_per_night);
+        setAccomodation(night * ratesData.price_per_night);
       }
     });
+
+    // if (night > 30) {
+    //   const noOfWeeks = Math.ceil(night / 7);
+    //   setAccomodation(
+    //     night * ratesData.price_per_night +
+    //       noOfWeeks * ratesData.discount_price_per_week
+    //   );
+    // } else {
+    //   const noOfMonths = Math.ceil(night / 30);
+    //   setAccomodation(
+    //     night * ratesData.price_per_night +
+    //       noOfMonths * ratesData.discount_price_per_month
+    //   );
+    // }
+
+    // unitTypeData.forEach((el) => {
+    //   if (el.id === unit) {
+    //     setPrice(el.perNight);
+    //     form.setFieldsValue({ perNight: el.perNight });
+    //     setAmt(night * el.perNight);
+    //     setAccomodation(night * el.perNight);
+    //   }
+    // });
+
     setUnitName(unitname);
   };
   const fun5 = (value, event) => {
@@ -283,8 +328,9 @@ const CreateBookingPopup = (props) => {
     }
   };
 
-  const fun4 = (value) => {
+  const onChangeDate = (value) => {
     if (value) {
+      setSelectDate(value);
       const d1 = new Date(value[0]._d);
       const d2 = new Date(value[1]._d);
       const diff = Math.abs(d1 - d2);
@@ -357,11 +403,7 @@ const CreateBookingPopup = (props) => {
                 name={[el, 'phone']}
                 style={{ paddingRight: 20 }}
               >
-                <Input
-                  type="number"
-                  minLength="9"
-                  maxLength="15"
-                />
+                <Input type="number" minLength="9" maxLength="15" />
               </Form.Item>
             </Col>
 
@@ -403,7 +445,7 @@ const CreateBookingPopup = (props) => {
               label={t('bookingpop.label1')}
               name="groupname"
               style={{ paddingRight: 20 }}
-              onChange={fun4}
+              onChange={onChangeDate}
               rules={[
                 {
                   required: true,
@@ -411,7 +453,7 @@ const CreateBookingPopup = (props) => {
                 },
               ]}
             >
-              <RangePicker onChange={fun4} />
+              <RangePicker onChange={onChangeDate} />
             </Form.Item>
           </Col>
 
@@ -438,7 +480,7 @@ const CreateBookingPopup = (props) => {
             >
               <Select
                 placeholder={t('strings.select')}
-                onSelect={(value, event) => fun1(value, event)}
+                onSelect={(value, event) => onSelectProperty(value, event)}
               >
                 {propertyData.map((el) => (
                   <Select.Option value={el.id}>{el.propertyName}</Select.Option>
@@ -461,7 +503,7 @@ const CreateBookingPopup = (props) => {
             >
               <Select
                 placeholder={t('strings.select')}
-                onSelect={(value, event) => fun3(value, event)}
+                onSelect={(value, event) => onSelectUnit(value, event)}
               >
                 {unitData.map((el) => (
                   <Select.Option value={el.id}>{el.unitName}</Select.Option>
@@ -786,7 +828,7 @@ const CreateBookingPopup = (props) => {
                               <Select
                                 style={{ width: '100px' }}
                                 placeholder={t('bookingpop.rule7')}
-                                onSelect={(value, event) => fun2(value, event)}
+                                onSelect={(value, event) => onSelectServices(value, event)}
                               >
                                 {serviceData.map((element) => (
                                   <Select.Option value={element.serviceName}>
@@ -955,7 +997,7 @@ const CreateBookingPopup = (props) => {
               <Button
                 style={{ marginRight: 10 }}
                 onClick={() => {
-                  close();
+                  hidePopUp();
                 }}
               >
                 {t('strings.cancel')}

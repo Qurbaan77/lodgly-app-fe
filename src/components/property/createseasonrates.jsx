@@ -1,20 +1,32 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import Helmet from 'react-helmet';
+import queryString from 'query-string';
+import { useHistory } from 'react-router-dom';
 import './rates.css';
 import {
-  Button, Row, Col, Form, Select, Input, Switch, Checkbox,
+  Button,
+  Row,
+  Col,
+  Form,
+  Select,
+  Input,
+  Switch,
+  Checkbox,
+  DatePicker,
 } from 'antd';
-import ReactQuill from 'react-quill';
 import { toast } from 'react-toastify';
-import { userInstance } from '../../axios/axiosconfig';
-import CopyRatePopup from './copyratepopup';
+import { LeftOutlined } from '@ant-design/icons';
+import moment from 'moment';
 import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
-import 'react-quill/dist/quill.snow.css';
 
-const Rates = () => {
+import { userInstance } from '../../axios/axiosconfig';
+
+const CreateSeasonRates = () => {
+  const { RangePicker } = DatePicker;
+  const history = useHistory();
+
   const [form] = Form.useForm();
-  const [value, setValue] = useState('');
   const [showCustomNights, setShowCustomNights] = useState(false);
   const [disabledInput, setDisabledInput] = useState(true);
   const [nights, setNights] = useState(14);
@@ -24,12 +36,9 @@ const Rates = () => {
   const [occupancy, setOccupancy] = useState(false);
   const [shortStay, setshortStay] = useState(false);
   const [restriction, setRestriction] = useState(false);
-  const [vat, setVat] = useState(false);
-  const [nav, setNav] = useState(false);
-  const [visisbleCopyRate, setVisisbleCopyRate] = useState(false);
 
-  const handleCancel = () => {
-    setVisisbleCopyRate(false);
+  const goBack = () => {
+    history.push('/seasonrates');
   };
 
   const days = {
@@ -77,23 +86,28 @@ const Rates = () => {
       return checkInBox.tuesday
         ? setCheckInBox({ ...checkInBox, tuesday: false })
         : setCheckInBox({ ...checkInBox, tuesday: true });
-    } if (day === 'wednesday') {
+    }
+    if (day === 'wednesday') {
       return checkInBox.wednesday
         ? setCheckInBox({ ...checkInBox, wednesday: false })
         : setCheckInBox({ ...checkInBox, wednesday: true });
-    } if (day === 'thursday') {
+    }
+    if (day === 'thursday') {
       return checkInBox.thursday
         ? setCheckInBox({ ...checkInBox, thursday: false })
         : setCheckInBox({ ...checkInBox, thursday: true });
-    } if (day === 'friday') {
+    }
+    if (day === 'friday') {
       return checkInBox.friday
         ? setCheckInBox({ ...checkInBox, friday: false })
         : setCheckInBox({ ...checkInBox, friday: true });
-    } if (day === 'saturday') {
+    }
+    if (day === 'saturday') {
       return checkInBox.saturday
         ? setCheckInBox({ ...checkInBox, saturday: false })
         : setCheckInBox({ ...checkInBox, saturday: true });
-    } if (day === 'sunday') {
+    }
+    if (day === 'sunday') {
       return checkInBox.sunday
         ? setCheckInBox({ ...checkInBox, sunday: false })
         : setCheckInBox({ ...checkInBox, sunday: true });
@@ -143,27 +157,33 @@ const Rates = () => {
       return checkOutBox.monday
         ? setCheckOutBox({ ...checkOutBox, monday: false })
         : setCheckOutBox({ ...checkOutBox, monday: true });
-    } if (day === 'tuesday') {
+    }
+    if (day === 'tuesday') {
       return checkOutBox.tuesday
         ? setCheckOutBox({ ...checkOutBox, tuesday: false })
         : setCheckOutBox({ ...checkOutBox, tuesday: true });
-    } if (day === 'wednesday') {
+    }
+    if (day === 'wednesday') {
       return checkOutBox.wednesday
         ? setCheckOutBox({ ...checkOutBox, wednesday: false })
         : setCheckOutBox({ ...checkOutBox, wednesday: true });
-    } if (day === 'thursday') {
+    }
+    if (day === 'thursday') {
       return checkOutBox.thursday
         ? setCheckOutBox({ ...checkOutBox, thursday: false })
         : setCheckOutBox({ ...checkOutBox, thursday: true });
-    } if (day === 'friday') {
+    }
+    if (day === 'friday') {
       return checkOutBox.friday
         ? setCheckOutBox({ ...checkOutBox, friday: false })
         : setCheckOutBox({ ...checkOutBox, friday: true });
-    } if (day === 'saturday') {
+    }
+    if (day === 'saturday') {
       return checkOutBox.saturday
         ? setCheckOutBox({ ...checkOutBox, saturday: false })
         : setCheckOutBox({ ...checkOutBox, saturday: true });
-    } if (day === 'sunday') {
+    }
+    if (day === 'sunday') {
       return checkOutBox.sunday
         ? setCheckOutBox({ ...checkOutBox, sunday: false })
         : setCheckOutBox({ ...checkOutBox, sunday: true });
@@ -208,12 +228,9 @@ const Rates = () => {
   };
 
   const onFinish = async (values) => {
-    // console.log('checkInBox', checkInBox);
-    // console.log('checkOutBox', checkOutBox);
-    // console.log('value', value);
-    // console.log('values', values);
+    const params = queryString.parse(window.location.search);
+    values.id = params.seasonRateId;
     values.unitTypeId = localStorage.getItem('unittypeId');
-    values.notes = value;
     values.checkIn_on_monday = checkInBox.monday;
     values.checkIn_on_tuesday = checkInBox.tuesday;
     values.checkIn_on_wednesday = checkInBox.wednesday;
@@ -229,92 +246,88 @@ const Rates = () => {
     values.checkOut_on_saturday = checkOutBox.saturday;
     values.checkOut_on_sunday = checkOutBox.sunday;
 
-    const response = await userInstance.post('/addRates', values);
+    const response = await userInstance.post('/addSeasonRates', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
-      toast.success('Rate added successfully', { containerId: 'B' });
+      toast.success('Season rates update successfully', { containerId: 'B' });
       // form.resetFields();
     } else {
       toast.error('server error please try again', { containerId: 'B' });
     }
   };
 
-  const fetchData = useCallback(async () => {
-    const payload = {
-      unittypeId: localStorage.getItem('unittypeId'),
-    };
-    const response = await userInstance.post('getRates', payload);
-    if (response.data.code === 200) {
-      if (response.data.ratesData.length > 0) {
-        const data = response.data.ratesData[0];
-        setLengthOfStay(true);
-        setPricePerDayWeek(true);
-        setMinStayPerWeek(true);
-        setOccupancy(true);
-        setshortStay(true);
-        setRestriction(true);
-        setVat(true);
-        setNav(true);
+  useEffect(() => {
+    async function fetchData() {
+      const values = queryString.parse(window.location.search);
+      const { seasonRateId } = values;
+      if (seasonRateId !== undefined) {
+        const response = await userInstance.get(
+          `/getSeasonRate/${seasonRateId}`,
+        );
+        if (response.data.code === 200) {
+          const data = response.data.seasonRateData[0];
+          const m1 = moment(data.startDate);
+          const m2 = moment(data.endDate);
+          setLengthOfStay(true);
+          setPricePerDayWeek(true);
+          setMinStayPerWeek(true);
+          setOccupancy(true);
+          setshortStay(true);
+          setRestriction(true);
 
-        form.setFieldsValue({
-          rateName: data.rateName,
-          currency: data.currency,
-          pricePerNight: data.price_per_night,
-          minStay: data.minimum_stay,
-          weeklyPrice: data.discount_price_per_week,
-          monthlyPrice: data.discount_price_per_month,
-          customNightsPrice: data.discount_price_custom_nights,
-          priceOnMon: data.price_on_monday,
-          priceOnTues: data.price_on_tuesday,
-          priceOnWed: data.price_on_wednesday,
-          priceOnThu: data.price_on_thursday,
-          priceOnFri: data.price_on_friday,
-          priceOnSat: data.price_on_saturday,
-          priceOnSun: data.price_on_sunday,
-          minStayOnMon: data.minimum_stay_on_monday,
-          minStayOnTues: data.minimum_stay_on_tuesday,
-          minStayOnWed: data.minimum_stay_on_wednesday,
-          minStayOnThu: data.minimum_stay_on_thursday,
-          minStayOnFri: data.minimum_stay_on_friday,
-          minStayOnSat: data.minimum_stay_on_saturday,
-          minStayOnSun: data.minimum_stay_on_sunday,
-          extraCharge: data.extra_charge_on_guest,
-          extraGuest: data.extra_guest,
-          shortStayNight: data.short_stay,
-          shortStayPrice: data.extra_chage_on_stay,
-          tax: data.tax_status,
-          taxPer: data.tax,
-        });
-        if (data.notes) {
-          setValue(data.notes);
+          form.setFieldsValue({
+            seasonRate: data.seasonRateName,
+            groupname: [m1, m2],
+            currency: data.currency,
+            pricePerNight: data.price_per_night,
+            minStay: data.minimum_stay,
+            weeklyPrice: data.discount_price_per_week,
+            monthlyPrice: data.discount_price_per_month,
+            customNightsPrice: data.discount_price_custom_nights,
+            priceOnMon: data.price_on_monday,
+            priceOnTues: data.price_on_tuesday,
+            priceOnWed: data.price_on_wednesday,
+            priceOnThu: data.price_on_thursday,
+            priceOnFri: data.price_on_friday,
+            priceOnSat: data.price_on_saturday,
+            priceOnSun: data.price_on_sunday,
+            minStayOnMon: data.minimum_stay_on_monday,
+            minStayOnTues: data.minimum_stay_on_tuesday,
+            minStayOnWed: data.minimum_stay_on_wednesday,
+            minStayOnThu: data.minimum_stay_on_thursday,
+            minStayOnFri: data.minimum_stay_on_friday,
+            minStayOnSat: data.minimum_stay_on_saturday,
+            minStayOnSun: data.minimum_stay_on_sunday,
+            extraCharge: data.extra_charge_on_guest,
+            extraGuest: data.extra_guest,
+            shortStayNight: data.short_stay,
+            shortStayPrice: data.extra_chage_on_stay,
+          });
+          setCheckInBox({
+            ...checkInBox,
+            monday: data.checkIn_on_monday,
+            tuesday: data.checkIn_on_tuesday,
+            wednesday: data.checkIn_on_wednesday,
+            thursday: data.checkIn_on_thursday,
+            friday: data.checkIn_on_friday,
+            saturday: data.checkIn_on_saturday,
+            sunday: data.checkIn_on_sunday,
+          });
+          setCheckOutBox({
+            ...checkOutBox,
+            monday: data.checkOut_on_monday,
+            tuesday: data.checkOut_on_tuesday,
+            wednesday: data.checkOut_on_wednesday,
+            thursday: data.checkOut_on_thursday,
+            friday: data.checkOut_on_friday,
+            saturday: data.checkOut_on_saturday,
+            sunday: data.checkOut_on_sunday,
+          });
         }
-        setCheckInBox({
-          ...checkInBox,
-          monday: data.checkIn_on_monday,
-          tuesday: data.checkIn_on_tuesday,
-          wednesday: data.checkIn_on_wednesday,
-          thursday: data.checkIn_on_thursday,
-          friday: data.checkIn_on_friday,
-          saturday: data.checkIn_on_saturday,
-          sunday: data.checkIn_on_sunday,
-        });
-        setCheckOutBox({
-          ...checkOutBox,
-          monday: data.checkOut_on_monday,
-          tuesday: data.checkOut_on_tuesday,
-          wednesday: data.checkOut_on_wednesday,
-          thursday: data.checkOut_on_thursday,
-          friday: data.checkOut_on_friday,
-          saturday: data.checkOut_on_saturday,
-          sunday: data.checkOut_on_sunday,
-        });
       }
     }
-  }, [checkInBox, checkOutBox, form]);
-
-  useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, [checkInBox, checkOutBox, form]);
 
   return (
     <Wrapper>
@@ -327,32 +340,46 @@ const Rates = () => {
           name="description"
           content="Grow your Vacation Rental with Lodgly"
         />
-        <body className="rates-page-view" />
+        <body className="season-page-view" />
       </Helmet>
 
-      <div className="rates-page">
+      <div className="rates-page create-season-rate">
         <Row>
           <Col span={24}>
             <div className="rates-content">
               <Form form={form} onFinish={onFinish}>
                 <div className="rate-first-section">
-                  <h3>Rates</h3>
-                  <Row>
-                    <Col span={12}>
-                      <Form.Item name="rateName">
-                        <Input
-                          placeholder="Default Rate"
-                          defaultValue="Default Rate"
-                        />
+                  <div className="go-back" onClick={goBack} role="presentation">
+                    <LeftOutlined />
+                    {' '}
+                    Go back
+                  </div>
+                  <h3>Season name and date periods</h3>
+                  <p>
+                    Give your season a descriptive name, e.g.
+                    {' '}
+                    <span>&quot;</span>
+                    High Season
+                    <span>&quot;</span>
+                    {' '}
+                    or
+                    <span>&quot;</span>
+                    Low Season
+                    <span>&quot;</span>
+                    {' '}
+                    and define for which date period this season
+                    should apply to
+                  </p>
+                  <Row style={{ alignItems: 'flex-end' }}>
+                    <Col span={11}>
+                      <Form.Item name="seasonRate">
+                        <Input placeholder="e.g. High Season or Low Season" />
                       </Form.Item>
                     </Col>
-                    <Col span={1} />
-                    <Col span={8}>
-                      <Form.Item name="currency">
-                        <Select placeholder="USD">
-                          <Select.Option value="usd">USD</Select.Option>
-                          <Select.Option value="euro">EURO</Select.Option>
-                        </Select>
+                    <Col span={2} />
+                    <Col span={11}>
+                      <Form.Item label="Date Periods" name="groupname">
+                        <RangePicker />
                       </Form.Item>
                     </Col>
                   </Row>
@@ -454,7 +481,6 @@ const Rates = () => {
                     {' '}
                     <Switch
                       checked={pricePerDayWeek}
-
                       onClick={() => setPricePerDayWeek(!pricePerDayWeek)}
                     />
                   </h3>
@@ -590,7 +616,6 @@ const Rates = () => {
                     {' '}
                     <Switch
                       checked={minStayPerWeek}
-
                       onClick={() => setMinStayPerWeek(!minStayPerWeek)}
                     />
                   </h3>
@@ -711,7 +736,6 @@ const Rates = () => {
                     {' '}
                     <Switch
                       checked={occupancy}
-
                       onClick={() => setOccupancy(!occupancy)}
                     />
                   </h3>
@@ -738,15 +762,9 @@ const Rates = () => {
                       <Col span={6}>
                         <Form.Item name="extraGuest">
                           <Select placeholder="1st Guest">
-                            <Select.Option value="1">
-                              1st Guest
-                            </Select.Option>
-                            <Select.Option value="2">
-                              2nd Guest
-                            </Select.Option>
-                            <Select.Option value="3">
-                              3rd Guest
-                            </Select.Option>
+                            <Select.Option value="1">1st Guest</Select.Option>
+                            <Select.Option value="2">2nd Guest</Select.Option>
+                            <Select.Option value="3">3rd Guest</Select.Option>
                           </Select>
                         </Form.Item>
                       </Col>
@@ -760,7 +778,6 @@ const Rates = () => {
                     {' '}
                     <Switch
                       checked={shortStay}
-
                       onClick={() => setshortStay(!shortStay)}
                     />
                   </h3>
@@ -814,7 +831,6 @@ const Rates = () => {
                     {' '}
                     <Switch
                       checked={restriction}
-
                       onClick={() => setRestriction(!restriction)}
                     />
                   </h3>
@@ -959,79 +975,9 @@ const Rates = () => {
                   </div>
                 </div>
 
-                <div className="toggle-box-section">
-                  <h3>
-                    Sales tax / VAT
-                    {' '}
-                    <Switch
-                      checked={vat}
-                      onClick={() => setVat(!vat)}
-                    />
-                  </h3>
-                  <p>Set the sales tax / VAT for your room rate.</p>
-
-                  <div className={`toggle-content ${vat ? 'show' : ''}`}>
-                    <Row>
-                      <Col span={8}>
-                        <Form.Item name="tax">
-                          <Select placeholder="Prices incl. sales tax / VAT">
-                            <Select.Option value="include">
-                              Prices incl. sales tax / VAT
-                            </Select.Option>
-                            <Select.Option value="exclude">
-                              Prices excl. sales tax / VAT
-                            </Select.Option>
-                          </Select>
-                        </Form.Item>
-                      </Col>
-                      <Col span={1} />
-                      <Col span={6}>
-                        <Form.Item name="taxPer">
-                          <Input placeholder="% 0" />
-                        </Form.Item>
-                      </Col>
-                      <Col span={24} className="sales-text">
-                        <span>
-                          If you chose included: the guest pays your nightly
-                          cost
-                        </span>
-                        <span>
-                          If you chose excluded: the guest pays your nightly
-                          cost + tax
-                        </span>
-                      </Col>
-                    </Row>
-                  </div>
-                </div>
-
-                <div className="toggle-box-section">
-                  <h3>
-                    Rates notes
-                    {' '}
-                    <Switch checked={nav} onClick={() => setNav(!nav)} />
-                  </h3>
-                  <p>Provide more information about your rates and policies.</p>
-
-                  <div className={`toggle-content ${nav ? 'show' : ''}`}>
-                    <Row>
-                      <Col span={24}>
-                        <ReactQuill
-                          defaultValue={value}
-                          theme="snow"
-                          value={value}
-                          onChange={setValue}
-                        />
-                      </Col>
-                    </Row>
-                  </div>
-                </div>
-
                 <div className="toggle-box-button">
-                  <Button
-                    className="gray-btn"
-                    onClick={() => setVisisbleCopyRate(true)}
-                  >
-                    Copy Rates
+                  <Button className="gray-btn" onClick={goBack}>
+                    Back
                   </Button>
                   <Button type="primary" htmlType="submit">
                     Save
@@ -1042,9 +988,8 @@ const Rates = () => {
           </Col>
         </Row>
       </div>
-      <CopyRatePopup visible={visisbleCopyRate} handleCancel={handleCancel} fetchData={fetchData} />
     </Wrapper>
   );
 };
 
-export default Rates;
+export default CreateSeasonRates;

@@ -149,6 +149,7 @@ CheckoutForm.propTypes = {
   hideBilling: PropTypes.func,
   getData: PropTypes.func,
   getInvoice: PropTypes.func,
+  coupon: PropTypes.string,
 };
 CheckoutForm.defaultProps = {
   total: 0,
@@ -157,6 +158,7 @@ CheckoutForm.defaultProps = {
   subscriptionType: '',
   planType: '',
   submitChange: '',
+  coupon: '',
   showCancelCheckout: false,
   hideBilling: () => {},
   getData: () => {},

@@ -8,7 +8,6 @@ import {
   Tooltip,
 } from 'antd';
 import {
-  PlusOutlined,
   DeleteOutlined,
   FormOutlined,
   CloseCircleOutlined,
@@ -198,7 +197,17 @@ const AddUnitType = () => {
                   ? currentUnittype.unitTypeName
                   : `Unit type ${unittypeNo}`}
               </h1>
-              {btn}
+
+              {isOnTrial ? (
+                <Button
+                  onClick={() => setShowPanel(false)}
+                >
+                  {t('addunity.button1')}
+                </Button>
+              ) : (
+                btn
+              )}
+
             </div>
 
             {!showPanel ? (
@@ -302,19 +311,6 @@ const AddUnitType = () => {
                     )}
                   </div>
                 ))}
-              </div>
-              <div>
-                {isOnTrial ? (
-                  <Button
-                    onClick={() => setShowPanel(false)}
-                    className="add-unit-link"
-                    icon={<PlusOutlined />}
-                  >
-                    Add unit
-                  </Button>
-                ) : (
-                  btn
-                )}
               </div>
               <Modal
                 visible={visible}
