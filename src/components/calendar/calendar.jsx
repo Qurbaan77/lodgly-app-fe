@@ -2,10 +2,11 @@ import React, { useEffect, useState, useCallback } from 'react';
 import './calendar.css';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
-import { Button, Tooltip, Spin } from 'antd';
+import { Button, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
+import loader from '../../assets/images/cliploader.gif';
 // import nobooking from '../../assets/images/no-booking.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
@@ -331,7 +332,11 @@ const Calendar = () => {
   if (loading) {
     return (
       <Wrapper>
-        <Spin size="large" />
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
       </Wrapper>
     );
   }

@@ -7,7 +7,7 @@ import './profile.css';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import {
-  Form, Select, Row, Col, Collapse, Button, Tooltip, Input,
+  Form, Select, Row, Col, Collapse, Button, Input,
 } from 'antd';
 import {
   UserOutlined,
@@ -15,13 +15,14 @@ import {
   CloseCircleOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-
+import loader from '../../assets/images/cliploader.gif';
 import BillingHistory from './billinghistory';
 import { STRIPE_APP_KEY } from '../../config/keys';
 import config from '../../config/config.json';
 import { userInstance } from '../../axios/axiosconfig';
 import CheckoutForm from './CheckoutForm';
 import favicon from '../../assets/images/logo-mobile.png';
+import payment from '../../assets/images/payment.png';
 // import loader from '../../assets/images/loader.svg';
 
 const stripePromise = loadStripe(STRIPE_APP_KEY);
@@ -49,11 +50,13 @@ const BillingInformation = () => {
     gbp: false,
   });
   const [showCancelCheckout, setShowCancelCheckout] = useState(false);
-  const [canDowngrade, setCanDowngrade] = useState();
+  // const [canDowngrade, setCanDowngrade] = useState();
   const [disableBtn, setDisableBtn] = useState(false);
   const [onFreePlan, setOnFreePlan] = useState(false);
   const [freePlanEnd, setFreePlanEnd] = useState();
   const [coupon, setCoupon] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [hidePlanInfo, setHidePlanInfo] = useState();
   // const [showCard, setShowCard] = useState(true);
   // const [disablePayNow, setDisablePayNow] = useState(true);
 
@@ -66,7 +69,7 @@ const BillingInformation = () => {
         //   .fill()
         //   .map((_, idx) => units + idx);
         // setUnitDropDown(range);
-        setCanDowngrade(res.data.totalUnit < res.data.units);
+      // setCanDowngrade(res.data.totalUnit < res.data.units);
       }
       const response = await userInstance.post('/getRate');
       if (response.data.code === 200) {
@@ -92,6 +95,7 @@ const BillingInformation = () => {
       code, transactions, endDate, status,
     } = response.data;
     if (code === 200 && transactions != null) {
+      setLoading(false);
       const [{ interval }] = transactions;
       if (interval === 'month') {
         const renewDate = moment(endDate);
@@ -117,6 +121,7 @@ const BillingInformation = () => {
   const getInvoice = async () => {
     const response = await userInstance.post('/getBillingInvoice');
     if (response.data.code === 200) {
+      setLoading(false);
       setInvoiceList(response.data.invoicesList);
     }
   };
@@ -359,6 +364,7 @@ const BillingInformation = () => {
   /* ----------------------------- All payment handling functions here -------------------------- */
 
   const handleChangeSubscription = async () => {
+    setHidePlanInfo(true);
     setHideBilling(false);
     if (data.interval === 'year') setDisablePlanType(true);
     setShowCancelCheckout(true);
@@ -447,6 +453,18 @@ const BillingInformation = () => {
   //   </div>
   // );
 
+  if (loading) {
+    return (
+      <Wrapper>
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper>
       <Helmet>
@@ -473,7 +491,7 @@ const BillingInformation = () => {
             {
             !onFreePlan
               ? (
-                <Col span={16} hidden={hideBilling}>
+                <Col span={12} hidden={hideBilling}>
                   <Collapse defaultActiveKey={['1']} accordion>
                     <Panel header={t('billinginformation.label23')} key="1">
                       <div className="billing-info-form">
@@ -652,7 +670,7 @@ const BillingInformation = () => {
                                   </Form.Item>
                                 </Row>
                                 <Row gutter={[16, 0]}>
-                                  <Col span={24}>
+                                  {/* <Col span={24}>
                                     <div>
                                       <Elements stripe={stripePromise}>
                                         {showCancelCheckout ? (
@@ -681,7 +699,7 @@ const BillingInformation = () => {
                                         )}
                                       </Elements>
                                     </div>
-                                  </Col>
+                                  </Col> */}
                                 </Row>
                               </Form>
                             </div>
@@ -695,7 +713,7 @@ const BillingInformation = () => {
               : ''
           }
             {data ? (
-              <Col span={16}>
+              <Col span={12} hidden={hidePlanInfo}>
                 <Collapse defaultActiveKey={['1']} accordion>
                   <Panel
                     header={`${data.interval}ly Subscription Plan`}
@@ -739,13 +757,21 @@ const BillingInformation = () => {
                               </li>
                             </ul>
                           </div>
-                          <Button
-                            onClick={handleChangeSubscription}
-                            disabled={disableBtn}
-                          >
-                            {t('billinginformation.label18')}
-                          </Button>
-                          {canDowngrade ? (
+                          <div className="billing-action-buttons">
+                            <Button
+                              onClick={handleChangeSubscription}
+                              disabled={disableBtn}
+                            >
+                              {t('billinginformation.label18')}
+                            </Button>
+                            <Button
+                              onClick={handleCancelSubscription}
+                              disabled={disableBtn}
+                            >
+                              {t('strings.cancel')}
+                            </Button>
+                          </div>
+                          {/* {canDowngrade ? (
                             <Button
                               style={{ margin: '50px 30px 20px 10px' }}
                               onClick={handleChangeSubscription}
@@ -755,7 +781,8 @@ const BillingInformation = () => {
                             </Button>
                           ) : (
                             <Tooltip
-                              title="You are utilising all your subscribed units,to downgrade you have to delete some units"
+                              title="You are utilising all your
+                               subscribed units,to downgrade you have to delete some units"
                               color="gold"
                             >
                               <Button
@@ -765,7 +792,7 @@ const BillingInformation = () => {
                                 downgrade
                               </Button>
                             </Tooltip>
-                          )}
+                          )} */}
                         </Col>
 
                         <Col span={10}>
@@ -784,12 +811,6 @@ const BillingInformation = () => {
                               {end}
                             </p>
                           </div>
-                          <Button
-                            onClick={handleCancelSubscription}
-                            disabled={disableBtn}
-                          >
-                            {t('strings.cancel')}
-                          </Button>
                         </Col>
                       </Row>
                     </div>
@@ -797,7 +818,7 @@ const BillingInformation = () => {
                 </Collapse>
               </Col>
             ) : onFreePlan ? (
-              <Col span={16}>
+              <Col span={12}>
                 <Collapse defaultActiveKey={['1']} accordion>
                   <Panel
                     header="Free yearly Subscription Plan"
@@ -836,6 +857,93 @@ const BillingInformation = () => {
                 </Collapse>
               </Col>
             ) : ''}
+            <Col span={12}>
+              <Collapse defaultActiveKey={['4']} accordion>
+
+                <Panel header="Choose Your Payment Method" key="4">
+
+                  <div className="main-info-form">
+
+                    <h4>
+                      Visa Credit/Debit Card
+                      <img src={payment} alt="payment" className="payment-method-icon" />
+                    </h4>
+                    <p>
+                      If choosen this method $0.20 fee will be automatically
+                      added to your total. Tha fee is nott refundable and works as a prevention
+                      against ladybugs.
+                    </p>
+
+                    {/* <Form>
+                      <Row gutter={[16, 0]}>
+
+                        <Col span={9}>
+                          <Form.Item label="Card Number">
+                            <Input placeholder="**** **** **** 7117" />
+                          </Form.Item>
+                        </Col>
+
+                        <Col span={10}>
+                          <Form.Item label="Expiry Date">
+                            <Row>
+                              <Col span={12} style={{ marginRight: 10 }}>
+                                <Select>
+                                  <Select.Option value="demo">10</Select.Option>
+                                </Select>
+                              </Col>
+                              <Col span={10}>
+                                <Select>
+                                  <Select.Option value="demo">2019</Select.Option>
+                                </Select>
+                              </Col>
+                            </Row>
+                          </Form.Item>
+                        </Col>
+
+                        <Col span={5}>
+                          <Form.Item label="CVC Code">
+                            <Input placeholder="234" />
+                          </Form.Item>
+                        </Col>
+
+                      </Row>
+                    </Form> */}
+
+                    <Col span={24}>
+                      <div>
+                        <Elements stripe={stripePromise}>
+                          {showCancelCheckout ? (
+                            <CheckoutForm
+                              total={(total + Number.EPSILON) * 100}
+                              currency={currency}
+                              unitsSelected={unitsSelected}
+                              subscriptionType={subscriptionType}
+                              planType={planType}
+                              submitChange={submitChangesubscription}
+                              showCancelCheckout={showCancelCheckout}
+                              coupon={coupon}
+                            />
+                          ) : (
+                            <CheckoutForm
+                              total={(total + Number.EPSILON) * 100}
+                              currency={currency}
+                              unitsSelected={unitsSelected}
+                              subscriptionType={subscriptionType}
+                              planType={planType}
+                              hideBilling={setHideBilling}
+                              getData={getUser}
+                              getInvoice={getInvoice}
+                              coupon={coupon}
+                            />
+                          )}
+                        </Elements>
+                      </div>
+                    </Col>
+
+                  </div>
+                </Panel>
+              </Collapse>
+            </Col>
           </Row>
         </div>
       </div>

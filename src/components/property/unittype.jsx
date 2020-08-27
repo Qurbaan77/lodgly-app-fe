@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import Helmet from 'react-helmet';
 import './property.css';
 import {
-  Button, Tooltip, Modal, Form, Input, Spin,
+  Button, Tooltip, Modal, Form, Input,
 } from 'antd';
 import {
   PlusOutlined,
@@ -21,6 +21,7 @@ import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 import UserLock from '../userlock/userlock';
 import nounit from '../../assets/images/no-unit.png';
+import loader from '../../assets/images/cliploader.gif';
 
 const UnitType = () => {
   const { t } = useTranslation();
@@ -193,7 +194,11 @@ const UnitType = () => {
   if (loading) {
     return (
       <Wrapper>
-        <Spin size="large" />
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
       </Wrapper>
     );
   }

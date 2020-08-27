@@ -128,7 +128,7 @@
 }
 
 .billing-container .ant-collapse-item:last-child > .ant-collapse-content {
-  min-height: 225px;
+  min-height: 308px;
 }
 
 .main-info-form .ant-upload-list-item-card-actions-btn {
@@ -228,4 +228,24 @@
 
 .user-pic-success:hover span {
   opacity: 1;
+}
+.payment-method-icon {
+  position: absolute;
+  right: 35px;
+  top: 15px;
+}
+.main-info-form h4 {
+  padding-bottom: 11px;
+}
+.custom-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.billing-action-buttons {
+  padding-top: 50px;
+}
+
+.billing-action-buttons .ant-btn {
+  margin-right: 20px;
 }

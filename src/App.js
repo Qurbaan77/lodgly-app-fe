@@ -1,37 +1,9 @@
-import React, { Suspense, useState, useCallback } from 'react';
+import React, {
+  Suspense, useState, useCallback, lazy,
+} from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import Header from './components/header/header';
-import Footer from './components/footer/footer';
-import Login from './components/login/login';
-import Register from './components/register/register';
-import Sidenav from './components/navbar/sidenav/sidenav';
 import 'antd/dist/antd.css';
-import AddProperty from './components/property/addproperty';
-import PropertyList from './components/property/propertylist';
-import UnitType from './components/property/unittype';
-import ChannelManager from './components/property/channelmanager';
-import Groups from './components/property/group';
-import Task from './components/property/task';
-import AdminLogin from './components/admin-panel/login/login';
-import AdminSetting from './components/admin-panel/setting/setting';
-import CreateBookingPopup from './components/booking/createbookingpopup';
-import GuestPopup from './components/booking/guestpopup';
-import Booking from './components/booking/booking';
-import BookingFilter from './components/booking/filter';
-import DeletePopup from './components/property/deletepopup';
-import Property from './components/property/property';
-import AddUnitType from './components/property/addunittype';
-import Forget from './components/forget/forget';
-import Thankyou from './components/thankyou/thankyou';
-import Reset from './components/reset/reset';
-import Services from './components/property/services';
-import Calendar from './components/calendar/calendar';
-import Popup from './components/calendar/popup';
-import Company from './components/company/company';
-import Rates from './components/property/rates';
-import SeasonRates from './components/property/seasonrates';
-
 import { PrivateRoute, LoginRoute } from './Routes/PrivateRoute';
 import {
   SecureBooking,
@@ -53,6 +25,26 @@ import Stats from './components/stats/stats';
 import PageNotFound from './components/404/404';
 import './responsive.css';
 
+const Header = lazy(() => import('./components/header/header'));
+const Sidenav = lazy(() => import('./components/navbar/sidenav/sidenav'));
+const Footer = lazy(() => import('./components/footer/footer'));
+const Login = lazy(() => import('./components/login/login'));
+const AddProperty = lazy(() => import('./components/property/addproperty'));
+const PropertyList = lazy(() => import('./components/property/propertylist'));
+const UnitType = lazy(() => import('./components/property/unittype'));
+const ChannelManager = lazy(() => import('./components/property/channelmanager'));
+const Groups = lazy(() => import('./components/property/group'));
+const Task = lazy(() => import('./components/property/task'));
+const Booking = lazy(() => import('./components/booking/booking'));
+const Property = lazy(() => import('./components/property/property'));
+const AddUnitType = lazy(() => import('./components/property/addunittype'));
+const Forget = lazy(() => import('./components/forget/forget'));
+const Reset = lazy(() => import('./components/reset/reset'));
+const Services = lazy(() => import('./components/property/services'));
+const Calendar = lazy(() => import('./components/calendar/calendar'));
+const Popup = lazy(() => import('./components/calendar/popup'));
+const Rates = lazy(() => import('./components/property/rates'));
+const SeasonRates = lazy(() => import('./components/property/seasonrates'));
 const App = () => {
   const initialState = {
     booking: true,
@@ -78,14 +70,14 @@ const App = () => {
     <div className="App">
       <div className="main-wrapper">
         <>
-          <Suspense fallback={null}>
-            <Router>
+          <Router>
+            <Suspense fallback={null}>
               <Header getFeature={getFeature} />
               <main>
                 <div className="main_content">
                   <Switch>
                     <LoginRoute exact path="/" component={() => <Login />} />
-                    <LoginRoute
+                    {/* <LoginRoute
                       exact
                       path="/company"
                       component={() => <Company />}
@@ -94,7 +86,7 @@ const App = () => {
                       exact
                       path="/register"
                       component={() => <Register />}
-                    />
+                    /> */}
                     <PrivateRoute
                       exact
                       path="/sidenav"
@@ -164,7 +156,7 @@ const App = () => {
                       path="/channelmanager"
                       component={() => <ChannelManager />}
                     />
-                    <Route
+                    {/* <Route
                       exact
                       path="/admin"
                       component={() => <AdminLogin />}
@@ -173,21 +165,21 @@ const App = () => {
                       exact
                       path="/adminsetting"
                       component={() => <AdminSetting />}
-                    />
-                    {isSubUser ? (
+                    /> */}
+                    {/* {isSubUser ? (
                       <SecureBooking
                         exact
                         path="/createbookingpopup"
-                        component={() => <CreateBookingPopup />}
+                        component={<CreateBookingPopup />}
                       />
                     ) : (
                       <PrivateRoute
                         exact
                         path="/createbookingpopup"
-                        component={() => <CreateBookingPopup />}
+                        component={<CreateBookingPopup />}
                       />
-                    )}
-                    {isSubUser ? (
+                    )} */}
+                    {/* {isSubUser ? (
                       <SecureBooking
                         exact
                         path="/guestpopup"
@@ -199,7 +191,7 @@ const App = () => {
                         path="/guestpopup"
                         component={() => <GuestPopup />}
                       />
-                    )}
+                    )} */}
 
                     {isSubUser ? (
                       <SecureBooking
@@ -216,16 +208,16 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
-                    <PrivateRoute
+                    {/* <PrivateRoute
                       exact
                       path="/filter"
                       component={() => <BookingFilter />}
-                    />
-                    <PrivateRoute
+                    /> */}
+                    {/* <PrivateRoute
                       exact
                       path="/deletepopup"
                       component={() => <DeletePopup />}
-                    />
+                    /> */}
                     {isSubUser ? (
                       <SecureProperty
                         exact
@@ -268,11 +260,11 @@ const App = () => {
                       path="/reset"
                       component={() => <Reset />}
                     />
-                    <LoginRoute
+                    {/* <LoginRoute
                       exact
                       path="/thankyou"
                       component={() => <Thankyou />}
-                    />
+                    /> */}
                     {isSubUser ? (
                       <SecureService
                         exact
@@ -414,8 +406,8 @@ const App = () => {
                 draggable
                 pauseOnHover
               />
-            </Router>
-          </Suspense>
+            </Suspense>
+          </Router>
         </>
       </div>
     </div>

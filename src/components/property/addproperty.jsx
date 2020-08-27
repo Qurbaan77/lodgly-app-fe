@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 // import PlacesAutocomplete from 'react-places-autocomplete';
-import PlacesAutocomplete from 'react-places-autocomplete';
+import PlacesAutocomplete, {
+  geocodeByAddress,
+} from 'react-places-autocomplete';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import './property.css';
 import { toast } from 'react-toastify';
@@ -73,7 +75,8 @@ const AddProperty = () => {
   const [form] = Form.useForm();
   const [No, setNo] = useState(0);
   const [address, setAddress] = useState('');
-  const [country, setCountry] = useState(null);
+  const [country, setCountry] = useState('');
+  // const [state, setstate] = useState('');
   const organizationid = localStorage.getItem('organizationid');
   const history = useHistory();
 
@@ -195,18 +198,30 @@ const AddProperty = () => {
     setAddress(...address);
   };
 
-  const handleAddressSelect = (address) => {
-    // console.log('Address', address);
-    // geocodeByAddress(address)
-    //   .then((results) => getLatLng(results[0]))
-    //   .then((latLng) => {
-    //     console.log('Success', latLng);
-    //     getAddress(latLng.lat, latLng.lng).then(console.log).catch(console.error);
-    //   })
-    //   .catch((error) => console.error('Error', error));
+  // const handleAddressSelect = (address) => {
+  //   console.log('Address', address);
+  //   geocodeByAddress(address)
+  //     .then((results) => getLatLng(results[0]))
+  //     .then((latLng) => {
+  //       console.log('Success', latLng);
+  //     })
+  //     .catch((error) => console.error('Error', error));
 
+  //   form.setFieldsValue({
+  //     address,
+  //   });
+  // };
+
+  const handleAddressSelect = async (address) => {
+    const geocodeAddress = await geocodeByAddress(address);
+    const addressComponent = geocodeAddress[0].address_components.reverse();
+    const zip = addressComponent[0].long_name;
+    const country = addressComponent[1].long_name;
+    const state = addressComponent[2].long_name;
+    const city = addressComponent[3].long_name;
+    setCountry(country);
     form.setFieldsValue({
-      address,
+      address, country, state, zip, city,
     });
   };
 
@@ -382,7 +397,7 @@ const AddProperty = () => {
                           },
                         ]}
                       >
-                        <CountryDropdown onChange={(val) => setCountry(val)} />
+                        <CountryDropdown value={country} onChange={(val) => setCountry(val)} />
                       </Form.Item>
                     </Col>
 

@@ -4,7 +4,7 @@ import './team.css';
 import { toast } from 'react-toastify';
 import Avatar from 'react-avatar';
 import { useTranslation } from 'react-i18next';
-import { Button, Tooltip, Spin } from 'antd';
+import { Button, Tooltip } from 'antd';
 import {
   PlusOutlined,
   DeleteOutlined,
@@ -19,6 +19,7 @@ import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
 import DeletePopup from './deletepopup';
+import loader from '../../assets/images/cliploader.gif';
 
 const TeamListing = () => {
   const { t } = useTranslation();
@@ -143,7 +144,11 @@ const TeamListing = () => {
   if (loading) {
     return (
       <Wrapper>
-        <Spin size="large" />
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
       </Wrapper>
     );
   }

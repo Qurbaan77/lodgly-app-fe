@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 // import moment from 'moment';
 import './booking.css';
 import {
-  Form, Button, Row, Col, Tooltip, Tag, Select, Checkbox, Spin,
+  Form, Button, Row, Col, Tooltip, Tag, Select, Checkbox,
 } from 'antd';
 import {
   FormOutlined,
@@ -26,6 +26,7 @@ import { userInstance } from '../../axios/axiosconfig';
 import filterIcon from '../../assets/images/menu/filter-icon.png';
 import cancelIcon from '../../assets/images/menu/cancel-icon.png';
 import nobooking from '../../assets/images/no-booking.png';
+import loader from '../../assets/images/cliploader.gif';
 // import noproperty from '../../assets/images/property-placeholder.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
 import editIcon from '../../assets/images/menu/pencil-icon.png';
@@ -434,7 +435,11 @@ const Booking = () => {
   if (loading) {
     return (
       <Wrapper>
-        <Spin size="large" />
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
       </Wrapper>
     );
   }

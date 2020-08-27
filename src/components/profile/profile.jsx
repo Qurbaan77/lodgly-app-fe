@@ -21,6 +21,7 @@ import Wrapper from '../wrapper';
 import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
 import favicon from '../../assets/images/logo-mobile.png';
+import arrow from '../../assets/images/select-arrow.png';
 import { server } from '../../config/keys';
 
 const { Panel } = Collapse;
@@ -583,16 +584,18 @@ const Profile = () => {
                           </Col>
 
                           <Col span={12}>
-                            <Form.Item name="country" label="Country">
+                            <Form.Item name="country" label="Country" className="custom-select">
                               <CountryDropdown
                                 onChange={(val) => setCountry(val)}
                               />
+                              <img src={arrow} alt="" />
                             </Form.Item>
                           </Col>
 
                           <Col span={12}>
-                            <Form.Item name="state" label={t('strings.state')}>
+                            <Form.Item name="state" label={t('strings.state')} className="custom-select">
                               <RegionDropdown country={country} />
+                              <img src={arrow} alt="" />
                             </Form.Item>
                           </Col>
 

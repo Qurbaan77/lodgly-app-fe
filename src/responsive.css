@@ -429,7 +429,12 @@ input[type=number]{
 .Toastify__close-button>svg {
     margin-top: 5px!important;
 }
-
+.billing-information .ant-collapse > .ant-collapse-item > .ant-collapse-header .anticon {
+    display: none;
+}
+.ant-result.ant-result-404 {
+    margin-top: 141px;
+}
 /******************************************************************************************************/
 
                                 /*********** Media Query ***********/   
@@ -947,6 +952,14 @@ input[type=number]{
     margin-left: 2%;
 }
 
+.billing-information .ant-collapse > .ant-collapse-item > .ant-collapse-header .anticon {
+    display: inline-block;
+}
+
+
+.payment-method-icon {
+    display: none;
+}
 }
 
 
