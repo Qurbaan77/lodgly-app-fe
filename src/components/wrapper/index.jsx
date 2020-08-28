@@ -31,10 +31,7 @@ const Wrapper = ({
       <Layout>
         <Sidenav
           menutoggle={menutoggle}
-          img={img}
-          name={name}
           handleMenuSide={handleMenuSide}
-          getUserInfo={getUserInfo}
         />
         <Layout className="site-layout">
           <TopHeader
