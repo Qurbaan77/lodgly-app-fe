@@ -43,7 +43,6 @@ const Invoice = () => {
   const { t } = useTranslation();
   // const { Option } = Select;
   const history = useHistory();
-  const [propertyData, setPropertyData] = useState([]);
 
   const [topNavId, setTopNavId] = useState(null);
   const [visible, setVisible] = useState(false);
@@ -147,22 +146,21 @@ const Invoice = () => {
 
   const [{ invoicesWrite, invoicesDelete, userId }] = userCred || [{}];
   const canWrite = invoicesWrite;
-
-  const getProperty = useCallback(async () => {
-    const response = await userInstance.post('/fetchProperty', {
-      affiliateId: userId,
-    });
-    const data2 = [];
-    const data = response.data.propertiesData;
-    data
-      .filter((el) => el.id === parseInt(topNavId, 10))
-      .forEach((filterData) => {
-        data2.push(filterData);
-      });
-    if (response.data.code === 200) {
-      setPropertyData(data2.length > 0 ? data2 : data);
-    }
-  }, [userId, topNavId]);
+  // const getProperty = useCallback(async () => {
+  //   const response = await userInstance.post('/fetchProperty', {
+  //     affiliateId: userId,
+  //   });
+  //   const data2 = [];
+  //   const data = response.data.propertiesData;
+  //   data
+  //     .filter((el) => el.id === parseInt(topNavId, 10))
+  //     .forEach((filterData) => {
+  //       data2.push(filterData);
+  //     });
+  //   if (response.data.code === 200) {
+  //     setPropertyData(data2.length > 0 ? data2 : data);
+  //   }
+  // }, [userId, topNavId]);
 
   const getData = useCallback(async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
@@ -176,7 +174,6 @@ const Invoice = () => {
     }
     const inb = await userInstance.post('getInvoice', { affiliateId: userId });
     if (inb.data.code === 200) {
-      setLoading(false);
       inb.data.invoiceData.forEach((el, i) => {
         el[`checked${i}`] = false;
       });
@@ -216,14 +213,15 @@ const Invoice = () => {
     }
   };
   useEffect(() => {
-    const data = propertyInfo.filter((property) => property.id === topNavId);
+    setTopNavId(parseInt(localStorage.getItem('topNavId'), 10));
+    const data = propertyInfo.filter((property) => property.id === parseInt(localStorage.getItem('topNavId'), 10));
     setCurrentPropertyInfo(data);
   }, [topNavId, propertyInfo]);
 
   useEffect(() => {
     getData();
-    getProperty();
-  }, [getData, getProperty]);
+    // getProperty();
+  }, [getData]);
 
   const handleDownload = () => {
     const urls = [];
@@ -549,7 +547,7 @@ const Invoice = () => {
       )}
     </>
   );
-  if (propertyData.length < 1) {
+  if (propertyInfo.length < 1) {
     return (
       <Wrapper>
         <div className="add-team-page">

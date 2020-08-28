@@ -189,7 +189,7 @@ const Profile = () => {
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
-    <Wrapper img={img} name={userName} getUserInfo={getUserInfo}>
+    <Wrapper>
       <Helmet>
         <link rel="icon" href={favicon} />
         <title>

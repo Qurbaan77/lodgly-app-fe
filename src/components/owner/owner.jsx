@@ -691,7 +691,7 @@ const Owner = () => {
                     onSelect={(e) => handlePropertySelect(e)}
                   >
                     {propertyData.map((el) => (
-                      <Option value={el.id}>{el.propertyName}</Option>
+                      <Option value={el.id} key={el.id}>{el.propertyName}</Option>
                     ))}
                   </Select>
                   <img src={arrow} alt="" />

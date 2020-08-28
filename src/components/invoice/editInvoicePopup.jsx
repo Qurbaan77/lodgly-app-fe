@@ -31,6 +31,16 @@ const EditInvoicePopup = (props) => {
     userData, property, invoiceData, invoiceItems, setInvoiceItems, close, visible, handleOk,
     handleCancel,
   } = props;
+
+  function useUpdate() {
+    const [, setTick] = useState(0);
+    const update = useCallback(() => {
+      setTick((tick) => tick + 1);
+    }, []);
+    return update;
+  }
+
+  const update = useUpdate();
   const [form] = Form.useForm();
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
@@ -48,8 +58,9 @@ const EditInvoicePopup = (props) => {
   const [cancellation, setCancellation] = useState(false);
   const [discountPer, setDiscountPer] = useState(null);
   const [deleteInvoiceItemId, setDeleteInvoiecItemId] = useState(null);
-  const [itemState, setItemState] = useState([]);
+  // const [itemState, setItemState] = useState([]);
   const [issueState, setIssueState] = useState(false);
+  const [download, setDownload] = useState(false);
   const updateValues = useCallback(() => {
     if (visible) {
       const date0 = moment(invoiceData.date);
@@ -76,16 +87,16 @@ const EditInvoicePopup = (props) => {
       setEmail(invoiceData.email);
       setVatId(invoiceData.vat);
       setAddress(invoiceData.address);
-      setItemState(invoiceItems);
+      // setItemState(invoiceItems);
       if (invoiceItems.length) {
         invoiceItems.forEach((el, i) => {
           form.setFieldsValue({
             [`itemDescription${i}`]: el.itemDescription,
-            [`quantity${i}`]: el.quantity,
-            [`price${i}`]: el.price,
-            [`amount${i}`]: el.amount,
-            [`discount${i}`]: el.discount,
-            [`discountPer${i}`]: el.discountPer,
+            [`itemQuantity${i}`]: el.quantity,
+            [`itemPrice${i}`]: el.price,
+            [`itemAmount${i}`]: el.amount,
+            [`itemDiscount${i}`]: el.discount,
+            [`itemDiscountPer${i}`]: el.discountPer,
             [`itemTotal${i}`]: el.itemTotal,
           });
         });
@@ -112,18 +123,18 @@ const EditInvoicePopup = (props) => {
     if (invoiceItems.length) {
       invoiceItems.forEach((el, i) => {
         const ele = el;
-        const q = 'quantity';
-        const p = 'price';
-        const a = 'amount';
-        const d0 = 'discountPer';
-        const d1 = 'discount';
+        const q = 'itemQuantity';
+        const p = 'itemPrice';
+        const a = 'itemAmount';
+        const d0 = 'itemDiscountPer';
+        const d1 = 'itemDiscount';
         const it = 'itemTotal';
         ele.id = el.id || null;
-        ele.quantity = valuesCopy[q + i];
-        ele.price = valuesCopy[p + i];
-        ele.amount = valuesCopy[a + i];
-        ele.discountPer = valuesCopy[d0 + i];
-        ele.discount = valuesCopy[d1 + i];
+        ele.itemQuantity = valuesCopy[q + i];
+        ele.itemPrice = valuesCopy[p + i];
+        ele.itemAmount = valuesCopy[a + i];
+        ele.itemDiscountPer = valuesCopy[d0 + i];
+        ele.itemDiscount = valuesCopy[d1 + i];
         ele.itemTotal = valuesCopy[it + i];
         total += ele.itemTotal;
         itemData.push(ele);
@@ -152,14 +163,16 @@ const EditInvoicePopup = (props) => {
       element.click();
       props.getData();
       props.close();
-      let msg;
-      if (issueState) {
-        (msg = 'Invoice issued');
-        toast.success(msg, { containerId: 'B' });
-      } else {
-        toast.success('Invoice drafted successfully', { containerId: 'B' });
+      if (!download) {
+        let msg;
+        if (issueState) {
+          (msg = 'Invoice issued');
+          toast.success(msg, { containerId: 'B' });
+        } else {
+          toast.success('Invoice drafted successfully', { containerId: 'B' });
+        }
+        setShowLoader(true);
       }
-      setShowLoader(true);
     } else {
       toast.error('server error please try again', { containerId: 'B' });
       setShowLoader(true);
@@ -172,8 +185,8 @@ const EditInvoicePopup = (props) => {
     setQuantity(e.target.value);
     if (ele.price) {
       form.setFieldsValue({
-        [`amount${i}`]: e.target.value * paisa,
-        [`discount${i}`]: (e.target.value * paisa) * (perDiscount / 100),
+        [`itemAmount${i}`]: e.target.value * paisa,
+        [`itemDiscount${i}`]: (e.target.value * paisa) * (perDiscount / 100),
         [`itemTotal${i}`]: e.target.value * paisa - (e.target.value * paisa) * (perDiscount / 100),
       });
       invoiceItems.forEach((el) => {
@@ -181,7 +194,8 @@ const EditInvoicePopup = (props) => {
           el.itemTotal = e.target.value * paisa - (e.target.value * paisa) * (perDiscount / 100);
         }
       });
-      setItemState(invoiceItems);
+      setInvoiceItems(invoiceItems);
+      // setItemState(invoiceItems);
     }
   };
 
@@ -189,12 +203,12 @@ const EditInvoicePopup = (props) => {
     const { discountPer: perDiscount } = ele;
     setPrice(e.target.value);
     form.setFieldsValue({
-      [`amount${i}`]: quantity * e.target.value,
+      [`itemAmount${i}`]: quantity * e.target.value,
       [`itemTotal${i}`]: quantity * e.target.value,
     });
     if (ele.discountPer) {
       form.setFieldsValue({
-        [`discount${i}`]: (quantity * e.target.value) * (perDiscount / 100),
+        [`itemDiscount${i}`]: (quantity * e.target.value) * (perDiscount / 100),
       });
     }
     setAmount(quantity * e.target.value);
@@ -203,14 +217,15 @@ const EditInvoicePopup = (props) => {
         el.itemTotal = quantity * e.target.value;
       }
     });
-    setItemState(invoiceItems);
+    setInvoiceItems(invoiceItems);
+    // setItemState(invoiceItems);
   };
 
   const handleDiscount = (e, ele, i) => {
     const element = ele;
     if (ele.discountPer) {
       form.setFieldsValue({
-        [`discount${i}`]: (element.amount) * (e.target.value / 100),
+        [`temDiscount${i}`]: (element.amount) * (e.target.value / 100),
         [`itemTotal${i}`]: element.amount - (element.amount) * (e.target.value / 100),
       });
       invoiceItems.forEach((el) => {
@@ -218,20 +233,24 @@ const EditInvoicePopup = (props) => {
           el.itemTotal = element.amount - (element.amount) * (e.target.value / 100);
         }
       });
-      setItemState(invoiceItems);
+      setInvoiceItems(invoiceItems);
+      // setItemState(invoiceItems);
+      update();
+    } else {
+      setDiscountPer(e.target.value);
+      // setDiscount(amount - (amount) * (e.target.value / 100));
+      form.setFieldsValue({
+        [`itemDiscount${i}`]: (amount) * (e.target.value / 100),
+        [`itemTotal${i}`]: amount - (amount) * (e.target.value / 100),
+      });
+      invoiceItems.forEach((el) => {
+        if (el.id === ele.id) {
+          el.itemTotal = amount - (amount) * (e.target.value / 100);
+        }
+      });
+      // setItemState(invoiceItems);
+      update();
     }
-    setDiscountPer(e.target.value);
-    // setDiscount(amount - (amount) * (e.target.value / 100));
-    form.setFieldsValue({
-      [`discount${i}`]: (amount) * (e.target.value / 100),
-      [`itemTotal${i}`]: amount - (amount) * (e.target.value / 100),
-    });
-    invoiceItems.forEach((el) => {
-      if (el.id === ele.id) {
-        el.itemTotal = amount - (amount) * (e.target.value / 100);
-      }
-    });
-    setItemState(invoiceItems);
   };
 
   const addMorePanel = () => {
@@ -253,7 +272,7 @@ const EditInvoicePopup = (props) => {
         el.itemTotal = 0;
       }
     });
-    setItemState(invoiceItems);
+    // setItemState(invoiceItems);
   };
 
   const handleCancelllation = async () => {
@@ -286,6 +305,11 @@ const EditInvoicePopup = (props) => {
     props.close();
   };
 
+  const preventTypeE = (evt) => {
+    if ((evt.which !== 8 && evt.which !== 0 && evt.which < 48) || evt.which > 57) {
+      evt.preventDefault();
+    }
+  };
   return (
     <Modal
       title={t('invoice.heading2')}
@@ -513,7 +537,7 @@ const EditInvoicePopup = (props) => {
 
         {invoiceItems.length
           ? invoiceItems.map((ele, j) => (
-            <div className="additional-fields">
+            <div className="additional-fields" key={ele.itemDescription}>
               <Row style={{ alignItems: 'center' }}>
                 <Col span={6}>
                   <Form.Item
@@ -532,7 +556,7 @@ const EditInvoicePopup = (props) => {
 
                 <Col span={2}>
                   <Form.Item
-                    name={`quantity${j}`}
+                    name={`itemQuantity${j}`}
                     label="Qty."
                     rules={[
                       {
@@ -543,7 +567,7 @@ const EditInvoicePopup = (props) => {
                   >
                     <Input
                       type="number"
-                      onkeydown="return event.keyCode !== 69"
+                      onKeyPress={preventTypeE}
                         // value={quantity}
                       onChange={(e) => handleQuantity(e, ele, j)}
                     />
@@ -552,7 +576,7 @@ const EditInvoicePopup = (props) => {
 
                 <Col span={3}>
                   <Form.Item
-                    name={`price${j}`}
+                    name={`itemPrice${j}`}
                     label={t('strings.price')}
                     rules={[
                       {
@@ -563,7 +587,7 @@ const EditInvoicePopup = (props) => {
                   >
                     <Input
                       type="number"
-                      onkeydown="return event.keyCode !== 69"
+                      onKeyPress={preventTypeE}
                       value={price}
                       onChange={(e) => handlePrice(e, j, ele)}
                     />
@@ -574,7 +598,7 @@ const EditInvoicePopup = (props) => {
                   {/* <div className="amount-field">
                     <p>{ele.amount}</p>
                   </div> */}
-                  <Form.Item name={`amount${j}`} label="Price">
+                  <Form.Item name={`itemAmount${j}`} label="Price">
                     <Input
                       disabled
                       onChange={(e) => setAmount(e.target.value)}
@@ -584,12 +608,12 @@ const EditInvoicePopup = (props) => {
 
                 <Col span={2} className="label-hidden">
                   <Form.Item
-                    name={`discountPer${j}`}
+                    name={`itemDiscountPer${j}`}
                     label={t('strings.discount')}
                   >
                     <Input
                       type="number"
-                      onkeydown="return event.keyCode !== 69"
+                      onKeyPress={preventTypeE}
                       placeholder="%"
                       value={discountPer}
                       onChange={(e) => handleDiscount(e, ele, j)}
@@ -598,7 +622,7 @@ const EditInvoicePopup = (props) => {
                 </Col>
 
                 <Col span={3}>
-                  <Form.Item name={`discount${j}`} label="Discount">
+                  <Form.Item name={`itemDiscount${j}`} label="Discount">
                     <Input disabled />
                   </Form.Item>
                 </Col>
@@ -646,7 +670,7 @@ const EditInvoicePopup = (props) => {
                 :
                 {' '}
                 <span>
-                  {itemState
+                  {invoiceItems
                     .map((el) => el.itemTotal)
                     .reduce((a, b) => a + (b || 0), 0).toFixed(2)}
                   {' '}
@@ -695,12 +719,12 @@ const EditInvoicePopup = (props) => {
             }}
           >
             <Form.Item>
-              <Button className="print-btn" type="secondry" htmlType="submit">
+              <Button className="print-btn" type="secondry" htmlType="submit" onClick={() => setDownload(true)}>
                 <img src={printIcon} alt="" />
                 {' '}
                 {t('strings.print')}
               </Button>
-              <Button className="pdf-btn" type="primary" htmlType="submit">
+              <Button className="pdf-btn" type="primary" htmlType="submit" onClick={() => setDownload(true)}>
                 <img src={pdfIcon} alt="" />
                 {' '}
                 PDF

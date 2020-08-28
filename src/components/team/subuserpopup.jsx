@@ -53,13 +53,6 @@ const SubUserPopup = ({
   const [{ userId }] = userCred || [{}];
 
   const handleSelect = (value) => {
-    if (value === 'read') {
-      if (clickedOnRead) {
-        setClickedOnRead(false);
-      } else {
-        setClickedOnRead(true);
-      }
-    }
     if (value === 'fullaccess') {
       setHideDelete(false);
       setHideWrite(false);
@@ -347,12 +340,15 @@ const SubUserPopup = ({
               <Form.Item label={t('subuserpopup.label25')} name="role">
                 <Select
                   placeholder={t('subuserpopup.label3')}
-                  onSelect={(value) => handleSelect(value)}
+                  onSelect={(value) => {
+                    handleSelect(value);
+                    return clickedOnRead ? setClickedOnRead(false) : setClickedOnRead(true);
+                  }}
                 >
                   <Select.Option value="read">Read</Select.Option>
                   <Select.Option value="write">Write</Select.Option>
                   <Select.Option value="fullaccess">Full Access</Select.Option>
-                  <Select.Option value="fullaccess" hidden>custom</Select.Option>
+                  <Select.Option value="custom" hidden>custom</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
