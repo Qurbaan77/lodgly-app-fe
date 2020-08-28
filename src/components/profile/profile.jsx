@@ -85,7 +85,7 @@ const Profile = () => {
         timezone: body[0].timeZone,
       });
     }
-  }, [form1]);
+  }, [form1, form2]);
 
   const getCompanyInfo = useCallback(async () => {
     const companyName = window.location.hostname.split('.');
