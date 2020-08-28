@@ -48,7 +48,7 @@ const Profile = () => {
   const userId = localStorage.getItem('userId');
   const organizationid = localStorage.getItem('organizationid');
   const [img, setImg] = useState('');
-  const [userName, setUserName] = useState('');
+  // const [userName, setUserName] = useState('');
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
@@ -72,9 +72,9 @@ const Profile = () => {
       if (body[0].image !== null) {
         setImg(body[0].image);
       }
-      if (body[0].fullname !== null) {
-        setUserName(body[0].fullname);
-      }
+      // if (body[0].fullname !== null) {
+      //   setUserName(body[0].fullname);
+      // }
       form1.setFieldsValue({
         fullname: body[0].fullname,
         address: body[0].address,
