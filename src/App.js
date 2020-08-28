@@ -473,8 +473,6 @@ const App = () => {
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
 
-                    <Route exact path="/rates" component={() => <Rates />} />
-                    <Route exact path="/seasonrates" component={() => <SeasonRates />} />
                     <Route component={PageNotFound} />
 
                   </Switch>
