@@ -260,7 +260,12 @@ const Sidenav = ({
           <Link to="/calendar">{t('sidebar.menu2')}</Link>
         </Menu.Item>
 
-        <SubMenu
+        <Menu.Item className="property-nav" hidden={disableProperties}>
+          <img src={propertyIcon} alt="property-icon" />
+          <Link to="/propertylist">{t('sidebar.menu3')}</Link>
+        </Menu.Item>
+
+        {/* <SubMenu
           className={`${disableProperties ? 'hide-prop' : 'property-nav'}`}
           onClick={() => handleMenu('toggle')}
           key="2"
@@ -269,12 +274,6 @@ const Sidenav = ({
             <div>
               <img src={propertyIcon} alt="property-icon" />
               <Link to="/propertylist">{t('sidebar.menu3')}</Link>
-              {/* <img
-                src={arrow}
-                alt=""
-                className="menu-arrow"
-                hidden={!propertyData.length}
-              /> */}
             </div>
           )}
         >
@@ -292,7 +291,7 @@ const Sidenav = ({
               </Link>
             </Menu.Item>
           ))} */}
-        </SubMenu>
+        {/* </SubMenu> */}
 
         <SubMenu
           title={(

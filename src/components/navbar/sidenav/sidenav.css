@@ -219,9 +219,7 @@ margin-right: 10px;
   display: none;
 }
 
-.ant-menu-submenu .ant-menu-submenu-arrow {
-  display: none;
-}
+
 .main-menu li .menu-arrow {
   width: 11px;
   position: absolute;

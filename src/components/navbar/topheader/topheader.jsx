@@ -24,6 +24,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
   const [propertyData, setPropertyData] = useState([]);
   const [propertyName, setPropertyName] = useState();
   const [menu, setMenu] = useState();
+  const [isOnProperty, setIsOnProperty] = useState(false);
 
   const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
 
@@ -60,6 +61,10 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
   };
 
   useEffect(() => {
+    const { pathname } = window.location;
+    if (pathname === '/propertylist') {
+      setIsOnProperty(true);
+    }
     async function getData() {
       const response = await userInstance.post('/fetchProperty', {
         affiliateId: userId,
@@ -133,13 +138,13 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
           <SearchOutlined />
         </div>
 
-        <Dropdown overlay={menu} trigger={['click']}>
+        <Dropdown overlay={menu} trigger={['click']} disabled={isOnProperty}>
           <div
             className="ant-dropdown-link"
             onClick={(e) => selectProperty(e)}
             role="presentation"
           >
-            {propertyName || t('header.searchplaceholder')}
+            {!isOnProperty ? propertyName || t('header.searchplaceholder') : 'Properties'}
             {' '}
             <VerticalAlignMiddleOutlined />
           </div>
