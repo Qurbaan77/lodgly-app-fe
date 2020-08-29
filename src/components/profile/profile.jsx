@@ -48,7 +48,7 @@ const Profile = () => {
   const userId = localStorage.getItem('userId');
   const organizationid = localStorage.getItem('organizationid');
   const [img, setImg] = useState('');
-  const [userName, setUserName] = useState('');
+  // const [userName, setUserName] = useState('');
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
@@ -68,24 +68,22 @@ const Profile = () => {
     const response = await userInstance.post('/getuserData');
     // console.log(response);
     const body = response.data.userData;
-    if (response.data.code === 200) {
-      if (body.length > 0) {
-        if (body[0].image !== null) {
-          setImg(body[0].image);
-        }
-        if (body[0].fullname !== null) {
-          setUserName(body[0].fullname);
-        }
-        form1.setFieldsValue({
-          fullname: body[0].fullname,
-          address: body[0].address,
-          email: body[0].email,
-          phone: body[0].phone,
-        });
-        form2.setFieldsValue({
-          timezone: body[0].timeZone,
-        });
+    if (body.length > 0) {
+      if (body[0].image !== null) {
+        setImg(body[0].image);
       }
+      // if (body[0].fullname !== null) {
+      //   setUserName(body[0].fullname);
+      // }
+      form1.setFieldsValue({
+        fullname: body[0].fullname,
+        address: body[0].address,
+        email: body[0].email,
+        phone: body[0].phone,
+      });
+      form2.setFieldsValue({
+        timezone: body[0].timeZone,
+      });
     }
   }, [form1, form2]);
 
@@ -206,7 +204,7 @@ const Profile = () => {
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
-    <Wrapper img={img} name={userName} getUserInfo={getUserInfo}>
+    <Wrapper>
       <Helmet>
         <link rel="icon" href={favicon} />
         <title>

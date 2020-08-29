@@ -10,7 +10,7 @@ import {
 import { userInstance } from '../../../axios/axiosconfig';
 // import user from '../../../assets/images/profile_user.jpg';
 
-const UserProfile = (props) => {
+const UserProfile = () => {
   const { t } = useTranslation();
   const [img, setImg] = useState('');
   const [name, setName] = useState('');
@@ -44,7 +44,7 @@ const UserProfile = (props) => {
 
   useEffect(() => {
     getUserInfo();
-  }, [props, getUserInfo]);
+  }, [getUserInfo]);
 
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ email, billingWrite }] = userCred || [{}];

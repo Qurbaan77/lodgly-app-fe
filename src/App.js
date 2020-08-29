@@ -396,7 +396,6 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
-
                     {isSubUser ? (
                       <SecureProperty
                         exact
@@ -475,6 +474,7 @@ const App = () => {
                     )}
 
                     <Route component={PageNotFound} />
+
                   </Switch>
                 </div>
               </main>
