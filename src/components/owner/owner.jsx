@@ -15,6 +15,7 @@ import {
   Modal,
   Row,
   Col,
+  Switch,
 } from 'antd';
 import { PlusOutlined, DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -26,7 +27,6 @@ import property1 from '../../assets/images/property-1.png';
 import owner from '../../assets/images/profile_user.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
 import loader from '../../assets/images/cliploader.gif';
-import arrow from '../../assets/images/select-arrow.png';
 import subuser from '../../assets/images/subuser.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
@@ -49,6 +49,7 @@ const Owner = () => {
   const [selectedPropertyId, setSelectedPropertyId] = useState([]);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [access, setAccess] = useState(false);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
 
@@ -132,6 +133,7 @@ const Owner = () => {
         arr.push(filter.id);
       });
       setSelectedPropertyId(arr);
+      setAccess(data.isaccess);
       form.setFieldsValue({
         id: data.id,
         firstname: data.fname,
@@ -166,7 +168,7 @@ const Owner = () => {
     const response = await userInstance.post('/addOwner', copyValues);
     const statusCode = response.data.code;
     if (statusCode === 200) {
-      toast.success('owner added successfully', { containerId: 'B' });
+      toast.success('Data save successfully', { containerId: 'B' });
       setVisible(false);
       getSubUserData();
       getPropertyData();
@@ -255,13 +257,11 @@ const Owner = () => {
                             <div className="owner-title">
                               <h5>{`${el.fname} ${el.lname}`}</h5>
                               <span>
-                                {t('owner.label4')}
+                                {el.citizenship !== null
+                                  ? `${el.citizenship},`
+                                  : ''}
                                 {' '}
-                                |
-                                {el.citizenship}
-                                ,
-                                {' '}
-                                {el.country}
+                                {el.country !== null ? `${el.country},` : ''}
                               </span>
                             </div>
                           </div>
@@ -273,7 +273,12 @@ const Owner = () => {
                           <div className="owner-property">
                             {properties.map((ele) => {
                               if (ele.ownerId === el.id) {
-                                return <img src={property1} alt="property1" />;
+                                return (
+                                  <img
+                                    src={ele.image || property1}
+                                    alt="property1"
+                                  />
+                                );
                               }
                               return null;
                             })}
@@ -482,6 +487,17 @@ const Owner = () => {
                 </Col>
               </Row>
 
+              <Row style={{ alignItems: 'center' }}>
+                <Col span={24}>
+                  <Form.Item label="Access to the owner panel" name="access">
+                    <Switch
+                      checked={access}
+                      onClick={() => setAccess(!access)}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+
               <Row style={{ alignItems: 'center', textAlign: 'right' }}>
                 <Col span={24}>
                   <Form.Item>
@@ -624,10 +640,8 @@ const Owner = () => {
                     label={t('owner.label11')}
                     name="country"
                     style={{ paddingRight: 20 }}
-                    className="custom-select"
                   >
                     <CountryDropdown onChange={(val) => setCountry(val)} />
-                    <img src={arrow} alt="" />
                   </Form.Item>
                 </Col>
               </Row>
@@ -638,10 +652,8 @@ const Owner = () => {
                     label={t('strings.citizenship')}
                     name="citizenship"
                     style={{ paddingRight: 20 }}
-                    className="custom-select"
                   >
                     <RegionDropdown country={country} />
-                    <img src={arrow} alt="" />
                   </Form.Item>
                 </Col>
 
@@ -675,7 +687,6 @@ const Owner = () => {
                   style={{ width: '100%' }}
                   name="properties"
                   label={t('owner.label21')}
-                  className="custom-select"
                   rules={[
                     {
                       required: true,
@@ -691,10 +702,9 @@ const Owner = () => {
                     onSelect={(e) => handlePropertySelect(e)}
                   >
                     {propertyData.map((el) => (
-                      <Option value={el.id} key={el.id}>{el.propertyName}</Option>
+                      <Option value={el.id}>{el.propertyName}</Option>
                     ))}
                   </Select>
-                  <img src={arrow} alt="" />
                 </Form.Item>
               </Row>
 
@@ -702,6 +712,14 @@ const Owner = () => {
                 <Col span={24}>
                   <Form.Item label="Notes" name="notes">
                     <Input.TextArea />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row style={{ alignItems: 'center' }}>
+                <Col span={24}>
+                  <Form.Item label="Access to the owner panel" name="access">
+                    <Switch />
                   </Form.Item>
                 </Col>
               </Row>
