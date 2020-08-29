@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './guests.css';
-import {
-  Table, Button, Modal,
-} from 'antd';
+import { Table, Button, Modal } from 'antd';
 import Helmet from 'react-helmet';
-import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
+import { toast } from 'react-toastify';
 import favicon from '../../assets/images/logo-mobile.png';
 import Wrapper from '../wrapper';
 import companyicon from '../../assets/images/company-icon.png';
@@ -12,8 +11,54 @@ import actionicon from '../../assets/images/action-icon.png';
 import editicon from '../../assets/images/edit-icon.png';
 import deleteicon from '../../assets/images/delete-icon.png';
 import AddCompany from './addcompanypopup';
+import { userInstance } from '../../axios/axiosconfig';
+import loader from '../../assets/images/cliploader.gif';
+import DeletePopup from '../property/deletepopup';
+import nocompany from '../../assets/images/company-placeholder.png';
 
 const CompanyList = () => {
+  const [companyData, setCompanyData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [editData, showEditData] = useState({});
+  const [currId, setCurrId] = useState(0);
+  const [visibiltyOFDelete, setVisibiltyOFDelete] = useState(false);
+
+  const getData = useCallback(async () => {
+    const response = await userInstance.post('/getCompanyList');
+    if (response.data.code === 200) {
+      setCompanyData(response.data.companyData);
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    getData();
+  }, [getData]);
+
+  const edit = (record) => {
+    showEditData(record);
+    setVisible(true);
+  };
+
+  const delRow = (id) => {
+    setVisibiltyOFDelete(true);
+    setCurrId(id);
+  };
+
+  const remove = async () => {
+    const values = {
+      id: currId,
+    };
+    const response = await userInstance.post('/deleteCompany', values);
+    if (response.data.code === 200) {
+      setVisibiltyOFDelete(false);
+      getData();
+      toast.success('Successfully deleted company', { containerId: 'B' });
+    } else {
+      toast.error('Server error please try again', { containerId: 'B' });
+    }
+  };
+
   const columns = [
     {
       title: 'Name',
@@ -25,7 +70,7 @@ const CompanyList = () => {
     },
     {
       title: 'Vat ID',
-      dataIndex: 'vat',
+      dataIndex: 'vatId',
       sorter: {
         compare: (a, b) => a.chinese - b.chinese,
         multiple: 3,
@@ -50,48 +95,27 @@ const CompanyList = () => {
     {
       title: 'Action',
       key: 'action',
-      render: () => (
+      render: (record) => (
         <div className="guest-action">
           <img className="action-icon" src={actionicon} alt="" />
           <div className="edit-delete">
-            <img className="guest-edit-icon" src={editicon} alt="" />
-            <img className="guest-delete-icon" src={deleteicon} alt="" />
+            <img
+              className="guest-edit-icon"
+              src={editicon}
+              alt=""
+              onClick={() => edit(record)}
+              role="presentation"
+            />
+            <img
+              className="guest-delete-icon"
+              src={deleteicon}
+              alt=""
+              onClick={() => delRow(record.id)}
+              role="presentation"
+            />
           </div>
         </div>
       ),
-    },
-  ];
-
-  const data = [
-    {
-      key: '1',
-      name: 'Name of Company',
-      vat: '1234567',
-      email: 'namecompany@gmail.com',
-      address: 'Company Address St. 348',
-    },
-    {
-      key: '2',
-      name: 'Name of Company',
-      vat: '1234567',
-      email: 'namecompany@gmail.com',
-      address: 'Company Address St. 348',
-    },
-
-    {
-      key: '3',
-      name: 'Name of Company',
-      vat: '1234567',
-      email: 'namecompany@gmail.com',
-      address: 'Company Address St. 348',
-    },
-
-    {
-      key: '4',
-      name: 'Name of Company',
-      vat: '1234567',
-      email: 'namecompany@gmail.com',
-      address: 'Company Address St. 348',
     },
   ];
 
@@ -107,11 +131,52 @@ const CompanyList = () => {
 
   const handleOk = () => {
     setVisible(false);
+    setVisibiltyOFDelete(false);
   };
 
   const handleCancel = () => {
     setVisible(false);
+    setVisibiltyOFDelete(false);
   };
+
+  if (loading) {
+    return (
+      <Wrapper>
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
+
+  if (companyData.length < 1) {
+    return (
+      <Wrapper>
+        <div className="add-team-page">
+          <div className="add-subuser">
+            <img src={nocompany} alt="noguest" />
+            <h4>Companies</h4>
+            <p>Currently there are no companies created</p>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => show()}
+            >
+              Add Company
+            </Button>
+          </div>
+        </div>
+        <AddCompany
+          visible={visible}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          getData={getData}
+        />
+      </Wrapper>
+    );
+  }
 
   return (
     <Wrapper>
@@ -141,23 +206,33 @@ const CompanyList = () => {
 
         <div className="guest-table company-table">
           <div className="custom-table">
-            <Table columns={columns} dataSource={data} onChange={onChange} />
+            <Table
+              columns={columns}
+              dataSource={companyData}
+              onChange={onChange}
+            />
           </div>
         </div>
       </div>
 
-      <Modal
-        title="Add Company"
+      <AddCompany
         visible={visible}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        getData={getData}
+        editData={editData}
+      />
+
+      <Modal
+        visible={visibiltyOFDelete}
         onOk={handleOk}
         onCancel={handleCancel}
-        wrapClassName="guest-modal add-company-modal"
+        wrapClassName="delete-modal"
       >
-        <div className="cross-btn">
-          <CloseOutlined onClick={handleCancel} />
-        </div>
-
-        <AddCompany />
+        <DeletePopup
+          dataObject={() => remove()}
+          cancel={() => handleCancel()}
+        />
       </Modal>
     </Wrapper>
   );

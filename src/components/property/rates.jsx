@@ -17,7 +17,7 @@ const Rates = () => {
   const [value, setValue] = useState('');
   const [showCustomNights, setShowCustomNights] = useState(false);
   const [disabledInput, setDisabledInput] = useState(true);
-  const [nights, setNights] = useState(14);
+  const [customNights, setCustomNights] = useState(14);
   const [lengthOfStay, setLengthOfStay] = useState(false);
   const [pricePerDayWeek, setPricePerDayWeek] = useState(false);
   const [minStayPerWeek, setMinStayPerWeek] = useState(false);
@@ -55,7 +55,7 @@ const Rates = () => {
     } else {
       setDisabledInput(true);
     }
-    setNights(14);
+    setCustomNights(14);
   }
   function customInputChange(e) {
     if (!e.target.value) {
@@ -63,7 +63,7 @@ const Rates = () => {
     } else {
       setShowCustomNights(true);
     }
-    setNights(e.target.value);
+    setCustomNights(e.target.value);
   }
 
   const handleCheckInBox = (e) => {
@@ -423,7 +423,7 @@ const Rates = () => {
                       <Col span={6}>
                         <Form.Item
                           name="customNightsPrice"
-                          label={`${nights} Nights`}
+                          label={`${customNights} Nights`}
                           hidden={!showCustomNights}
                         >
                           <Input placeholder="$" />
@@ -439,7 +439,7 @@ const Rates = () => {
                           <Input
                             onChange={customInputChange}
                             disabled={disabledInput}
-                            defaultValue={nights}
+                            defaultValue={customNights}
                           />
                           <span>Nights</span>
                         </Form.Item>

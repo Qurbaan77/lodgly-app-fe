@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import queryString from 'query-string';
 import { useHistory } from 'react-router-dom';
@@ -256,78 +256,81 @@ const CreateSeasonRates = () => {
     }
   };
 
-  useEffect(() => {
-    async function fetchData() {
-      const values = queryString.parse(window.location.search);
-      const { seasonRateId } = values;
-      if (seasonRateId !== undefined) {
-        const response = await userInstance.get(
-          `/getSeasonRate/${seasonRateId}`,
-        );
-        if (response.data.code === 200) {
-          const data = response.data.seasonRateData[0];
-          const m1 = moment(data.startDate);
-          const m2 = moment(data.endDate);
-          setLengthOfStay(true);
-          setPricePerDayWeek(true);
-          setMinStayPerWeek(true);
-          setOccupancy(true);
-          setshortStay(true);
-          setRestriction(true);
-
-          form.setFieldsValue({
-            seasonRate: data.seasonRateName,
-            groupname: [m1, m2],
-            currency: data.currency,
-            pricePerNight: data.price_per_night,
-            minStay: data.minimum_stay,
-            weeklyPrice: data.discount_price_per_week,
-            monthlyPrice: data.discount_price_per_month,
-            customNightsPrice: data.discount_price_custom_nights,
-            priceOnMon: data.price_on_monday,
-            priceOnTues: data.price_on_tuesday,
-            priceOnWed: data.price_on_wednesday,
-            priceOnThu: data.price_on_thursday,
-            priceOnFri: data.price_on_friday,
-            priceOnSat: data.price_on_saturday,
-            priceOnSun: data.price_on_sunday,
-            minStayOnMon: data.minimum_stay_on_monday,
-            minStayOnTues: data.minimum_stay_on_tuesday,
-            minStayOnWed: data.minimum_stay_on_wednesday,
-            minStayOnThu: data.minimum_stay_on_thursday,
-            minStayOnFri: data.minimum_stay_on_friday,
-            minStayOnSat: data.minimum_stay_on_saturday,
-            minStayOnSun: data.minimum_stay_on_sunday,
-            extraCharge: data.extra_charge_on_guest,
-            extraGuest: data.extra_guest,
-            shortStayNight: data.short_stay,
-            shortStayPrice: data.extra_chage_on_stay,
-          });
-          setCheckInBox({
-            ...checkInBox,
-            monday: data.checkIn_on_monday,
-            tuesday: data.checkIn_on_tuesday,
-            wednesday: data.checkIn_on_wednesday,
-            thursday: data.checkIn_on_thursday,
-            friday: data.checkIn_on_friday,
-            saturday: data.checkIn_on_saturday,
-            sunday: data.checkIn_on_sunday,
-          });
-          setCheckOutBox({
-            ...checkOutBox,
-            monday: data.checkOut_on_monday,
-            tuesday: data.checkOut_on_tuesday,
-            wednesday: data.checkOut_on_wednesday,
-            thursday: data.checkOut_on_thursday,
-            friday: data.checkOut_on_friday,
-            saturday: data.checkOut_on_saturday,
-            sunday: data.checkOut_on_sunday,
-          });
+  const fetchData = useCallback(async () => {
+    const values = queryString.parse(window.location.search);
+    const { seasonRateId } = values;
+    if (seasonRateId !== undefined) {
+      const response = await userInstance.get(`/getSeasonRate/${seasonRateId}`);
+      if (response.data.code === 200) {
+        const data = response.data.seasonRateData[0];
+        let m1;
+        let m2;
+        if (data.startDate && data.endDate) {
+          m1 = moment(data.startDate);
+          m2 = moment(data.endDate);
         }
+        setLengthOfStay(true);
+        setPricePerDayWeek(true);
+        setMinStayPerWeek(true);
+        setOccupancy(true);
+        setshortStay(true);
+        setRestriction(true);
+
+        form.setFieldsValue({
+          seasonRate: data.seasonRateName,
+          groupname: [m1, m2],
+          currency: data.currency,
+          pricePerNight: data.price_per_night,
+          minStay: data.minimum_stay,
+          weeklyPrice: data.discount_price_per_week,
+          monthlyPrice: data.discount_price_per_month,
+          customNightsPrice: data.discount_price_custom_nights,
+          priceOnMon: data.price_on_monday,
+          priceOnTues: data.price_on_tuesday,
+          priceOnWed: data.price_on_wednesday,
+          priceOnThu: data.price_on_thursday,
+          priceOnFri: data.price_on_friday,
+          priceOnSat: data.price_on_saturday,
+          priceOnSun: data.price_on_sunday,
+          minStayOnMon: data.minimum_stay_on_monday,
+          minStayOnTues: data.minimum_stay_on_tuesday,
+          minStayOnWed: data.minimum_stay_on_wednesday,
+          minStayOnThu: data.minimum_stay_on_thursday,
+          minStayOnFri: data.minimum_stay_on_friday,
+          minStayOnSat: data.minimum_stay_on_saturday,
+          minStayOnSun: data.minimum_stay_on_sunday,
+          extraCharge: data.extra_charge_on_guest,
+          extraGuest: data.extra_guest,
+          shortStayNight: data.short_stay,
+          shortStayPrice: data.extra_chage_on_stay,
+        });
+        setCheckInBox({
+          ...checkInBox,
+          monday: data.checkIn_on_monday,
+          tuesday: data.checkIn_on_tuesday,
+          wednesday: data.checkIn_on_wednesday,
+          thursday: data.checkIn_on_thursday,
+          friday: data.checkIn_on_friday,
+          saturday: data.checkIn_on_saturday,
+          sunday: data.checkIn_on_sunday,
+        });
+        setCheckOutBox({
+          ...checkOutBox,
+          monday: data.checkOut_on_monday,
+          tuesday: data.checkOut_on_tuesday,
+          wednesday: data.checkOut_on_wednesday,
+          thursday: data.checkOut_on_thursday,
+          friday: data.checkOut_on_friday,
+          saturday: data.checkOut_on_saturday,
+          sunday: data.checkOut_on_sunday,
+        });
       }
     }
+  }, [form, checkInBox, checkOutBox]);
+
+  useEffect(() => {
     fetchData();
-  }, [checkInBox, checkOutBox, form]);
+  }, [fetchData]);
 
   return (
     <Wrapper>
@@ -367,8 +370,8 @@ const CreateSeasonRates = () => {
                     Low Season
                     <span>&quot;</span>
                     {' '}
-                    and define for which date period this season
-                    should apply to
+                    and define for which date period this
+                    season should apply to
                   </p>
                   <Row style={{ alignItems: 'flex-end' }}>
                     <Col span={11}>
@@ -422,7 +425,6 @@ const CreateSeasonRates = () => {
                     {' '}
                     <Switch
                       checked={lengthOfStay}
-
                       onClick={() => setLengthOfStay(!lengthOfStay)}
                     />
                   </h3>

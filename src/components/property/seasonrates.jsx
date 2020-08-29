@@ -58,7 +58,7 @@ const SeasonRates = () => {
 
   const delRow = (id) => {
     setVisibiltyOFDelete(true);
-    setServiceRateId(id);
+    setSeasonRateId(id);
   };
 
   const edit = (id) => {
@@ -67,7 +67,7 @@ const SeasonRates = () => {
 
   const [visible, setVisible] = useState(false);
   const [visibiltyOFDelete, setVisibiltyOFDelete] = useState(false);
-  const [serviceRateId, setServiceRateId] = useState(0);
+  const [seasonRateId, setSeasonRateId] = useState(0);
   const [seasonRatesData, setSeasonRatesData] = useState([]);
   const [showTable, setShowTable] = useState(true);
 
@@ -87,15 +87,15 @@ const SeasonRates = () => {
 
   const remove = async () => {
     const values = {
-      id: serviceRateId,
+      id: seasonRateId,
     };
     const response = await userInstance.post('/deleteSeasonRate', values);
     if (response.data.code === 200) {
       setVisibiltyOFDelete(false);
       getData();
-      toast.success('successfully deleted service', { containerId: 'B' });
+      toast.success('Successfully deleted Season', { containerId: 'B' });
     } else {
-      toast.error('server error please try again', { containerId: 'B' });
+      toast.error('Server error please try again', { containerId: 'B' });
     }
   };
 

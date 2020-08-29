@@ -68,22 +68,24 @@ const Profile = () => {
     const response = await userInstance.post('/getuserData');
     // console.log(response);
     const body = response.data.userData;
-    if (body.length > 0) {
-      if (body[0].image !== null) {
-        setImg(body[0].image);
+    if (response.data.code === 200) {
+      if (body.length > 0) {
+        if (body[0].image !== null) {
+          setImg(body[0].image);
+        }
+        if (body[0].fullname !== null) {
+          setUserName(body[0].fullname);
+        }
+        form1.setFieldsValue({
+          fullname: body[0].fullname,
+          address: body[0].address,
+          email: body[0].email,
+          phone: body[0].phone,
+        });
+        form2.setFieldsValue({
+          timezone: body[0].timeZone,
+        });
       }
-      if (body[0].fullname !== null) {
-        setUserName(body[0].fullname);
-      }
-      form1.setFieldsValue({
-        fullname: body[0].fullname,
-        address: body[0].address,
-        email: body[0].email,
-        phone: body[0].phone,
-      });
-      form2.setFieldsValue({
-        timezone: body[0].timeZone,
-      });
     }
   }, [form1, form2]);
 

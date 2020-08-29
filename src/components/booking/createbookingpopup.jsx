@@ -78,6 +78,8 @@ const CreateBookingPopup = (props) => {
   // const [unitTypeData, setUnitTypeData] = useState([]);
   const [propertyData, setPropertyData] = useState([]);
   const [currentPropertyId, setCurrentPropertyId] = useState(null);
+  // const [noOfAdult, setNoOfAdult] = useState(0);
+  const [ratesData, setRatesData] = useState({});
   // const history = useHistory();
 
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -233,6 +235,81 @@ const CreateBookingPopup = (props) => {
     //   .map((filterUnit) => setCurrentUnit(filterUnit));
   };
 
+  // const enumerateDaysBetweenDates = (startDate, endDate) => {
+  //   const dates = [];
+  //   const currDate = moment(startDate).startOf('day');
+  //   const lastDate = moment(endDate).startOf('day');
+
+  //   do {
+  //     dates.push(currDate.clone().toDate());
+  //   } while (currDate.add(1, 'days').diff(lastDate) < 1);
+
+  //   return dates;
+  // };
+
+  const onSelectAdult = (value) => {
+    // console.log(value);
+    let pricePerNight = (
+      Math.floor(
+        ratesData.price_on_monday
+          + ratesData.price_on_tuesday
+          + ratesData.price_on_wednesday
+          + ratesData.price_on_thursday
+          + ratesData.price_on_friday
+          + ratesData.price_on_saturday
+          + ratesData.price_on_sunday,
+      ) / 7
+    ).toFixed(2);
+
+    // console.log('outer', pricePerNight);
+    if (parseInt(value, 10) > ratesData.extra_guest) {
+      pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_charge_on_guest;
+      // console.log('adults', pricePerNight);
+    }
+
+    if (night < ratesData.short_stay) {
+      pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_chage_on_stay;
+      // console.log('night', pricePerNight);
+    }
+    // console.log(ratesData.tax_status);
+    if (ratesData.tax_status === 'include') {
+      const tax = Math.floor(
+        (parseInt(pricePerNight, 10) * ratesData.tax) / 100,
+      );
+      pricePerNight = parseInt(pricePerNight, 10) + tax;
+      // console.log('tax', pricePerNight);
+    }
+
+    setPrice(pricePerNight);
+    form.setFieldsValue({ perNight: pricePerNight });
+
+    if (night >= 7) {
+      const noOfWeeks = Math.floor(night / 7);
+      setAmt(
+        night * pricePerNight - noOfWeeks * ratesData.discount_price_per_week,
+      );
+      setAccomodation(
+        night * pricePerNight - noOfWeeks * ratesData.discount_price_per_week,
+      );
+    } else if (night === ratesData.customNights) {
+      setAmt(night * pricePerNight - ratesData.discount_price_custom_nights);
+      setAccomodation(
+        night * pricePerNight - ratesData.discount_price_custom_nights,
+      );
+    } else if (night >= 30) {
+      const noOfMonths = Math.floor(night / 30);
+      setAmt(
+        night * pricePerNight - noOfMonths * ratesData.discount_price_per_month,
+      );
+      setAccomodation(
+        night * pricePerNight - noOfMonths * ratesData.discount_price_per_month,
+      );
+    } else {
+      setAmt(night * pricePerNight);
+      setAccomodation(night * pricePerNight);
+    }
+  };
+
   const onSelectUnit = async (value, event) => {
     const unitname = event.children;
     const [unit] = unitData
@@ -244,7 +321,17 @@ const CreateBookingPopup = (props) => {
     };
 
     const response = await userInstance.post('/getRates', payload);
-    const ratesData = response.data.ratesData[0];
+    // const ratesData = response.data.ratesData[0];
+    setRatesData(response.data.ratesData[0]);
+
+    // const selectStartDate = moment(selectDate[0]._d);
+    // const selectEndDate = moment(selectDate[1]._d);
+    // const days = enumerateDaysBetweenDates(selectDate[0]._d, selectDate[1]._d);
+    // console.log(days);
+    // days.forEach((element) => {
+    //   console.log(moment(element).format('dddd'));
+    // });
+
     const { seasonRatesData } = response.data;
 
     seasonRatesData.forEach((el) => {
@@ -260,32 +347,17 @@ const CreateBookingPopup = (props) => {
         || selectEndDate.isSame(startDate)
         || selectEndDate.isSame(endDate);
       if (firstDate && secondDate) {
-        // console.log('dono date range me hai');
+        // console.log('Dono date range me hai');
+        setRatesData(el);
       } else if (firstDate) {
         // console.log('Pehli date aati hai range me');
       } else if (secondDate) {
         // console.log('Dusri date aati hai range me');
       } else {
-        setPrice(ratesData.price_per_night);
-        form.setFieldsValue({ perNight: ratesData.price_per_night });
-        setAmt(night * ratesData.price_per_night);
-        setAccomodation(night * ratesData.price_per_night);
+        // console.log('Dono date range me nahi aati hai');
+        setRatesData(response.data.ratesData[0]);
       }
     });
-
-    // if (night > 30) {
-    //   const noOfWeeks = Math.ceil(night / 7);
-    //   setAccomodation(
-    //     night * ratesData.price_per_night +
-    //       noOfWeeks * ratesData.discount_price_per_week
-    //   );
-    // } else {
-    //   const noOfMonths = Math.ceil(night / 30);
-    //   setAccomodation(
-    //     night * ratesData.price_per_night +
-    //       noOfMonths * ratesData.discount_price_per_month
-    //   );
-    // }
 
     // unitTypeData.forEach((el) => {
     //   if (el.id === unit) {
@@ -562,7 +634,10 @@ const CreateBookingPopup = (props) => {
                 },
               ]}
             >
-              <Select placeholder={t('strings.select')}>
+              <Select
+                placeholder={t('strings.select')}
+                onSelect={(value, event) => onSelectAdult(value, event)}
+              >
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
