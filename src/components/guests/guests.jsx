@@ -14,7 +14,7 @@ import {
   Modal,
 } from 'antd';
 import Helmet from 'react-helmet';
-
+import { toast } from 'react-toastify';
 import favicon from '../../assets/images/logo-mobile.png';
 import Wrapper from '../wrapper';
 import guesticon from '../../assets/images/guest-icon.png';
@@ -33,15 +33,16 @@ import cancelIcon from '../../assets/images/menu/cancel-icon.png';
 import loader from '../../assets/images/cliploader.gif';
 import { userInstance } from '../../axios/axiosconfig';
 import NoGuest from './noguests';
-import GuestPopup from '../booking/guestpopup';
+import UpdateGuestPopup from './updateGuest';
 import DeletePopup from '../property/deletepopup';
 
 const GuestList = () => {
   const [guestData, setGuestData] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const [currId, setCurrId] = useState(0);
+  const [currId, setCurrId] = useState(0);
   const [visibleGuest, setVisibleGuest] = useState(false);
   const [visibiltyOFDelete, setVisibiltyOFDelete] = useState(false);
+  const [editValues, setEditValues] = useState({});
 
   const getData = useCallback(async () => {
     const response = await userInstance.post('/getGuest');
@@ -54,6 +55,18 @@ const GuestList = () => {
   useEffect(() => {
     getData();
   }, [getData]);
+
+  const close = () => {
+    setVisibleGuest(false);
+  };
+
+  const onOk = () => {
+    setVisibleGuest(false);
+  };
+  const handleCancel = () => {
+    setVisibleGuest(false);
+    setVisibiltyOFDelete(false);
+  };
 
   const columns = [
     {
@@ -127,7 +140,7 @@ const GuestList = () => {
     {
       title: 'Action',
       key: 'action',
-      render: () => (
+      render: (record) => (
         <div className="guest-action">
           <img className="action-icon" src={actionicon} alt="" />
           <div className="edit-delete">
@@ -135,14 +148,14 @@ const GuestList = () => {
               className="guest-edit-icon"
               src={editIcon}
               alt=""
-              onClick={() => edit()}
+              onClick={() => edit(record)}
               role="presentation"
             />
             <img
               className="guest-delete-icon"
               src={deleteicon}
               alt=""
-              onClick={() => delRow()}
+              onClick={() => delRow(record.id)}
               role="presentation"
             />
           </div>
@@ -151,29 +164,30 @@ const GuestList = () => {
     },
   ];
 
-  const edit = () => {
+  const edit = (data) => {
+    setEditValues(data);
     setVisibleGuest(true);
   };
 
-  const delRow = () => {
+  const delRow = (id) => {
     setVisibiltyOFDelete(true);
-    // setCurrId(id);
+    setCurrId(id);
   };
 
-  // const remove = async () => {
-  //   const values = {
-  //     id: currId,
-  //   };
+  const remove = async () => {
+    const values = {
+      id: currId,
+    };
 
-  //   // const response = await userInstance.post('/deleteGuest', values);
-  //   // if (response.data.code === 200) {
-  //   //   setVisibiltyOFDelete(false);
-  //   //   getData();
-  //   //   toast.success('Successfully deleted company', { containerId: 'B' });
-  //   // } else {
-  //   //   toast.error('Server error please try again', { containerId: 'B' });
-  //   // }
-  // };
+    const response = await userInstance.post('/deleteGuest', values);
+    if (response.data.code === 200) {
+      setVisibiltyOFDelete(false);
+      getData();
+      toast.success('Successfully deleted company', { containerId: 'B' });
+    } else {
+      toast.error('Server error please try again', { containerId: 'B' });
+    }
+  };
 
   // const data = [
   //   {
@@ -478,9 +492,19 @@ const GuestList = () => {
           </div>
         </div>
       </div>
-      <GuestPopup visible={visibleGuest} />
+      <UpdateGuestPopup
+        visible={visibleGuest}
+        handleCancel={handleCancel}
+        onOk={onOk}
+        close={close}
+        editValues={editValues}
+        getData={getData}
+      />
       <Modal visible={visibiltyOFDelete} wrapClassName="delete-modal">
-        <DeletePopup />
+        <DeletePopup
+          dataObject={() => remove()}
+          cancel={() => handleCancel()}
+        />
       </Modal>
     </Wrapper>
   );
