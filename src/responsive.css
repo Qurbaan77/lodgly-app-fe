@@ -995,6 +995,29 @@ input[type=number]{
 .payment-method-icon {
     display: none;
 }
+
+
+
+
+
+
+.invoice-wrapper-expand .invoice-filter {
+    position: fixed;
+    z-index: 9;
+    top: 0;
+    border-right: 2px solid #efefef;
+}
+
+.filter-box {
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.invoice-wrapper-expand .invoice-listing-page {
+    width: calc(100% - 0px);
+}
+
+
 }
 
 

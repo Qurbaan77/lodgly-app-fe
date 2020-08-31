@@ -14,6 +14,10 @@ import {
   Col,
   Pagination,
   Tag,
+  // Input,
+  DatePicker,
+  Select,
+  Form,
 } from 'antd';
 import {
   PlusOutlined, DeleteOutlined, FormOutlined, MoreOutlined,
@@ -33,13 +37,16 @@ import printIcon from '../../assets/images/menu/print-icon.png';
 import cancelIcon from '../../assets/images/menu/cancel-icon.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
 // import loader from '../../assets/images/loader.svg';
+import nobooking from '../../assets/images/no-booking.png';
 import AdInvoicePopup from './addinvoicepopup';
 import EditInvoicePopup from './editInvoicePopup';
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 import UserLock from '../userlock/userlock';
+import back from '../../assets/images/back.png';
 
 const Invoice = () => {
+  const { RangePicker } = DatePicker;
   const { t } = useTranslation();
   // const { Option } = Select;
   const history = useHistory();
@@ -66,6 +73,18 @@ const Invoice = () => {
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
   const [loading, setLoading] = useState(true);
+  const [inFilter, setInFilter] = useState(false);
+  const [filterValues, setFilterValues] = useState({
+    range: '',
+    prevYear: '',
+    currYear: '',
+    invoice: '',
+    cancellation: '',
+    deposit: '',
+    draft: '',
+    issued: '',
+    paymentMethod: '',
+  });
 
   function useUpdate() {
     const [, setTick] = useState(0);
@@ -283,6 +302,124 @@ const Invoice = () => {
     setCheckedInvoice([]);
   };
 
+  // filter handling functions
+  const handleFilter = (values) => {
+    setInFilter(true);
+    setLoading(true);
+    const filterData = [];
+    let startDate = 0;
+    let endDate = 0;
+    if (values.groupname) {
+      startDate = filterValues.groupname[0]._d;
+      endDate = filterValues.groupname[1]._d;
+      const data = invoiceData.filter(
+        (el) => new Date(el.date) >= startDate
+          || new Date(el.date) <= endDate,
+      );
+      filterData.push(data);
+    }
+    if (filterValues.currYear) {
+      const data0 = filterData.length > 0 ? filterData : invoiceData;
+      const data = data0.filter((el) => new Date(el.date)
+        .getFullYear() === new Date().getFullYear());
+      filterData.length = 0;
+      filterData.push(...data);
+    }
+    if (filterValues.prevYear) {
+      const data0 = filterData.length > 0 ? filterData : invoiceData;
+      const data = data0.filter((el) => new Date(el.date)
+        .getFullYear() === new Date().getFullYear() - 1);
+      filterData.length = 0;
+      filterData.push(...data);
+    }
+    if (filterValues.invoice && filterValues.cancellation) {
+      const data0 = filterData.length > 0 ? filterData : invoiceData;
+      const data = data0.filter(() => true);
+      filterData.length = 0;
+      filterData.push(...data);
+    } else if (filterValues.invoice) {
+      const data0 = filterData.length > 0 ? filterData : invoiceData;
+      const data = data0.filter((el) => el.type !== 'Cancellation');
+      filterData.length = 0;
+      filterData.push(...data);
+    } else if (filterValues.cancellation) {
+      const data0 = filterData.length > 0 ? filterData : invoiceData;
+      const data = data0.filter((el) => el.type === 'Cancellation');
+      filterData.length = 0;
+      filterData.push(...data);
+    }
+    if (filterValues.draft) {
+      const data0 = filterData.length > 0 ? filterData : invoiceData;
+      const data = data0.filter((el) => el.status === 'draft');
+      filterData.length = 0;
+      filterData.push(...data);
+    }
+    if (filterValues.issued) {
+      const data0 = filterData.length > 0 ? filterData : invoiceData;
+      const data = data0.filter((el) => el.status === 'isuued');
+      filterData.length = 0;
+      filterData.push(...data);
+    }
+    if (values.payment) {
+      const data0 = filterData.length > 0 ? filterData : invoiceData;
+      const data = data0.filter((el) => el.paymentMethod === values.payment);
+      filterData.length = 0;
+      filterData.push(...data);
+    }
+    setInvoiceData(filterData);
+    setLoading(false);
+    handleMenuSide('close');
+  };
+
+  console.log(invoiceData);
+
+  const handleFilterCheckboxes = (e) => {
+    const { name } = e.target;
+    switch (name) {
+      case 'prevYear':
+        return filterValues.prevYear
+          ? setFilterValues({ ...filterValues, prevYear: false })
+          : setFilterValues({ ...filterValues, prevYear: true });
+      case 'currYear':
+        return filterValues.currYear
+          ? setFilterValues({ ...filterValues, currYear: false })
+          : setFilterValues({ ...filterValues, currYear: true });
+      case 'invoice':
+        return filterValues.invoice
+          ? setFilterValues({ ...filterValues, invoice: false })
+          : setFilterValues({ ...filterValues, invoice: true });
+      case 'cancellation':
+        return filterValues.cancellation
+          ? setFilterValues({ ...filterValues, cancellation: false })
+          : setFilterValues({ ...filterValues, cancellation: true });
+      case 'deposit':
+        return filterValues.deposit
+          ? setFilterValues({ ...filterValues, deposit: false })
+          : setFilterValues({ ...filterValues, deposit: true });
+      case 'draft':
+        return filterValues.draft
+          ? setFilterValues({ ...filterValues, draft: false })
+          : setFilterValues({ ...filterValues, draft: true });
+      case 'issued':
+        return filterValues.issued
+          ? setFilterValues({ ...filterValues, issued: false })
+          : setFilterValues({ ...filterValues, issued: true });
+      default:
+        break;
+    }
+    return true;
+  };
+
+  const [menutoggle, setMenuToggle] = useState(false);
+  const handleMenuSide = (e) => {
+    if (e === 'open') {
+      setMenuToggle(true);
+    } else if (e === 'close') {
+      setMenuToggle(false);
+    } else if (e === 'toggle') {
+      setMenuToggle(!menutoggle);
+    }
+  };
   const enableButton = (
     <Button type="primary" icon={<PlusOutlined />} onClick={show}>
       {t('invoice.button1')}
@@ -328,6 +465,26 @@ const Invoice = () => {
       </Wrapper>
     );
   }
+
+  if (inFilter && invoiceData && invoiceData.length < 1) {
+    return (
+      <Wrapper>
+        <div className="add-team-page">
+          <div className="add-subuser">
+            <img src={nobooking} alt="subuser" />
+            <h4>No Results</h4>
+            <p>
+              Please select another search criteria.
+            </p>
+            <Button onClick={() => window.location.reload()}>
+              Reset All
+            </Button>
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
+
   const pageContent = (
     <>
       {page ? (
@@ -352,171 +509,359 @@ const Invoice = () => {
         </Wrapper>
       ) : (
         <Wrapper fun={setTopNavId}>
-          <div className="invoice-listing-page">
-            <div className="page-header">
-              <h1>
-                <img src={invoiceIcon} alt="" />
-                {t('invoice.label1')}
-              </h1>
-              {topNavId ? perm : propertySelectButton}
-            </div>
-            <div className="invoice-list">
-              <div className="custom-table">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>{t('strings.date')}</th>
-                      <th>{t('strings.label')}</th>
-                      <th>{t('strings.type')}</th>
-                      <th>{t('strings.client')}</th>
-                      <th>{t('strings.amount')}</th>
-                      <th>{t('strings.status')}</th>
-                      <th>{t('strings.action')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {invoiceData
-                      .slice(0)
-                      .reverse()
-                      .slice(pagination.minValue, pagination.maxValue)
-                      .map((el, i) => (
-                        <tr key={el.id}>
-                          <td>
-                            <Checkbox
-                              checked={el[Object.keys(el)[20]]}
-                              onClick={() => handleCheck(el, i)}
-                            />
-                            {el.date.slice(0, 10)}
-                          </td>
-                          <td>
-                            {el.label
-                              || `INVOICE ${el.id} - ${new Date().getFullYear()}`}
-                          </td>
-                          <td>{el.type || 'Invoice'}</td>
-                          <td>{el.clientName}</td>
-                          <td>
-                            {el.total}
-                            {' '}
-                            EUR
-                          </td>
-                          <td>{el.status}</td>
-                          <td>
-                            <div className="action-icon">
-                              <MoreOutlined />
-                            </div>
+          <div className={`invoice-wrapper ${menutoggle ? 'invoice-wrapper-expand' : ''}`}>
 
-                            <div className="invoice-action">
-                              <FormOutlined
-                                onClick={() => showEditInvoice(el, i)}
-                              />
-                              <DeleteOutlined
-                                hidden={isSubUser ? !invoicesDelete : false}
-                                onClick={() => showpopup(el, i)}
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
-              <Row>
-                <Col span={12}>
-                  <div className="filter-invoice">
-                    <ul>
-                      <li>
-                        <img
-                          role="presentation"
-                          className="download-img"
-                          src={refreshIcon}
-                          alt=""
-                          onClick={handleRefresh}
-                        />
-                      </li>
-                      <li>
-                        <img src={filterIcon} alt="" />
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="invoice-filter-box">
-                    <Checkbox
-                      checked={selectAllCheck}
-                      value={selectAllCheck}
-                      onClick={handleSelectAll}
-                    >
-                      {t('strings.select_all')}
-                    </Checkbox>
-                    {checkedInvoice.length ? (
-                      <div
-                        className="cancel-icon"
-                        onClick={handleCancelCheck}
-                        role="presentation"
+            <div className="invoice-filter">
+
+              <div className="filter-box">
+
+                <h2 onClick={() => handleMenuSide('close')} role="presentation">
+                  <img src={back} alt="" />
+                  {' '}
+                  Filters
+                </h2>
+
+                <Form name="basic" onFinish={handleFilter}>
+
+                  <Row style={{ alignItems: 'center' }}>
+
+                    <Col span={24}>
+                      <Form.Item
+                        label="Select Date"
+                        name="groupname"
                       >
-                        <img src={cancelIcon} alt="" />
-                        {t('strings.cancel')}
-                      </div>
-                    ) : (
-                      <div className="cancel-icon" hidden>
-                        <img src={cancelIcon} alt="" />
-                        {t('strings.cancel')}
-                      </div>
-                    )}
+                        <RangePicker />
+                      </Form.Item>
+                    </Col>
 
-                    {checkedInvoice.length ? (
-                      <Tag color="#FB4B56">
-                        {checkedInvoice.length}
-                        {' '}
-                        {t('strings.selected')}
-                      </Tag>
-                    ) : (
-                      <Tag color="#FB4B56" hidden>
-                        3
-                        {' '}
-                        {t('strings.selected')}
-                      </Tag>
-                    )}
-                    <div className="filter-icons">
+                    <Col span={24}>
+                      <div className="invoice-filter-section">
+                        <Row>
+                          <Col span={24}><span className="filter-title">Year</span></Col>
+                          <Col span={12} className="invoice-filter-checkbox">
+                            <Checkbox
+                              name="prevYear"
+                              value={filterValues.prevYear}
+                              onClick={handleFilterCheckboxes}
+                              checked={filterValues.prevYear}
+                            />
+                            {' '}
+                            {new Date().getFullYear() - 1}
+                          </Col>
+
+                          <Col span={12} className="invoice-filter-checkbox">
+                            <Checkbox
+                              name="currYear"
+                              value={filterValues.currYear}
+                              checked={filterValues.currYear}
+                              onClick={handleFilterCheckboxes}
+                            />
+                            {' '}
+                            {new Date().getFullYear()}
+                          </Col>
+                        </Row>
+                      </div>
+                    </Col>
+
+                    <Col span={24}>
+                      <div className="invoice-filter-section">
+                        <Row>
+                          <Col span={24}><span className="filter-title">Type</span></Col>
+                          <Col span={7} className="invoice-filter-checkbox">
+                            <Checkbox
+                              name="invoice"
+                              value={filterValues.invoice}
+                              checked={filterValues.invoice}
+                              onClick={handleFilterCheckboxes}
+                            />
+                            {' '}
+                            Invoice
+                          </Col>
+
+                          <Col span={10} className="invoice-filter-checkbox">
+                            <Checkbox
+                              name="cancellation"
+                              value={filterValues.cancellation}
+                              checked={filterValues.cancellation}
+                              onClick={handleFilterCheckboxes}
+                            />
+                            {' '}
+                            Cancellation
+                          </Col>
+
+                          <Col span={7} className="invoice-filter-checkbox">
+                            <Checkbox
+                              name="deposit"
+                              value={filterValues.deposit}
+                              checked={filterValues.deposit}
+                              onClick={handleFilterCheckboxes}
+                            />
+                            {' '}
+                            Deposit
+                          </Col>
+                        </Row>
+                      </div>
+                    </Col>
+
+                    <Col span={24}>
+                      <div className="invoice-filter-section">
+                        <Row>
+                          <Col span={24}><span className="filter-title">Status</span></Col>
+                          <Col span={7} className="invoice-filter-checkbox">
+                            <Checkbox
+                              name="draft"
+                              value={filterValues.draft}
+                              checked={filterValues.draft}
+                              onClick={handleFilterCheckboxes}
+                            />
+                            {' '}
+                            Draft
+                          </Col>
+
+                          <Col span={10} className="invoice-filter-checkbox">
+                            <Checkbox
+                              name="issued"
+                              value={filterValues.issued}
+                              checked={filterValues.issued}
+                              onClick={handleFilterCheckboxes}
+                            />
+                            {' '}
+                            Issued
+                          </Col>
+
+                          <Col span={7} className="invoice-filter-checkbox">
+                            <Checkbox />
+                            {' '}
+                            Fiscalised
+                          </Col>
+                        </Row>
+                      </div>
+                    </Col>
+
+                    <Col span={24}>
+                      <Form.Item
+                        label="Payment Method"
+                        name="payment"
+                      >
+                        <Select placeholder="Select">
+                          <Select.Option value="bank notes">
+                            {t('strings.bank_note')}
+                          </Select.Option>
+                          <Select.Option value="card">
+                            {t('strings.card')}
+                          </Select.Option>
+                          <Select.Option value="check">
+                            {t('strings.check')}
+                          </Select.Option>
+                          <Select.Option value="bank transfer">
+                            {t('strings.bank_transfer')}
+                          </Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+
+                    <Col span={24} className="invoice-filter-button">
+                      <Form.Item>
+                        <Button
+                          className="border-btn"
+                          style={{ marginRight: 10 }}
+                          onClick={() => {
+                            setFilterValues({
+                              range: '',
+                              prevYear: '',
+                              currYear: '',
+                              invoice: '',
+                              cancellation: '',
+                              deposit: '',
+                              draft: '',
+                              issued: '',
+                              paymentMethod: '',
+                            });
+                            window.location.reload();
+                          }}
+                        >
+                          Reset All
+
+                        </Button>
+                        <Button type="primary" htmlType="submit">
+                          Filter
+                        </Button>
+                      </Form.Item>
+                    </Col>
+
+                  </Row>
+
+                </Form>
+
+              </div>
+
+            </div>
+
+            <div className="invoice-listing-page">
+              <div className="page-header">
+                <h1>
+                  <img src={invoiceIcon} alt="" />
+                  {t('invoice.label1')}
+                </h1>
+                {topNavId ? perm : propertySelectButton}
+              </div>
+              <div className="invoice-list">
+                <div className="custom-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>{t('strings.date')}</th>
+                        <th>{t('strings.label')}</th>
+                        <th>{t('strings.type')}</th>
+                        <th>{t('strings.client')}</th>
+                        <th>{t('strings.amount')}</th>
+                        <th>{t('strings.status')}</th>
+                        <th>{t('strings.action')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {invoiceData
+                        .slice(0)
+                        .reverse()
+                        .slice(pagination.minValue, pagination.maxValue)
+                        .map((el, i) => (
+                          <tr key={el.id}>
+                            <td>
+                              <Checkbox
+                                checked={el[Object.keys(el)[20]]}
+                                onClick={() => handleCheck(el, i)}
+                              />
+                              {el.date.slice(0, 10)}
+                            </td>
+                            <td>
+                              {el.label
+                              || `INVOICE ${el.id} - ${new Date().getFullYear()}`}
+                            </td>
+                            <td>{el.type || 'Invoice'}</td>
+                            <td>{el.clientName}</td>
+                            <td>
+                              {el.total}
+                              {' '}
+                              EUR
+                            </td>
+                            <td>{el.status}</td>
+                            <td>
+                              <div className="action-icon">
+                                <MoreOutlined />
+                              </div>
+
+                              <div className="invoice-action">
+                                <FormOutlined
+                                  onClick={() => showEditInvoice(el, i)}
+                                />
+                                <DeleteOutlined
+                                  hidden={isSubUser ? !invoicesDelete : false}
+                                  onClick={() => showpopup(el, i)}
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+                <Row>
+                  <Col span={12}>
+                    <div className="filter-invoice">
                       <ul>
-                        <li hidden={!checkedInvoice.length}>
+                        <li>
                           <img
                             role="presentation"
                             className="download-img"
-                            src={downloadIcon}
+                            src={refreshIcon}
                             alt=""
-                            onClick={handleDownload}
+                            onClick={handleRefresh}
                           />
                         </li>
-                        <li hidden={checkedInvoice.length !== 1}>
-                          <img
-                            role="presentation"
-                            className="download-img"
-                            src={printIcon}
-                            alt=""
-                            onClick={handlePrint}
-                          />
+                        <li>
+                          <img src={filterIcon} alt="" onClick={() => setMenuToggle(!menutoggle)} role="presentation" />
                         </li>
                       </ul>
                     </div>
-                  </div>
-                </Col>
-                <Col span={12}>
-                  <div className="pagination">
-                    <Pagination
-                      total={invoiceData.length}
-                      onChange={handlePagination}
-                      defaultPageSize={7}
-                      defaultCurrent={1}
-                    />
+                    <div className="invoice-filter-box">
+                      <Checkbox
+                        checked={selectAllCheck}
+                        value={selectAllCheck}
+                        onClick={handleSelectAll}
+                      >
+                        {t('strings.select_all')}
+                      </Checkbox>
+                      {checkedInvoice.length ? (
+                        <div
+                          className="cancel-icon"
+                          onClick={handleCancelCheck}
+                          role="presentation"
+                        >
+                          <img src={cancelIcon} alt="" />
+                          {t('strings.cancel')}
+                        </div>
+                      ) : (
+                        <div className="cancel-icon" hidden>
+                          <img src={cancelIcon} alt="" />
+                          {t('strings.cancel')}
+                        </div>
+                      )}
 
-                    <div className="setting-icon">
-                      <img src={settingIcon} alt="" />
+                      {checkedInvoice.length ? (
+                        <Tag color="#FB4B56">
+                          {checkedInvoice.length}
+                          {' '}
+                          {t('strings.selected')}
+                        </Tag>
+                      ) : (
+                        <Tag color="#FB4B56" hidden>
+                          3
+                          {' '}
+                          {t('strings.selected')}
+                        </Tag>
+                      )}
+                      <div className="filter-icons">
+                        <ul>
+                          <li hidden={!checkedInvoice.length}>
+                            <img
+                              role="presentation"
+                              className="download-img"
+                              src={downloadIcon}
+                              alt=""
+                              onClick={handleDownload}
+                            />
+                          </li>
+                          <li hidden={checkedInvoice.length !== 1}>
+                            <img
+                              role="presentation"
+                              className="download-img"
+                              src={printIcon}
+                              alt=""
+                              onClick={handlePrint}
+                            />
+                          </li>
+                        </ul>
+                      </div>
                     </div>
-                  </div>
-                </Col>
-              </Row>
+                  </Col>
+                  <Col span={12}>
+                    <div className="pagination">
+                      <Pagination
+                        total={invoiceData.length}
+                        onChange={handlePagination}
+                        defaultPageSize={7}
+                        defaultCurrent={1}
+                      />
+
+                      <div className="setting-icon">
+                        <img src={settingIcon} alt="" />
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
+              </div>
             </div>
           </div>
-
           <AdInvoicePopup
             visible={visible}
             getData={getData}
