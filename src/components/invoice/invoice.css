@@ -276,6 +276,7 @@
   text-align: center;
   line-height: 40px;
   border: 1px solid #ddd;
+  cursor: pointer;
 }
 
 .pagination {
@@ -294,6 +295,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0px 10px;
 }
 
 .filter-icons ul {
@@ -469,3 +471,122 @@
   .amount-field::-webkit-scrollbar-thumb:hover {
   background: #f1f1f1;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+.invoice-filter .filter-box h2 {
+  display: block;
+  padding: 50px 20px;
+  margin-bottom: 0px;
+  font-size: 16px;
+  color: #444;
+  cursor: pointer;
+}
+
+.invoice-filter .filter-box form {
+  padding: 20px 10px;
+}
+
+.invoice-filter .inline-form label {
+  margin: 0px 10px;
+}
+
+.invoice-wrapper {
+  display: flex;
+}
+
+.invoice-filter {
+  overflow: hidden;
+  background: #fff;
+  width: 0;
+  border-bottom: 1px solid #efefef;
+  border-right: 1px solid #efefef;
+  transition: all 0.5s;
+  opacity: 0;
+
+}
+
+.invoice-wrapper-expand .invoice-filter {
+  overflow: auto;
+  width: 300px;
+  border-bottom: 1px solid #efefef;
+  border-right: 1px solid #efefef;
+  transition: all 0.5s;
+  opacity: 1;
+  background: #fff;
+
+}
+
+.invoice-listing-page {
+  width: calc(100% - 0px);
+}
+
+.invoice-wrapper-expand .invoice-listing-page {
+  width: calc(100% - 300px);
+}
+
+
+.invoice-filter .ant-picker-input > input {
+  padding: 5px 12px;
+}
+
+.invoice-filter .ant-picker {
+  border: 1px solid #eaeaea;
+}
+
+.invoice-page-view .ant-layout-content{
+  margin: 0!important;
+  padding: 0!important;
+}
+
+.invoice-filter-button{
+  padding-top: 50px;
+}
+
+.invoice-filter-button .ant-btn-primary {
+  background: #7FBD34;
+  border-color: #7FBD34;
+}
+
+.invoice-filter-checkbox{
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+
+.invoice-filter .filter-box h2 img {
+  margin-top: -4px;
+}
+
+
+.invoice-listing-page .page-header {
+  padding-bottom: 0;
+  padding: 20px;
+}
+
+
+.invoice-listing-page .page-header h1 {
+  font-size: 20px;
+}
+
+.invoice-filter-section span.filter-title {
+  color: #999;
+  font-size: 14px;
+  padding-bottom: 10px;
+  display: block;
+}
+
+.invoice-filter .ant-form-item-label > label::after{
+  display: none;
+}

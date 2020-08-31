@@ -64,7 +64,7 @@ const UserProfile = () => {
           {t('userprofile.label2')}
         </Link>
       </Menu.Item>
-      <Menu.Item onClick={() => exit()}>
+      <Menu.Item onClick={() => exit()} danger>
         <span>
           <PoweroffOutlined />
           {' '}

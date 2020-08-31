@@ -23,6 +23,8 @@ const [
     statsWrite,
     billingRead,
     billingWrite,
+    guestsRead,
+    guestsWrite,
   },
 ] = subUserCred || [{}];
 
@@ -123,6 +125,25 @@ export const SecureBilling = ({ component: Component, ...rest }) => (
     ))}
   />
 );
+
+export const SecureGuests = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) => (guestsRead && guestsWrite ? (
+      <Component {...props} {...rest} />
+    ) : (
+      <Redirect to="/" />
+    ))}
+  />
+);
+
+SecureGuests.propTypes = {
+  component: PropTypes.func,
+};
+
+SecureGuests.defaultProps = {
+  component: () => {},
+};
 
 SecureBilling.propTypes = {
   component: PropTypes.func,

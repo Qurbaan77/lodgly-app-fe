@@ -153,8 +153,6 @@ const AddProperty = () => {
 
   const props = {
     name: 'file',
-    // action: `http://localhost:3001/users/propertyPicture${props2}`,
-    // action: `${server}/users/propertyPicture${props2}`,
     action: `${server}/users/propertyPicture?propertyid=${props2}&organizationid=${organizationid}`,
     headers: {
       authorization: 'authorization-text',
@@ -168,49 +166,9 @@ const AddProperty = () => {
     },
   };
 
-  // const getAddress = (latitude, longitude) => new Promise((resolve, reject) => {
-  //   const request = new XMLHttpRequest();
-
-  //   const method = 'GET';
-  //   const url = `http://maps.googleapis.com/maps/api/geocode/json?latlng=${
-  //     latitude
-  //   },${
-  //     longitude
-  //   }&sensor=true`;
-  //   const async = true;
-
-  //   request.open(method, url, async);
-  //   request.onreadystatechange = function () {
-  //     if (request.readyState === 4) {
-  //       if (request.status === 200) {
-  //         const data = JSON.parse(request.responseText);
-  //         const address = data.results[0];
-  //         resolve(address);
-  //       } else {
-  //         reject(request.status);
-  //       }
-  //     }
-  //   };
-  //   request.send();
-  // });
-
   const handleAddressChange = (address) => {
     setAddress(...address);
   };
-
-  // const handleAddressSelect = (address) => {
-  //   console.log('Address', address);
-  //   geocodeByAddress(address)
-  //     .then((results) => getLatLng(results[0]))
-  //     .then((latLng) => {
-  //       console.log('Success', latLng);
-  //     })
-  //     .catch((error) => console.error('Error', error));
-
-  //   form.setFieldsValue({
-  //     address,
-  //   });
-  // };
 
   const handleAddressSelect = async (address) => {
     const geocodeAddress = await geocodeByAddress(address);
@@ -465,90 +423,92 @@ const AddProperty = () => {
               </div>
             </Panel>
 
-            <Panel header={t('addproperty.title2')} key="2">
-              <div className="main-info-form">
-                <Form form={form} name="property" onFinish={onFinish}>
-                  <Row gutter={[16, 0]}>
-                    <Col span={24}>
-                      <Form.Item label={t('addproperty.detail2')}>
-                        <Input />
-                      </Form.Item>
-                    </Col>
+            <Tooltip title="Please save property details first" color="gold">
+              <Panel header={t('addproperty.title2')} key="2" disabled>
+                <div className="main-info-form">
+                  <Form form={form} name="property" onFinish={onFinish}>
+                    <Row gutter={[16, 0]}>
+                      <Col span={24}>
+                        <Form.Item label={t('addproperty.detail2')}>
+                          <Input />
+                        </Form.Item>
+                      </Col>
 
-                    <Col span={8}>
-                      <Form.Item
-                        name="bedrooms"
-                        label={t('addproperty.detail10')}
-                      >
-                        <Select>
-                          <Select.Option value="1">1</Select.Option>
-                          <Select.Option value="2">2</Select.Option>
-                          <Select.Option value="3">3</Select.Option>
-                          <Select.Option value="4">4</Select.Option>
-                          <Select.Option value="5">5</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
+                      <Col span={8}>
+                        <Form.Item
+                          name="bedrooms"
+                          label={t('addproperty.detail10')}
+                        >
+                          <Select>
+                            <Select.Option value="1">1</Select.Option>
+                            <Select.Option value="2">2</Select.Option>
+                            <Select.Option value="3">3</Select.Option>
+                            <Select.Option value="4">4</Select.Option>
+                            <Select.Option value="5">5</Select.Option>
+                          </Select>
+                        </Form.Item>
+                      </Col>
 
-                    <Col span={8}>
-                      <Form.Item
-                        name="fullBathroom"
-                        label={t('addproperty.detail11')}
-                      >
-                        <Select>
-                          <Select.Option value="1">1</Select.Option>
-                          <Select.Option value="2">2</Select.Option>
-                          <Select.Option value="3">3</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
+                      <Col span={8}>
+                        <Form.Item
+                          name="fullBathroom"
+                          label={t('addproperty.detail11')}
+                        >
+                          <Select>
+                            <Select.Option value="1">1</Select.Option>
+                            <Select.Option value="2">2</Select.Option>
+                            <Select.Option value="3">3</Select.Option>
+                          </Select>
+                        </Form.Item>
+                      </Col>
 
-                    <Col span={8}>
-                      <Form.Item
-                        name="halfBathroom"
-                        label={t('addproperty.detail12')}
-                      >
-                        <Select>
-                          <Select.Option value="1">1</Select.Option>
-                          <Select.Option value="2">2</Select.Option>
-                          <Select.Option value="3">3</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
+                      <Col span={8}>
+                        <Form.Item
+                          name="halfBathroom"
+                          label={t('addproperty.detail12')}
+                        >
+                          <Select>
+                            <Select.Option value="1">1</Select.Option>
+                            <Select.Option value="2">2</Select.Option>
+                            <Select.Option value="3">3</Select.Option>
+                          </Select>
+                        </Form.Item>
+                      </Col>
 
-                    <Col span={8}>
-                      <Form.Item
-                        name="sqfoot"
-                        label={t('addproperty.detail13')}
-                      >
-                        <Input />
-                      </Form.Item>
-                    </Col>
+                      <Col span={8}>
+                        <Form.Item
+                          name="sqfoot"
+                          label={t('addproperty.detail13')}
+                        >
+                          <Input />
+                        </Form.Item>
+                      </Col>
 
-                    <Col span={24}>
-                      <Form.Item
-                        name="description"
-                        label={t('addproperty.detail14')}
-                      >
-                        <Input.TextArea />
-                      </Form.Item>
-                    </Col>
+                      <Col span={24}>
+                        <Form.Item
+                          name="description"
+                          label={t('addproperty.detail14')}
+                        >
+                          <Input.TextArea />
+                        </Form.Item>
+                      </Col>
 
-                    <Col span={24}>
-                      <Form.Item>
-                        <Tooltip title={t('addproperty.title5')} color="gold">
-                          <Button htmlType="submit" disabled="true">
-                            {t('strings.save')}
-                          </Button>
-                        </Tooltip>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            </Panel>
+                      <Col span={24}>
+                        <Form.Item>
+                          <Tooltip title={t('addproperty.title5')} color="gold">
+                            <Button htmlType="submit" disabled="true">
+                              {t('strings.save')}
+                            </Button>
+                          </Tooltip>
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Form>
+                </div>
+              </Panel>
+            </Tooltip>
 
-            <Panel header={t('addproperty.title3')} key="3">
+            <Panel header={t('addproperty.title3')} key="3" disabled>
               <div className="listing-info-form">
                 <Form disabled>
                   <Row gutter={[16, 0]}>
@@ -596,7 +556,7 @@ const AddProperty = () => {
               </div>
             </Panel>
 
-            <Panel header={t('addproperty.title4')} key="4">
+            <Panel header={t('addproperty.title4')} key="4" disabled>
               <div className="main-info-form">
                 <Form disabled>
                   <Row gutter={[16, 0]}>
