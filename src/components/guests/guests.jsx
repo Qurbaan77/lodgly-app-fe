@@ -11,9 +11,10 @@ import {
   Tag,
   Form,
   Input,
+  Modal,
 } from 'antd';
 import Helmet from 'react-helmet';
-
+import { toast } from 'react-toastify';
 import favicon from '../../assets/images/logo-mobile.png';
 import Wrapper from '../wrapper';
 import guesticon from '../../assets/images/guest-icon.png';
@@ -29,16 +30,44 @@ import editIcon from '../../assets/images/edit-icon.png';
 import downloadIcon from '../../assets/images/menu/download-icon.png';
 import refreshIcon from '../../assets/images/refresh-icon.png';
 import cancelIcon from '../../assets/images/menu/cancel-icon.png';
+import loader from '../../assets/images/cliploader.gif';
 import { userInstance } from '../../axios/axiosconfig';
+import NoGuest from './noguests';
+import UpdateGuestPopup from './updateGuest';
+import DeletePopup from '../property/deletepopup';
 
 const GuestList = () => {
+  const [guestData, setGuestData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currId, setCurrId] = useState(0);
+  const [visibleGuest, setVisibleGuest] = useState(false);
+  const [visibiltyOFDelete, setVisibiltyOFDelete] = useState(false);
+  const [editValues, setEditValues] = useState({});
+
   const getData = useCallback(async () => {
-    await userInstance.post('/getGuest');
+    const response = await userInstance.post('/getGuest');
+    if (response.data.code === 200) {
+      setGuestData(response.data.guestData);
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
     getData();
   }, [getData]);
+
+  const close = () => {
+    setVisibleGuest(false);
+  };
+
+  const onOk = () => {
+    setVisibleGuest(false);
+  };
+  const handleCancel = () => {
+    setVisibleGuest(false);
+    setVisibiltyOFDelete(false);
+  };
+
   const columns = [
     {
       title: 'Guest',
@@ -111,86 +140,123 @@ const GuestList = () => {
     {
       title: 'Action',
       key: 'action',
-      render: () => (
+      render: (record) => (
         <div className="guest-action">
           <img className="action-icon" src={actionicon} alt="" />
           <div className="edit-delete">
-            <img className="guest-edit-icon" src={editIcon} alt="" />
-            <img className="guest-delete-icon" src={deleteicon} alt="" />
+            <img
+              className="guest-edit-icon"
+              src={editIcon}
+              alt=""
+              onClick={() => edit(record)}
+              role="presentation"
+            />
+            <img
+              className="guest-delete-icon"
+              src={deleteicon}
+              alt=""
+              onClick={() => delRow(record.id)}
+              role="presentation"
+            />
           </div>
         </div>
       ),
     },
   ];
 
-  const data = [
-    {
-      key: '1',
-      guest: 'Barry Griffith',
-      country: 'USA',
-      date: 'Aug 5 2019',
-      night: '10',
-      people: '2',
-      contact: 'mymail@gmail.com',
-      phone: '+30 37 678 8790',
-      spent: '304.00 EUR',
-      pernight: '76,00 p/n',
-      impression: 'Some impressions about client',
-    },
-    {
-      key: '2',
-      guest: 'Emily Byrd',
-      country: 'USA',
-      date: 'Aug 5 2019',
-      night: '10',
-      people: '2',
-      contact: 'mymail@gmail.com',
-      phone: '+30 37 678 8790',
-      spent: '304.00 EUR',
-      pernight: '76,00 p/n',
-      impression: 'Some impressions about client',
-    },
+  const edit = (data) => {
+    setEditValues(data);
+    setVisibleGuest(true);
+  };
 
-    {
-      key: '3',
-      guest: 'Rose White',
-      country: 'USA',
-      date: 'Aug 5 2019',
-      night: '10',
-      people: '2',
-      contact: 'mymail@gmail.com',
-      phone: '+30 37 678 8790',
-      spent: '304.00 EUR',
-      pernight: '76,00 p/n',
-      impression: 'Some impressions about client',
-    },
-    {
-      key: '4',
-      guest: 'Janie Schneider',
-      country: 'USA',
-      date: 'Aug 5 2019',
-      night: '10',
-      people: '2',
-      contact: 'mymail@gmail.com',
-      phone: '+30 37 678 8790',
-      spent: '304.00 EUR',
-      pernight: '76,00 p/n',
-      impression: 'Some impressions about client',
-    },
-    {
-      key: '5',
-      guest: 'Harvey Rivera',
-      country: 'USA',
-      date: 'Aug 5 2019',
-      night: '10',
-      people: '2',
-      contact: 'mymail@gmail.com',
-      phone: '+30 37 678 8790',
-      spent: '304.00 EUR',
-      pernight: '76,00 p/n',
-      impression: 'Some impressions about client',
-    },
-  ];
+  const delRow = (id) => {
+    setVisibiltyOFDelete(true);
+    setCurrId(id);
+  };
+
+  const remove = async () => {
+    const values = {
+      id: currId,
+    };
+
+    const response = await userInstance.post('/deleteGuest', values);
+    if (response.data.code === 200) {
+      setVisibiltyOFDelete(false);
+      getData();
+      toast.success('Successfully deleted company', { containerId: 'B' });
+    } else {
+      toast.error('Server error please try again', { containerId: 'B' });
+    }
+  };
+
+  // const data = [
+  //   {
+  //     key: '1',
+  //     guest: 'Barry Griffith',
+  //     country: 'USA',
+  //     date: 'Aug 5 2019',
+  //     night: '10',
+  //     people: '2',
+  //     contact: 'mymail@gmail.com',
+  //     phone: '+30 37 678 8790',
+  //     spent: '304.00 EUR',
+  //     pernight: '76,00 p/n',
+  //     impression: 'Some impressions about client',
+  //   },
+  //   {
+  //     key: '2',
+  //     guest: 'Emily Byrd',
+  //     country: 'USA',
+  //     date: 'Aug 5 2019',
+  //     night: '10',
+  //     people: '2',
+  //     contact: 'mymail@gmail.com',
+  //     phone: '+30 37 678 8790',
+  //     spent: '304.00 EUR',
+  //     pernight: '76,00 p/n',
+  //     impression: 'Some impressions about client',
+  //   },
+
+  //   {
+  //     key: '3',
+  //     guest: 'Rose White',
+  //     country: 'USA',
+  //     date: 'Aug 5 2019',
+  //     night: '10',
+  //     people: '2',
+  //     contact: 'mymail@gmail.com',
+  //     phone: '+30 37 678 8790',
+  //     spent: '304.00 EUR',
+  //     pernight: '76,00 p/n',
+  //     impression: 'Some impressions about client',
+  //   },
+  //   {
+  //     key: '4',
+  //     guest: 'Janie Schneider',
+  //     country: 'USA',
+  //     date: 'Aug 5 2019',
+  //     night: '10',
+  //     people: '2',
+  //     contact: 'mymail@gmail.com',
+  //     phone: '+30 37 678 8790',
+  //     spent: '304.00 EUR',
+  //     pernight: '76,00 p/n',
+  //     impression: 'Some impressions about client',
+  //   },
+  //   {
+  //     key: '5',
+  //     guest: 'Harvey Rivera',
+  //     country: 'USA',
+  //     date: 'Aug 5 2019',
+  //     night: '10',
+  //     people: '2',
+  //     contact: 'mymail@gmail.com',
+  //     phone: '+30 37 678 8790',
+  //     spent: '304.00 EUR',
+  //     pernight: '76,00 p/n',
+  //     impression: 'Some impressions about client',
+  //   },
+  // ];
 
   // function onChange(pagination, filters, sorter, extra) {
   //   console.log('params', pagination, filters, sorter, extra);
@@ -198,9 +264,7 @@ const GuestList = () => {
 
   const { RangePicker } = DatePicker;
 
-  function onChange() {
-
-  }
+  function onChange() {}
 
   const [menutoggle, setMenuToggle] = useState(false);
   const handleMenuSide = (e) => {
@@ -212,6 +276,26 @@ const GuestList = () => {
       setMenuToggle(!menutoggle);
     }
   };
+
+  if (loading) {
+    return (
+      <Wrapper>
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
+
+  if (guestData.length < 1) {
+    return (
+      <Wrapper>
+        <NoGuest />
+      </Wrapper>
+    );
+  }
 
   return (
     <Wrapper>
@@ -354,7 +438,11 @@ const GuestList = () => {
 
           <div className="guest-table">
             <div className="custom-table">
-              <Table columns={columns} dataSource={data} onChange={onChange} />
+              <Table
+                columns={columns}
+                dataSource={guestData}
+                onChange={onChange}
+              />
             </div>
 
             <Col span={12}>
@@ -404,6 +492,20 @@ const GuestList = () => {
           </div>
         </div>
       </div>
+      <UpdateGuestPopup
+        visible={visibleGuest}
+        handleCancel={handleCancel}
+        onOk={onOk}
+        close={close}
+        editValues={editValues}
+        getData={getData}
+      />
+      <Modal visible={visibiltyOFDelete} wrapClassName="delete-modal">
+        <DeletePopup
+          dataObject={() => remove()}
+          cancel={() => handleCancel()}
+        />
+      </Modal>
     </Wrapper>
   );
 };
