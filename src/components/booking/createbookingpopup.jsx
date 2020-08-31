@@ -411,7 +411,7 @@ const CreateBookingPopup = (props) => {
         setAccomodation(night * pricePerNight);
       }
     }
-  }, [selectDate, unitName, noOfAdult, ratesData]);
+  }, [selectDate, unitName, noOfAdult, ratesData, form, night]);
 
   const createGuestDetails = (
     <>
