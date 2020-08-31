@@ -178,6 +178,7 @@ const Sidenav = ({
     invoicesRead,
     ownerRead,
     statsRead,
+    guestsRead,
     isSubUser,
   ]);
 
