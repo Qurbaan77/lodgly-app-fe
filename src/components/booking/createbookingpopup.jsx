@@ -78,7 +78,7 @@ const CreateBookingPopup = (props) => {
   // const [unitTypeData, setUnitTypeData] = useState([]);
   const [propertyData, setPropertyData] = useState([]);
   const [currentPropertyId, setCurrentPropertyId] = useState(null);
-  // const [noOfAdult, setNoOfAdult] = useState(0);
+  const [noOfAdult, setNoOfAdult] = useState(0);
   const [ratesData, setRatesData] = useState({});
   // const history = useHistory();
 
@@ -248,66 +248,7 @@ const CreateBookingPopup = (props) => {
   // };
 
   const onSelectAdult = (value) => {
-    // console.log(value);
-    let pricePerNight = (
-      Math.floor(
-        ratesData.price_on_monday
-          + ratesData.price_on_tuesday
-          + ratesData.price_on_wednesday
-          + ratesData.price_on_thursday
-          + ratesData.price_on_friday
-          + ratesData.price_on_saturday
-          + ratesData.price_on_sunday,
-      ) / 7
-    ).toFixed(2);
-
-    // console.log('outer', pricePerNight);
-    if (parseInt(value, 10) > ratesData.extra_guest) {
-      pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_charge_on_guest;
-      // console.log('adults', pricePerNight);
-    }
-
-    if (night < ratesData.short_stay) {
-      pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_chage_on_stay;
-      // console.log('night', pricePerNight);
-    }
-    // console.log(ratesData.tax_status);
-    if (ratesData.tax_status === 'include') {
-      const tax = Math.floor(
-        (parseInt(pricePerNight, 10) * ratesData.tax) / 100,
-      );
-      pricePerNight = parseInt(pricePerNight, 10) + tax;
-      // console.log('tax', pricePerNight);
-    }
-
-    setPrice(pricePerNight);
-    form.setFieldsValue({ perNight: pricePerNight });
-
-    if (night >= 7) {
-      const noOfWeeks = Math.floor(night / 7);
-      setAmt(
-        night * pricePerNight - noOfWeeks * ratesData.discount_price_per_week,
-      );
-      setAccomodation(
-        night * pricePerNight - noOfWeeks * ratesData.discount_price_per_week,
-      );
-    } else if (night === ratesData.customNights) {
-      setAmt(night * pricePerNight - ratesData.discount_price_custom_nights);
-      setAccomodation(
-        night * pricePerNight - ratesData.discount_price_custom_nights,
-      );
-    } else if (night >= 30) {
-      const noOfMonths = Math.floor(night / 30);
-      setAmt(
-        night * pricePerNight - noOfMonths * ratesData.discount_price_per_month,
-      );
-      setAccomodation(
-        night * pricePerNight - noOfMonths * ratesData.discount_price_per_month,
-      );
-    } else {
-      setAmt(night * pricePerNight);
-      setAccomodation(night * pricePerNight);
-    }
+    setNoOfAdult(value);
   };
 
   const onSelectUnit = async (value, event) => {
@@ -347,7 +288,6 @@ const CreateBookingPopup = (props) => {
         || selectEndDate.isSame(startDate)
         || selectEndDate.isSame(endDate);
       if (firstDate && secondDate) {
-        // console.log('Dono date range me hai');
         setRatesData(el);
       } else if (firstDate) {
         // console.log('Pehli date aati hai range me');
@@ -410,6 +350,68 @@ const CreateBookingPopup = (props) => {
       setNight(day);
     }
   };
+
+  useEffect(() => {
+    if (selectDate && unitName && noOfAdult > 0) {
+      let pricePerNight = (
+        Math.floor(
+          ratesData.price_on_monday
+            + ratesData.price_on_tuesday
+            + ratesData.price_on_wednesday
+            + ratesData.price_on_thursday
+            + ratesData.price_on_friday
+            + ratesData.price_on_saturday
+            + ratesData.price_on_sunday,
+        ) / 7
+      ).toFixed(2);
+
+      if (parseInt(noOfAdult, 10) > ratesData.extra_guest) {
+        pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_charge_on_guest;
+      }
+
+      if (night < ratesData.short_stay) {
+        pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_chage_on_stay;
+      }
+
+      if (ratesData.tax_status === 'include') {
+        const tax = Math.floor(
+          (parseInt(pricePerNight, 10) * ratesData.tax) / 100,
+        );
+        pricePerNight = parseInt(pricePerNight, 10) + tax;
+      }
+
+      setPrice(pricePerNight);
+      form.setFieldsValue({ perNight: pricePerNight });
+
+      if (night >= 7) {
+        const noOfWeeks = Math.floor(night / 7);
+        setAmt(
+          night * pricePerNight - noOfWeeks * ratesData.discount_price_per_week,
+        );
+        setAccomodation(
+          night * pricePerNight - noOfWeeks * ratesData.discount_price_per_week,
+        );
+      } else if (night === ratesData.customNights) {
+        setAmt(night * pricePerNight - ratesData.discount_price_custom_nights);
+        setAccomodation(
+          night * pricePerNight - ratesData.discount_price_custom_nights,
+        );
+      } else if (night >= 30) {
+        const noOfMonths = Math.floor(night / 30);
+        setAmt(
+          night * pricePerNight
+            - noOfMonths * ratesData.discount_price_per_month,
+        );
+        setAccomodation(
+          night * pricePerNight
+            - noOfMonths * ratesData.discount_price_per_month,
+        );
+      } else {
+        setAmt(night * pricePerNight);
+        setAccomodation(night * pricePerNight);
+      }
+    }
+  }, [selectDate, unitName, noOfAdult, ratesData]);
 
   const createGuestDetails = (
     <>
