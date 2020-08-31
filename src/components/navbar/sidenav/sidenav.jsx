@@ -41,7 +41,7 @@ const Sidenav = ({
   const [hideService, setHideService] = useState(false);
   const [hideOwner, setHideOwner] = useState(false);
   const [disableProperties, setDisableProperties] = useState(false);
-  // const [disableGuests, setDisableGuests] = useState(false);
+  const [disableGuests, setDisableGuests] = useState(false);
   const isSubUser = localStorage.getItem('isSubUser');
   const subUserCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [
@@ -55,6 +55,7 @@ const Sidenav = ({
       teamRead,
       userId,
       ownerRead,
+      guestsRead,
     },
   ] = subUserCred || [{}];
 
@@ -115,6 +116,13 @@ const Sidenav = ({
     } else {
       setHideOwner(true);
     }
+    if (!isSubUser) {
+      setDisableGuests(false);
+    } else if (guestsRead) {
+      setDisableGuests(false);
+    } else {
+      setDisableGuests(true);
+    }
   }, [
     bookingRead,
     calendarRead,
@@ -125,6 +133,7 @@ const Sidenav = ({
     statsRead,
     teamRead,
     ownerRead,
+    guestsRead,
   ]);
   const getData = useCallback(async () => {
     const values = {
@@ -136,7 +145,7 @@ const Sidenav = ({
       // getFeature(featureData);
       const [
         {
-          booking, calendar, properties, team, invoice, owner, stats,
+          booking, calendar, properties, team, invoice, owner, stats, guests,
         },
       ] = featureData;
       setHideBooking(isSubUser ? !bookingRead : !booking);
@@ -146,6 +155,7 @@ const Sidenav = ({
       setHideInvoice(!isSubUser ? !invoice : !invoicesRead);
       setHideOwner(!isSubUser ? !owner : !ownerRead);
       setHideStats(!isSubUser ? !stats : !statsRead);
+      setDisableGuests(!isSubUser ? !guests : !guestsRead);
     }
     const Id = localStorage.getItem('propertyId');
     const response = await userInstance.post('/fetchProperty', {
@@ -294,18 +304,19 @@ const Sidenav = ({
         {/* </SubMenu> */}
 
         <SubMenu
+          hidden={disableGuests}
           title={(
             <div>
               <img src={guestIcon} alt="guest-icon" />
-              <Link to="/">{t('sidebar.menu4')}</Link>
+              <Link to="/guests">{t('sidebar.menu4')}</Link>
             </div>
           )}
         >
-          <Menu.Item className="guest-nav">
+          <Menu.Item className="guest-nav" hidden={disableGuests}>
             <img src={guestIcon} alt="guest-icon" />
             <Link to="/guests">{t('sidebar.menu4')}</Link>
           </Menu.Item>
-          <Menu.Item className="guest-nav">
+          <Menu.Item className="guest-nav" hidden={disableGuests}>
             <img src={guestIcon} alt="guest-icon" />
             <Link to="/companylist">Companies</Link>
           </Menu.Item>

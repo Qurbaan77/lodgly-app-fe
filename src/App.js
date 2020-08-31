@@ -46,6 +46,7 @@ import {
   SecureService,
   SecureStats,
   SecureBilling,
+  SecureGuests,
 } from './Routes/SecureRoute';
 import Owner from './components/owner/owner';
 import Team from './components/team/team';
@@ -443,12 +444,12 @@ const App = () => {
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
                     {isSubUser ? (
-                      <SecureProperty
+                      <SecureGuests
                         exact
                         path="/guests"
                         component={() => <GuestList />}
                       />
-                    ) : feature.properties ? (
+                    ) : feature.guests ? (
                       <PrivateRoute
                         exact
                         path="/guests"

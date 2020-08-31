@@ -86,6 +86,7 @@ const BillingInformation = () => {
   const getUser = async () => {
     const response = await userInstance.get('/transactions');
     if (response.data.code === 200 && response.data.onFreePlan) {
+      setLoading(false);
       setHideBilling(true);
       setOnFreePlan(true);
       const renewDate = moment(response.data.createdAt).add(1, 'year').format('DD/MM/YYYY');
@@ -112,6 +113,7 @@ const BillingInformation = () => {
         setDisableBtn(true);
       }
     } else {
+      setLoading(false);
       addData('');
       setHideBilling(false);
     }
