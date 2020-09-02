@@ -250,7 +250,7 @@ const Owner = () => {
                     {ownerData.map((el) => (
                       <tr>
                         <td>
-                          <div className="owner-info">
+                          <div className="owner-info" onClick={() => edit(el)} role="presentation">
                             <div className="owner-pic">
                               <img src={owner} alt="ownerImage" />
                             </div>
@@ -390,6 +390,11 @@ const Owner = () => {
                     name="dob"
                     label={t('strings.dob')}
                     style={{ paddingRight: 20 }}
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
                   >
                     <DatePicker />
                   </Form.Item>
@@ -619,6 +624,11 @@ const Owner = () => {
                     name="dob"
                     label={t('strings.dob')}
                     style={{ paddingRight: 20 }}
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
                   >
                     <DatePicker />
                   </Form.Item>

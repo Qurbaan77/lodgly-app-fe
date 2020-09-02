@@ -371,8 +371,6 @@ const Invoice = () => {
     handleMenuSide('close');
   };
 
-  console.log(invoiceData);
-
   const handleFilterCheckboxes = (e) => {
     const { name } = e.target;
     switch (name) {

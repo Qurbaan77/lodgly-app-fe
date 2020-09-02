@@ -250,7 +250,9 @@
 .group-page-view .ant-menu .group-nav,
 .detail-page-view .ant-menu .detail-nav,
 .rates-page-view .ant-menu .rates-nav,
-.season-page-view .ant-menu .season-nav    {
+.season-page-view .ant-menu .season-nav,
+.guest-page-view .ant-menu .guest-nav,
+.company-page-view .ant-menu .company-nav     {
     background-color: #fffaf0!important;
 }
 
@@ -268,7 +270,9 @@
 .group-page-view .ant-menu .group-nav a,
 .detail-page-view .ant-menu .detail-nav a,
 .rates-page-view .ant-menu .rates-nav a,
-.season-page-view .ant-menu .season-nav a  {
+.season-page-view .ant-menu .season-nav a,
+.guest-page-view .ant-menu .guest-nav a,
+.company-page-view .ant-menu .company-nav a  {
     color: #fab52c!important;
 }
 
@@ -287,7 +291,9 @@
 .group-page-view .ant-menu .group-nav:before,
 .detail-page-view .ant-menu .detail-nav:before,
 .rates-page-view .ant-menu .rates-nav:before,
-.season-page-view .ant-menu .season-nav:before {
+.season-page-view .ant-menu .season-nav:before,
+.guest-page-view .ant-menu .guest-nav:before,
+.company-page-view .ant-menu .company-nav:before {
     content: "";
     position: absolute;
     width: 3px;
@@ -434,7 +440,18 @@ input[type=number]{
 }
 .ant-result.ant-result-404 {
     margin-top: 141px;
+
 }
+
+
+
+
+
+
+
+
+
+
 /******************************************************************************************************/
 
                                 /*********** Media Query ***********/   
@@ -445,7 +462,16 @@ input[type=number]{
 
 
 
+@media screen and (min-width:1680px){
+    .company-ip {
+        bottom: calc(0px - 0px);
+    }
 
+    .ant-layout-sider-light {
+        min-height: 94vh;
+    }
+
+}
 
 
 

@@ -377,7 +377,10 @@ const Profile = () => {
 
                           <Col span={12}>
                             <Form.Item label={t('billingprofile.label11')} name="timezone">
-                              <Select>
+                              <Select
+                                showSearch
+                                optionFilterProp="children"
+                              >
                                 <Select.Option value="Etc/GMT+12">(GMT-12:00) International Date Line West</Select.Option>
                                 <Select.Option value="Pacific/Midway">(GMT-11:00) Midway Island, Samoa</Select.Option>
                                 <Select.Option value="Pacific/Honolulu">(GMT-10:00) Hawaii</Select.Option>

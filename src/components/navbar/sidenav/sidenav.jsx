@@ -12,6 +12,9 @@ import bookingIcon from '../../../assets/images/menu/booking-icon.png';
 import calenderIcon from '../../../assets/images/menu/calendar-icon.png';
 import propertyIcon from '../../../assets/images/menu/property-icon.png';
 import guestIcon from '../../../assets/images/menu/guest-icon.png';
+import submenuCompany from '../../../assets/images/menu/submenu-company.png';
+import submenuGuest from '../../../assets/images/menu/submenu-guest.png';
+
 import teamIcon from '../../../assets/images/menu/team-icon.png';
 import invoiceIcon from '../../../assets/images/menu/invoice-icon.png';
 import statsIcon from '../../../assets/images/menu/stats-icon.png';
@@ -314,11 +317,11 @@ const Sidenav = ({
           )}
         >
           <Menu.Item className="guest-nav" hidden={disableGuests}>
-            <img src={guestIcon} alt="guest-icon" />
+            <img src={submenuGuest} alt="guest-icon" />
             <Link to="/guests">{t('sidebar.menu4')}</Link>
           </Menu.Item>
-          <Menu.Item className="guest-nav" hidden={disableGuests}>
-            <img src={guestIcon} alt="guest-icon" />
+          <Menu.Item className="company-nav" hidden={disableGuests}>
+            <img src={submenuCompany} alt="guest-icon" />
             <Link to="/companylist">Companies</Link>
           </Menu.Item>
         </SubMenu>

@@ -28,17 +28,19 @@ const UserProfile = () => {
 
   const getUserInfo = useCallback(async () => {
     const response = await userInstance.post('/getuserData');
-    const body = response.data.userData;
-    if (body.length > 0) {
-      if (body[0].image !== null) {
-        setImg(body[0].image);
+    if (response.data.code === 200) {
+      const body = response.data.userData;
+      if (body.length > 0) {
+        if (body[0].image !== null) {
+          setImg(body[0].image);
+        }
+        if (body[0].fullname !== null) {
+          setName(`${body[0].fullname}`);
+        }
+      } else {
+        localStorage.clear();
+        history.push('/');
       }
-      if (body[0].fullname !== null) {
-        setName(`${body[0].fullname}`);
-      }
-    } else {
-      localStorage.clear();
-      history.push('/');
     }
   }, [history]);
 

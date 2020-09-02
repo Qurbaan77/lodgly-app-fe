@@ -38,6 +38,7 @@ const AddUnitType = () => {
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
   const [showEdit, setShowEdit] = useState(false);
+  const [saveLoading, setSaveLoading] = useState(false);
 
   const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
 
@@ -71,6 +72,7 @@ const AddUnitType = () => {
   // };
 
   const onUnitSave = async (id) => {
+    setSaveLoading(true);
     const values = {
       unitName: name,
       propertyId: localStorage.getItem('propertyId'),
@@ -80,6 +82,7 @@ const AddUnitType = () => {
     };
     const response = await userInstance.post('/addUnit', values);
     if (response.data.code === 200) {
+      setSaveLoading(false);
       setEditId(null);
       setShowPanel(true);
       getUnitData();
@@ -243,6 +246,7 @@ const AddUnitType = () => {
                     <CheckCircleOutlined />
                     {' '}
                     {t('strings.save')}
+                    <Button type="primary" loading={saveLoading} />
                   </div>
                 </div>
               </div>
@@ -278,7 +282,7 @@ const AddUnitType = () => {
                       ) : (
                         ''
                       )}
-                      <span>{t('addunity.para3')}</span>
+                      {/* <span>{t('addunity.para3')}</span> */}
                     </div>
 
                     {editId === i ? (
@@ -301,6 +305,7 @@ const AddUnitType = () => {
                         >
                           <CheckCircleOutlined />
                           {t('strings.save')}
+                          <Button type="primary" loading={saveLoading} />
                         </div>
                       </div>
                     ) : (

@@ -189,7 +189,7 @@ const CompanyList = () => {
           name="description"
           content="Grow your Vacation Rental with Lodgly"
         />
-        <body className="rates-page-view" />
+        <body className="company-page-view" />
       </Helmet>
 
       <div className="guest-list company-list">

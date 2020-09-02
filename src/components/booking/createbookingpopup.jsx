@@ -66,6 +66,7 @@ const CreateBookingPopup = (props) => {
   const [depositAmount, setDepositAmount] = useState(null);
   const [discountAmount, setdiscountAmount] = useState(null);
   const [selectDate, setSelectDate] = useState({});
+  const [seasonRatesData, setSeasonRatesData] = useState([]);
 
   // const [fullname, setFullname] = useState({});
   // const [email, setEmail] = useState({});
@@ -249,31 +250,6 @@ const CreateBookingPopup = (props) => {
 
   const onSelectAdult = (value) => {
     setNoOfAdult(value);
-  };
-
-  const onSelectUnit = async (value, event) => {
-    const unitname = event.children;
-    const [unit] = unitData
-      .filter((el) => el.unitName === unitname)
-      .map((el) => el.unittypeId);
-
-    const payload = {
-      unittypeId: unit,
-    };
-
-    const response = await userInstance.post('/getRates', payload);
-    // const ratesData = response.data.ratesData[0];
-    setRatesData(response.data.ratesData[0]);
-
-    // const selectStartDate = moment(selectDate[0]._d);
-    // const selectEndDate = moment(selectDate[1]._d);
-    // const days = enumerateDaysBetweenDates(selectDate[0]._d, selectDate[1]._d);
-    // console.log(days);
-    // days.forEach((element) => {
-    //   console.log(moment(element).format('dddd'));
-    // });
-
-    const { seasonRatesData } = response.data;
 
     seasonRatesData.forEach((el) => {
       const selectStartDate = moment(selectDate[0]._d);
@@ -289,15 +265,77 @@ const CreateBookingPopup = (props) => {
         || selectEndDate.isSame(endDate);
       if (firstDate && secondDate) {
         setRatesData(el);
-      } else if (firstDate) {
-        // console.log('Pehli date aati hai range me');
-      } else if (secondDate) {
-        // console.log('Dusri date aati hai range me');
+      } else if (!firstDate && !secondDate) {
+        // setRatesData(response.data.ratesData[0]);
       } else {
-        // console.log('Dono date range me nahi aati hai');
-        setRatesData(response.data.ratesData[0]);
+        // const d1 = new Date(startDate).getDate();
+        // const d2 = new Date(selectStartDate).getDate();
+        // const d3 = new Date(selectEndDate).getDate();
+        // const diff = Math.abs(d1 - d2);
+        // const ratesOne = calculatePerNight(diff, el, value);
+        // const diff2 = 30 - Math.abs(d3 - d1);
+        // const ratesSecond = calculatePerNight(diff2, ratesData, value);
       }
     });
+  };
+
+  const onSelectUnit = async (value, event) => {
+    const unitname = event.children;
+    const [unit] = unitData
+      .filter((el) => el.unitName === unitname)
+      .map((el) => el.unittypeId);
+
+    const payload = {
+      unittypeId: unit,
+    };
+
+    const response = await userInstance.post('/getRates', payload);
+    // const ratesData = response.data.ratesData[0];
+    setRatesData(response.data.ratesData[0]);
+    setSeasonRatesData(response.data.seasonRatesData);
+
+    // const selectStartDate = moment(selectDate[0]._d);
+    // const selectEndDate = moment(selectDate[1]._d);
+    // const days = enumerateDaysBetweenDates(selectDate[0]._d, selectDate[1]._d);
+    // console.log(days);
+    // days.forEach((element) => {
+    //   console.log(moment(element).format('dddd'));
+    // });
+
+    // const { seasonRatesData } = response.data;
+
+    // seasonRatesData.forEach((el) => {
+    //   const selectStartDate = moment(selectDate[0]._d);
+    //   const selectEndDate = moment(selectDate[1]._d);
+    //   const startDate = moment(el.startDate);
+    //   const endDate = moment(el.endDate);
+    //   const firstDate =
+    //     (selectStartDate.isBefore(endDate) &&
+    //       selectStartDate.isAfter(startDate)) ||
+    //     selectStartDate.isSame(startDate) ||
+    //     selectStartDate.isSame(endDate);
+    //   const secondDate =
+    //     (selectEndDate.isBefore(endDate) && selectEndDate.isAfter(startDate)) ||
+    //     selectEndDate.isSame(startDate) ||
+    //     selectEndDate.isSame(endDate);
+    //   if (firstDate && secondDate) {
+    //     console.log('Normal Rates');
+    //     setRatesData(el);
+    //   } else if (firstDate) {
+    //     console.log('Pehli date aati hai range me');
+    //     const d1 = new Date(startDate);
+    //     const d2 = new Date(selectStartDate);
+    //     const diff = Math.abs(d1 - d2);
+    //     const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+    //     console.log(day);
+    //     console.log(calculatePerNight(day, el));
+    //   } else if (secondDate) {
+    //     console.log('Dusri date aati hai range me');
+    //   } else {
+    //     console.log('Season Rates');
+    //     setRatesData(response.data.ratesData[0]);
+    //   }
+    // });
 
     // unitTypeData.forEach((el) => {
     //   if (el.id === unit) {
@@ -351,6 +389,68 @@ const CreateBookingPopup = (props) => {
     }
   };
 
+  // const calculatePerNight = (nights, ratesData, numOfAdult) => {
+  //   // console.log(nights)
+  //   // console.log(ratesData)
+  //   // console.log(selectDate)
+  //   // console.log(unitName)
+  //   // console.log(numOfAdult)
+  //   if (selectDate && unitName && numOfAdult > 0) {
+  //     let pricePerNight = (
+  //       Math.floor(
+  //         ratesData.price_on_monday
+  //           + ratesData.price_on_tuesday
+  //           + ratesData.price_on_wednesday
+  //           + ratesData.price_on_thursday
+  //           + ratesData.price_on_friday
+  //           + ratesData.price_on_saturday
+  //           + ratesData.price_on_sunday,
+  //       ) / 7
+  //     ).toFixed(2);
+
+  //     // console.log('pricePerNight', pricePerNight);
+  //     if (parseInt(numOfAdult, 10) > ratesData.extra_guest) {
+  //       pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_charge_on_guest;
+  //     }
+
+  //     // console.log('extra_guest', pricePerNight);
+  //     if (nights < ratesData.short_stay) {
+  //       pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_chage_on_stay;
+  //     }
+
+  //     // console.log('short_stay', pricePerNight);
+  //     if (ratesData.tax_status === 'include') {
+  //       const tax = Math.floor(
+  //         (parseInt(pricePerNight, 10) * ratesData.tax) / 100,
+  //       );
+  //       pricePerNight = parseInt(pricePerNight, 10) + tax;
+  //     }
+
+  //     // console.log('tax_status', pricePerNight);
+
+  //     let amt;
+  //     if (nights >= 7) {
+  //       const noOfWeeks = Math.floor(nights / 7);
+  //       amt = nights * pricePerNight
+  //         - noOfWeeks * ratesData.discount_price_per_week;
+  //     } else if (nights === ratesData.customNights) {
+  //       amt = nights * pricePerNight - ratesData.discount_price_custom_nights;
+  //     } else if (nights >= 30) {
+  //       const noOfMonths = Math.floor(nights / 30);
+  //       amt = nights * pricePerNight
+  //         - noOfMonths * ratesData.discount_price_per_month;
+  //     } else {
+  //       amt = nights * pricePerNight;
+  //     }
+  //     // console.log('amt', amt)
+  //     const data = {
+  //       pricePerNight,
+  //       amt,
+  //     };
+  //     return data;
+  //   }
+  // };
+
   useEffect(() => {
     if (selectDate && unitName && noOfAdult > 0) {
       let pricePerNight = (
@@ -364,25 +464,20 @@ const CreateBookingPopup = (props) => {
             + ratesData.price_on_sunday,
         ) / 7
       ).toFixed(2);
-
       if (parseInt(noOfAdult, 10) > ratesData.extra_guest) {
         pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_charge_on_guest;
       }
-
       if (night < ratesData.short_stay) {
         pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_chage_on_stay;
       }
-
       if (ratesData.tax_status === 'include') {
         const tax = Math.floor(
           (parseInt(pricePerNight, 10) * ratesData.tax) / 100,
         );
         pricePerNight = parseInt(pricePerNight, 10) + tax;
       }
-
       setPrice(pricePerNight);
       form.setFieldsValue({ perNight: pricePerNight });
-
       if (night >= 7) {
         const noOfWeeks = Math.floor(night / 7);
         setAmt(

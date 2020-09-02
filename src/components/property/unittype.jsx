@@ -37,6 +37,7 @@ const UnitType = () => {
   const [daysLeft, setDaysLeft] = useState();
   const [showEdit, setShowEdit] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [saveLoading, setSaveLoading] = useState(false);
   const history = useHistory();
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
@@ -68,6 +69,7 @@ const UnitType = () => {
   };
 
   const onFinish = async (id) => {
+    setSaveLoading(true);
     const values = {
       name,
       propertyId: localStorage.getItem('propertyId'),
@@ -77,6 +79,7 @@ const UnitType = () => {
     const response = await userInstance.post('/addUnitType', values);
     const { msg } = response.data;
     if (response.data.code === 200) {
+      setSaveLoading(false);
       toast.success(msg, { containerId: 'B' });
       setEditId(null);
       setShowPanel(true);
@@ -287,7 +290,9 @@ const UnitType = () => {
                             <CheckCircleOutlined />
                             {' '}
                             {t('strings.save')}
+                            <Button type="primary" loading={saveLoading} />
                           </div>
+
                         </div>
                       </div>
                     )
@@ -353,6 +358,7 @@ const UnitType = () => {
                             <CheckCircleOutlined />
                             {' '}
                             {t('strings.save')}
+                            <Button type="primary" loading={saveLoading} />
                           </div>
                         </div>
                       ) : (
