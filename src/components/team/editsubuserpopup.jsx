@@ -48,8 +48,6 @@ const EditSubUserPopup = (props) => {
   const [billingRead, setBillingRead] = useState(false);
   const [billingWrite, setBillingWrite] = useState(false);
   const [billingDelete, setBillingDelete] = useState(false);
-  const [hideWrite, setHideWrite] = useState(true);
-  const [hideDelete, setHideDelete] = useState(true);
   const [clickedOnRead, setClickedOnRead] = useState(true);
 
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -59,16 +57,6 @@ const EditSubUserPopup = (props) => {
       email: subUserData.email,
       role: subUserData.role,
     });
-    if (subUserData.role === 'read') {
-      setHideWrite(true);
-      setHideDelete(true);
-    } else if (subUserData.role === 'write') {
-      setHideWrite(false);
-      setHideDelete(true);
-    } else {
-      setHideDelete(false);
-      setHideWrite(false);
-    }
     setBookingRead(subUserData.bookingRead);
     setBookingWrite(subUserData.bookingWrite);
     setBookingDelete(subUserData.bookingDelete);
@@ -114,8 +102,6 @@ const EditSubUserPopup = (props) => {
       }
     }
     if (value === 'fullaccess') {
-      setHideDelete(false);
-      setHideWrite(false);
       setBookingRead(true);
       setBookingWrite(true);
       setBookingDelete(true);
@@ -147,8 +133,6 @@ const EditSubUserPopup = (props) => {
       setBillingWrite(true);
       setBillingDelete(true);
     } else if (value === 'write') {
-      setHideWrite(false);
-      setHideDelete(true);
       setBookingRead(true);
       setBookingWrite(true);
       setBookingDelete(false);
@@ -181,8 +165,6 @@ const EditSubUserPopup = (props) => {
       setBillingDelete(false);
     } else if (value === 'read') {
       if (clickedOnRead) {
-        setHideWrite(true);
-        setHideDelete(true);
         setBookingRead(true);
         setBookingWrite(false);
         setBookingDelete(false);
@@ -328,14 +310,14 @@ const EditSubUserPopup = (props) => {
     : setGuestsDelete(true));
   const handleTeamRead = (e) => (e.target.value === 'true' ? setTeamRead(false) : setTeamRead(true));
   const handleTeamWrite = (e) => (e.target.value === 'true' ? setTeamWrite(false) : setTeamWrite(true));
-  const handleTeamDelete = (e) => (e.target.value ? setPropertiesDelete(false)
-    : setPropertiesDelete(true));
+  const handleTeamDelete = (e) => (e.target.value ? setTeamDelete(false)
+    : setTeamDelete(true));
   const handleInvoicesRead = (e) => (e.target.value
     ? setInvoicesRead(false) : setInvoicesRead(true));
   const handleInvoicesWrite = (e) => (e.target.value
     ? setInvoicesWrite(false) : setInvoicesWrite(true));
-  const handleInvoicesDelete = (e) => (e.target.value ? setPropertiesDelete(false)
-    : setPropertiesDelete(true));
+  const handleInvoicesDelete = (e) => (e.target.value ? setInvoicesDelete(false)
+    : setInvoicesDelete(true));
   const handleStatsRead = (e) => (e.target.value ? setStatsRead(false) : setStatsRead(true));
   const handleStatsWrite = (e) => (e.target.value ? setStatsWrite(false) : setStatsWrite(true));
   const handleStatsDelete = (e) => (e.target.value ? setStatsDelete(false)
@@ -457,7 +439,6 @@ const EditSubUserPopup = (props) => {
                   </th>
                   <th>
                     <Checkbox
-                      disabled={hideWrite}
                       value={bookingWrite}
                       onChange={(e) => handleBookingWrite(e)}
                       checked={bookingWrite}
@@ -466,7 +447,6 @@ const EditSubUserPopup = (props) => {
                   </th>
                   <th>
                     <Checkbox
-                      disabled={hideDelete}
                       value={bookingDelete}
                       onChange={(e) => handleBookingDelete(e)}
                       checked={bookingDelete}
@@ -499,7 +479,6 @@ const EditSubUserPopup = (props) => {
                   </th>
                   <th>
                     <Checkbox
-                      disabled={hideWrite}
                       value={calendarWrite}
                       onChange={(e) => handleCalendarWrite(e)}
                       checked={calendarWrite}
@@ -508,7 +487,6 @@ const EditSubUserPopup = (props) => {
                   </th>
                   <th>
                     <Checkbox
-                      disabled={hideDelete}
                       value={calendarDelete}
                       onChange={(e) => handleCalendarDelete(e)}
                       checked={calendarDelete}
@@ -538,7 +516,6 @@ const EditSubUserPopup = (props) => {
                   </td>
                   <td>
                     <Checkbox
-                      disabled={hideWrite}
                       value={propertiesWrite}
                       onChange={(e) => handlePropertiesWrite(e)}
                       checked={propertiesWrite}
@@ -547,7 +524,6 @@ const EditSubUserPopup = (props) => {
                   </td>
                   <td>
                     <Checkbox
-                      disabled={hideDelete}
                       value={propertiesDelete}
                       onChange={(e) => handlePropertiesDelete(e)}
                       checked={propertiesDelete}
@@ -575,7 +551,6 @@ const EditSubUserPopup = (props) => {
                   </td>
                   <td>
                     <Checkbox
-                      disabled={hideWrite}
                       value={guestsWrite}
                       onChange={(e) => handleGuestsWrite(e)}
                       checked={guestsWrite}
@@ -583,8 +558,7 @@ const EditSubUserPopup = (props) => {
                     />
                   </td>
                   <td>
-                    <Checkbox
-                      disabled={hideDelete}
+                    <Checkbox                     
                       value={guestsDelete}
                       onChange={(e) => handleGuestsDelete(e)}
                       checked={guestsDelete}
@@ -602,27 +576,25 @@ const EditSubUserPopup = (props) => {
                   <td>
                     <Checkbox
                       value={teamRead}
-                      onClick={(e) => handleTeamRead(e)}
+                      onChange={(e) => handleTeamRead(e)}
                       checked={teamRead}
-                      onChange={handleCustomCheck}
+                      onClick={handleCustomCheck}
                     />
                   </td>
                   <td>
-                    <Checkbox
-                      disabled={hideWrite}
+                    <Checkbox                  
                       value={teamWrite}
-                      onClick={(e) => handleTeamWrite(e)}
+                      onChange={(e) => handleTeamWrite(e)}
                       checked={teamWrite}
-                      onChange={handleCustomCheck}
+                      onClick={handleCustomCheck}
                     />
                   </td>
                   <td>
-                    <Checkbox
-                      disabled={hideDelete}
+                    <Checkbox                    
                       value={teamDelete}
-                      onClick={(e) => handleTeamDelete(e)}
+                      onChange={(e) => handleTeamDelete(e)}
                       checked={teamDelete}
-                      onChange={handleCustomCheck}
+                      onClick={handleCustomCheck}
                     />
                   </td>
                   <td>
@@ -654,7 +626,6 @@ const EditSubUserPopup = (props) => {
                   </th>
                   <th>
                     <Checkbox
-                      disabled={hideWrite}
                       value={invoicesWrite}
                       onChange={(e) => handleInvoicesWrite(e)}
                       checked={invoicesWrite}
@@ -663,7 +634,6 @@ const EditSubUserPopup = (props) => {
                   </th>
                   <th>
                     <Checkbox
-                      disabled={hideDelete}
                       value={invoicesDelete}
                       onChange={(e) => handleInvoicesDelete(e)}
                       checked={invoicesDelete}
@@ -699,7 +669,6 @@ const EditSubUserPopup = (props) => {
                   </th>
                   <th>
                     <Checkbox
-                      disabled={hideWrite}
                       value={statsWrite}
                       onChange={(e) => handleStatsWrite(e)}
                       checked={statsWrite}
@@ -708,7 +677,6 @@ const EditSubUserPopup = (props) => {
                   </th>
                   <th>
                     <Checkbox
-                      disabled={hideDelete}
                       value={statsDelete}
                       onChange={(e) => handleStatsDelete(e)}
                       checked={statsDelete}
@@ -744,7 +712,6 @@ const EditSubUserPopup = (props) => {
                   </th>
                   <th>
                     <Checkbox
-                      disabled={hideWrite}
                       value={serviceWrite}
                       onChange={(e) => handleServiceWrite(e)}
                       checked={serviceWrite}
@@ -753,7 +720,6 @@ const EditSubUserPopup = (props) => {
                   </th>
                   <th>
                     <Checkbox
-                      disabled={hideDelete}
                       value={serviceDelete}
                       onChange={(e) => handleServiceDelete(e)}
                       checked={serviceDelete}
@@ -782,7 +748,6 @@ const EditSubUserPopup = (props) => {
                   </th>
                   <th>
                     <Checkbox
-                      disabled={hideWrite}
                       value={ownerWrite}
                       onChange={(e) => handleOwnerWrite(e)}
                       checked={ownerWrite}
@@ -791,7 +756,6 @@ const EditSubUserPopup = (props) => {
                   </th>
                   <th>
                     <Checkbox
-                      disabled={hideDelete}
                       value={ownerDelete}
                       onChange={(e) => handleOwnerDelete(e)}
                       checked={ownerDelete}
@@ -824,7 +788,6 @@ const EditSubUserPopup = (props) => {
                   </th>
                   <th>
                     <Checkbox
-                      disabled={hideWrite}
                       value={billingWrite}
                       onChange={(e) => handleBillingWrite(e)}
                       checked={billingWrite}
@@ -833,7 +796,6 @@ const EditSubUserPopup = (props) => {
                   </th>
                   <th>
                     <Checkbox
-                      disabled={hideDelete}
                       value={billingDelete}
                       onChange={(e) => handleBillingDelete(e)}
                       checked={billingDelete}
