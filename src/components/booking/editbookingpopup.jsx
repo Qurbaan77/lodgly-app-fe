@@ -542,6 +542,7 @@ const Editbookingpopup = (props) => {
                 value={adult}
                 onSelect={(e) => handleAdult(e)}
               >
+                <Select.Option value="0">0</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -562,6 +563,7 @@ const Editbookingpopup = (props) => {
                 value={children1}
                 onSelect={(e) => handleChildren1(e)}
               >
+                <Select.Option value="0">0</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -578,6 +580,7 @@ const Editbookingpopup = (props) => {
                 value={children2}
                 onSelect={(e) => handleChildren2(e)}
               >
+                <Select.Option value="0">0</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>

@@ -37,7 +37,7 @@ border-right: 1px solid #efefef;
 }
 
 .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
-  background-color: #fffaf0!important;
+  background-color: #fffaf000!important;
 }
 
 .ant-menu-sub.ant-menu-inline > .ant-menu-item a {
@@ -65,7 +65,11 @@ right: inherit!important;
 border-right: 3px solid #fab52c!important;
 }
 .main-menu .ant-menu-item-selected a, .main-menu .ant-menu-item-selected span{
-color: #fab52c!important;
+color: #999!important;
+}
+
+.ant-menu-inline .ant-menu-selected::after, .ant-menu-inline .ant-menu-item-selected::after{
+  display:none;
 }
 
 .ant-menu-item:hover, .ant-menu-item-active, .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open, .ant-menu-submenu-active, .ant-menu-submenu-title:hover {

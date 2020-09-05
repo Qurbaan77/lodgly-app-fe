@@ -668,7 +668,7 @@ const SubUserPopup = ({
                     />
                   </th>
                   <th>
-                    <Checkbox                     
+                    <Checkbox
                       value={serviceDelete}
                       onChange={(e) => handleServiceDelete(e)}
                       checked={serviceDelete}
@@ -696,7 +696,7 @@ const SubUserPopup = ({
                     />
                   </th>
                   <th>
-                    <Checkbox                  
+                    <Checkbox
                       value={ownerWrite}
                       onChange={(e) => handleOwnerWrite(e)}
                       checked={ownerWrite}
@@ -704,7 +704,7 @@ const SubUserPopup = ({
                     />
                   </th>
                   <th>
-                    <Checkbox                
+                    <Checkbox
                       value={ownerDelete}
                       onChange={(e) => handleOwnerDelete(e)}
                       checked={ownerDelete}

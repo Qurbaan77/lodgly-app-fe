@@ -558,7 +558,7 @@ const EditSubUserPopup = (props) => {
                     />
                   </td>
                   <td>
-                    <Checkbox                     
+                    <Checkbox
                       value={guestsDelete}
                       onChange={(e) => handleGuestsDelete(e)}
                       checked={guestsDelete}
@@ -582,7 +582,7 @@ const EditSubUserPopup = (props) => {
                     />
                   </td>
                   <td>
-                    <Checkbox                  
+                    <Checkbox
                       value={teamWrite}
                       onChange={(e) => handleTeamWrite(e)}
                       checked={teamWrite}
@@ -590,7 +590,7 @@ const EditSubUserPopup = (props) => {
                     />
                   </td>
                   <td>
-                    <Checkbox                    
+                    <Checkbox
                       value={teamDelete}
                       onChange={(e) => handleTeamDelete(e)}
                       checked={teamDelete}

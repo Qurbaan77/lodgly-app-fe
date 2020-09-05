@@ -72,7 +72,7 @@ const Profile = () => {
       if (body[0].image !== null) {
         setImg(body[0].image);
       } else {
-        setImg('')
+        setImg('');
       }
       // if (body[0].fullname !== null) {
       //   setUserName(body[0].fullname);
@@ -186,15 +186,15 @@ const Profile = () => {
     getCompanyInfo();
   }, [getUserInfo, getCompanyInfo]);
 
-   const Delete = async() =>{
-    const response = await userInstance.post('/removeProfile')
-  if(response.data.code === 200){
-    toast.success('Profile Removed Successfully', { containerId: 'B' });
-    getUserInfo();
-  } else {
-    toast.error('server error please try again', { containerId: 'B' });
-  }
-  }
+  const Delete = async () => {
+    const response = await userInstance.post('/removeProfile');
+    if (response.data.code === 200) {
+      toast.success('Profile Removed Successfully', { containerId: 'B' });
+      getUserInfo();
+    } else {
+      toast.error('server error please try again', { containerId: 'B' });
+    }
+  };
 
   const english = useCallback(() => {
     changeLanguage('en');
@@ -268,7 +268,7 @@ const Profile = () => {
                                             {t('billingprofile.label3')}
                                             {t('billingprofile.label4')}
                                           </span>
-                                         
+
                                         </div>
                                       )
                                       : (

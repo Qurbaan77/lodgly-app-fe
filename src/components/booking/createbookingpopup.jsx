@@ -22,8 +22,13 @@ import {
   PlusOutlined,
   EditOutlined,
   DeleteOutlined,
+  ClockCircleOutlined,
+  CheckOutlined,
+  DownSquareOutlined,
+  UpSquareOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import countryList from 'react-select-country-list';
 import { userInstance } from '../../axios/axiosconfig';
 
@@ -39,6 +44,7 @@ const CreateBookingPopup = (props) => {
   } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
+  const [country, setCountry] = useState(null);
   // const [visible1, setVisible1] = useState(false);
   // const [radio, setRadio] = useState(1);
   const [channel, setChannel] = useState('');
@@ -67,6 +73,14 @@ const CreateBookingPopup = (props) => {
   const [discountAmount, setdiscountAmount] = useState(null);
   const [selectDate, setSelectDate] = useState({});
   const [seasonRatesData, setSeasonRatesData] = useState([]);
+  const [visibleGuest, setVisibleGuest] = useState(false);
+  const [showOptional, setShowOptional] = useState(true);
+  const [leftDays, setLeftDays] = useState(0);
+  const [daysArr, setDaysArr] = useState([]);
+  const [startDate, setStartDate] = useState('');
+  const [startDateMonth, setStartDateMonth] = useState('');
+  const [currMonthDay, setCurrMonthDay] = useState(0);
+  const [upDown, setUpDown] = useState(false);
 
   // const [fullname, setFullname] = useState({});
   // const [email, setEmail] = useState({});
@@ -94,6 +108,10 @@ const CreateBookingPopup = (props) => {
   const addMore = () => {
     i += 1;
     setPanel([...panel, i]);
+  };
+
+  const guestForm = () => {
+    setVisibleGuest(true);
   };
 
   const removePanel = () => {
@@ -381,13 +399,42 @@ const CreateBookingPopup = (props) => {
   const onChangeDate = (value) => {
     if (value) {
       setSelectDate(value);
+      setStartDate(value[0]._d.getDate());
+      setStartDateMonth(value[0]._d.getMonth() + 1);
+      const now = new Date(value[0]._d);
+      const days = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      setCurrMonthDay(days);
       const d1 = new Date(value[0]._d);
       const d2 = new Date(value[1]._d);
       const diff = Math.abs(d1 - d2);
       const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
       setNight(day);
+      setDaysArr(Array.from(Array(day).keys()));
     }
   };
+
+  const onOptionalDate = (value) => {
+    if (value) {
+      // setSelectDate(value);
+      const d1 = new Date(value._d);
+      const d2 = new Date();
+      const diff = Math.abs(d1 - d2);
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+      setLeftDays(day);
+    }
+  };
+
+  const priceFunction = useCallback(
+    (value) => {
+      setPrice(value);
+      daysArr.forEach((el, j) => {
+        form.setFieldsValue({
+          [`everyDayPrice${j}`]: value,
+        });
+      });
+    },
+    [daysArr, form],
+  );
 
   // const calculatePerNight = (nights, ratesData, numOfAdult) => {
   //   // console.log(nights)
@@ -451,6 +498,14 @@ const CreateBookingPopup = (props) => {
   //   }
   // };
 
+  const onOk = () => {
+    setVisibleGuest(false);
+  };
+
+  const onCancel = () => {
+    setVisibleGuest(false);
+  };
+
   useEffect(() => {
     if (selectDate && unitName && noOfAdult > 0) {
       let pricePerNight = (
@@ -478,6 +533,12 @@ const CreateBookingPopup = (props) => {
       }
       setPrice(pricePerNight);
       form.setFieldsValue({ perNight: pricePerNight });
+      daysArr.forEach((el, j) => {
+        form.setFieldsValue({
+          [`everyDayPrice${j}`]: pricePerNight,
+        });
+      });
+
       if (night >= 7) {
         const noOfWeeks = Math.floor(night / 7);
         setAmt(
@@ -506,7 +567,7 @@ const CreateBookingPopup = (props) => {
         setAccomodation(night * pricePerNight);
       }
     }
-  }, [selectDate, unitName, noOfAdult, ratesData, form, night]);
+  }, [selectDate, unitName, noOfAdult, ratesData, form, night, daysArr]);
 
   const createGuestDetails = (
     <>
@@ -577,7 +638,11 @@ const CreateBookingPopup = (props) => {
             </Col>
 
             <Col span={24}>
-              <div className="additional-edit">
+              <div
+                className="additional-edit"
+                onClick={guestForm}
+                role="presentation"
+              >
                 <div>
                   <EditOutlined />
                   {' '}
@@ -590,6 +655,151 @@ const CreateBookingPopup = (props) => {
           <div className="delete-data">
             <DeleteOutlined onClick={removePanel} />
           </div>
+          <Modal
+            title={t('strings.guest')}
+            visible={visibleGuest}
+            onOk={onOk}
+            onCancel={onCancel}
+            wrapClassName="guest-modal"
+          >
+            <Helmet>
+              <body className={visible ? 'ant-scrolling-effect' : ''} />
+            </Helmet>
+            <Row style={{ alignItems: 'center' }}>
+              <Col span={12}>
+                <Form.Item
+                  label={t('strings.full')}
+                  name={[el, 'fullName']}
+                  style={{ paddingRight: 20 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: t('guestpopup.label1'),
+                    },
+                  ]}
+                >
+                  <Input placeholder={t('strings.full')} />
+                </Form.Item>
+              </Col>
+
+              <Col span={12}>
+                <Form.Item
+                  label={t('guestpopup.label2')}
+                  name={[el, 'country']}
+                  rules={[{ required: true, message: t('guestpopup.label3') }]}
+                >
+                  <CountryDropdown onChange={(val) => setCountry(val)} />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row style={{ alignItems: 'center' }}>
+              <Col span={12}>
+                <Form.Item
+                  label={t('strings.email')}
+                  name={[el, 'email']}
+                  style={{ paddingRight: 20 }}
+                >
+                  <Input placeholder={t('strings.email')} />
+                </Form.Item>
+              </Col>
+
+              <Col span={12}>
+                <Form.Item label={t('strings.phone')} name={[el, 'phone']}>
+                  <Input placeholder={t('strings.phone')} type="number" />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row style={{ alignItems: 'center' }}>
+              <Col span={12}>
+                <Form.Item
+                  name={[el, 'dob']}
+                  label={t('strings.dob')}
+                  style={{ paddingRight: 20 }}
+                >
+                  <DatePicker />
+                </Form.Item>
+              </Col>
+
+              <Col span={12}>
+                <Form.Item name={[el, 'gender']} label={t('strings.gender')}>
+                  <Radio.Group name="radiogroup" defaultValue={1}>
+                    <Radio value={1}>M</Radio>
+                    <Radio value={2}>F</Radio>
+                    <Radio value={3}>Other</Radio>
+                  </Radio.Group>
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row style={{ alignItems: 'center' }}>
+              <Col span={12}>
+                <Form.Item
+                  label={t('guestpopup.label4')}
+                  name={[el, 'typeOfDoc']}
+                  style={{ paddingRight: 20 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: t('guestpopup.label5'),
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+
+              <Col span={12}>
+                <Form.Item
+                  label={t('guestpopup.label6')}
+                  name={[el, 'docNo']}
+                  rules={[{ required: true, message: t('guestpopup.label5') }]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row style={{ alignItems: 'center' }}>
+              <Col span={12}>
+                <Form.Item
+                  label={t('strings.citizenship')}
+                  name={[el, 'citizenShip']}
+                  style={{ paddingRight: 20 }}
+                >
+                  <RegionDropdown country={country} />
+                </Form.Item>
+              </Col>
+
+              <Col span={12}>
+                <Form.Item label={t('guestpopup.label8')} name={[el, 'place']}>
+                  <Input />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row style={{ alignItems: 'center' }}>
+              <Col span={24}>
+                <Form.Item label={t('strings.note')} name={[el, 'notes']}>
+                  <Input.TextArea />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row style={{ alignItems: 'center', textAlign: 'right' }}>
+              <Col span={24}>
+                <Form.Item>
+                  <Button style={{ marginRight: 10 }} onClick={onCancel}>
+                    {t('strings.cancel')}
+                  </Button>
+                  <Button type="primary" onClick={onOk}>
+                    {t('strings.save')}
+                  </Button>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Modal>
         </div>
       ))}
     </>
@@ -628,9 +838,37 @@ const CreateBookingPopup = (props) => {
 
           <Col span={12}>
             <Radio.Group name="radiogroup" defaultValue={1}>
-              <Radio value={1}>{t('strings.confirmed')}</Radio>
-              <Radio value={2}>{t('strings.option')}</Radio>
+              <Radio value={1} onClick={() => setShowOptional(true)}>
+                {t('strings.confirmed')}
+              </Radio>
+              <Radio value={2} onClick={() => setShowOptional(false)}>
+                {t('strings.option')}
+              </Radio>
             </Radio.Group>
+          </Col>
+
+          <Col span={24}>
+            <div className="option-content" hidden={showOptional}>
+              <p>
+                <ClockCircleOutlined />
+                {' '}
+                Option is active untill
+              </p>
+              <DatePicker onChange={onOptionalDate} />
+              <span>
+                (days left:
+                {leftDays}
+                )
+              </span>
+              <div className="option-tag">
+                <CheckOutlined />
+                {' '}
+                Confirmed
+              </div>
+            </div>
+            <p className="checked-avail">
+              *Availability is checked automatically
+            </p>
           </Col>
         </Row>
 
@@ -692,6 +930,7 @@ const CreateBookingPopup = (props) => {
                 onSelect={(value, event) => fun5(value, event)}
                 style={{ width: '70%', display: 'inline-block' }}
               >
+                <Select.Option value="">Select</Select.Option>
                 <Select.Option value="Airbnb">Airbnb</Select.Option>
                 <Select.Option value="Booking">Booking</Select.Option>
               </Select>
@@ -735,6 +974,7 @@ const CreateBookingPopup = (props) => {
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => onSelectAdult(value, event)}
               >
+                <Select.Option value="">--Select--</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -751,6 +991,7 @@ const CreateBookingPopup = (props) => {
               style={{ paddingRight: 20 }}
             >
               <Select placeholder={t('strings.select')}>
+                <Select.Option value="">--Select--</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -763,6 +1004,7 @@ const CreateBookingPopup = (props) => {
           <Col span={8}>
             <Form.Item label={t('bookingpop.label17')} name="children2">
               <Select placeholder={t('strings.select')}>
+                <Select.Option value="0">0</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -850,14 +1092,14 @@ const CreateBookingPopup = (props) => {
                       type="number"
                       placeholder="0,00"
                       value={price}
-                      disabled="true"
                       rules={[
                         {
                           required: true,
                           message: t('bookingpop.rule5'),
                         },
                       ]}
-                      onChange={(e) => setPrice(e.target.value)}
+                      onChange={(e) => priceFunction(e.target.value)}
+                      // onChange={(e) => setPrice(e.target.value)}
                     />
                   </Form.Item>
                   <label htmlFor="number">
@@ -948,6 +1190,8 @@ const CreateBookingPopup = (props) => {
             <Col span={24}>
               <div className="per-night">
                 <label htmlFor="night">
+                  <DownSquareOutlined hidden={upDown} onClick={() => setUpDown(true)} />
+                  <UpSquareOutlined hidden={!upDown} onClick={() => setUpDown(!upDown)} />
                   <input hidden />
                   {t('bookingpop.label6')}
                 </label>
@@ -960,6 +1204,24 @@ const CreateBookingPopup = (props) => {
                   {' '}
                   €
                 </span>
+              </div>
+              <div className="per-night-content" hidden={upDown}>
+                <div className="night-container">
+                  {daysArr.map((ele, j) => (
+                    <div className="night-box">
+                      <Form.Item
+                        label={
+                          startDate + j <= currMonthDay
+                            ? `${startDate + j} : ${startDateMonth}`
+                            : `${0 + j} : ${startDateMonth + 1}`
+                        }
+                        name={`everyDayPrice${j}`}
+                      >
+                        <Input />
+                      </Form.Item>
+                    </div>
+                  ))}
+                </div>
               </div>
             </Col>
 

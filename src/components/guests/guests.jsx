@@ -14,6 +14,7 @@ import {
   Modal,
 } from 'antd';
 import Helmet from 'react-helmet';
+import moment from 'moment';
 import { toast } from 'react-toastify';
 import favicon from '../../assets/images/logo-mobile.png';
 import Wrapper from '../wrapper';
@@ -71,21 +72,22 @@ const GuestList = () => {
   const columns = [
     {
       title: 'Guest',
-      dataIndex: 'guest',
+      dataIndex: 'fullname',
       sorter: {
         compare: (a, b) => a.french - b.french,
         multiple: 4,
       },
-      render: (guest, record) => (
+      render: (fullname, record) => (
         <div className="guest-info-table">
           <div className="guest-checkbox">
             <Checkbox />
           </div>
           <div className="guest-info-box">
-            <h3>{guest}</h3>
+            <h3>{fullname}</h3>
             <span>{record.country}</span>
             <p>
-              {record.date}
+              {moment(new Date(record.created_at)).format('DD MMM YYYY')}
+
               {' '}
               <i />
               {' '}
@@ -103,14 +105,14 @@ const GuestList = () => {
     },
     {
       title: 'Contact',
-      dataIndex: 'contact',
+      dataIndex: 'email',
       sorter: {
         compare: (a, b) => a.chinese - b.chinese,
         multiple: 3,
       },
-      render: (contact, record) => (
+      render: (email, record) => (
         <div className="guest-contact-table">
-          <p>{contact}</p>
+          <p>{email}</p>
           <span>{record.phone}</span>
         </div>
       ),
@@ -131,7 +133,7 @@ const GuestList = () => {
     },
     {
       title: 'Impression',
-      dataIndex: 'impression',
+      dataIndex: 'notes',
       sorter: {
         compare: (a, b) => a.english - b.english,
         multiple: 1,
@@ -188,75 +190,6 @@ const GuestList = () => {
       toast.error('Server error please try again', { containerId: 'B' });
     }
   };
-
-  // const data = [
-  //   {
-  //     key: '1',
-  //     guest: 'Barry Griffith',
-  //     country: 'USA',
-  //     date: 'Aug 5 2019',
-  //     night: '10',
-  //     people: '2',
-  //     contact: 'mymail@gmail.com',
-  //     phone: '+30 37 678 8790',
-  //     spent: '304.00 EUR',
-  //     pernight: '76,00 p/n',
-  //     impression: 'Some impressions about client',
-  //   },
-  //   {
-  //     key: '2',
-  //     guest: 'Emily Byrd',
-  //     country: 'USA',
-  //     date: 'Aug 5 2019',
-  //     night: '10',
-  //     people: '2',
-  //     contact: 'mymail@gmail.com',
-  //     phone: '+30 37 678 8790',
-  //     spent: '304.00 EUR',
-  //     pernight: '76,00 p/n',
-  //     impression: 'Some impressions about client',
-  //   },
-
-  //   {
-  //     key: '3',
-  //     guest: 'Rose White',
-  //     country: 'USA',
-  //     date: 'Aug 5 2019',
-  //     night: '10',
-  //     people: '2',
-  //     contact: 'mymail@gmail.com',
-  //     phone: '+30 37 678 8790',
-  //     spent: '304.00 EUR',
-  //     pernight: '76,00 p/n',
-  //     impression: 'Some impressions about client',
-  //   },
-  //   {
-  //     key: '4',
-  //     guest: 'Janie Schneider',
-  //     country: 'USA',
-  //     date: 'Aug 5 2019',
-  //     night: '10',
-  //     people: '2',
-  //     contact: 'mymail@gmail.com',
-  //     phone: '+30 37 678 8790',
-  //     spent: '304.00 EUR',
-  //     pernight: '76,00 p/n',
-  //     impression: 'Some impressions about client',
-  //   },
-  //   {
-  //     key: '5',
-  //     guest: 'Harvey Rivera',
-  //     country: 'USA',
-  //     date: 'Aug 5 2019',
-  //     night: '10',
-  //     people: '2',
-  //     contact: 'mymail@gmail.com',
-  //     phone: '+30 37 678 8790',
-  //     spent: '304.00 EUR',
-  //     pernight: '76,00 p/n',
-  //     impression: 'Some impressions about client',
-  //   },
-  // ];
 
   // function onChange(pagination, filters, sorter, extra) {
   //   console.log('params', pagination, filters, sorter, extra);
@@ -441,6 +374,7 @@ const GuestList = () => {
               <Table
                 columns={columns}
                 dataSource={guestData}
+                // dataSource={data}
                 onChange={onChange}
               />
             </div>

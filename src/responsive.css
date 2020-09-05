@@ -252,7 +252,10 @@
 .rates-page-view .ant-menu .rates-nav,
 .season-page-view .ant-menu .season-nav,
 .guest-page-view .ant-menu .guest-nav,
-.company-page-view .ant-menu .company-nav     {
+.company-page-view .ant-menu .company-nav,
+.overview-page-view .ant-menu .overview-nav,
+.location-page-view .ant-menu .location-nav,
+.photos-page-view .ant-menu .photos-nav      {
     background-color: #fffaf0!important;
 }
 
@@ -272,7 +275,10 @@
 .rates-page-view .ant-menu .rates-nav a,
 .season-page-view .ant-menu .season-nav a,
 .guest-page-view .ant-menu .guest-nav a,
-.company-page-view .ant-menu .company-nav a  {
+.company-page-view .ant-menu .company-nav a,
+.overview-page-view .ant-menu .overview-nav a,
+.location-page-view .ant-menu .location-nav a,
+.photos-page-view .ant-menu .photos-nav a   {
     color: #fab52c!important;
 }
 
@@ -293,7 +299,10 @@
 .rates-page-view .ant-menu .rates-nav:before,
 .season-page-view .ant-menu .season-nav:before,
 .guest-page-view .ant-menu .guest-nav:before,
-.company-page-view .ant-menu .company-nav:before {
+.company-page-view .ant-menu .company-nav:before,
+.overview-page-view .ant-menu .overview-nav:before,
+.location-page-view .ant-menu .location-nav:before,
+.photos-page-view .ant-menu .photos-nav:before  {
     content: "";
     position: absolute;
     width: 3px;

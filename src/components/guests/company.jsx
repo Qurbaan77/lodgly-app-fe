@@ -11,6 +11,7 @@ import actionicon from '../../assets/images/action-icon.png';
 import editicon from '../../assets/images/edit-icon.png';
 import deleteicon from '../../assets/images/delete-icon.png';
 import AddCompany from './addcompanypopup';
+import EditCompany from './editcompanypop';
 import { userInstance } from '../../axios/axiosconfig';
 import loader from '../../assets/images/cliploader.gif';
 import DeletePopup from '../property/deletepopup';
@@ -35,11 +36,6 @@ const CompanyList = () => {
     getData();
   }, [getData]);
 
-  const edit = (record) => {
-    showEditData(record);
-    setVisible(true);
-  };
-
   const delRow = (id) => {
     setVisibiltyOFDelete(true);
     setCurrId(id);
@@ -53,7 +49,7 @@ const CompanyList = () => {
     if (response.data.code === 200) {
       setVisibiltyOFDelete(false);
       getData();
-      toast.success('Successfully deleted company', { containerId: 'B' });
+      toast.success('Successfully deleted company', { containerId: 'B', toastId: 'unique' });
     } else {
       toast.error('Server error please try again', { containerId: 'B' });
     }
@@ -124,18 +120,24 @@ const CompanyList = () => {
   }
 
   const [visible, setVisible] = useState(false);
-
+  const [visibletwo, setVisibleTwo] = useState(false);
   const show = () => {
     setVisible(true);
+    showEditData({});
   };
-
+  const edit = (record) => {
+    showEditData(record);
+    setVisibleTwo(true);
+  };
   const handleOk = () => {
     setVisible(false);
+    setVisibleTwo(false);
     setVisibiltyOFDelete(false);
   };
 
   const handleCancel = () => {
     setVisible(false);
+    setVisibleTwo(false);
     setVisibiltyOFDelete(false);
   };
 
@@ -189,7 +191,7 @@ const CompanyList = () => {
           name="description"
           content="Grow your Vacation Rental with Lodgly"
         />
-        <body className="company-page-view" />
+        <body className="rates-page-view" />
       </Helmet>
 
       <div className="guest-list company-list">
@@ -215,18 +217,23 @@ const CompanyList = () => {
         </div>
       </div>
 
-      <AddCompany
-        visible={visible}
+      <EditCompany
+        visible={visibletwo}
         handleOk={handleOk}
         handleCancel={handleCancel}
         getData={getData}
         editData={editData}
       />
-
+      <AddCompany
+        visible={visible}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
+        getData={getData}
+      />
       <Modal
         visible={visibiltyOFDelete}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        handleOk={handleOk}
+        handleCancel={handleCancel}
         wrapClassName="delete-modal"
       >
         <DeletePopup

@@ -187,6 +187,7 @@ const Sidenav = ({
 
   const [nav, setNav] = useState(false);
   const [ratesNav, setRatesNav] = useState(false);
+  // const [propertyNav, setPropertyNav] = useState(false);
   const changeMenu = useCallback(() => {
     const { pathname } = window.location;
     if (
@@ -215,9 +216,25 @@ const Sidenav = ({
     }
   }, [ratesNav]);
 
+  // const changeMenuProperty = useCallback(() => {
+  //   const { pathname } = window.location;
+  //   if (
+  //     (pathname === '/overview'
+  //       || pathname === '/location'
+  //       || pathname === '/photos'
+  //       || pathname === '/rates'
+  //       || pathname === '/seasonrates'
+  //       || pathname === '/channelmanager')
+  //     && propertyNav === false
+  //   ) {
+  //     setPropertyNav(true);
+  //   }
+  // }, [propertyNav]);
+
   useEffect(() => {
     changeMenu();
     changeMenuUnitTypes();
+    // changeMenuProperty();
   }, [changeMenu, changeMenuUnitTypes]);
 
   useEffect(() => {
@@ -279,33 +296,10 @@ const Sidenav = ({
           <Link to="/propertylist">{t('sidebar.menu3')}</Link>
         </Menu.Item>
 
-        {/* <SubMenu
-          className={`${disableProperties ? 'hide-prop' : 'property-nav'}`}
-          onClick={() => handleMenu('toggle')}
-          key="2"
-          disabled={disableProperties}
-          title={(
-            <div>
-              <img src={propertyIcon} alt="property-icon" />
-              <Link to="/propertylist">{t('sidebar.menu3')}</Link>
-            </div>
-          )}
-        >
-          {/* {propertyData.map((el) => (
-            <Menu.Item key={el.propertyNo}>
-              <Link
-                to="/property"
-                onClick={() => {
-                  func(el.id);
-                }}
-              >
-                {' '}
-                {el.propertyName}
-                {' '}j
-              </Link>
-            </Menu.Item>
-          ))} */}
-        {/* </SubMenu> */}
+        {/* <Menu.ItemGroup key="g1" title="Item 1">
+          <Menu.Item key="1">Option 1</Menu.Item>
+          <Menu.Item key="2">Option 2</Menu.Item>
+        </Menu.ItemGroup> */}
 
         <SubMenu
           hidden={disableGuests}
@@ -341,11 +335,6 @@ const Sidenav = ({
           <Link to="/stats">{t('sidebar.menu7')}</Link>
         </Menu.Item>
 
-        {/* <Menu.Item className="integration-nav">
-          <img src={integrationIcon} alt="integration-icon" />
-          <Link to="/">{t('sidebar.menu8')}</Link>
-        </Menu.Item> */}
-
         <Menu.Item className="owner-nav" hidden={hideOwner}>
           <img src={ownerIcon} alt="owner-icon" />
           <Link to="/owner">{t('sidebar.menu9')}</Link>
@@ -380,10 +369,6 @@ const Sidenav = ({
           <img src={unitIcon} alt="unit" />
           <Link to="/unittype">{t('sidebar.menu12')}</Link>
         </Menu.Item>
-        {/* <Menu.Item className="group-nav">
-          <img src={taskIcon} alt="task" />
-          <Link to="/groups">{t('sidebar.menu13')}</Link>
-        </Menu.Item> */}
         <Menu.Item className="channel-nav">
           <img src={channelIcon} alt="channel" />
           <Link to="/channelmanager">{t('sidebar.menu14')}</Link>
@@ -430,6 +415,58 @@ const Sidenav = ({
           <Link to="/seasonrates">Season Rates</Link>
         </Menu.Item>
       </Menu>
+
+      {/* <Menu
+        className={`main-menu-mbl ${propertyNav ? 'show' : ''}`}
+        theme="light"
+        mode="inline"
+        style={{ height: '100%' }}
+      >
+        <span
+          className="submenu-heading"
+          onClick={() => handleMenu('close')}
+          role="presentation"
+        >
+          <Link
+            to="/property"
+            onClick={() => localStorage.removeItem('property')}
+          >
+            <ArrowLeftOutlined />
+            {' '}
+            Property
+          </Link>
+        </span>
+        <Menu.Item className="overview-nav">
+          <img src={propertyIcon} alt="property" />
+          <Link to="/overview">Overview</Link>
+        </Menu.Item>
+
+        <Menu.Item className="location-nav">
+          <img src={statsIcon} alt="property" />
+          <Link to="/location">Location</Link>
+        </Menu.Item>
+
+        <Menu.Item className="photos-nav">
+          <img src={guestIcon} alt="unit" />
+          <Link to="/photos">Photos</Link>
+        </Menu.Item>
+
+        <Menu.Item className="rates-nav">
+          <img src={unitIcon} alt="unit" />
+          <Link to="/rates">Rates</Link>
+        </Menu.Item>
+
+        <Menu.Item className="season-nav">
+          <img src={teamIcon} alt="channel" />
+          <Link to="/seasonrates">Season Rates</Link>
+        </Menu.Item>
+
+        <Menu.Item className="channel-nav">
+          <img src={channelIcon} alt="channel" />
+          <Link to="/channelmanager">{t('sidebar.menu14')}</Link>
+        </Menu.Item>
+
+      </Menu> */}
 
       <div className="company-ip">
         <h6>

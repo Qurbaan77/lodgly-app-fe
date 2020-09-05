@@ -7,19 +7,27 @@ import {
 import { toast } from 'react-toastify';
 import { userInstance } from '../../axios/axiosconfig';
 
-const AddCompany = (props) => {
+const EditCompany = (props) => {
   const {
-    visible, handleOk, handleCancel, getData,
+    visible, handleOk, handleCancel, getData, editData,
   } = props;
 
   const [form] = Form.useForm();
 
+  form.setFieldsValue({
+    name: editData.name,
+    vat: editData.vatId,
+    email: editData.email,
+    address: editData.address,
+  });
+
   const onFinish = async (values) => {
+    values.id = editData.id;
     const response = await userInstance.post('/addCompany', values);
     if (response.data.code === 200) {
       handleCancel();
       getData();
-      toast.success('Company created successfully!', { containerId: 'B' });
+      toast.success('Company updated successfully!', { containerId: 'B', toastId: 'unique' });
     } else {
       toast.error('Some error occurred!', { containerId: 'B' });
     }
@@ -30,7 +38,7 @@ const AddCompany = (props) => {
 
   return (
     <Modal
-      title="Add Company"
+      title="Edit Company"
       visible={visible}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -134,17 +142,19 @@ const AddCompany = (props) => {
   );
 };
 
-AddCompany.propTypes = {
+EditCompany.propTypes = {
   visible: PropTypes.string,
   handleOk: PropTypes.func,
   handleCancel: PropTypes.func,
   getData: PropTypes.func,
+  editData: PropTypes.objectOf(PropTypes.object),
 };
-AddCompany.defaultProps = {
+EditCompany.defaultProps = {
   visible: false,
   handleOk: () => {},
   handleCancel: () => {},
   getData: () => {},
+  editData: {},
 };
 
-export default AddCompany;
+export default EditCompany;
