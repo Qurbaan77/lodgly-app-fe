@@ -8,7 +8,7 @@ import {
   Select,
   Checkbox,
   DatePicker,
-  Tag,
+  // Tag,
   Form,
   Input,
   Modal,
@@ -28,9 +28,9 @@ import deleteicon from '../../assets/images/delete-icon.png';
 
 import back from '../../assets/images/back.png';
 import editIcon from '../../assets/images/edit-icon.png';
-import downloadIcon from '../../assets/images/menu/download-icon.png';
-import refreshIcon from '../../assets/images/refresh-icon.png';
-import cancelIcon from '../../assets/images/menu/cancel-icon.png';
+// import downloadIcon from '../../assets/images/menu/download-icon.png';
+// import refreshIcon from '../../assets/images/refresh-icon.png';
+// import cancelIcon from '../../assets/images/menu/cancel-icon.png';
 import loader from '../../assets/images/cliploader.gif';
 import { userInstance } from '../../axios/axiosconfig';
 import NoGuest from './noguests';
@@ -79,9 +79,9 @@ const GuestList = () => {
       },
       render: (fullname, record) => (
         <div className="guest-info-table">
-          <div className="guest-checkbox">
+          {/* <div className="guest-checkbox">
             <Checkbox />
-          </div>
+          </div> */}
           <div className="guest-info-box">
             <h3>{fullname}</h3>
             <span>{record.country}</span>
@@ -380,7 +380,7 @@ const GuestList = () => {
             </div>
 
             <Col span={12}>
-              <div className="filter-invoice">
+              {/* <div className="filter-invoice">
                 <ul>
                   <li>
                     <img
@@ -421,7 +421,7 @@ const GuestList = () => {
                     </li>
                   </ul>
                 </div>
-              </div>
+              </div> */}
             </Col>
           </div>
         </div>
