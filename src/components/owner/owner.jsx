@@ -15,6 +15,7 @@ import {
   Modal,
   Row,
   Col,
+  Switch,
 } from 'antd';
 import { PlusOutlined, DeleteOutlined, FormOutlined } from '@ant-design/icons';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
@@ -25,7 +26,7 @@ import propertyplace from '../../assets/images/property-placeholder.png';
 import property1 from '../../assets/images/property-1.png';
 import owner from '../../assets/images/profile_user.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
-import arrow from '../../assets/images/select-arrow.png';
+import loader from '../../assets/images/cliploader.gif';
 import subuser from '../../assets/images/subuser.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
@@ -47,10 +48,12 @@ const Owner = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState([]);
   const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [access, setAccess] = useState(false);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
 
-  const [{ userId, ownerWrite: canWrite }] = JSON.parse(
+  const [{ userId, ownerWrite: canWrite, ownerDelete }] = JSON.parse(
     localStorage.getItem('userCred'),
   ) || [{}];
 
@@ -98,6 +101,7 @@ const Owner = () => {
         arr.push(filterData);
       });
     if (response.data.code === 200) {
+      setLoading(false);
       setPropertyData(arr);
     }
   }, [userId]);
@@ -108,6 +112,7 @@ const Owner = () => {
     });
     if (response.data.code === 200) {
       setOwnerData(response.data.data);
+      setLoading(false);
     }
   }, [userId]);
 
@@ -128,6 +133,7 @@ const Owner = () => {
         arr.push(filter.id);
       });
       setSelectedPropertyId(arr);
+      setAccess(data.isaccess);
       form.setFieldsValue({
         id: data.id,
         firstname: data.fname,
@@ -162,7 +168,7 @@ const Owner = () => {
     const response = await userInstance.post('/addOwner', copyValues);
     const statusCode = response.data.code;
     if (statusCode === 200) {
-      toast.success('owner added successfully', { containerId: 'B' });
+      toast.success('Data save successfully', { containerId: 'B' });
       setVisible(false);
       getSubUserData();
       getPropertyData();
@@ -220,7 +226,7 @@ const Owner = () => {
 
   const pageContent = (
     <>
-      {ownerData.length ? (
+      {ownerData.length > 0 ? (
         <Wrapper>
           <div className="owner-page">
             <div className="page-header">
@@ -244,20 +250,18 @@ const Owner = () => {
                     {ownerData.map((el) => (
                       <tr>
                         <td>
-                          <div className="owner-info">
+                          <div className="owner-info" onClick={() => edit(el)} role="presentation">
                             <div className="owner-pic">
                               <img src={owner} alt="ownerImage" />
                             </div>
                             <div className="owner-title">
                               <h5>{`${el.fname} ${el.lname}`}</h5>
                               <span>
-                                {t('owner.label4')}
+                                {el.citizenship !== null
+                                  ? `${el.citizenship},`
+                                  : ''}
                                 {' '}
-                                |
-                                {el.citizenship}
-                                ,
-                                {' '}
-                                {el.country}
+                                {el.country !== null ? `${el.country},` : ''}
                               </span>
                             </div>
                           </div>
@@ -269,7 +273,12 @@ const Owner = () => {
                           <div className="owner-property">
                             {properties.map((ele) => {
                               if (ele.ownerId === el.id) {
-                                return <img src={property1} alt="property1" />;
+                                return (
+                                  <img
+                                    src={ele.image || property1}
+                                    alt="property1"
+                                  />
+                                );
                               }
                               return null;
                             })}
@@ -280,6 +289,7 @@ const Owner = () => {
                           <div className="owner-action">
                             <FormOutlined onClick={() => edit(el)} />
                             <DeleteOutlined
+                              hidden={isSubUser ? !ownerDelete : false}
                               onClick={() => showDeletePopUP(el.id)}
                             />
                           </div>
@@ -299,6 +309,9 @@ const Owner = () => {
             onCancel={handleCancel}
             wrapClassName="guest-modal"
           >
+            <Helmet>
+              <body className={visible ? 'ant-scrolling-effect' : ''} />
+            </Helmet>
             <Form form={form} name="basic" onFinish={onFinish}>
               <h4>{t('owner.label20')}</h4>
               <Row style={{ alignItems: 'center' }}>
@@ -377,6 +390,11 @@ const Owner = () => {
                     name="dob"
                     label={t('strings.dob')}
                     style={{ paddingRight: 20 }}
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
                   >
                     <DatePicker />
                   </Form.Item>
@@ -474,6 +492,17 @@ const Owner = () => {
                 </Col>
               </Row>
 
+              <Row style={{ alignItems: 'center' }}>
+                <Col span={24}>
+                  <Form.Item label="Access to the owner panel" name="access">
+                    <Switch
+                      checked={access}
+                      onClick={() => setAccess(!access)}
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+
               <Row style={{ alignItems: 'center', textAlign: 'right' }}>
                 <Col span={24}>
                   <Form.Item>
@@ -514,6 +543,9 @@ const Owner = () => {
             onCancel={handleCancel}
             wrapClassName="guest-modal"
           >
+            <Helmet>
+              <body className={visible ? 'ant-scrolling-effect' : ''} />
+            </Helmet>
             <Form form={form} name="basic" onFinish={onFinish}>
               <h4>{t('owner.label20')}</h4>
               <Row style={{ alignItems: 'center' }}>
@@ -592,13 +624,18 @@ const Owner = () => {
                     name="dob"
                     label={t('strings.dob')}
                     style={{ paddingRight: 20 }}
+                    rules={[
+                      {
+                        required: true,
+                      },
+                    ]}
                   >
                     <DatePicker />
                   </Form.Item>
                 </Col>
 
                 <Col span={12}>
-                  <Form.Item name="gender" label={t('strings.gender')}>
+                  <Form.Item name="gender" label="Gender">
                     <Radio.Group name="radiogroup">
                       <Radio value="Male">Male</Radio>
                       <Radio value="female">Female</Radio>
@@ -610,13 +647,11 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    className="custom-select"
                     label={t('owner.label11')}
                     name="country"
                     style={{ paddingRight: 20 }}
                   >
                     <CountryDropdown onChange={(val) => setCountry(val)} />
-                    <img src={arrow} alt="arrow" />
                   </Form.Item>
                 </Col>
               </Row>
@@ -624,14 +659,11 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    className="custom-select"
-
                     label={t('strings.citizenship')}
                     name="citizenship"
                     style={{ paddingRight: 20 }}
                   >
                     <RegionDropdown country={country} />
-                    <img src={arrow} alt="arrow" />
                   </Form.Item>
                 </Col>
 
@@ -662,7 +694,6 @@ const Owner = () => {
 
               <Row style={{ alignItems: 'center' }}>
                 <Form.Item
-                  className="custom-select"
                   style={{ width: '100%' }}
                   name="properties"
                   label={t('owner.label21')}
@@ -678,19 +709,27 @@ const Owner = () => {
                     mode="multiple"
                     size="large"
                     placeholder={t('owner.label16')}
+                    onSelect={(e) => handlePropertySelect(e)}
                   >
                     {propertyData.map((el) => (
                       <Option value={el.id}>{el.propertyName}</Option>
                     ))}
                   </Select>
-                  <img src={arrow} alt="arrow" />
                 </Form.Item>
               </Row>
 
               <Row style={{ alignItems: 'center' }}>
                 <Col span={24}>
-                  <Form.Item label={t('strings.note')} name="notes">
+                  <Form.Item label="Notes" name="notes">
                     <Input.TextArea />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row style={{ alignItems: 'center' }}>
+                <Col span={24}>
+                  <Form.Item label="Access to the owner panel" name="access">
+                    <Switch />
                   </Form.Item>
                 </Col>
               </Row>
@@ -698,11 +737,8 @@ const Owner = () => {
               <Row style={{ alignItems: 'center', textAlign: 'right' }}>
                 <Col span={24}>
                   <Form.Item>
-                    <Button style={{ marginRight: 10 }} onClick={handleCancel}>
-                      {t('strings.cancel')}
-                    </Button>
                     <Button type="primary" htmlType="submit">
-                      {t('strings.save')}
+                      {saveBtn}
                     </Button>
                   </Form.Item>
                 </Col>
@@ -713,7 +749,19 @@ const Owner = () => {
       )}
     </>
   );
-  if (propertyData.length < 1) {
+  if (loading) {
+    return (
+      <Wrapper>
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
+
+  if (!properties && properties.length < 1) {
     return (
       <Wrapper>
         <div className="add-team-page">

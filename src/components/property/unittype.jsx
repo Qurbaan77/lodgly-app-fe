@@ -21,6 +21,7 @@ import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 import UserLock from '../userlock/userlock';
 import nounit from '../../assets/images/no-unit.png';
+import loader from '../../assets/images/cliploader.gif';
 
 const UnitType = () => {
   const { t } = useTranslation();
@@ -35,11 +36,13 @@ const UnitType = () => {
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
   const [showEdit, setShowEdit] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saveLoading, setSaveLoading] = useState(false);
   const history = useHistory();
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  const [{ propertiesWrite, userId }] = userCred || [{}];
+  const [{ propertiesWrite, userId, propertiesDelete }] = userCred || [{}];
   const canWrite = propertiesWrite;
 
   const showUnitPanel = () => {
@@ -66,6 +69,7 @@ const UnitType = () => {
   };
 
   const onFinish = async (id) => {
+    setSaveLoading(true);
     const values = {
       name,
       propertyId: localStorage.getItem('propertyId'),
@@ -75,6 +79,7 @@ const UnitType = () => {
     const response = await userInstance.post('/addUnitType', values);
     const { msg } = response.data;
     if (response.data.code === 200) {
+      setSaveLoading(false);
       toast.success(msg, { containerId: 'B' });
       setEditId(null);
       setShowPanel(true);
@@ -112,6 +117,7 @@ const UnitType = () => {
     const response = await userInstance.post('/getUnittype', values);
     const { unittypeData, units } = response.data;
     if (response.data.code === 200) {
+      setLoading(false);
       unittypeData.forEach((el) => {
         let sum = 0;
         units.forEach((ele) => {
@@ -132,6 +138,7 @@ const UnitType = () => {
     };
     const response = await userInstance.post('/deleteUnitType', values);
     if (response.data.code === 200) {
+      toast.success('Unit Type removed successfully!', { containerId: 'B' });
       setVisible(false);
       getData();
     }
@@ -182,12 +189,24 @@ const UnitType = () => {
 
   const checkSpace = (rule, value) => {
     if (value.replace(/\s/g, '').length === 0) {
-      return Promise.resolve('Name should not only contains whitespace');
+      return Promise.reject(new Error('Name should not only contains whitespace'));
     }
     return true;
   };
 
-  if (!unittypeData.length) {
+  if (loading) {
+    return (
+      <Wrapper>
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
+
+  if (!unittypeData.length && showPanel) {
     return (
       <Wrapper>
         <div className="add-team-page">
@@ -263,7 +282,6 @@ const UnitType = () => {
                             {t('strings.cancel')}
                           </div>
                           <div
-                            disabled
                             className="sav-btn"
                             onClick={() => onFinish()}
                             role="button"
@@ -272,7 +290,9 @@ const UnitType = () => {
                             <CheckCircleOutlined />
                             {' '}
                             {t('strings.save')}
+                            <Button type="primary" loading={saveLoading} />
                           </div>
+
                         </div>
                       </div>
                     )
@@ -338,12 +358,17 @@ const UnitType = () => {
                             <CheckCircleOutlined />
                             {' '}
                             {t('strings.save')}
+                            <Button type="primary" loading={saveLoading} />
                           </div>
                         </div>
                       ) : (
                         <div className="group-action">
                           <FormOutlined onClick={() => editName(i)} />
-                          <DeleteOutlined onClick={() => show(el.id)} />
+                          <DeleteOutlined
+                            hidden={isSubUser ? !propertiesDelete : false}
+                            onClick={() => show(el.id)}
+
+                          />
                         </div>
                       )}
                     </div>

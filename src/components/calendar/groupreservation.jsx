@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
 import './calendar.css';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -121,6 +122,9 @@ const GroupReservation = (props) => {
       onCancel={close}
       wrapClassName="create-booking-modal group-reservation"
     >
+      <Helmet>
+        <body className={visible ? 'ant-scrolling-effect' : ''} />
+      </Helmet>
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={24}>
@@ -128,6 +132,11 @@ const GroupReservation = (props) => {
               label={t('strings.reservation_date')}
               name="groupname"
               style={{ paddingRight: 20 }}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
             >
               <RangePicker onCalendarChange={onCalendarChange} />
             </Form.Item>
@@ -156,6 +165,11 @@ const GroupReservation = (props) => {
               label={t('addreservation.heading6')}
               name="channel"
               style={{ width: '70%', display: 'inline-block' }}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
             >
               <Select
                 placeholder="Select"
@@ -175,6 +189,7 @@ const GroupReservation = (props) => {
                 verticalAlign: 'bottom',
                 marginLeft: '4%',
               }}
+
             >
               <Input
                 name="commission"
@@ -223,6 +238,11 @@ const GroupReservation = (props) => {
                     <Form.Item
                       label="Number of units"
                       name={[`array${i}`, 'units']}
+                      rules={[
+                        {
+                          required: true,
+                        },
+                      ]}
                     >
                       <Select
                         style={{ width: '50%', display: 'inline-block' }}
@@ -248,6 +268,11 @@ const GroupReservation = (props) => {
                     <Form.Item
                       label="Price per night/unit"
                       name={[`array${i}`, 'pricePer']}
+                      rules={[
+                        {
+                          required: true,
+                        },
+                      ]}
                     >
                       <Input
                         style={{

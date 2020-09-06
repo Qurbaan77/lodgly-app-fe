@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './userprofile.css';
 import { Dropdown, Menu } from 'antd';
 import Avatar from 'react-avatar';
@@ -10,10 +10,12 @@ import {
 import { userInstance } from '../../../axios/axiosconfig';
 // import user from '../../../assets/images/profile_user.jpg';
 
-const UserProfile = (props) => {
+const UserProfile = () => {
   const { t } = useTranslation();
   const [img, setImg] = useState('');
   const [name, setName] = useState('');
+
+  const isSubUser = localStorage.getItem('isSubUser') || false;
 
   const history = useHistory();
   const exit = async () => {
@@ -24,26 +26,30 @@ const UserProfile = (props) => {
     }
   };
 
-  const getUserInfo = async () => {
+  const getUserInfo = useCallback(async () => {
     const response = await userInstance.post('/getuserData');
-    const body = response.data.userData;
-    if (body.length > 0) {
-      if (body[0].image !== null) {
-        setImg(body[0].image);
-      }
-      if (body[0].fullname !== null) {
-        setName(`${body[0].fullname}`);
+    if (response.data.code === 200) {
+      const body = response.data.userData;
+      if (body.length > 0) {
+        if (body[0].image !== null) {
+          setImg(body[0].image);
+        }
+        if (body[0].fullname !== null) {
+          setName(`${body[0].fullname}`);
+        }
+      } else {
+        localStorage.clear();
+        history.push('/');
       }
     }
-  };
+  }, [history]);
 
   useEffect(() => {
     getUserInfo();
-  }, [props]);
+  }, [getUserInfo]);
 
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  const [{ billingWrite }] = userCred || [{}];
-
+  const [{ email, billingWrite }] = userCred || [{}];
   const menu = (
     <Menu className="setting-dropdown">
       <Menu.Item>
@@ -60,7 +66,7 @@ const UserProfile = (props) => {
           {t('userprofile.label2')}
         </Link>
       </Menu.Item>
-      <Menu.Item onClick={() => exit()}>
+      <Menu.Item onClick={() => exit()} danger>
         <span>
           <PoweroffOutlined />
           {' '}
@@ -94,8 +100,8 @@ const UserProfile = (props) => {
           </div>
         </Dropdown>
       </div>
-      <h3>{name || 'No Name Added'}</h3>
-      <span>{userCred ? 'Sub User' : 'User'}</span>
+      <h3>{isSubUser ? email : name }</h3>
+      <span>{isSubUser ? 'Sub User' : 'Owner'}</span>
     </div>
   );
 };

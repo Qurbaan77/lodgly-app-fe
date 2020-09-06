@@ -6,7 +6,8 @@ import { Button, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
-import nobooking from '../../assets/images/no-booking.png';
+import loader from '../../assets/images/cliploader.gif';
+// import nobooking from '../../assets/images/no-booking.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
 import GSTC from './GSTC';
@@ -30,6 +31,7 @@ const Calendar = () => {
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
   const [userData, setUserData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -155,6 +157,7 @@ const Calendar = () => {
         data2.push(filterData);
       });
     if (response.data.code === 200) {
+      setLoading(false);
       setPropertyData(data2.length > 0 ? data2 : data);
     }
   }, [userId, topNavId]);
@@ -172,9 +175,10 @@ const Calendar = () => {
     });
     const { reservationData: data } = response.data;
     if (response.data.code === 200) {
+      setLoading(false);
       setReservationData(data);
       if (response.data.guestData.length !== 0) {
-        if (response.data.guestData[0][0].fullname) {
+        if (response.data.guestData[0][0].fullname !== undefined) {
           setGuestName(response.data.guestData[0][0].fullname);
         }
       }
@@ -188,6 +192,7 @@ const Calendar = () => {
     const { unittypeData: data0 } = response.data;
     const { unitData: data1 } = response.data;
     if (response.data.code === 200) {
+      setLoading(false);
       setUnittypeData(data0);
       setUnitData(data1);
     }
@@ -324,6 +329,18 @@ const Calendar = () => {
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
 
+  if (loading) {
+    return (
+      <Wrapper>
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
+
   if (propertyData.length < 1) {
     return (
       <Wrapper>
@@ -361,23 +378,10 @@ const Calendar = () => {
               </>
             )}
           </div>
-          {reservationData && reservationData.length > 0 ? (
-            <div className="calendar-calendar">
-              <GSTC config={config} onState={onState} />
-            </div>
-          ) : (
-            <div className="add-team-page">
-              <div className="add-subuser">
-                <img src={nobooking} alt="subuser" />
-                <h4>No Calendar</h4>
-                <p>
-                  Currently, you don
-                  <span>&apos;</span>
-                  t have any reservations created
-                </p>
-              </div>
-            </div>
-          )}
+
+          <div className="calendar-calendar">
+            <GSTC config={config} onState={onState} />
+          </div>
 
           <AddReservation
             title={t('addreservation.heading34')}

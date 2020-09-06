@@ -29,6 +29,16 @@ import Services from './components/property/services';
 import Calendar from './components/calendar/calendar';
 import Popup from './components/calendar/popup';
 import Company from './components/company/company';
+import Rates from './components/property/rates';
+import SeasonRates from './components/property/seasonrates';
+import CreateSeasonRates from './components/property/createseasonrates';
+import GuestList from './components/guests/guests';
+import CompanyList from './components/guests/company';
+
+// import Overview from './components/property/overview';
+// import Location from './components/property/location';
+// import Photos from './components/property/photos';
+
 import { PrivateRoute, LoginRoute } from './Routes/PrivateRoute';
 import {
   SecureBooking,
@@ -40,6 +50,7 @@ import {
   SecureService,
   SecureStats,
   SecureBilling,
+  SecureGuests,
 } from './Routes/SecureRoute';
 import Owner from './components/owner/owner';
 import Team from './components/team/team';
@@ -390,7 +401,89 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
+                    {isSubUser ? (
+                      <SecureProperty
+                        exact
+                        path="/rates"
+                        component={() => <Rates />}
+                      />
+                    ) : feature.properties ? (
+                      <PrivateRoute
+                        exact
+                        path="/rates"
+                        component={() => <Rates />}
+                      />
+                    ) : (
+                      <LoginRoute exact path="/" component={() => <Login />} />
+                    )}
+
+                    {isSubUser ? (
+                      <SecureProperty
+                        exact
+                        path="/seasonrates"
+                        component={() => <SeasonRates />}
+                      />
+                    ) : feature.properties ? (
+                      <PrivateRoute
+                        exact
+                        path="/seasonrates"
+                        component={() => <SeasonRates />}
+                      />
+                    ) : (
+                      <LoginRoute exact path="/" component={() => <Login />} />
+                    )}
+                    {isSubUser ? (
+                      <SecureProperty
+                        exact
+                        path="/createseasonrates"
+                        component={() => <CreateSeasonRates />}
+                      />
+                    ) : feature.properties ? (
+                      <PrivateRoute
+                        exact
+                        path="/createseasonrates"
+                        component={() => <CreateSeasonRates />}
+                      />
+                    ) : (
+                      <LoginRoute exact path="/" component={() => <Login />} />
+                    )}
+                    {isSubUser ? (
+                      <SecureGuests
+                        exact
+                        path="/guests"
+                        component={() => <GuestList />}
+                      />
+                    ) : feature.guests ? (
+                      <PrivateRoute
+                        exact
+                        path="/guests"
+                        component={() => <GuestList />}
+                      />
+                    ) : (
+                      <LoginRoute exact path="/" component={() => <Login />} />
+                    )}
+                    {isSubUser ? (
+                      <SecureProperty
+                        exact
+                        path="/companylist"
+                        component={() => <CompanyList />}
+                      />
+                    ) : feature.properties ? (
+                      <PrivateRoute
+                        exact
+                        path="/companylist"
+                        component={() => <CompanyList />}
+                      />
+                    ) : (
+                      <LoginRoute exact path="/" component={() => <Login />} />
+                    )}
+
+                    {/* <Route exact path="/overview" component={() => <Overview />} />
+                    <Route exact path="/location" component={() => <Location />} />
+                    <Route exact path="/photos" component={() => <Photos />} /> */}
+
                     <Route component={PageNotFound} />
+
                   </Switch>
                 </div>
               </main>

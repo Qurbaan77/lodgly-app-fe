@@ -13,6 +13,7 @@ import uniticon from '../../assets/images/property-unit-icon.png';
 import homeicon from '../../assets/images/property-home-icon.png';
 import propertyicon from '../../assets/images/menu/property-icon.png';
 import UserLock from '../userlock/userlock';
+import loader from '../../assets/images/cliploader.gif';
 import { userInstance } from '../../axios/axiosconfig';
 import NoList from './nolist';
 
@@ -23,6 +24,7 @@ const PropertyList = () => {
   const [subscribed, setSubscribed] = useState(true);
   const [OnTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
+  const [loading, setLoading] = useState(true);
 
   const history = useHistory();
   const isSubUser = localStorage.getItem('isSubUser') || false;
@@ -56,6 +58,7 @@ const PropertyList = () => {
         data2.push(filterData);
       });
     if (response.data.code === 200) {
+      setLoading(false);
       setPropertyData(data2.length > 0 ? data2 : data);
     }
     await userInstance.get('/getSubscriptionStatus');
@@ -123,6 +126,18 @@ const PropertyList = () => {
 
   const trial = OnTrial && daysLeft !== 0;
   const hasAccess = trial || subscribed;
+
+  if (loading) {
+    return (
+      <Wrapper>
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
   return (
     <Wrapper fun={setTopNavId}>
       <Helmet>

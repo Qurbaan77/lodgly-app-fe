@@ -21,6 +21,7 @@ import qst from '../../assets/images/menu/qst.png';
 import favicon from '../../assets/images/logo-mobile.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
 import UserLock from '../userlock/userlock';
+import loader from '../../assets/images/cliploader.gif';
 
 const Stats = () => {
   const { t } = useTranslation();
@@ -43,6 +44,7 @@ const Stats = () => {
     'no-stats-data',
   );
   const [paceHasData, setPaceHasData] = useState('no-stats-data');
+  const [loading, setLoading] = useState(true);
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
 
   const [{ userId }] = userCred || [{}];
@@ -59,6 +61,7 @@ const Stats = () => {
         data2.push(filterData);
       });
     if (response.data.code === 200) {
+      setLoading(false);
       setPropertyData(data2.length > 0 ? data2 : data);
     }
   }, [userId, topNavId]);
@@ -81,6 +84,17 @@ const Stats = () => {
   }, [getProperty]);
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+  if (loading) {
+    return (
+      <Wrapper>
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
 
   if (propertyData.length < 1) {
     return (
@@ -533,9 +547,9 @@ ReservationCountryChart.defaultProps = {
 
 const ReservationChannelChart = () => {
   const state = {
-    series: [20, 30, 50],
+    series: [], // put data for show in statistics
     options: {
-      labels: ['Airbnb', 'Booking', 'Booking'],
+      labels: [], // put name of labels for show in statistics
       chart: {
         type: 'donut',
       },

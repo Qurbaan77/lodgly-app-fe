@@ -3,13 +3,14 @@
     "heading1": "Proszę wybrać właściwość z górnego paska"
   },
   "strings": {
+    "close": "blisko",
     "time": "CZAS",
     "days": "Wybierać",
     "name": "Imię",
     "save": "Zapisać",
     "choose": "Choose",
     "cancel": "Anuluj",
-    "property": "Własność",
+    "property": "Brak własności",
     "propertyno": "Właściwość",
     "edit_unit": "Edytuj jednostkę",
     "day": "Dzień",
@@ -104,7 +105,7 @@
   },
   "sidebar": {
     "heading": "Pasek boczny",
-    "menu1": "Rezerwować",
+    "menu1": "Rezerwacje",
     "menu2": "Kalendarz",
     "menu3": "Nieruchomości",
     "menu4": "Goście",
@@ -114,7 +115,7 @@
     "menu7": "Statystyki",
     "menu8": "Integracje",
     "submenu2": "Opcja 3",
-    "menu9": "Właściciel",
+    "menu9": "właściciele",
     "menu10": "Wyloguj",
     "menu11": "Detale",
     "menu12": "Typ jednostki",
@@ -722,18 +723,17 @@
   "label11": "Miesięczny",
   "label12": "Rocznie",
   "label13": " Proszę podać cenę",
-  "label14": " 20% zniżki, jeśli wybierzesz abonament roczny",
+  "label14": "20% zniżki, jeśli wybierzesz Abonament roczny, użyj kodu YEARLY20",
   "label15": "  za",
   "label16": "   Plan",
   "label17": " Zniżka",
-  "label18": "  upgrade/downgrade",
+  "label18": "zmienić plan",
   "label19": " Twój",
   "label20": " ly Plan abonamentowy",
   "label21": " odnowi się",
   "label22": "  Cena całkowita",
-  "label23":"Aktywna subskrypcja"
-
-
+  "label23":"Aktywna subskrypcja",
+  "label24": "Dodaj zadanie"
 },
 "checkoutform": {
   "heading1": " Wprowadź dane swojej karty",
@@ -859,7 +859,9 @@
  
   "label1": "Wprowadzone dane są nieprawidłowe. E-mail!",
   "label2": "Wpisz swój adres e-mail!",
-  "label3": "Podużytkownik",
+  "label3": "Wybierz rolę",
+  "delete": "Usunąć",
+  "name": "Imię",
   "label4": "Pełny dostęp",
   "label5": "Rezerwować",
   "label6": "Ceny i dostępność synchronizowane z połączonymi OTA",
@@ -909,8 +911,8 @@
   "label3": "Użytkownik podrzędny",
   "label4": "Rola",
   "label5": " Stanowisko | City of London, Wielka Brytania",
-  "label6": "Obecnie nie ma utworzonych subużytkowników"
-  
+  "label6": "Obecnie nie ma utworzonych subużytkowników",
+  "status": "Status"
 },
 "thankyou": {
   
@@ -930,7 +932,7 @@
   
   "button1": "Dodaj właściwość",
   "tooltip1": "Nie masz uprawnień do tworzenia nowej usługi",
-  "heading1":"Nie ma jeszcze żadnej nieruchomości"
+  "heading1":"Obecnie nie masz żadnych nieruchomości"
   
  
 }

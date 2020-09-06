@@ -1001,6 +1001,28 @@ margin: 0;
   cursor: default;
 }
 
+.group-name .ant-row.ant-form-item {
+  margin: 0;
+}
+
+.sav-btn .ant-btn {
+  background: transparent;
+  padding: 0;
+}
+
+.sav-btn .ant-btn .anticon-loading {
+  color: #fab52c;
+  font-size: 30px!important;
+}
+
+.unit-type .assign-unit {
+  padding-top: 0px;
+}
+
+.can-btn, .sav-btn {
+  text-align: center;
+}
+
 @media screen and (min-width: 1367px) {
   .unittype-calendar {
     max-width: 100%;

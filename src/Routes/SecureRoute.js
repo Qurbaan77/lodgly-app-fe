@@ -15,14 +15,16 @@ const [
     teamWrite,
     ownerRead,
     ownerWrite,
-    invoiceRead,
-    invoiceWrite,
+    invoicesRead,
+    invoicesWrite,
     serviceRead,
     serviceWrite,
     statsRead,
     statsWrite,
     billingRead,
     billingWrite,
+    guestsRead,
+    guestsWrite,
   },
 ] = subUserCred || [{}];
 
@@ -84,7 +86,7 @@ export const SecureOwner = ({ component: Component, ...rest }) => (
 export const SecureInvoice = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={(props) => (invoiceRead || invoiceWrite ? (
+    render={(props) => (invoicesRead || invoicesWrite ? (
       <Component {...props} {...rest} />
     ) : (
       <Redirect to="/" />
@@ -123,6 +125,25 @@ export const SecureBilling = ({ component: Component, ...rest }) => (
     ))}
   />
 );
+
+export const SecureGuests = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) => (guestsRead && guestsWrite ? (
+      <Component {...props} {...rest} />
+    ) : (
+      <Redirect to="/" />
+    ))}
+  />
+);
+
+SecureGuests.propTypes = {
+  component: PropTypes.func,
+};
+
+SecureGuests.defaultProps = {
+  component: () => {},
+};
 
 SecureBilling.propTypes = {
   component: PropTypes.func,

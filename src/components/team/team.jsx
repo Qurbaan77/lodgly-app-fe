@@ -19,6 +19,7 @@ import favicon from '../../assets/images/logo-mobile.png';
 import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
 import DeletePopup from './deletepopup';
+import loader from '../../assets/images/cliploader.gif';
 
 const TeamListing = () => {
   const { t } = useTranslation();
@@ -26,17 +27,16 @@ const TeamListing = () => {
   const [visibleSubUser, setVisibleSubUser] = useState(false);
   const [subUser, setSubUser] = useState([]);
   const [currentSubUser, setCurrentSubUser] = useState(false);
-  // const [notifyType, setNotifyType] = useState();
-  // const [notifyMsg, setNotifyMsg] = useState();
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
   const [visibleDeletePopup, setVisibleDeletePopup] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  const [{ teamWrite: canWrite, userId }] = userCred || [{}];
+  const [{ teamWrite: canWrite, userId, teamDelete }] = userCred || [{}];
 
   const show = () => {
     setVisible(true);
@@ -50,10 +50,13 @@ const TeamListing = () => {
     setVisibleDeletePopup(true);
   };
 
+  const handleDeleteCancel = () => {
+    setVisibleDeletePopup(false);
+  };
+
   const handleCancel = () => {
     setVisible(false);
     setVisibleSubUser(false);
-    setVisibleDeletePopup(true);
   };
 
   const closeSubUser = () => {
@@ -102,6 +105,7 @@ const TeamListing = () => {
       affiliateId: userId,
     });
     if (response.status === 200) {
+      setLoading(false);
       setSubUser(response.data.subUser);
     }
   }, [userId]);
@@ -137,6 +141,18 @@ const TeamListing = () => {
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
 
+  if (loading) {
+    return (
+      <Wrapper>
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
+
   const pageContent = (
     <>
       {subUser.length ? (
@@ -171,6 +187,10 @@ const TeamListing = () => {
                         {' '}
                         {t('team.label4')}
                       </th>
+                      <th>
+                        {' '}
+                        {t('team.status')}
+                      </th>
                       <th> </th>
                     </tr>
                   </thead>
@@ -178,7 +198,7 @@ const TeamListing = () => {
                   <tbody>
                     {subUser.map((el, i) => (
                       <tr key={el.id}>
-                        <td>
+                        <td onClick={() => showEditSubUser(el, i)} role="presentation">
                           <div className="team-info">
                             <div className="team-pic">
                               <Avatar
@@ -200,9 +220,12 @@ const TeamListing = () => {
 
                         <td>{el.email}</td>
                         <td>
-                          {
-                          el.role === 'fullaccess' ? 'Full Access' : 'Sub User'
-                        }
+                          {el.role === 'fullaccess'
+                            ? 'Full Access'
+                            : el.role === 'read' ? 'Read' : 'Write'}
+                        </td>
+                        <td>
+                          {el.status === 0 ? 'Pending' : 'Accepted'}
                         </td>
 
                         <td>
@@ -211,6 +234,7 @@ const TeamListing = () => {
                               onClick={() => showEditSubUser(el, i)}
                             />
                             <DeleteOutlined
+                              hidden={isSubUser ? !teamDelete : false}
                               onClick={() => showDeletePopup(el, i)}
                             />
                           </div>
@@ -240,7 +264,7 @@ const TeamListing = () => {
           <DeletePopup
             visible={visibleDeletePopup}
             dataObject={handleDeleteSubUser}
-            cancel={() => handleCancel()}
+            cancel={handleDeleteCancel}
           />
         </Wrapper>
       ) : (

@@ -26,7 +26,7 @@ const CARD_ELEMENT_OPTIONS = {
 };
 const CheckoutForm = ({
   total, currency, unitsSelected, subscriptionType, planType,
-  submitChange, showCancelCheckout, hideBilling, getData, getInvoice,
+  submitChange, showCancelCheckout, hideBilling, getData, getInvoice, coupon,
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -52,16 +52,27 @@ const CheckoutForm = ({
       // Send the token to your server.
       if (total !== 0) {
         setHideLoader(false);
+        let token;
+        if (process.env.REACT_APP_ENV === 'development' || process.env.REACT_APP_ENV === 'staging') {
+          token = 'tok_visa';
+        } else {
+          token = result.token.id;
+        }
         const payload = {
-          stripeToken: result.token.id,
+          stripeToken: token,
           amount: total / 100,
           interval: subscriptionType,
           noOfUnits: unitsSelected,
           currency,
           planType,
+          coupon,
         };
         const response = await userInstance.post('/charge', payload);
         const { code } = response.data;
+        if (code === 400) {
+          setHideLoader(true);
+          toast.error('Please provide correct information', { containerId: 'B' });
+        }
         if (code === 200) {
           setHideLoader(true);
           toast.success(t('checkoutform.tooltip1'), { containerId: 'B' });
@@ -138,6 +149,7 @@ CheckoutForm.propTypes = {
   hideBilling: PropTypes.func,
   getData: PropTypes.func,
   getInvoice: PropTypes.func,
+  coupon: PropTypes.string,
 };
 CheckoutForm.defaultProps = {
   total: 0,
@@ -146,6 +158,7 @@ CheckoutForm.defaultProps = {
   subscriptionType: '',
   planType: '',
   submitChange: '',
+  coupon: '',
   showCancelCheckout: false,
   hideBilling: () => {},
   getData: () => {},

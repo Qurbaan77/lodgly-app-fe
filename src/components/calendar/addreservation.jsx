@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
 // import { useHistory } from 'react-router-dom';
 import {
   Form,
@@ -376,6 +377,9 @@ const AddReservation = (props) => {
       onCancel={close}
       wrapClassName="create-booking-modal"
     >
+      <Helmet>
+        <body className={visible ? 'ant-scrolling-effect' : ''} />
+      </Helmet>
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={12}>

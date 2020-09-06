@@ -974,3 +974,61 @@ font-size: 11px
   border-radius: 30px;
   min-width: 40px;
 }
+
+.option-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: #ffeca8;
+  margin-bottom: 10px;
+}
+
+.option-content p {
+  margin: 0;
+}
+
+.option-content .ant-picker {
+  margin: 0px 10px;
+}
+
+.option-tag {
+  background: #03a84e;
+  color: #fff;
+  border-radius: 3px;
+  padding: 0px 5px;
+  margin-left: 10px;
+}
+
+.option-content p .anticon {
+  color: #1890ff;
+}
+
+.checked-avail{
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 20px;
+}
+
+.per-night-content .night-container {
+  padding: 20px;
+  padding-bottom: 0;
+}
+
+.night-box .ant-form-item-label > label {
+  text-align: center!important;
+}
+
+.per-night-content .night-box {
+  width: 20%;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.per-night .anticon {
+  font-size: 20px;
+  margin-right: 10px;
+  vertical-align: text-top;
+  cursor: pointer;
+}

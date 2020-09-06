@@ -45,6 +45,10 @@ const Task = () => {
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
 
+  const isSubUser = localStorage.getItem('isSubUser') || false;
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  const [{ userId, propertiesDelete }] = userCred || [{}];
+
   const columns = [
     {
       title: 'Name',
@@ -78,7 +82,10 @@ const Task = () => {
             </Tag>
             <span className="group-action">
               <FormOutlined onClick={() => edit(record)} />
-              <DeleteOutlined onClick={() => showDeletePopup(record.id)} />
+              <DeleteOutlined
+                hidden={isSubUser ? !propertiesDelete : false}
+                onClick={() => showDeletePopup(record.id)}
+              />
             </span>
           </div>
         );
@@ -140,6 +147,7 @@ const Task = () => {
       values.id = currTaskId;
     }
     values.groupId = localStorage.getItem('groupId');
+    values.affiliateId = userId;
     const response = await userInstance.post('/addTask', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {

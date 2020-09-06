@@ -7,7 +7,7 @@ import './profile.css';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import {
-  Form, Select, Row, Col, Collapse, Button, Tooltip,
+  Form, Select, Row, Col, Collapse, Button, Input,
 } from 'antd';
 import {
   UserOutlined,
@@ -15,13 +15,14 @@ import {
   CloseCircleOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
-
+import loader from '../../assets/images/cliploader.gif';
 import BillingHistory from './billinghistory';
 import { STRIPE_APP_KEY } from '../../config/keys';
 import config from '../../config/config.json';
 import { userInstance } from '../../axios/axiosconfig';
 import CheckoutForm from './CheckoutForm';
 import favicon from '../../assets/images/logo-mobile.png';
+import payment from '../../assets/images/payment.png';
 // import loader from '../../assets/images/loader.svg';
 
 const stripePromise = loadStripe(STRIPE_APP_KEY);
@@ -29,7 +30,6 @@ const { Panel } = Collapse;
 const { basicPrice, advancePrice, discount } = config.development.Billing;
 const BillingInformation = () => {
   const { t } = useTranslation();
-  const [unitDropDown, setUnitDropDown] = useState([]);
   const [total, setTotal] = useState(0);
   const [unitPrice, setUnitPrice] = useState(basicPrice);
   const [unitsSelected, setUnitsSelected] = useState();
@@ -50,8 +50,13 @@ const BillingInformation = () => {
     gbp: false,
   });
   const [showCancelCheckout, setShowCancelCheckout] = useState(false);
-  const [canDowngrade, setCanDowngrade] = useState();
+  // const [canDowngrade, setCanDowngrade] = useState();
   const [disableBtn, setDisableBtn] = useState(false);
+  const [onFreePlan, setOnFreePlan] = useState(false);
+  const [freePlanEnd, setFreePlanEnd] = useState();
+  const [coupon, setCoupon] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [hidePlanInfo, setHidePlanInfo] = useState();
   // const [showCard, setShowCard] = useState(true);
   // const [disablePayNow, setDisablePayNow] = useState(true);
 
@@ -59,12 +64,12 @@ const BillingInformation = () => {
     const getData = async () => {
       const res = await userInstance.post('/getTotalUnit');
       if (res.data.code === 200 || res.data.code === 404) {
-        const units = res.data.totalUnit || 1;
-        const range = Array(units + 50000 - units + 1)
-          .fill()
-          .map((_, idx) => units + idx);
-        setUnitDropDown(range);
-        setCanDowngrade(res.data.totalUnit < res.data.units);
+        // const units = res.data.totalUnit || 1;
+        // const range = Array(units + 50000 - units + 1)
+        //   .fill()
+        //   .map((_, idx) => units + idx);
+        // setUnitDropDown(range);
+      // setCanDowngrade(res.data.totalUnit < res.data.units);
       }
       const response = await userInstance.post('/getRate');
       if (response.data.code === 200) {
@@ -80,10 +85,18 @@ const BillingInformation = () => {
 
   const getUser = async () => {
     const response = await userInstance.get('/transactions');
+    if (response.data.code === 200 && response.data.onFreePlan) {
+      setLoading(false);
+      setHideBilling(true);
+      setOnFreePlan(true);
+      const renewDate = moment(response.data.createdAt).add(1, 'year').format('DD/MM/YYYY');
+      setFreePlanEnd(renewDate);
+    }
     const {
       code, transactions, endDate, status,
     } = response.data;
     if (code === 200 && transactions != null) {
+      setLoading(false);
       const [{ interval }] = transactions;
       if (interval === 'month') {
         const renewDate = moment(endDate);
@@ -100,6 +113,7 @@ const BillingInformation = () => {
         setDisableBtn(true);
       }
     } else {
+      setLoading(false);
       addData('');
       setHideBilling(false);
     }
@@ -109,6 +123,7 @@ const BillingInformation = () => {
   const getInvoice = async () => {
     const response = await userInstance.post('/getBillingInvoice');
     if (response.data.code === 200) {
+      setLoading(false);
       setInvoiceList(response.data.invoicesList);
     }
   };
@@ -187,7 +202,8 @@ const BillingInformation = () => {
       }
     }
   };
-  const handleUnitSelect = (e) => {
+  const handleUnitChange = (event) => {
+    const e = event.target.value;
     setUnitsSelected(e);
     setTotal(e * unitPrice);
     if (currency === 'CHF' || currency === 'GBP' || currency === 'PLN') {
@@ -226,8 +242,7 @@ const BillingInformation = () => {
     if (e === 'month') {
       setTotal(unitsSelected * unitPrice);
     } else {
-      const amount = unitsSelected * unitPrice * 12
-        - (unitsSelected * unitPrice * 12 * discount) / 100;
+      const amount = unitsSelected * unitPrice * 12;
       setTotal(amount);
     }
   };
@@ -331,6 +346,17 @@ const BillingInformation = () => {
     }
   };
 
+  const handleCouponCode = (e) => {
+    setCoupon(e.target.value);
+  };
+
+  const checkCoupon = (rule, value) => {
+    if (value !== 'YEARLY20') {
+      return Promise.reject(new Error('Invalid coupon code'));
+    }
+    return true;
+  };
+
   // const disablebtn = () => {
   //   if (!unitsSelected && !subscriptionType && !currency && !planType) {
   //     setDisablePayNow(false);
@@ -340,6 +366,7 @@ const BillingInformation = () => {
   /* ----------------------------- All payment handling functions here -------------------------- */
 
   const handleChangeSubscription = async () => {
+    setHidePlanInfo(true);
     setHideBilling(false);
     if (data.interval === 'year') setDisablePlanType(true);
     setShowCancelCheckout(true);
@@ -382,25 +409,27 @@ const BillingInformation = () => {
   const submitChangesubscription = async () => {
     if (!unitsSelected && !subscriptionType && !currency) {
       toast.error('Please select everything properly', { containerId: 'B' });
-    }
-    const payload = {
-      subscriptionId: data.subscriptionId,
-      planId: data.planId,
-      productId: data.productId,
-      amount: total,
-      interval: subscriptionType,
-      noOfUnits: unitsSelected,
-      currency,
-      planType,
-    };
-    const res = await userInstance.post('/changeSubscription', payload);
-    if (res.data.code === 200) {
-      toast.success('subscription changed successfully', { containerId: 'B' });
-      getUser();
-      getInvoice();
-      setHideBilling(true);
     } else {
-      toast.error('server error please try again', { containerId: 'B' });
+      const payload = {
+        subscriptionId: data.subscriptionId,
+        planId: data.planId,
+        productId: data.productId,
+        amount: total,
+        interval: subscriptionType,
+        noOfUnits: unitsSelected,
+        currency,
+        planType,
+        coupon,
+      };
+      const res = await userInstance.post('/changeSubscription', payload);
+      if (res.data.code === 200) {
+        toast.success('subscription changed successfully', { containerId: 'B' });
+        getUser();
+        getInvoice();
+        setHideBilling(true);
+      } else {
+        toast.error('server error please try again', { containerId: 'B' });
+      }
     }
   };
 
@@ -426,6 +455,18 @@ const BillingInformation = () => {
   //   </div>
   // );
 
+  if (loading) {
+    return (
+      <Wrapper>
+        <div className="loader">
+          <div className="loader-box">
+            <img src={loader} alt="loader" />
+          </div>
+        </div>
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper>
       <Helmet>
@@ -449,215 +490,232 @@ const BillingInformation = () => {
 
         <div className="billing-container">
           <Row gutter={[16, 0]}>
-            <Col span={16} hidden={hideBilling}>
-              <Collapse defaultActiveKey={['1']} accordion>
-                <Panel header={t('billinginformation.label23')} key="1">
-                  <div className="billing-info-form">
-                    <Row gutter={[16, 0]}>
-                      <Col span={24}>
-                        <div className="subscription-plan-list">
-                          <div className="invoice-warning" hidden>
-                            <WarningOutlined />
-                            {t('billinginformation.label2')}
-                            {' '}
-                            4.07.2020.
-                          </div>
-                          <div className="invoice-error" hidden>
-                            <CloseCircleOutlined hidden />
-                            {t('billinginformation.label3')}
-                          </div>
-                          <Form>
-                            <Row gutter={[16, 0]}>
-                              <Col span={6}>
-                                <Form.Item label="Subscription Type">
-                                  <Select
-                                    defaultValue="basic"
-                                    placeholder="basic"
-                                    onSelect={handlePlanSelect}
-                                  >
-                                    <Select.Option value="advance" hidden>
-                                      {t('billinginformation.label4')}
-                                    </Select.Option>
-                                    <Select.Option value="basic">
-                                      {t('billinginformation.label5')}
-                                    </Select.Option>
-                                  </Select>
-                                </Form.Item>
-                              </Col>
+            {
+            !onFreePlan
+              ? (
+                <Col span={12} hidden={hideBilling}>
+                  <Collapse defaultActiveKey={['1']} accordion>
+                    <Panel header={t('billinginformation.label23')} key="1">
+                      <div className="billing-info-form">
+                        <Row gutter={[16, 0]}>
+                          <Col span={24}>
+                            <div className="subscription-plan-list">
+                              <div className="invoice-warning" hidden>
+                                <WarningOutlined />
+                                {t('billinginformation.label2')}
+                                {' '}
+                                4.07.2020.
+                              </div>
+                              <div className="invoice-error" hidden>
+                                <CloseCircleOutlined hidden />
+                                {t('billinginformation.label3')}
+                              </div>
+                              <Form>
+                                <Row gutter={[16, 0]}>
+                                  <Col span={6}>
+                                    <Form.Item label="Subscription Type">
+                                      <Select
+                                        defaultValue="basic"
+                                        placeholder="basic"
+                                        onSelect={handlePlanSelect}
+                                      >
+                                        <Select.Option value="advance" hidden>
+                                          {t('billinginformation.label4')}
+                                        </Select.Option>
+                                        <Select.Option value="basic">
+                                          {t('billinginformation.label5')}
+                                        </Select.Option>
+                                      </Select>
+                                    </Form.Item>
+                                  </Col>
 
-                              <Col span={5}>
-                                <Form.Item
-                                  label={t('billinginformation.label7')}
-                                  name="pricePerUnit"
-                                >
-                                  <div className="amount-field">
-                                    <p>{unitPrice}</p>
-                                  </div>
-                                </Form.Item>
-                              </Col>
-                              <Col span={1}>
-                                <div className="into">X</div>
-                              </Col>
-                              <Col span={5}>
-                                <Form.Item
-                                  label={t('billinginformation.label8')}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message: t('billinginformation.label9'),
-                                    },
-                                  ]}
-                                >
-                                  <Select
-                                    placeholder={t('billinginformation.label8')}
-                                    onSelect={handleUnitSelect}
-                                  >
-                                    {unitDropDown.map((el) => (
-                                      <Select.Option value={el} key={el}>
-                                        {el}
-                                      </Select.Option>
-                                    ))}
-                                  </Select>
-                                </Form.Item>
-                              </Col>
-                              <Col span={6}>
-                                <Form.Item
-                                  label={t('billinginformation.label10')}
-                                >
-                                  <Select
-                                    defaultValue="Monthly"
-                                    placeholder="Monthly"
-                                    onSelect={handlePlanType}
-                                  >
-                                    <Select.Option
-                                      value="month"
-                                      disabled={disablePlanType}
+                                  <Col span={5}>
+                                    <Form.Item
+                                      label={t('billinginformation.label7')}
+                                      name="pricePerUnit"
                                     >
-                                      {t('billinginformation.label11')}
-                                    </Select.Option>
-                                    <Select.Option value="year">
-                                      {t('billinginformation.label12')}
-                                    </Select.Option>
-                                  </Select>
-                                </Form.Item>
-                              </Col>
-
-                              <Col span={6}>
-                                <Form.Item
-                                  name="currency"
-                                  label={t('strings.currency')}
-                                  rules={[
-                                    {
-                                      required: true,
-                                      message: t('billinginformation.label13'),
-                                    },
-                                  ]}
-                                >
-                                  <Select
-                                    placeholder="EUR"
-                                    onSelect={handleCurrencyChange}
-                                  >
-                                    <Select.Option
-                                      value="EUR"
-                                      disabled={disableCurrency.eur}
+                                      <div className="amount-field">
+                                        <p>{unitPrice}</p>
+                                      </div>
+                                    </Form.Item>
+                                  </Col>
+                                  <Col span={1}>
+                                    <div className="into">X</div>
+                                  </Col>
+                                  <Col span={5}>
+                                    <Form.Item
+                                      label={t('billinginformation.label8')}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: t('billinginformation.label9'),
+                                        },
+                                      ]}
                                     >
-                                      EUR
-                                    </Select.Option>
-                                    <Select.Option
-                                      value="CHF"
-                                      disabled={disableCurrency.chf}
-                                    >
-                                      CHF
-                                    </Select.Option>
-                                    <Select.Option
-                                      value="PLN"
-                                      disabled={disableCurrency.pln}
-                                    >
-                                      PLN
-                                    </Select.Option>
-                                    <Select.Option
-                                      value="GBP"
-                                      disabled={disableCurrency.gbp}
-                                    >
-                                      GBP
-                                    </Select.Option>
-                                  </Select>
-                                </Form.Item>
-                              </Col>
-
-                              <Col span={9} className="total-billing-price">
-                                <Form.Item
-                                  label={t('billinginformation.label22')}
-                                >
-                                  <h2>
-                                    =
-                                    {' '}
-                                    {Math.round(
-                                      (total + Number.EPSILON) * 100,
-                                    ) / 100 || 0}
-                                    <span>
-                                      {' '}
-                                      {data
-                                        ? data.currency
-                                        : currency || ''}
-                                      {' '}
-                                      {t('billinginformation.label15')}
-                                      {' '}
-                                      {subscriptionType}
-                                    </span>
-                                  </h2>
-                                  <p>{t('billinginformation.label14')}</p>
-                                </Form.Item>
-                              </Col>
-                              {/* <Col span={9}>
-                                <Button
-                                  onClick={disablebtn}
-                                  disabled={disablePayNow}
-                                >
-                                  Pay Now
-                                </Button>
-                              </Col> */}
-                            </Row>
-                            <Row gutter={[16, 0]}>
-                              <Col span={24}>
-                                <div>
-                                  <Elements stripe={stripePromise}>
-                                    {showCancelCheckout ? (
-                                      <CheckoutForm
-                                        total={(total + Number.EPSILON) * 100}
-                                        currency={currency}
-                                        unitsSelected={unitsSelected}
-                                        subscriptionType={subscriptionType}
-                                        planType={planType}
-                                        submitChange={submitChangesubscription}
-                                        showCancelCheckout={showCancelCheckout}
+                                      <Input
+                                        placeholder={t('billinginformation.label8')}
+                                        onChange={handleUnitChange}
                                       />
-                                    ) : (
-                                      <CheckoutForm
-                                        total={(total + Number.EPSILON) * 100}
-                                        currency={currency}
-                                        unitsSelected={unitsSelected}
-                                        subscriptionType={subscriptionType}
-                                        planType={planType}
-                                        hideBilling={setHideBilling}
-                                        getData={getUser}
-                                        getInvoice={getInvoice}
-                                      />
-                                    )}
-                                  </Elements>
-                                </div>
-                              </Col>
-                            </Row>
-                          </Form>
-                        </div>
-                      </Col>
-                    </Row>
-                  </div>
-                </Panel>
-              </Collapse>
-            </Col>
+                                      {/* <Select
+                                        placeholder={t('billinginformation.label8')}
+                                        onSelect={handleUnitSelect}
+                                      >
+                                        {unitDropDown.map((el) => (
+                                          <Select.Option value={el} key={el}>
+                                            {el}
+                                          </Select.Option>
+                                        ))}
+                                      </Select> */}
+                                    </Form.Item>
+                                  </Col>
+                                  <Col span={6}>
+                                    <Form.Item
+                                      label={t('billinginformation.label10')}
+                                    >
+                                      <Select
+                                        defaultValue="Monthly"
+                                        placeholder="Monthly"
+                                        onSelect={handlePlanType}
+                                      >
+                                        <Select.Option
+                                          value="month"
+                                          disabled={disablePlanType}
+                                        >
+                                          {t('billinginformation.label11')}
+                                        </Select.Option>
+                                        <Select.Option value="year">
+                                          {t('billinginformation.label12')}
+                                        </Select.Option>
+                                      </Select>
+                                    </Form.Item>
+                                  </Col>
+
+                                  <Col span={6}>
+                                    <Form.Item
+                                      name="currency"
+                                      label={t('strings.currency')}
+                                      rules={[
+                                        {
+                                          required: true,
+                                          message: t('billinginformation.label13'),
+                                        },
+                                      ]}
+                                    >
+                                      <Select
+                                        placeholder="EUR"
+                                        onSelect={handleCurrencyChange}
+                                      >
+                                        <Select.Option
+                                          value="EUR"
+                                          disabled={disableCurrency.eur}
+                                        >
+                                          EUR
+                                        </Select.Option>
+                                        <Select.Option
+                                          value="CHF"
+                                          disabled={disableCurrency.chf}
+                                          hidden
+                                        >
+                                          CHF
+                                        </Select.Option>
+                                        <Select.Option
+                                          value="PLN"
+                                          disabled={disableCurrency.pln}
+                                          hidden
+                                        >
+                                          PLN
+                                        </Select.Option>
+                                        <Select.Option
+                                          value="GBP"
+                                          disabled={disableCurrency.gbp}
+                                          hidden
+                                        >
+                                          GBP
+                                        </Select.Option>
+                                      </Select>
+                                    </Form.Item>
+                                  </Col>
+
+                                  <Col span={9} className="total-billing-price">
+                                    <Form.Item
+                                      label={t('billinginformation.label22')}
+                                    >
+                                      <h2>
+                                        =
+                                        {' '}
+                                        {Math.round(
+                                          (total + Number.EPSILON) * 100,
+                                        ) / 100 || 0}
+                                        <span>
+                                          {' '}
+                                          {data
+                                            ? data.currency
+                                            : currency || ''}
+                                          {' '}
+                                          {t('billinginformation.label15')}
+                                          {' '}
+                                          {subscriptionType}
+                                        </span>
+                                      </h2>
+                                      <p>{t('billinginformation.label14')}</p>
+                                    </Form.Item>
+                                  </Col>
+                                  <Form.Item
+                                    name="coupon"
+                                    rules={[{ validator: checkCoupon }]}
+                                    style={{ maxWidth: '50%', marginTop: '20px' }}
+                                  >
+                                    <Input
+                                      placeholder="Enter coupon code here"
+                                      onChange={handleCouponCode}
+                                    />
+                                  </Form.Item>
+                                </Row>
+                                <Row gutter={[16, 0]}>
+                                  {/* <Col span={24}>
+                                    <div>
+                                      <Elements stripe={stripePromise}>
+                                        {showCancelCheckout ? (
+                                          <CheckoutForm
+                                            total={(total + Number.EPSILON) * 100}
+                                            currency={currency}
+                                            unitsSelected={unitsSelected}
+                                            subscriptionType={subscriptionType}
+                                            planType={planType}
+                                            submitChange={submitChangesubscription}
+                                            showCancelCheckout={showCancelCheckout}
+                                            coupon={coupon}
+                                          />
+                                        ) : (
+                                          <CheckoutForm
+                                            total={(total + Number.EPSILON) * 100}
+                                            currency={currency}
+                                            unitsSelected={unitsSelected}
+                                            subscriptionType={subscriptionType}
+                                            planType={planType}
+                                            hideBilling={setHideBilling}
+                                            getData={getUser}
+                                            getInvoice={getInvoice}
+                                            coupon={coupon}
+                                          />
+                                        )}
+                                      </Elements>
+                                    </div>
+                                  </Col> */}
+                                </Row>
+                              </Form>
+                            </div>
+                          </Col>
+                        </Row>
+                      </div>
+                    </Panel>
+                  </Collapse>
+                </Col>
+              )
+              : ''
+          }
             {data ? (
-              <Col span={16}>
+              <Col span={12} hidden={hidePlanInfo}>
                 <Collapse defaultActiveKey={['1']} accordion>
                   <Panel
                     header={`${data.interval}ly Subscription Plan`}
@@ -701,13 +759,21 @@ const BillingInformation = () => {
                               </li>
                             </ul>
                           </div>
-                          <Button
-                            onClick={handleChangeSubscription}
-                            disabled={disableBtn}
-                          >
-                            {t('billinginformation.label18')}
-                          </Button>
-                          {canDowngrade ? (
+                          <div className="billing-action-buttons">
+                            <Button
+                              onClick={handleChangeSubscription}
+                              disabled={disableBtn}
+                            >
+                              {t('billinginformation.label18')}
+                            </Button>
+                            <Button
+                              onClick={handleCancelSubscription}
+                              disabled={disableBtn}
+                            >
+                              {t('strings.cancel')}
+                            </Button>
+                          </div>
+                          {/* {canDowngrade ? (
                             <Button
                               style={{ margin: '50px 30px 20px 10px' }}
                               onClick={handleChangeSubscription}
@@ -717,7 +783,8 @@ const BillingInformation = () => {
                             </Button>
                           ) : (
                             <Tooltip
-                              title="You are utilising all your subscribed units,to downgrade you have to delete some units"
+                              title="You are utilising all your
+                               subscribed units,to downgrade you have to delete some units"
                               color="gold"
                             >
                               <Button
@@ -727,7 +794,7 @@ const BillingInformation = () => {
                                 downgrade
                               </Button>
                             </Tooltip>
-                          )}
+                          )} */}
                         </Col>
 
                         <Col span={10}>
@@ -746,21 +813,139 @@ const BillingInformation = () => {
                               {end}
                             </p>
                           </div>
-                          <Button
-                            onClick={handleCancelSubscription}
-                            disabled={disableBtn}
-                          >
-                            {t('strings.cancel')}
-                          </Button>
                         </Col>
                       </Row>
                     </div>
                   </Panel>
                 </Collapse>
               </Col>
-            ) : (
-              ''
-            )}
+            ) : onFreePlan ? (
+              <Col span={12}>
+                <Collapse defaultActiveKey={['1']} accordion>
+                  <Panel
+                    header="Free yearly Subscription Plan"
+                    key="1"
+                  >
+                    <div className="billing-info-form">
+                      <Row gutter={[16, 0]}>
+                        <Col span={14}>
+                          <div className="subscription-plan-list">
+                            <li>
+                              <span>Advance Plan</span>
+                            </li>
+                          </div>
+                        </Col>
+
+                        <Col span={10}>
+                          <div className="subscription-plan-list">
+                            <p>
+                              {t('billinginformation.label24')}
+                              {' '}
+                              <span>
+                                Year
+                                {t('billinginformation.label20')}
+                              </span>
+                            </p>
+                            <p>
+                              {t('billinginformation.label21')}
+                              {' '}
+                              {freePlanEnd}
+                            </p>
+                          </div>
+                        </Col>
+                      </Row>
+                    </div>
+                  </Panel>
+                </Collapse>
+              </Col>
+            ) : ''}
+            <Col span={12}>
+              <Collapse defaultActiveKey={['4']} accordion>
+
+                <Panel header="Choose Your Payment Method" key="4">
+
+                  <div className="main-info-form">
+
+                    <h4>
+                      Visa Credit/Debit Card
+                      <img src={payment} alt="payment" className="payment-method-icon" />
+                    </h4>
+                    <p>
+                      If choosen this method $0.20 fee will be automatically
+                      added to your total. Tha fee is nott refundable and works as a prevention
+                      against ladybugs.
+                    </p>
+
+                    {/* <Form>
+                      <Row gutter={[16, 0]}>
+
+                        <Col span={9}>
+                          <Form.Item label="Card Number">
+                            <Input placeholder="**** **** **** 7117" />
+                          </Form.Item>
+                        </Col>
+
+                        <Col span={10}>
+                          <Form.Item label="Expiry Date">
+                            <Row>
+                              <Col span={12} style={{ marginRight: 10 }}>
+                                <Select>
+                                  <Select.Option value="demo">10</Select.Option>
+                                </Select>
+                              </Col>
+                              <Col span={10}>
+                                <Select>
+                                  <Select.Option value="demo">2019</Select.Option>
+                                </Select>
+                              </Col>
+                            </Row>
+                          </Form.Item>
+                        </Col>
+
+                        <Col span={5}>
+                          <Form.Item label="CVC Code">
+                            <Input placeholder="234" />
+                          </Form.Item>
+                        </Col>
+
+                      </Row>
+                    </Form> */}
+
+                    <Col span={24}>
+                      <div>
+                        <Elements stripe={stripePromise}>
+                          {showCancelCheckout ? (
+                            <CheckoutForm
+                              total={(total + Number.EPSILON) * 100}
+                              currency={currency}
+                              unitsSelected={unitsSelected}
+                              subscriptionType={subscriptionType}
+                              planType={planType}
+                              submitChange={submitChangesubscription}
+                              showCancelCheckout={showCancelCheckout}
+                              coupon={coupon}
+                            />
+                          ) : (
+                            <CheckoutForm
+                              total={(total + Number.EPSILON) * 100}
+                              currency={currency}
+                              unitsSelected={unitsSelected}
+                              subscriptionType={subscriptionType}
+                              planType={planType}
+                              hideBilling={setHideBilling}
+                              getData={getUser}
+                              getInvoice={getInvoice}
+                              coupon={coupon}
+                            />
+                          )}
+                        </Elements>
+                      </div>
+                    </Col>
+
+                  </div>
+                </Panel>
+              </Collapse>
+            </Col>
           </Row>
         </div>
       </div>

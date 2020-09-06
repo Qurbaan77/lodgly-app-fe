@@ -248,7 +248,14 @@
 .unit-page-view .ant-menu .unit-nav,
 .channel-page-view .ant-menu .channel-nav,
 .group-page-view .ant-menu .group-nav,
-.detail-page-view .ant-menu .detail-nav   {
+.detail-page-view .ant-menu .detail-nav,
+.rates-page-view .ant-menu .rates-nav,
+.season-page-view .ant-menu .season-nav,
+.guest-page-view .ant-menu .guest-nav,
+.company-page-view .ant-menu .company-nav,
+.overview-page-view .ant-menu .overview-nav,
+.location-page-view .ant-menu .location-nav,
+.photos-page-view .ant-menu .photos-nav      {
     background-color: #fffaf0!important;
 }
 
@@ -264,7 +271,14 @@
 .unit-page-view .ant-menu .unit-nav a,
 .channel-page-view .ant-menu .channel-nav a,
 .group-page-view .ant-menu .group-nav a,
-.detail-page-view .ant-menu .detail-nav a  {
+.detail-page-view .ant-menu .detail-nav a,
+.rates-page-view .ant-menu .rates-nav a,
+.season-page-view .ant-menu .season-nav a,
+.guest-page-view .ant-menu .guest-nav a,
+.company-page-view .ant-menu .company-nav a,
+.overview-page-view .ant-menu .overview-nav a,
+.location-page-view .ant-menu .location-nav a,
+.photos-page-view .ant-menu .photos-nav a   {
     color: #fab52c!important;
 }
 
@@ -281,7 +295,14 @@
 .unit-page-view .ant-menu .unit-nav:before,
 .channel-page-view .ant-menu .channel-nav:before,
 .group-page-view .ant-menu .group-nav:before,
-.detail-page-view .ant-menu .detail-nav:before {
+.detail-page-view .ant-menu .detail-nav:before,
+.rates-page-view .ant-menu .rates-nav:before,
+.season-page-view .ant-menu .season-nav:before,
+.guest-page-view .ant-menu .guest-nav:before,
+.company-page-view .ant-menu .company-nav:before,
+.overview-page-view .ant-menu .overview-nav:before,
+.location-page-view .ant-menu .location-nav:before,
+.photos-page-view .ant-menu .photos-nav:before  {
     content: "";
     position: absolute;
     width: 3px;
@@ -423,6 +444,23 @@ input[type=number]{
 .Toastify__close-button>svg {
     margin-top: 5px!important;
 }
+.billing-information .ant-collapse > .ant-collapse-item > .ant-collapse-header .anticon {
+    display: none;
+}
+.ant-result.ant-result-404 {
+    margin-top: 141px;
+
+}
+
+
+
+
+
+
+
+
+
+
 /******************************************************************************************************/
 
                                 /*********** Media Query ***********/   
@@ -433,7 +471,16 @@ input[type=number]{
 
 
 
+@media screen and (min-width:1680px){
+    .company-ip {
+        bottom: calc(0px - 0px);
+    }
 
+    .ant-layout-sider-light {
+        min-height: 94vh;
+    }
+
+}
 
 
 
@@ -939,6 +986,72 @@ input[type=number]{
     margin-right: 2%;
     margin-left: 2%;
 }
+
+
+/******** Guest ***************/
+
+
+.guest-table .ant-col-12 {
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+.guest-table {
+    padding-bottom: 50px;
+}
+
+.guest-wrapper-expand .guest-filter {
+    position: fixed;
+    z-index: 9;
+    top: 0;
+    border-right: 2px solid #efefef;
+}
+
+.filter-box {
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.guest-wrapper-expand .guest-list {
+    width: calc(100% - 0px);
+}
+
+
+.guest-action {
+    width: 100px;
+}
+
+.billing-information .ant-collapse > .ant-collapse-item > .ant-collapse-header .anticon {
+    display: inline-block;
+}
+
+
+.payment-method-icon {
+    display: none;
+}
+
+
+
+
+
+
+.invoice-wrapper-expand .invoice-filter {
+    position: fixed;
+    z-index: 9;
+    top: 0;
+    border-right: 2px solid #efefef;
+}
+
+.filter-box {
+    overflow-y: auto;
+    height: 100vh;
+}
+
+.invoice-wrapper-expand .invoice-listing-page {
+    width: calc(100% - 0px);
+}
+
 
 }
 

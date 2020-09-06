@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import './invoice.css';
 import { toast } from 'react-toastify';
+import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import {
   Form,
@@ -22,21 +23,12 @@ import deleteIcon from '../../assets/images/menu/delete-icon-red.png';
 import loader from '../../assets/images/loader.svg';
 import { userInstance } from '../../axios/axiosconfig';
 
-let i = 1;
 const AdInvoicePopup = (props) => {
   const { t } = useTranslation();
   const {
     userData, property, label, visible, handleCancel, handleOk,
   } = props;
-  // const [{ phone: userPhone, email: userEmail }] = userData || [
-  //   { phone: null, email: null },
-  // ];
-  // const [
-  //   { propertyName, address: propertyAddress, website, id: propertyId },
-  // ] = property || [{ propertyName: null, address: null, website: null }];
-  // console.log(userPhone, userEmail);
   const [draftBtn, setDraftBtn] = useState(false);
-  // const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState(null);
   const [dueDate, setDueDate] = useState(null);
@@ -44,20 +36,19 @@ const AdInvoicePopup = (props) => {
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [vatId, setVatId] = useState(null);
-  const [pricePanel, setPricePanel] = useState([1]);
-  // const [quantity, setQuantity] = useState(null);
-  // const [price, setPrice] = useState(null);
-  // const [amount, setAmount] = useState(null);
-  // const [discountType, setDiscountType] = useState('%');
-  // const [discount, setDiscount] = useState(null);
-  // const [itemTotal, setItemTotal] = useState(null);
-  const [quantityCopy, setQuantityCopy] = useState([]);
-  // const [priceCopy, setPriceCopy] = useState([]);
-  const [amountCopy, setAmountCopy] = useState([]);
-  // const [discountCopy, setDiscountCopy] = useState([]);
-  const [itemTotalCopy, setItemTotalCopy] = useState([]);
+  const [pricePanel, setPricePanel] = useState([
+    {
+      itemDescription: '',
+      itemQuantity: 0,
+      itemPrice: 0,
+      itemAmount: 0,
+      itemDiscount: 0,
+      itemTotal: 0,
+    },
+  ]);
   const [showLoader, setShowLoader] = useState(true);
   const [impression, setImpression] = useState('');
+  const [total, setTotal] = useState([0]);
 
   const handleFinish = async (values) => {
     setShowLoader(false);
@@ -68,23 +59,15 @@ const AdInvoicePopup = (props) => {
     );
     valuesCopy.dueDate = moment(valuesCopy.dueDate._d).format('YYYY/MM/DD');
     valuesCopy.time = time.slice(0, 5);
-    const itemData = [];
-    pricePanel.forEach((el) => {
-      valuesCopy[el].amount = valuesCopy[el].price * valuesCopy[el].quantity;
-      valuesCopy[el].itemTotal = valuesCopy[el].price * valuesCopy[el].quantity
-        - (valuesCopy[el].price
-          * valuesCopy[el].quantity
-          * valuesCopy[el].discount)
-        / 100;
-      valuesCopy[el].discountPer = valuesCopy[el].discount;
-      valuesCopy[el].discount = ((valuesCopy[el].amount) * (valuesCopy[el].discount / 100));
-      itemData.push(valuesCopy[el]);
+    pricePanel.forEach((panel) => {
+      panel.itemDiscountPer = panel.itemDiscount;
+      panel.itemDiscount = (panel.itemAmount * panel.itemDiscount) / 100;
     });
-    valuesCopy.itemData = itemData;
+    valuesCopy.itemData = pricePanel;
     valuesCopy.phone = userData[0].phone;
     valuesCopy.userEmail = userData[0].email;
     valuesCopy.email = email;
-    valuesCopy.total = itemTotalCopy.reduce((a, b) => a + (b || 0), 0);
+    valuesCopy.total = total.reduce((a, b) => a + (b || 0), 0);
     valuesCopy.propertyName = property[0].propertyName;
     valuesCopy.propertyAddress = property[0].address;
     valuesCopy.website = property[0].website;
@@ -99,6 +82,7 @@ const AdInvoicePopup = (props) => {
       const res = await userInstance.post('/invoicedraft', valuesCopy);
       setShowLoader(true);
       if (res.data.code === 200) {
+        setPricePanel([]);
         const element = document.createElement('a');
         element.setAttribute('href', `${res.data.url}`);
         element.setAttribute('download', `${clientName}.pdf`);
@@ -113,6 +97,7 @@ const AdInvoicePopup = (props) => {
         setShowLoader(true);
       }
     } else {
+      setPricePanel([]);
       valuesCopy.status = 'Draft';
       const response = await userInstance.post('/invoicedraft', valuesCopy);
       setShowLoader(true);
@@ -127,65 +112,69 @@ const AdInvoicePopup = (props) => {
       }
     }
     setShowLoader(true);
-    setItemTotalCopy([]);
-    setAmountCopy([]);
   };
 
-  const handleQuantity = (e) => {
-    const d = e.target.value;
-    // setQuantity(d);
-    setQuantityCopy((quantityCopy) => [...quantityCopy, d]);
+  const handleQuantity = (e, i) => {
+    pricePanel.forEach((el, j) => {
+      if (i === j) {
+        el.itemQuantity = e.target.value;
+      }
+    });
+  };
+  function useUpdate() {
+    const [, setTick] = useState(0);
+    const update = useCallback(() => {
+      setTick((tick) => tick + 1);
+    }, []);
+    return update;
+  }
+
+  const update = useUpdate();
+
+  const handlePrice = (e, i) => {
+    pricePanel.forEach((el, j) => {
+      if (i === j) {
+        el.itemPrice = e.target.value;
+        el.itemAmount = e.target.value * el.itemQuantity;
+        el.itemTotal = e.target.value * el.itemQuantity;
+      }
+    });
+    setPricePanel(pricePanel);
+    update();
+    const item = pricePanel.map((panel) => panel.itemTotal);
+    setTotal(item);
+  };
+  const handleDiscount = (e, i) => {
+    pricePanel.forEach((el, j) => {
+      if (i === j) {
+        el.itemDiscount = e.target.value;
+        el.itemTotal = el.itemAmount - (el.itemAmount * e.target.value) / 100;
+      }
+    });
+    setPricePanel(pricePanel);
+    update();
+    const item = pricePanel.map((panel) => panel.itemTotal);
+    setTotal(item);
   };
 
-  const handlePrice = (e, ele) => {
-    const d = e.target.value;
-    // setPrice(d);
-    // setPriceCopy((priceCopy) => [...priceCopy, d]);
-    // setAmount(d * quantity);
-    setAmountCopy((amountCopy) => [...amountCopy, quantityCopy[ele - 1] * d]);
+  const preventTypeE = (evt) => {
+    if ((evt.which !== 8 && evt.which !== 0 && evt.which < 48) || evt.which > 57) {
+      evt.preventDefault();
+    }
   };
-  const handleDiscount = (e, ele) => {
-    const d = e.target.value;
-    // setDiscount(d);
-    // setDiscountCopy((discountCopy) => [...discountCopy, d]);
-    // if (discountType === '%') {
-    // setItemTotal(amount - (amount * d) / 100);
-    setItemTotalCopy((itemTotalCopy) => [
-      ...itemTotalCopy,
-      amountCopy[ele - 1] - (amountCopy[ele - 1] * d) / 100,
-    ]);
-    // } else {
-    //   setItemTotal(amount - d);
-    //   setItemTotalCopy((itemTotalCopy) => [
-    //     ...itemTotalCopy,
-    //     amountCopy[ele - 1] - d,
-    //   ]);
-    // }
-  };
-
-  // const handleDiscountType = (value, ele) => {
-  //   setDiscountType(value);
-  //   if (discount && discountCopy.length) {
-  //     if (value === '%') {
-  //       setItemTotal(amount - (amount * discount) / 100);
-  //       setItemTotalCopy((itemTotalCopy) => [
-  //         ...itemTotalCopy,
-  //         amountCopy[ele - 1]
-  //         - (amountCopy[ele - 1] * discountCopy[ele - 1]) / 100,
-  //       ]);
-  //     } else {
-  //       setItemTotal(amount - discount);
-  //       setItemTotalCopy((itemTotalCopy) => [
-  //         ...itemTotalCopy,
-  //         amountCopy[ele - 1] - discountCopy[ele - 1],
-  //       ]);
-  //     }
-  //   }
-  // };
 
   const addMorePanel = () => {
-    i += 1;
-    setPricePanel([...pricePanel, i]);
+    const oldArray = [...pricePanel];
+    oldArray.push({
+      itemDescription: '',
+      itemQuantity: 0,
+      itemPrice: 0,
+      itemAmount: 0,
+      itemDiscount: 0,
+      itemTotal: 0,
+    });
+    setPricePanel(oldArray);
+    update();
   };
 
   const removePanel = () => {
@@ -200,6 +189,14 @@ const AdInvoicePopup = (props) => {
   const handleCross = () => {
     props.close();
   };
+  const handleDescription = (e, i) => {
+    pricePanel.forEach((el, j) => {
+      if (i === j) {
+        el.itemDescription = e.target.value;
+      }
+    });
+    setPricePanel(pricePanel);
+  };
   return (
     <Modal
       title={t('invoice.heading1')}
@@ -209,6 +206,9 @@ const AdInvoicePopup = (props) => {
       wrapClassName="guest-modal add-invoice-popup"
       destroyOnClose
     >
+      <Helmet>
+        <body className={visible ? 'ant-scrolling-effect' : ''} />
+      </Helmet>
       <div className="cross-btn">
         <CloseOutlined onClick={handleCross} />
       </div>
@@ -432,12 +432,12 @@ const AdInvoicePopup = (props) => {
           </Col>
         </Row>
 
-        {pricePanel.map((ele) => (
-          <div className="additional-fields" key={ele}>
+        {pricePanel.map((ele, i) => (
+          <div className="additional-fields" key={ele.itemDescription}>
             <Row style={{ alignItems: 'center' }}>
               <Col span={6}>
                 <Form.Item
-                  name={[ele, 'itemDescription']}
+                  name={`itemDescription${i}`}
                   label={t('invoice.label13')}
                   rules={[
                     {
@@ -446,13 +446,16 @@ const AdInvoicePopup = (props) => {
                     },
                   ]}
                 >
-                  <Input />
+                  <Input
+                    value={ele.itemDescription}
+                    onChange={(e) => handleDescription(e, i)}
+                  />
                 </Form.Item>
               </Col>
 
               <Col span={3}>
                 <Form.Item
-                  name={[ele, 'quantity']}
+                  name={`quantity${i}`}
                   label="Qty."
                   rules={[
                     {
@@ -463,16 +466,17 @@ const AdInvoicePopup = (props) => {
                 >
                   <Input
                     type="number"
-                    onkeydown="return event.keyCode !== 69"
-                    // value={quantity}
-                    onBlur={(e) => handleQuantity(e, ele)}
+                    onKeyPress={preventTypeE}
+                   // value={ele.itemQuantity}
+                   // onChange={(e) => setQuantity(e.target.value.replace(/\D/, ''))}
+                    onChange={(e) => handleQuantity(e, i)}
                   />
                 </Form.Item>
               </Col>
 
               <Col span={3}>
                 <Form.Item
-                  name={[ele, 'price']}
+                  name={`price${i}`}
                   label={t('strings.price')}
                   rules={[
                     {
@@ -483,9 +487,9 @@ const AdInvoicePopup = (props) => {
                 >
                   <Input
                     type="number"
-                    onkeydown="return event.keyCode !== 69"
-                    // value={price}
-                    onBlur={(e) => handlePrice(e, ele)}
+                    onKeyPress={preventTypeE}
+                   // value={ele.itemPrice}
+                    onChange={(e) => handlePrice(e, i)}
                   />
                 </Form.Item>
               </Col>
@@ -493,14 +497,14 @@ const AdInvoicePopup = (props) => {
               <Col span={3}>
                 <Form.Item label="Amount">
                   <div className="amount-field">
-                    <p>{amountCopy[ele - 1]}</p>
+                    <p>{ele.itemAmount}</p>
                   </div>
                 </Form.Item>
               </Col>
 
               <Col span={2} className="label-hidden">
                 <Form.Item
-                  name={[ele, 'discountType']}
+                  name={`discountType${i}`}
                   label={t('strings.discount_type')}
                 >
                   {/* <Select
@@ -515,11 +519,12 @@ const AdInvoicePopup = (props) => {
               </Col>
 
               <Col span={3}>
-                <Form.Item name={[ele, 'discount']} label="Discount">
+                <Form.Item name={`discount${i}`} label="Discount">
                   <Input
+                   // value={ele.itemDiscount}
                     type="number"
-                    onkeydown="return event.keyCode !== 69"
-                    onBlur={(e) => handleDiscount(e, ele)}
+                    onKeyPress={preventTypeE}
+                    onChange={(e) => handleDiscount(e, i)}
                   />
                 </Form.Item>
               </Col>
@@ -527,7 +532,7 @@ const AdInvoicePopup = (props) => {
               <Col span={3}>
                 <Form.Item label="Total">
                   <div className="amount-field" key={ele}>
-                    <p>{itemTotalCopy[ele - 1]}</p>
+                    <p>{ele.itemTotal}</p>
                   </div>
                 </Form.Item>
               </Col>
@@ -566,14 +571,13 @@ const AdInvoicePopup = (props) => {
                 :
                 {' '}
                 <span>
-                  {itemTotalCopy.reduce((a, b) => a + (b || 0), 0).toFixed(2)}
+                  {total.reduce((a, b) => a + (b || 0), 0)}
                   {' '}
                   €
                 </span>
               </h3>
             </div>
           </Col>
-
           <Col span={24} className="m-top-30">
             <Form.Item name="impression" label="Impression">
               <Input.TextArea

@@ -3,6 +3,7 @@
     "heading1": "Please choose the property from top bar"
   },
   "strings": {
+    "close": "close",
     "time": "Time",
     "days": "days",
     "name": "Name",
@@ -33,7 +34,7 @@
     "balcony": "Balcony",
     "garden": "Garden",
     "wheelchair": "Wheelchair accessible",
-    "property": "Property",
+    "property": "No Property",
     "propertyno": "Property No",
     "edit_unit": "Edit Unit",
     "day": "Day",
@@ -118,17 +119,17 @@
   },
   "sidebar": {
     "heading": "Sidebar",
-    "menu1": "Booking",
+    "menu1": "Bookings",
     "menu2": "Calendar",
     "menu3": "Properties",
     "menu4": "Guests",
     "submenu1": "Option 4",
     "menu5": "Team",
     "menu6": "Invoices",
-    "menu7": "Stats",
+    "menu7": "Statistics",
     "menu8": "Integrations",
     "submenu2": "Option 3",
-    "menu9": "Owner",
+    "menu9": "Owners",
     "menu10": "Logout",
     "menu11": "Details",
     "menu12": "Unit Type",
@@ -666,18 +667,17 @@
     "label11": "Monthly",
     "label12": "Yearly",
     "label13": "Please enter price",
-    "label14": "20% discount if you select Yearly plan",
+    "label14": "20% discount if you select Yearly plan, use code YEARLY20",
     "label15": "per",
     "label16": "Plan",
     "label17": "Discount",
-    "label18": "upgrade/downgrade",
+    "label18": "Change Plan",
     "label19": "Your",
     "label20": "ly Subscription Plan",
     "label21": "will renew on",
     "label22": "Total Price",
-    "label23":"Active Subscription"
-
-
+    "label23":"Active Subscription",
+    "label24": "Your Free"
   },
   "checkoutform": {
     "heading1": "Enter Your Card Details",
@@ -799,15 +799,17 @@
 },
 "subuserpopup": {
   "heading1": "Add New Sub-User",
- 
+  
   "label1": "The input is not valid E-mail!",
   "label2": "Please input your E-mail!",
-  "label3": "Sub-User",
+  "label3": "Choose a Role",
+  "delete": "Delete",
+  "name": "Name",
   "label4": "Full Access",
   "label5": "Booking",
   "label6": "Prices and availability that are syncing with connected OTAs",
   "label7": "Calendar",
-  "label8": "Access Description",
+  "label8": "Reservations, booked date on calendar, edit reservations",
   "label9": "Properties",
   "label10": "Booked dates on calendar",
   "label11": "Guests",
@@ -852,8 +854,8 @@
   "label3": "Sub User",
   "label4": "Role",
   "label5": "Job Title | City of London, United Kingdom",
-  "label6": "Currently there are no Sub users created"
-  
+  "label6": "Currently there are no Sub users created",
+  "status":"Status"
 },
 "thankyou": {
   
@@ -874,7 +876,7 @@
   
   "button1": "Add Property",
   "tooltip1": "You are not authorize to create new property",
-  "heading1":"There is no property yet"
+  "heading1":"Currently you don't have any properties"
   
  
 }

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import PlacesAutocomplete from 'react-places-autocomplete';
+// import PlacesAutocomplete from 'react-places-autocomplete';
+import PlacesAutocomplete, {
+  geocodeByAddress,
+} from 'react-places-autocomplete';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import './property.css';
 import { toast } from 'react-toastify';
@@ -18,10 +21,11 @@ import {
   Collapse,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { HomeOutlined, InboxOutlined } from '@ant-design/icons';
+import { InboxOutlined } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import { server } from '../../config/keys';
 import { userInstance } from '../../axios/axiosconfig';
+import propertyDetailIcon from '../../assets/images/menu/property-detail-icon.png';
 
 const { Panel } = Collapse;
 
@@ -71,7 +75,8 @@ const AddProperty = () => {
   const [form] = Form.useForm();
   const [No, setNo] = useState(0);
   const [address, setAddress] = useState('');
-  const [country, setCountry] = useState(null);
+  const [country, setCountry] = useState('');
+  // const [state, setstate] = useState('');
   const organizationid = localStorage.getItem('organizationid');
   const history = useHistory();
 
@@ -148,8 +153,6 @@ const AddProperty = () => {
 
   const props = {
     name: 'file',
-    // action: `http://localhost:3001/users/propertyPicture${props2}`,
-    // action: `${server}/users/propertyPicture${props2}`,
     action: `${server}/users/propertyPicture?propertyid=${props2}&organizationid=${organizationid}`,
     headers: {
       authorization: 'authorization-text',
@@ -167,9 +170,16 @@ const AddProperty = () => {
     setAddress(...address);
   };
 
-  const handleAddressSelect = (address) => {
+  const handleAddressSelect = async (address) => {
+    const geocodeAddress = await geocodeByAddress(address);
+    const addressComponent = geocodeAddress[0].address_components.reverse();
+    const zip = addressComponent[0].long_name;
+    const country = addressComponent[1].long_name;
+    const state = addressComponent[2].long_name;
+    const city = addressComponent[3].long_name;
+    setCountry(country);
     form.setFieldsValue({
-      address,
+      address, country, state, zip, city,
     });
   };
 
@@ -188,7 +198,8 @@ const AddProperty = () => {
       <div className="add-property">
         <div className="page-header">
           <h1>
-            <HomeOutlined />
+            <img src={propertyDetailIcon} alt="property" />
+            {' '}
             {t('addproperty.heading')}
             {' '}
             {No}
@@ -229,24 +240,42 @@ const AddProperty = () => {
                         ]}
                       >
                         <Select>
-                          <Select.Option value="Holiday House">Holiday House</Select.Option>
-                          <Select.Option value="Holiday Apartment">Holiday Apartment</Select.Option>
-                          <Select.Option value="Bed and Breakfast">Bed and Breakfast</Select.Option>
-                          <Select.Option value="Boat House">Boat House</Select.Option>
-                          <Select.Option value="Bungalow">Bungalow</Select.Option>
+                          <Select.Option value="Holiday House">
+                            Holiday House
+                          </Select.Option>
+                          <Select.Option value="Holiday Apartment">
+                            Holiday Apartment
+                          </Select.Option>
+                          <Select.Option value="Bed and Breakfast">
+                            Bed and Breakfast
+                          </Select.Option>
+                          <Select.Option value="Boat House">
+                            Boat House
+                          </Select.Option>
+                          <Select.Option value="Bungalow">
+                            Bungalow
+                          </Select.Option>
                           <Select.Option value="Cabin">Cabin</Select.Option>
-                          <Select.Option value="Agritourism">Agritourism</Select.Option>
-                          <Select.Option value="Mobile House">Mobile House</Select.Option>
+                          <Select.Option value="Agritourism">
+                            Agritourism
+                          </Select.Option>
+                          <Select.Option value="Mobile House">
+                            Mobile House
+                          </Select.Option>
                           <Select.Option value="Villa">Villa</Select.Option>
                           <Select.Option value="Room">Room</Select.Option>
                           <Select.Option value="Hotel">Hotel</Select.Option>
                           <Select.Option value="Camping">Camping</Select.Option>
-                          <Select.Option value="Student Housing">Student Housing</Select.Option>
+                          <Select.Option value="Student Housing">
+                            Student Housing
+                          </Select.Option>
                           <Select.Option value="Resort">Resort</Select.Option>
                           <Select.Option value="Inn">Inn</Select.Option>
                           <Select.Option value="Hostel">Hostel</Select.Option>
                           <Select.Option value="Motel">Motel</Select.Option>
-                          <Select.Option value="Hospital">Hospital</Select.Option>
+                          <Select.Option value="Hospital">
+                            Hospital
+                          </Select.Option>
                           <Select.Option value="Pousada">Pousada</Select.Option>
                         </Select>
                       </Form.Item>
@@ -326,7 +355,7 @@ const AddProperty = () => {
                           },
                         ]}
                       >
-                        <CountryDropdown onChange={(val) => setCountry(val)} />
+                        <CountryDropdown value={country} onChange={(val) => setCountry(val)} />
                       </Form.Item>
                     </Col>
 
@@ -394,90 +423,92 @@ const AddProperty = () => {
               </div>
             </Panel>
 
-            <Panel header={t('addproperty.title2')} key="2">
-              <div className="main-info-form">
-                <Form form={form} name="property" onFinish={onFinish}>
-                  <Row gutter={[16, 0]}>
-                    <Col span={24}>
-                      <Form.Item label={t('addproperty.detail2')}>
-                        <Input />
-                      </Form.Item>
-                    </Col>
+            <Tooltip title="Please save property details first" color="gold">
+              <Panel header={t('addproperty.title2')} key="2" disabled>
+                <div className="main-info-form">
+                  <Form form={form} name="property" onFinish={onFinish}>
+                    <Row gutter={[16, 0]}>
+                      <Col span={24}>
+                        <Form.Item label={t('addproperty.detail2')}>
+                          <Input />
+                        </Form.Item>
+                      </Col>
 
-                    <Col span={8}>
-                      <Form.Item
-                        name="bedrooms"
-                        label={t('addproperty.detail10')}
-                      >
-                        <Select>
-                          <Select.Option value="1">1</Select.Option>
-                          <Select.Option value="2">2</Select.Option>
-                          <Select.Option value="3">3</Select.Option>
-                          <Select.Option value="4">4</Select.Option>
-                          <Select.Option value="5">5</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
+                      <Col span={8}>
+                        <Form.Item
+                          name="bedrooms"
+                          label={t('addproperty.detail10')}
+                        >
+                          <Select>
+                            <Select.Option value="1">1</Select.Option>
+                            <Select.Option value="2">2</Select.Option>
+                            <Select.Option value="3">3</Select.Option>
+                            <Select.Option value="4">4</Select.Option>
+                            <Select.Option value="5">5</Select.Option>
+                          </Select>
+                        </Form.Item>
+                      </Col>
 
-                    <Col span={8}>
-                      <Form.Item
-                        name="fullBathroom"
-                        label={t('addproperty.detail11')}
-                      >
-                        <Select>
-                          <Select.Option value="1">1</Select.Option>
-                          <Select.Option value="2">2</Select.Option>
-                          <Select.Option value="3">3</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
+                      <Col span={8}>
+                        <Form.Item
+                          name="fullBathroom"
+                          label={t('addproperty.detail11')}
+                        >
+                          <Select>
+                            <Select.Option value="1">1</Select.Option>
+                            <Select.Option value="2">2</Select.Option>
+                            <Select.Option value="3">3</Select.Option>
+                          </Select>
+                        </Form.Item>
+                      </Col>
 
-                    <Col span={8}>
-                      <Form.Item
-                        name="halfBathroom"
-                        label={t('addproperty.detail12')}
-                      >
-                        <Select>
-                          <Select.Option value="1">1</Select.Option>
-                          <Select.Option value="2">2</Select.Option>
-                          <Select.Option value="3">3</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
+                      <Col span={8}>
+                        <Form.Item
+                          name="halfBathroom"
+                          label={t('addproperty.detail12')}
+                        >
+                          <Select>
+                            <Select.Option value="1">1</Select.Option>
+                            <Select.Option value="2">2</Select.Option>
+                            <Select.Option value="3">3</Select.Option>
+                          </Select>
+                        </Form.Item>
+                      </Col>
 
-                    <Col span={8}>
-                      <Form.Item
-                        name="sqfoot"
-                        label={t('addproperty.detail13')}
-                      >
-                        <Input />
-                      </Form.Item>
-                    </Col>
+                      <Col span={8}>
+                        <Form.Item
+                          name="sqfoot"
+                          label={t('addproperty.detail13')}
+                        >
+                          <Input />
+                        </Form.Item>
+                      </Col>
 
-                    <Col span={24}>
-                      <Form.Item
-                        name="description"
-                        label={t('addproperty.detail14')}
-                      >
-                        <Input.TextArea />
-                      </Form.Item>
-                    </Col>
+                      <Col span={24}>
+                        <Form.Item
+                          name="description"
+                          label={t('addproperty.detail14')}
+                        >
+                          <Input.TextArea />
+                        </Form.Item>
+                      </Col>
 
-                    <Col span={24}>
-                      <Form.Item>
-                        <Tooltip title={t('addproperty.title5')} color="gold">
-                          <Button htmlType="submit" disabled="true">
-                            {t('strings.save')}
-                          </Button>
-                        </Tooltip>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            </Panel>
+                      <Col span={24}>
+                        <Form.Item>
+                          <Tooltip title={t('addproperty.title5')} color="gold">
+                            <Button htmlType="submit" disabled="true">
+                              {t('strings.save')}
+                            </Button>
+                          </Tooltip>
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Form>
+                </div>
+              </Panel>
+            </Tooltip>
 
-            <Panel header={t('addproperty.title3')} key="3">
+            <Panel header={t('addproperty.title3')} key="3" disabled>
               <div className="listing-info-form">
                 <Form disabled>
                   <Row gutter={[16, 0]}>
@@ -525,7 +556,7 @@ const AddProperty = () => {
               </div>
             </Panel>
 
-            <Panel header={t('addproperty.title4')} key="4">
+            <Panel header={t('addproperty.title4')} key="4" disabled>
               <div className="main-info-form">
                 <Form disabled>
                   <Row gutter={[16, 0]}>
@@ -562,9 +593,11 @@ const AddProperty = () => {
                       </Form.Item>
                     </Col>
 
-                    {/* <Col span={24}>
-                      <Form.Item>{btn2}</Form.Item>
-                    </Col> */}
+                    <Col span={24}>
+                      <Form.Item>
+                        <Button htmlType="submit">Save</Button>
+                      </Form.Item>
+                    </Col>
                   </Row>
                 </Form>
               </div>

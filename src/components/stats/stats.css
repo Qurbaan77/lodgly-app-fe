@@ -36,5 +36,5 @@
     right: 0;
     display: block;
     z-index: 9;
-    height: calc(100% - 20px);
+        border: 1px solid #eaeaea;
     }
