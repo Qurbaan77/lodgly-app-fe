@@ -5,14 +5,9 @@ import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import './stats.css';
 import {
-  Button,
-  Tooltip,
-  Row,
-  Col,
+  Button, Tooltip, Row, Col,
 } from 'antd';
-import {
-  PlusOutlined,
-} from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import Chart from 'react-apexcharts';
 import Wrapper from '../wrapper';
 import { userInstance } from '../../axios/axiosconfig';
@@ -87,6 +82,17 @@ const Stats = () => {
   if (loading) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="stats-page-view" />
+        </Helmet>
         <div className="loader">
           <div className="loader-box">
             <img src={loader} alt="loader" />
@@ -99,6 +105,17 @@ const Stats = () => {
   if (propertyData.length < 1) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="stats-page-view" />
+        </Helmet>
         <div className="add-team-page">
           <div className="add-subuser">
             <img src={propertyplace} alt="subuser" />
@@ -119,6 +136,17 @@ const Stats = () => {
 
   return (
     <Wrapper fun={setTopNavId}>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
+        <body className="stats-page-view" />
+      </Helmet>
       <Helmet>
         <link rel="icon" href={favicon} />
         <title>

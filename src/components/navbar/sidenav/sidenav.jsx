@@ -31,7 +31,7 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 const Sidenav = ({
-  img, name, getUserInfo, handleMenuSide, menutoggle,
+  imgState, userName, handleMenuSide, menutoggle,
 }) => {
   const { t } = useTranslation();
   // const [propertyData, setPropertyData] = useState([]);
@@ -273,13 +273,14 @@ const Sidenav = ({
         />
       </div>
 
-      <UserProfile img={img} name={name} getUserInfo={getUserInfo} />
+      <UserProfile imgState={imgState} userName={userName} />
 
       <Menu
         className={`main-menu ${nav || ratesNav ? 'hide' : ''}`}
         theme="light"
         mode="inline"
         style={{ height: '100%' }}
+        defaultOpenKeys={['sub1']}
       >
         <Menu.Item className="booking-nav" hidden={hideBooking}>
           <img src={bookingIcon} alt="booking-icon" />
@@ -303,6 +304,7 @@ const Sidenav = ({
 
         <SubMenu
           hidden={disableGuests}
+          key="sub1"
           title={(
             <div>
               <img src={guestIcon} alt="guest-icon" />
@@ -480,16 +482,14 @@ const Sidenav = ({
 };
 
 Sidenav.propTypes = {
-  img: PropTypes.element,
-  name: PropTypes.string,
-  getUserInfo: PropTypes.func,
+  imgState: PropTypes.element,
+  userName: PropTypes.string,
   menutoggle: PropTypes.bool,
   handleMenuSide: PropTypes.func,
 };
 Sidenav.defaultProps = {
-  img: '',
-  name: '',
-  getUserInfo: () => {},
+  imgState: '',
+  userName: '',
   handleMenuSide: () => {},
   menutoggle: false,
 };

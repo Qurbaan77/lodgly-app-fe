@@ -193,6 +193,10 @@ const Owner = () => {
     }
   };
 
+  // Can not select days before today and today
+  // current > moment().startOf('day')
+  const disabledDate = (current) => current > moment().subtract(18, 'y') || current > moment();
+
   useEffect(() => {
     getSubUserData();
     getPropertyData();
@@ -396,7 +400,9 @@ const Owner = () => {
                       },
                     ]}
                   >
-                    <DatePicker />
+                    <DatePicker
+                      disabledDate={disabledDate}
+                    />
                   </Form.Item>
                 </Col>
 
@@ -630,7 +636,9 @@ const Owner = () => {
                       },
                     ]}
                   >
-                    <DatePicker />
+                    <DatePicker
+                      disabledDate={disabledDate}
+                    />
                   </Form.Item>
                 </Col>
 

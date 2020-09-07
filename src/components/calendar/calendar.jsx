@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import Helmet from 'react-helmet';
 import './calendar.css';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
@@ -14,6 +15,7 @@ import GSTC from './GSTC';
 import { userInstance } from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
 import GroupReservation from './groupreservation';
+import favicon from '../../assets/images/logo-mobile.png';
 
 const Calendar = () => {
   const { t } = useTranslation();
@@ -332,6 +334,17 @@ const Calendar = () => {
   if (loading) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="calendar-page-view" />
+        </Helmet>
         <div className="loader">
           <div className="loader-box">
             <img src={loader} alt="loader" />
@@ -344,6 +357,17 @@ const Calendar = () => {
   if (propertyData.length < 1) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="calendar-page-view" />
+        </Helmet>
         <div className="add-team-page">
           <div className="add-subuser">
             <img src={propertyplace} alt="subuser" />
@@ -364,6 +388,17 @@ const Calendar = () => {
 
   return (
     <Wrapper fun={setTopNavId}>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
+        <body className="calendar-page-view" />
+      </Helmet>
       {hasAccess ? (
         <div className="calendar">
           <div className="calendar-btn">

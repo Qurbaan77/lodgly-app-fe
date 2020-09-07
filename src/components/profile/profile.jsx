@@ -48,7 +48,7 @@ const Profile = () => {
   const userId = localStorage.getItem('userId');
   const organizationid = localStorage.getItem('organizationid');
   const [img, setImg] = useState('');
-  // const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState('');
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
@@ -74,9 +74,9 @@ const Profile = () => {
       } else {
         setImg('');
       }
-      // if (body[0].fullname !== null) {
-      //   setUserName(body[0].fullname);
-      // }
+      if (body[0].fullname !== null) {
+        setUserName(body[0].fullname);
+      }
       form1.setFieldsValue({
         fullname: body[0].fullname,
         address: body[0].address,
@@ -216,7 +216,7 @@ const Profile = () => {
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
-    <Wrapper>
+    <Wrapper userName={userName} imgState={img}>
       <Helmet>
         <link rel="icon" href={favicon} />
         <title>
