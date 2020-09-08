@@ -203,7 +203,8 @@ const TeamListing = () => {
                         {' '}
                         {t('team.status')}
                       </th>
-                      <th> </th>
+                     
+                      <th>Actions</th>
                     </tr>
                   </thead>
 
@@ -244,8 +245,14 @@ const TeamListing = () => {
                               ? 'Read'
                               : 'Write'}
                         </td>
-                        <td>{el.status === 0 ? 'Pending' : 'Accepted'}</td>
-                        {el.status === 0 ? (
+                        <td>{el.status === 0 ?  <Button
+                              type="primary"
+                              onClick={() => resendMail(el.email, el.id)}
+                            >
+                              Resend
+                            </Button>
+                           : 'Accepted'}</td>
+                        {/* {el.status === 0 ? (
                           <td>
                             <Button
                               type="primary"
@@ -256,7 +263,7 @@ const TeamListing = () => {
                           </td>
                         ) : (
                           ''
-                        )}
+                        )} */}
                         <td>
                           <div className="team-action">
                             <FormOutlined
