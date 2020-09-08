@@ -115,6 +115,10 @@ const Profile = () => {
 
   const personalInfoFinish = async (values) => {
     const copyValues = values;
+    copyValues.address = values.address.trim();
+    copyValues.fullname = values.fullname.trim();
+    copyValues.email = values.email.trim();
+    copyValues.phone = values.phone.trim();
     const companyName = window.location.hostname.split('.');
     copyValues.name = companyName[0];
     const response = await userInstance.post('/updatePersonalInfo', copyValues);
@@ -126,7 +130,7 @@ const Profile = () => {
       toast.error('server error please try again', { containerId: 'B' });
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    form1.resetFields();
+    // form1.resetFields();
   };
 
   const companyFinsh = async (values) => {
