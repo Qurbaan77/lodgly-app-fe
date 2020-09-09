@@ -14,7 +14,6 @@ import {
   Modal,
   Row,
   Col,
-  InputNumber,
 } from 'antd';
 import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
 
@@ -68,7 +67,7 @@ const AdInvoicePopup = (props) => {
     const date = moment(formatedDate);
     const dueDate = moment(formatedDate);
     const time0 = moment(ftime, 'HH:mm:ss');
-    setTime(time0)
+    setTime(time0);
     form.setFieldsValue({
       deliveryDate,
       dueDate,
@@ -76,7 +75,6 @@ const AdInvoicePopup = (props) => {
       time: time0,
     });
   }, []);
-
 
   const handleFinish = async (values) => {
     // setShowLoader(false);
@@ -87,23 +85,16 @@ const AdInvoicePopup = (props) => {
       'YYYY/MM/DD',
     );
     valuesCopy.dueDate = moment(valuesCopy.dueDate._d).format('YYYY/MM/DD');
-    valuesCopy.time = moment(time._d, 'HH:mm:ss')
-    console.log(time)
+    valuesCopy.time = moment(time._d, 'HH:mm:ss');
     pricePanel.forEach((panel) => {
-      console.log(panel);
       if (panel.itemDiscountType === '%') {
-        console.log('a');
-        panel.itemDiscount = (panel.itemAmount * panel.itemDiscountPer)/100;
-        console.log((panel.itemAmount * panel.itemDiscountPer)/100);
+        panel.itemDiscount = (panel.itemAmount * panel.itemDiscountPer) / 100;
       } else {
-        console.log('b');
         panel.itemDiscount = panel.itemAmount - panel.itemDiscountPer;
-        console.log( panel.itemAmount - panel.itemDiscountPer)
       }
       // panel.itemDiscount = (panel.itemAmount * panel.itemDiscount) / 100;
     });
     valuesCopy.itemData = pricePanel;
-    console.log(valuesCopy)
     valuesCopy.phone = userData[0].phone;
     valuesCopy.userEmail = userData[0].email;
     valuesCopy.email = email;
@@ -156,18 +147,12 @@ const AdInvoicePopup = (props) => {
   };
   const handleDiscountType = (value, i) => {
     setDiscountType(value);
-     console.log("value and i==>",value,i);
     if (value === '%') {
-       
       pricePanel.forEach((el, j) => {
-
         if (i === j) {
-          console.log("itemAmount",el.itemAmount );
-          console.log("itemDiscount",el.itemDiscountPer );
-         el.itemDiscountType = '%';
+          el.itemDiscountType = '%';
           // el.itemDiscount = el.itemAmount*el.itemDiscount/100;
           el.itemTotal = el.itemAmount - ((el.itemAmount * el.itemDiscountPer) / 100);
-          console.log(el.itemTotal );
         }
       });
       setPricePanel(pricePanel);
@@ -175,15 +160,11 @@ const AdInvoicePopup = (props) => {
       const item = pricePanel.map((panel) => panel.itemTotal);
       setTotal(item);
     } else {
-     
       pricePanel.forEach((el, j) => {
-        
         if (i === j) {
-          console.log("else executes");
           el.itemDiscountType = '€';
           // el.itemDiscount =el.itemDiscount;
           el.itemTotal = el.itemAmount - el.itemDiscountPer;
-          console.log(el.itemTotal );
         }
       });
       setPricePanel(pricePanel);
@@ -192,7 +173,6 @@ const AdInvoicePopup = (props) => {
       setTotal(item);
     }
   };
-
 
   const handleQuantity = (e, i) => {
     pricePanel.forEach((el, j) => {
@@ -225,8 +205,7 @@ const AdInvoicePopup = (props) => {
     setTotal(item);
   };
   const handleDiscount = (e, i) => {
-    console.log("discount==>",e.target.value, discountType);
-    if (e.target.value < 1 || e.target.value > 100 && discountType === '%') {
+    if ((e.target.value < 1 || e.target.value > 100) && discountType === '%') {
       toast.error('Please Enter Discount in the Range of 0 to 100', { containerId: 'B', toastId: 'ABC' });
       form.setFieldsValue({
         [`discount${i}`]: 100,
@@ -239,7 +218,6 @@ const AdInvoicePopup = (props) => {
           el.itemTotal = el.itemAmount - (el.itemAmount * e.target.value) / 100;
         }
       });
-      // console.log("pricepanel==>",pricePanel);
       setPricePanel(pricePanel);
       update();
       const item = pricePanel.map((panel) => panel.itemTotal);
@@ -248,7 +226,6 @@ const AdInvoicePopup = (props) => {
   };
 
   const preventTypeE = (evt) => {
-    console.log(evt.target.value);
     if (
       (evt.which !== 8 && evt.which !== 0 && evt.which < 48)
       || evt.which > 57

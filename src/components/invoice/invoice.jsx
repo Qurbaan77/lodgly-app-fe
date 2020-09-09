@@ -33,7 +33,7 @@ import filterIcon from '../../assets/images/menu/filter-icon.png';
 // import editIcon from '../../assets/images/menu/pencil-icon.png';
 import downloadIcon from '../../assets/images/menu/download-icon.png';
 import refreshIcon from '../../assets/images/menu/refresh-icon.png';
-import settingIcon from '../../assets/images/menu/setting-icon.png';
+// import settingIcon from '../../assets/images/menu/setting-icon.png';
 import printIcon from '../../assets/images/menu/print-icon.png';
 import cancelIcon from '../../assets/images/menu/cancel-icon.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
@@ -777,20 +777,20 @@ const Invoice = () => {
                               />
                               {el.date.slice(0, 10)}
                             </td>
-                            <td  onClick={() => showEditInvoice(el, i)}>
+                            <td onClick={() => showEditInvoice(el, i)} role="presentation">
                               {el.label
                                 || `INVOICE ${
                                   el.id
                                 } - ${new Date().getFullYear()}`}
                             </td>
-                            <td  onClick={() => showEditInvoice(el, i)}>{el.type || 'Invoice'}</td>
-                            <td  onClick={() => showEditInvoice(el, i)}>{el.clientName}</td>
-                            <td  onClick={() => showEditInvoice(el, i)}>
+                            <td onClick={() => showEditInvoice(el, i)} role="presentation">{el.type || 'Invoice'}</td>
+                            <td onClick={() => showEditInvoice(el, i)} role="presentation">{el.clientName}</td>
+                            <td onClick={() => showEditInvoice(el, i)} role="presentation">
                               {el.total}
                               {' '}
                               EUR
                             </td>
-                            <td  onClick={() => showEditInvoice(el, i)}>{el.status}</td>
+                            <td onClick={() => showEditInvoice(el, i)} role="presentation">{el.status}</td>
                             <td>
                               <div className="action-icon">
                                 <MoreOutlined />
