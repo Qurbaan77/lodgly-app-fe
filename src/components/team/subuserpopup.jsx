@@ -145,7 +145,7 @@ const SubUserPopup = ({
         setBillingRead(true);
         setBillingWrite(false);
         setBillingDelete(false);
-      } 
+      }
       // else {
       //   makeEverythingUncheck();
       // }

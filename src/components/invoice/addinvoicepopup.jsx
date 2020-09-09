@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './invoice.css';
 import { toast } from 'react-toastify';
@@ -12,7 +12,9 @@ import {
   DatePicker,
   TimePicker,
   Modal,
-  Row, Col,
+  Row,
+  Col,
+  InputNumber,
 } from 'antd';
 import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
 
@@ -20,16 +22,18 @@ import moment from 'moment';
 import propertyIcon from '../../assets/images/menu/property-icon-orange.png';
 
 import deleteIcon from '../../assets/images/menu/delete-icon-red.png';
-import loader from '../../assets/images/loader.svg';
+import loader from '../../assets/images/cliploader.gif';
 import { userInstance } from '../../axios/axiosconfig';
 
 const AdInvoicePopup = (props) => {
   const { t } = useTranslation();
+  const [form] = Form.useForm();
   const {
     userData, property, label, visible, handleCancel, handleOk,
   } = props;
   const [draftBtn, setDraftBtn] = useState(false);
   const [time, setTime] = useState(null);
+  const [date, setDate] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState(null);
   const [dueDate, setDueDate] = useState(null);
   const [fName, setFName] = useState('');
@@ -42,28 +46,64 @@ const AdInvoicePopup = (props) => {
       itemQuantity: 0,
       itemPrice: 0,
       itemAmount: 0,
+      itemDiscountPer: 0,
       itemDiscount: 0,
+      itemDiscountType: '%',
       itemTotal: 0,
     },
   ]);
   const [showLoader, setShowLoader] = useState(true);
   const [impression, setImpression] = useState('');
   const [total, setTotal] = useState([0]);
+  const [discountType, setDiscountType] = useState('%');
+  useEffect(() => {
+    const ddate = new Date();
+    const ftime = `${ddate.getHours()}:${ddate.getMinutes()}:${ddate.getSeconds()}`;
+    const formatedDate = `${ddate.getFullYear()}-${(
+      `0${
+        ddate.getMonth() + 1}`
+    ).slice(-2)}-${(`0${ddate.getDate()}`).slice(-2)}`;
+
+    const deliveryDate = moment(formatedDate);
+    const date = moment(formatedDate);
+    const dueDate = moment(formatedDate);
+    const time0 = moment(ftime, 'HH:mm:ss');
+    setTime(time0)
+    form.setFieldsValue({
+      deliveryDate,
+      dueDate,
+      date,
+      time: time0,
+    });
+  }, []);
+
 
   const handleFinish = async (values) => {
-    setShowLoader(false);
+    // setShowLoader(false);
+
     const valuesCopy = values;
     valuesCopy.date = moment(valuesCopy.date._d).format('YYYY/MM/DD');
     valuesCopy.deliveryDate = moment(valuesCopy.deliveryDate._d).format(
       'YYYY/MM/DD',
     );
     valuesCopy.dueDate = moment(valuesCopy.dueDate._d).format('YYYY/MM/DD');
-    valuesCopy.time = time.slice(0, 5);
+    valuesCopy.time = moment(time._d, 'HH:mm:ss')
+    console.log(time)
     pricePanel.forEach((panel) => {
-      panel.itemDiscountPer = panel.itemDiscount;
-      panel.itemDiscount = (panel.itemAmount * panel.itemDiscount) / 100;
+      console.log(panel);
+      if (panel.itemDiscountType === '%') {
+        console.log('a');
+        panel.itemDiscount = (panel.itemAmount * panel.itemDiscountPer)/100;
+        console.log((panel.itemAmount * panel.itemDiscountPer)/100);
+      } else {
+        console.log('b');
+        panel.itemDiscount = panel.itemAmount - panel.itemDiscountPer;
+        console.log( panel.itemAmount - panel.itemDiscountPer)
+      }
+      // panel.itemDiscount = (panel.itemAmount * panel.itemDiscount) / 100;
     });
     valuesCopy.itemData = pricePanel;
+    console.log(valuesCopy)
     valuesCopy.phone = userData[0].phone;
     valuesCopy.userEmail = userData[0].email;
     valuesCopy.email = email;
@@ -79,6 +119,7 @@ const AdInvoicePopup = (props) => {
     } - ${new Date().getFullYear()}`;
     if (!draftBtn) {
       valuesCopy.status = 'Issued';
+
       const res = await userInstance.post('/invoicedraft', valuesCopy);
       setShowLoader(true);
       if (res.data.code === 200) {
@@ -113,6 +154,45 @@ const AdInvoicePopup = (props) => {
     }
     setShowLoader(true);
   };
+  const handleDiscountType = (value, i) => {
+    setDiscountType(value);
+     console.log("value and i==>",value,i);
+    if (value === '%') {
+       
+      pricePanel.forEach((el, j) => {
+
+        if (i === j) {
+          console.log("itemAmount",el.itemAmount );
+          console.log("itemDiscount",el.itemDiscountPer );
+         el.itemDiscountType = '%';
+          // el.itemDiscount = el.itemAmount*el.itemDiscount/100;
+          el.itemTotal = el.itemAmount - ((el.itemAmount * el.itemDiscountPer) / 100);
+          console.log(el.itemTotal );
+        }
+      });
+      setPricePanel(pricePanel);
+      update();
+      const item = pricePanel.map((panel) => panel.itemTotal);
+      setTotal(item);
+    } else {
+     
+      pricePanel.forEach((el, j) => {
+        
+        if (i === j) {
+          console.log("else executes");
+          el.itemDiscountType = '€';
+          // el.itemDiscount =el.itemDiscount;
+          el.itemTotal = el.itemAmount - el.itemDiscountPer;
+          console.log(el.itemTotal );
+        }
+      });
+      setPricePanel(pricePanel);
+      update();
+      const item = pricePanel.map((panel) => panel.itemTotal);
+      setTotal(item);
+    }
+  };
+
 
   const handleQuantity = (e, i) => {
     pricePanel.forEach((el, j) => {
@@ -145,20 +225,34 @@ const AdInvoicePopup = (props) => {
     setTotal(item);
   };
   const handleDiscount = (e, i) => {
-    pricePanel.forEach((el, j) => {
-      if (i === j) {
-        el.itemDiscount = e.target.value;
-        el.itemTotal = el.itemAmount - (el.itemAmount * e.target.value) / 100;
-      }
-    });
-    setPricePanel(pricePanel);
-    update();
-    const item = pricePanel.map((panel) => panel.itemTotal);
-    setTotal(item);
+    console.log("discount==>",e.target.value, discountType);
+    if (e.target.value < 1 || e.target.value > 100 && discountType === '%') {
+      toast.error('Please Enter Discount in the Range of 0 to 100', { containerId: 'B', toastId: 'ABC' });
+      form.setFieldsValue({
+        [`discount${i}`]: 100,
+
+      });
+    } else {
+      pricePanel.forEach((el, j) => {
+        if (i === j) {
+          el.itemDiscountPer = e.target.value;
+          el.itemTotal = el.itemAmount - (el.itemAmount * e.target.value) / 100;
+        }
+      });
+      // console.log("pricepanel==>",pricePanel);
+      setPricePanel(pricePanel);
+      update();
+      const item = pricePanel.map((panel) => panel.itemTotal);
+      setTotal(item);
+    }
   };
 
   const preventTypeE = (evt) => {
-    if ((evt.which !== 8 && evt.which !== 0 && evt.which < 48) || evt.which > 57) {
+    console.log(evt.target.value);
+    if (
+      (evt.which !== 8 && evt.which !== 0 && evt.which < 48)
+      || evt.which > 57
+    ) {
       evt.preventDefault();
     }
   };
@@ -212,7 +306,7 @@ const AdInvoicePopup = (props) => {
       <div className="cross-btn">
         <CloseOutlined onClick={handleCross} />
       </div>
-      <Form name="basic" onFinish={handleFinish}>
+      <Form name="basic" form={form} onFinish={handleFinish}>
         <Row style={{ alignItems: 'center' }}>
           <Col span={12}>
             <div className="invoice-property-info">
@@ -264,10 +358,11 @@ const AdInvoicePopup = (props) => {
                     ]}
                   >
                     <DatePicker
-                      // value={date}
+                      value={date}
+                      selected={date}
                       onChange={(e) => {
                         const d1 = moment(e._id).format('MM/DD/YYYY');
-                        setDeliveryDate(d1);
+                        setDate(d1);
                       }}
                     />
                   </Form.Item>
@@ -310,6 +405,8 @@ const AdInvoicePopup = (props) => {
                   >
                     <DatePicker
                       value={deliveryDate}
+
+                      selected={deliveryDate}
                       onChange={(e) => {
                         const d1 = moment(e._id).format('MM/DD/YYYY');
                         setDeliveryDate(d1);
@@ -467,8 +564,8 @@ const AdInvoicePopup = (props) => {
                   <Input
                     type="number"
                     onKeyPress={preventTypeE}
-                   // value={ele.itemQuantity}
-                   // onChange={(e) => setQuantity(e.target.value.replace(/\D/, ''))}
+                    // value={ele.itemQuantity}
+                    // onChange={(e) => setQuantity(e.target.value.replace(/\D/, ''))}
                     onChange={(e) => handleQuantity(e, i)}
                   />
                 </Form.Item>
@@ -488,7 +585,7 @@ const AdInvoicePopup = (props) => {
                   <Input
                     type="number"
                     onKeyPress={preventTypeE}
-                   // value={ele.itemPrice}
+                    value={ele.itemPrice}
                     onChange={(e) => handlePrice(e, i)}
                   />
                 </Form.Item>
@@ -501,31 +598,31 @@ const AdInvoicePopup = (props) => {
                   </div>
                 </Form.Item>
               </Col>
+              <Col span={3}>
+                <Form.Item name={`discount${i}`} label="Discount">
+                  <Input
+                    value={ele.itemDiscount}
+                    type="number"
+                    onKeyPress={preventTypeE}
+                    onChange={(e) => handleDiscount(e, i)}
+                  />
+                </Form.Item>
+              </Col>
 
               <Col span={2} className="label-hidden">
                 <Form.Item
                   name={`discountType${i}`}
                   label={t('strings.discount_type')}
                 >
-                  {/* <Select
-                    placeholder="Discount type"
-                    onSelect={(value) => handleDiscountType(value, ele)}
+                  <Select
                     defaultValue="%"
+                    onSelect={(value) => handleDiscountType(value, i)}
                   >
+                    <Select.Option>Select</Select.Option>
                     <Select.Option value="%">%</Select.Option>
-                  </Select> */}
-                  <Input placeholder="%" disabled />
-                </Form.Item>
-              </Col>
+                    <Select.Option value="€">€</Select.Option>
+                  </Select>
 
-              <Col span={3}>
-                <Form.Item name={`discount${i}`} label="Discount">
-                  <Input
-                   // value={ele.itemDiscount}
-                    type="number"
-                    onKeyPress={preventTypeE}
-                    onChange={(e) => handleDiscount(e, i)}
-                  />
                 </Form.Item>
               </Col>
 
@@ -536,6 +633,15 @@ const AdInvoicePopup = (props) => {
                   </div>
                 </Form.Item>
               </Col>
+
+              {/* <Col span={3}>
+
+                <Form.Item label="Total" >
+                  <div className="amount-field" key={ele}>
+                    <p>{total}</p>
+                  </div>
+                </Form.Item>
+              </Col> */}
 
               <Col span={1} className="deleteicon">
                 <Form.Item>
@@ -555,7 +661,7 @@ const AdInvoicePopup = (props) => {
           <Col span={12}>
             <div
               role="presentation"
-              className="additional-add-guest"
+              className="additional-add-item"
               onClick={addMorePanel}
             >
               <PlusOutlined />
@@ -567,6 +673,7 @@ const AdInvoicePopup = (props) => {
           <Col span={12}>
             <div className="total-add">
               <h3>
+                {/* {total} */}
                 {t('strings.total')}
                 :
                 {' '}
@@ -579,7 +686,16 @@ const AdInvoicePopup = (props) => {
             </div>
           </Col>
           <Col span={24} className="m-top-30">
-            <Form.Item name="impression" label="Impression">
+            <Form.Item
+              name="impression"
+              label="Note"
+              rules={[
+                {
+                  required: true,
+
+                },
+              ]}
+            >
               <Input.TextArea
                 value={impression}
                 onChange={(e) => setImpression(e.target.value)}

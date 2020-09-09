@@ -143,25 +143,26 @@ const UpdateGuestPopup = (props) => {
 
         <Row style={{ alignItems: 'center' }}>
           <Col span={12}>
-          <Form.Item
+            <Form.Item
               label={t('guestpopup.label4')}
-              name="typeOfDoc" 
-               label="Type of Document"  rules={[
+              name="typeOfDoc"
+              label="Type of Document"
+              rules={[
                 {
                   required: true,
                   message: t('guestpopup.label5'),
                 },
               ]}
             >
-       <Select placeholder="Select">
-      <Select.Option value="Passport" selected>Passport</Select.Option>
-      <Select.Option value="ID Card">ID Card</Select.Option>
-      <Select.Option value="Driving License">Driving License</Select.Option>
-      <Select.Option value="Other">Other</Select.Option>
+              <Select placeholder="Select">
+                <Select.Option value="Passport" selected>Passport</Select.Option>
+                <Select.Option value="ID Card">ID Card</Select.Option>
+                <Select.Option value="Driving License">Driving License</Select.Option>
+                <Select.Option value="Other">Other</Select.Option>
               </Select>
-             
+
             </Form.Item>
-            
+
           </Col>
 
           <Col span={12}>

@@ -708,6 +708,7 @@ const Invoice = () => {
                   <table>
                     <thead>
                       <tr>
+
                         <th>{t('strings.date')}</th>
                         <th>{t('strings.label')}</th>
                         <th>{t('strings.type')}</th>
@@ -731,23 +732,22 @@ const Invoice = () => {
                               />
                               {el.date.slice(0, 10)}
                             </td>
-                            <td>
+                            <td  onClick={() => showEditInvoice(el, i)}>
                               {el.label
                               || `INVOICE ${el.id} - ${new Date().getFullYear()}`}
                             </td>
-                            <td>{el.type || 'Invoice'}</td>
-                            <td>{el.clientName}</td>
-                            <td>
+                            <td  onClick={() => showEditInvoice(el, i)}>{el.type || 'Invoice'}</td>
+                            <td  onClick={() => showEditInvoice(el, i)}>{el.clientName}</td>
+                            <td  onClick={() => showEditInvoice(el, i)}>
                               {el.total}
                               {' '}
                               EUR
                             </td>
-                            <td>{el.status}</td>
+                            <td  onClick={() => showEditInvoice(el, i)}>{el.status}</td>
                             <td>
                               <div className="action-icon">
                                 <MoreOutlined />
                               </div>
-
                               <div className="invoice-action">
                                 <FormOutlined
                                   onClick={() => showEditInvoice(el, i)}
@@ -851,9 +851,9 @@ const Invoice = () => {
                         defaultCurrent={1}
                       />
 
-                      <div className="setting-icon">
+                      {/* <div className="setting-icon">
                         <img src={settingIcon} alt="" />
-                      </div>
+                      </div> */}
                     </div>
                   </Col>
                 </Row>

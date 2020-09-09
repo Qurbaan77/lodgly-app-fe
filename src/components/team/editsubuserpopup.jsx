@@ -195,7 +195,7 @@ const EditSubUserPopup = (props) => {
         setBillingRead(true);
         setBillingWrite(false);
         setBillingDelete(false);
-      } 
+      }
       // else {
       //   makeEverythingUncheck();
       // }

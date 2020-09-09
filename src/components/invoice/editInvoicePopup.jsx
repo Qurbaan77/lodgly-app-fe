@@ -13,7 +13,6 @@ import {
   Modal,
   Row, Col,
 } from 'antd';
-
 import { PlusOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { toast } from 'react-toastify';
@@ -21,8 +20,7 @@ import propertyIcon from '../../assets/images/menu/property-icon-orange.png';
 import printIcon from '../../assets/images/menu/print-white.png';
 import pdfIcon from '../../assets/images/menu/pdf-white.png';
 import deleteIcon from '../../assets/images/menu/delete-icon-red.png';
-import loader from '../../assets/images/loader.svg';
-
+import loader from '../../assets/images/cliploader.gif';
 import { userInstance } from '../../axios/axiosconfig';
 
 const EditInvoicePopup = (props) => {
@@ -31,7 +29,6 @@ const EditInvoicePopup = (props) => {
     userData, property, invoiceData, invoiceItems, setInvoiceItems, close, visible, handleOk,
     handleCancel,
   } = props;
-
   function useUpdate() {
     const [, setTick] = useState(0);
     const update = useCallback(() => {
@@ -61,6 +58,8 @@ const EditInvoicePopup = (props) => {
   // const [itemState, setItemState] = useState([]);
   const [issueState, setIssueState] = useState(false);
   const [download, setDownload] = useState(false);
+  const [total, setTotal] = useState([0]);
+  const [discountType, setDiscountType] = useState('%');
   const updateValues = useCallback(() => {
     if (visible) {
       const date0 = moment(invoiceData.date);
@@ -95,8 +94,8 @@ const EditInvoicePopup = (props) => {
             [`itemQuantity${i}`]: el.quantity,
             [`itemPrice${i}`]: el.price,
             [`itemAmount${i}`]: el.amount,
-            [`itemDiscount${i}`]: el.discount,
-            [`itemDiscountPer${i}`]: el.discountPer,
+            [`itemDiscount${i}`]: el.discountPer,
+            [`itemDiscountType${i}`]: el.discountType,
             [`itemTotal${i}`]: el.itemTotal,
           });
         });
@@ -183,10 +182,17 @@ const EditInvoicePopup = (props) => {
   const handleQuantity = (e, ele, i) => {
     const { price: paisa, discountPer: perDiscount } = ele;
     setQuantity(e.target.value);
+    invoiceItems.forEach((el) => {
+      if (ele.id === el.id) {
+        el.quantity = e.target.value;
+        el.discountType = '%';
+      }
+    });
+    setInvoiceItems(invoiceItems)
     if (ele.price) {
       form.setFieldsValue({
         [`itemAmount${i}`]: e.target.value * paisa,
-        [`itemDiscount${i}`]: (e.target.value * paisa) * (perDiscount / 100),
+       // [`itemDiscount${i}`]: (e.target.value * paisa) * (perDiscount / 100),
         [`itemTotal${i}`]: e.target.value * paisa - (e.target.value * paisa) * (perDiscount / 100),
       });
       invoiceItems.forEach((el) => {
@@ -198,10 +204,56 @@ const EditInvoicePopup = (props) => {
       // setItemState(invoiceItems);
     }
   };
+  const handleDiscountType = (value, ele, i) => {
+    console.log(ele,i)
+    // setDiscountType(value);
+    if (value === '%') 
+    {
+      form.setFieldsValue({
+        // [`temDiscount${i}`]: (element.amount) * (e.target.value / 100),
+         [`itemTotal${i}`]: ele.amount - ((ele.amount * ele.discountPer) / 100),
+       });
+      invoiceItems.forEach((el, j) => {
+        if (i === j) {
+          el.discountType = '%';
+          //el.itemDiscount = el.itemAmount*el.itemDiscount/100;
+          el.itemTotal = el.amount - ((el.amount * el.discountPer) / 100);
+          console.log("If total", el.amount - ((el.amount * el.discountPer) / 100) );
+        }
+      });
+      setInvoiceItems(invoiceItems);
+      // setItemState(invoiceItems);
+      update();
+    } else {
+      form.setFieldsValue({
+        // [`temDiscount${i}`]: (element.amount) * (e.target.value / 100),
+         [`itemTotal${i}`]: ele.amount - ele.discountPer,
+       });
+      invoiceItems.forEach((el, j) => {
+        if (i === j) {
+          console.log("else executes");
+          el.discountType = '€';
+          // el.itemDiscount =el.itemDiscount;
+          el.itemTotal = el.amount - el.discountPer;
+          console.log("Else Total ==>",el.itemTotal );
+        }
+      });
+      setInvoiceItems(invoiceItems);
+         // setItemState(invoiceItems);
+         update();
+    }
+  };
 
   const handlePrice = (e, i, ele) => {
     const { discountPer: perDiscount } = ele;
     setPrice(e.target.value);
+    invoiceItems.forEach((el) => {
+      if (ele.id === el.id) {
+        el.price = e.target.value;
+        el.amount = el.quantity * e.target.value;
+      }
+    });
+    setInvoiceItems(invoiceItems)
     form.setFieldsValue({
       [`itemAmount${i}`]: quantity * e.target.value,
       [`itemTotal${i}`]: quantity * e.target.value,
@@ -222,36 +274,83 @@ const EditInvoicePopup = (props) => {
   };
 
   const handleDiscount = (e, ele, i) => {
+    console.log(ele, i)
     const element = ele;
+    invoiceItems.forEach((el) => {
+      if (ele.id === el.id) {
+        el.discountPer = e.target.value;
+      }
+    });
+    setInvoiceItems(invoiceItems)
     if (ele.discountPer) {
-      form.setFieldsValue({
-        [`temDiscount${i}`]: (element.amount) * (e.target.value / 100),
-        [`itemTotal${i}`]: element.amount - (element.amount) * (e.target.value / 100),
-      });
-      invoiceItems.forEach((el) => {
-        if (el.id === ele.id) {
-          el.itemTotal = element.amount - (element.amount) * (e.target.value / 100);
-        }
-      });
-      setInvoiceItems(invoiceItems);
-      // setItemState(invoiceItems);
-      update();
+      console.log('a')
+      if (ele.discountType === '%') {
+        form.setFieldsValue({
+          // [`temDiscount${i}`]: (element.amount) * (e.target.value / 100),
+           [`itemTotal${i}`]: element.amount - ((element.amount * e.target.value) / 100),
+         });
+         invoiceItems.forEach((el) => {
+           if (el.id === ele.id) {
+             el.discountPer = e.target.value;
+             el.itemTotal = element.amount - ((element.amount * e.target.value )/ 100);
+           }
+         });
+         setInvoiceItems(invoiceItems);
+         // setItemState(invoiceItems);
+         update();
+      } else {
+        form.setFieldsValue({
+          // [`temDiscount${i}`]: (element.amount) * (e.target.value / 100),
+           [`itemTotal${i}`]: element.amount - e.target.value,
+         });
+         invoiceItems.forEach((el) => {
+           if (el.id === ele.id) {
+             el.discountPer = e.target.value;
+             el.itemTotal = element.amount - e.target.value;
+           }
+         });
+         setInvoiceItems(invoiceItems);
+         // setItemState(invoiceItems);
+         update();
+      }
     } else {
-      setDiscountPer(e.target.value);
-      // setDiscount(amount - (amount) * (e.target.value / 100));
-      form.setFieldsValue({
-        [`itemDiscount${i}`]: (amount) * (e.target.value / 100),
-        [`itemTotal${i}`]: amount - (amount) * (e.target.value / 100),
-      });
-      invoiceItems.forEach((el) => {
-        if (el.id === ele.id) {
-          el.itemTotal = amount - (amount) * (e.target.value / 100);
-        }
-      });
-      // setItemState(invoiceItems);
-      update();
+      console.log('b')
+      if (ele.discountType === '%') {
+        setDiscountPer(e.target.value);
+        // setDiscount(amount - (amount) * (e.target.value / 100));
+        form.setFieldsValue({
+         // [`itemDiscount${i}`]: (amount) * (e.target.value / 100),
+          [`itemTotal${i}`]: amount - ((amount * e.target.value) / 100),
+        });
+        invoiceItems.forEach((el) => {
+          if (el.id === ele.id) {
+            el.discountPer = e.target.value;
+            el.itemTotal = amount - (amount) * (e.target.value / 100);
+          }
+        });
+        // setItemState(invoiceItems);
+        update();
+      } else {
+        setDiscountPer(e.target.value);
+        // setDiscount(amount - (amount) * (e.target.value / 100));
+        form.setFieldsValue({
+         // [`itemDiscount${i}`]: (amount) * (e.target.value / 100),
+          [`itemTotal${i}`]: amount - e.target.value,
+        });
+        invoiceItems.forEach((el) => {
+          if (el.id === ele.id) {
+            el.discountPer = e.target.value;
+            el.itemTotal =  amount - e.target.value;
+          }
+        });
+        setInvoiceItems(invoiceItems);
+        // setItemState(invoiceItems);
+        update();
+      }
     }
   };
+
+  console.log(invoiceItems)
 
   const addMorePanel = () => {
     if (invoiceItems.length) {
@@ -537,7 +636,7 @@ const EditInvoicePopup = (props) => {
 
         {invoiceItems.length
           ? invoiceItems.map((ele, j) => (
-            <div className="additional-fields" key={ele.itemDescription}>
+            <div className="additional-fields" key={ele.id}>
               <Row style={{ alignItems: 'center' }}>
                 <Col span={6}>
                   <Form.Item
@@ -598,35 +697,57 @@ const EditInvoicePopup = (props) => {
                   {/* <div className="amount-field">
                     <p>{ele.amount}</p>
                   </div> */}
-                  <Form.Item name={`itemAmount${j}`} label="Price">
+                  <Form.Item name={`itemAmount${j}`} label="Amount">
                     <Input
                       disabled
                       onChange={(e) => setAmount(e.target.value)}
                     />
                   </Form.Item>
                 </Col>
+                <Col span={3}>
+                <Form.Item name={`itemDiscount${j}`} label="Discount">
+                  <Input
+                    value={discountPer}
+                    type="number"
+                    onKeyPress={preventTypeE}
+                    onChange={(e) => handleDiscount(e,ele, j)}
+                  />
+                </Form.Item>
+                  {/* <Form.Item name={`itemDiscount${j}`} label="Discount">
+                    <Input 
+                     value={discountPer}
+                     type="number"
+                     onKeyPress={preventTypeE}
+                     onChange={(e) =>handleDiscount(e, ele, j)}
+                     />
+                    
+                  </Form.Item> */}
+                </Col>
 
                 <Col span={2} className="label-hidden">
                   <Form.Item
-                    name={`itemDiscountPer${j}`}
+                    name={`itemDiscountType${j}`}
                     label={t('strings.discount')}
                   >
-                    <Input
+                     <Select
+                    defaultValue="%"
+                    onSelect={(value) => handleDiscountType(value, ele, j)}
+                  >
+                    <Select.Option>Select</Select.Option>
+                    <Select.Option value="%">%</Select.Option>
+                    <Select.Option value="€">€</Select.Option>
+                  </Select>
+                    {/* <Input
                       type="number"
                       onKeyPress={preventTypeE}
                       placeholder="%"
                       value={discountPer}
                       onChange={(e) => handleDiscount(e, ele, j)}
-                    />
+                    /> */}
                   </Form.Item>
                 </Col>
-
-                <Col span={3}>
-                  <Form.Item name={`itemDiscount${j}`} label="Discount">
-                    <Input disabled />
-                  </Form.Item>
-                </Col>
-
+              
+               
                 <Col span={3}>
                   {/* <div className="amount-field" key={ele.id}>
                     <p>{itemTotalCopy[j]}</p>
@@ -655,7 +776,7 @@ const EditInvoicePopup = (props) => {
           <Col span={12}>
             <div
               role="presentation"
-              className="additional-add-guest"
+              className="additional-add-item"
               onClick={addMorePanel}
             >
               <PlusOutlined />
@@ -681,7 +802,17 @@ const EditInvoicePopup = (props) => {
           </Col>
 
           <Col span={24} className="m-top-30">
-            <Form.Item name="impression" label="Impression">
+            <Form.Item
+              name="impression"
+              label="Note"
+              rules={[
+                {
+                  required: true,
+
+                },
+              ]}
+            >
+
               <Input.TextArea />
             </Form.Item>
 
@@ -702,6 +833,7 @@ const EditInvoicePopup = (props) => {
               {' '}
             </p>
           </Col>
+
         </Row>
 
         <Row
@@ -776,6 +908,7 @@ const EditInvoicePopup = (props) => {
             <div className="note">
               <p>{t('invoice.label11')}</p>
             </div>
+
           </Col>
         </Row>
       </Form>
