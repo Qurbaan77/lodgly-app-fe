@@ -8,7 +8,7 @@ import AlertBox from './alert';
 const { Content } = Layout;
 
 const Wrapper = ({
-  fun, children, onChange,
+  fun, children, onChange, userName, imgState,
 }) => {
   const handleChange = (newValue) => {
     onChange(newValue);
@@ -30,6 +30,8 @@ const Wrapper = ({
       <AlertBox />
       <Layout>
         <Sidenav
+          userName={userName}
+          imgState={imgState}
           menutoggle={menutoggle}
           handleMenuSide={handleMenuSide}
         />
@@ -57,17 +59,17 @@ const Wrapper = ({
 };
 
 Wrapper.propTypes = {
-  // img: PropTypes.string,
+  imgState: PropTypes.string,
   // getUserInfo: PropTypes.func,
-  // name: PropTypes.string,
+  userName: PropTypes.string,
   fun: PropTypes.func,
   children: PropTypes.string,
   onChange: PropTypes.func,
 };
 Wrapper.defaultProps = {
-  // img: '',
+  imgState: '',
   // getUserInfo: () => {},
-  // name: '',
+  userName: '',
   fun: () => {},
   children: '',
   onChange: () => {},

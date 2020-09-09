@@ -1,4 +1,10 @@
-
+* {
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+     -moz-user-select: -moz-none;
+     -o-user-select: none;
+     user-select: none;
+ }
 
 .clean-filter {
     padding-top: 30px;
@@ -116,8 +122,6 @@
 .company-ip {
     padding: 24px 10px 24px 10px;
     border-top: 1px solid #efefef;
-    position: absolute;
-    bottom: calc(0px - 70px);
     border-right: 1px solid #efefef;
     background: #fff;
     width: 100%;
@@ -473,12 +477,10 @@ input[type=number]{
 
 @media screen and (min-width:1680px){
     .company-ip {
-        bottom: calc(0px - 0px);
+        bottom: 0;
+        position: absolute;
     }
 
-    .ant-layout-sider-light {
-        min-height: 94vh;
-    }
 
 }
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import './userprofile.css';
 import { Dropdown, Menu } from 'antd';
 import Avatar from 'react-avatar';
@@ -10,7 +11,7 @@ import {
 import { userInstance } from '../../../axios/axiosconfig';
 // import user from '../../../assets/images/profile_user.jpg';
 
-const UserProfile = () => {
+const UserProfile = ({ userName, imgState }) => {
   const { t } = useTranslation();
   const [img, setImg] = useState('');
   const [name, setName] = useState('');
@@ -36,6 +37,8 @@ const UserProfile = () => {
         }
         if (body[0].fullname !== null) {
           setName(`${body[0].fullname}`);
+        } else {
+          setName(`${body[0].email}`);
         }
       } else {
         localStorage.clear();
@@ -46,7 +49,7 @@ const UserProfile = () => {
 
   useEffect(() => {
     getUserInfo();
-  }, [getUserInfo]);
+  }, [getUserInfo, userName, imgState]);
 
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ email, billingWrite }] = userCred || [{}];
@@ -104,6 +107,16 @@ const UserProfile = () => {
       <span>{isSubUser ? 'Sub User' : 'Owner'}</span>
     </div>
   );
+};
+
+UserProfile.propTypes = {
+  imgState: PropTypes.element,
+  userName: PropTypes.string,
+
+};
+UserProfile.defaultProps = {
+  imgState: '',
+  userName: '',
 };
 
 export default UserProfile;

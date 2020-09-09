@@ -224,7 +224,7 @@
 
 .season-rates-content {
     background: #fff;
-    max-width: 800px;
+    /* max-width: 800px; */
     border: 1px solid #eaeaea;
 }
 
@@ -288,3 +288,16 @@
     display: none;
 }
 
+.rates-page-view .ant-layout-content {
+    margin: 0!important;
+    padding: 0!important;
+    }
+    
+    .rates-page-view .rates-content {
+    border: none;
+    }
+    
+    .toggle-box-button {
+    background: #ffffff;
+    
+    }

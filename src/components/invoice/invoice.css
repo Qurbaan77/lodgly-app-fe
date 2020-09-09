@@ -590,3 +590,17 @@
 .invoice-filter .ant-form-item-label > label::after{
   display: none;
 }
+
+
+.invoice-list .ant-checkbox-wrapper {
+  margin-right: 15px!important;
+  }
+  
+  .setting-icon {
+  display: none;
+  }
+  
+  
+  .invoice-wrapper-expand .invoice-filter{
+  min-height: 100vh;
+  }

@@ -366,7 +366,7 @@ const CreateBookingPopup = (props) => {
 
     setUnitName(unitname);
   };
-  const fun5 = (value, event) => {
+  const onSelectChannel = (value, event) => {
     setChannel(event.children);
   };
   const handleCommissionChange = (e) => {
@@ -407,7 +407,7 @@ const CreateBookingPopup = (props) => {
       const d1 = new Date(value[0]._d);
       const d2 = new Date(value[1]._d);
       const diff = Math.abs(d1 - d2);
-      const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000));
       setNight(day);
       setDaysArr(Array.from(Array(day).keys()));
     }
@@ -507,64 +507,70 @@ const CreateBookingPopup = (props) => {
   };
 
   useEffect(() => {
-    if (selectDate && unitName && noOfAdult > 0) {
-      let pricePerNight = (
-        Math.floor(
-          ratesData.price_on_monday
-            + ratesData.price_on_tuesday
-            + ratesData.price_on_wednesday
-            + ratesData.price_on_thursday
-            + ratesData.price_on_friday
-            + ratesData.price_on_saturday
-            + ratesData.price_on_sunday,
-        ) / 7
-      ).toFixed(2);
-      if (parseInt(noOfAdult, 10) > ratesData.extra_guest) {
-        pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_charge_on_guest;
-      }
-      if (night < ratesData.short_stay) {
-        pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_chage_on_stay;
-      }
-      if (ratesData.tax_status === 'include') {
-        const tax = Math.floor(
-          (parseInt(pricePerNight, 10) * ratesData.tax) / 100,
-        );
-        pricePerNight = parseInt(pricePerNight, 10) + tax;
-      }
-      setPrice(pricePerNight);
-      form.setFieldsValue({ perNight: pricePerNight });
-      daysArr.forEach((el, j) => {
-        form.setFieldsValue({
-          [`everyDayPrice${j}`]: pricePerNight,
+    if (ratesData) {
+      if (selectDate && unitName && noOfAdult > 0) {
+        let pricePerNight = (
+          Math.floor(
+            ratesData.price_on_monday
+              + ratesData.price_on_tuesday
+              + ratesData.price_on_wednesday
+              + ratesData.price_on_thursday
+              + ratesData.price_on_friday
+              + ratesData.price_on_saturday
+              + ratesData.price_on_sunday,
+          ) / 7
+        ).toFixed(2);
+        if (parseInt(noOfAdult, 10) > ratesData.extra_guest) {
+          pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_charge_on_guest;
+        }
+        if (night < ratesData.short_stay) {
+          pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_chage_on_stay;
+        }
+        if (ratesData.tax_status === 'include') {
+          const tax = Math.floor(
+            (parseInt(pricePerNight, 10) * ratesData.tax) / 100,
+          );
+          pricePerNight = parseInt(pricePerNight, 10) + tax;
+        }
+        setPrice(pricePerNight);
+        form.setFieldsValue({ perNight: pricePerNight });
+        daysArr.forEach((el, j) => {
+          form.setFieldsValue({
+            [`everyDayPrice${j}`]: pricePerNight,
+          });
         });
-      });
 
-      if (night >= 7) {
-        const noOfWeeks = Math.floor(night / 7);
-        setAmt(
-          night * pricePerNight - noOfWeeks * ratesData.discount_price_per_week,
-        );
-        setAccomodation(
-          night * pricePerNight - noOfWeeks * ratesData.discount_price_per_week,
-        );
-      } else if (night === ratesData.customNights) {
-        setAmt(night * pricePerNight - ratesData.discount_price_custom_nights);
-        setAccomodation(
-          night * pricePerNight - ratesData.discount_price_custom_nights,
-        );
-      } else if (night >= 30) {
-        const noOfMonths = Math.floor(night / 30);
-        setAmt(
-          night * pricePerNight
-            - noOfMonths * ratesData.discount_price_per_month,
-        );
-        setAccomodation(
-          night * pricePerNight
-            - noOfMonths * ratesData.discount_price_per_month,
-        );
-      } else {
-        setAmt(night * pricePerNight);
-        setAccomodation(night * pricePerNight);
+        if (night >= 7) {
+          const noOfWeeks = Math.floor(night / 7);
+          setAmt(
+            night * pricePerNight
+              - noOfWeeks * ratesData.discount_price_per_week,
+          );
+          setAccomodation(
+            night * pricePerNight
+              - noOfWeeks * ratesData.discount_price_per_week,
+          );
+        } else if (night === ratesData.customNights) {
+          setAmt(
+            night * pricePerNight - ratesData.discount_price_custom_nights,
+          );
+          setAccomodation(
+            night * pricePerNight - ratesData.discount_price_custom_nights,
+          );
+        } else if (night >= 30) {
+          const noOfMonths = Math.floor(night / 30);
+          setAmt(
+            night * pricePerNight
+              - noOfMonths * ratesData.discount_price_per_month,
+          );
+          setAccomodation(
+            night * pricePerNight
+              - noOfMonths * ratesData.discount_price_per_month,
+          );
+        } else {
+          setAmt(night * pricePerNight);
+          setAccomodation(night * pricePerNight);
+        }
       }
     }
   }, [selectDate, unitName, noOfAdult, ratesData, form, night, daysArr]);
@@ -927,7 +933,7 @@ const CreateBookingPopup = (props) => {
             >
               <Select
                 placeholder={t('strings.select')}
-                onSelect={(value, event) => fun5(value, event)}
+                onSelect={(value, event) => onSelectChannel(value, event)}
                 style={{ width: '70%', display: 'inline-block' }}
               >
                 <Select.Option value="">Select</Select.Option>
@@ -1190,8 +1196,14 @@ const CreateBookingPopup = (props) => {
             <Col span={24}>
               <div className="per-night">
                 <label htmlFor="night">
-                  <DownSquareOutlined hidden={upDown} onClick={() => setUpDown(true)} />
-                  <UpSquareOutlined hidden={!upDown} onClick={() => setUpDown(!upDown)} />
+                  <DownSquareOutlined
+                    hidden={upDown}
+                    onClick={() => setUpDown(true)}
+                  />
+                  <UpSquareOutlined
+                    hidden={!upDown}
+                    onClick={() => setUpDown(!upDown)}
+                  />
                   <input hidden />
                   {t('bookingpop.label6')}
                 </label>
