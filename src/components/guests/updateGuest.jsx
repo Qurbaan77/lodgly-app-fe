@@ -144,7 +144,6 @@ const UpdateGuestPopup = (props) => {
         <Row style={{ alignItems: 'center' }}>
           <Col span={12}>
             <Form.Item
-              label={t('guestpopup.label4')}
               name="typeOfDoc"
               label="Type of Document"
               rules={[

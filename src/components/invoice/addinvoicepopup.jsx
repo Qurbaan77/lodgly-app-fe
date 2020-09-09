@@ -74,7 +74,7 @@ const AdInvoicePopup = (props) => {
       date,
       time: time0,
     });
-  }, []);
+  }, [form]);
 
   const handleFinish = async (values) => {
     // setShowLoader(false);
