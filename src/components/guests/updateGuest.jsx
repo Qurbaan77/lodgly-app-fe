@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import './guests.css';
@@ -16,7 +16,7 @@ import {
   Select,
 } from 'antd';
 // import Toaster from '../toaster/toaster';
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import { CountryDropdown } from 'react-country-region-selector';
 import { userInstance } from '../../axios/axiosconfig';
 
 const UpdateGuestPopup = (props) => {
@@ -26,7 +26,7 @@ const UpdateGuestPopup = (props) => {
   } = props;
   const [form] = Form.useForm();
   const guestData = editValues;
-  const [country, setCountry] = useState(null);
+  // const [country, setCountry] = useState(null);
 
   form.setFieldsValue({
     id: guestData.id,
@@ -37,7 +37,7 @@ const UpdateGuestPopup = (props) => {
     gender: guestData.gender,
     typeOfDoc: guestData.typeOfDoc,
     docNo: guestData.docNo,
-    citizenShip: guestData.citizenShip,
+    // citizenShip: guestData.citizenShip,
     place: guestData.place,
     notes: guestData.notes,
   });
@@ -96,7 +96,7 @@ const UpdateGuestPopup = (props) => {
               name="country"
               rules={[{ required: true, message: t('guestpopup.label3') }]}
             >
-              <CountryDropdown onChange={(val) => setCountry(val)} />
+              <CountryDropdown />
             </Form.Item>
           </Col>
         </Row>
@@ -176,7 +176,7 @@ const UpdateGuestPopup = (props) => {
         </Row>
 
         <Row style={{ alignItems: 'center' }}>
-          <Col span={12}>
+          {/* <Col span={12}>
             <Form.Item
               label={t('strings.citizenship')}
               name="citizenShip"
@@ -184,7 +184,7 @@ const UpdateGuestPopup = (props) => {
             >
               <RegionDropdown country={country} />
             </Form.Item>
-          </Col>
+          </Col> */}
 
           <Col span={12}>
             <Form.Item label={t('guestpopup.label8')} name="place">

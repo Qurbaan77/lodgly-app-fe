@@ -1032,3 +1032,6 @@ font-size: 11px
   vertical-align: text-top;
   cursor: pointer;
 }
+.ant-form-item-label > label::after {
+display:none;
+}

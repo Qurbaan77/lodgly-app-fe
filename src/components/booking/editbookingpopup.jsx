@@ -13,12 +13,14 @@ import {
   Button,
   Row,
   Col,
-  Collapse, Modal,
+  Collapse,
+  Modal,
 } from 'antd';
 import {
   PlusSquareOutlined,
   PlusOutlined,
-  EditOutlined, DeleteOutlined,
+  EditOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
@@ -163,8 +165,15 @@ const Editbookingpopup = (props) => {
             / 100,
       );
     }
-  }, [currentService, editBookingValues, editCurrentGuest, form, nights, perNight,
-    visible]);
+  }, [
+    currentService,
+    editBookingValues,
+    editCurrentGuest,
+    form,
+    nights,
+    perNight,
+    visible,
+  ]);
 
   useEffect(() => {
     updateFields();
@@ -313,6 +322,49 @@ const Editbookingpopup = (props) => {
       setUnitTypeData(data3);
     }
   };
+  const preventTypeE = (evt) => {
+    if (
+      evt.which === 64
+      || evt.which === 35
+      || evt.which === 36
+      || evt.which === 37
+      || evt.which === 94
+      || evt.which === 38
+      || evt.which === 42
+      || evt.which === 40
+      || evt.which === 41
+      || evt.which === 95
+      || evt.which === 45
+      || evt.which === 61
+      || evt.which === 43
+      || evt.which === 126
+      || evt.which === 96
+      || evt.which === 48
+      || evt.which === 49
+      || evt.which === 50
+      || evt.which === 51
+      || evt.which === 52
+      || evt.which === 53
+      || evt.which === 54
+      || evt.which === 55
+      || evt.which === 56
+      || evt.which === 57
+      || evt.which === 91
+      || evt.which === 92
+      || evt.which === 93
+      || evt.which === 123
+      || evt.which === 124
+      || evt.which === 125
+      || evt.which === 33
+      || evt.which === 34
+      || evt.which === 44
+      || evt.which === 47
+      || evt.which === 60
+      || evt.which === 62
+    ) {
+      evt.preventDefault();
+    }
+  };
 
   const fun2 = (value) => {
     serviceData
@@ -325,7 +377,9 @@ const Editbookingpopup = (props) => {
   };
 
   const fun3 = (event) => {
-    const [data] = unitData.filter((el) => el.unitName !== event).map((el) => el.id);
+    const [data] = unitData
+      .filter((el) => el.unitName !== event)
+      .map((el) => el.id);
     setUnitId(data);
     const unitname = event.children || event;
     const [unit] = unitData
@@ -614,6 +668,7 @@ const Editbookingpopup = (props) => {
                               >
                                 <Input
                                   defaultValue={el.fullname}
+                                  onKeyPress={preventTypeE}
                                 />
                               </Form.Item>
                             </Col>
@@ -625,7 +680,7 @@ const Editbookingpopup = (props) => {
                                 name={`email${i}`}
                                 style={{ paddingRight: 20 }}
                               >
-                                <Input />
+                                <Input type="email" />
                               </Form.Item>
                             </Col>
 
@@ -640,7 +695,10 @@ const Editbookingpopup = (props) => {
                                   {countryList()
                                     .getData()
                                     .map((ele) => (
-                                      <Select.Option value={ele.label}>
+                                      <Select.Option
+                                        value={ele.label}
+                                        key={ele.label}
+                                      >
                                         {ele.label}
                                       </Select.Option>
                                     ))}
