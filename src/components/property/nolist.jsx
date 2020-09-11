@@ -6,14 +6,14 @@ import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import propertyplace from '../../assets/images/property-placeholder.png';
 
-const NoList = ({ isSubUser, canWrite }) => {
+const NoList = ({ isSubUser, canWrite, show }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const enableButton = (
     <Button
       type="primary"
       icon={<PlusOutlined />}
-      onClick={() => history.push('/addproperty')}
+      onClick={show}
     >
       {t('nolist.button1')}
     </Button>
@@ -46,9 +46,11 @@ const NoList = ({ isSubUser, canWrite }) => {
 NoList.propTypes = {
   isSubUser: PropTypes.bool,
   canWrite: PropTypes.bool,
+  show: PropTypes.func,
 };
 NoList.defaultProps = {
   isSubUser: false,
   canWrite: true,
+  show: () => {},
 };
 export default NoList;

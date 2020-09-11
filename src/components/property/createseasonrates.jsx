@@ -20,7 +20,7 @@ import moment from 'moment';
 import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
 
-import { userInstance } from '../../axios/axiosconfig';
+import { propertyInstance } from '../../axios/axiosconfig';
 
 const CreateSeasonRates = () => {
   const { RangePicker } = DatePicker;
@@ -230,7 +230,7 @@ const CreateSeasonRates = () => {
   const onFinish = async (values) => {
     const params = queryString.parse(window.location.search);
     values.id = params.seasonRateId;
-    values.unitTypeId = localStorage.getItem('unittypeId');
+    values.unitTypeId = localStorage.getItem('propertyV2Id');
     values.checkIn_on_monday = checkInBox.monday;
     values.checkIn_on_tuesday = checkInBox.tuesday;
     values.checkIn_on_wednesday = checkInBox.wednesday;
@@ -246,7 +246,7 @@ const CreateSeasonRates = () => {
     values.checkOut_on_saturday = checkOutBox.saturday;
     values.checkOut_on_sunday = checkOutBox.sunday;
 
-    const response = await userInstance.post('/addSeasonRates', values);
+    const response = await propertyInstance.post('/addSeasonRates', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
       toast.success('Season rates update successfully', { containerId: 'B' });
@@ -260,7 +260,7 @@ const CreateSeasonRates = () => {
     const values = queryString.parse(window.location.search);
     const { seasonRateId } = values;
     if (seasonRateId !== undefined) {
-      const response = await userInstance.get(`/getSeasonRate/${seasonRateId}`);
+      const response = await propertyInstance.get(`/getSeasonRate/${seasonRateId}`);
       if (response.data.code === 200) {
         const data = response.data.seasonRateData[0];
         let m1;
@@ -326,7 +326,8 @@ const CreateSeasonRates = () => {
         });
       }
     }
-  }, [form, checkInBox, checkOutBox]);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     fetchData();

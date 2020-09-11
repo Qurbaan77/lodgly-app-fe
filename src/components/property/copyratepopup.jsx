@@ -7,7 +7,7 @@ import {
   Form, Button, Select, Modal,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { userInstance } from '../../axios/axiosconfig';
+import { propertyInstance } from '../../axios/axiosconfig';
 
 const CopyRatePopup = (props) => {
   const { t } = useTranslation();
@@ -20,12 +20,12 @@ const CopyRatePopup = (props) => {
     const payload = {
       unittypeId: values.copyRate,
     };
-    const response = await userInstance.post('getRates', payload);
+    const response = await propertyInstance.post('getRates', payload);
     if (response.data.code === 200) {
       if (response.data.ratesData.length > 0) {
         const data = response.data.ratesData[0];
-        data.newUnitType = localStorage.getItem('unittypeId');
-        const res = await userInstance.post('copyRates', data);
+        data.newUnitType = localStorage.getItem('propertyV2Id');
+        const res = await propertyInstance.post('copyRates', data);
         const statusCode = res.data.code;
         if (statusCode === 200) {
           toast.success('Rate added successfully', { containerId: 'B' });
@@ -38,7 +38,7 @@ const CopyRatePopup = (props) => {
   };
 
   const getData = useCallback(async () => {
-    const response = await userInstance.post('/getUnitTypeRates');
+    const response = await propertyInstance.post('/getUnitTypeRates');
     if (response.data.code === 200) {
       setUnitTypeData(response.data.unittypeData);
     }

@@ -6,7 +6,7 @@ import {
   Button, Row, Col, Table, Modal,
 } from 'antd';
 import { toast } from 'react-toastify';
-import { userInstance } from '../../axios/axiosconfig';
+import { propertyInstance } from '../../axios/axiosconfig';
 import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
 import Addseason from './addseason';
@@ -89,7 +89,7 @@ const SeasonRates = () => {
     const values = {
       id: seasonRateId,
     };
-    const response = await userInstance.post('/deleteSeasonRate', values);
+    const response = await propertyInstance.post('/deleteSeasonRate', values);
     if (response.data.code === 200) {
       setVisibiltyOFDelete(false);
       getData();
@@ -101,9 +101,9 @@ const SeasonRates = () => {
 
   const getData = useCallback(async () => {
     const values = {
-      unitTypeId: localStorage.getItem('unittypeId'),
+      unitTypeId: localStorage.getItem('propertyV2Id'),
     };
-    const response = await userInstance.post('/getSeasonRates', values);
+    const response = await propertyInstance.post('/getSeasonRates', values);
     if (response.data.code === 200) {
       if (response.data.seasonRateData.length > 0) {
         setShowTable(false);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import './stats.css';
@@ -16,17 +16,19 @@ import qst from '../../assets/images/menu/qst.png';
 import favicon from '../../assets/images/logo-mobile.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
 import UserLock from '../userlock/userlock';
+import CreateProperty from '../property/createProperty';
 import loader from '../../assets/images/cliploader.gif';
 
 const Stats = () => {
   const { t } = useTranslation();
 
-  const history = useHistory();
+  // const history = useHistory();
   const [propertyData, setPropertyData] = useState([]);
 
   const [topNavId, setTopNavId] = useState();
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
+  const [visibleProperty, setVisibleProperty] = useState(false);
   const [daysLeft, setDaysLeft] = useState();
   const [accomodationHasData, setAccomodationHasData] = useState(
     'no-stats-data',
@@ -43,6 +45,10 @@ const Stats = () => {
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
 
   const [{ userId }] = userCred || [{}];
+
+  const closeCreateProperty = () => {
+    setVisibleProperty(false);
+  };
 
   const getProperty = useCallback(async () => {
     const response = await userInstance.post('/fetchProperty', {
@@ -124,12 +130,13 @@ const Stats = () => {
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => history.push('/addproperty')}
+              onClick={() => setVisibleProperty(true)}
             >
               {t('nolist.button1')}
             </Button>
           </div>
         </div>
+        <CreateProperty visible={visibleProperty} onCancel={closeCreateProperty} />
       </Wrapper>
     );
   }

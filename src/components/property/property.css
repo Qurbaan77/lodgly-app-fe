@@ -1023,9 +1023,354 @@ margin: 0;
   text-align: center;
 }
 
+
 @media screen and (min-width: 1367px) {
   .unittype-calendar {
     max-width: 100%;
   }
 }
 
+
+
+
+
+
+
+/**************************** New Property CSS *****************************/
+
+
+
+
+
+.overview-content {
+  background: #fff;
+  max-width: 800px;
+  border: 1px solid #eaeaea;
+}
+
+.overview-first-section {
+  padding: 50px 50px 25px 50px;
+}
+
+.overview-first-section h3 {
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+
+.ql-toolbar.ql-snow {
+  border: 1px solid #eaeaea!important;
+}
+
+.ql-container.ql-snow {
+  border: 1px solid #eaeaea!important;
+}
+
+
+.overview-second-section {
+  padding: 50px 50px 25px 50px;
+  border-top: 1px solid #eaeaea;
+}
+
+.overview-third-section {
+  padding: 50px 50px 25px 50px;
+  border-top: 1px solid #eaeaea;
+}
+
+.overview-fourth-section {
+  padding: 50px 50px 25px 50px;
+  border-top: 1px solid #eaeaea;
+}
+
+
+.overview-fifth-section {
+  padding: 50px 50px 25px 50px;
+  border-top: 1px solid #eaeaea;
+}
+
+
+.overview-sixth-section {
+  padding: 50px 50px 50px 50px;
+  border-top: 1px solid #eaeaea;
+}
+
+
+.overview-second-section h3, .overview-third-section h3, .overview-fourth-section h3, .overview-fifth-section h3, .overview-sixth-section h3 {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+
+.property-info-unit .ant-form-item-control-input-content {
+  display: flex;
+}
+
+.property-info-unit .ant-select, .property-info-unit .ant-input {
+  max-width: 200px;
+  margin-right: 20px;
+}
+
+.overview-third-section p {
+  padding-bottom: 30px;
+  font-size: 16px;
+  color: #adadad;
+}
+
+.overview-third-section .input-counter {
+  padding: 10px 0px;
+  padding-bottom: 0;
+}
+
+.input-counter > div > div {
+  background: #e2e2e2;
+  width: 40px;
+  height: 40px;
+  padding: 0!important;
+  text-align: center;
+  color: #777;
+  line-height: 40px;
+  border-radius: 30px;
+  font-size: 22px;
+}
+
+
+
+.property-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  transition: all 0.5s;
+  cursor: pointer;
+}
+
+.property-popup .ant-modal .ant-modal-body {
+  padding: 0;
+}
+
+.property-popup h3 {
+  font-size: 20px;
+  font-weight: 600;
+  padding: 10px 25px;
+  margin: 0;
+}
+
+.property-popup p {
+  font-size: 14px;
+  padding: 0px 25px;
+}
+
+.property-selection:hover {
+  background: #f1f1f1;
+}
+
+.icon-name span {
+  font-size: 15px;
+  vertical-align: middle;
+}
+
+.icon-name .anticon {
+  font-size: 20px;
+  color: #999;
+  margin-right: 10px;
+}
+
+.guest-modal.property-popup .ant-modal {
+  right: -500px;
+  width: 500px !important;
+}
+
+.guest-modal.property-popup .ant-modal-title {
+  font-weight: 500;
+  font-size: 16px;
+  text-transform: capitalize;
+  text-align: left;
+}
+
+.property-btns {
+  background: #f5f5f5;
+  padding: 20px;
+  text-align: center;
+  position: sticky;
+  bottom: 0;
+}
+
+.property-btns .ant-btn {
+  margin: 0px 5px;
+}
+
+.input-counter .ant-switch {
+  margin: 9px 0px;
+}
+
+
+.edit-room-content h5 {
+  padding: 5px 25px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.more-content {
+  border-top: 1px solid #e8e8e8;
+  padding-top: 10px;
+  margin-top: 10px;
+  display: none;
+}
+
+.more-content.show {
+  display: block;
+}
+
+
+.edit-room-content .view-more {
+  padding: 20px 25px;
+  display: inline-block;
+  text-decoration: underline;
+  text-decoration-color: #ccc;
+  cursor: pointer;
+}
+
+.amenities-search {
+  margin: 0px 25px;
+}
+
+
+
+/********** Location ************/
+
+
+
+.location-content {
+  background: #fff;
+  max-width: 800px;
+  border: 1px solid #eaeaea;
+}
+
+.location-first-section {
+  padding: 50px 50px 25px 50px;
+}
+
+.location-first-section h3 {
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+
+
+
+
+.distance-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0px;
+}
+
+.location-radio {
+  margin-bottom: 30px;
+}
+
+.distance-input .ant-input {
+  max-width: 100px;
+  margin-right: 50px;
+}
+
+.location-distance p {
+  margin-top: 20px;
+  padding: 0;
+}
+
+.distance-icon {
+  font-size: 16px;
+}
+
+.distance-icon .anticon {
+  margin-right: 10px;
+  font-size: 20px;
+  color: #999;
+}
+
+
+
+
+
+
+/********** Photos ************/
+
+
+
+.photos-content {
+  background: #fff;
+  max-width: 800px;
+  border: 1px solid #eaeaea;
+}
+
+.photos-first-section {
+  padding: 50px 50px 25px 50px;
+}
+
+.photos-first-section h3 {
+  font-size: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.location-first-section .ant-form-item{
+  padding-top: 30px;
+}
+
+.location-first-section .ant-upload-drag-container {
+  height: 300px;
+}
+
+
+
+/********** Add property popup **************/
+
+
+
+.add-property-popup .ant-modal-footer {
+  display: none;
+}
+
+.add-property-popup-content {
+  text-align: center;
+}
+
+.add-property-popup-content h3 {
+  font-weight: 600;
+  margin: 0;
+  font-size: 20px;
+  padding-bottom: 5px;
+}
+
+.add-property-popup-content .property-btns {
+  background: transparent;
+  padding: 0;
+}
+
+.add-property-popup .ant-modal-body {
+  padding: 50px;
+}
+
+.add-property-popup-content img {
+  width: 150px;
+  margin-bottom: 20px;
+}
+
+.add-property-popup-content p {
+  padding-bottom: 20px;
+}
+.user-pic-success img {
+  width: 100%;
+  height: 300px!important;
+  border-radius: 5px;
+  margin-bottom: 0;
+  object-fit: cover;
+  object-position: center;
+}
+.ant-upload.ant-upload-drag{
+  border: none!important;
+}

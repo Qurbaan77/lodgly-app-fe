@@ -5,14 +5,14 @@ import { toast } from 'react-toastify';
 import {
   Button, Row, Col, Form, Input,
 } from 'antd';
-import { userInstance } from '../../axios/axiosconfig';
+import { propertyInstance } from '../../axios/axiosconfig';
 
 const AddSeason = (props) => {
   const [form] = Form.useForm();
   const { close, getData } = props;
   const onFinish = async (values) => {
-    values.unitTypeId = localStorage.getItem('unittypeId');
-    const response = await userInstance.post('/addSeasonRates', values);
+    values.unitTypeId = localStorage.getItem('propertyV2Id');
+    const response = await propertyInstance.post('/addSeasonRates', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
       toast.success('Season rate added successfully', { containerId: 'B' });

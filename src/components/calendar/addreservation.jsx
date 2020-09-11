@@ -436,20 +436,21 @@ const AddReservation = (props) => {
               label={t('strings.unit')}
               name="unit"
               style={{ paddingRight: 20 }}
-              rules={[
-                {
-                  required: true,
-                  message: t('addreservation.heading5'),
-                },
-              ]}
+              // rules={[
+              //   {
+              //     required: true,
+              //     message: t('addreservation.heading5'),
+              //   },
+              // ]}
             >
               <Select
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => fun3(value, event)}
               >
-                {unitData.map((el) => (
+                {/* {unitData.map((el) => (
                   <Select.Option value={el.id}>{el.unitName}</Select.Option>
-                ))}
+                ))} */}
+                <Select.Option value="unit 1">Unit 1</Select.Option>
               </Select>
             </Form.Item>
           </Col>

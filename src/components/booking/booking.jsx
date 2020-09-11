@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import moment from 'moment';
 import { toast } from 'react-toastify';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 // import moment from 'moment';
 import './booking.css';
 import {
@@ -22,6 +22,7 @@ import GuestPopup from './guestpopup';
 import CreateBookingPopup from './createbookingpopup';
 import EditBookingPopup from './editbookingpopup';
 import BookingFilter from './filter';
+import CreateProperty from '../property/createProperty';
 import { userInstance } from '../../axios/axiosconfig';
 import filterIcon from '../../assets/images/menu/filter-icon.png';
 import cancelIcon from '../../assets/images/menu/cancel-icon.png';
@@ -33,7 +34,6 @@ import editIcon from '../../assets/images/menu/pencil-icon.png';
 import downloadIcon from '../../assets/images/menu/download-icon.png';
 import refreshIcon from '../../assets/images/menu/refresh-icon.png';
 import favicon from '../../assets/images/logo-mobile.png';
-
 // const { Panel } = Collapse;
 // const { MonthPicker, RangePicker } = DatePicker;
 
@@ -43,7 +43,7 @@ const Booking = () => {
   const forceUpdate = useForceUpdate();
   const [form] = Form.useForm();
 
-  const history = useHistory();
+  // const history = useHistory();
   const [propertyData, setPropertyData] = useState([]);
 
   const [visible, setVisible] = useState(false);
@@ -75,6 +75,7 @@ const Booking = () => {
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ bookingWrite, userId }] = userCred || [{}];
   const canWrite = bookingWrite;
+  const [visibleProperty, setVisibleProperty] = useState(false);
   // const show = () => {
   // setVisible(true);
   // };
@@ -411,6 +412,10 @@ const Booking = () => {
     setCheckedBooking([]);
   };
 
+  const closeCreateProperty = () => {
+    setVisibleProperty(false);
+  };
+
   const handleDelete = async (e) => {
     if (e === 'trash') {
       const id = [];
@@ -466,12 +471,14 @@ const Booking = () => {
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => history.push('/addproperty')}
+              // onClick={() => history.push('/addproperty')}
+              onClick={() => setVisibleProperty(true)}
             >
               {t('nolist.button1')}
             </Button>
           </div>
         </div>
+        <CreateProperty visible={visibleProperty} onCancel={closeCreateProperty} />
       </Wrapper>
     );
   }

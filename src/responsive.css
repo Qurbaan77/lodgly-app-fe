@@ -120,18 +120,19 @@
 }
 
 .company-ip {
-    padding: 24px 10px 24px 10px;
+    padding: 10px 10px 10px 10px;
     border-top: 1px solid #efefef;
-    border-right: 1px solid #efefef;
     background: #fff;
-    width: 100%;
-    margin-left: 1px;
+    width: 199px;
+    position: fixed;
+    bottom: 0;
 }
 
 .company-ip h6 {
     font-size: 11px;
     color: rgba(62, 63, 66, 0.7);
     font-weight: 700;
+    word-break: break-all;
 }
 
 .company-ip p {
@@ -472,17 +473,6 @@ input[type=number]{
 /******************************************************************************************************/
 
 
-
-
-
-@media screen and (min-width:1680px){
-    .company-ip {
-        bottom: 0;
-        position: absolute;
-    }
-
-
-}
 
 
 
@@ -1054,7 +1044,9 @@ input[type=number]{
     width: calc(100% - 0px);
 }
 
-
+.company-ip {
+    position: relative;
+}
 }
 
 

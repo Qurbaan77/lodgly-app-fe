@@ -2,11 +2,12 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import './calendar.css';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import { Button, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
+import CreateProperty from '../property/createProperty';
 import loader from '../../assets/images/cliploader.gif';
 // import nobooking from '../../assets/images/no-booking.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
@@ -19,7 +20,7 @@ import favicon from '../../assets/images/logo-mobile.png';
 
 const Calendar = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  // const history = useHistory();
   const [propertyData, setPropertyData] = useState([]);
   const [reservationData, setReservationData] = useState([]);
   const [guestName, setGuestName] = useState('');
@@ -34,6 +35,7 @@ const Calendar = () => {
   const [daysLeft, setDaysLeft] = useState();
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [visibleProperty, setVisibleProperty] = useState(false);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -124,6 +126,7 @@ const Calendar = () => {
       id,
       rowId: `ut${element.unitId.toString()}`,
       label: `${guestName} / ${element.totalAmount} EUR`,
+      item: '100',
       time: {
         start: startDate,
         end: endDate,
@@ -228,6 +231,10 @@ const Calendar = () => {
   const handleCancel = () => {
     setVisible(false);
     setVisibleGroupReserv(false);
+  };
+
+  const closeCreateProperty = () => {
+    setVisibleProperty(false);
   };
 
   function onState(state) {
@@ -378,12 +385,13 @@ const Calendar = () => {
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => history.push('/addproperty')}
+              onClick={() => setVisibleProperty(true)}
             >
               {t('nolist.button1')}
             </Button>
           </div>
         </div>
+        <CreateProperty visible={visibleProperty} onCancel={closeCreateProperty} />
       </Wrapper>
     );
   }
