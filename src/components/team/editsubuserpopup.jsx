@@ -195,9 +195,10 @@ const EditSubUserPopup = (props) => {
         setBillingRead(true);
         setBillingWrite(false);
         setBillingDelete(false);
-      } else {
-        makeEverythingUncheck();
       }
+      // else {
+      //   makeEverythingUncheck();
+      // }
     }
   };
 
@@ -385,6 +386,7 @@ const EditSubUserPopup = (props) => {
                   <Select.Option value="read">
                     Read
                   </Select.Option>
+
                   <Select.Option value="write">
                     Write
                   </Select.Option>

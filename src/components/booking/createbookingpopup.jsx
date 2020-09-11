@@ -96,7 +96,7 @@ const CreateBookingPopup = (props) => {
   const [noOfAdult, setNoOfAdult] = useState(0);
   const [ratesData, setRatesData] = useState({});
   // const history = useHistory();
-
+  // const regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ userId }] = userCred || [{}];
 
@@ -181,6 +181,7 @@ const CreateBookingPopup = (props) => {
     values.commission = channelCommission;
     values.unitName = unitName;
     values.affiliateId = userId;
+
     const response = await userInstance.post('/addBooking', values);
     if (response.data.code === 200) {
       getData();
@@ -189,7 +190,6 @@ const CreateBookingPopup = (props) => {
     } else {
       toast.error('Some error occurred!', { containerId: 'B' });
     }
-
     form.resetFields();
   };
 
@@ -211,12 +211,13 @@ const CreateBookingPopup = (props) => {
     getPropertyData();
   }, [getPropertyData]);
 
-  const calculateTotal = () => {
-    const calculate = servicePrice * serviceAmt
-      + servicePrice * serviceAmt * (serviceTax / 100);
-    const sum = parseInt(total, 10) + parseInt(calculate, 10);
+  const calculateTotal = (servicetax) => {
+    setServiceTax(servicetax);
+    // const calculate = servicePrice * serviceAmt
+    // + servicePrice * serviceAmt * (servicetax / 100);
+    const calculate = (servicePrice * serviceAmt) - (servicePrice * serviceAmt * servicetax) / 100;
+    // const sum = parseInt(total, 10) + parseInt(calculate, 10);
     setServiceAmount(calculate);
-    setTotal(sum);
   };
 
   const onSelectProperty = async (value, event) => {
@@ -242,6 +243,32 @@ const CreateBookingPopup = (props) => {
     // if (response3.data.code === 200) {
     //   setUnitTypeData(data3);
     // }
+  };
+
+  const preventTypeE = (evt) => {
+    if (
+      evt.which === 64 || evt.which === 35 || evt.which === 36
+      || evt.which === 37 || evt.which === 94
+       || evt.which === 38 || evt.which === 42
+       || evt.which === 40 || evt.which === 41
+        || evt.which === 95
+       || evt.which === 45 || evt.which === 61
+       || evt.which === 43 || evt.which === 126
+       || evt.which === 96
+       || evt.which === 48 || evt.which === 49
+        || evt.which === 50 || evt.which === 51
+        || evt.which === 52 || evt.which === 53
+       || evt.which === 54 || evt.which === 55
+        || evt.which === 56 || evt.which === 57
+         || evt.which === 91
+       || evt.which === 92 || evt.which === 93
+       || evt.which === 123 || evt.which === 124 || evt.which === 125
+       || evt.which === 33 || evt.which === 34
+       || evt.which === 44 || evt.which === 47 || evt.which === 60
+       || evt.which === 62
+    ) {
+      evt.preventDefault();
+    }
   };
 
   const onSelectServices = (value) => {
@@ -315,9 +342,7 @@ const CreateBookingPopup = (props) => {
     // const selectStartDate = moment(selectDate[0]._d);
     // const selectEndDate = moment(selectDate[1]._d);
     // const days = enumerateDaysBetweenDates(selectDate[0]._d, selectDate[1]._d);
-    // console.log(days);
     // days.forEach((element) => {
-    //   console.log(moment(element).format('dddd'));
     // });
 
     // const { seasonRatesData } = response.data;
@@ -376,20 +401,21 @@ const CreateBookingPopup = (props) => {
   const handleDiscount = (value) => {
     setDiscountType(value);
     if (value === '%') {
-      const data = amt * (discountAmount / 100);
+      const data = ((night * price) * discountAmount) / 100;
+      // const data = amt * (discountAmount / 100);
       setDiscount(data);
-      setAccomodation(amt - data);
+      setAccomodation((night * price) - data);
     } else {
       setDiscount(discountAmount);
-      setAccomodation(amt - discountAmount);
+      setAccomodation((night * price) - discountAmount);
     }
   };
 
   const handleDeposit = (value) => {
     setDepositType(value);
     if (value === '%') {
-      const mon = Math.round(total * 100) / 100 + Math.round(accomodation * 100) / 100;
-      const data = mon * (depositAmount / 100);
+      const mon = Math.round((accomodation + serviceAmount));
+      const data = (mon * depositAmount) / 100;
       setDeposit(data);
     } else {
       setDeposit(depositAmount);
@@ -427,13 +453,14 @@ const CreateBookingPopup = (props) => {
   const priceFunction = useCallback(
     (value) => {
       setPrice(value);
+      setAccomodation(night * value);
       daysArr.forEach((el, j) => {
         form.setFieldsValue({
           [`everyDayPrice${j}`]: value,
         });
       });
     },
-    [daysArr, form],
+    [daysArr, form, night],
   );
 
   // const calculatePerNight = (nights, ratesData, numOfAdult) => {
@@ -591,7 +618,7 @@ const CreateBookingPopup = (props) => {
                   },
                 ]}
               >
-                <Input />
+                <Input onKeyPress={preventTypeE} />
               </Form.Item>
             </Col>
 
@@ -603,10 +630,11 @@ const CreateBookingPopup = (props) => {
                 rules={[
                   {
                     required: 'true',
+
                   },
                 ]}
               >
-                <Input />
+                <Input type="email" />
               </Form.Item>
             </Col>
 
@@ -1124,6 +1152,7 @@ const CreateBookingPopup = (props) => {
                     <input hidden />
                     =
                   </label>
+
                   <Input
                     name="totalAAmount"
                     type="number"
@@ -1150,9 +1179,9 @@ const CreateBookingPopup = (props) => {
                       setDiscount(e.target.value);
                       setdiscountAmount(e.target.value);
                       if (discountType === '€') {
-                        setAccomodation(amt - e.target.value);
+                        setAccomodation((night * price) - e.target.value);
                       } else {
-                        setAccomodation(amt - amt * (e.target.value / 100));
+                        setAccomodation((night * price) - ((night * price) * e.target.value) / 100);
                       }
                     }}
                   />
@@ -1174,15 +1203,20 @@ const CreateBookingPopup = (props) => {
                     <input hidden />
                     =
                   </label>
+
                   <Input
                     type="number"
+
                     value={
                       discountType === '€'
-                        ? amt - discountAmount
-                        : amt - amt * (discountAmount / 100)
+                        // ? amt - discountAmount
+                        ? discountAmount
+                        : ((night * price) * discountAmount) / 100
+                        // : amt - amt * (discountAmount / 100)
                     }
                     onBlur={(e) => setAccomodation(e.target.value)}
                   />
+
                   <label htmlFor="eur">
                     <input hidden />
                     EUR
@@ -1221,11 +1255,12 @@ const CreateBookingPopup = (props) => {
                 <div className="night-container">
                   {daysArr.map((ele, j) => (
                     <div className="night-box">
+
                       <Form.Item
                         label={
                           startDate + j <= currMonthDay
                             ? `${startDate + j} : ${startDateMonth}`
-                            : `${0 + j} : ${startDateMonth + 1}`
+                            : `${0 + j} : ${startDateMonth}`
                         }
                         name={`everyDayPrice${j}`}
                       >
@@ -1321,8 +1356,10 @@ const CreateBookingPopup = (props) => {
                             <Form.Item name={[ele, 'serviceTax']}>
                               <Input
                                 type="number"
-                                placeholder="%"
-                                onChange={(e) => setServiceTax(e.target.value)}
+                                placeholder="Tax"
+                                // onBlur={calculateTotal}
+                                value={serviceTax}
+                                onChange={(e) => calculateTotal(e.target.value)}
                               />
                             </Form.Item>
                           </Col>
@@ -1331,14 +1368,18 @@ const CreateBookingPopup = (props) => {
                             <input hidden />
                             =
                           </label>
+
                           <Col span={4}>
                             <Form.Item name={[ele, 'serviceAmount']}>
                               <Input
                                 value={serviceAmount}
-                                onBlur={calculateTotal}
+                                // onBlur={calculateTotal}
                               />
                             </Form.Item>
                           </Col>
+                          <label htmlFor="eur">
+                            {serviceAmount}
+                          </label>
 
                           <label htmlFor="eur">
                             <input hidden />
@@ -1351,15 +1392,15 @@ const CreateBookingPopup = (props) => {
                 </Collapse>
               </Form.Item>
             </Col>
-
             <Col span={24}>
               <div className="amnt-total">
                 <h4>
                   {t('bookingpop.label10')}
                   :
                   {' '}
-                  {Math.round(total * 100) / 100
-                    + Math.round(accomodation * 100) / 100}
+                  {accomodation + serviceAmount}
+                  {/* {Math.round(total * 100) / 100
+                    + Math.round(accomodation * 100) / 100} */}
                   {' '}
                   €
                 </h4>
@@ -1419,9 +1460,10 @@ const CreateBookingPopup = (props) => {
                   :
                   {' '}
                   <span>
-                    {Math.round(total * 100) / 100
+                    {Math.round((accomodation + serviceAmount) - deposit)}
+                    {/* {Math.round(total * 100) / 100
                       + Math.round(accomodation * 100) / 100
-                      - deposit}
+                      - deposit} */}
                     €
                   </span>
                 </label>

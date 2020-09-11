@@ -7,10 +7,15 @@ import './i18n';
 import { SENTRY_DSN } from './config/keys';
 
 let env = process.env.REACT_APP_ENV;
-if (env === 'development') (env = 'undefined');
 Sentry.init({
   dsn: SENTRY_DSN,
-  environment: env,
+  beforeSend(event) {
+      if (env === 'development') {
+          return null;
+      } else {
+          return event;
+      }
+  }
 });
 
 ReactDOM.render(<App />, document.getElementById('root'));

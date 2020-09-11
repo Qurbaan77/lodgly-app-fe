@@ -205,7 +205,8 @@ const Booking = () => {
     const d2 = new Date(values.endDate);
     const diff = Math.abs(d1 - d2);
     const day = Math.floor(diff / (24 * 60 * 60 * 1000));
-    values.night = day + 1;
+    values.night = day;
+    // values.night = day + 1;
     localStorage.setItem('bookingId', values.id);
     localStorage.setItem('propertyId', values.propertyId);
     const arr = [];
@@ -532,6 +533,7 @@ const Booking = () => {
         <body className="booking-page-view" />
       </Helmet>
       {hasAccess ? (
+
         <div className="booking">
           <div className="container">
             <Row>
@@ -551,13 +553,14 @@ const Booking = () => {
                         <Tag color="error">{t('booking.heading4')}</Tag>
                       </div>
                     </div>
-
-                    <div className="filter-icon">
-                      <Button onClick={showfilter}>
-                        {' '}
-                        <img src={filterIcon} alt="filter-icon" />
-                      </Button>
-                    </div>
+                    <Tooltip title="Filter" color="gold">
+                      <div className="filter-icon">
+                        <Button onClick={showfilter}>
+                          {' '}
+                          <img src={filterIcon} alt="filter-icon" />
+                        </Button>
+                      </div>
+                    </Tooltip>
                   </div>
                   {mapBooking.map((el, i) => (
                     <div
@@ -645,15 +648,21 @@ const Booking = () => {
                   </div>
                   <div className="bookin-footer">
                     <ul>
-                      <li>
-                        <img src={editIcon} alt="edit-icon" />
-                      </li>
-                      <li>
-                        <img src={downloadIcon} alt="download=icon" />
-                      </li>
-                      <li>
-                        <img src={refreshIcon} alt="refresh-icon" />
-                      </li>
+                      <Tooltip title="Edit Booking" color="gold">
+                        <li>
+                          <img src={editIcon} alt="edit-icon" />
+                        </li>
+                      </Tooltip>
+                      <Tooltip title="Download" color="gold">
+                        <li>
+                          <img src={downloadIcon} alt="download=icon" />
+                        </li>
+                      </Tooltip>
+                      <Tooltip title="Refresh" color="gold">
+                        <li>
+                          <img src={refreshIcon} alt="refresh-icon" />
+                        </li>
+                      </Tooltip>
                     </ul>
                     {btn2}
                   </div>
