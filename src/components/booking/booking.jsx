@@ -204,7 +204,8 @@ const Booking = () => {
     const d2 = new Date(values.endDate);
     const diff = Math.abs(d1 - d2);
     const day = Math.floor(diff / (24 * 60 * 60 * 1000));
-    values.night = day + 1;
+    values.night = day;
+    // values.night = day + 1;
     localStorage.setItem('bookingId', values.id);
     localStorage.setItem('propertyId', values.propertyId);
     const arr = [];

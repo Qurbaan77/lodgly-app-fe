@@ -453,13 +453,14 @@ const CreateBookingPopup = (props) => {
   const priceFunction = useCallback(
     (value) => {
       setPrice(value);
+      setAccomodation(night * value);
       daysArr.forEach((el, j) => {
         form.setFieldsValue({
           [`everyDayPrice${j}`]: value,
         });
       });
     },
-    [daysArr, form],
+    [daysArr, form, night],
   );
 
   // const calculatePerNight = (nights, ratesData, numOfAdult) => {
