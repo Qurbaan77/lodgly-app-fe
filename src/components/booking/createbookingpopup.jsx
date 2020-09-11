@@ -211,12 +211,13 @@ const CreateBookingPopup = (props) => {
     getPropertyData();
   }, [getPropertyData]);
 
-  const calculateTotal = () => {
-    const calculate = servicePrice * serviceAmt
-      + servicePrice * serviceAmt * (serviceTax / 100);
-    const sum = parseInt(total, 10) + parseInt(calculate, 10);
+  const calculateTotal = (servicetax) => {
+    setServiceTax(servicetax);
+    // const calculate = servicePrice * serviceAmt
+    // + servicePrice * serviceAmt * (servicetax / 100);
+    const calculate = (servicePrice * serviceAmt) - (servicePrice * serviceAmt * servicetax) / 100;
+    // const sum = parseInt(total, 10) + parseInt(calculate, 10);
     setServiceAmount(calculate);
-    setTotal(sum);
   };
 
   const onSelectProperty = async (value, event) => {
@@ -400,20 +401,21 @@ const CreateBookingPopup = (props) => {
   const handleDiscount = (value) => {
     setDiscountType(value);
     if (value === '%') {
-      const data = amt * (discountAmount / 100);
+      const data = ((night * price) * discountAmount) / 100;
+      // const data = amt * (discountAmount / 100);
       setDiscount(data);
-      setAccomodation(amt - data);
+      setAccomodation((night * price) - data);
     } else {
       setDiscount(discountAmount);
-      setAccomodation(amt - discountAmount);
+      setAccomodation((night * price) - discountAmount);
     }
   };
 
   const handleDeposit = (value) => {
     setDepositType(value);
     if (value === '%') {
-      const mon = Math.round(total * 100) / 100 + Math.round(accomodation * 100) / 100;
-      const data = mon * (depositAmount / 100);
+      const mon = Math.round((accomodation + serviceAmount));
+      const data = (mon * depositAmount) / 100;
       setDeposit(data);
     } else {
       setDeposit(depositAmount);
@@ -1149,6 +1151,7 @@ const CreateBookingPopup = (props) => {
                     <input hidden />
                     =
                   </label>
+
                   <Input
                     name="totalAAmount"
                     type="number"
@@ -1175,9 +1178,9 @@ const CreateBookingPopup = (props) => {
                       setDiscount(e.target.value);
                       setdiscountAmount(e.target.value);
                       if (discountType === '€') {
-                        setAccomodation(amt - e.target.value);
+                        setAccomodation((night * price) - e.target.value);
                       } else {
-                        setAccomodation(amt - amt * (e.target.value / 100));
+                        setAccomodation((night * price) - ((night * price) * e.target.value) / 100);
                       }
                     }}
                   />
@@ -1199,15 +1202,20 @@ const CreateBookingPopup = (props) => {
                     <input hidden />
                     =
                   </label>
+
                   <Input
                     type="number"
+
                     value={
                       discountType === '€'
-                        ? amt - discountAmount
-                        : amt - amt * (discountAmount / 100)
+                        // ? amt - discountAmount
+                        ? discountAmount
+                        : ((night * price) * discountAmount) / 100
+                        // : amt - amt * (discountAmount / 100)
                     }
                     onBlur={(e) => setAccomodation(e.target.value)}
                   />
+
                   <label htmlFor="eur">
                     <input hidden />
                     EUR
@@ -1347,8 +1355,10 @@ const CreateBookingPopup = (props) => {
                             <Form.Item name={[ele, 'serviceTax']}>
                               <Input
                                 type="number"
-                                placeholder="%"
-                                onChange={(e) => setServiceTax(e.target.value)}
+                                placeholder="Tax"
+                                // onBlur={calculateTotal}
+                                value={serviceTax}
+                                onChange={(e) => calculateTotal(e.target.value)}
                               />
                             </Form.Item>
                           </Col>
@@ -1357,14 +1367,18 @@ const CreateBookingPopup = (props) => {
                             <input hidden />
                             =
                           </label>
+
                           <Col span={4}>
                             <Form.Item name={[ele, 'serviceAmount']}>
                               <Input
                                 value={serviceAmount}
-                                onBlur={calculateTotal}
+                                // onBlur={calculateTotal}
                               />
                             </Form.Item>
                           </Col>
+                          <label htmlFor="eur">
+                            {serviceAmount}
+                          </label>
 
                           <label htmlFor="eur">
                             <input hidden />
@@ -1377,15 +1391,15 @@ const CreateBookingPopup = (props) => {
                 </Collapse>
               </Form.Item>
             </Col>
-
             <Col span={24}>
               <div className="amnt-total">
                 <h4>
                   {t('bookingpop.label10')}
                   :
                   {' '}
-                  {Math.round(total * 100) / 100
-                    + Math.round(accomodation * 100) / 100}
+                  {accomodation + serviceAmount}
+                  {/* {Math.round(total * 100) / 100
+                    + Math.round(accomodation * 100) / 100} */}
                   {' '}
                   €
                 </h4>
@@ -1445,9 +1459,10 @@ const CreateBookingPopup = (props) => {
                   :
                   {' '}
                   <span>
-                    {Math.round(total * 100) / 100
+                    {Math.round((accomodation + serviceAmount) - deposit)}
+                    {/* {Math.round(total * 100) / 100
                       + Math.round(accomodation * 100) / 100
-                      - deposit}
+                      - deposit} */}
                     €
                   </span>
                 </label>

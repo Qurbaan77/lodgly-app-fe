@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import './booking.css';
@@ -15,7 +15,8 @@ import {
   Modal,
 } from 'antd';
 // import Toaster from '../toaster/toaster';
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import moment from 'moment';
+import { CountryDropdown } from 'react-country-region-selector';
 import { userInstance } from '../../axios/axiosconfig';
 
 const GuestPopup = (props) => {
@@ -26,19 +27,20 @@ const GuestPopup = (props) => {
   } = props;
   const [form] = Form.useForm();
   const guestData = editValues;
-  const [country, setCountry] = useState(null);
-
+  // const [country, setCountry] = useState(null);
+  const m1 = moment(guestData.dob);
   form.setFieldsValue({
     id: guestData.id,
     fullName: guestData.fullname,
     country: guestData.country,
     email: guestData.email,
     phone: guestData.phone,
+    dob: m1,
     // dob: guestData.dob,
     gender: guestData.gender,
     typeOfDoc: guestData.typeOfDoc,
     docNo: guestData.docNo,
-    citizenShip: guestData.citizenShip,
+    // citizenShip: guestData.citizenShip,
     place: guestData.place,
     notes: guestData.notes,
   });
@@ -60,6 +62,7 @@ const GuestPopup = (props) => {
     form.resetFields();
     closeToaster();
   };
+  const disabledDate = (current) => current > moment().subtract(18, 'y') || current > moment();
 
   return (
     <Modal
@@ -99,9 +102,10 @@ const GuestPopup = (props) => {
               name="country"
               rules={[{ required: true, message: t('guestpopup.label3') }]}
             >
-              <CountryDropdown onChange={(val) => setCountry(val)} />
+              <CountryDropdown />
             </Form.Item>
           </Col>
+
         </Row>
 
         <Row style={{ alignItems: 'center' }}>
@@ -128,8 +132,15 @@ const GuestPopup = (props) => {
               name="dob"
               label={t('strings.dob')}
               style={{ paddingRight: 20 }}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}
             >
-              <DatePicker />
+              <DatePicker
+                disabledDate={disabledDate}
+              />
             </Form.Item>
           </Col>
 
@@ -173,7 +184,7 @@ const GuestPopup = (props) => {
         </Row>
 
         <Row style={{ alignItems: 'center' }}>
-          <Col span={12}>
+          {/* <Col span={12}>
             <Form.Item
               label={t('strings.citizenship')}
               name="citizenShip"
@@ -181,7 +192,7 @@ const GuestPopup = (props) => {
             >
               <RegionDropdown country={country} />
             </Form.Item>
-          </Col>
+          </Col> */}
 
           <Col span={12}>
             <Form.Item label={t('guestpopup.label8')} name="place">

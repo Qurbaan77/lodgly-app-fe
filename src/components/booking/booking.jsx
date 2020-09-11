@@ -525,6 +525,7 @@ const Booking = () => {
         <body className="booking-page-view" />
       </Helmet>
       {hasAccess ? (
+
         <div className="booking">
           <div className="container">
             <Row>
@@ -544,13 +545,14 @@ const Booking = () => {
                         <Tag color="error">{t('booking.heading4')}</Tag>
                       </div>
                     </div>
-
-                    <div className="filter-icon">
-                      <Button onClick={showfilter}>
-                        {' '}
-                        <img src={filterIcon} alt="filter-icon" />
-                      </Button>
-                    </div>
+                    <Tooltip title="Filter" color="gold">
+                      <div className="filter-icon">
+                        <Button onClick={showfilter}>
+                          {' '}
+                          <img src={filterIcon} alt="filter-icon" />
+                        </Button>
+                      </div>
+                    </Tooltip>
                   </div>
                   {mapBooking.map((el, i) => (
                     <div
@@ -638,15 +640,21 @@ const Booking = () => {
                   </div>
                   <div className="bookin-footer">
                     <ul>
-                      <li>
-                        <img src={editIcon} alt="edit-icon" />
-                      </li>
-                      <li>
-                        <img src={downloadIcon} alt="download=icon" />
-                      </li>
-                      <li>
-                        <img src={refreshIcon} alt="refresh-icon" />
-                      </li>
+                      <Tooltip title="Edit Booking" color="gold">
+                        <li>
+                          <img src={editIcon} alt="edit-icon" />
+                        </li>
+                      </Tooltip>
+                      <Tooltip title="Download" color="gold">
+                        <li>
+                          <img src={downloadIcon} alt="download=icon" />
+                        </li>
+                      </Tooltip>
+                      <Tooltip title="Refresh" color="gold">
+                        <li>
+                          <img src={refreshIcon} alt="refresh-icon" />
+                        </li>
+                      </Tooltip>
                     </ul>
                     {btn2}
                   </div>

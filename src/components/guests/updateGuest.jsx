@@ -15,6 +15,7 @@ import {
   Modal,
   Select,
 } from 'antd';
+import moment from 'moment';
 // import Toaster from '../toaster/toaster';
 import { CountryDropdown } from 'react-country-region-selector';
 import { userInstance } from '../../axios/axiosconfig';
@@ -27,6 +28,7 @@ const UpdateGuestPopup = (props) => {
   const [form] = Form.useForm();
   const guestData = editValues;
   // const [country, setCountry] = useState(null);
+  const m1 = moment(guestData.dob);
 
   form.setFieldsValue({
     id: guestData.id,
@@ -36,11 +38,13 @@ const UpdateGuestPopup = (props) => {
     phone: guestData.phone,
     gender: guestData.gender,
     typeOfDoc: guestData.typeOfDoc,
+    dob: m1,
     docNo: guestData.docNo,
     // citizenShip: guestData.citizenShip,
     place: guestData.place,
     notes: guestData.notes,
   });
+  const disabledDate = (current) => current > moment().subtract(18, 'y') || current > moment();
 
   const onFinish = async (values) => {
     values.bookingId = localStorage.getItem('bookingId');
@@ -126,7 +130,9 @@ const UpdateGuestPopup = (props) => {
               label={t('strings.dob')}
               style={{ paddingRight: 20 }}
             >
-              <DatePicker />
+              <DatePicker
+                disabledDate={disabledDate}
+              />
             </Form.Item>
           </Col>
 
