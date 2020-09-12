@@ -28,7 +28,7 @@ import {
   UpSquareOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import { CountryDropdown } from 'react-country-region-selector';
 import countryList from 'react-select-country-list';
 import { userInstance } from '../../axios/axiosconfig';
 
@@ -44,7 +44,7 @@ const CreateBookingPopup = (props) => {
   } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const [country, setCountry] = useState(null);
+  // const [country, setCountry] = useState(null);
   // const [visible1, setVisible1] = useState(false);
   // const [radio, setRadio] = useState(1);
   const [channel, setChannel] = useState('');
@@ -151,8 +151,9 @@ const CreateBookingPopup = (props) => {
 
     const guestData = [];
     const serviceDataNew = [];
+    values.totalAmount = serviceAmount + accomodation;
     // values.acknowledge = radio;
-    values.totalAmount = parseInt(total, 10) + parseInt(accomodation, 10);
+    // values.totalAmount = parseInt(total, 10) + parseInt(accomodation, 10);
     // values.total = parseInt(total) + parseInt(accomodation);
 
     panel.forEach((el) => {
@@ -218,6 +219,9 @@ const CreateBookingPopup = (props) => {
     const calculate = (servicePrice * serviceAmt) - (servicePrice * serviceAmt * servicetax) / 100;
     // const sum = parseInt(total, 10) + parseInt(calculate, 10);
     setServiceAmount(calculate);
+    form.setFieldsValue(
+      { serviceAmount: calculate },
+    );
   };
 
   const onSelectProperty = async (value, event) => {
@@ -421,7 +425,7 @@ const CreateBookingPopup = (props) => {
       setDeposit(depositAmount);
     }
   };
-
+  const disabledDate = (current) => current > moment().subtract(18, 'y') || current > moment();
   const onChangeDate = (value) => {
     if (value) {
       setSelectDate(value);
@@ -722,7 +726,7 @@ const CreateBookingPopup = (props) => {
                   name={[el, 'country']}
                   rules={[{ required: true, message: t('guestpopup.label3') }]}
                 >
-                  <CountryDropdown onChange={(val) => setCountry(val)} />
+                  <CountryDropdown />
                 </Form.Item>
               </Col>
             </Row>
@@ -752,7 +756,9 @@ const CreateBookingPopup = (props) => {
                   label={t('strings.dob')}
                   style={{ paddingRight: 20 }}
                 >
-                  <DatePicker />
+                  <DatePicker
+                    disabledDate={disabledDate}
+                  />
                 </Form.Item>
               </Col>
 
@@ -796,15 +802,6 @@ const CreateBookingPopup = (props) => {
             </Row>
 
             <Row style={{ alignItems: 'center' }}>
-              <Col span={12}>
-                <Form.Item
-                  label={t('strings.citizenship')}
-                  name={[el, 'citizenShip']}
-                  style={{ paddingRight: 20 }}
-                >
-                  <RegionDropdown country={country} />
-                </Form.Item>
-              </Col>
 
               <Col span={12}>
                 <Form.Item label={t('guestpopup.label8')} name={[el, 'place']}>
@@ -1206,7 +1203,6 @@ const CreateBookingPopup = (props) => {
 
                   <Input
                     type="number"
-
                     value={
                       discountType === '€'
                         // ? amt - discountAmount
@@ -1370,16 +1366,16 @@ const CreateBookingPopup = (props) => {
                           </label>
 
                           <Col span={4}>
-                            <Form.Item name={[ele, 'serviceAmount']}>
+                            <label htmlFor="eur">
+                              {serviceAmount}
+                            </label>
+                            {/* <Form.Item name={[ele, 'serviceAmount']}>
                               <Input
                                 value={serviceAmount}
                                 // onBlur={calculateTotal}
                               />
-                            </Form.Item>
+                            </Form.Item> */}
                           </Col>
-                          <label htmlFor="eur">
-                            {serviceAmount}
-                          </label>
 
                           <label htmlFor="eur">
                             <input hidden />

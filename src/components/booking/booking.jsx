@@ -161,7 +161,8 @@ const Booking = () => {
       const d2 = new Date(el.endDate);
       const diff = Math.abs(d1 - d2);
       const day = Math.floor(diff / (24 * 60 * 60 * 1000));
-      el.nights = day + 1;
+      el.nights = day;
+      // el.nights = day + 1;
       el.created_date = el.created_at.split('T', 1);
       el.created_time = el.created_at.split('T').pop().substring(0, 5);
       el.noOfGuest = guestnum[i];
