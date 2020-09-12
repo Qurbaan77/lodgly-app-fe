@@ -14,13 +14,24 @@ import homeicon from '../../assets/images/property-home-icon.png';
 import propertyicon from '../../assets/images/menu/property-icon.png';
 import UserLock from '../userlock/userlock';
 import loader from '../../assets/images/cliploader.gif';
-import { userInstance } from '../../axios/axiosconfig';
+import { propertyInstance, userInstance } from '../../axios/axiosconfig';
 import NoList from './nolist';
+import CreateProperty from './createProperty';
 
 const PropertyList = () => {
+  // const [form] = Form.useForm();
+  const [visible, setVisible] = useState(false);
+  const show = () => {
+    setVisible(true);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
   const { t } = useTranslation();
   const [propertyData, setPropertyData] = useState([]);
-  const [topNavId, setTopNavId] = useState();
+  // const [topNavId, setTopNavId] = useState();
   const [subscribed, setSubscribed] = useState(true);
   const [OnTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
@@ -32,9 +43,9 @@ const PropertyList = () => {
   const [{ propertiesWrite, userId }] = userCred || [{}];
   const canWrite = propertiesWrite;
 
-  useEffect(() => {
-    setTopNavId(localStorage.getItem('topNavId'));
-  }, [topNavId]);
+  // useEffect(() => {
+  //   setTopNavId(localStorage.getItem('topNavId'));
+  // }, [topNavId]);
 
   // keep function reference
   const getData = useCallback(async () => {
@@ -47,22 +58,23 @@ const PropertyList = () => {
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
     }
-    const response = await userInstance.post('/fetchProperty', {
+    const response = await propertyInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
-    const data2 = [];
+    // const data2 = [];
     const data = response.data.propertiesData;
-    data
-      .filter((el) => el.id === parseInt(topNavId, 10))
-      .forEach((filterData) => {
-        data2.push(filterData);
-      });
+    // data
+    //   .filter((el) => el.id === parseInt(topNavId, 10))
+    //   .forEach((filterData) => {
+    //     data2.push(filterData);
+    //   });
     if (response.data.code === 200) {
       setLoading(false);
-      setPropertyData(data2.length > 0 ? data2 : data);
+      // setPropertyData(data2.length > 0 ? data2 : data);
+      setPropertyData(data);
     }
     await userInstance.get('/getSubscriptionStatus');
-  }, [userId, topNavId]);
+  }, [userId]);
 
   // const getData = async () => {
   //   const res = await userInstance.get('/getUserSubscriptionStatus');
@@ -95,15 +107,44 @@ const PropertyList = () => {
   }, [getData]);
 
   const handlePropertyClick = (id) => {
-    localStorage.setItem('propertyId', id);
-    history.push('/property');
+    // localStorage.setItem('propertyId', id);
+    localStorage.setItem('propertyV2Id', id);
+    // history.push(`/overview/?pid=${id}`);
+    history.push('/overview');
   };
+
+  // const handleSaveProperty = async () => {
+  //   const payload = {
+  //     propertyName: propertyName.trim(),
+  //     affiliateId: userId,
+  //   };
+  //   const res = await userInstance.post('/addProperty', {
+  //     affiliateId: userId,
+  //   });
+  //   if (res.data.code === 200) {
+  //     localStorage.setItem('propertyV2Id', res.data.savedData);
+  //     localStorage.setItem('unitTypeV2Id', res.data.unitTypeV2Id);
+  //     history.push('/overview');
+  //   }
+  // };
+
+  // const onFinish = async (values) => {
+  //   const copyValues = values;
+  //   copyValues.name = values.name.trim();
+  //   copyValues.affiliateId = userId;
+  //   const response = await propertyInstance.post('/addProperty', copyValues);
+  //   if (response.data.code === 200) {
+  //     localStorage.setItem('propertyV2Id', response.data.savedData);
+  //     localStorage.setItem('unitTypeV2Id', response.data.unitTypeV2Id);
+  //     history.push('/overview');
+  //   }
+  // };
 
   const enableButton = (
     <Button
       type="primary"
       icon={<PlusOutlined />}
-      onClick={() => history.push('/addproperty')}
+      onClick={() => show()}
     >
       {t('propertylist.addbtn')}
     </Button>
@@ -139,7 +180,7 @@ const PropertyList = () => {
     );
   }
   return (
-    <Wrapper fun={setTopNavId}>
+    <Wrapper>
       <Helmet>
         <body className="property-page-view" />
       </Helmet>
@@ -164,10 +205,10 @@ const PropertyList = () => {
                       <img src={el.image || property1} alt="property" />
                     </div>
                     <div className="property-info">
-                      <h3>{el.propertyName}</h3>
+                      <h3>{el.unitTypeName}</h3>
                       <span>{el.created_at.split('T', 1)}</span>
                       <ul>
-                        <li>
+                        <li hidden>
                           <img src={uniticon} alt="Unit" />
                           {' '}
                           {el.noUnitType}
@@ -195,7 +236,7 @@ const PropertyList = () => {
                   }}
                 >
                   <Col span={24}>
-                    <NoList isSubUser={isSubUser} canWrite={canWrite} />
+                    <NoList isSubUser={isSubUser} canWrite={canWrite} show={show} />
                   </Col>
                 </Row>
               )}
@@ -206,6 +247,41 @@ const PropertyList = () => {
           <UserLock />
         )
       }
+
+      <CreateProperty visible={visible} onCancel={handleCancel} />
+      {/* <Modal
+        visible={visible}
+        onCancel={handleCancel}
+        wrapClassName="add-property-popup"
+      >
+
+        <div className="add-property-popup-content">
+          <Form form={form} onFinish={onFinish}>
+            <img src={property1} alt="property" />
+            <h3>Add a new property</h3>
+            <p>You are starting the process to create a new property</p>
+            <Form.Item
+              name="name"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter property name!',
+                  whitespace: true,
+                },
+              ]}
+            >
+              <Input
+                placeholder="Property Name"
+              />
+            </Form.Item>
+            <div className="property-btns">
+              <Button onClick={handleCancel} className="border-btn">Cancel</Button>
+              <Button type="primary" htmlType="submit">Save</Button>
+            </div>
+          </Form>
+        </div>
+      </Modal> */}
+
     </Wrapper>
   );
 };

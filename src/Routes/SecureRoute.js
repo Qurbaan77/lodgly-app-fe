@@ -137,6 +137,29 @@ export const SecureGuests = ({ component: Component, ...rest }) => (
   />
 );
 
+export const SecureOverview = ({ component: Component, ...rest }) => {
+  const hasParam = window.location.search;
+  const token = localStorage.getItem('token');
+  return (
+    <Route
+      {...rest}
+      render={(props) => (token && hasParam ? (
+        <Component {...props} {...rest} />
+      ) : (
+        <Redirect to="/propertylist" />
+      ))}
+    />
+  );
+};
+
+SecureOverview.propTypes = {
+  component: PropTypes.func,
+};
+
+SecureOverview.defaultProps = {
+  component: () => {},
+};
+
 SecureGuests.propTypes = {
   component: PropTypes.func,
 };

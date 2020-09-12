@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import './invoice.css';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -44,13 +44,14 @@ import EditInvoicePopup from './editInvoicePopup';
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 import UserLock from '../userlock/userlock';
+import CreateProperty from '../property/createProperty';
 import back from '../../assets/images/back.png';
 
 const Invoice = () => {
   const { RangePicker } = DatePicker;
   const { t } = useTranslation();
   // const { Option } = Select;
-  const history = useHistory();
+  // const history = useHistory();
 
   const [topNavId, setTopNavId] = useState(null);
   const [visible, setVisible] = useState(false);
@@ -86,6 +87,7 @@ const Invoice = () => {
     issued: '',
     paymentMethod: '',
   });
+  const [visibleProperty, setVisibleProperty] = useState(false);
 
   function useUpdate() {
     const [, setTick] = useState(0);
@@ -458,6 +460,10 @@ const Invoice = () => {
       </Button>
     </Tooltip>
   );
+
+  const closeCreateProperty = () => {
+    setVisibleProperty(false);
+  };
 
   const btn = isSubUser && canWrite ? enableButton : disabledButton;
   const perm = isSubUser ? btn : enableButton;
@@ -964,12 +970,13 @@ const Invoice = () => {
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => history.push('/addproperty')}
+              onClick={() => setVisibleProperty(true)}
             >
               {t('nolist.button1')}
             </Button>
           </div>
         </div>
+        <CreateProperty visible={visibleProperty} onCancel={closeCreateProperty} />
       </Wrapper>
     );
   }

@@ -185,6 +185,7 @@ const Profile = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form2.resetFields();
   };
+
   useEffect(() => {
     getUserInfo();
     getCompanyInfo();

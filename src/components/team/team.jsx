@@ -156,6 +156,17 @@ const TeamListing = () => {
   if (loading) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="stats-page-view" />
+        </Helmet>
         <div className="loader">
           <div className="loader-box">
             <img src={loader} alt="loader" />

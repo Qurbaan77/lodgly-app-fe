@@ -8,6 +8,12 @@ export const userInstance = axios.create({
   headers: { 'x-custom-header': token },
 });
 
+export const propertyInstance = axios.create({
+  baseURL: `${server}/properties`,
+  withCredentials: true,
+  headers: { 'x-custom-header': token },
+});
+
 export const adminInstance = axios.create({
   baseURL: `${server}/admin`,
   withCredentials: true,

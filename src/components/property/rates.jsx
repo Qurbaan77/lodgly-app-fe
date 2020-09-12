@@ -6,7 +6,7 @@ import {
 } from 'antd';
 import ReactQuill from 'react-quill';
 import { toast } from 'react-toastify';
-import { userInstance } from '../../axios/axiosconfig';
+import { propertyInstance } from '../../axios/axiosconfig';
 import CopyRatePopup from './copyratepopup';
 import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
@@ -27,6 +27,7 @@ const Rates = () => {
   const [vat, setVat] = useState(false);
   const [nav, setNav] = useState(false);
   const [visisbleCopyRate, setVisisbleCopyRate] = useState(false);
+  const [pricePerNIght, setPricePerNight] = useState(0);
 
   const handleCancel = () => {
     setVisisbleCopyRate(false);
@@ -212,7 +213,7 @@ const Rates = () => {
     // console.log('checkOutBox', checkOutBox);
     // console.log('value', value);
     // console.log('values', values);
-    values.unitTypeId = localStorage.getItem('unittypeId');
+    values.unitTypeId = localStorage.getItem('propertyV2Id');
     values.notes = value;
     values.checkIn_on_monday = checkInBox.monday;
     values.checkIn_on_tuesday = checkInBox.tuesday;
@@ -229,7 +230,7 @@ const Rates = () => {
     values.checkOut_on_saturday = checkOutBox.saturday;
     values.checkOut_on_sunday = checkOutBox.sunday;
 
-    const response = await userInstance.post('/addRates', values);
+    const response = await propertyInstance.post('/addRates', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
       toast.success('Rate added successfully', { containerId: 'B' });
@@ -241,9 +242,9 @@ const Rates = () => {
 
   const fetchData = useCallback(async () => {
     const payload = {
-      unittypeId: localStorage.getItem('unittypeId'),
+      unittypeId: localStorage.getItem('propertyV2Id'),
     };
-    const response = await userInstance.post('getRates', payload);
+    const response = await propertyInstance.post('getRates', payload);
     if (response.data.code === 200) {
       if (response.data.ratesData.length > 0) {
         const data = response.data.ratesData[0];
@@ -310,7 +311,8 @@ const Rates = () => {
         });
       }
     }
-  }, [checkInBox, checkOutBox, form]);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -377,7 +379,9 @@ const Rates = () => {
                           },
                         ]}
                       >
-                        <Input placeholder="$ 100" />
+                        <Input
+                          onChange={(e) => setPricePerNight(e.target.value)}
+                        />
                       </Form.Item>
                     </Col>
                     <Col span={1} />
@@ -498,7 +502,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input defaultValue={pricePerNIght} />
                           </Form.Item>
                           <Form.Item
                             label="Tu"
@@ -511,7 +515,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input defaultValue={pricePerNIght} />
                           </Form.Item>
                           <Form.Item
                             label="We"
@@ -524,7 +528,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input defaultValue={pricePerNIght} />
                           </Form.Item>
                           <Form.Item
                             label="Th"
@@ -537,7 +541,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input defaultValue={pricePerNIght} />
                           </Form.Item>
                           <Form.Item
                             label="Fr"
@@ -550,7 +554,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input defaultValue={pricePerNIght} />
                           </Form.Item>
                           <Form.Item
                             label="Sa"
@@ -563,7 +567,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input defaultValue={pricePerNIght} />
                           </Form.Item>
                           <Form.Item
                             label="Su"
@@ -576,7 +580,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input defaultValue={pricePerNIght} />
                           </Form.Item>
                         </div>
                       </Col>
