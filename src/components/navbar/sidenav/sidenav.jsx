@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './sidenav.css';
 import { Layout, Menu } from 'antd';
@@ -39,6 +39,7 @@ const Sidenav = ({
   menutoggle,
 }) => {
   const { t } = useTranslation();
+  const history = useHistory();
   // const [propertyData, setPropertyData] = useState([]);
   // const [currProperty, setCurrProperty] = useState('');
   const [hideBooking, setHideBooking] = useState(false);
@@ -260,6 +261,10 @@ const Sidenav = ({
     }
   };
 
+  const homePage = () => {
+    history.push('/booking');
+  };
+
   return (
     <Sider
       theme="light"
@@ -268,7 +273,7 @@ const Sidenav = ({
       className={`side-menu ${menutoggle ? 'menu-show' : ''}`}
     >
       <div className="sidebar-logo">
-        <img className="logo" src={logo} alt="logo" />
+        <img className="logo" src={logo} alt="logo" onClick={homePage} role="presentation" />
         <img
           className="close-icon"
           src={closeicon}

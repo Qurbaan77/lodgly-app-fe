@@ -31,7 +31,7 @@ const PropertyList = () => {
 
   const { t } = useTranslation();
   const [propertyData, setPropertyData] = useState([]);
-  const [topNavId, setTopNavId] = useState();
+  // const [topNavId, setTopNavId] = useState();
   const [subscribed, setSubscribed] = useState(true);
   const [OnTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
@@ -43,9 +43,9 @@ const PropertyList = () => {
   const [{ propertiesWrite, userId }] = userCred || [{}];
   const canWrite = propertiesWrite;
 
-  useEffect(() => {
-    setTopNavId(localStorage.getItem('topNavId'));
-  }, [topNavId]);
+  // useEffect(() => {
+  //   setTopNavId(localStorage.getItem('topNavId'));
+  // }, [topNavId]);
 
   // keep function reference
   const getData = useCallback(async () => {
@@ -61,19 +61,20 @@ const PropertyList = () => {
     const response = await propertyInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
-    const data2 = [];
+    // const data2 = [];
     const data = response.data.propertiesData;
-    data
-      .filter((el) => el.id === parseInt(topNavId, 10))
-      .forEach((filterData) => {
-        data2.push(filterData);
-      });
+    // data
+    //   .filter((el) => el.id === parseInt(topNavId, 10))
+    //   .forEach((filterData) => {
+    //     data2.push(filterData);
+    //   });
     if (response.data.code === 200) {
       setLoading(false);
-      setPropertyData(data2.length > 0 ? data2 : data);
+      // setPropertyData(data2.length > 0 ? data2 : data);
+      setPropertyData(data);
     }
     await userInstance.get('/getSubscriptionStatus');
-  }, [userId, topNavId]);
+  }, [userId]);
 
   // const getData = async () => {
   //   const res = await userInstance.get('/getUserSubscriptionStatus');
@@ -179,7 +180,7 @@ const PropertyList = () => {
     );
   }
   return (
-    <Wrapper fun={setTopNavId}>
+    <Wrapper>
       <Helmet>
         <body className="property-page-view" />
       </Helmet>

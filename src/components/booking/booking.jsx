@@ -30,9 +30,9 @@ import nobooking from '../../assets/images/no-booking.png';
 import loader from '../../assets/images/cliploader.gif';
 // import noproperty from '../../assets/images/property-placeholder.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
-import editIcon from '../../assets/images/menu/pencil-icon.png';
-import downloadIcon from '../../assets/images/menu/download-icon.png';
-import refreshIcon from '../../assets/images/menu/refresh-icon.png';
+// import editIcon from '../../assets/images/menu/pencil-icon.png';
+// import downloadIcon from '../../assets/images/menu/download-icon.png';
+// import refreshIcon from '../../assets/images/menu/refresh-icon.png';
 import favicon from '../../assets/images/logo-mobile.png';
 // const { Panel } = Collapse;
 // const { MonthPicker, RangePicker } = DatePicker;
@@ -647,7 +647,7 @@ const Booking = () => {
                     </div>
                   </div>
                   <div className="bookin-footer">
-                    <ul>
+                    {/* <ul>
                       <Tooltip title="Edit Booking" color="gold">
                         <li>
                           <img src={editIcon} alt="edit-icon" />
@@ -663,7 +663,7 @@ const Booking = () => {
                           <img src={refreshIcon} alt="refresh-icon" />
                         </li>
                       </Tooltip>
-                    </ul>
+                    </ul> */}
                     {btn2}
                   </div>
                 </div>

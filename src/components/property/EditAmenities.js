@@ -44,10 +44,11 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
 
   const isSelected = (id) => {
     const checkExist = selectedAmenities && selectedAmenities.filter((el) => el === id);
+    console.log('checkExist', checkExist);
     if (checkExist && checkExist.length > 0) {
       return true;
     }
-    return false;
+    // return false;
   };
 
   return (
