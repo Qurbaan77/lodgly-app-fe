@@ -763,7 +763,7 @@ const Owner = () => {
       )}
     </>
   );
-  
+
   if (loading) {
     return (
       <Wrapper>

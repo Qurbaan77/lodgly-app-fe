@@ -27,7 +27,7 @@ const Rates = () => {
   const [vat, setVat] = useState(false);
   const [nav, setNav] = useState(false);
   const [visisbleCopyRate, setVisisbleCopyRate] = useState(false);
-  const [pricePerNIght, setPricePerNight] = useState(0);
+  // const [pricePerNIght, setPricePerNight] = useState(0);
 
   const handleCancel = () => {
     setVisisbleCopyRate(false);
@@ -344,7 +344,7 @@ const Rates = () => {
                       <Form.Item name="rateName">
                         <Input
                           placeholder="Default Rate"
-                          defaultValue="Default Rate"
+                          // defaultValue="Default Rate"
                         />
                       </Form.Item>
                     </Col>
@@ -380,7 +380,7 @@ const Rates = () => {
                         ]}
                       >
                         <Input
-                          onChange={(e) => setPricePerNight(e.target.value)}
+                          placeholder="$"
                         />
                       </Form.Item>
                     </Col>
@@ -502,7 +502,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input defaultValue={pricePerNIght} />
+                            <Input placeholder="$" />
                           </Form.Item>
                           <Form.Item
                             label="Tu"
@@ -515,7 +515,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input defaultValue={pricePerNIght} />
+                            <Input placeholder="$" />
                           </Form.Item>
                           <Form.Item
                             label="We"
@@ -528,7 +528,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input defaultValue={pricePerNIght} />
+                            <Input placeholder="$" />
                           </Form.Item>
                           <Form.Item
                             label="Th"
@@ -541,7 +541,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input defaultValue={pricePerNIght} />
+                            <Input placeholder="$" />
                           </Form.Item>
                           <Form.Item
                             label="Fr"
@@ -554,7 +554,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input defaultValue={pricePerNIght} />
+                            <Input placeholder="$" />
                           </Form.Item>
                           <Form.Item
                             label="Sa"
@@ -567,7 +567,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input defaultValue={pricePerNIght} />
+                            <Input placeholder="$" />
                           </Form.Item>
                           <Form.Item
                             label="Su"
@@ -580,7 +580,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input defaultValue={pricePerNIght} />
+                            <Input placeholder="$" />
                           </Form.Item>
                         </div>
                       </Col>
@@ -620,7 +620,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Tu"
@@ -633,7 +633,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="We"
@@ -646,7 +646,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Th"
@@ -659,7 +659,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Fr"
@@ -672,7 +672,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Sa"
@@ -685,7 +685,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Su"
@@ -698,7 +698,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item>
                             <span>nights</span>
@@ -735,8 +735,9 @@ const Rates = () => {
                           // ]}
                         >
                           <Input placeholder="$" />
+                          <span>after</span>
                         </Form.Item>
-                        <span>after</span>
+
                       </Col>
                       <Col span={1} />
                       <Col span={6}>
@@ -787,9 +788,11 @@ const Rates = () => {
                           //   },
                           // ]}
                         >
+                          {' '}
+                          <span>A short stay has no more than</span>
                           <Input type="number" placeholder="nights" />
                         </Form.Item>
-                        <span>A short stay has no more than</span>
+
                       </Col>
 
                       <Col span={24}>
@@ -804,9 +807,10 @@ const Rates = () => {
                           //   },
                           // ]}
                         >
+                          <span>Extra charge per night</span>
                           <Input type="number" placeholder="$" />
                         </Form.Item>
-                        <span>Extra charge per night</span>
+
                       </Col>
                     </Row>
                   </div>

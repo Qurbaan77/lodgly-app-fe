@@ -16,7 +16,7 @@ import { userInstance, propertyInstance } from '../../../axios/axiosconfig';
 import property1 from '../../../assets/images/placeholder.svg';
 // import user from '../../../assets/images/profile_user.jpg';
 
-const UserProfile = ({ userName, imgState, propertyImg, }) => {
+const UserProfile = ({ userName, imgState, propertyImg }) => {
   const { t } = useTranslation();
   const [img, setImg] = useState('');
   const [name, setName] = useState('');

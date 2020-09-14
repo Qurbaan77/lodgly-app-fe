@@ -2,9 +2,9 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
-  Button, Tooltip, Row, Col,
+  Button, Tooltip, Row, Col, Menu, Dropdown,
 } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, EllipsisOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import Helmet from 'react-helmet';
 import Wrapper from '../wrapper';
@@ -51,9 +51,7 @@ const PropertyList = () => {
   const getData = useCallback(async () => {
     const res = await userInstance.get('/getUserSubscriptionStatus');
     if (res.data.code === 200) {
-      const [{
-        days, isOnTrial, isSubscribed,
-      }] = res.data.userSubsDetails;
+      const [{ days, isOnTrial, isSubscribed }] = res.data.userSubsDetails;
       setDaysLeft(parseInt(days, 10));
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
@@ -141,11 +139,7 @@ const PropertyList = () => {
   // };
 
   const enableButton = (
-    <Button
-      type="primary"
-      icon={<PlusOutlined />}
-      onClick={() => show()}
-    >
+    <Button type="primary" icon={<PlusOutlined />} onClick={() => show()}>
       {t('propertylist.addbtn')}
     </Button>
   );
@@ -179,74 +173,101 @@ const PropertyList = () => {
       </Wrapper>
     );
   }
+
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <div>Edit</div>
+      </Menu.Item>
+      <Menu.Item key="1">
+        <div>Delete</div>
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <Wrapper>
       <Helmet>
         <body className="property-page-view" />
       </Helmet>
-      {
-        hasAccess ? (
-          <div className="property-listing">
-            <div className="page-header" hidden={!(propertyData.length > 0)}>
-              <h1>
-                <img src={propertyicon} alt="Property" />
-                {' '}
-                {t('propertylist.heading')}
-              </h1>
-              {btn2}
-            </div>
-
-            <div className="property-list">
-
-              {propertyData && propertyData.length > 0 ? (
-                propertyData.map((el) => (
-                  <div className="property" onClick={() => handlePropertyClick(el.id)} role="presentation">
-                    <div className="property-img-box">
-                      <img src={el.image || property1} alt="property" />
-                    </div>
-                    <div className="property-info">
-                      <h3>{el.unitTypeName}</h3>
-                      <span>{el.created_at.split('T', 1)}</span>
-                      <ul>
-                        <li hidden>
-                          <img src={uniticon} alt="Unit" />
-                          {' '}
-                          {el.noUnitType}
-                          {' '}
-                          {t('strings.unit_t')}
-                        </li>
-                        <li>
-                          <img src={homeicon} alt="Unit" />
-                          {' '}
-                          {el.noUnit}
-                          {' '}
-                          {t('strings.unit')}
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <Row
-                  gutter={{
-                    xs: 8,
-                    sm: 16,
-                    md: 24,
-                    lg: 32,
-                  }}
-                >
-                  <Col span={24}>
-                    <NoList isSubUser={isSubUser} canWrite={canWrite} show={show} />
-                  </Col>
-                </Row>
-              )}
-
-            </div>
+      {hasAccess ? (
+        <div className="property-listing">
+          <div className="page-header" hidden={!(propertyData.length > 0)}>
+            <h1>
+              <img src={propertyicon} alt="Property" />
+              {' '}
+              {t('propertylist.heading')}
+            </h1>
+            {btn2}
           </div>
-        ) : (
-          <UserLock />
-        )
-      }
+
+          <div className="property-list">
+            {propertyData && propertyData.length > 0 ? (
+              propertyData.map((el) => (
+                <div className="property">
+                  <div className="property-edit-delete">
+                    <Dropdown overlay={menu} trigger={['click']}>
+                      <div className="ant-dropdown-link">
+                        <EllipsisOutlined />
+                      </div>
+                    </Dropdown>
+                  </div>
+                  <div
+                    className="property-img-box"
+                    onClick={() => handlePropertyClick(el.id)}
+                    role="presentation"
+                  >
+                    <img src={el.image || property1} alt="property" />
+                  </div>
+                  <div
+                    className="property-info"
+                    onClick={() => handlePropertyClick(el.id)}
+                    role="presentation"
+                  >
+                    <h3>{el.unitTypeName}</h3>
+                    <span>{el.created_at.split('T', 1)}</span>
+                    <ul>
+                      <li hidden>
+                        <img src={uniticon} alt="Unit" />
+                        {' '}
+                        {el.noUnitType}
+                        {' '}
+                        {t('strings.unit_t')}
+                      </li>
+                      <li>
+                        <img src={homeicon} alt="Unit" />
+                        {' '}
+                        {el.noUnit}
+                        {' '}
+                        {t('strings.unit')}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <Row
+                gutter={{
+                  xs: 8,
+                  sm: 16,
+                  md: 24,
+                  lg: 32,
+                }}
+              >
+                <Col span={24}>
+                  <NoList
+                    isSubUser={isSubUser}
+                    canWrite={canWrite}
+                    show={show}
+                  />
+                </Col>
+              </Row>
+            )}
+          </div>
+        </div>
+      ) : (
+        <UserLock />
+      )}
 
       <CreateProperty visible={visible} onCancel={handleCancel} />
       {/* <Modal
@@ -281,7 +302,6 @@ const PropertyList = () => {
           </Form>
         </div>
       </Modal> */}
-
     </Wrapper>
   );
 };

@@ -26,6 +26,7 @@ const Location = () => {
   const [latLng, setlatLng] = useState({});
   const [distance, setDistance] = useState(false);
   const [directions, setDirections] = useState(false);
+  const [placeHolderValue, setPlaceHolderValue] = useState('km');
 
   const handleAddressChange = (address) => {
     setAddress(...address);
@@ -55,9 +56,21 @@ const Location = () => {
     });
     if (response.data.code === 200) {
       const data = response.data.unitTypeV2Data[0];
-      if (response.data.unitTypeV2Data.length > 0) {
+      form.setFieldsValue({
+        distanceIn: data.distanceIn,
+      });
+      if (data.distance !== null && data.direction !== null) {
+        setDistance(true);
+        setDirections(true);
         form.setFieldsValue({
           location: data.address,
+          direction: data.direction,
+          bus: data.distance.bus,
+          train: data.distance.train,
+          underground: data.distance.underground,
+          motorway: data.distance.motorway,
+          airport: data.distance.airport,
+          port: data.distance.port,
         });
       }
     }
@@ -70,6 +83,15 @@ const Location = () => {
     values.state = state;
     values.city = city;
     values.zip = zip;
+    const obj = {
+      bus: values.bus,
+      train: values.train,
+      underground: values.underground,
+      motorway: values.motorway,
+      airport: values.airport,
+      port: values.port,
+    };
+    values.distance = JSON.stringify(obj);
     const response = await propertyInstance.post('/updateLocation', values);
     if (response.data.code === 200) {
       getData();
@@ -183,8 +205,12 @@ const Location = () => {
                       <Row>
                         <Col span={24}>
                           <div className="location-radio">
-                            <Radio>Kilometers</Radio>
-                            <Radio>Miles</Radio>
+                            <Form.Item name="distanceIn">
+                              <Radio.Group name="radiogroup">
+                                <Radio value="km" onClick={() => setPlaceHolderValue('km')}>Kilometers</Radio>
+                                <Radio value="mi" onClick={() => setPlaceHolderValue('mi')}>Miles</Radio>
+                              </Radio.Group>
+                            </Form.Item>
                           </div>
                         </Col>
 
@@ -196,7 +222,9 @@ const Location = () => {
                               Bus
                             </div>
                             <div className="distance-input">
-                              <Input placeholder="km" />
+                              <Form.Item name="bus">
+                                <Input placeholder={placeHolderValue} />
+                              </Form.Item>
                             </div>
                           </div>
 
@@ -207,7 +235,9 @@ const Location = () => {
                               Train
                             </div>
                             <div className="distance-input">
-                              <Input placeholder="km" />
+                              <Form.Item name="train">
+                                <Input placeholder={placeHolderValue} />
+                              </Form.Item>
                             </div>
                           </div>
 
@@ -218,7 +248,10 @@ const Location = () => {
                               Underground
                             </div>
                             <div className="distance-input">
-                              <Input placeholder="km" />
+                              <Form.Item name="underground">
+                                <Input placeholder={placeHolderValue} />
+                              </Form.Item>
+
                             </div>
                           </div>
                         </Col>
@@ -231,7 +264,9 @@ const Location = () => {
                               Motorway
                             </div>
                             <div className="distance-input">
-                              <Input placeholder="km" />
+                              <Form.Item name="motorway">
+                                <Input placeholder={placeHolderValue} />
+                              </Form.Item>
                             </div>
                           </div>
 
@@ -242,7 +277,9 @@ const Location = () => {
                               Airport
                             </div>
                             <div className="distance-input">
-                              <Input placeholder="km" />
+                              <Form.Item name="airport">
+                                <Input placeholder={placeHolderValue} />
+                              </Form.Item>
                             </div>
                           </div>
 
@@ -253,7 +290,9 @@ const Location = () => {
                               Port
                             </div>
                             <div className="distance-input">
-                              <Input placeholder="km" />
+                              <Form.Item name="port">
+                                <Input placeholder={placeHolderValue} />
+                              </Form.Item>
                             </div>
                           </div>
                         </Col>
@@ -280,7 +319,7 @@ const Location = () => {
                   <div className={`toggle-content ${directions ? 'show' : ''}`}>
                     <Row>
                       <Col span={24}>
-                        <Form.Item name="description">
+                        <Form.Item name="direction">
                           <TextArea placeholder="Description" rows={4} />
                         </Form.Item>
                       </Col>
