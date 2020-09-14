@@ -67,7 +67,7 @@ const Editbookingpopup = (props) => {
   const [discount, setDiscount] = useState(0);
   const [discountType, setDiscountType] = useState('%');
   const [accomodation, setAccomodation] = useState(0);
-  const [total, setTotal] = useState(0);
+  // const [total, setTotal] = useState(0);
   const [deposit, setDeposit] = useState(0);
   const [servicePrice, setServicePrice] = useState(0);
   const [serviceAmt, setServiceAmt] = useState(0);
@@ -91,12 +91,10 @@ const Editbookingpopup = (props) => {
   // const [currentUnit, setCurrentUnit] = useState({});
   const [unitTypeData, setUnitTypeData] = useState([]);
   const [unitId, setUnitId] = useState(null);
-
   // const [propertyData, setPropertyData] = useState([]);
   const [propertyName, setPropertyName] = useState('');
   // const history = useHistory();
   const { nights, perNight } = editBookingValues;
-
   const updateFields = useCallback(() => {
     if (visible) {
       fun1(editBookingValues.propertyId);
@@ -132,7 +130,7 @@ const Editbookingpopup = (props) => {
         });
       }
 
-      currentService.forEach((el) => {
+      currentService[0].forEach((el, i) => {
         form.setFieldsValue({
           [`serviceName${i}`]: el.serviceName,
           [`servicePrice${i}`]: el.servicePrice,
@@ -201,13 +199,13 @@ const Editbookingpopup = (props) => {
     setPanel([...panel, i]);
   };
 
-  const addMoreService = async () => {
-    if (currentService.length) {
-      setCurrentService(currentService.concat([{}]));
-      // const value = localStorage.getItem('propertyId');
-      // fun1(value);
-    }
-  };
+  // const addMoreService = async () => {
+  //   if (currentService.length) {
+  //     setCurrentService(currentService.concat([{}]));
+  //     // const value = localStorage.getItem('propertyId');
+  //     // fun1(value);
+  //   }
+  // };
 
   const onFinish = async (values) => {
     values.id = localStorage.getItem('bookingId');
@@ -218,7 +216,7 @@ const Editbookingpopup = (props) => {
     values.discount = discount;
     values.accomodation = accomodation;
     // values.acknowledge = radio;
-    values.totalAmount = parseInt(total, 10) + parseInt(accomodation, 10);
+    // values.totalAmount = parseInt(total, 10) + parseInt(accomodation, 10);
     // values.total = parseInt(total) + parseInt(accomodation);
     // values.deposit = deposit;
 
@@ -283,23 +281,50 @@ const Editbookingpopup = (props) => {
 
     form.resetFields();
   };
-
-  const calculateTotal = (el) => {
-    const calculate = servicePrice * serviceAmt
-      + servicePrice * serviceAmt * (serviceTax / 100);
+  const calculateTotal = (servicetax, el) => {
+    setServiceTax(servicetax);
+    const calculate = (servicePrice * serviceAmt) - (servicePrice * serviceAmt * servicetax) / 100;
+    setServiceAmount(calculate);
     if (el.id) {
       currentService.forEach((ele) => {
         if (ele.id === el.id) {
           el.serviceAmount = calculate;
+          setServiceAmount(el.serviceAmount);
         }
       });
       setServiceState(currentService);
     } else {
-      const sum = parseFloat(total) + calculate;
+      // const sum = parseFloat(total) + calculate;
       setServiceAmount(calculate);
-      setTotal(sum);
+
+      // setServiceAmount(calculate);
+      // setTotal(sum);
     }
   };
+
+  // const calculateTotal = (el) => {
+  //   setServiceTax(el.servicetax);
+  //   console.log("el==>",el);
+  //   const calculate =
+  // (servicePrice * serviceAmt) -
+  // ((servicePrice * serviceAmt *
+  // el.servicetax) / 100);
+  //   console.log(calculate);
+  //   setServiceAmount(calculate);
+  //   if (el.id) {
+  //     currentService.forEach((ele) => {
+  //       if (ele.id === el.id) {
+  //         el.serviceAmount = calculate;
+  //       }
+  //     });
+  //     setServiceState(currentService);
+  //   } else {
+  //     const sum = parseFloat(total) + calculate;
+  //     setServiceAmount(calculate);
+  //     // setServiceAmount(calculate);
+  //     // setTotal(sum);
+  //   }
+  // };
   const fun1 = async (value) => {
     const payload = {
       propertyId: value,
@@ -405,23 +430,27 @@ const Editbookingpopup = (props) => {
   const handleDiscount = (value) => {
     setDiscountType(value);
     if (value === '%') {
-      const data = amt * (discountAmount / 100);
+      const data = (night * price * discountAmount) / 100;
       setDiscount(data);
-      setAccomodation(amt - data);
+      setAccomodation((night * price) - data);
     } else {
       setDiscount(discountAmount);
-      setAccomodation(amt - discountAmount);
+      setAccomodation((night * price) - discountAmount);
     }
   };
 
   const handleDeposit = (value) => {
     setDepositType(value);
     if (value === '%') {
-      const mon = Math.round(total * 100) / 100 + Math.round(accomodation * 100) / 100;
-      const data = mon * (depositAmount / 100);
+      // const mon = Math.round(total * 100) / 100 + Math.round(accomodation * 100) / 100;
+      // const data = mon * (depositAmount / 100);
+      const data = ((night * price) * discountAmount) / 100;
+      setDiscount(data);
+      setAccomodation((night * price) - data);
       setDeposit(data);
     } else {
-      setDeposit(depositAmount);
+      setDiscount(discountAmount);
+      setAccomodation((night * price) - discountAmount);
     }
   };
 
@@ -857,10 +886,17 @@ const Editbookingpopup = (props) => {
                       onChange={(e) => {
                         setDiscount(e.target.value);
                         setdiscountAmount(e.target.value);
-                        if (discountType === '€') {
-                          setAccomodation(amt - e.target.value);
+                        if (discountType
+                           === '€') {
+                          setAccomodation(
+                            (night * price)
+                            - e.target.value,
+                          );
                         } else {
-                          setAccomodation(amt - amt * (e.target.value / 100));
+                          setAccomodation((night * price)
+                          - ((night * price
+                            * e.target.value)
+                             / 100));
                         }
                       }}
                     />
@@ -873,7 +909,8 @@ const Editbookingpopup = (props) => {
                     <Select
                       placeholder={t('editbookingpopup.heading28')}
                       onSelect={(value) => handleDiscount(value)}
-                      defaultValue={discountType}
+                      defaultValue="%"
+                      // defaultValue={discountType}
                     >
                       <Select.Option value="€">€</Select.Option>
                       <Select.Option value="%">%</Select.Option>
@@ -889,11 +926,13 @@ const Editbookingpopup = (props) => {
                       value={
                         discountType === '€'
                           ? discountAmount
-                          : amt * (discountAmount / 100)
+                          : (night * price * discountAmount) / 100
                       }
                       onBlur={(e) => setAccomodation(e.target.value)}
                     />
+                    {console.log('')}
                   </Form.Item>
+
                   <label htmlFor="dis">
                     <input hidden />
                     EUR
@@ -922,7 +961,7 @@ const Editbookingpopup = (props) => {
               </div>
             </Col>
 
-            <Col span={24}>
+            {/* <Col span={24}>
               <div
                 role="presentation"
                 className="srvice-heading"
@@ -932,7 +971,7 @@ const Editbookingpopup = (props) => {
                 {' '}
                 {t('editbookingpopup.heading21')}
               </div>
-            </Col>
+            </Col> */}
 
             <Col span={24}>
               <Form.Item style={{ marginBottom: '0' }}>
@@ -948,7 +987,7 @@ const Editbookingpopup = (props) => {
                   >
                     <div className="service-form">
                       {currentService.length
-                        ? currentService.map((el, j) => (
+                        ? currentService[0].map((el, j) => (
                           <div className="inline-form">
                             <div className="delete-data">
                               <DeleteOutlined
@@ -971,11 +1010,13 @@ const Editbookingpopup = (props) => {
                               </Form.Item>
                             </Col>
                             <Col span={4}>
+
                               <Form.Item name={`servicePrice${j}`}>
                                 <Select
                                   placeholder="Rate"
                                   onSelect={(value) => setServicePrice(value)}
                                 >
+
                                   <Select.Option
                                     value={editServicePanel.servicePrice}
                                   >
@@ -1004,12 +1045,15 @@ const Editbookingpopup = (props) => {
                               +
                             </label>
                             <Col span={4}>
-                              <Form.Item name={`serviceTax${i}`}>
+                              <Form.Item name={`serviceTax${j}`}>
                                 <Input
                                   type="number"
-                                  placeholder="%"
-                                  onChange={(e) => setServiceTax(e.target.value)}
+                                  placeholder="Tax"
+                                // onBlur={calculateTotal}
+                                  value={serviceTax}
+                                  onChange={(e) => calculateTotal(e.target.value, el)}
                                 />
+
                               </Form.Item>
                             </Col>
 
@@ -1017,15 +1061,12 @@ const Editbookingpopup = (props) => {
                               <input hidden />
                               =
                             </label>
-                            <Col span={4}>
-                              <Form.Item name={`serviceAmount${i}`}>
-                                <Input
-                                  value={serviceAmount}
-                                  onBlur={calculateTotal}
-                                />
-                              </Form.Item>
-                            </Col>
 
+                            <Col span={4}>
+                              <label htmlFor="eur">
+                                {serviceAmount}
+                              </label>
+                            </Col>
                             <label htmlFor="eur">
                               <input hidden />
                               EUR
@@ -1038,7 +1079,6 @@ const Editbookingpopup = (props) => {
                 </Collapse>
               </Form.Item>
             </Col>
-
             <Col span={24}>
               <div className="amnt-total">
                 <h4>
@@ -1046,8 +1086,10 @@ const Editbookingpopup = (props) => {
                     <>
                       Total:
                       {' '}
-                      {Math.round(total * 100) / 100
-                        + Math.round(accomodation * 100) / 100}
+                      {accomodation + serviceAmount}
+                      {/* {Math.round(accomodation) + Math.round(serviceAmount)} */}
+                      {/* {Math.round(total * 100) / 100
+                        + Math.round(accomodation * 100) / 100} */}
                       {' '}
                       €
                     </>
@@ -1055,11 +1097,12 @@ const Editbookingpopup = (props) => {
                     <>
                       Total:
                       {' '}
-                      {Math.round(total * 100) / 100
+                      {accomodation + serviceAmount}
+                      {/* {Math.round(total * 100) / 100
                         + Math.round(accomodation * 100) / 100
                         + serviceState
                           .map((el) => el.serviceAmount)
-                          .reduce((a, b) => a + (b || 0), 0)}
+                          .reduce((a, b) => a + (b || 0), 0)} */}
                       {' '}
                       €
                     </>
@@ -1121,9 +1164,10 @@ const Editbookingpopup = (props) => {
                   :
                   {' '}
                   <span>
-                    {Math.round(total * 100) / 100
+                    {Math.round((accomodation + serviceAmount) - deposit)}
+                    {/* {Math.round(total * 100) / 100
                       + Math.round(accomodation * 100) / 100
-                      - deposit}
+                      - deposit} */}
                     €
                   </span>
                 </label>
