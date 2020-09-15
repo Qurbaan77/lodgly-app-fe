@@ -481,7 +481,7 @@ const CreateBookingPopup = (props) => {
         });
       });
     },
-    [daysArr, form, night],
+    [daysArr, form],
   );
 
   // const calculatePerNight = (nights, ratesData, numOfAdult) => {
