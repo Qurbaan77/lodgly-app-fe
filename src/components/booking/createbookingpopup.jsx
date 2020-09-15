@@ -26,6 +26,7 @@ import {
   CheckOutlined,
   DownSquareOutlined,
   UpSquareOutlined,
+  // LeftCircleFilled,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { CountryDropdown } from 'react-country-region-selector';
@@ -67,17 +68,18 @@ const CreateBookingPopup = (props) => {
   const [serviceTax, setServiceTax] = useState(0);
   const [serviceAmount, setServiceAmount] = useState(0);
   const [currentPropertyName, setCurrentPropertyName] = useState('');
-  const [unitName, setUnitName] = useState('');
+  // const [unitName, setUnitName] = useState('');
   const [depositType, setDepositType] = useState('€');
   const [depositAmount, setDepositAmount] = useState(null);
   const [discountAmount, setdiscountAmount] = useState(null);
   const [selectDate, setSelectDate] = useState({});
-  const [seasonRatesData, setSeasonRatesData] = useState([]);
+  //  const [seasonRatesData, ] = useState([]);
   const [visibleGuest, setVisibleGuest] = useState(false);
   const [showOptional, setShowOptional] = useState(true);
   const [leftDays, setLeftDays] = useState(0);
   const [daysArr, setDaysArr] = useState([]);
   const [startDate, setStartDate] = useState('');
+  const [startdate, setstartdate] = useState('');
   const [startDateMonth, setStartDateMonth] = useState('');
   const [currMonthDay, setCurrMonthDay] = useState(0);
   const [upDown, setUpDown] = useState(false);
@@ -88,7 +90,7 @@ const CreateBookingPopup = (props) => {
   // const [country, setCountry] = useState({});
   const [serviceData, setServiceData] = useState([]);
   const [currentService, setCurrentService] = useState({});
-  const [unitData, setUnitData] = useState([]);
+  // const [unitData, setUnitData] = useState([]);
   // const [currentUnit, setCurrentUnit] = useState({});
   // const [unitTypeData, setUnitTypeData] = useState([]);
   const [propertyData, setPropertyData] = useState([]);
@@ -180,7 +182,7 @@ const CreateBookingPopup = (props) => {
     values.propertyId = currentPropertyId;
     values.channel = channel;
     values.commission = channelCommission;
-    values.unitName = unitName;
+    // values.unitName = unitName;
     values.affiliateId = userId;
 
     const response = await userInstance.post('/addBooking', values);
@@ -232,17 +234,17 @@ const CreateBookingPopup = (props) => {
     };
     const response = await userInstance.post('/getService', payload);
     const data = response.data.servicData;
-    const response2 = await userInstance.post('/getUnit', payload);
-    const data2 = response2.data.unitData;
+    // const response2 = await userInstance.post('/getUnit', payload);
+    // const data2 = response2.data.unitData;
     await userInstance.post('/getUnittype', payload);
     // const data3 = response3.data.unittypeData;
     if (response.data.code === 200) {
       setServiceData(data);
     }
 
-    if (response2.data.code === 200) {
-      setUnitData(data2);
-    }
+    // if (response2.data.code === 200) {
+    //   setUnitData(data2);
+    // }
 
     // if (response3.data.code === 200) {
     //   setUnitTypeData(data3);
@@ -300,101 +302,101 @@ const CreateBookingPopup = (props) => {
   const onSelectAdult = (value) => {
     setNoOfAdult(value);
 
-    seasonRatesData.forEach((el) => {
-      const selectStartDate = moment(selectDate[0]._d);
-      const selectEndDate = moment(selectDate[1]._d);
-      const startDate = moment(el.startDate);
-      const endDate = moment(el.endDate);
-      const firstDate = (selectStartDate.isBefore(endDate)
-          && selectStartDate.isAfter(startDate))
-        || selectStartDate.isSame(startDate)
-        || selectStartDate.isSame(endDate);
-      const secondDate = (selectEndDate.isBefore(endDate) && selectEndDate.isAfter(startDate))
-        || selectEndDate.isSame(startDate)
-        || selectEndDate.isSame(endDate);
-      if (firstDate && secondDate) {
-        setRatesData(el);
-      } else if (!firstDate && !secondDate) {
-        // setRatesData(response.data.ratesData[0]);
-      } else {
-        // const d1 = new Date(startDate).getDate();
-        // const d2 = new Date(selectStartDate).getDate();
-        // const d3 = new Date(selectEndDate).getDate();
-        // const diff = Math.abs(d1 - d2);
-        // const ratesOne = calculatePerNight(diff, el, value);
-        // const diff2 = 30 - Math.abs(d3 - d1);
-        // const ratesSecond = calculatePerNight(diff2, ratesData, value);
-      }
-    });
-  };
-
-  const onSelectUnit = async (value, event) => {
-    const unitname = event.children;
-    const [unit] = unitData
-      .filter((el) => el.unitName === unitname)
-      .map((el) => el.unittypeId);
-
-    const payload = {
-      unittypeId: unit,
-    };
-
-    const response = await userInstance.post('/getRates', payload);
-    // const ratesData = response.data.ratesData[0];
-    setRatesData(response.data.ratesData[0]);
-    setSeasonRatesData(response.data.seasonRatesData);
-
-    // const selectStartDate = moment(selectDate[0]._d);
-    // const selectEndDate = moment(selectDate[1]._d);
-    // const days = enumerateDaysBetweenDates(selectDate[0]._d, selectDate[1]._d);
-    // days.forEach((element) => {
-    // });
-
-    // const { seasonRatesData } = response.data;
-
     // seasonRatesData.forEach((el) => {
     //   const selectStartDate = moment(selectDate[0]._d);
     //   const selectEndDate = moment(selectDate[1]._d);
     //   const startDate = moment(el.startDate);
     //   const endDate = moment(el.endDate);
-    //   const firstDate =
-    //     (selectStartDate.isBefore(endDate) &&
-    //       selectStartDate.isAfter(startDate)) ||
-    //     selectStartDate.isSame(startDate) ||
-    //     selectStartDate.isSame(endDate);
-    //   const secondDate =
-    //     (selectEndDate.isBefore(endDate) && selectEndDate.isAfter(startDate)) ||
-    //     selectEndDate.isSame(startDate) ||
-    //     selectEndDate.isSame(endDate);
+    //   const firstDate = (selectStartDate.isBefore(endDate)
+    //       && selectStartDate.isAfter(startDate))
+    //     || selectStartDate.isSame(startDate)
+    //     || selectStartDate.isSame(endDate);
+    //   const secondDate = (selectEndDate.isBefore(endDate) && selectEndDate.isAfter(startDate))
+    //     || selectEndDate.isSame(startDate)
+    //     || selectEndDate.isSame(endDate);
     //   if (firstDate && secondDate) {
-    //     console.log('Normal Rates');
     //     setRatesData(el);
-    //   } else if (firstDate) {
-    //     console.log('Pehli date aati hai range me');
-    //     const d1 = new Date(startDate);
-    //     const d2 = new Date(selectStartDate);
-    //     const diff = Math.abs(d1 - d2);
-    //     const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
-    //     console.log(day);
-    //     console.log(calculatePerNight(day, el));
-    //   } else if (secondDate) {
-    //     console.log('Dusri date aati hai range me');
+    //   } else if (!firstDate && !secondDate) {
+    //     // setRatesData(response.data.ratesData[0]);
     //   } else {
-    //     console.log('Season Rates');
-    //     setRatesData(response.data.ratesData[0]);
+    //     // const d1 = new Date(startDate).getDate();
+    //     // const d2 = new Date(selectStartDate).getDate();
+    //     // const d3 = new Date(selectEndDate).getDate();
+    //     // const diff = Math.abs(d1 - d2);
+    //     // const ratesOne = calculatePerNight(diff, el, value);
+    //     // const diff2 = 30 - Math.abs(d3 - d1);
+    //     // const ratesSecond = calculatePerNight(diff2, ratesData, value);
     //   }
     // });
-
-    // unitTypeData.forEach((el) => {
-    //   if (el.id === unit) {
-    //     setPrice(el.perNight);
-    //     form.setFieldsValue({ perNight: el.perNight });
-    //     setAmt(night * el.perNight);
-    //     setAccomodation(night * el.perNight);
-    //   }
-    // });
-
-    setUnitName(unitname);
   };
+
+  // const onSelectUnit = async (value, event) => {
+  //   const unitname = event.children;
+  //   const [unit] = unitData
+  //     .filter((el) => el.unitName === unitname)
+  //     .map((el) => el.unittypeId);
+
+  //   const payload = {
+  //     unittypeId: unit,
+  //   };
+
+  // const response = await userInstance.post('/getRates', payload);
+  // // const ratesData = response.data.ratesData[0];
+  // setRatesData(response.data.ratesData[0]);
+  // setSeasonRatesData(response.data.seasonRatesData);
+
+  // const selectStartDate = moment(selectDate[0]._d);
+  // const selectEndDate = moment(selectDate[1]._d);
+  // const days = enumerateDaysBetweenDates(selectDate[0]._d, selectDate[1]._d);
+  // days.forEach((element) => {
+  // });
+
+  // const { seasonRatesData } = response.data;
+
+  // seasonRatesData.forEach((el) => {
+  //   const selectStartDate = moment(selectDate[0]._d);
+  //   const selectEndDate = moment(selectDate[1]._d);
+  //   const startDate = moment(el.startDate);
+  //   const endDate = moment(el.endDate);
+  //   const firstDate =
+  //     (selectStartDate.isBefore(endDate) &&
+  //       selectStartDate.isAfter(startDate)) ||
+  //     selectStartDate.isSame(startDate) ||
+  //     selectStartDate.isSame(endDate);
+  //   const secondDate =
+  //     (selectEndDate.isBefore(endDate) && selectEndDate.isAfter(startDate)) ||
+  //     selectEndDate.isSame(startDate) ||
+  //     selectEndDate.isSame(endDate);
+  //   if (firstDate && secondDate) {
+  //     console.log('Normal Rates');
+  //     setRatesData(el);
+  //   } else if (firstDate) {
+  //     console.log('Pehli date aati hai range me');
+  //     const d1 = new Date(startDate);
+  //     const d2 = new Date(selectStartDate);
+  //     const diff = Math.abs(d1 - d2);
+  //     const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+  //     console.log(day);
+  //     console.log(calculatePerNight(day, el));
+  //   } else if (secondDate) {
+  //     console.log('Dusri date aati hai range me');
+  //   } else {
+  //     console.log('Season Rates');
+  //     setRatesData(response.data.ratesData[0]);
+  //   }
+  // });
+
+  // unitTypeData.forEach((el) => {
+  //   if (el.id === unit) {
+  //     setPrice(el.perNight);
+  //     form.setFieldsValue({ perNight: el.perNight });
+  //     setAmt(night * el.perNight);
+  //     setAccomodation(night * el.perNight);
+  //   }
+  // });
+
+  //   setUnitName(unitname);
+  // };
   const onSelectChannel = (value, event) => {
     setChannel(event.children);
   };
@@ -426,7 +428,9 @@ const CreateBookingPopup = (props) => {
     }
   };
   const disabledDate = (current) => current > moment().subtract(18, 'y') || current > moment();
+
   const onChangeDate = (value) => {
+    // { minDate : startdate}
     if (value) {
       setSelectDate(value);
       setStartDate(value[0]._d.getDate());
@@ -458,6 +462,19 @@ const CreateBookingPopup = (props) => {
     (value) => {
       setPrice(value);
       setAccomodation(night * value);
+      daysArr.forEach((el, j) => {
+        form.setFieldsValue({
+          [`everyDayPrice${j}`]: value,
+        });
+      });
+    },
+    [daysArr, form, night],
+  );
+
+  const priceSingleNight = useCallback(
+    (value) => {
+      // setPrice(value);
+      // setAccomodation(night * value);
       daysArr.forEach((el, j) => {
         form.setFieldsValue({
           [`everyDayPrice${j}`]: value,
@@ -538,8 +555,22 @@ const CreateBookingPopup = (props) => {
   };
 
   useEffect(() => {
+    let today = new Date();
+    let dd = today.getDate();
+
+    let mm = today.getMonth() + 1;
+    const yyyy = today.getFullYear();
+    if (dd < 10) {
+      dd = `0${dd}`;
+    }
+
+    if (mm < 10) {
+      mm = `0${mm}`;
+    }
+    today = `${yyyy}-${mm}-${dd}`;
+    setstartdate(today);
     if (ratesData) {
-      if (selectDate && unitName && noOfAdult > 0) {
+      if (selectDate && noOfAdult > 0) {
         let pricePerNight = (
           Math.floor(
             ratesData.price_on_monday
@@ -604,7 +635,7 @@ const CreateBookingPopup = (props) => {
         }
       }
     }
-  }, [selectDate, unitName, noOfAdult, ratesData, form, night, daysArr]);
+  }, [selectDate, noOfAdult, ratesData, form, night, daysArr]);
 
   const createGuestDetails = (
     <>
@@ -779,14 +810,23 @@ const CreateBookingPopup = (props) => {
                   label={t('guestpopup.label4')}
                   name={[el, 'typeOfDoc']}
                   style={{ paddingRight: 20 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: t('guestpopup.label5'),
-                    },
-                  ]}
+
                 >
-                  <Input />
+                  <Select
+                    placeholder={t('guestpopup.label4')}
+                    name={[el, 'typeOfDoc']}
+                    rules={[
+                      {
+                        required: true,
+                        message: t('guestpopup.label5'),
+                      },
+                    ]}
+                  >
+                    <Select.Option value="Passport">Passport</Select.Option>
+                    <Select.Option value="ID Card">ID Card</Select.Option>
+                    <Select.Option value="Driving License">Driving License</Select.Option>
+                    <Select.Option value="Other">Other</Select.Option>
+                  </Select>
                 </Form.Item>
               </Col>
 
@@ -862,6 +902,8 @@ const CreateBookingPopup = (props) => {
                   message: t('bookingpop.rule1'),
                 },
               ]}
+              defaultValue={startdate}
+
             >
               <RangePicker onChange={onChangeDate} />
             </Form.Item>
@@ -927,7 +969,7 @@ const CreateBookingPopup = (props) => {
             </Form.Item>
           </Col>
 
-          <Col span={8}>
+          {/* <Col span={8}>
             <Form.Item
               label={t('strings.unit')}
               name="unit"
@@ -948,7 +990,7 @@ const CreateBookingPopup = (props) => {
                 ))}
               </Select>
             </Form.Item>
-          </Col>
+          </Col> */}
 
           <Col span={8}>
             <Form.Item
@@ -1255,12 +1297,16 @@ const CreateBookingPopup = (props) => {
                       <Form.Item
                         label={
                           startDate + j <= currMonthDay
-                            ? `${startDate + j} : ${startDateMonth}`
-                            : `${0 + j} : ${startDateMonth}`
+                            ? `${startDate + j} / ${startDateMonth}`
+                            : `${0 + j} / ${startDateMonth}`
                         }
                         name={`everyDayPrice${j}`}
                       >
-                        <Input />
+                        <Input
+                          type="number"
+                        // value={price}
+                          onChange={(e) => priceSingleNight(e.target.value, j)}
+                        />
                       </Form.Item>
                     </div>
                   ))}

@@ -138,8 +138,7 @@ const Owner = () => {
         selectedProperty.push(filter.propertyName);
         arr.push(filter.id);
       });
-      setSelectedPropertyId(arr);
-      setAccess(data.isaccess);
+
       form.setFieldsValue({
         id: data.id,
         firstname: data.fname,
@@ -276,9 +275,7 @@ const Owner = () => {
                             </div>
                           </div>
                         </td>
-
                         <td>{el.email}</td>
-
                         <td>
                           <div className="owner-property">
                             {properties.map((ele) => {
@@ -763,7 +760,7 @@ const Owner = () => {
       )}
     </>
   );
-  
+
   if (loading) {
     return (
       <Wrapper>

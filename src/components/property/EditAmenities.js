@@ -10,7 +10,6 @@ import { toast } from 'react-toastify';
 import { propertyInstance } from '../../axios/axiosconfig';
 
 const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
-  console.log(selectedAmenities);
   const [form] = Form.useForm();
   const [nav, setNav] = useState(false);
   const [panel, setPanel] = useState([]);
@@ -44,7 +43,7 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
 
   const isSelected = (id) => {
     const checkExist = selectedAmenities && selectedAmenities.filter((el) => el === id);
-    console.log('checkExist', checkExist);
+
     if (checkExist && checkExist.length > 0) {
       return true;
     }
