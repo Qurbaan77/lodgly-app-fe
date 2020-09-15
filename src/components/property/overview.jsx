@@ -26,7 +26,7 @@ const Overview = () => {
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   // const [unitTypeV2Data, setUnitTypeV2Data] = useState({});
 
-  const show = () => {
+  const showEditSleeping = () => {
     setVisible(true);
   };
 
@@ -65,10 +65,12 @@ const Overview = () => {
           description: data.description,
           propertyType: data.propertyType,
         });
-        form2.setFieldsValue({
-          sqSelectedValue: data.sizeType,
-          sqNumber: data.sizeValue,
-        });
+        if (data.sizeValue > 0) {
+          form2.setFieldsValue({
+            sqSelectedValue: data.sizeType,
+            sqNumber: data.sizeValue,
+          });
+        }
         setNoOfGuests(data.standardGuests);
         setNoOfUnits(data.units);
         setSelectedAmenities(data.amenities);
@@ -266,7 +268,7 @@ const Overview = () => {
                             },
                           ]}
                         >
-                          <Input type="number" />
+                          <Input placeholder="0.00" />
                         </Form.Item>
 
                         <Form.Item label="How many guests can your place accommodate?">
@@ -306,7 +308,7 @@ const Overview = () => {
                 <div className="overview-fourth-section">
                   <h3>Sleeping arrangements</h3>
                   <p>Show guests what the sleeping arrangements are.</p>
-                  <Button onClick={() => show()}>
+                  <Button onClick={() => showEditSleeping()}>
                     Edit sleeping arrangements
                   </Button>
                 </div>
@@ -342,7 +344,7 @@ const Overview = () => {
         wrapClassName="guest-modal property-popup"
       >
         <Helmet>
-          <body className={visible ? 'ant-scrolling-effect' : ''} />
+          <body className="ant-scrolling-effect" />
         </Helmet>
         <div className="cross-btn">
           <CloseOutlined onClick={handleCancel} />
@@ -359,7 +361,7 @@ const Overview = () => {
         wrapClassName="guest-modal property-popup"
       >
         <Helmet>
-          <body className={visible1 ? 'ant-scrolling-effect' : ''} />
+          <body className="ant-scrolling-effect" />
         </Helmet>
         <div className="cross-btn">
           <CloseOutlined onClick={handleCancel1} />
@@ -376,7 +378,7 @@ const Overview = () => {
         wrapClassName="guest-modal property-popup"
       >
         <Helmet>
-          <body className={visible2 ? 'ant-scrolling-effect' : ''} />
+          <body className="ant-scrolling-effect" />
         </Helmet>
         <div className="cross-btn">
           <CloseOutlined onClick={handleCancel2} />

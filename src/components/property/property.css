@@ -1374,3 +1374,46 @@ margin: 0;
 .ant-upload.ant-upload-drag{
   border: none!important;
 }
+
+.property {
+  position: relative;
+}
+
+.property:hover .property-edit-delete {
+  opacity: 1;
+}
+
+.property:hover .property-edit-delete .anticon {
+  color: #fff;
+}
+
+.property-edit-delete {
+  position: absolute;
+  right: 5px;
+  top: 0px;
+  z-index: 999;
+  opacity: 0;
+  transition: all 0.5s;
+}
+
+.property-edit-delete .anticon {
+  font-size: 30px;
+  color: #000;
+}
+
+.property-img-box::before {
+  background: rgb(0,7,20);
+  background: radial-gradient(circle, rgba(0,7,20,0) 0%, rgb(0 0 0 / 42%) 100%);
+  display: block;
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+}
+
+.property:hover .property-img-box::before {
+  opacity: 1;
+}
