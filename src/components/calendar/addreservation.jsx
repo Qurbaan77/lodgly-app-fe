@@ -21,7 +21,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
 import { toast } from 'react-toastify';
-import { userInstance } from '../../axios/axiosconfig';
+import { userInstance, reservationInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
 
@@ -168,7 +168,7 @@ const AddReservation = (props) => {
     values.commission = channelCommission;
     values.unitName = unitName;
     values.affiliateId = userId;
-    const response = await userInstance.post('/addReservation', values);
+    const response = await reservationInstance.post('/addReservation', values);
     if (response.data.code === 200) {
       getData();
       close();
@@ -204,7 +204,10 @@ const AddReservation = (props) => {
     setTotal(sum);
   };
 
-  const fun1 = async (value, event) => {
+  const onSelectProperty = async (value, event) => {
+    propertyData
+      .filter((el) => el.id === parseInt(value, 10))
+      .map((filter) => setUnitData(filter.unitType[0].unitsData || []));
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
@@ -213,17 +216,17 @@ const AddReservation = (props) => {
     };
     const response = await userInstance.post('/getService', payload);
     const data = response.data.servicData;
-    const response2 = await userInstance.post('/getUnit', payload);
-    const data2 = response2.data.unitData;
+    // const response2 = await userInstance.post('/getUnit', payload);
+    // const data2 = response2.data.unitData;
     const response3 = await userInstance.post('/getUnittype', payload);
     const data3 = response3.data.unittypeData;
     if (response.data.code === 200) {
       setServiceData(data);
     }
 
-    if (response2.data.code === 200) {
-      setUnitData(data2);
-    }
+    // if (response2.data.code === 200) {
+    //   setUnitData(data2);
+    // }
 
     if (response3.data.code === 200) {
       setUnitTypeData(data3);
@@ -285,13 +288,13 @@ const AddReservation = (props) => {
     }
   };
 
-  const fun4 = (value) => {
+  const onChangeDate = (value) => {
     setReservationDate(value);
     if (value) {
       const d1 = new Date(value[0]._d);
       const d2 = new Date(value[1]._d);
       const diff = Math.abs(d1 - d2);
-      const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000));
       setNight(day);
     }
   };
@@ -387,7 +390,7 @@ const AddReservation = (props) => {
               label={t('addreservation.heading2')}
               name="groupname"
               style={{ paddingRight: 20 }}
-              onChange={fun4}
+              onChange={onChangeDate}
               rules={[
                 {
                   required: true,
@@ -395,7 +398,7 @@ const AddReservation = (props) => {
                 },
               ]}
             >
-              <RangePicker onChange={fun4} />
+              <RangePicker onChange={onChangeDate} />
             </Form.Item>
           </Col>
 
@@ -422,7 +425,7 @@ const AddReservation = (props) => {
             >
               <Select
                 placeholder={t('strings.select')}
-                onSelect={(value, event) => fun1(value, event)}
+                onSelect={(value, event) => onSelectProperty(value, event)}
               >
                 {propertyData.map((el) => (
                   <Select.Option value={el.id}>{el.propertyName}</Select.Option>
@@ -447,10 +450,9 @@ const AddReservation = (props) => {
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => fun3(value, event)}
               >
-                {/* {unitData.map((el) => (
-                  <Select.Option value={el.id}>{el.unitName}</Select.Option>
-                ))} */}
-                <Select.Option value="unit 1">Unit 1</Select.Option>
+                {unitData.map((el, i) => (
+                  <Select.Option value={i}>{el}</Select.Option>
+                ))}
               </Select>
             </Form.Item>
           </Col>
@@ -620,7 +622,6 @@ const AddReservation = (props) => {
                       type="number"
                       placeholder="0,00"
                       value={price}
-                      disabled="true"
                       rules={[
                         {
                           required: true,
@@ -672,9 +673,11 @@ const AddReservation = (props) => {
                       setDiscount(e.target.value);
                       setdiscountAmount(e.target.value);
                       if (discountType === '€') {
-                        setAccomodation(amt - e.target.value);
+                        setAccomodation(night * price - e.target.value);
                       } else {
-                        setAccomodation(amt - amt * (e.target.value / 100));
+                        setAccomodation(
+                          night * price - (night * price * e.target.value) / 100,
+                        );
                       }
                     }}
                   />
@@ -699,9 +702,8 @@ const AddReservation = (props) => {
                   <Input
                     type="number"
                     value={
-                      discountType === '€'
-                        ? amt - discountAmount
-                        : amt - amt * (discountAmount / 100)
+                      discountType === '€' ? discountAmount : (night * price * discountAmount) / 100
+                      // : amt - amt * (discountAmount / 100)
                     }
                     onBlur={(e) => setAccomodation(e.target.value)}
                   />
@@ -853,9 +855,9 @@ const AddReservation = (props) => {
                 <h4>
                   {t('addreservation.heading26')}
                   :
-                  {' '}
-                  {Math.round(total * 100) / 100
-                    + Math.round(accomodation * 100) / 100}
+                  {accomodation + serviceAmount}
+                  {/* {Math.round(total * 100) / 100
+                    + Math.round(accomodation * 100) / 100} */}
                   {' '}
                   €
                 </h4>

@@ -30,7 +30,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { CountryDropdown } from 'react-country-region-selector';
 import countryList from 'react-select-country-list';
-import { userInstance } from '../../axios/axiosconfig';
+import { userInstance, bookingInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
 
@@ -183,7 +183,7 @@ const CreateBookingPopup = (props) => {
     values.unitName = unitName;
     values.affiliateId = userId;
 
-    const response = await userInstance.post('/addBooking', values);
+    const response = await bookingInstance.post('/addBooking', values);
     if (response.data.code === 200) {
       getData();
       close();
@@ -216,15 +216,17 @@ const CreateBookingPopup = (props) => {
     setServiceTax(servicetax);
     // const calculate = servicePrice * serviceAmt
     // + servicePrice * serviceAmt * (servicetax / 100);
-    const calculate = (servicePrice * serviceAmt) - (servicePrice * serviceAmt * servicetax) / 100;
+    const calculate = servicePrice * serviceAmt
+      - (servicePrice * serviceAmt * servicetax) / 100;
     // const sum = parseInt(total, 10) + parseInt(calculate, 10);
     setServiceAmount(calculate);
-    form.setFieldsValue(
-      { serviceAmount: calculate },
-    );
+    form.setFieldsValue({ serviceAmount: calculate });
   };
 
   const onSelectProperty = async (value, event) => {
+    propertyData
+      .filter((el) => el.id === parseInt(value, 10))
+      .map((filter) => setUnitData(filter.unitType[0].unitsData || []));
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
@@ -232,17 +234,17 @@ const CreateBookingPopup = (props) => {
     };
     const response = await userInstance.post('/getService', payload);
     const data = response.data.servicData;
-    const response2 = await userInstance.post('/getUnit', payload);
-    const data2 = response2.data.unitData;
+    // const response2 = await userInstance.post('/getUnit', payload);
+    // const data2 = response2.data.unitData;
     await userInstance.post('/getUnittype', payload);
     // const data3 = response3.data.unittypeData;
     if (response.data.code === 200) {
       setServiceData(data);
     }
 
-    if (response2.data.code === 200) {
-      setUnitData(data2);
-    }
+    // if (response2.data.code === 200) {
+    //   setUnitData(data2);
+    // }
 
     // if (response3.data.code === 200) {
     //   setUnitTypeData(data3);
@@ -251,25 +253,43 @@ const CreateBookingPopup = (props) => {
 
   const preventTypeE = (evt) => {
     if (
-      evt.which === 64 || evt.which === 35 || evt.which === 36
-      || evt.which === 37 || evt.which === 94
-       || evt.which === 38 || evt.which === 42
-       || evt.which === 40 || evt.which === 41
-        || evt.which === 95
-       || evt.which === 45 || evt.which === 61
-       || evt.which === 43 || evt.which === 126
-       || evt.which === 96
-       || evt.which === 48 || evt.which === 49
-        || evt.which === 50 || evt.which === 51
-        || evt.which === 52 || evt.which === 53
-       || evt.which === 54 || evt.which === 55
-        || evt.which === 56 || evt.which === 57
-         || evt.which === 91
-       || evt.which === 92 || evt.which === 93
-       || evt.which === 123 || evt.which === 124 || evt.which === 125
-       || evt.which === 33 || evt.which === 34
-       || evt.which === 44 || evt.which === 47 || evt.which === 60
-       || evt.which === 62
+      evt.which === 64
+      || evt.which === 35
+      || evt.which === 36
+      || evt.which === 37
+      || evt.which === 94
+      || evt.which === 38
+      || evt.which === 42
+      || evt.which === 40
+      || evt.which === 41
+      || evt.which === 95
+      || evt.which === 45
+      || evt.which === 61
+      || evt.which === 43
+      || evt.which === 126
+      || evt.which === 96
+      || evt.which === 48
+      || evt.which === 49
+      || evt.which === 50
+      || evt.which === 51
+      || evt.which === 52
+      || evt.which === 53
+      || evt.which === 54
+      || evt.which === 55
+      || evt.which === 56
+      || evt.which === 57
+      || evt.which === 91
+      || evt.which === 92
+      || evt.which === 93
+      || evt.which === 123
+      || evt.which === 124
+      || evt.which === 125
+      || evt.which === 33
+      || evt.which === 34
+      || evt.which === 44
+      || evt.which === 47
+      || evt.which === 60
+      || evt.which === 62
     ) {
       evt.preventDefault();
     }
@@ -330,18 +350,19 @@ const CreateBookingPopup = (props) => {
 
   const onSelectUnit = async (value, event) => {
     const unitname = event.children;
-    const [unit] = unitData
-      .filter((el) => el.unitName === unitname)
-      .map((el) => el.unittypeId);
+    // const [unit] = unitData
+    //   .filter((el) => el.unitName === unitname)
+    //   .map((el) => el.unittypeId);
 
-    const payload = {
-      unittypeId: unit,
-    };
+    // const payload = {
+    //   unittypeId: unit,
+    // };
 
-    const response = await userInstance.post('/getRates', payload);
+    // const response = await userInstance.post('/getRates', payload);
     // const ratesData = response.data.ratesData[0];
-    setRatesData(response.data.ratesData[0]);
-    setSeasonRatesData(response.data.seasonRatesData);
+    // setRatesData(response.data.ratesData[0]);
+    // setSeasonRatesData(response.data.seasonRatesData);
+    setSeasonRatesData({});
 
     // const selectStartDate = moment(selectDate[0]._d);
     // const selectEndDate = moment(selectDate[1]._d);
@@ -405,20 +426,20 @@ const CreateBookingPopup = (props) => {
   const handleDiscount = (value) => {
     setDiscountType(value);
     if (value === '%') {
-      const data = ((night * price) * discountAmount) / 100;
+      const data = (night * price * discountAmount) / 100;
       // const data = amt * (discountAmount / 100);
       setDiscount(data);
-      setAccomodation((night * price) - data);
+      setAccomodation(night * price - data);
     } else {
       setDiscount(discountAmount);
-      setAccomodation((night * price) - discountAmount);
+      setAccomodation(night * price - discountAmount);
     }
   };
 
   const handleDeposit = (value) => {
     setDepositType(value);
     if (value === '%') {
-      const mon = Math.round((accomodation + serviceAmount));
+      const mon = Math.round(accomodation + serviceAmount);
       const data = (mon * depositAmount) / 100;
       setDeposit(data);
     } else {
@@ -634,7 +655,6 @@ const CreateBookingPopup = (props) => {
                 rules={[
                   {
                     required: 'true',
-
                   },
                 ]}
               >
@@ -756,9 +776,7 @@ const CreateBookingPopup = (props) => {
                   label={t('strings.dob')}
                   style={{ paddingRight: 20 }}
                 >
-                  <DatePicker
-                    disabledDate={disabledDate}
-                  />
+                  <DatePicker disabledDate={disabledDate} />
                 </Form.Item>
               </Col>
 
@@ -802,7 +820,6 @@ const CreateBookingPopup = (props) => {
             </Row>
 
             <Row style={{ alignItems: 'center' }}>
-
               <Col span={12}>
                 <Form.Item label={t('guestpopup.label8')} name={[el, 'place']}>
                   <Input />
@@ -943,8 +960,8 @@ const CreateBookingPopup = (props) => {
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => onSelectUnit(value, event)}
               >
-                {unitData.map((el) => (
-                  <Select.Option value={el.id}>{el.unitName}</Select.Option>
+                {unitData.map((el, i) => (
+                  <Select.Option value={i}>{el}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -1176,9 +1193,11 @@ const CreateBookingPopup = (props) => {
                       setDiscount(e.target.value);
                       setdiscountAmount(e.target.value);
                       if (discountType === '€') {
-                        setAccomodation((night * price) - e.target.value);
+                        setAccomodation(night * price - e.target.value);
                       } else {
-                        setAccomodation((night * price) - ((night * price) * e.target.value) / 100);
+                        setAccomodation(
+                          night * price - (night * price * e.target.value) / 100,
+                        );
                       }
                     }}
                   />
@@ -1204,11 +1223,8 @@ const CreateBookingPopup = (props) => {
                   <Input
                     type="number"
                     value={
-                      discountType === '€'
-                        // ? amt - discountAmount
-                        ? discountAmount
-                        : ((night * price) * discountAmount) / 100
-                        // : amt - amt * (discountAmount / 100)
+                      discountType === '€' ? discountAmount : (night * price * discountAmount) / 100
+                      // : amt - amt * (discountAmount / 100)
                     }
                     onBlur={(e) => setAccomodation(e.target.value)}
                   />
@@ -1251,7 +1267,6 @@ const CreateBookingPopup = (props) => {
                 <div className="night-container">
                   {daysArr.map((ele, j) => (
                     <div className="night-box">
-
                       <Form.Item
                         label={
                           startDate + j <= currMonthDay
@@ -1366,9 +1381,7 @@ const CreateBookingPopup = (props) => {
                           </label>
 
                           <Col span={4}>
-                            <label htmlFor="eur">
-                              {serviceAmount}
-                            </label>
+                            <label htmlFor="eur">{serviceAmount}</label>
                             {/* <Form.Item name={[ele, 'serviceAmount']}>
                               <Input
                                 value={serviceAmount}
@@ -1393,7 +1406,6 @@ const CreateBookingPopup = (props) => {
                 <h4>
                   {t('bookingpop.label10')}
                   :
-                  {' '}
                   {accomodation + serviceAmount}
                   {/* {Math.round(total * 100) / 100
                     + Math.round(accomodation * 100) / 100} */}
@@ -1456,7 +1468,7 @@ const CreateBookingPopup = (props) => {
                   :
                   {' '}
                   <span>
-                    {Math.round((accomodation + serviceAmount) - deposit)}
+                    {Math.round(accomodation + serviceAmount - deposit)}
                     {/* {Math.round(total * 100) / 100
                       + Math.round(accomodation * 100) / 100
                       - deposit} */}

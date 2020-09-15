@@ -23,7 +23,7 @@ import CreateBookingPopup from './createbookingpopup';
 import EditBookingPopup from './editbookingpopup';
 import BookingFilter from './filter';
 import CreateProperty from '../property/createProperty';
-import { userInstance } from '../../axios/axiosconfig';
+import { userInstance, bookingInstance } from '../../axios/axiosconfig';
 import filterIcon from '../../assets/images/menu/filter-icon.png';
 import cancelIcon from '../../assets/images/menu/cancel-icon.png';
 import nobooking from '../../assets/images/no-booking.png';
@@ -132,7 +132,7 @@ const Booking = () => {
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
     }
-    const response = await userInstance.post('/getBooking', {
+    const response = await bookingInstance.post('/getBooking', {
       affiliateId: userId,
     });
     if (response.data.code === 200) {
@@ -427,7 +427,7 @@ const Booking = () => {
       const values = {
         bookings: id,
       };
-      const response = await userInstance.post('/deleteBookings', values);
+      const response = await bookingInstance.post('/deleteBookings', values);
       const { msg } = response.data;
       if (response.data.code === 200) {
         toast.success(msg, { containerId: 'B' });

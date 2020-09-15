@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import './property.css';
 import {
-  Button, Tooltip, Row, Col, Menu, Dropdown,
+  Button, Tooltip, Row, Col, Menu, Dropdown, Modal,
 } from 'antd';
 import { PlusOutlined, EllipsisOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,7 @@ import loader from '../../assets/images/cliploader.gif';
 import { propertyInstance, userInstance } from '../../axios/axiosconfig';
 import NoList from './nolist';
 import CreateProperty from './createProperty';
+import DeletePopup from './deletepopup';
 
 const PropertyList = () => {
   // const [form] = Form.useForm();
@@ -29,6 +30,10 @@ const PropertyList = () => {
     setVisible(false);
   };
 
+  const handleCancelDelete = () => {
+    setVisibleOFDelete(false);
+  };
+
   const { t } = useTranslation();
   const [propertyData, setPropertyData] = useState([]);
   // const [topNavId, setTopNavId] = useState();
@@ -36,7 +41,8 @@ const PropertyList = () => {
   const [OnTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
   const [loading, setLoading] = useState(true);
-
+  const [visibleOFDelete, setVisibleOFDelete] = useState(false);
+  const [currProperty, setCurrProperty] = useState(0);
   const history = useHistory();
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -111,6 +117,17 @@ const PropertyList = () => {
     history.push('/overview');
   };
 
+  const remove = async () => {
+    const values = {
+      id: currProperty,
+    };
+    const response = await propertyInstance.post('/deleteProperty', values);
+    if (response.data.code === 200) {
+      setVisibleOFDelete(false);
+      getData();
+    }
+  };
+
   // const handleSaveProperty = async () => {
   //   const payload = {
   //     propertyName: propertyName.trim(),
@@ -177,10 +194,10 @@ const PropertyList = () => {
   const menu = (
     <Menu>
       <Menu.Item key="0">
-        <div>Edit</div>
+        <div role="presentation" onClick={() => handlePropertyClick(currProperty)}>Edit</div>
       </Menu.Item>
       <Menu.Item key="1">
-        <div>Delete</div>
+        <div role="presentation" onClick={() => setVisibleOFDelete(true)}>Delete</div>
       </Menu.Item>
     </Menu>
   );
@@ -208,7 +225,7 @@ const PropertyList = () => {
                   <div className="property-edit-delete">
                     <Dropdown overlay={menu} trigger={['click']}>
                       <div className="ant-dropdown-link">
-                        <EllipsisOutlined />
+                        <EllipsisOutlined onClick={() => { setCurrProperty(el.id); }} />
                       </div>
                     </Dropdown>
                   </div>
@@ -264,6 +281,17 @@ const PropertyList = () => {
               </Row>
             )}
           </div>
+          <Modal
+            visible={visibleOFDelete}
+            onOk={handleCancelDelete}
+            onCancel={handleCancelDelete}
+            wrapClassName="delete-modal"
+          >
+            <DeletePopup
+              dataObject={() => remove()}
+              cancel={() => handleCancelDelete()}
+            />
+          </Modal>
         </div>
       ) : (
         <UserLock />

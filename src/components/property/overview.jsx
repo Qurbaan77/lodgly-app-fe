@@ -21,9 +21,11 @@ const Overview = () => {
   const [amenitiesList, setAmenitiesList] = useState([]);
   const [propertyName, setPropertyName] = useState('');
   const [propertyDescription, setPropertyDescription] = useState('');
+  const [noOfBedRooms, setNoOfBedRooms] = useState(0);
   const [noOfGuests, setNoOfGuests] = useState(0);
   const [noOfUnits, setNoOfUnits] = useState(0);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
+  const [unitsArr, setUnitsArr] = useState([]);
   // const [unitTypeV2Data, setUnitTypeV2Data] = useState({});
 
   const showEditSleeping = () => {
@@ -71,6 +73,7 @@ const Overview = () => {
             sqNumber: data.sizeValue,
           });
         }
+        setNoOfBedRooms(data.bedRooms);
         setNoOfGuests(data.standardGuests);
         setNoOfUnits(data.units);
         setSelectedAmenities(data.amenities);
@@ -128,9 +131,17 @@ const Overview = () => {
   };
 
   const onFinishPropertyInfo = async (values) => {
+    const units = [];
+    unitsArr.forEach((i) => {
+      const j = i + 1;
+      const unitName = 'unit';
+      units.push(values[unitName + j]);
+    });
     values.unitTypeV2Id = localStorage.getItem('propertyV2Id');
+    values.noOfBedRooms = noOfBedRooms;
     values.noOfGuests = noOfGuests;
     values.noOfUnits = noOfUnits;
+    values.unitsData = JSON.stringify(units);
     const response = await propertyInstance.post('/updatePropertyInfo', values);
     if (response.data.code === 200) {
       getData();
@@ -139,6 +150,11 @@ const Overview = () => {
         toastId: 'B',
       });
     }
+  };
+
+  const createArray = (value) => {
+    setNoOfUnits(value);
+    setUnitsArr(Array.from(Array(value).keys()));
   };
 
   return (
@@ -271,6 +287,20 @@ const Overview = () => {
                           <Input placeholder="0.00" />
                         </Form.Item>
 
+                        <Form.Item
+                          // name="units"
+                          label="How many bedRooms of the rental do you have?"
+                        >
+                          <div className="input-counter">
+                            <CounterInput
+                              min={0}
+                              max={30}
+                              count={noOfBedRooms}
+                              onCountChange={(count) => setNoOfBedRooms(count)}
+                            />
+                          </div>
+                        </Form.Item>
+
                         <Form.Item label="How many guests can your place accommodate?">
                           <div className="input-counter">
                             <CounterInput
@@ -291,10 +321,19 @@ const Overview = () => {
                               min={0}
                               max={10}
                               count={noOfUnits}
-                              onCountChange={(count) => setNoOfUnits(count)}
+                              onCountChange={(count) => createArray(count)}
                             />
                           </div>
                         </Form.Item>
+                        {unitsArr.map((el) => (
+                          <Form.Item
+                            className="property-info-unit"
+                            label="Units Name"
+                            name={`unit${el + 1}`}
+                          >
+                            <Input placeholder={`Unit ${el + 1}`} />
+                          </Form.Item>
+                        ))}
                       </Col>
                     </Row>
                     <div>
