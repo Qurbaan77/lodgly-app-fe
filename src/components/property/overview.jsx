@@ -212,11 +212,11 @@ const Overview = () => {
                           placeholder="Select"
                           onSelect={handleRentalTypeSelect}
                         >
-                          <Select.Option value="Holiday House">
-                            Holiday House
+                          <Select.Option value="Apartment">
+                            Apartment
                           </Select.Option>
-                          <Select.Option value="Holiday Apartment">
-                            Holiday Apartment
+                          <Select.Option value="Chalet">
+                            Chalet
                           </Select.Option>
                           <Select.Option value="Bed and Breakfast">
                             Bed and Breakfast
@@ -224,31 +224,31 @@ const Overview = () => {
                           <Select.Option value="Boat House">
                             Boat House
                           </Select.Option>
-                          <Select.Option value="Bungalow">
-                            Bungalow
+                          <Select.Option value="Guest House">
+                            Guest House
                           </Select.Option>
-                          <Select.Option value="Cabin">Cabin</Select.Option>
-                          <Select.Option value="Agritourism">
-                            Agritourism
+                          <Select.Option value="Hotel">Hotel</Select.Option>
+                          <Select.Option value="Lodge">
+                            Lodge
                           </Select.Option>
-                          <Select.Option value="Mobile House">
-                            Mobile House
+                          <Select.Option value="Resort">
+                            Resort
                           </Select.Option>
                           <Select.Option value="Villa">Villa</Select.Option>
-                          <Select.Option value="Room">Room</Select.Option>
-                          <Select.Option value="Hotel">Hotel</Select.Option>
+                          <Select.Option value="Castle">Castle</Select.Option>
+                          <Select.Option value="Aparthotel">Aparthotel</Select.Option>
                           <Select.Option value="Camping">Camping</Select.Option>
-                          <Select.Option value="Student Housing">
-                            Student Housing
+                          <Select.Option value="Cottage">
+                            Cottage
                           </Select.Option>
-                          <Select.Option value="Resort">Resort</Select.Option>
-                          <Select.Option value="Inn">Inn</Select.Option>
+                          <Select.Option value="House">House</Select.Option>
+                          {/* <Select.Option value="Inn">Inn</Select.Option>
                           <Select.Option value="Hostel">Hostel</Select.Option>
                           <Select.Option value="Motel">Motel</Select.Option>
                           <Select.Option value="Hospital">
                             Hospital
                           </Select.Option>
-                          <Select.Option value="Pousada">Pousada</Select.Option>
+                          <Select.Option value="Pousada">Pousada</Select.Option> */}
                         </Select>
                       </Form.Item>
                     </Col>
