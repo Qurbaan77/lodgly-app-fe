@@ -6,16 +6,15 @@ import App from './App';
 import './i18n';
 import { SENTRY_DSN } from './config/keys';
 
-let env = process.env.REACT_APP_ENV;
+const env = process.env.REACT_APP_ENV;
 Sentry.init({
   dsn: SENTRY_DSN,
   beforeSend(event) {
-      if (env === 'development') {
-          return null;
-      } else {
-          return event;
-      }
-  }
+    if (env === 'development') {
+      return null;
+    }
+    return event;
+  },
 });
 
 ReactDOM.render(<App />, document.getElementById('root'));
