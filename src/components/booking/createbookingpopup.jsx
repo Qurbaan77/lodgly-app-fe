@@ -635,7 +635,7 @@ const CreateBookingPopup = (props) => {
         }
       }
     }
-  }, [selectDate, noOfAdult, ratesData, form, night, daysArr]);
+  }, [selectDate, noOfAdult, ratesData, form, night, daysArr, unitName]);
 
   const createGuestDetails = (
     <>
