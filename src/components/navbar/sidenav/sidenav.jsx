@@ -14,7 +14,6 @@ import propertyIcon from '../../../assets/images/menu/property-icon.png';
 import guestIcon from '../../../assets/images/menu/guest-icon.png';
 import submenuCompany from '../../../assets/images/menu/submenu-company.png';
 import submenuGuest from '../../../assets/images/menu/submenu-guest.png';
-
 import teamIcon from '../../../assets/images/menu/team-icon.png';
 import invoiceIcon from '../../../assets/images/menu/invoice-icon.png';
 import statsIcon from '../../../assets/images/menu/stats-icon.png';
@@ -475,6 +474,11 @@ const Sidenav = ({
         <Menu.Item className="season-nav">
           <img src={teamIcon} alt="channel" />
           <Link to="seasonrates">Season Rates</Link>
+        </Menu.Item>
+        <Menu.Item className="service-nav">
+          <img alt="not" />
+          {/* <ApartmentOutlined /> */}
+          <Link to="/services">{t('sidebar.menu15')}</Link>
         </Menu.Item>
 
         <Menu.Item className="channel-nav">

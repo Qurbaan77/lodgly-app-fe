@@ -26,6 +26,7 @@ import {
   CheckOutlined,
   DownSquareOutlined,
   UpSquareOutlined,
+  // LeftCircleFilled,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { CountryDropdown } from 'react-country-region-selector';
@@ -78,6 +79,7 @@ const CreateBookingPopup = (props) => {
   const [leftDays, setLeftDays] = useState(0);
   const [daysArr, setDaysArr] = useState([]);
   const [startDate, setStartDate] = useState('');
+  const [startdate, setstartdate] = useState('');
   const [startDateMonth, setStartDateMonth] = useState('');
   const [currMonthDay, setCurrMonthDay] = useState(0);
   const [upDown, setUpDown] = useState(false);
@@ -180,7 +182,7 @@ const CreateBookingPopup = (props) => {
     values.propertyId = currentPropertyId;
     values.channel = channel;
     values.commission = channelCommission;
-    values.unitName = unitName;
+    // values.unitName = unitName;
     values.affiliateId = userId;
 
     const response = await userInstance.post('/addBooking', values);
@@ -426,7 +428,9 @@ const CreateBookingPopup = (props) => {
     }
   };
   const disabledDate = (current) => current > moment().subtract(18, 'y') || current > moment();
+
   const onChangeDate = (value) => {
+    // { minDate : startdate}
     if (value) {
       setSelectDate(value);
       setStartDate(value[0]._d.getDate());
@@ -465,6 +469,19 @@ const CreateBookingPopup = (props) => {
       });
     },
     [daysArr, form, night],
+  );
+
+  const priceSingleNight = useCallback(
+    (value) => {
+      // setPrice(value);
+      // setAccomodation(night * value);
+      daysArr.forEach((el, j) => {
+        form.setFieldsValue({
+          [`everyDayPrice${j}`]: value,
+        });
+      });
+    },
+    [daysArr, form],
   );
 
   // const calculatePerNight = (nights, ratesData, numOfAdult) => {
@@ -538,6 +555,20 @@ const CreateBookingPopup = (props) => {
   };
 
   useEffect(() => {
+    let today = new Date();
+    let dd = today.getDate();
+
+    let mm = today.getMonth() + 1;
+    const yyyy = today.getFullYear();
+    if (dd < 10) {
+      dd = `0${dd}`;
+    }
+
+    if (mm < 10) {
+      mm = `0${mm}`;
+    }
+    today = `${yyyy}-${mm}-${dd}`;
+    setstartdate(today);
     if (ratesData) {
       if (selectDate && unitName && noOfAdult > 0) {
         let pricePerNight = (
@@ -604,7 +635,7 @@ const CreateBookingPopup = (props) => {
         }
       }
     }
-  }, [selectDate, unitName, noOfAdult, ratesData, form, night, daysArr]);
+  }, [selectDate, noOfAdult, ratesData, form, night, daysArr, unitName]);
 
   const createGuestDetails = (
     <>
@@ -779,14 +810,23 @@ const CreateBookingPopup = (props) => {
                   label={t('guestpopup.label4')}
                   name={[el, 'typeOfDoc']}
                   style={{ paddingRight: 20 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: t('guestpopup.label5'),
-                    },
-                  ]}
+
                 >
-                  <Input />
+                  <Select
+                    placeholder={t('guestpopup.label4')}
+                    name={[el, 'typeOfDoc']}
+                    rules={[
+                      {
+                        required: true,
+                        message: t('guestpopup.label5'),
+                      },
+                    ]}
+                  >
+                    <Select.Option value="Passport">Passport</Select.Option>
+                    <Select.Option value="ID Card">ID Card</Select.Option>
+                    <Select.Option value="Driving License">Driving License</Select.Option>
+                    <Select.Option value="Other">Other</Select.Option>
+                  </Select>
                 </Form.Item>
               </Col>
 
@@ -862,6 +902,8 @@ const CreateBookingPopup = (props) => {
                   message: t('bookingpop.rule1'),
                 },
               ]}
+              defaultValue={startdate}
+
             >
               <RangePicker onChange={onChangeDate} />
             </Form.Item>
@@ -1255,12 +1297,16 @@ const CreateBookingPopup = (props) => {
                       <Form.Item
                         label={
                           startDate + j <= currMonthDay
-                            ? `${startDate + j} : ${startDateMonth}`
-                            : `${0 + j} : ${startDateMonth}`
+                            ? `${startDate + j} / ${startDateMonth}`
+                            : `${0 + j} / ${startDateMonth}`
                         }
                         name={`everyDayPrice${j}`}
                       >
-                        <Input />
+                        <Input
+                          type="number"
+                        // value={price}
+                          onChange={(e) => priceSingleNight(e.target.value, j)}
+                        />
                       </Form.Item>
                     </div>
                   ))}

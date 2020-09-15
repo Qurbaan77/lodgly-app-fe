@@ -231,23 +231,9 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
               </div>
             ))
           }
-          <h5>Sleeping</h5>
-          {
-            amenitiesList.slice(129, 130).map((amenities) => (
-              <div className="property-selection" key={amenities.id}>
-                <div className="icon-name">
-                  <InboxOutlined />
-                  <span>{amenities.name}</span>
-                </div>
-                <div className="input-counter">
-                  <Switch onChange={() => handleChange(amenities.id)} />
-                </div>
-              </div>
-            ))
-          }
           <h5>Spa</h5>
           {
-            amenitiesList.slice(131, 150).map((amenities) => (
+            amenitiesList.slice(129, 150).map((amenities) => (
               <div className="property-selection" key={amenities.id}>
                 <div className="icon-name">
                   <InboxOutlined />
