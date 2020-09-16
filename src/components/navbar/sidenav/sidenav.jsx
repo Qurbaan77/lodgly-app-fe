@@ -4,7 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './sidenav.css';
 import { Layout, Menu } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ApartmentOutlined } from '@ant-design/icons';
 import logo from '../../../assets/images/logo.png';
 import UserProfile from '../userprofile/userprofile';
 import { userInstance } from '../../../axios/axiosconfig';
@@ -476,8 +476,8 @@ const Sidenav = ({
           <Link to="seasonrates">Season Rates</Link>
         </Menu.Item>
         <Menu.Item className="service-nav">
-          <img alt="not" />
-          {/* <ApartmentOutlined /> */}
+          {/* <img alt="not" /> */}
+          <ApartmentOutlined />
           <Link to="/services">{t('sidebar.menu15')}</Link>
         </Menu.Item>
 
