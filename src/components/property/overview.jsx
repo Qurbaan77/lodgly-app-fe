@@ -155,6 +155,11 @@ const Overview = () => {
   const createArray = (value) => {
     setNoOfUnits(value);
     setUnitsArr(Array.from(Array(value).keys()));
+    Array.from(Array(value).keys()).forEach((ele) => {
+      form2.setFieldsValue({
+        [`unit${ele + 1}`]: `Unit ${ele + 1}`,
+      });
+    });
   };
 
   return (

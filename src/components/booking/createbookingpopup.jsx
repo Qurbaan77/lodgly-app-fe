@@ -228,7 +228,7 @@ const CreateBookingPopup = (props) => {
   const onSelectProperty = async (value, event) => {
     propertyData
       .filter((el) => el.id === parseInt(value, 10))
-      .map((filter) => setUnitData(filter.unitType[0].unitsData || []));
+      .map((filter) => setUnitData(JSON.parse(filter.unitType[0].unitsData) || []));
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
@@ -1108,7 +1108,7 @@ const CreateBookingPopup = (props) => {
         <Row style={{ alignItems: 'center' }}>
           <Col span={24}>
             <Form.Item style={{ marginBottom: '0' }}>
-              <Collapse accordion>
+              <Collapse defaultActiveKey={['1']} accordion>
                 <Panel
                   icon={<PlusSquareOutlined />}
                   header={t('bookingpop.label18')}

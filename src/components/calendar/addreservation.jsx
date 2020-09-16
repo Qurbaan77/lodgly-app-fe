@@ -207,7 +207,7 @@ const AddReservation = (props) => {
   const onSelectProperty = async (value, event) => {
     propertyData
       .filter((el) => el.id === parseInt(value, 10))
-      .map((filter) => setUnitData(filter.unitType[0].unitsData || []));
+      .map((filter) => setUnitData(JSON.parse(filter.unitType[0].unitsData) || []));
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
