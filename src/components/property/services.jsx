@@ -7,14 +7,17 @@ import {
   Form, Input, Button, Tooltip, Modal,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { PlusOutlined, DeleteOutlined, FormOutlined } from '@ant-design/icons';
+import {
+  PlusOutlined, DeleteOutlined, FormOutlined,
+  ApartmentOutlined,
+} from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 import favicon from '../../assets/images/logo-mobile.png';
 import UserLock from '../userlock/userlock';
 import loader from '../../assets/images/cliploader.gif';
-import propertyplace from '../../assets/images/property-placeholder.png';
+
 // import CreateProperty from './createProperty';
 
 const Services = () => {
@@ -451,7 +454,7 @@ const Services = () => {
       <Wrapper>
         <div className="add-team-page">
           <div className="add-subuser">
-            <img src={propertyplace} alt="subuser" />
+            <ApartmentOutlined />
             <h4>{t('services.heading1')}</h4>
             {btn2}
           </div>

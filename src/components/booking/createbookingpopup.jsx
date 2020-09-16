@@ -721,6 +721,7 @@ const CreateBookingPopup = (props) => {
                 label={t('strings.phone')}
                 name={[el, 'phone']}
                 style={{ paddingRight: 20 }}
+                rules={[{ required: true }]}
               >
                 <Input type="number" minLength="9" maxLength="15" />
               </Form.Item>
@@ -788,13 +789,19 @@ const CreateBookingPopup = (props) => {
                   label={t('strings.email')}
                   name={[el, 'email']}
                   style={{ paddingRight: 20 }}
+                  rules={[{ required: true }]}
                 >
-                  <Input placeholder={t('strings.email')} />
+                  <Input placeholder={t('strings.email')} type="email" />
                 </Form.Item>
               </Col>
 
               <Col span={12}>
-                <Form.Item label={t('strings.phone')} name={[el, 'phone']}>
+                <Form.Item
+                  label={t('strings.phone')}
+                  name={[el, 'phone']}
+                  rules={[{ required: true }]}
+                >
+
                   <Input placeholder={t('strings.phone')} type="number" />
                 </Form.Item>
               </Col>
@@ -922,7 +929,12 @@ const CreateBookingPopup = (props) => {
               defaultValue={startdate}
 
             >
-              <RangePicker onChange={onChangeDate} />
+              <RangePicker
+                defaultValue={moment()}
+                format="YYYY-MM-DD"
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onChangeDate}
+              />
             </Form.Item>
           </Col>
 

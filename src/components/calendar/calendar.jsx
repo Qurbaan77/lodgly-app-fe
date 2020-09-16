@@ -178,7 +178,6 @@ const Calendar = () => {
     const response = await reservationInstance.post('/getReservation', {
       affiliateId: userId,
     });
-    console.log(response);
     // const { reservationData: data } = response.data;
     // if (response.data.code === 200) {
     //   setLoading(false);
@@ -197,7 +196,6 @@ const Calendar = () => {
     const response = await reservationInstance.post('/getReservationCalendarData', {
       affiliateId: userId,
     });
-    console.log(response);
     // const { unittypeData: data0 } = response.data;
     // const { unitData: data1 } = response.data;
     if (response.data.code === 200) {
