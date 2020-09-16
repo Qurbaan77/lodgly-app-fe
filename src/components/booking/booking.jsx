@@ -568,7 +568,6 @@ const Booking = () => {
                       key={el.id}
                       role="presentation"
                       className={`booking-list ${el.statusColour}`}
-                      onClick={() => selectBooking(el, i)}
                     >
                       <div className="filter-checkbox">
                         <Checkbox
@@ -576,7 +575,7 @@ const Booking = () => {
                           onClick={() => handleCheck(el, i)}
                         />
                       </div>
-                      <div className="detail">
+                      <div className="detail" onClick={() => selectBooking(el, i)} role="presentation">
                         <h3>{el.guest}</h3>
                         <p>{el.propertyName}</p>
                         <ul>
