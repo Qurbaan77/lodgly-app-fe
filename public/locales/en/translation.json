@@ -338,9 +338,9 @@
   },
   "booking": {
     "heading": " Filters",
-    "tag1": "item 1",
-    "tag2": "item 2",
-    "tag3": "item 3",
+    "tag1": "Decline",
+    "tag2": "Open",
+    "tag3": "Set as tentative",
     "tooltip":"You are not authorize to create booking",
     "tooltip1":"You are not authorize to edit booking",
     "title1":"Create Booking",

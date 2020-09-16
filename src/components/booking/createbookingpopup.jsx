@@ -1120,7 +1120,7 @@ const CreateBookingPopup = (props) => {
         <Row style={{ alignItems: 'center' }}>
           <Col span={24}>
             <Form.Item style={{ marginBottom: '0' }}>
-              <Collapse accordion>
+              <Collapse defaultActiveKey={['1']} accordion>
                 <Panel
                   icon={<PlusSquareOutlined />}
                   header={t('bookingpop.label18')}

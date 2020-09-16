@@ -548,10 +548,10 @@ const Booking = () => {
                         <input type="text" hidden />
                       </label>
                       <div className="filter-item" id="filters">
-                        <Tag color="default">{t('booking.tag1')}</Tag>
-                        <Tag color="success">{t('booking.tag2')}</Tag>
-                        <Tag color="default">{t('booking.tag3')}</Tag>
-                        <Tag color="error">{t('booking.heading4')}</Tag>
+                        <Tag color="default">Decline</Tag>
+                        <Tag color="success">Open</Tag>
+                        <Tag color="yellow">Set as tentative</Tag>
+                        <Tag color="error">Booked</Tag>
                       </div>
                     </div>
                     <Tooltip title="Filter" color="gold">

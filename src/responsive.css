@@ -473,8 +473,14 @@ input[type=number]{
 /******************************************************************************************************/
 
 
-
-
+@media screen and (max-width:1024px){
+ul.ant-menu.main-menu, ul.ant-menu.main-menu-mbl {
+    height: calc(60vh - 45px)!important;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 50px;
+}
+}
 
 @media screen and (max-width:767px){
 
