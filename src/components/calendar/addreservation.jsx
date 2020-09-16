@@ -628,7 +628,10 @@ const AddReservation = (props) => {
                           message: t('addreservation.heading9'),
                         },
                       ]}
-                      onChange={(e) => setPrice(e.target.value)}
+                      onChange={(e) => {
+                        setPrice(e.target.value);
+                        setAccomodation(night * e.target.value);
+                      }}
                     />
                   </Form.Item>
                   <label htmlFor="number">
