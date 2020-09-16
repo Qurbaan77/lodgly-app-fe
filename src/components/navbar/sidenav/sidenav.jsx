@@ -228,6 +228,7 @@ const Sidenav = ({
         || pathname.includes('photos')
         || pathname.includes('rates')
         || pathname.includes('seasonrates')
+        || pathname.includes('services')
         || pathname.includes('channelmanager'))
       && propertyNav === false
     ) {
