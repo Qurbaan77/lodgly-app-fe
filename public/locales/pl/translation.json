@@ -513,9 +513,6 @@
 
 },
 "services": {
-
-
-  
   "heading1":"Dodaj usługi",
   "heading2":"Nie masz uprawnień do tworzenia nowych usług",
   "heading3":"Usługi",
@@ -523,13 +520,9 @@
   "heading5":"proszę podać nazwę usługi",
   "heading6":" Cena usługi",
   "heading8":"Proszę podać cenę",
-  "heading9":"Ilość standardowa"
- 
-
-  
-
-
-
+  "heading9":"Ilość standardowa",
+  "label18": "dodaj usługę",
+  "label19": "Edytuj usługę"
 },
 
 "calendarpop": {

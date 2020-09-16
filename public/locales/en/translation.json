@@ -444,7 +444,9 @@
     "heading6": "Service Price",
     "heading8": "Please enter price",
     "heading9": "Standard Quantity",
-    "heading10":"Action"
+    "heading10":"Action",
+    "label18": "Add Services",
+    "label19": "Edit Service"
    
   },
   "addreservation": {
