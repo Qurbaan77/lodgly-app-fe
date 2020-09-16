@@ -905,7 +905,12 @@ const CreateBookingPopup = (props) => {
               defaultValue={startdate}
 
             >
-              <RangePicker onChange={onChangeDate} />
+              <RangePicker
+                defaultValue={moment()}
+                format="YYYY-MM-DD"
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onChangeDate}
+              />
             </Form.Item>
           </Col>
 

@@ -5,6 +5,7 @@ import {
 import { InboxOutlined } from '@ant-design/icons';
 import Helmet from 'react-helmet';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
 import { propertyInstance } from '../../axios/axiosconfig';
 import favicon from '../../assets/images/logo-mobile.png';
@@ -14,6 +15,7 @@ const Photos = () => {
   const unitTypeV2Id = localStorage.getItem('propertyV2Id');
   const organizationid = localStorage.getItem('organizationid');
   const [propertyImage, setPropertyImage] = useState('');
+  const { t } = useTranslation();
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
@@ -77,13 +79,13 @@ const Photos = () => {
             <div className="photos-content">
               <Form>
                 <div className="location-first-section">
-                  <h3>Photos</h3>
+                  <h3>{t('photos.heading1')}</h3>
                   <p>
-                    Catch a potential guest
+                    {t('photos.paragraph1')}
                     <span>&apos;</span>
-                    s eye with high-quality photos. Include a
-                    variety of perspectives (interior and exterior) to give them
-                    the best overall impression of your place.
+                    {t('photos.paragraph2')}
+                    {t('photos.paragraph3')}
+                    {t('photos.paragraph4')}
                   </p>
                   <Form.Item>
                     <Form.Item
@@ -107,10 +109,10 @@ const Photos = () => {
                                   <InboxOutlined />
                                 </p>
                                 <p className="ant-upload-text">
-                                  Click or drag file to this area to upload
+                                  {t('photos.paragraph5')}
                                 </p>
                                 <p className="ant-upload-hint">
-                                  Support for a single or bulk upload.
+                                  {t('photos.paragraph6')}
                                 </p>
                               </>
                             )

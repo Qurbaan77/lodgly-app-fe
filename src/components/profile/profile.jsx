@@ -41,6 +41,7 @@ const Profile = () => {
     },
     [i18n],
   );
+
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
   const [form3] = Form.useForm();
@@ -208,6 +209,7 @@ const Profile = () => {
   const polish = useCallback(() => {
     changeLanguage('pl');
   }, [changeLanguage]);
+
   const language = (
     <Menu>
       <Menu.Item key="1" onClick={english}>

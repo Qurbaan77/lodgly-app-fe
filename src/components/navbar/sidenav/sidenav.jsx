@@ -4,7 +4,11 @@ import { Link, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import './sidenav.css';
 import { Layout, Menu } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import {
+  ArrowLeftOutlined,
+  ApartmentOutlined,
+} from '@ant-design/icons';
+
 import logo from '../../../assets/images/logo.png';
 import UserProfile from '../userprofile/userprofile';
 import { userInstance } from '../../../axios/axiosconfig';
@@ -453,31 +457,30 @@ const Sidenav = ({
         </span>
         <Menu.Item className="overview-nav">
           <img src={propertyIcon} alt="property" />
-          <Link to="/overview">Overview</Link>
+          <Link to="/overview">{t('sidenav.menu1')}</Link>
         </Menu.Item>
 
         <Menu.Item className="location-nav">
           <img src={statsIcon} alt="property" />
-          <Link to="/location">Location</Link>
+          <Link to="/location">{t('sidenav.menu2')}</Link>
         </Menu.Item>
 
         <Menu.Item className="photos-nav">
           <img src={guestIcon} alt="unit" />
-          <Link to="photos">Photos</Link>
+          <Link to="photos">{t('sidenav.menu3')}</Link>
         </Menu.Item>
 
         <Menu.Item className="rates-nav">
           <img src={unitIcon} alt="unit" />
-          <Link to="rates">Rates</Link>
+          <Link to="rates">{t('sidenav.menu4')}</Link>
         </Menu.Item>
 
         <Menu.Item className="season-nav">
           <img src={teamIcon} alt="channel" />
-          <Link to="seasonrates">Season Rates</Link>
+          <Link to="seasonrates">{t('sidenav.menu5')}</Link>
         </Menu.Item>
         <Menu.Item className="service-nav">
-          <img alt="not" />
-          {/* <ApartmentOutlined /> */}
+          <ApartmentOutlined />
           <Link to="/services">{t('sidebar.menu15')}</Link>
         </Menu.Item>
 
