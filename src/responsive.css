@@ -1065,3 +1065,12 @@ input[type=number]{
     margin-left: 0%;
 }
 }
+.header-css{
+   
+    position: sticky!important;
+    width: 100%!important;
+    left: 0!important;
+    top: 0!important;
+    right: 0!important;
+    z-index: 1000!important;
+}
