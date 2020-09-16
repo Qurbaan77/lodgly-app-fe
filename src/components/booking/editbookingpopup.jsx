@@ -930,7 +930,6 @@ const Editbookingpopup = (props) => {
                       }
                       onBlur={(e) => setAccomodation(e.target.value)}
                     />
-                    {console.log('')}
                   </Form.Item>
 
                   <label htmlFor="dis">

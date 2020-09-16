@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Row, Col, Form, Upload,
+  Row, Col, Form, Upload, Button,
 } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import Helmet from 'react-helmet';
@@ -59,6 +59,16 @@ const Photos = () => {
     getData();
   }, []);
 
+  const removePhoto = async () => {
+    const res = await propertyInstance.post('/removePropertyPhoto', { unitTypeV2Id: localStorage.getItem('propertyV2Id') });
+    if (res.data.code === 200) {
+      getData();
+      toast.success('photo removed successfully', { containerId: 'B' });
+    } else {
+      toast.error('server error', { containerId: 'B' });
+    }
+  };
+
   return (
     <Wrapper propertyImage={propertyImage}>
       <Helmet>
@@ -98,10 +108,11 @@ const Photos = () => {
                         {
                           propertyImage
                             ? (
-                              <div className="user-pic-success">
-                                <img src={propertyImage} alt="propertyImage" />
-
-                              </div>
+                              <>
+                                <div className="user-pic-success">
+                                  <img src={propertyImage} alt="propertyImage" />
+                                </div>
+                              </>
                             )
                             : (
                               <>
@@ -118,6 +129,14 @@ const Photos = () => {
                             )
                       }
                       </Upload.Dragger>
+                      {
+                        propertyImage
+                        && (
+                        <div className="remove-property-btn">
+                          <Button onClick={removePhoto}>Remove photo</Button>
+                        </div>
+                        )
+                      }
                     </Form.Item>
                   </Form.Item>
                 </div>

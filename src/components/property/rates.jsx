@@ -315,6 +315,18 @@ const Rates = () => {
     // eslint-disable-next-line
   }, []);
 
+  const onChangePricePerNight = (pricePerNight) => {
+    form.setFieldsValue({
+      priceOnMon: pricePerNight,
+      priceOnTues: pricePerNight,
+      priceOnWed: pricePerNight,
+      priceOnThu: pricePerNight,
+      priceOnFri: pricePerNight,
+      priceOnSat: pricePerNight,
+      priceOnSun: pricePerNight,
+    });
+  };
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -382,6 +394,7 @@ const Rates = () => {
                       >
                         <Input
                           placeholder={t('rates.placeholder3')}
+                          onChange={(e) => onChangePricePerNight(e.target.value)}
                         />
                       </Form.Item>
                     </Col>
@@ -611,91 +624,42 @@ const Rates = () => {
                           <Form.Item
                             label={t('rates.label7')}
                             name="minStayOnMon"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
                             <Input placeholder={t('rates.placeholder12')} />
                           </Form.Item>
                           <Form.Item
                             label={t('rates.label8')}
                             name="minStayOnTues"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
                             <Input placeholder={t('rates.placeholder12')} />
                           </Form.Item>
                           <Form.Item
                             label={t('rates.label2')}
                             name="minStayOnWed"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
                             <Input placeholder={t('rates.placeholder12')} />
                           </Form.Item>
                           <Form.Item
                             label={t('rates.label3')}
                             name="minStayOnThu"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
                             <Input placeholder={t('rates.placeholder12')} />
                           </Form.Item>
                           <Form.Item
                             label={t('rates.label4')}
                             name="minStayOnFri"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
                             <Input placeholder={t('rates.placeholder12')} />
                           </Form.Item>
                           <Form.Item
                             label={t('rates.label5')}
                             name="minStayOnSat"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
                             <Input placeholder={t('rates.placeholder12')} />
                           </Form.Item>
                           <Form.Item
                             label={t('rates.label6')}
                             name="minStayOnSun"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
                             <Input placeholder={t('rates.placeholder12')} />
                           </Form.Item>

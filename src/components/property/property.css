@@ -1417,3 +1417,7 @@ margin: 0;
 .property:hover .property-img-box::before {
   opacity: 1;
 }
+
+.remove-property-btn {
+  margin: 20px 10px 0px 78%;
+}

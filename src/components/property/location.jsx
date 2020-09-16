@@ -54,16 +54,18 @@ const Location = () => {
     const response = await propertyInstance.post('/fetchUnittypeData', {
       unitTypeV2Id: localStorage.getItem('propertyV2Id'),
     });
+    console.log('response', response);
     if (response.data.code === 200) {
       const data = response.data.unitTypeV2Data[0];
+      console.log(data);
       form.setFieldsValue({
+        location: data.address,
         distanceIn: data.distanceIn,
       });
       if (data.distance !== null && data.direction !== null) {
         setDistance(true);
         setDirections(true);
         form.setFieldsValue({
-          location: data.address,
           direction: data.direction,
           bus: data.distance.bus,
           train: data.distance.train,
