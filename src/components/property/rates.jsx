@@ -314,6 +314,18 @@ const Rates = () => {
     // eslint-disable-next-line
   }, []);
 
+  const onChangePricePerNight = (pricePerNight) => {
+    form.setFieldsValue({
+      priceOnMon: pricePerNight,
+      priceOnTues: pricePerNight,
+      priceOnWed: pricePerNight,
+      priceOnThu: pricePerNight,
+      priceOnFri: pricePerNight,
+      priceOnSat: pricePerNight,
+      priceOnSun: pricePerNight,
+    });
+  };
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -351,7 +363,7 @@ const Rates = () => {
                     <Col span={1} />
                     <Col span={8}>
                       <Form.Item name="currency">
-                        <Select placeholder="USD">
+                        <Select placeholder="$ USD">
                           <Select.Option value="usd">USD</Select.Option>
                           <Select.Option value="euro">EURO</Select.Option>
                         </Select>
@@ -381,6 +393,7 @@ const Rates = () => {
                       >
                         <Input
                           placeholder="$"
+                          onChange={(e) => onChangePricePerNight(e.target.value)}
                         />
                       </Form.Item>
                     </Col>
@@ -612,91 +625,42 @@ const Rates = () => {
                           <Form.Item
                             label="Mo"
                             name="minStayOnMon"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
                             <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Tu"
                             name="minStayOnTues"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
                             <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="We"
                             name="minStayOnWed"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
                             <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Th"
                             name="minStayOnThu"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
                             <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Fr"
                             name="minStayOnFri"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
                             <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Sa"
                             name="minStayOnSat"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
                             <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Su"
                             name="minStayOnSun"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
                             <Input placeholder="1" />
                           </Form.Item>
