@@ -213,7 +213,8 @@ const Sidenav = ({
       (pathname === '/addunittype'
         || pathname === '/rates'
         || pathname === '/seasonrates'
-        || pathname === '/createseasonrates')
+        || pathname === '/createseasonrates'
+      )
       && ratesNav === false
     ) {
       setRatesNav(true);
@@ -228,8 +229,9 @@ const Sidenav = ({
         || pathname.includes('photos')
         || pathname.includes('rates')
         || pathname.includes('seasonrates')
-        || pathname.includes('services')
-        || pathname.includes('channelmanager'))
+        || pathname.includes('channelmanager')
+        || pathname.includes('/services')
+      )
       && propertyNav === false
     ) {
       setPropertyNav(true);
