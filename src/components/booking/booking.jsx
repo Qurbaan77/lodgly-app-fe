@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 // import moment from 'moment';
 import './booking.css';
 import {
-  Form, Button, Row, Col, Tooltip, Tag, Select, Checkbox,
+  Form, Button, Row, Col, Tooltip, Tag, Select, Checkbox, Modal,
 } from 'antd';
 import {
   FormOutlined,
@@ -36,6 +36,7 @@ import propertyplace from '../../assets/images/property-placeholder.png';
 import favicon from '../../assets/images/logo-mobile.png';
 // const { Panel } = Collapse;
 // const { MonthPicker, RangePicker } = DatePicker;
+import DeletePopup from '../property/deletepopup';
 
 const useForceUpdate = () => useState()[1];
 const Booking = () => {
@@ -76,6 +77,8 @@ const Booking = () => {
   const [{ bookingWrite, userId }] = userCred || [{}];
   const canWrite = bookingWrite;
   const [visibleProperty, setVisibleProperty] = useState(false);
+  const [tagStatus, setTagStatus] = useState('');
+  const [visibleOFDelete, setVisibleOFDelete] = useState(false);
   // const show = () => {
   // setVisible(true);
   // };
@@ -253,12 +256,18 @@ const Booking = () => {
     setVisible(false);
   };
 
+  const handleCancelDelete = () => {
+    setVisibleOFDelete(false);
+  };
+
   useEffect(() => {
     getData();
     getProperty();
   }, [getData, getProperty]);
 
   const filter = useCallback(() => {
+    // console.log('filterValues', filterValues);
+    // console.log('bookingData', bookingData);
     const copyBookingData = bookingData;
     const filterData = [];
     let startDate = 0;
@@ -266,16 +275,22 @@ const Booking = () => {
     if (filterValues.groupname) {
       startDate = filterValues.groupname[0]._d;
       endDate = filterValues.groupname[1]._d;
+      // console.log('startDate', new Date(startDate));
+      // console.log('endDate', new Date(endDate));
+      // copyBookingData.filter(
+      //   (el) => console.log(new Date(el.startDate)),
+      // );
       const data = copyBookingData.filter(
         (el) => new Date(el.startDate) >= startDate
-          || new Date(el.startDate) <= endDate,
+        && new Date(el.startDate) <= endDate,
       );
-      filterData.push(data);
+      // console.log('asdffgf', data);
+      filterData.push(...data);
     }
     if (filterValues.property) {
       const data0 = filterData.length > 0 ? filterData : copyBookingData;
       const data = data0.filter(
-        (el) => el.propertyId === filterValues.property,
+        (el) => el.unitTypeId === filterValues.property,
       );
       filterData.length = 0;
       filterData.push(...data);
@@ -295,8 +310,14 @@ const Booking = () => {
       filterData.length = 0;
       filterData.push(...data);
     }
+    if (tagStatus) {
+      const data0 = filterData.length > 0 ? filterData : copyBookingData;
+      const data = data0.filter((el) => el.status === tagStatus);
+      filterData.length = 0;
+      filterData.push(...data);
+    }
     setFilterArr(filterData);
-  }, [filterValues, bookingData]);
+  }, [filterValues, bookingData, tagStatus]);
 
   useEffect(() => {
     filter();
@@ -357,13 +378,13 @@ const Booking = () => {
       status: value,
       bookingId: currentBooking.id,
     };
-    const response = await userInstance.post('/setStatus', payload);
+    const response = await bookingInstance.post('/setStatus', payload);
     if (response.data.code === 200) {
       getData();
       setStatus(value);
-      toast.success('successfully updated status', { containerId: 'B' });
+      toast.success('successfully updated status', { containerId: 'B', toastId: 'B' });
     } else {
-      toast.error('some error occurred!', { containerId: 'B' });
+      toast.error('some error occurred!', { containerId: 'B', toastId: 'B' });
     }
   };
 
@@ -419,24 +440,47 @@ const Booking = () => {
     setVisibleProperty(false);
   };
 
-  const handleDelete = async (e) => {
+  const handleDelete = (e) => {
     if (e === 'trash') {
-      const id = [];
-      checkedBooking.forEach((el) => {
-        id.push(el.id);
-      });
-      const values = {
-        bookings: id,
-      };
-      const response = await bookingInstance.post('/deleteBookings', values);
-      const { msg } = response.data;
-      if (response.data.code === 200) {
-        toast.success(msg, { containerId: 'B' });
-        setSelectAllCheck(false);
-        getData();
-      } else {
-        toast.error(msg, { containerId: 'B' });
-      }
+      setVisibleOFDelete(true);
+      // const id = [];
+      // checkedBooking.forEach((el) => {
+      //   id.push(el.id);
+      // });
+      // const values = {
+      //   bookings: id,
+      // };
+      // const response = await bookingInstance.post('/deleteBookings', values);
+      // const { msg } = response.data;
+      // if (response.data.code === 200) {
+      //   toast.success(msg, { containerId: 'B' });
+      //   setCheckedBooking([]);
+      //   setSelectAllCheck(false);
+      //   getData();
+      // } else {
+      //   toast.error(msg, { containerId: 'B' });
+      // }
+    }
+  };
+
+  const remove = async () => {
+    const id = [];
+    checkedBooking.forEach((el) => {
+      id.push(el.id);
+    });
+    const values = {
+      bookings: id,
+    };
+    const response = await bookingInstance.post('/deleteBookings', values);
+    const { msg } = response.data;
+    if (response.data.code === 200) {
+      toast.success(msg, { containerId: 'B' });
+      setCheckedBooking([]);
+      setSelectAllCheck(false);
+      setVisibleOFDelete(false);
+      getData();
+    } else {
+      toast.error(msg, { containerId: 'B' });
     }
   };
 
@@ -549,10 +593,10 @@ const Booking = () => {
                         <input type="text" hidden />
                       </label>
                       <div className="filter-item" id="filters">
-                        <Tag color="default">Decline</Tag>
-                        <Tag color="success">Open</Tag>
-                        <Tag color="yellow">Set as tentative</Tag>
-                        <Tag color="error">Booked</Tag>
+                        <Tag color="default" onClick={() => setTagStatus('decline')}>Decline</Tag>
+                        <Tag color="success" onClick={() => setTagStatus('open')}>Open</Tag>
+                        <Tag color="yellow" onClick={() => setTagStatus('tentative')}>Set as tentative</Tag>
+                        <Tag color="error" onClick={() => setTagStatus('booked')}>Booked</Tag>
                       </div>
                     </div>
                     <Tooltip title="Filter" color="gold">
@@ -745,7 +789,9 @@ const Booking = () => {
                         <span>{t('strings.guests')}</span>
                         <p>
                           {currentBooking.adult}
+                          {' '}
                           {t('strings.adults')}
+                          {' '}
                         </p>
                         <p>
                           {currentBooking.children1}
@@ -841,6 +887,17 @@ const Booking = () => {
               </Col>
             </Row>
           </div>
+          <Modal
+            visible={visibleOFDelete}
+            onOk={handleCancelDelete}
+            onCancel={handleCancelDelete}
+            wrapClassName="delete-modal"
+          >
+            <DeletePopup
+              dataObject={() => remove()}
+              cancel={() => handleCancelDelete()}
+            />
+          </Modal>
         </div>
       ) : (
         <UserLock />
@@ -883,6 +940,7 @@ const Booking = () => {
         handleCancel={handleCancel}
         handleOk={handleOk}
         setFilterValues={setFilterValues}
+        getData={getData}
       />
     </Wrapper>
   );
