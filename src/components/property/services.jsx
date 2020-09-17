@@ -9,7 +9,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import {
   PlusOutlined, DeleteOutlined, FormOutlined,
-  ApartmentOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import { userInstance } from '../../axios/axiosconfig';
@@ -17,6 +16,7 @@ import DeletePopup from './deletepopup';
 import favicon from '../../assets/images/logo-mobile.png';
 import UserLock from '../userlock/userlock';
 import loader from '../../assets/images/cliploader.gif';
+import propertyplace from '../../assets/images/property-placeholder.png';
 
 // import CreateProperty from './createProperty';
 
@@ -454,8 +454,13 @@ const Services = () => {
       <Wrapper>
         <div className="add-team-page">
           <div className="add-subuser">
-            <ApartmentOutlined />
+            <img src={propertyplace} alt="subuser" />
             <h4>{t('services.heading1')}</h4>
+            <p>
+              Currently you don
+              <span>&apos;</span>
+              t have any services
+            </p>
             {btn2}
           </div>
         </div>

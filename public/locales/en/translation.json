@@ -743,7 +743,6 @@
   },
   "reset": {
     "heading1": " Get a new password",
-    "label2": " Enter your email address to reset your password",
     "label3": " E-mail Address",
     "label4": "Please enter your E-mail Address!",
     "label5": "The input is not valid E-mail!",
@@ -1038,6 +1037,7 @@
   "label1":"What's the size of your property?",
   "label2": "How many guests can your place accommodate?",
   "label3": "How many units of this rental do you have?",
+  "label4": "How many units of bedrooms this rental have?",
   "message1": "Please enter the value",
   "button1": "Save",
   "button2": "Edit sleeping arrangements",

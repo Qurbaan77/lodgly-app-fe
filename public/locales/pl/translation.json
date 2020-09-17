@@ -787,7 +787,6 @@
 },
 "reset": {
   "heading1": " Uzyskaj nowe hasło",
-  "label2": " Wpisz swój adres e-mail, aby zresetować hasło",
   "label3": " Adres e-mail",
   "label4": "Podaj swój adres e-mail!",
   "label5": "Wprowadzone dane są nieprawidłowe. E-mail!",
@@ -1086,6 +1085,7 @@
   "label1":"Jaka jest wielkość twojej nieruchomości?",
   "label2": "Ilu gości może pomieścić Twoje miejsce?",
   "label3": "Ile masz jednostek tego wynajmu?",
+  "label4": "Ile jednostek sypialni ma ten wynajem?",
   "message1": "Wprowadź wartość",
   "button1": "Zapisz",
   "button2": "Edycja układów spania",
