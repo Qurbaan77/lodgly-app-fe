@@ -313,7 +313,7 @@ const Overview = () => {
                           <Input placeholder="0.00" />
                         </Form.Item>
 
-                        <Form.Item label={t('overview.label2')}>
+                        <Form.Item label={t('overview.label4')}>
                           <div className="input-counter">
                             <CounterInput
                               min={0}
@@ -324,7 +324,7 @@ const Overview = () => {
                           </div>
                         </Form.Item>
 
-                        <Form.Item label="How many guests can your place accommodate?">
+                        <Form.Item label={t('overview.label2')}>
                           <div className="input-counter">
                             <CounterInput
                               min={0}

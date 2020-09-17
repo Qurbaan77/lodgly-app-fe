@@ -78,7 +78,7 @@ const Reset = () => {
                 </div>
                 <div className="forget-form">
                   <h1>{t('reset.heading1')}</h1>
-                  <p>{t('reset.label2')}</p>
+                  {/* <p>{t('reset.label2')}</p> */}
                   <div className="forget-box">
                     <div>
                       <Form

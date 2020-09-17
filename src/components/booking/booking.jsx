@@ -140,7 +140,7 @@ const Booking = () => {
     }
     const bookingdata = response.data.bookingData;
     const guestdata = response.data.guestData;
-    const servicedata = response.data.serviceData;
+    const servicedata = response.data.serviceData[0];
     const guestnum = guestdata.map((el) => el.length);
     const guestname = [];
     const data = guestdata.map((el) => el.find((ele) => ele.id));
@@ -188,7 +188,7 @@ const Booking = () => {
         setBookingData([...bookingdata]);
         setGuestData([...guestdata]);
         if (servicedata.length) {
-          setServiceData([...servicedata]);
+          setServiceData(servicedata);
         }
       }
     }
@@ -216,7 +216,8 @@ const Booking = () => {
       .map((filterGuest) => arr.push(filterGuest)));
 
     const data = [];
-    serviceData.map((el) => el.map((ele) => (ele.bookingId === values.id ? data.push(el) : null)));
+
+    serviceData.map((el) => (el.bookingId === values.id ? data.push(el) : null));
     setCurrentService(data);
     setEditCurrentGuest(arr);
     setCurrentBooking(values);
