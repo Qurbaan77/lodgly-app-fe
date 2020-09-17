@@ -442,7 +442,10 @@
     "heading9": "Standard Quantity",
     "heading10":"Action",
     "label18": "Add Services",
-    "label19": "Edit Service"
+    "label19": "Edit Service",
+    "th1": "Service Name",
+    "th2": "Price",
+    "th3": "Quantity"
    
   },
   "addreservation": {
@@ -1207,6 +1210,15 @@
    "paragraph22": "Provide more information about your rates and policies.",
    "button1": "Copy Rates",
    "button2": "Save"
+   },
+   "seasonrates":
+   {
+     "heading1": "SEASON RATES",
+     "button1": "Add Season",
+     "paragraph1": "Set different rates for specific date periods (up to 3 years",
+     "paragraph2": "in advance). Your season rates will overwrite your Default",
+     "paragraph3": "Rate for those periods."
    }
+
 }
 
