@@ -1,29 +1,32 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import Helmet from 'react-helmet';
 import './calendar.css';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import { Button, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
+import CreateProperty from '../property/createProperty';
 import loader from '../../assets/images/cliploader.gif';
 // import nobooking from '../../assets/images/no-booking.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
 import GSTC from './GSTC';
-import { userInstance } from '../../axios/axiosconfig';
+import { userInstance, reservationInstance } from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
 import GroupReservation from './groupreservation';
+import favicon from '../../assets/images/logo-mobile.png';
 
 const Calendar = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  // const history = useHistory();
   const [propertyData, setPropertyData] = useState([]);
-  const [reservationData, setReservationData] = useState([]);
-  const [guestName, setGuestName] = useState('');
+  // const [reservationData, setReservationData] = useState([]);
+  // const [guestName, setGuestName] = useState('');
   const [data, setData] = useState([]);
-  const [unitData, setUnitData] = useState([]);
-  const [unittypeData, setUnittypeData] = useState([]);
+  // const [unitData, setUnitData] = useState([]);
+  // const [unittypeData, setUnittypeData] = useState([]);
   const [visible, setVisible] = useState(false);
   const [visibleGroupReserv, setVisibleGroupReserv] = useState(false);
   const [topNavId, setTopNavId] = useState(0);
@@ -32,6 +35,7 @@ const Calendar = () => {
   const [daysLeft, setDaysLeft] = useState();
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [visibleProperty, setVisibleProperty] = useState(false);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -39,55 +43,55 @@ const Calendar = () => {
   const canWrite = calendarWrite;
   const rows = {};
 
-  propertyData.forEach(() => {
-    unittypeData.forEach((ele, j) => {
-      const uttId = `utt${ele.id.toString()}`;
-      if (topNavId > 0) {
-        if (unittypeData[j].propertyId === parseInt(topNavId, 10)) {
-          rows[uttId] = {
-            id: uttId,
-            label: ele.unitTypeName,
-            progress: 50,
-            expanded: false,
-          };
-        }
-      } else {
-        rows[uttId] = {
-          id: uttId,
-          label: ele.unitTypeName,
-          progress: 50,
-          expanded: false,
-        };
-      }
+  // propertyData.forEach(() => {
+  //   unittypeData.forEach((ele, j) => {
+  //     const uttId = `utt${ele.id.toString()}`;
+  //     if (topNavId > 0) {
+  //       if (unittypeData[j].propertyId === parseInt(topNavId, 10)) {
+  //         rows[uttId] = {
+  //           id: uttId,
+  //           label: ele.unitTypeName,
+  //           progress: 50,
+  //           expanded: false,
+  //         };
+  //       }
+  //     } else {
+  //       rows[uttId] = {
+  //         id: uttId,
+  //         label: ele.unitTypeName,
+  //         progress: 50,
+  //         expanded: false,
+  //       };
+  //     }
 
-      unitData.forEach((elem, k) => {
-        const utId = `ut${elem.id.toString()}`;
-        const a = `mt_1${ele.id.toString()}`;
-        const b = `mt_2${ele.id.toString()}`;
-        rows[a] = {
-          id: a,
-          label: t('addreservation.rule1'),
-          parentId: `utt${ele.id.toString()}`,
-          progress: 50,
-        };
-        rows[b] = {
-          id: b,
-          label: t('addreservation.rule2'),
-          progress: 50,
-          parentId: `utt${ele.id.toString()}`,
-        };
-        if (elem.unittypeId === ele.id) {
-          rows[utId] = {
-            id: utId,
-            label: unitData[k].unitName,
-            progress: 50,
-            parentId: `utt${unittypeData[j].id.toString()}`,
-            expanded: false,
-          };
-        }
-      });
-    });
-  });
+  //     unitData.forEach((elem, k) => {
+  //       const utId = `ut${elem.id.toString()}`;
+  //       const a = `mt_1${ele.id.toString()}`;
+  //       const b = `mt_2${ele.id.toString()}`;
+  //       rows[a] = {
+  //         id: a,
+  //         label: t('addreservation.rule1'),
+  //         parentId: `utt${ele.id.toString()}`,
+  //         progress: 50,
+  //       };
+  //       rows[b] = {
+  //         id: b,
+  //         label: t('addreservation.rule2'),
+  //         progress: 50,
+  //         parentId: `utt${ele.id.toString()}`,
+  //       };
+  //       if (elem.unittypeId === ele.id) {
+  //         rows[utId] = {
+  //           id: utId,
+  //           label: unitData[k].unitName,
+  //           progress: 50,
+  //           parentId: `utt${unittypeData[j].id.toString()}`,
+  //           expanded: false,
+  //         };
+  //       }
+  //     });
+  //   });
+  // });
 
   const columns = {
     percent: 100,
@@ -110,27 +114,28 @@ const Calendar = () => {
   };
 
   const items = {};
-  reservationData.forEach((element) => {
-    const id = element.id.toString();
-    const startDate = new Date(
-      element.startDate.split('T', 1).toString(),
-    ).getTime();
-    const endDate = new Date(
-      element.endDate.split('T', 1).toString(),
-    ).getTime();
-    items[id] = {
-      id,
-      rowId: `ut${element.unitId.toString()}`,
-      label: `${guestName} / ${element.totalAmount} EUR`,
-      time: {
-        start: startDate,
-        end: endDate,
-      },
-      style: {
-        background: 'blue',
-      },
-    };
-  });
+  // reservationData.forEach((element) => {
+  //   const id = element.id.toString();
+  //   const startDate = new Date(
+  //     element.startDate.split('T', 1).toString(),
+  //   ).getTime();
+  //   const endDate = new Date(
+  //     element.endDate.split('T', 1).toString(),
+  //   ).getTime();
+  //   items[id] = {
+  //     id,
+  //     rowId: `ut${element.unitId.toString()}`,
+  //     label: `${guestName} / ${element.totalAmount} EUR`,
+  //     item: '100',
+  //     time: {
+  //       start: startDate,
+  //       end: endDate,
+  //     },
+  //     style: {
+  //       background: 'blue',
+  //     },
+  //   };
+  // });
 
   const config = {
     height: 650,
@@ -170,31 +175,34 @@ const Calendar = () => {
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
     }
-    const response = await userInstance.post('/getReservation', {
+    const response = await reservationInstance.post('/getReservation', {
       affiliateId: userId,
     });
-    const { reservationData: data } = response.data;
-    if (response.data.code === 200) {
-      setLoading(false);
-      setReservationData(data);
-      if (response.data.guestData.length !== 0) {
-        if (response.data.guestData[0][0].fullname !== undefined) {
-          setGuestName(response.data.guestData[0][0].fullname);
-        }
-      }
-    }
+    console.log(response);
+    // const { reservationData: data } = response.data;
+    // if (response.data.code === 200) {
+    //   setLoading(false);
+    //   setReservationData(data);
+    //   if (response.data.guestData.length !== 0) {
+    //     if (response.data.guestData[0].length !== 0) {
+    //       if (response.data.guestData[0][0].fullname !== undefined) {
+    //         setGuestName(response.data.guestData[0][0].fullname);
+    //       }
+    //     }
+    //   }
+    // }
   }, [userId]);
 
   const getCalendarData = useCallback(async () => {
-    const response = await userInstance.post('/getReservationCalendarData', {
+    const response = await reservationInstance.post('/getReservationCalendarData', {
       affiliateId: userId,
     });
-    const { unittypeData: data0 } = response.data;
-    const { unitData: data1 } = response.data;
+    // const { unittypeData: data0 } = response.data;
+    // const { unitData: data1 } = response.data;
     if (response.data.code === 200) {
       setLoading(false);
-      setUnittypeData(data0);
-      setUnitData(data1);
+      // setUnittypeData(data0);
+      // setUnitData(data1);
     }
   }, [userId]);
 
@@ -224,6 +232,10 @@ const Calendar = () => {
   const handleCancel = () => {
     setVisible(false);
     setVisibleGroupReserv(false);
+  };
+
+  const closeCreateProperty = () => {
+    setVisibleProperty(false);
   };
 
   function onState(state) {
@@ -332,6 +344,17 @@ const Calendar = () => {
   if (loading) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="calendar-page-view" />
+        </Helmet>
         <div className="loader">
           <div className="loader-box">
             <img src={loader} alt="loader" />
@@ -344,6 +367,17 @@ const Calendar = () => {
   if (propertyData.length < 1) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="calendar-page-view" />
+        </Helmet>
         <div className="add-team-page">
           <div className="add-subuser">
             <img src={propertyplace} alt="subuser" />
@@ -352,18 +386,30 @@ const Calendar = () => {
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => history.push('/addproperty')}
+              onClick={() => setVisibleProperty(true)}
             >
               {t('nolist.button1')}
             </Button>
           </div>
         </div>
+        <CreateProperty visible={visibleProperty} onCancel={closeCreateProperty} />
       </Wrapper>
     );
   }
 
   return (
     <Wrapper fun={setTopNavId}>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
+        <body className="calendar-page-view" />
+      </Helmet>
       {hasAccess ? (
         <div className="calendar">
           <div className="calendar-btn">

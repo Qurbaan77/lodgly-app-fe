@@ -35,9 +35,9 @@ import CreateSeasonRates from './components/property/createseasonrates';
 import GuestList from './components/guests/guests';
 import CompanyList from './components/guests/company';
 
-// import Overview from './components/property/overview';
-// import Location from './components/property/location';
-// import Photos from './components/property/photos';
+import Overview from './components/property/overview';
+import Location from './components/property/location';
+import Photos from './components/property/photos';
 
 import { PrivateRoute, LoginRoute } from './Routes/PrivateRoute';
 import {
@@ -51,6 +51,7 @@ import {
   SecureStats,
   SecureBilling,
   SecureGuests,
+  // SecureOverview,
 } from './Routes/SecureRoute';
 import Owner from './components/owner/owner';
 import Team from './components/team/team';
@@ -477,10 +478,55 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
+                    {isSubUser ? (
+                      <SecureProperty
+                        exact
+                        path="/overview"
+                        component={() => <Overview />}
+                      />
+                    ) : feature.properties ? (
+                      <PrivateRoute
+                        exact
+                        path="/overview"
+                        component={() => <Overview />}
+                      />
+                    ) : (
+                      <LoginRoute exact path="/" component={() => <Login />} />
+                    )}
+                    {isSubUser ? (
+                      <SecureProperty
+                        exact
+                        path="/location"
+                        component={() => <Location />}
+                      />
+                    ) : feature.properties ? (
+                      <PrivateRoute
+                        exact
+                        path="/location"
+                        component={() => <Location />}
+                      />
+                    ) : (
+                      <LoginRoute exact path="/" component={() => <Login />} />
+                    )}
+                    {isSubUser ? (
+                      <SecureProperty
+                        exact
+                        path="/photos"
+                        component={() => <Photos />}
+                      />
+                    ) : feature.properties ? (
+                      <PrivateRoute
+                        exact
+                        path="/photos"
+                        component={() => <Photos />}
+                      />
+                    ) : (
+                      <LoginRoute exact path="/" component={() => <Login />} />
+                    )}
 
-                    {/* <Route exact path="/overview" component={() => <Overview />} />
-                    <Route exact path="/location" component={() => <Location />} />
-                    <Route exact path="/photos" component={() => <Photos />} /> */}
+                    {/* <SecureOverview exact path="/overview" component={() => <Overview />} />
+                    <SecureOverview exact path="/location" component={() => <Location />} />
+                    <SecureOverview exact path="/photos" component={() => <Photos />} /> */}
 
                     <Route component={PageNotFound} />
 

@@ -90,13 +90,24 @@ const TeamListing = () => {
     }
   };
 
+  // Resend Mail
+  const resendMail = async (email, id) => {
+    const res = await userInstance.post('/resend-email', { email, id });
+
+    if (res.data.code === 200) {
+      toast.success('Invitation Link Sent Successfully', { containerId: 'B' });
+    } else {
+      toast.error('server error please try again', { containerId: 'B' });
+    }
+  };
+
   // keep function reference
   const getData = useCallback(async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
     if (response0.data.code === 200) {
-      const [{
-        days, isOnTrial, isSubscribed,
-      }] = response0.data.userSubsDetails;
+      const [
+        { days, isOnTrial, isSubscribed },
+      ] = response0.data.userSubsDetails;
       setDaysLeft(parseInt(days, 10));
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
@@ -104,6 +115,7 @@ const TeamListing = () => {
     const response = await userInstance.post('/getSubUser', {
       affiliateId: userId,
     });
+
     if (response.status === 200) {
       setLoading(false);
       setSubUser(response.data.subUser);
@@ -144,6 +156,17 @@ const TeamListing = () => {
   if (loading) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="stats-page-view" />
+        </Helmet>
         <div className="loader">
           <div className="loader-box">
             <img src={loader} alt="loader" />
@@ -191,14 +214,18 @@ const TeamListing = () => {
                         {' '}
                         {t('team.status')}
                       </th>
-                      <th> </th>
+
+                      <th>Actions</th>
                     </tr>
                   </thead>
 
                   <tbody>
                     {subUser.map((el, i) => (
                       <tr key={el.id}>
-                        <td onClick={() => showEditSubUser(el, i)} role="presentation">
+                        <td
+                          onClick={() => showEditSubUser(el, i)}
+                          role="presentation"
+                        >
                           <div className="team-info">
                             <div className="team-pic">
                               <Avatar
@@ -210,8 +237,11 @@ const TeamListing = () => {
                             </div>
                             <div className="team-title">
                               <h5>
-                                Sub User
-                                {i + 1}
+                                {/* Sub User
+                                {i + 1} */}
+                                {/* {el.fullname} */}
+
+                                {el.fullname ? el.fullname : 'Sub User'}
                               </h5>
                               <span>{t('team.label5')}</span>
                             </div>
@@ -222,12 +252,33 @@ const TeamListing = () => {
                         <td>
                           {el.role === 'fullaccess'
                             ? 'Full Access'
-                            : el.role === 'read' ? 'Read' : 'Write'}
+                            : el.role === 'read'
+                              ? 'Read'
+                              : 'Write'}
                         </td>
                         <td>
-                          {el.status === 0 ? 'Pending' : 'Accepted'}
+                          {el.status === 0 ? (
+                            <Button
+                              type="primary"
+                              onClick={() => resendMail(el.email, el.id)}
+                            >
+                              Resend
+                            </Button>
+                          )
+                            : 'Accepted'}
                         </td>
-
+                        {/* {el.status === 0 ? (
+                          <td>
+                            <Button
+                              type="primary"
+                              onClick={() => resendMail(el.email, el.id)}
+                            >
+                              Resend
+                            </Button>
+                          </td>
+                        ) : (
+                          ''
+                        )} */}
                         <td>
                           <div className="team-action">
                             <FormOutlined
@@ -292,18 +343,22 @@ const TeamListing = () => {
     <>
       <Helmet>
         <link rel="icon" href={favicon} />
-        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
         <body className="team-page-view" />
       </Helmet>
-      {
-      hasAccess ? pageContent
-        : (
-          <Wrapper>
-            <UserLock />
-          </Wrapper>
-        )
-    }
+      {hasAccess ? (
+        pageContent
+      ) : (
+        <Wrapper>
+          <UserLock />
+        </Wrapper>
+      )}
     </>
   );
 };

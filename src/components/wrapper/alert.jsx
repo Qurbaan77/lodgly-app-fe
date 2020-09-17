@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useLocation, Redirect } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Alert } from 'antd';
 import { userInstance } from '../../axios/axiosconfig';
 
@@ -10,14 +10,15 @@ const AlertBox = () => {
 
   const [daysLeft, setDaysLeft] = useState(14);
   const [hideBanner, setHideBanner] = useState(false);
-  const [redirect, setRedirect] = useState(false);
+  // const [redirect, setRedirect] = useState(false);
 
   const getDays = async () => {
     const res = await userInstance.post('/trialDays');
-    if (res.data.code === 400) {
-      localStorage.clear();
-      setRedirect(true);
-    }
+    // console.log(res);
+    // if (res.data.code === 400) {
+    //   // localStorage.clear();
+    //   // setRedirect(true);
+    // }
     if (!res.data.isOnTrial) {
       localStorage.setItem('collapse', 1);
     }
@@ -43,9 +44,9 @@ const AlertBox = () => {
 
   const isCollapsed = localStorage.getItem('collapse') || false;
 
-  if (redirect) {
-    return <Redirect to="/" />;
-  }
+  // if (redirect) {
+  //   return <Redirect to="/" />;
+  // }
   return (
     <>
       {!parseInt(isCollapsed, 10) ? (

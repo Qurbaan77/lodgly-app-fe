@@ -41,6 +41,7 @@ const Profile = () => {
     },
     [i18n],
   );
+
   const [form1] = Form.useForm();
   const [form2] = Form.useForm();
   const [form3] = Form.useForm();
@@ -48,7 +49,7 @@ const Profile = () => {
   const userId = localStorage.getItem('userId');
   const organizationid = localStorage.getItem('organizationid');
   const [img, setImg] = useState('');
-  // const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState('');
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
@@ -74,9 +75,9 @@ const Profile = () => {
       } else {
         setImg('');
       }
-      // if (body[0].fullname !== null) {
-      //   setUserName(body[0].fullname);
-      // }
+      if (body[0].fullname !== null) {
+        setUserName(body[0].fullname);
+      }
       form1.setFieldsValue({
         fullname: body[0].fullname,
         address: body[0].address,
@@ -115,6 +116,10 @@ const Profile = () => {
 
   const personalInfoFinish = async (values) => {
     const copyValues = values;
+    copyValues.address = values.address.trim();
+    copyValues.fullname = values.fullname.trim();
+    copyValues.email = values.email.trim();
+    copyValues.phone = values.phone.trim();
     const companyName = window.location.hostname.split('.');
     copyValues.name = companyName[0];
     const response = await userInstance.post('/updatePersonalInfo', copyValues);
@@ -126,7 +131,7 @@ const Profile = () => {
       toast.error('server error please try again', { containerId: 'B' });
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    form1.resetFields();
+    // form1.resetFields();
   };
 
   const companyFinsh = async (values) => {
@@ -181,6 +186,7 @@ const Profile = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form2.resetFields();
   };
+
   useEffect(() => {
     getUserInfo();
     getCompanyInfo();
@@ -203,6 +209,7 @@ const Profile = () => {
   const polish = useCallback(() => {
     changeLanguage('pl');
   }, [changeLanguage]);
+
   const language = (
     <Menu>
       <Menu.Item key="1" onClick={english}>
@@ -216,7 +223,7 @@ const Profile = () => {
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   return (
-    <Wrapper>
+    <Wrapper userName={userName} imgState={img}>
       <Helmet>
         <link rel="icon" href={favicon} />
         <title>

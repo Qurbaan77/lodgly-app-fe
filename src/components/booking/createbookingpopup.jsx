@@ -26,11 +26,12 @@ import {
   CheckOutlined,
   DownSquareOutlined,
   UpSquareOutlined,
+  // LeftCircleFilled,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
+import { CountryDropdown } from 'react-country-region-selector';
 import countryList from 'react-select-country-list';
-import { userInstance } from '../../axios/axiosconfig';
+import { userInstance, bookingInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
 
@@ -44,7 +45,7 @@ const CreateBookingPopup = (props) => {
   } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
-  const [country, setCountry] = useState(null);
+  // const [country, setCountry] = useState(null);
   // const [visible1, setVisible1] = useState(false);
   // const [radio, setRadio] = useState(1);
   const [channel, setChannel] = useState('');
@@ -72,12 +73,13 @@ const CreateBookingPopup = (props) => {
   const [depositAmount, setDepositAmount] = useState(null);
   const [discountAmount, setdiscountAmount] = useState(null);
   const [selectDate, setSelectDate] = useState({});
-  const [seasonRatesData, setSeasonRatesData] = useState([]);
+  // const [seasonRatesData, setSeasonRatesData] = useState([]);
   const [visibleGuest, setVisibleGuest] = useState(false);
   const [showOptional, setShowOptional] = useState(true);
   const [leftDays, setLeftDays] = useState(0);
   const [daysArr, setDaysArr] = useState([]);
   const [startDate, setStartDate] = useState('');
+  const [startdate, setstartdate] = useState('');
   const [startDateMonth, setStartDateMonth] = useState('');
   const [currMonthDay, setCurrMonthDay] = useState(0);
   const [upDown, setUpDown] = useState(false);
@@ -94,9 +96,10 @@ const CreateBookingPopup = (props) => {
   const [propertyData, setPropertyData] = useState([]);
   const [currentPropertyId, setCurrentPropertyId] = useState(null);
   const [noOfAdult, setNoOfAdult] = useState(0);
-  const [ratesData, setRatesData] = useState({});
+  const [guestEle, setGuestEle] = useState(0);
+  // const [ratesData, setRatesData] = useState({});
   // const history = useHistory();
-
+  // const regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ userId }] = userCred || [{}];
 
@@ -110,8 +113,9 @@ const CreateBookingPopup = (props) => {
     setPanel([...panel, i]);
   };
 
-  const guestForm = () => {
+  const guestForm = (value) => {
     setVisibleGuest(true);
+    setGuestEle(value);
   };
 
   const removePanel = () => {
@@ -151,8 +155,9 @@ const CreateBookingPopup = (props) => {
 
     const guestData = [];
     const serviceDataNew = [];
+    values.totalAmount = serviceAmount + accomodation;
     // values.acknowledge = radio;
-    values.totalAmount = parseInt(total, 10) + parseInt(accomodation, 10);
+    // values.totalAmount = parseInt(total, 10) + parseInt(accomodation, 10);
     // values.total = parseInt(total) + parseInt(accomodation);
 
     panel.forEach((el) => {
@@ -181,7 +186,8 @@ const CreateBookingPopup = (props) => {
     values.commission = channelCommission;
     values.unitName = unitName;
     values.affiliateId = userId;
-    const response = await userInstance.post('/addBooking', values);
+
+    const response = await bookingInstance.post('/addBooking', values);
     if (response.data.code === 200) {
       getData();
       close();
@@ -189,7 +195,6 @@ const CreateBookingPopup = (props) => {
     } else {
       toast.error('Some error occurred!', { containerId: 'B' });
     }
-
     form.resetFields();
   };
 
@@ -211,15 +216,21 @@ const CreateBookingPopup = (props) => {
     getPropertyData();
   }, [getPropertyData]);
 
-  const calculateTotal = () => {
+  const calculateTotal = (servicetax) => {
+    setServiceTax(servicetax);
+    // const calculate = servicePrice * serviceAmt
+    // + servicePrice * serviceAmt * (servicetax / 100);
     const calculate = servicePrice * serviceAmt
-      + servicePrice * serviceAmt * (serviceTax / 100);
-    const sum = parseInt(total, 10) + parseInt(calculate, 10);
+      - (servicePrice * serviceAmt * servicetax) / 100;
+    // const sum = parseInt(total, 10) + parseInt(calculate, 10);
     setServiceAmount(calculate);
-    setTotal(sum);
+    form.setFieldsValue({ serviceAmount: calculate });
   };
 
   const onSelectProperty = async (value, event) => {
+    propertyData
+      .filter((el) => el.id === parseInt(value, 10))
+      .map((filter) => setUnitData(JSON.parse(filter.unitType[0].unitsData) || []));
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
@@ -227,21 +238,65 @@ const CreateBookingPopup = (props) => {
     };
     const response = await userInstance.post('/getService', payload);
     const data = response.data.servicData;
-    const response2 = await userInstance.post('/getUnit', payload);
-    const data2 = response2.data.unitData;
-    await userInstance.post('/getUnittype', payload);
+    // const response2 = await userInstance.post('/getUnit', payload);
+    // const data2 = response2.data.unitData;
+    // await userInstance.post('/getUnittype', payload);
     // const data3 = response3.data.unittypeData;
     if (response.data.code === 200) {
       setServiceData(data);
     }
 
-    if (response2.data.code === 200) {
-      setUnitData(data2);
-    }
+    // if (response2.data.code === 200) {
+    //   setUnitData(data2);
+    // }
 
     // if (response3.data.code === 200) {
     //   setUnitTypeData(data3);
     // }
+  };
+
+  const preventTypeE = (evt) => {
+    if (
+      evt.which === 64
+      || evt.which === 35
+      || evt.which === 36
+      || evt.which === 37
+      || evt.which === 94
+      || evt.which === 38
+      || evt.which === 42
+      || evt.which === 40
+      || evt.which === 41
+      || evt.which === 95
+      || evt.which === 45
+      || evt.which === 61
+      || evt.which === 43
+      || evt.which === 126
+      || evt.which === 96
+      || evt.which === 48
+      || evt.which === 49
+      || evt.which === 50
+      || evt.which === 51
+      || evt.which === 52
+      || evt.which === 53
+      || evt.which === 54
+      || evt.which === 55
+      || evt.which === 56
+      || evt.which === 57
+      || evt.which === 91
+      || evt.which === 92
+      || evt.which === 93
+      || evt.which === 123
+      || evt.which === 124
+      || evt.which === 125
+      || evt.which === 33
+      || evt.which === 34
+      || evt.which === 44
+      || evt.which === 47
+      || evt.which === 60
+      || evt.which === 62
+    ) {
+      evt.preventDefault();
+    }
   };
 
   const onSelectServices = (value) => {
@@ -269,55 +324,54 @@ const CreateBookingPopup = (props) => {
   const onSelectAdult = (value) => {
     setNoOfAdult(value);
 
-    seasonRatesData.forEach((el) => {
-      const selectStartDate = moment(selectDate[0]._d);
-      const selectEndDate = moment(selectDate[1]._d);
-      const startDate = moment(el.startDate);
-      const endDate = moment(el.endDate);
-      const firstDate = (selectStartDate.isBefore(endDate)
-          && selectStartDate.isAfter(startDate))
-        || selectStartDate.isSame(startDate)
-        || selectStartDate.isSame(endDate);
-      const secondDate = (selectEndDate.isBefore(endDate) && selectEndDate.isAfter(startDate))
-        || selectEndDate.isSame(startDate)
-        || selectEndDate.isSame(endDate);
-      if (firstDate && secondDate) {
-        setRatesData(el);
-      } else if (!firstDate && !secondDate) {
-        // setRatesData(response.data.ratesData[0]);
-      } else {
-        // const d1 = new Date(startDate).getDate();
-        // const d2 = new Date(selectStartDate).getDate();
-        // const d3 = new Date(selectEndDate).getDate();
-        // const diff = Math.abs(d1 - d2);
-        // const ratesOne = calculatePerNight(diff, el, value);
-        // const diff2 = 30 - Math.abs(d3 - d1);
-        // const ratesSecond = calculatePerNight(diff2, ratesData, value);
-      }
-    });
+    // seasonRatesData.forEach((el) => {
+    //   const selectStartDate = moment(selectDate[0]._d);
+    //   const selectEndDate = moment(selectDate[1]._d);
+    //   const startDate = moment(el.startDate);
+    //   const endDate = moment(el.endDate);
+    //   const firstDate = (selectStartDate.isBefore(endDate)
+    //       && selectStartDate.isAfter(startDate))
+    //     || selectStartDate.isSame(startDate)
+    //     || selectStartDate.isSame(endDate);
+    //   const secondDate = (selectEndDate.isBefore(endDate) && selectEndDate.isAfter(startDate))
+    //     || selectEndDate.isSame(startDate)
+    //     || selectEndDate.isSame(endDate);
+    //   if (firstDate && secondDate) {
+    //     setRatesData(el);
+    //   } else if (!firstDate && !secondDate) {
+    //     // setRatesData(response.data.ratesData[0]);
+    //   } else {
+    //     // const d1 = new Date(startDate).getDate();
+    //     // const d2 = new Date(selectStartDate).getDate();
+    //     // const d3 = new Date(selectEndDate).getDate();
+    //     // const diff = Math.abs(d1 - d2);
+    //     // const ratesOne = calculatePerNight(diff, el, value);
+    //     // const diff2 = 30 - Math.abs(d3 - d1);
+    //     // const ratesSecond = calculatePerNight(diff2, ratesData, value);
+    //   }
+    // });
   };
 
   const onSelectUnit = async (value, event) => {
     const unitname = event.children;
-    const [unit] = unitData
-      .filter((el) => el.unitName === unitname)
-      .map((el) => el.unittypeId);
+    // const [unit] = unitData
+    //   .filter((el) => el.unitName === unitname)
+    //   .map((el) => el.unittypeId);
 
-    const payload = {
-      unittypeId: unit,
-    };
+    // const payload = {
+    //   unittypeId: unit,
+    // };
 
-    const response = await userInstance.post('/getRates', payload);
+    // const response = await userInstance.post('/getRates', payload);
     // const ratesData = response.data.ratesData[0];
-    setRatesData(response.data.ratesData[0]);
-    setSeasonRatesData(response.data.seasonRatesData);
+    // setRatesData(response.data.ratesData[0]);
+    // setSeasonRatesData(response.data.seasonRatesData);
+    // setSeasonRatesData({});
 
     // const selectStartDate = moment(selectDate[0]._d);
     // const selectEndDate = moment(selectDate[1]._d);
     // const days = enumerateDaysBetweenDates(selectDate[0]._d, selectDate[1]._d);
-    // console.log(days);
     // days.forEach((element) => {
-    //   console.log(moment(element).format('dddd'));
     // });
 
     // const { seasonRatesData } = response.data;
@@ -366,7 +420,7 @@ const CreateBookingPopup = (props) => {
 
     setUnitName(unitname);
   };
-  const fun5 = (value, event) => {
+  const onSelectChannel = (value, event) => {
     setChannel(event.children);
   };
   const handleCommissionChange = (e) => {
@@ -376,27 +430,30 @@ const CreateBookingPopup = (props) => {
   const handleDiscount = (value) => {
     setDiscountType(value);
     if (value === '%') {
-      const data = amt * (discountAmount / 100);
+      const data = (night * price * discountAmount) / 100;
+      // const data = amt * (discountAmount / 100);
       setDiscount(data);
-      setAccomodation(amt - data);
+      setAccomodation(night * price - data);
     } else {
       setDiscount(discountAmount);
-      setAccomodation(amt - discountAmount);
+      setAccomodation(night * price - discountAmount);
     }
   };
 
   const handleDeposit = (value) => {
     setDepositType(value);
     if (value === '%') {
-      const mon = Math.round(total * 100) / 100 + Math.round(accomodation * 100) / 100;
-      const data = mon * (depositAmount / 100);
+      const mon = Math.round(accomodation + serviceAmount);
+      const data = (mon * depositAmount) / 100;
       setDeposit(data);
     } else {
       setDeposit(depositAmount);
     }
   };
+  const disabledDate = (current) => current > moment().subtract(18, 'y') || current > moment();
 
   const onChangeDate = (value) => {
+    // { minDate : startdate}
     if (value) {
       setSelectDate(value);
       setStartDate(value[0]._d.getDate());
@@ -407,7 +464,7 @@ const CreateBookingPopup = (props) => {
       const d1 = new Date(value[0]._d);
       const d2 = new Date(value[1]._d);
       const diff = Math.abs(d1 - d2);
-      const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000));
       setNight(day);
       setDaysArr(Array.from(Array(day).keys()));
     }
@@ -427,6 +484,20 @@ const CreateBookingPopup = (props) => {
   const priceFunction = useCallback(
     (value) => {
       setPrice(value);
+      setAccomodation(night * value);
+      daysArr.forEach((el, j) => {
+        form.setFieldsValue({
+          [`everyDayPrice${j}`]: value,
+        });
+      });
+    },
+    [daysArr, form, night],
+  );
+
+  const priceSingleNight = useCallback(
+    (value) => {
+      // setPrice(value);
+      // setAccomodation(night * value);
       daysArr.forEach((el, j) => {
         form.setFieldsValue({
           [`everyDayPrice${j}`]: value,
@@ -507,67 +578,87 @@ const CreateBookingPopup = (props) => {
   };
 
   useEffect(() => {
-    if (selectDate && unitName && noOfAdult > 0) {
-      let pricePerNight = (
-        Math.floor(
-          ratesData.price_on_monday
-            + ratesData.price_on_tuesday
-            + ratesData.price_on_wednesday
-            + ratesData.price_on_thursday
-            + ratesData.price_on_friday
-            + ratesData.price_on_saturday
-            + ratesData.price_on_sunday,
-        ) / 7
-      ).toFixed(2);
-      if (parseInt(noOfAdult, 10) > ratesData.extra_guest) {
-        pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_charge_on_guest;
-      }
-      if (night < ratesData.short_stay) {
-        pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_chage_on_stay;
-      }
-      if (ratesData.tax_status === 'include') {
-        const tax = Math.floor(
-          (parseInt(pricePerNight, 10) * ratesData.tax) / 100,
-        );
-        pricePerNight = parseInt(pricePerNight, 10) + tax;
-      }
-      setPrice(pricePerNight);
-      form.setFieldsValue({ perNight: pricePerNight });
-      daysArr.forEach((el, j) => {
-        form.setFieldsValue({
-          [`everyDayPrice${j}`]: pricePerNight,
-        });
-      });
+    let today = new Date();
+    let dd = today.getDate();
 
-      if (night >= 7) {
-        const noOfWeeks = Math.floor(night / 7);
-        setAmt(
-          night * pricePerNight - noOfWeeks * ratesData.discount_price_per_week,
-        );
-        setAccomodation(
-          night * pricePerNight - noOfWeeks * ratesData.discount_price_per_week,
-        );
-      } else if (night === ratesData.customNights) {
-        setAmt(night * pricePerNight - ratesData.discount_price_custom_nights);
-        setAccomodation(
-          night * pricePerNight - ratesData.discount_price_custom_nights,
-        );
-      } else if (night >= 30) {
-        const noOfMonths = Math.floor(night / 30);
-        setAmt(
-          night * pricePerNight
-            - noOfMonths * ratesData.discount_price_per_month,
-        );
-        setAccomodation(
-          night * pricePerNight
-            - noOfMonths * ratesData.discount_price_per_month,
-        );
-      } else {
-        setAmt(night * pricePerNight);
-        setAccomodation(night * pricePerNight);
-      }
+    let mm = today.getMonth() + 1;
+    const yyyy = today.getFullYear();
+    if (dd < 10) {
+      dd = `0${dd}`;
     }
-  }, [selectDate, unitName, noOfAdult, ratesData, form, night, daysArr]);
+
+    if (mm < 10) {
+      mm = `0${mm}`;
+    }
+    today = `${yyyy}-${mm}-${dd}`;
+    setstartdate(today);
+    // if (ratesData) {
+    //   if (selectDate && unitName && noOfAdult > 0) {
+    //     let pricePerNight = (
+    //       Math.floor(
+    //         ratesData.price_on_monday
+    //           + ratesData.price_on_tuesday
+    //           + ratesData.price_on_wednesday
+    //           + ratesData.price_on_thursday
+    //           + ratesData.price_on_friday
+    //           + ratesData.price_on_saturday
+    //           + ratesData.price_on_sunday,
+    //       ) / 7
+    //     ).toFixed(2);
+    //     if (parseInt(noOfAdult, 10) > ratesData.extra_guest) {
+    //       pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_charge_on_guest;
+    //     }
+    //     if (night < ratesData.short_stay) {
+    //       pricePerNight = parseInt(pricePerNight, 10) + ratesData.extra_chage_on_stay;
+    //     }
+    //     if (ratesData.tax_status === 'include') {
+    //       const tax = Math.floor(
+    //         (parseInt(pricePerNight, 10) * ratesData.tax) / 100,
+    //       );
+    //       pricePerNight = parseInt(pricePerNight, 10) + tax;
+    //     }
+    //     setPrice(pricePerNight);
+    //     form.setFieldsValue({ perNight: pricePerNight });
+    //     daysArr.forEach((el, j) => {
+    //       form.setFieldsValue({
+    //         [`everyDayPrice${j}`]: pricePerNight,
+    //       });
+    //     });
+
+    //     if (night >= 7) {
+    //       const noOfWeeks = Math.floor(night / 7);
+    //       setAmt(
+    //         night * pricePerNight
+    //           - noOfWeeks * ratesData.discount_price_per_week,
+    //       );
+    //       setAccomodation(
+    //         night * pricePerNight
+    //           - noOfWeeks * ratesData.discount_price_per_week,
+    //       );
+    //     } else if (night === ratesData.customNights) {
+    //       setAmt(
+    //         night * pricePerNight - ratesData.discount_price_custom_nights,
+    //       );
+    //       setAccomodation(
+    //         night * pricePerNight - ratesData.discount_price_custom_nights,
+    //       );
+    //     } else if (night >= 30) {
+    //       const noOfMonths = Math.floor(night / 30);
+    //       setAmt(
+    //         night * pricePerNight
+    //           - noOfMonths * ratesData.discount_price_per_month,
+    //       );
+    //       setAccomodation(
+    //         night * pricePerNight
+    //           - noOfMonths * ratesData.discount_price_per_month,
+    //       );
+    //     } else {
+    //       setAmt(night * pricePerNight);
+    //       setAccomodation(night * pricePerNight);
+    //     }
+    //   }
+    // }
+  }, [selectDate, noOfAdult, form, night, daysArr, unitName]);
 
   const createGuestDetails = (
     <>
@@ -585,7 +676,7 @@ const CreateBookingPopup = (props) => {
                   },
                 ]}
               >
-                <Input />
+                <Input onKeyPress={preventTypeE} />
               </Form.Item>
             </Col>
 
@@ -600,7 +691,7 @@ const CreateBookingPopup = (props) => {
                   },
                 ]}
               >
-                <Input />
+                <Input type="email" />
               </Form.Item>
             </Col>
 
@@ -632,6 +723,7 @@ const CreateBookingPopup = (props) => {
                 label={t('strings.phone')}
                 name={[el, 'phone']}
                 style={{ paddingRight: 20 }}
+                rules={[{ required: true }]}
               >
                 <Input type="number" minLength="9" maxLength="15" />
               </Form.Item>
@@ -640,7 +732,7 @@ const CreateBookingPopup = (props) => {
             <Col span={24}>
               <div
                 className="additional-edit"
-                onClick={guestForm}
+                onClick={() => guestForm(el)}
                 role="presentation"
               >
                 <div>
@@ -669,7 +761,7 @@ const CreateBookingPopup = (props) => {
               <Col span={12}>
                 <Form.Item
                   label={t('strings.full')}
-                  name={[el, 'fullName']}
+                  name={[guestEle, 'fullName']}
                   style={{ paddingRight: 20 }}
                   rules={[
                     {
@@ -685,10 +777,10 @@ const CreateBookingPopup = (props) => {
               <Col span={12}>
                 <Form.Item
                   label={t('guestpopup.label2')}
-                  name={[el, 'country']}
+                  name={[guestEle, 'country']}
                   rules={[{ required: true, message: t('guestpopup.label3') }]}
                 >
-                  <CountryDropdown onChange={(val) => setCountry(val)} />
+                  <CountryDropdown />
                 </Form.Item>
               </Col>
             </Row>
@@ -697,15 +789,21 @@ const CreateBookingPopup = (props) => {
               <Col span={12}>
                 <Form.Item
                   label={t('strings.email')}
-                  name={[el, 'email']}
+                  name={[guestEle, 'email']}
                   style={{ paddingRight: 20 }}
+                  rules={[{ required: true }]}
                 >
-                  <Input placeholder={t('strings.email')} />
+                  <Input placeholder={t('strings.email')} type="email" />
                 </Form.Item>
               </Col>
 
               <Col span={12}>
-                <Form.Item label={t('strings.phone')} name={[el, 'phone']}>
+                <Form.Item
+                  label={t('strings.phone')}
+                  name={[guestEle, 'phone']}
+                  rules={[{ required: true }]}
+                >
+
                   <Input placeholder={t('strings.phone')} type="number" />
                 </Form.Item>
               </Col>
@@ -714,16 +812,16 @@ const CreateBookingPopup = (props) => {
             <Row style={{ alignItems: 'center' }}>
               <Col span={12}>
                 <Form.Item
-                  name={[el, 'dob']}
+                  name={[guestEle, 'dob']}
                   label={t('strings.dob')}
                   style={{ paddingRight: 20 }}
                 >
-                  <DatePicker />
+                  <DatePicker disabledDate={disabledDate} />
                 </Form.Item>
               </Col>
 
               <Col span={12}>
-                <Form.Item name={[el, 'gender']} label={t('strings.gender')}>
+                <Form.Item name={[guestEle, 'gender']} label={t('strings.gender')}>
                   <Radio.Group name="radiogroup" defaultValue={1}>
                     <Radio value={1}>M</Radio>
                     <Radio value={2}>F</Radio>
@@ -737,23 +835,32 @@ const CreateBookingPopup = (props) => {
               <Col span={12}>
                 <Form.Item
                   label={t('guestpopup.label4')}
-                  name={[el, 'typeOfDoc']}
+                  name={[guestEle, 'typeOfDoc']}
                   style={{ paddingRight: 20 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: t('guestpopup.label5'),
-                    },
-                  ]}
+
                 >
-                  <Input />
+                  <Select
+                    placeholder={t('guestpopup.label4')}
+                    name={[guestEle, 'typeOfDoc']}
+                    rules={[
+                      {
+                        required: true,
+                        message: t('guestpopup.label5'),
+                      },
+                    ]}
+                  >
+                    <Select.Option value="Passport">Passport</Select.Option>
+                    <Select.Option value="ID Card">ID Card</Select.Option>
+                    <Select.Option value="Driving License">Driving License</Select.Option>
+                    <Select.Option value="Other">Other</Select.Option>
+                  </Select>
                 </Form.Item>
               </Col>
 
               <Col span={12}>
                 <Form.Item
                   label={t('guestpopup.label6')}
-                  name={[el, 'docNo']}
+                  name={[guestEle, 'docNo']}
                   rules={[{ required: true, message: t('guestpopup.label5') }]}
                 >
                   <Input />
@@ -762,16 +869,6 @@ const CreateBookingPopup = (props) => {
             </Row>
 
             <Row style={{ alignItems: 'center' }}>
-              <Col span={12}>
-                <Form.Item
-                  label={t('strings.citizenship')}
-                  name={[el, 'citizenShip']}
-                  style={{ paddingRight: 20 }}
-                >
-                  <RegionDropdown country={country} />
-                </Form.Item>
-              </Col>
-
               <Col span={12}>
                 <Form.Item label={t('guestpopup.label8')} name={[el, 'place']}>
                   <Input />
@@ -831,8 +928,15 @@ const CreateBookingPopup = (props) => {
                   message: t('bookingpop.rule1'),
                 },
               ]}
+              defaultValue={startdate}
+
             >
-              <RangePicker onChange={onChangeDate} />
+              <RangePicker
+                defaultValue={moment()}
+                format="YYYY-MM-DD"
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onChangeDate}
+              />
             </Form.Item>
           </Col>
 
@@ -912,8 +1016,8 @@ const CreateBookingPopup = (props) => {
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => onSelectUnit(value, event)}
               >
-                {unitData.map((el) => (
-                  <Select.Option value={el.id}>{el.unitName}</Select.Option>
+                {unitData.map((el, i) => (
+                  <Select.Option value={i}>{el}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -927,7 +1031,7 @@ const CreateBookingPopup = (props) => {
             >
               <Select
                 placeholder={t('strings.select')}
-                onSelect={(value, event) => fun5(value, event)}
+                onSelect={(value, event) => onSelectChannel(value, event)}
                 style={{ width: '70%', display: 'inline-block' }}
               >
                 <Select.Option value="">Select</Select.Option>
@@ -1018,7 +1122,7 @@ const CreateBookingPopup = (props) => {
         <Row style={{ alignItems: 'center' }}>
           <Col span={24}>
             <Form.Item style={{ marginBottom: '0' }}>
-              <Collapse accordion>
+              <Collapse defaultActiveKey={['1']} accordion>
                 <Panel
                   icon={<PlusSquareOutlined />}
                   header={t('bookingpop.label18')}
@@ -1118,6 +1222,7 @@ const CreateBookingPopup = (props) => {
                     <input hidden />
                     =
                   </label>
+
                   <Input
                     name="totalAAmount"
                     type="number"
@@ -1144,9 +1249,11 @@ const CreateBookingPopup = (props) => {
                       setDiscount(e.target.value);
                       setdiscountAmount(e.target.value);
                       if (discountType === '€') {
-                        setAccomodation(amt - e.target.value);
+                        setAccomodation(night * price - e.target.value);
                       } else {
-                        setAccomodation(amt - amt * (e.target.value / 100));
+                        setAccomodation(
+                          night * price - (night * price * e.target.value) / 100,
+                        );
                       }
                     }}
                   />
@@ -1168,15 +1275,16 @@ const CreateBookingPopup = (props) => {
                     <input hidden />
                     =
                   </label>
+
                   <Input
                     type="number"
                     value={
-                      discountType === '€'
-                        ? amt - discountAmount
-                        : amt - amt * (discountAmount / 100)
+                      discountType === '€' ? discountAmount : (night * price * discountAmount) / 100
+                      // : amt - amt * (discountAmount / 100)
                     }
                     onBlur={(e) => setAccomodation(e.target.value)}
                   />
+
                   <label htmlFor="eur">
                     <input hidden />
                     EUR
@@ -1190,8 +1298,14 @@ const CreateBookingPopup = (props) => {
             <Col span={24}>
               <div className="per-night">
                 <label htmlFor="night">
-                  <DownSquareOutlined hidden={upDown} onClick={() => setUpDown(true)} />
-                  <UpSquareOutlined hidden={!upDown} onClick={() => setUpDown(!upDown)} />
+                  <DownSquareOutlined
+                    hidden={upDown}
+                    onClick={() => setUpDown(true)}
+                  />
+                  <UpSquareOutlined
+                    hidden={!upDown}
+                    onClick={() => setUpDown(!upDown)}
+                  />
                   <input hidden />
                   {t('bookingpop.label6')}
                 </label>
@@ -1212,12 +1326,16 @@ const CreateBookingPopup = (props) => {
                       <Form.Item
                         label={
                           startDate + j <= currMonthDay
-                            ? `${startDate + j} : ${startDateMonth}`
-                            : `${0 + j} : ${startDateMonth + 1}`
+                            ? `${startDate + j} / ${startDateMonth}`
+                            : `${0 + j} / ${startDateMonth}`
                         }
                         name={`everyDayPrice${j}`}
                       >
-                        <Input />
+                        <Input
+                          type="number"
+                        // value={price}
+                          onChange={(e) => priceSingleNight(e.target.value, j)}
+                        />
                       </Form.Item>
                     </div>
                   ))}
@@ -1309,8 +1427,10 @@ const CreateBookingPopup = (props) => {
                             <Form.Item name={[ele, 'serviceTax']}>
                               <Input
                                 type="number"
-                                placeholder="%"
-                                onChange={(e) => setServiceTax(e.target.value)}
+                                placeholder="Tax"
+                                // onBlur={calculateTotal}
+                                value={serviceTax}
+                                onChange={(e) => calculateTotal(e.target.value)}
                               />
                             </Form.Item>
                           </Col>
@@ -1319,13 +1439,15 @@ const CreateBookingPopup = (props) => {
                             <input hidden />
                             =
                           </label>
+
                           <Col span={4}>
-                            <Form.Item name={[ele, 'serviceAmount']}>
+                            <label htmlFor="eur">{serviceAmount}</label>
+                            {/* <Form.Item name={[ele, 'serviceAmount']}>
                               <Input
                                 value={serviceAmount}
-                                onBlur={calculateTotal}
+                                // onBlur={calculateTotal}
                               />
-                            </Form.Item>
+                            </Form.Item> */}
                           </Col>
 
                           <label htmlFor="eur">
@@ -1339,15 +1461,14 @@ const CreateBookingPopup = (props) => {
                 </Collapse>
               </Form.Item>
             </Col>
-
             <Col span={24}>
               <div className="amnt-total">
                 <h4>
                   {t('bookingpop.label10')}
                   :
-                  {' '}
-                  {Math.round(total * 100) / 100
-                    + Math.round(accomodation * 100) / 100}
+                  {accomodation + serviceAmount}
+                  {/* {Math.round(total * 100) / 100
+                    + Math.round(accomodation * 100) / 100} */}
                   {' '}
                   €
                 </h4>
@@ -1407,9 +1528,10 @@ const CreateBookingPopup = (props) => {
                   :
                   {' '}
                   <span>
-                    {Math.round(total * 100) / 100
+                    {Math.round(accomodation + serviceAmount - deposit)}
+                    {/* {Math.round(total * 100) / 100
                       + Math.round(accomodation * 100) / 100
-                      - deposit}
+                      - deposit} */}
                     €
                   </span>
                 </label>

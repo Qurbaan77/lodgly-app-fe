@@ -2,11 +2,11 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import moment from 'moment';
 import { toast } from 'react-toastify';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 // import moment from 'moment';
 import './booking.css';
 import {
-  Form, Button, Row, Col, Tooltip, Tag, Select, Checkbox,
+  Form, Button, Row, Col, Tooltip, Tag, Select, Checkbox, Modal,
 } from 'antd';
 import {
   FormOutlined,
@@ -22,20 +22,21 @@ import GuestPopup from './guestpopup';
 import CreateBookingPopup from './createbookingpopup';
 import EditBookingPopup from './editbookingpopup';
 import BookingFilter from './filter';
-import { userInstance } from '../../axios/axiosconfig';
+import CreateProperty from '../property/createProperty';
+import { userInstance, bookingInstance } from '../../axios/axiosconfig';
 import filterIcon from '../../assets/images/menu/filter-icon.png';
 import cancelIcon from '../../assets/images/menu/cancel-icon.png';
 import nobooking from '../../assets/images/no-booking.png';
 import loader from '../../assets/images/cliploader.gif';
 // import noproperty from '../../assets/images/property-placeholder.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
-import editIcon from '../../assets/images/menu/pencil-icon.png';
-import downloadIcon from '../../assets/images/menu/download-icon.png';
-import refreshIcon from '../../assets/images/menu/refresh-icon.png';
+// import editIcon from '../../assets/images/menu/pencil-icon.png';
+// import downloadIcon from '../../assets/images/menu/download-icon.png';
+// import refreshIcon from '../../assets/images/menu/refresh-icon.png';
 import favicon from '../../assets/images/logo-mobile.png';
-
 // const { Panel } = Collapse;
 // const { MonthPicker, RangePicker } = DatePicker;
+import DeletePopup from '../property/deletepopup';
 
 const useForceUpdate = () => useState()[1];
 const Booking = () => {
@@ -43,7 +44,7 @@ const Booking = () => {
   const forceUpdate = useForceUpdate();
   const [form] = Form.useForm();
 
-  const history = useHistory();
+  // const history = useHistory();
   const [propertyData, setPropertyData] = useState([]);
 
   const [visible, setVisible] = useState(false);
@@ -75,6 +76,9 @@ const Booking = () => {
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ bookingWrite, userId }] = userCred || [{}];
   const canWrite = bookingWrite;
+  const [visibleProperty, setVisibleProperty] = useState(false);
+  const [tagStatus, setTagStatus] = useState('');
+  const [visibleOFDelete, setVisibleOFDelete] = useState(false);
   // const show = () => {
   // setVisible(true);
   // };
@@ -131,7 +135,7 @@ const Booking = () => {
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
     }
-    const response = await userInstance.post('/getBooking', {
+    const response = await bookingInstance.post('/getBooking', {
       affiliateId: userId,
     });
     if (response.data.code === 200) {
@@ -139,7 +143,7 @@ const Booking = () => {
     }
     const bookingdata = response.data.bookingData;
     const guestdata = response.data.guestData;
-    const servicedata = response.data.serviceData;
+    const servicedata = response.data.serviceData[0];
     const guestnum = guestdata.map((el) => el.length);
     const guestname = [];
     const data = guestdata.map((el) => el.find((ele) => ele.id));
@@ -161,7 +165,8 @@ const Booking = () => {
       const d2 = new Date(el.endDate);
       const diff = Math.abs(d1 - d2);
       const day = Math.floor(diff / (24 * 60 * 60 * 1000));
-      el.nights = day + 1;
+      el.nights = day;
+      // el.nights = day + 1;
       el.created_date = el.created_at.split('T', 1);
       el.created_time = el.created_at.split('T').pop().substring(0, 5);
       el.noOfGuest = guestnum[i];
@@ -185,8 +190,8 @@ const Booking = () => {
       } else {
         setBookingData([...bookingdata]);
         setGuestData([...guestdata]);
-        if (servicedata.length) {
-          setServiceData([...servicedata]);
+        if (servicedata && servicedata.length) {
+          setServiceData(servicedata);
         }
       }
     }
@@ -204,7 +209,8 @@ const Booking = () => {
     const d2 = new Date(values.endDate);
     const diff = Math.abs(d1 - d2);
     const day = Math.floor(diff / (24 * 60 * 60 * 1000));
-    values.night = day + 1;
+    values.night = day;
+    // values.night = day + 1;
     localStorage.setItem('bookingId', values.id);
     localStorage.setItem('propertyId', values.propertyId);
     const arr = [];
@@ -213,7 +219,8 @@ const Booking = () => {
       .map((filterGuest) => arr.push(filterGuest)));
 
     const data = [];
-    serviceData.map((el) => el.map((ele) => (ele.bookingId === values.id ? data.push(el) : null)));
+
+    serviceData.map((el) => (el.bookingId === values.id ? data.push(el) : null));
     setCurrentService(data);
     setEditCurrentGuest(arr);
     setCurrentBooking(values);
@@ -249,12 +256,18 @@ const Booking = () => {
     setVisible(false);
   };
 
+  const handleCancelDelete = () => {
+    setVisibleOFDelete(false);
+  };
+
   useEffect(() => {
     getData();
     getProperty();
   }, [getData, getProperty]);
 
   const filter = useCallback(() => {
+    // console.log('filterValues', filterValues);
+    // console.log('bookingData', bookingData);
     const copyBookingData = bookingData;
     const filterData = [];
     let startDate = 0;
@@ -262,16 +275,22 @@ const Booking = () => {
     if (filterValues.groupname) {
       startDate = filterValues.groupname[0]._d;
       endDate = filterValues.groupname[1]._d;
+      // console.log('startDate', new Date(startDate));
+      // console.log('endDate', new Date(endDate));
+      // copyBookingData.filter(
+      //   (el) => console.log(new Date(el.startDate)),
+      // );
       const data = copyBookingData.filter(
         (el) => new Date(el.startDate) >= startDate
-          || new Date(el.startDate) <= endDate,
+        && new Date(el.startDate) <= endDate,
       );
-      filterData.push(data);
+      // console.log('asdffgf', data);
+      filterData.push(...data);
     }
     if (filterValues.property) {
       const data0 = filterData.length > 0 ? filterData : copyBookingData;
       const data = data0.filter(
-        (el) => el.propertyId === filterValues.property,
+        (el) => el.unitTypeId === filterValues.property,
       );
       filterData.length = 0;
       filterData.push(...data);
@@ -291,8 +310,14 @@ const Booking = () => {
       filterData.length = 0;
       filterData.push(...data);
     }
+    if (tagStatus) {
+      const data0 = filterData.length > 0 ? filterData : copyBookingData;
+      const data = data0.filter((el) => el.status === tagStatus);
+      filterData.length = 0;
+      filterData.push(...data);
+    }
     setFilterArr(filterData);
-  }, [filterValues, bookingData]);
+  }, [filterValues, bookingData, tagStatus]);
 
   useEffect(() => {
     filter();
@@ -353,13 +378,13 @@ const Booking = () => {
       status: value,
       bookingId: currentBooking.id,
     };
-    const response = await userInstance.post('/setStatus', payload);
+    const response = await bookingInstance.post('/setStatus', payload);
     if (response.data.code === 200) {
       getData();
       setStatus(value);
-      toast.success('successfully updated status', { containerId: 'B' });
+      toast.success('successfully updated status', { containerId: 'B', toastId: 'B' });
     } else {
-      toast.error('some error occurred!', { containerId: 'B' });
+      toast.error('some error occurred!', { containerId: 'B', toastId: 'B' });
     }
   };
 
@@ -411,24 +436,51 @@ const Booking = () => {
     setCheckedBooking([]);
   };
 
-  const handleDelete = async (e) => {
+  const closeCreateProperty = () => {
+    setVisibleProperty(false);
+  };
+
+  const handleDelete = (e) => {
     if (e === 'trash') {
-      const id = [];
-      checkedBooking.forEach((el) => {
-        id.push(el.id);
-      });
-      const values = {
-        bookings: id,
-      };
-      const response = await userInstance.post('/deleteBookings', values);
-      const { msg } = response.data;
-      if (response.data.code === 200) {
-        toast.success(msg, { containerId: 'B' });
-        setSelectAllCheck(false);
-        getData();
-      } else {
-        toast.error(msg, { containerId: 'B' });
-      }
+      setVisibleOFDelete(true);
+      // const id = [];
+      // checkedBooking.forEach((el) => {
+      //   id.push(el.id);
+      // });
+      // const values = {
+      //   bookings: id,
+      // };
+      // const response = await bookingInstance.post('/deleteBookings', values);
+      // const { msg } = response.data;
+      // if (response.data.code === 200) {
+      //   toast.success(msg, { containerId: 'B' });
+      //   setCheckedBooking([]);
+      //   setSelectAllCheck(false);
+      //   getData();
+      // } else {
+      //   toast.error(msg, { containerId: 'B' });
+      // }
+    }
+  };
+
+  const remove = async () => {
+    const id = [];
+    checkedBooking.forEach((el) => {
+      id.push(el.id);
+    });
+    const values = {
+      bookings: id,
+    };
+    const response = await bookingInstance.post('/deleteBookings', values);
+    const { msg } = response.data;
+    if (response.data.code === 200) {
+      toast.success(msg, { containerId: 'B' });
+      setCheckedBooking([]);
+      setSelectAllCheck(false);
+      setVisibleOFDelete(false);
+      getData();
+    } else {
+      toast.error(msg, { containerId: 'B' });
     }
   };
 
@@ -466,12 +518,14 @@ const Booking = () => {
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => history.push('/addproperty')}
+              // onClick={() => history.push('/addproperty')}
+              onClick={() => setVisibleProperty(true)}
             >
               {t('nolist.button1')}
             </Button>
           </div>
         </div>
+        <CreateProperty visible={visibleProperty} onCancel={closeCreateProperty} />
       </Wrapper>
     );
   }
@@ -525,6 +579,7 @@ const Booking = () => {
         <body className="booking-page-view" />
       </Helmet>
       {hasAccess ? (
+
         <div className="booking">
           <div className="container">
             <Row>
@@ -538,26 +593,26 @@ const Booking = () => {
                         <input type="text" hidden />
                       </label>
                       <div className="filter-item" id="filters">
-                        <Tag color="default">{t('booking.tag1')}</Tag>
-                        <Tag color="success">{t('booking.tag2')}</Tag>
-                        <Tag color="default">{t('booking.tag3')}</Tag>
-                        <Tag color="error">{t('booking.heading4')}</Tag>
+                        <Tag color="default" onClick={() => setTagStatus('decline')}>Decline</Tag>
+                        <Tag color="success" onClick={() => setTagStatus('open')}>Open</Tag>
+                        <Tag color="yellow" onClick={() => setTagStatus('tentative')}>Set as tentative</Tag>
+                        <Tag color="error" onClick={() => setTagStatus('booked')}>Booked</Tag>
                       </div>
                     </div>
-
-                    <div className="filter-icon">
-                      <Button onClick={showfilter}>
-                        {' '}
-                        <img src={filterIcon} alt="filter-icon" />
-                      </Button>
-                    </div>
+                    <Tooltip title="Filter" color="gold">
+                      <div className="filter-icon">
+                        <Button onClick={showfilter}>
+                          {' '}
+                          <img src={filterIcon} alt="filter-icon" />
+                        </Button>
+                      </div>
+                    </Tooltip>
                   </div>
                   {mapBooking.map((el, i) => (
                     <div
                       key={el.id}
                       role="presentation"
                       className={`booking-list ${el.statusColour}`}
-                      onClick={() => selectBooking(el, i)}
                     >
                       <div className="filter-checkbox">
                         <Checkbox
@@ -565,7 +620,7 @@ const Booking = () => {
                           onClick={() => handleCheck(el, i)}
                         />
                       </div>
-                      <div className="detail">
+                      <div className="detail" onClick={() => selectBooking(el, i)} role="presentation">
                         <h3>{el.guest}</h3>
                         <p>{el.propertyName}</p>
                         <ul>
@@ -637,17 +692,23 @@ const Booking = () => {
                     </div>
                   </div>
                   <div className="bookin-footer">
-                    <ul>
-                      <li>
-                        <img src={editIcon} alt="edit-icon" />
-                      </li>
-                      <li>
-                        <img src={downloadIcon} alt="download=icon" />
-                      </li>
-                      <li>
-                        <img src={refreshIcon} alt="refresh-icon" />
-                      </li>
-                    </ul>
+                    {/* <ul>
+                      <Tooltip title="Edit Booking" color="gold">
+                        <li>
+                          <img src={editIcon} alt="edit-icon" />
+                        </li>
+                      </Tooltip>
+                      <Tooltip title="Download" color="gold">
+                        <li>
+                          <img src={downloadIcon} alt="download=icon" />
+                        </li>
+                      </Tooltip>
+                      <Tooltip title="Refresh" color="gold">
+                        <li>
+                          <img src={refreshIcon} alt="refresh-icon" />
+                        </li>
+                      </Tooltip>
+                    </ul> */}
                     {btn2}
                   </div>
                 </div>
@@ -728,7 +789,9 @@ const Booking = () => {
                         <span>{t('strings.guests')}</span>
                         <p>
                           {currentBooking.adult}
+                          {' '}
                           {t('strings.adults')}
+                          {' '}
                         </p>
                         <p>
                           {currentBooking.children1}
@@ -824,6 +887,17 @@ const Booking = () => {
               </Col>
             </Row>
           </div>
+          <Modal
+            visible={visibleOFDelete}
+            onOk={handleCancelDelete}
+            onCancel={handleCancelDelete}
+            wrapClassName="delete-modal"
+          >
+            <DeletePopup
+              dataObject={() => remove()}
+              cancel={() => handleCancelDelete()}
+            />
+          </Modal>
         </div>
       ) : (
         <UserLock />
@@ -866,6 +940,7 @@ const Booking = () => {
         handleCancel={handleCancel}
         handleOk={handleOk}
         setFilterValues={setFilterValues}
+        getData={getData}
       />
     </Wrapper>
   );

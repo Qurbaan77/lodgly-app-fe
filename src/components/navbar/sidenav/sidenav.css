@@ -252,3 +252,8 @@ margin-right: 10px;
 .submenu-heading {
   padding: 10px 10px 10px 28px;
 }
+.ant-layout-sider-children {
+  position: fixed;
+  width: 199px;
+    left: 0;
+}
