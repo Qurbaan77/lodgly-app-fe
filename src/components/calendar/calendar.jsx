@@ -178,6 +178,7 @@ const Calendar = () => {
     const response = await reservationInstance.post('/getReservation', {
       affiliateId: userId,
     });
+    console.log(response);
     // const { reservationData: data } = response.data;
     // if (response.data.code === 200) {
     //   setLoading(false);
