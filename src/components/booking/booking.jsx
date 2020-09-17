@@ -190,7 +190,7 @@ const Booking = () => {
       } else {
         setBookingData([...bookingdata]);
         setGuestData([...guestdata]);
-        if (servicedata.length) {
+        if (servicedata && servicedata.length) {
           setServiceData(servicedata);
         }
       }
