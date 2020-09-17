@@ -49,7 +49,10 @@ const CompanyList = () => {
     if (response.data.code === 200) {
       setVisibiltyOFDelete(false);
       getData();
-      toast.success('Successfully deleted company', { containerId: 'B', toastId: 'unique' });
+      toast.success('Successfully deleted company', {
+        containerId: 'B',
+        toastId: 'unique',
+      });
     } else {
       toast.error('Server error please try again', { containerId: 'B' });
     }
@@ -144,6 +147,17 @@ const CompanyList = () => {
   if (loading) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="company-page-view" />
+        </Helmet>
         <div className="loader">
           <div className="loader-box">
             <img src={loader} alt="loader" />
@@ -156,6 +170,17 @@ const CompanyList = () => {
   if (companyData.length < 1) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="company-page-view" />
+        </Helmet>
         <div className="add-team-page">
           <div className="add-subuser">
             <img src={nocompany} alt="noguest" />
@@ -191,7 +216,7 @@ const CompanyList = () => {
           name="description"
           content="Grow your Vacation Rental with Lodgly"
         />
-        <body className="rates-page-view" />
+        <body className="company-page-view" />
       </Helmet>
 
       <div className="guest-list company-list">

@@ -1,4 +1,10 @@
-
+* {
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+     -moz-user-select: -moz-none;
+     -o-user-select: none;
+     user-select: none;
+ }
 
 .clean-filter {
     padding-top: 30px;
@@ -114,20 +120,19 @@
 }
 
 .company-ip {
-    padding: 24px 10px 24px 10px;
+    padding: 10px 10px 10px 10px;
     border-top: 1px solid #efefef;
-    position: absolute;
-    bottom: calc(0px - 70px);
-    border-right: 1px solid #efefef;
     background: #fff;
-    width: 100%;
-    margin-left: 1px;
+    width: 199px;
+    position: fixed;
+    bottom: 0;
 }
 
 .company-ip h6 {
     font-size: 11px;
     color: rgba(62, 63, 66, 0.7);
     font-weight: 700;
+    word-break: break-all;
 }
 
 .company-ip p {
@@ -468,21 +473,32 @@ input[type=number]{
 /******************************************************************************************************/
 
 
+@media screen and (max-width:1440px){
+ul.ant-menu.main-menu, ul.ant-menu.main-menu-mbl {
+    height: calc(55vh - 0px)!important;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 50px;
+}
 
+ul.ant-menu.main-menu::-webkit-scrollbar-track, ul.ant-menu.main-menu-mbl::-webkit-scrollbar-track{
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
 
+ul.ant-menu.main-menu::-webkit-scrollbar, ul.ant-menu.main-menu-mbl::-webkit-scrollbar
+{
+	width: 0px;
+	background-color: #F5F5F5;
+}
 
-@media screen and (min-width:1680px){
-    .company-ip {
-        bottom: calc(0px - 0px);
-    }
-
-    .ant-layout-sider-light {
-        min-height: 94vh;
-    }
-
+ul.ant-menu.main-menu::-webkit-scrollbar-thumb, ul.ant-menu.main-menu-mbl::-webkit-scrollbar-thumb
+{
+	background-color: #999;
 }
 
 
+}
 
 @media screen and (max-width:767px){
 
@@ -1052,7 +1068,9 @@ input[type=number]{
     width: calc(100% - 0px);
 }
 
-
+.company-ip {
+    position: relative;
+}
 }
 
 
@@ -1070,4 +1088,13 @@ input[type=number]{
     margin-right: 0%;
     margin-left: 0%;
 }
+}
+.header-css{
+   
+    position: sticky!important;
+    width: 100%!important;
+    left: 0!important;
+    top: 0!important;
+    right: 0!important;
+    z-index: 1000!important;
 }

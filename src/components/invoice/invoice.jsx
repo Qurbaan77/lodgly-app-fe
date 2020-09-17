@@ -1,8 +1,6 @@
-import React, {
-  useEffect, useState, useCallback,
-} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import './invoice.css';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +18,10 @@ import {
   Form,
 } from 'antd';
 import {
-  PlusOutlined, DeleteOutlined, FormOutlined, MoreOutlined,
+  PlusOutlined,
+  DeleteOutlined,
+  FormOutlined,
+  MoreOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
@@ -32,7 +33,7 @@ import filterIcon from '../../assets/images/menu/filter-icon.png';
 // import editIcon from '../../assets/images/menu/pencil-icon.png';
 import downloadIcon from '../../assets/images/menu/download-icon.png';
 import refreshIcon from '../../assets/images/menu/refresh-icon.png';
-import settingIcon from '../../assets/images/menu/setting-icon.png';
+// import settingIcon from '../../assets/images/menu/setting-icon.png';
 import printIcon from '../../assets/images/menu/print-icon.png';
 import cancelIcon from '../../assets/images/menu/cancel-icon.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
@@ -43,13 +44,14 @@ import EditInvoicePopup from './editInvoicePopup';
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 import UserLock from '../userlock/userlock';
+import CreateProperty from '../property/createProperty';
 import back from '../../assets/images/back.png';
 
 const Invoice = () => {
   const { RangePicker } = DatePicker;
   const { t } = useTranslation();
   // const { Option } = Select;
-  const history = useHistory();
+  // const history = useHistory();
 
   const [topNavId, setTopNavId] = useState(null);
   const [visible, setVisible] = useState(false);
@@ -85,6 +87,7 @@ const Invoice = () => {
     issued: '',
     paymentMethod: '',
   });
+  const [visibleProperty, setVisibleProperty] = useState(false);
 
   function useUpdate() {
     const [, setTick] = useState(0);
@@ -118,7 +121,10 @@ const Invoice = () => {
   };
 
   let label;
-  invoiceData.map((el) => { (label = el.id); return label; });
+  invoiceData.map((el) => {
+    label = el.id;
+    return label;
+  });
 
   const showpopup = (ele) => {
     setVisibleDeletePopup(true);
@@ -184,9 +190,9 @@ const Invoice = () => {
   const getData = useCallback(async () => {
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
     if (response0.data.code === 200) {
-      const [{
-        days, isOnTrial, isSubscribed,
-      }] = response0.data.userSubsDetails;
+      const [
+        { days, isOnTrial, isSubscribed },
+      ] = response0.data.userSubsDetails;
       setDaysLeft(parseInt(days, 10));
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
@@ -218,7 +224,10 @@ const Invoice = () => {
     invoiceData.forEach((element) => {
       if (el.id === element.id && element[Object.keys(el)[20]] === true) {
         element[Object.keys(el)[20]] = false;
-      } else if (el.id === element.id && element[Object.keys(el)[20]] === false) {
+      } else if (
+        el.id === element.id
+        && element[Object.keys(el)[20]] === false
+      ) {
         element[Object.keys(el)[20]] = true;
       }
     });
@@ -233,7 +242,9 @@ const Invoice = () => {
   };
   useEffect(() => {
     setTopNavId(parseInt(localStorage.getItem('topNavId'), 10));
-    const data = propertyInfo.filter((property) => property.id === parseInt(localStorage.getItem('topNavId'), 10));
+    const data = propertyInfo.filter(
+      (property) => property.id === parseInt(localStorage.getItem('topNavId'), 10),
+    );
     setCurrentPropertyInfo(data);
   }, [topNavId, propertyInfo]);
 
@@ -272,7 +283,10 @@ const Invoice = () => {
   const handleSelectAll = (e) => {
     if (e.currentTarget.value === 'true') {
       setSelectAllCheck(false);
-      invoiceData.slice(0).reverse().slice(pagination.minValue, pagination.maxValue)
+      invoiceData
+        .slice(0)
+        .reverse()
+        .slice(pagination.minValue, pagination.maxValue)
         .forEach((el) => {
           el[Object.keys(el)[20]] = false;
         });
@@ -280,11 +294,16 @@ const Invoice = () => {
       setCheckedInvoice([]);
     } else {
       setSelectAllCheck(true);
-      invoiceData.slice(0).reverse().slice(pagination.minValue, pagination.maxValue)
+      invoiceData
+        .slice(0)
+        .reverse()
+        .slice(pagination.minValue, pagination.maxValue)
         .forEach((el) => {
           el[Object.keys(el)[20]] = true;
         });
-      const data = invoiceData.filter((el) => el[Object.keys(el)[20]] !== false);
+      const data = invoiceData.filter(
+        (el) => el[Object.keys(el)[20]] !== false,
+      );
       setInvoiceData(invoiceData);
       setCheckedInvoice(data);
     }
@@ -294,7 +313,10 @@ const Invoice = () => {
 
   const handleCancelCheck = () => {
     setSelectAllCheck(false);
-    invoiceData.slice(0).reverse().slice(pagination.minValue, pagination.maxValue)
+    invoiceData
+      .slice(0)
+      .reverse()
+      .slice(pagination.minValue, pagination.maxValue)
       .forEach((el) => {
         el[Object.keys(el)[20]] = false;
       });
@@ -313,22 +335,23 @@ const Invoice = () => {
       startDate = filterValues.groupname[0]._d;
       endDate = filterValues.groupname[1]._d;
       const data = invoiceData.filter(
-        (el) => new Date(el.date) >= startDate
-          || new Date(el.date) <= endDate,
+        (el) => new Date(el.date) >= startDate || new Date(el.date) <= endDate,
       );
       filterData.push(data);
     }
     if (filterValues.currYear) {
       const data0 = filterData.length > 0 ? filterData : invoiceData;
-      const data = data0.filter((el) => new Date(el.date)
-        .getFullYear() === new Date().getFullYear());
+      const data = data0.filter(
+        (el) => new Date(el.date).getFullYear() === new Date().getFullYear(),
+      );
       filterData.length = 0;
       filterData.push(...data);
     }
     if (filterValues.prevYear) {
       const data0 = filterData.length > 0 ? filterData : invoiceData;
-      const data = data0.filter((el) => new Date(el.date)
-        .getFullYear() === new Date().getFullYear() - 1);
+      const data = data0.filter(
+        (el) => new Date(el.date).getFullYear() === new Date().getFullYear() - 1,
+      );
       filterData.length = 0;
       filterData.push(...data);
     }
@@ -425,28 +448,22 @@ const Invoice = () => {
   );
   const disabledButton = (
     <Tooltip title={t('invoice.tootltip')} color="gold">
-      <Button
-        type="primary"
-        icon={<PlusOutlined />}
-        onClick={show}
-        disabled
-      >
+      <Button type="primary" icon={<PlusOutlined />} onClick={show} disabled>
         {t('invoice.button1')}
       </Button>
     </Tooltip>
   );
   const propertySelectButton = (
     <Tooltip title={t('invoice.tootltip1')} color="gold">
-      <Button
-        type="primary"
-        icon={<PlusOutlined />}
-        onClick={show}
-        disabled
-      >
+      <Button type="primary" icon={<PlusOutlined />} onClick={show} disabled>
         {t('invoice.button1')}
       </Button>
     </Tooltip>
   );
+
+  const closeCreateProperty = () => {
+    setVisibleProperty(false);
+  };
 
   const btn = isSubUser && canWrite ? enableButton : disabledButton;
   const perm = isSubUser ? btn : enableButton;
@@ -455,6 +472,17 @@ const Invoice = () => {
   if (loading) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="invoice-page-view" />
+        </Helmet>
         <div className="loader">
           <div className="loader-box">
             <img src={loader} alt="loader" />
@@ -467,16 +495,23 @@ const Invoice = () => {
   if (inFilter && invoiceData && invoiceData.length < 1) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="invoice-page-view" />
+        </Helmet>
         <div className="add-team-page">
           <div className="add-subuser">
             <img src={nobooking} alt="subuser" />
             <h4>No Results</h4>
-            <p>
-              Please select another search criteria.
-            </p>
-            <Button onClick={() => window.location.reload()}>
-              Reset All
-            </Button>
+            <p>Please select another search criteria.</p>
+            <Button onClick={() => window.location.reload()}>Reset All</Button>
           </div>
         </div>
       </Wrapper>
@@ -487,6 +522,17 @@ const Invoice = () => {
     <>
       {page ? (
         <Wrapper fun={setTopNavId}>
+          <Helmet>
+            <link rel="icon" href={favicon} />
+            <title>
+              Lodgly - Comprehensive Vacation Rental Property Management
+            </title>
+            <meta
+              name="description"
+              content="Grow your Vacation Rental with Lodgly"
+            />
+            <body className="invoice-page-view" />
+          </Helmet>
           <div className="add-invoice-page">
             <div className="add-invoice">
               <img src={invoice} alt="invoice" />
@@ -507,12 +553,24 @@ const Invoice = () => {
         </Wrapper>
       ) : (
         <Wrapper fun={setTopNavId}>
-          <div className={`invoice-wrapper ${menutoggle ? 'invoice-wrapper-expand' : ''}`}>
-
+          <Helmet>
+            <link rel="icon" href={favicon} />
+            <title>
+              Lodgly - Comprehensive Vacation Rental Property Management
+            </title>
+            <meta
+              name="description"
+              content="Grow your Vacation Rental with Lodgly"
+            />
+            <body className="invoice-page-view" />
+          </Helmet>
+          <div
+            className={`invoice-wrapper ${
+              menutoggle ? 'invoice-wrapper-expand' : ''
+            }`}
+          >
             <div className="invoice-filter">
-
               <div className="filter-box">
-
                 <h2 onClick={() => handleMenuSide('close')} role="presentation">
                   <img src={back} alt="" />
                   {' '}
@@ -520,14 +578,9 @@ const Invoice = () => {
                 </h2>
 
                 <Form name="basic" onFinish={handleFilter}>
-
                   <Row style={{ alignItems: 'center' }}>
-
                     <Col span={24}>
-                      <Form.Item
-                        label="Select Date"
-                        name="groupname"
-                      >
+                      <Form.Item label="Select Date" name="groupname">
                         <RangePicker />
                       </Form.Item>
                     </Col>
@@ -535,7 +588,9 @@ const Invoice = () => {
                     <Col span={24}>
                       <div className="invoice-filter-section">
                         <Row>
-                          <Col span={24}><span className="filter-title">Year</span></Col>
+                          <Col span={24}>
+                            <span className="filter-title">Year</span>
+                          </Col>
                           <Col span={12} className="invoice-filter-checkbox">
                             <Checkbox
                               name="prevYear"
@@ -564,7 +619,9 @@ const Invoice = () => {
                     <Col span={24}>
                       <div className="invoice-filter-section">
                         <Row>
-                          <Col span={24}><span className="filter-title">Type</span></Col>
+                          <Col span={24}>
+                            <span className="filter-title">Type</span>
+                          </Col>
                           <Col span={7} className="invoice-filter-checkbox">
                             <Checkbox
                               name="invoice"
@@ -604,7 +661,9 @@ const Invoice = () => {
                     <Col span={24}>
                       <div className="invoice-filter-section">
                         <Row>
-                          <Col span={24}><span className="filter-title">Status</span></Col>
+                          <Col span={24}>
+                            <span className="filter-title">Status</span>
+                          </Col>
                           <Col span={7} className="invoice-filter-checkbox">
                             <Checkbox
                               name="draft"
@@ -637,10 +696,7 @@ const Invoice = () => {
                     </Col>
 
                     <Col span={24}>
-                      <Form.Item
-                        label="Payment Method"
-                        name="payment"
-                      >
+                      <Form.Item label="Payment Method" name="payment">
                         <Select placeholder="Select">
                           <Select.Option value="bank notes">
                             {t('strings.bank_note')}
@@ -679,20 +735,15 @@ const Invoice = () => {
                           }}
                         >
                           Reset All
-
                         </Button>
                         <Button type="primary" htmlType="submit">
                           Filter
                         </Button>
                       </Form.Item>
                     </Col>
-
                   </Row>
-
                 </Form>
-
               </div>
-
             </div>
 
             <div className="invoice-listing-page">
@@ -708,6 +759,7 @@ const Invoice = () => {
                   <table>
                     <thead>
                       <tr>
+
                         <th>{t('strings.date')}</th>
                         <th>{t('strings.label')}</th>
                         <th>{t('strings.type')}</th>
@@ -731,23 +783,24 @@ const Invoice = () => {
                               />
                               {el.date.slice(0, 10)}
                             </td>
-                            <td>
+                            <td onClick={() => showEditInvoice(el, i)} role="presentation">
                               {el.label
-                              || `INVOICE ${el.id} - ${new Date().getFullYear()}`}
+                                || `INVOICE ${
+                                  el.id
+                                } - ${new Date().getFullYear()}`}
                             </td>
-                            <td>{el.type || 'Invoice'}</td>
-                            <td>{el.clientName}</td>
-                            <td>
+                            <td onClick={() => showEditInvoice(el, i)} role="presentation">{el.type || 'Invoice'}</td>
+                            <td onClick={() => showEditInvoice(el, i)} role="presentation">{el.clientName}</td>
+                            <td onClick={() => showEditInvoice(el, i)} role="presentation">
                               {el.total}
                               {' '}
                               EUR
                             </td>
-                            <td>{el.status}</td>
+                            <td onClick={() => showEditInvoice(el, i)} role="presentation">{el.status}</td>
                             <td>
                               <div className="action-icon">
                                 <MoreOutlined />
                               </div>
-
                               <div className="invoice-action">
                                 <FormOutlined
                                   onClick={() => showEditInvoice(el, i)}
@@ -777,7 +830,12 @@ const Invoice = () => {
                           />
                         </li>
                         <li>
-                          <img src={filterIcon} alt="" onClick={() => setMenuToggle(!menutoggle)} role="presentation" />
+                          <img
+                            src={filterIcon}
+                            alt=""
+                            onClick={() => setMenuToggle(!menutoggle)}
+                            role="presentation"
+                          />
                         </li>
                       </ul>
                     </div>
@@ -851,9 +909,9 @@ const Invoice = () => {
                         defaultCurrent={1}
                       />
 
-                      <div className="setting-icon">
+                      {/* <div className="setting-icon">
                         <img src={settingIcon} alt="" />
-                      </div>
+                      </div> */}
                     </div>
                   </Col>
                 </Row>
@@ -893,6 +951,17 @@ const Invoice = () => {
   if (propertyInfo.length < 1) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="invoice-page-view" />
+        </Helmet>
         <div className="add-team-page">
           <div className="add-subuser">
             <img src={propertyplace} alt="subuser" />
@@ -901,12 +970,13 @@ const Invoice = () => {
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => history.push('/addproperty')}
+              onClick={() => setVisibleProperty(true)}
             >
               {t('nolist.button1')}
             </Button>
           </div>
         </div>
+        <CreateProperty visible={visibleProperty} onCancel={closeCreateProperty} />
       </Wrapper>
     );
   }
@@ -914,18 +984,22 @@ const Invoice = () => {
     <>
       <Helmet>
         <link rel="icon" href={favicon} />
-        <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
         <body className="invoice-page-view" />
       </Helmet>
-      {
-      hasAccess ? pageContent
-        : (
-          <Wrapper>
-            <UserLock />
-          </Wrapper>
-        )
-        }
+      {hasAccess ? (
+        pageContent
+      ) : (
+        <Wrapper>
+          <UserLock />
+        </Wrapper>
+      )}
     </>
   );
 };

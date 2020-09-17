@@ -84,3 +84,6 @@
 .sb-avatar__text span {
     color: #fff !important
 }
+.user-profile {
+    min-height: 166px;
+}

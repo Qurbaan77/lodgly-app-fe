@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-// import PlacesAutocomplete from 'react-places-autocomplete';
 import PlacesAutocomplete, {
   geocodeByAddress,
 } from 'react-places-autocomplete';

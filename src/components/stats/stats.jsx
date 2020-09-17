@@ -1,18 +1,13 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import './stats.css';
 import {
-  Button,
-  Tooltip,
-  Row,
-  Col,
+  Button, Tooltip, Row, Col,
 } from 'antd';
-import {
-  PlusOutlined,
-} from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import Chart from 'react-apexcharts';
 import Wrapper from '../wrapper';
 import { userInstance } from '../../axios/axiosconfig';
@@ -21,17 +16,19 @@ import qst from '../../assets/images/menu/qst.png';
 import favicon from '../../assets/images/logo-mobile.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
 import UserLock from '../userlock/userlock';
+import CreateProperty from '../property/createProperty';
 import loader from '../../assets/images/cliploader.gif';
 
 const Stats = () => {
   const { t } = useTranslation();
 
-  const history = useHistory();
+  // const history = useHistory();
   const [propertyData, setPropertyData] = useState([]);
 
   const [topNavId, setTopNavId] = useState();
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
+  const [visibleProperty, setVisibleProperty] = useState(false);
   const [daysLeft, setDaysLeft] = useState();
   const [accomodationHasData, setAccomodationHasData] = useState(
     'no-stats-data',
@@ -48,6 +45,10 @@ const Stats = () => {
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
 
   const [{ userId }] = userCred || [{}];
+
+  const closeCreateProperty = () => {
+    setVisibleProperty(false);
+  };
 
   const getProperty = useCallback(async () => {
     const response = await userInstance.post('/fetchProperty', {
@@ -87,6 +88,17 @@ const Stats = () => {
   if (loading) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="stats-page-view" />
+        </Helmet>
         <div className="loader">
           <div className="loader-box">
             <img src={loader} alt="loader" />
@@ -99,6 +111,17 @@ const Stats = () => {
   if (propertyData.length < 1) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="stats-page-view" />
+        </Helmet>
         <div className="add-team-page">
           <div className="add-subuser">
             <img src={propertyplace} alt="subuser" />
@@ -107,18 +130,30 @@ const Stats = () => {
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => history.push('/addproperty')}
+              onClick={() => setVisibleProperty(true)}
             >
               {t('nolist.button1')}
             </Button>
           </div>
         </div>
+        <CreateProperty visible={visibleProperty} onCancel={closeCreateProperty} />
       </Wrapper>
     );
   }
 
   return (
     <Wrapper fun={setTopNavId}>
+      <Helmet>
+        <link rel="icon" href={favicon} />
+        <title>
+          Lodgly - Comprehensive Vacation Rental Property Management
+        </title>
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
+        <body className="stats-page-view" />
+      </Helmet>
       <Helmet>
         <link rel="icon" href={favicon} />
         <title>

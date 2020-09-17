@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import './owner.css';
 import { toast } from 'react-toastify';
 import {
@@ -30,10 +30,11 @@ import loader from '../../assets/images/cliploader.gif';
 import subuser from '../../assets/images/subuser.jpg';
 import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
+import CreateProperty from '../property/createProperty';
 
 const Owner = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  // const history = useHistory();
   const [form] = Form.useForm();
   const { Option } = Select;
   const [visible, setVisible] = useState(false);
@@ -50,6 +51,7 @@ const Owner = () => {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [access, setAccess] = useState(false);
+  const [visibleProperty, setVisibleProperty] = useState(false);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
 
@@ -77,6 +79,10 @@ const Owner = () => {
   const showDeletePopUP = (unitId) => {
     setVisible2(true);
     setCurOwner(unitId);
+  };
+
+  const closeCreateProperty = () => {
+    setVisibleProperty(false);
   };
 
   const getPropertyData = useCallback(async () => {
@@ -132,8 +138,7 @@ const Owner = () => {
         selectedProperty.push(filter.propertyName);
         arr.push(filter.id);
       });
-      setSelectedPropertyId(arr);
-      setAccess(data.isaccess);
+
       form.setFieldsValue({
         id: data.id,
         firstname: data.fname,
@@ -192,6 +197,10 @@ const Owner = () => {
       toast.error('server error please try again', { containerId: 'B' });
     }
   };
+
+  // Can not select days before today and today
+  // current > moment().startOf('day')
+  const disabledDate = (current) => current > moment().subtract(18, 'y') || current > moment();
 
   useEffect(() => {
     getSubUserData();
@@ -266,9 +275,7 @@ const Owner = () => {
                             </div>
                           </div>
                         </td>
-
                         <td>{el.email}</td>
-
                         <td>
                           <div className="owner-property">
                             {properties.map((ele) => {
@@ -396,7 +403,9 @@ const Owner = () => {
                       },
                     ]}
                   >
-                    <DatePicker />
+                    <DatePicker
+                      disabledDate={disabledDate}
+                    />
                   </Form.Item>
                 </Col>
 
@@ -630,7 +639,9 @@ const Owner = () => {
                       },
                     ]}
                   >
-                    <DatePicker />
+                    <DatePicker
+                      disabledDate={disabledDate}
+                    />
                   </Form.Item>
                 </Col>
 
@@ -749,9 +760,21 @@ const Owner = () => {
       )}
     </>
   );
+
   if (loading) {
     return (
       <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="stats-page-view" />
+        </Helmet>
         <div className="loader">
           <div className="loader-box">
             <img src={loader} alt="loader" />
@@ -761,7 +784,7 @@ const Owner = () => {
     );
   }
 
-  if (!properties && properties.length < 1) {
+  if (propertyData.length < 1) {
     return (
       <Wrapper>
         <div className="add-team-page">
@@ -772,12 +795,13 @@ const Owner = () => {
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              onClick={() => history.push('/addproperty')}
+              onClick={() => setVisibleProperty(true)}
             >
               {t('nolist.button1')}
             </Button>
           </div>
         </div>
+        <CreateProperty visible={visibleProperty} onCancel={closeCreateProperty} />
       </Wrapper>
     );
   }

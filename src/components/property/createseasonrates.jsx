@@ -20,7 +20,7 @@ import moment from 'moment';
 import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
 
-import { userInstance } from '../../axios/axiosconfig';
+import { propertyInstance } from '../../axios/axiosconfig';
 
 const CreateSeasonRates = () => {
   const { RangePicker } = DatePicker;
@@ -230,7 +230,7 @@ const CreateSeasonRates = () => {
   const onFinish = async (values) => {
     const params = queryString.parse(window.location.search);
     values.id = params.seasonRateId;
-    values.unitTypeId = localStorage.getItem('unittypeId');
+    values.unitTypeId = localStorage.getItem('propertyV2Id');
     values.checkIn_on_monday = checkInBox.monday;
     values.checkIn_on_tuesday = checkInBox.tuesday;
     values.checkIn_on_wednesday = checkInBox.wednesday;
@@ -246,7 +246,7 @@ const CreateSeasonRates = () => {
     values.checkOut_on_saturday = checkOutBox.saturday;
     values.checkOut_on_sunday = checkOutBox.sunday;
 
-    const response = await userInstance.post('/addSeasonRates', values);
+    const response = await propertyInstance.post('/addSeasonRates', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
       toast.success('Season rates update successfully', { containerId: 'B' });
@@ -260,7 +260,7 @@ const CreateSeasonRates = () => {
     const values = queryString.parse(window.location.search);
     const { seasonRateId } = values;
     if (seasonRateId !== undefined) {
-      const response = await userInstance.get(`/getSeasonRate/${seasonRateId}`);
+      const response = await propertyInstance.get(`/getSeasonRate/${seasonRateId}`);
       if (response.data.code === 200) {
         const data = response.data.seasonRateData[0];
         let m1;
@@ -326,7 +326,20 @@ const CreateSeasonRates = () => {
         });
       }
     }
-  }, [form, checkInBox, checkOutBox]);
+    // eslint-disable-next-line
+  }, []);
+
+  const onChangePricePerNight = (pricePerNight) => {
+    form.setFieldsValue({
+      priceOnMon: pricePerNight,
+      priceOnTues: pricePerNight,
+      priceOnWed: pricePerNight,
+      priceOnThu: pricePerNight,
+      priceOnFri: pricePerNight,
+      priceOnSat: pricePerNight,
+      priceOnSun: pricePerNight,
+    });
+  };
 
   useEffect(() => {
     fetchData();
@@ -407,7 +420,10 @@ const CreateSeasonRates = () => {
                           },
                         ]}
                       >
-                        <Input placeholder="$ 100" />
+                        <Input
+                          placeholder="$"
+                          onChange={(e) => onChangePricePerNight(e.target.value)}
+                        />
                       </Form.Item>
                     </Col>
                     <Col span={1} />
@@ -635,93 +651,44 @@ const CreateSeasonRates = () => {
                           <Form.Item
                             label="Mo"
                             name="minStayOnMon"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Tu"
                             name="minStayOnTues"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="We"
                             name="minStayOnWed"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Th"
                             name="minStayOnThu"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Fr"
                             name="minStayOnFri"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Sa"
                             name="minStayOnSat"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item
                             label="Su"
                             name="minStayOnSun"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder="1" />
                           </Form.Item>
                           <Form.Item>
                             <span>nights</span>
@@ -757,8 +724,8 @@ const CreateSeasonRates = () => {
                           // ]}
                         >
                           <Input placeholder="$" />
+                          <span>after</span>
                         </Form.Item>
-                        <span>after</span>
                       </Col>
                       <Col span={1} />
                       <Col span={6}>
@@ -802,9 +769,10 @@ const CreateSeasonRates = () => {
                           //   },
                           // ]}
                         >
+                          {' '}
+                          <span>A short stay has no more than</span>
                           <Input type="number" placeholder="nights" />
                         </Form.Item>
-                        <span>A short stay has no more than</span>
                       </Col>
 
                       <Col span={24}>
@@ -819,9 +787,9 @@ const CreateSeasonRates = () => {
                           //   },
                           // ]}
                         >
+                          <span>Extra charge per night</span>
                           <Input type="number" placeholder="$" />
                         </Form.Item>
-                        <span>Extra charge per night</span>
                       </Col>
                     </Row>
                   </div>
