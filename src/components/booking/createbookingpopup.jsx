@@ -184,7 +184,7 @@ const CreateBookingPopup = (props) => {
     values.propertyId = currentPropertyId;
     values.channel = channel;
     values.commission = channelCommission;
-    // values.unitName = unitName;
+    values.unitName = unitName;
     values.affiliateId = userId;
 
     const response = await bookingInstance.post('/addBooking', values);
