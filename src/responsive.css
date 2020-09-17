@@ -473,13 +473,31 @@ input[type=number]{
 /******************************************************************************************************/
 
 
-@media screen and (max-width:1024px){
+@media screen and (max-width:1440px){
 ul.ant-menu.main-menu, ul.ant-menu.main-menu-mbl {
-    height: calc(60vh - 45px)!important;
+    height: calc(55vh - 0px)!important;
     overflow-y: auto;
     overflow-x: hidden;
     padding-bottom: 50px;
 }
+
+ul.ant-menu.main-menu::-webkit-scrollbar-track, ul.ant-menu.main-menu-mbl::-webkit-scrollbar-track{
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+ul.ant-menu.main-menu::-webkit-scrollbar, ul.ant-menu.main-menu-mbl::-webkit-scrollbar
+{
+	width: 0px;
+	background-color: #F5F5F5;
+}
+
+ul.ant-menu.main-menu::-webkit-scrollbar-thumb, ul.ant-menu.main-menu-mbl::-webkit-scrollbar-thumb
+{
+	background-color: #999;
+}
+
+
 }
 
 @media screen and (max-width:767px){

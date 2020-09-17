@@ -96,6 +96,7 @@ const CreateBookingPopup = (props) => {
   const [propertyData, setPropertyData] = useState([]);
   const [currentPropertyId, setCurrentPropertyId] = useState(null);
   const [noOfAdult, setNoOfAdult] = useState(0);
+  const [guestEle, setGuestEle] = useState(0);
   // const [ratesData, setRatesData] = useState({});
   // const history = useHistory();
   // const regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
@@ -112,8 +113,9 @@ const CreateBookingPopup = (props) => {
     setPanel([...panel, i]);
   };
 
-  const guestForm = () => {
+  const guestForm = (value) => {
     setVisibleGuest(true);
+    setGuestEle(value);
   };
 
   const removePanel = () => {
@@ -238,7 +240,7 @@ const CreateBookingPopup = (props) => {
     const data = response.data.servicData;
     // const response2 = await userInstance.post('/getUnit', payload);
     // const data2 = response2.data.unitData;
-    await userInstance.post('/getUnittype', payload);
+    // await userInstance.post('/getUnittype', payload);
     // const data3 = response3.data.unittypeData;
     if (response.data.code === 200) {
       setServiceData(data);
@@ -730,7 +732,7 @@ const CreateBookingPopup = (props) => {
             <Col span={24}>
               <div
                 className="additional-edit"
-                onClick={guestForm}
+                onClick={() => guestForm(el)}
                 role="presentation"
               >
                 <div>
@@ -759,7 +761,7 @@ const CreateBookingPopup = (props) => {
               <Col span={12}>
                 <Form.Item
                   label={t('strings.full')}
-                  name={[el, 'fullName']}
+                  name={[guestEle, 'fullName']}
                   style={{ paddingRight: 20 }}
                   rules={[
                     {
@@ -775,7 +777,7 @@ const CreateBookingPopup = (props) => {
               <Col span={12}>
                 <Form.Item
                   label={t('guestpopup.label2')}
-                  name={[el, 'country']}
+                  name={[guestEle, 'country']}
                   rules={[{ required: true, message: t('guestpopup.label3') }]}
                 >
                   <CountryDropdown />
@@ -787,7 +789,7 @@ const CreateBookingPopup = (props) => {
               <Col span={12}>
                 <Form.Item
                   label={t('strings.email')}
-                  name={[el, 'email']}
+                  name={[guestEle, 'email']}
                   style={{ paddingRight: 20 }}
                   rules={[{ required: true }]}
                 >
@@ -798,7 +800,7 @@ const CreateBookingPopup = (props) => {
               <Col span={12}>
                 <Form.Item
                   label={t('strings.phone')}
-                  name={[el, 'phone']}
+                  name={[guestEle, 'phone']}
                   rules={[{ required: true }]}
                 >
 
@@ -810,7 +812,7 @@ const CreateBookingPopup = (props) => {
             <Row style={{ alignItems: 'center' }}>
               <Col span={12}>
                 <Form.Item
-                  name={[el, 'dob']}
+                  name={[guestEle, 'dob']}
                   label={t('strings.dob')}
                   style={{ paddingRight: 20 }}
                 >
@@ -819,7 +821,7 @@ const CreateBookingPopup = (props) => {
               </Col>
 
               <Col span={12}>
-                <Form.Item name={[el, 'gender']} label={t('strings.gender')}>
+                <Form.Item name={[guestEle, 'gender']} label={t('strings.gender')}>
                   <Radio.Group name="radiogroup" defaultValue={1}>
                     <Radio value={1}>M</Radio>
                     <Radio value={2}>F</Radio>
@@ -833,13 +835,13 @@ const CreateBookingPopup = (props) => {
               <Col span={12}>
                 <Form.Item
                   label={t('guestpopup.label4')}
-                  name={[el, 'typeOfDoc']}
+                  name={[guestEle, 'typeOfDoc']}
                   style={{ paddingRight: 20 }}
 
                 >
                   <Select
                     placeholder={t('guestpopup.label4')}
-                    name={[el, 'typeOfDoc']}
+                    name={[guestEle, 'typeOfDoc']}
                     rules={[
                       {
                         required: true,
@@ -858,7 +860,7 @@ const CreateBookingPopup = (props) => {
               <Col span={12}>
                 <Form.Item
                   label={t('guestpopup.label6')}
-                  name={[el, 'docNo']}
+                  name={[guestEle, 'docNo']}
                   rules={[{ required: true, message: t('guestpopup.label5') }]}
                 >
                   <Input />
