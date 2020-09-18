@@ -114,16 +114,18 @@ const Booking = () => {
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
-    const data2 = [];
-    const data = response.data.propertiesData;
-    data
-      .filter((el) => el.id === parseInt(topNavId, 10))
-      .forEach((filterData) => {
-        data2.push(filterData);
-      });
     if (response.data.code === 200) {
-      setLoading(false);
-      setPropertyData(data2.length > 0 ? data2 : data);
+      const data2 = [];
+      const data = response.data.propertiesData;
+      data
+        .filter((el) => el.id === parseInt(topNavId, 10))
+        .forEach((filterData) => {
+          data2.push(filterData);
+        });
+      if (response.data.code === 200) {
+        setLoading(false);
+        setPropertyData(data2.length > 0 ? data2 : data);
+      }
     }
   }, [userId, topNavId]);
 
@@ -140,47 +142,45 @@ const Booking = () => {
     });
     if (response.data.code === 200) {
       setLoading(false);
-    }
-    const bookingdata = response.data.bookingData;
-    const guestdata = response.data.guestData;
-    const servicedata = response.data.serviceData[0];
-    const guestnum = guestdata.map((el) => el.length);
-    const guestname = [];
-    const data = guestdata.map((el) => el.find((ele) => ele.id));
-    if (data.length) {
-      data.forEach((el) => {
-        if (el.fullname) {
-          guestname.push(el.fullname);
-        } else {
-          guestname.push('Unknown Guest');
-        }
+      const bookingdata = response.data.bookingData;
+      const guestdata = response.data.guestData;
+      const servicedata = response.data.serviceData[0];
+      const guestnum = guestdata.map((el) => el.length);
+      const guestname = [];
+      const data = guestdata.map((el) => el.find((ele) => ele.id));
+      if (data.length) {
+        data.forEach((el) => {
+          if (el.fullname) {
+            guestname.push(el.fullname);
+          } else {
+            guestname.push('Unknown Guest');
+          }
+        });
+      } else {
+        guestname.push('Unknown Guest');
+      }
+      guestname.push(data.fullname);
+      bookingdata.forEach((el, i) => {
+        el[`checked${i}`] = false;
+        const d1 = new Date(el.startDate);
+        const d2 = new Date(el.endDate);
+        const diff = Math.abs(d1 - d2);
+        const day = Math.floor(diff / (24 * 60 * 60 * 1000));
+        el.nights = day;
+        // el.nights = day + 1;
+        el.created_date = el.created_at.split('T', 1);
+        el.created_time = el.created_at.split('T').pop().substring(0, 5);
+        el.noOfGuest = guestnum[i];
+        el.guest = guestname[i] || 'Unknown Guest';
       });
-    } else {
-      guestname.push('Unknown Guest');
-    }
-    guestname.push(data.fullname);
-    bookingdata.forEach((el, i) => {
-      el[`checked${i}`] = false;
-      const d1 = new Date(el.startDate);
-      const d2 = new Date(el.endDate);
-      const diff = Math.abs(d1 - d2);
-      const day = Math.floor(diff / (24 * 60 * 60 * 1000));
-      el.nights = day;
-      // el.nights = day + 1;
-      el.created_date = el.created_at.split('T', 1);
-      el.created_time = el.created_at.split('T').pop().substring(0, 5);
-      el.noOfGuest = guestnum[i];
-      el.guest = guestname[i] || 'Unknown Guest';
-    });
 
-    // bookingdata.filter((el) =>
-    // el.propertyId === parseInt(localStorage.getItem('topNavId'), 10)).map((filter) =>
-    // setBookingData([filter]);
-    // );
+      // bookingdata.filter((el) =>
+      // el.propertyId === parseInt(localStorage.getItem('topNavId'), 10)).map((filter) =>
+      // setBookingData([filter]);
+      // );
 
-    // console.log('guestdata', guestdata);
-    // console.log('servicedata', servicedata);
-    if (response.data.code === 200) {
+      // console.log('guestdata', guestdata);
+      // console.log('servicedata', servicedata);
       if (topNavId) {
         const arr = [];
         bookingdata
