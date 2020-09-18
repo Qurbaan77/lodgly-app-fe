@@ -784,7 +784,15 @@ const Owner = () => {
     );
   }
 
-  if (propertyData.length < 1) {
+  if (!hasAccess) {
+    return (
+      <Wrapper>
+        <UserLock />
+      </Wrapper>
+    );
+  }
+
+  if (propertyData && propertyData.length < 1) {
     return (
       <Wrapper>
         <div className="add-team-page">
@@ -818,13 +826,9 @@ const Owner = () => {
         />
         <body className="owner-page-view" />
       </Helmet>
-      {hasAccess ? (
+      {
         pageContent
-      ) : (
-        <Wrapper>
-          <UserLock />
-        </Wrapper>
-      )}
+ }
     </>
   );
 };

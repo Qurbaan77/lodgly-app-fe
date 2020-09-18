@@ -469,6 +469,7 @@ const Invoice = () => {
   const perm = isSubUser ? btn : enableButton;
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+
   if (loading) {
     return (
       <Wrapper>
@@ -488,6 +489,14 @@ const Invoice = () => {
             <img src={loader} alt="loader" />
           </div>
         </div>
+      </Wrapper>
+    );
+  }
+
+  if (!hasAccess) {
+    return (
+      <Wrapper>
+        <UserLock />
       </Wrapper>
     );
   }
@@ -948,7 +957,7 @@ const Invoice = () => {
       )}
     </>
   );
-  if (propertyInfo.length < 1) {
+  if (propertyInfo && propertyInfo.length < 1) {
     return (
       <Wrapper>
         <Helmet>
@@ -993,13 +1002,7 @@ const Invoice = () => {
         />
         <body className="invoice-page-view" />
       </Helmet>
-      {hasAccess ? (
-        pageContent
-      ) : (
-        <Wrapper>
-          <UserLock />
-        </Wrapper>
-      )}
+      { pageContent }
     </>
   );
 };

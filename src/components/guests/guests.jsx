@@ -18,6 +18,7 @@ import moment from 'moment';
 import { toast } from 'react-toastify';
 import favicon from '../../assets/images/logo-mobile.png';
 import Wrapper from '../wrapper';
+import UserLock from '../userlock/userlock';
 import guesticon from '../../assets/images/guest-icon.png';
 
 import night from '../../assets/images/night.png';
@@ -44,8 +45,18 @@ const GuestList = () => {
   const [visibleGuest, setVisibleGuest] = useState(false);
   const [visibiltyOFDelete, setVisibiltyOFDelete] = useState(false);
   const [editValues, setEditValues] = useState({});
+  const [subscribed, setSubscribed] = useState(true);
+  const [onTrial, setOnTrial] = useState(true);
+  const [daysLeft, setDaysLeft] = useState();
 
   const getData = useCallback(async () => {
+    const res = await userInstance.get('/getUserSubscriptionStatus');
+    if (res.data.code === 200) {
+      const [{ days, isOnTrial, isSubscribed }] = res.data.userSubsDetails;
+      setDaysLeft(parseInt(days, 10));
+      setSubscribed(JSON.parse(isSubscribed));
+      setOnTrial(JSON.parse(isOnTrial));
+    }
     const response = await userInstance.post('/getGuest');
     if (response.data.code === 200) {
       setGuestData(response.data.guestData);
@@ -209,6 +220,7 @@ const GuestList = () => {
       setMenuToggle(!menutoggle);
     }
   };
+  const hasAccess = onTrial && daysLeft !== 0 ? true : subscribed;
 
   if (loading) {
     return (
@@ -222,7 +234,15 @@ const GuestList = () => {
     );
   }
 
-  if (guestData.length < 1) {
+  if (!hasAccess) {
+    return (
+      <Wrapper>
+        <UserLock />
+      </Wrapper>
+    );
+  }
+
+  if (guestData && guestData.length < 1) {
     return (
       <Wrapper>
         <NoGuest />

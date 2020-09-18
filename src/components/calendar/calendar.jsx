@@ -162,7 +162,7 @@ const Calendar = () => {
         data2.push(filterData);
       });
     if (response.data.code === 200) {
-      setLoading(false);
+      // setLoading(false);
       setPropertyData(data2.length > 0 ? data2 : data);
     }
   }, [userId, topNavId]);
@@ -174,6 +174,7 @@ const Calendar = () => {
       setDaysLeft(parseInt(days, 10));
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
+      setLoading(false);
     }
     const response = await reservationInstance.post('/getReservation', {
       affiliateId: userId,
@@ -364,7 +365,15 @@ const Calendar = () => {
     );
   }
 
-  if (propertyData.length < 1) {
+  if (!hasAccess) {
+    return (
+      <Wrapper>
+        <UserLock />
+      </Wrapper>
+    );
+  }
+
+  if (propertyData && propertyData.length < 1) {
     return (
       <Wrapper>
         <Helmet>
@@ -410,47 +419,43 @@ const Calendar = () => {
         />
         <body className="calendar-page-view" />
       </Helmet>
-      {hasAccess ? (
-        <div className="calendar">
-          <div className="calendar-btn">
-            {isSubUser ? (
-              btn
-            ) : (
-              <>
-                <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                  {t('addreservation.heading31')}
-                </Button>
-                {topNavId ? enableButton : disabledButton}
-              </>
-            )}
-          </div>
-
-          <div className="calendar-calendar">
-            <GSTC config={config} onState={onState} />
-          </div>
-
-          <AddReservation
-            title={t('addreservation.heading34')}
-            visible={visible}
-            onOk={handleOk}
-            close={handleCancel}
-            wrapClassName="create-booking-modal"
-            getData={getData}
-          />
-
-          <GroupReservation
-            title={t('calendarpop.heading4')}
-            visible={visibleGroupReserv}
-            onOk={handleOk}
-            close={handleCancel}
-            userData={userData}
-            data={data}
-            getData={getData}
-          />
+      <div className="calendar">
+        <div className="calendar-btn">
+          {isSubUser ? (
+            btn
+          ) : (
+            <>
+              <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+                {t('addreservation.heading31')}
+              </Button>
+              {topNavId ? enableButton : disabledButton}
+            </>
+          )}
         </div>
-      ) : (
-        <UserLock />
-      )}
+
+        <div className="calendar-calendar">
+          <GSTC config={config} onState={onState} />
+        </div>
+
+        <AddReservation
+          title={t('addreservation.heading34')}
+          visible={visible}
+          onOk={handleOk}
+          close={handleCancel}
+          wrapClassName="create-booking-modal"
+          getData={getData}
+        />
+
+        <GroupReservation
+          title={t('calendarpop.heading4')}
+          visible={visibleGroupReserv}
+          onOk={handleOk}
+          close={handleCancel}
+          userData={userData}
+          data={data}
+          getData={getData}
+        />
+      </div>
     </Wrapper>
   );
 };
