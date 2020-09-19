@@ -457,7 +457,7 @@ const CreateBookingPopup = (props) => {
     if (value) {
       setSelectDate(value);
       setStartDate(value[0]._d.getDate());
-      setStartDateMonth(value[0]._d.getMonth() + 1);
+      setStartDateMonth(`0${value[0]._d.getMonth() + 1}`.slice(-2));
       const now = new Date(value[0]._d);
       const days = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
       setCurrMonthDay(days);
@@ -958,7 +958,10 @@ const CreateBookingPopup = (props) => {
                 {' '}
                 Option is active untill
               </p>
-              <DatePicker onChange={onOptionalDate} />
+              <DatePicker
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onOptionalDate}
+              />
               <span>
                 (days left:
                 {leftDays}

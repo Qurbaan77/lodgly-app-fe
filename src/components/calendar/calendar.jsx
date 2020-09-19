@@ -26,7 +26,7 @@ const Calendar = () => {
   // const [guestName, setGuestName] = useState('');
   const [data, setData] = useState([]);
   // const [unitData, setUnitData] = useState([]);
-  const [unittypeData, setUnittypeData] = useState([]);
+  // const [unittypeData, setUnittypeData] = useState([]);
   const [visible, setVisible] = useState(false);
   const [visibleGroupReserv, setVisibleGroupReserv] = useState(false);
   const [topNavId, setTopNavId] = useState(0);
@@ -189,6 +189,7 @@ const Calendar = () => {
     const response = await reservationInstance.post('/getReservation', {
       affiliateId: userId,
     });
+    console.log(response);
     // const { reservationData: data } = response.data;
     // if (response.data.code === 200) {
     //   setLoading(false);
@@ -208,11 +209,11 @@ const Calendar = () => {
       affiliateId: userId,
     });
     console.log('getReservationCalendarData', response);
-    const { unittypeData: data0 } = response.data;
+    // const { unittypeData: data0 } = response.data;
     // const { unitData: data1 } = response.data;
     if (response.data.code === 200) {
       setLoading(false);
-      setUnittypeData(data0);
+      // setUnittypeData(data0);
       // setUnitData(data1);
     }
   }, [userId]);

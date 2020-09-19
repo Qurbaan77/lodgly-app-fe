@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import './calendar.css';
@@ -44,8 +45,8 @@ const GroupReservation = (props) => {
   const [startDateMonth, setStartDateMonth] = useState('');
   // const [units, setUnits] = useState(0);
   // const [price, setPrice] = useState(0);
-  const [night, setNight] = useState(0);
-  const [total, setTotal] = useState(0);
+  // const [night, setNight] = useState(0);
+  // const [total, setTotal] = useState(0);
   const [currMonthDay, setCurrMonthDay] = useState(0);
   const [showOptional, setShowOptional] = useState(true);
   const [leftDays, setLeftDays] = useState(0);
@@ -89,41 +90,41 @@ const GroupReservation = (props) => {
       setCurrMonthDay(days);
       // setRangeDate(value);
       setStartDate(value[0]._d.getDate());
-      setStartDateMonth(value[0]._d.getMonth() + 1);
+      setStartDateMonth(`0${value[0]._d.getMonth() + 1}`.slice(-2));
       // console.log('value[0]._d.daysInMonth()', value[0]._d.daysInMonth());
       const d1 = new Date(value[0]._d);
       //  console.log(d1.daysInMonth());
       const d2 = new Date(value[1]._d);
       const diff = Math.abs(d1 - d2);
       const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
-      setNight(day);
+      // setNight(day);
       setDaysArr(Array.from(Array(day).keys()));
       setShow(false);
     }
   };
 
-  const priceFunction = useCallback(
-    (value, i) => {
-      form.setFieldsValue({
-        [`array${i}`]: {
-          amount: Math.floor(night * value),
-        },
-      });
+  // const priceFunction = useCallback(
+  //   (value, i) => {
+  //     form.setFieldsValue({
+  //       [`array${i}`]: {
+  //         amount: Math.floor(night * value),
+  //       },
+  //     });
 
-      setTotal(0);
+  //     setTotal(0);
 
-      daysArr.forEach((el, j) => {
-        form.setFieldsValue({
-          [`array${i}`]: {
-            [`${j}`]: {
-              everyDayPrice: value,
-            },
-          },
-        });
-      });
-    },
-    [daysArr, form, night],
-  );
+  //     daysArr.forEach((el, j) => {
+  //       form.setFieldsValue({
+  //         [`array${i}`]: {
+  //           [`${j}`]: {
+  //             everyDayPrice: value,
+  //           },
+  //         },
+  //       });
+  //     });
+  //   },
+  //   [daysArr, form, night],
+  // );
 
   const onOptionalDate = (value) => {
     if (value) {
@@ -153,34 +154,32 @@ const GroupReservation = (props) => {
               label={t('strings.reservation_date')}
               name="groupname"
               style={{ paddingRight: 20 }}
+              onChange={onCalendarChange}
               rules={[
                 {
                   required: true,
                 },
               ]}
             >
-              <RangePicker onCalendarChange={onCalendarChange} />
+              <RangePicker
+                defaultValue={moment()}
+                format="YYYY-MM-DD"
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onCalendarChange}
+              />
             </Form.Item>
           </Col>
 
           <Col span={12}>
-            <Form.Item name="radiogroup" label="Radio.Group">
-              <Radio.Group defaultValue={1}>
-                <Radio value={1} onClick={() => setShowOptional(true)}>
-                  {t('strings.confirmed')}
-                </Radio>
-                <Radio value={2} onClick={() => setShowOptional(false)}>
-                  {t('strings.option')}
-                </Radio>
-              </Radio.Group>
-            </Form.Item>
+            <Radio.Group defaultValue={1}>
+              <Radio value={1} onClick={() => setShowOptional(true)}>
+                {t('strings.confirmed')}
+              </Radio>
+              <Radio value={2} onClick={() => setShowOptional(false)}>
+                {t('strings.option')}
+              </Radio>
+            </Radio.Group>
           </Col>
-
-          {/* <Col span={24}>
-            <div className="availability">
-              <p>{t('calendarpop.label6')}</p>
-            </div>
-          </Col> */}
 
           <Col span={24}>
             <div className="option-content" hidden={showOptional}>
@@ -189,7 +188,10 @@ const GroupReservation = (props) => {
                 {' '}
                 Option is active untill
               </p>
-              <DatePicker onChange={onOptionalDate} />
+              <DatePicker
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onOptionalDate}
+              />
               <span>
                 (days left:
                 {leftDays}
@@ -255,7 +257,7 @@ const GroupReservation = (props) => {
         <Row
           style={{
             alignItems: 'center',
-            padding: '0px 20px',
+            padding: '0px 0px',
           }}
           hidden={show}
         >
@@ -268,30 +270,24 @@ const GroupReservation = (props) => {
                   <Col span={6}>
                     <h3>Units</h3>
                     <div className="unit-boxes">
-                      <p>Unit type 1</p>
+                      <p>{el}</p>
                       <h5>Available: 1</h5>
                     </div>
                   </Col>
                   <Col span={6}>
                     <h3>No of units</h3>
                     <div className="unit-boxes">
-                      {/* <div className="input-group">
-                      <Button type="primary" icon={<MinusOutlined />} />
-                      <Input placeholder="1" />
-                      <Button type="primary" icon={<PlusOutlined />} />
-                    </div> */}
-                      <CounterInput min={0} max={10} />
+                      <div className="input-counter">
+                        <CounterInput min={0} max={10} />
+                      </div>
                     </div>
                   </Col>
                   <Col span={6}>
                     <h3>Price per night / units</h3>
                     <div className="unit-boxes">
-                      {/* <div className="input-group">
-                      <Button type="primary" icon={<MinusOutlined />} />
-                      <Input placeholder="1" />
-                      <Button type="primary" icon={<PlusOutlined />} />
-                    </div> */}
-                      <CounterInput min={0} max={10} />
+                      <div className="input-counter">
+                        <CounterInput min={0} max={10} />
+                      </div>
                     </div>
                   </Col>
                   <Col span={6}>
@@ -309,7 +305,7 @@ const GroupReservation = (props) => {
                       <Collapse accordion>
                         <Panel
                           icon={<PlusSquareOutlined />}
-                          header="Price per night"
+                          header="Individual prices per night"
                           key="11"
                         >
                           <div className="night-container">
@@ -318,8 +314,8 @@ const GroupReservation = (props) => {
                                 <Form.Item
                                   label={
                                     startDate + j <= currMonthDay
-                                      ? `${startDate + j} : ${startDateMonth}`
-                                      : `${0 + j} : ${startDateMonth + 1}`
+                                      ? `${startDate + j} / ${startDateMonth}`
+                                      : `${0 + j} / ${startDateMonth}`
                                   }
                                   name={[`array${i}`, ele, 'everyDayPrice']}
                                 >
