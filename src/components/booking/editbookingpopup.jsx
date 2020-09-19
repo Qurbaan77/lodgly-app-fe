@@ -130,7 +130,7 @@ const Editbookingpopup = (props) => {
         });
       }
 
-      currentService[0].forEach((el, i) => {
+      currentService.forEach((el, i) => {
         form.setFieldsValue({
           [`serviceName${i}`]: el.serviceName,
           [`servicePrice${i}`]: el.servicePrice,
@@ -199,13 +199,17 @@ const Editbookingpopup = (props) => {
     setPanel([...panel, i]);
   };
 
-  // const addMoreService = async () => {
-  //   if (currentService.length) {
-  //     setCurrentService(currentService.concat([{}]));
-  //     // const value = localStorage.getItem('propertyId');
-  //     // fun1(value);
-  //   }
-  // };
+  const addMoreService = async () => {
+    // if (currentService.length) {
+    let i;
+    currentService.forEach((el) => {
+      i = el.id;
+    });
+    setCurrentService(currentService.concat([{ id: i + 1 }]));
+    // const value = localStorage.getItem('propertyId');
+    // fun1(value);
+    // }
+  };
 
   const onFinish = async (values) => {
     values.id = localStorage.getItem('bookingId');
@@ -226,7 +230,7 @@ const Editbookingpopup = (props) => {
         const e = 'email';
         const c = 'country';
         const p = 'phone';
-        el.id = el.id || null;
+        // el.id = el.id || null;
         el.bookingId = el.bookingId || localStorage.getItem('bookingId');
         el.fullname = values[f + i];
         el.email = values[e + i];
@@ -960,7 +964,7 @@ const Editbookingpopup = (props) => {
               </div>
             </Col>
 
-            {/* <Col span={24}>
+            <Col span={24}>
               <div
                 role="presentation"
                 className="srvice-heading"
@@ -970,7 +974,7 @@ const Editbookingpopup = (props) => {
                 {' '}
                 {t('editbookingpopup.heading21')}
               </div>
-            </Col> */}
+            </Col>
 
             <Col span={24}>
               <Form.Item style={{ marginBottom: '0' }}>
@@ -986,7 +990,7 @@ const Editbookingpopup = (props) => {
                   >
                     <div className="service-form">
                       {currentService.length
-                        ? currentService[0].map((el, j) => (
+                        ? currentService.map((el, j) => (
                           <div className="inline-form">
                             <div className="delete-data">
                               <DeleteOutlined

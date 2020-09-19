@@ -503,14 +503,6 @@
    "heading32":" Rezerwacja grupowa",
    "heading33":"Nie masz uprawnień do dodawania rezerwacji",
    "headig34":"Dodaj nową rezerwację"
-
-  
- 
-
-  
-
-
-
 },
 "services": {
   "heading1":"Dodaj usługi",
@@ -522,7 +514,10 @@
   "heading8":"Proszę podać cenę",
   "heading9":"Ilość standardowa",
   "label18": "dodaj usługę",
-  "label19": "Edytuj usługę"
+  "label19": "Edytuj usługę",
+  "th1": "Nazwa usługi",
+  "th2": "Cena",
+  "th3": "Ilość"
 },
 
 "calendarpop": {
@@ -792,7 +787,6 @@
 },
 "reset": {
   "heading1": " Uzyskaj nowe hasło",
-  "label2": " Wpisz swój adres e-mail, aby zresetować hasło",
   "label3": " Adres e-mail",
   "label4": "Podaj swój adres e-mail!",
   "label5": "Wprowadzone dane są nieprawidłowe. E-mail!",
@@ -1091,6 +1085,7 @@
   "label1":"Jaka jest wielkość twojej nieruchomości?",
   "label2": "Ilu gości może pomieścić Twoje miejsce?",
   "label3": "Ile masz jednostek tego wynajmu?",
+  "label4": "Ile jednostek sypialni ma ten wynajem?",
   "message1": "Wprowadź wartość",
   "button1": "Zapisz",
   "button2": "Edycja układów spania",
@@ -1184,7 +1179,96 @@
    "paragraph4": "najlepsze ogólne wrażenie twojego miejsca.",
    "paragraph5": "Kliknij lub przeciągnij plik do tego obszaru, aby przesłać",
    "paragraph6": "Obsługa przekazywania pojedynczego lub zbiorczego."
-   }
+   },
+   "rates":{
+    "heading1": "Stawki",
+    "heading2": "Cena za noc & Min pobytu",
+    "heading3": "Ceny pobytu",
+    "heading4": "Cena za dzień powszedni",
+    "heading5": "Minimalny pobyt w dni powszednie",
+    "heading6": "Obłożenie",
+    "heading7": "Premia za krótki pobyt",
+    "heading8": "Ograniczenia dotyczące zameldowania/wymeldowania",
+    "heading9": "Podatek od sprzedaży / VAT",
+    "heading10": "Noty cenowe",
+    "placeholder1": "Domyślna stawka",
+    "placeholder2": "Usd",
+    "placeholder3": "$",
+    "placeholder4": "noce 1",
+    "placeholder5": "$",
+    "placeholder6": "$",
+    "placeholder7": "$",
+    "placeholder8": "$",
+    "placeholder9": "$",
+    "placeholder10": "$",
+    "placeholder11": "$",
+    "placeholder12": "1",
+    "placeholder13": "1. Gość",
+    "placeholder14": "Nocy",
+    "placeholder15": "Ceny z podatkiem od sprzedaży / VAT",
+    "placeholder16": "% 0",
+    "label1": "Tu",
+    "label2": "We",
+    "label3": "Th",
+    "label4": "Fr",
+    "label5": "Sa",
+    "label6": "Su",
+    "label7": "Mo",
+    "label8": "Tu",
+    "label9": "Wybierz wszystkie",
+    "option1": "USD",
+    "option2": "EURO",
+    "option3": "1. Gość",
+    "option4": "2. Gość",
+    "option5": "3. Gość",
+    "option6": "Ceny z podatkiem od sprzedaży / VAT",
+    "option7": "Ceny bez podatku od sprzedaży / VAT",
+    "span1": "Nocy",
+    "span2": "nocy",
+    "span3": "Po",
+    "span4": "Krótki pobyt nie ma więcej niż",
+    "span5": "Dodatkowa opłata za noc",
+    "span6": "Zamelduj się",
+    "span7": "Wymelduj się",
+    "span8": "Jeśli wybrałeś wliczone: gość płaci za noc",
+    "span9": "Koszt",
+    "span10": "Jeśli wybrałeś wykluczony: gość płaci za noc",
+    "span11": "koszt + podatek",
+    "check": "Okres niestandardowy",
+    "paragraph1": "Ustaw domyślną cenę za noc, a minimalna liczba gości",
+    "paragraph2": "zobacz swoją aukcję i sprawdź, jak są wyświetlane wartości",
+    "paragraph3": "w twojej witrynie",
+    "paragraph4": "Ustaw zniżki w przypadku rezerwacji obejmujących 7 nocy lub",
+    "paragraph5": "Dłuższy. Dodaj dodatkowe ceny za tydzień i miesiąc.",
+    "paragraph6": "Ustaw tutaj inną stawkę nocną w zależności od dnia",
+    "paragraph7": "w tygodniu. W przypadku, gdy masz zarówno",
+    "paragraph8": "Cena za noc",
+    "paragraph9": "I",
+    "paragraph10": "Cena za dzień powszedni",
+    "paragraph11": "Ustawienia,",
+    "paragraph12": "Cena za dzień powszedni",
+    "paragraph13": "zostaną zastosowane.",
+    "paragraph14": "Ustaw inny minimalny pobyt w zależności od dnia",
+    "paragraph15": "Tygodniu.",
+    "paragraph16": "Ustaw dodatkową opłatę za osobę za noc.",
+    "paragraph17": "Zwiększ stawkę za noc, jeśli gość pozostaje tylko na krótki czas",
+    "paragraph18": "Godzina.",
+    "paragraph19": "Ogranicz zameldowanie i wymeldowanie do określonych dni",
+    "paragraph20": "Tygodniu.",
+    "paragraph21": "Ustaw podatek od sprzedaży / VAT dla stawki za pokój.",
+    "paragraph22": "Podaj więcej informacji o swoich stawkach i zasadach.",
+    "button1": "Stawki za kopiowanie",
+    "button2": "Zapisz"
+    },
+ 
+    "seasonrates":
+    {
+      "heading1": "STAWKI SEZONOWE",
+      "button1": "Dodaj sezon",
+      "paragraph1": "Ustawianie różnych stawek dla określonych okresów daty (do 3 lat",
+      "paragraph2": "z wyprzedzeniem). Stawki sezonowe zastąpią domyślne",
+      "paragraph3": "Stawka za te okresy."
+    }
  
 }
 

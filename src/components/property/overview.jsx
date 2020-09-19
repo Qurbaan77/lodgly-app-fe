@@ -69,7 +69,6 @@ const Overview = () => {
           [`unit${i + 1}`]: el,
         });
       });
-
       form.setFieldsValue({
         description: data.description,
         propertyType: data.propertyType,
@@ -160,11 +159,6 @@ const Overview = () => {
   const createArray = (value) => {
     setNoOfUnits(value);
     setUnitsArr(Array.from(Array(value).keys()));
-    // Array.from(Array(value).keys()).forEach((ele) => {
-    //   form2.setFieldsValue({
-    //     [`unit${ele + 1}`]: `Unit ${ele + 1}`,
-    //   });
-    // });
   };
 
   return (
@@ -318,7 +312,7 @@ const Overview = () => {
                           <Input placeholder="0.00" />
                         </Form.Item>
 
-                        <Form.Item label={t('overview.label2')}>
+                        <Form.Item label={t('overview.label4')}>
                           <div className="input-counter">
                             <CounterInput
                               min={0}
@@ -329,7 +323,7 @@ const Overview = () => {
                           </div>
                         </Form.Item>
 
-                        <Form.Item label="How many guests can your place accommodate?">
+                        <Form.Item label={t('overview.label2')}>
                           <div className="input-counter">
                             <CounterInput
                               min={0}

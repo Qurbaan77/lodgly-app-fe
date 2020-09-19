@@ -35,7 +35,7 @@ const BillingInformation = () => {
   const [unitsSelected, setUnitsSelected] = useState();
   const [planType, setPlanType] = useState('basic');
   const [subscriptionType, setSubscriptionType] = useState('month');
-  const [exchangeRate, setExchangeRate] = useState([]);
+  // const [exchangeRate, setExchangeRate] = useState([]);
   const [currency, setCurrency] = useState('EUR');
   const [data, addData] = useState();
   const [invoiceList, setInvoiceList] = useState([]);
@@ -60,26 +60,26 @@ const BillingInformation = () => {
   // const [showCard, setShowCard] = useState(true);
   // const [disablePayNow, setDisablePayNow] = useState(true);
 
-  useEffect(() => {
-    const getData = async () => {
-      const res = await userInstance.post('/getTotalUnit');
-      if (res.data.code === 200 || res.data.code === 404) {
-        // const units = res.data.totalUnit || 1;
-        // const range = Array(units + 50000 - units + 1)
-        //   .fill()
-        //   .map((_, idx) => units + idx);
-        // setUnitDropDown(range);
-      // setCanDowngrade(res.data.totalUnit < res.data.units);
-      }
-      const response = await userInstance.post('/getRate');
-      if (response.data.code === 200) {
-        const [{ CHF, PLN, GBP }] = response.data.rates;
-        const rates = { CHF, PLN, GBP };
-        setExchangeRate(rates);
-      }
-    };
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     const res = await userInstance.post('/getTotalUnit');
+  //     if (res.data.code === 200 || res.data.code === 404) {
+  //       // const units = res.data.totalUnit || 1;
+  //       // const range = Array(units + 50000 - units + 1)
+  //       //   .fill()
+  //       //   .map((_, idx) => units + idx);
+  //       // setUnitDropDown(range);
+  //     // setCanDowngrade(res.data.totalUnit < res.data.units);
+  //     }
+  //     // const response = await userInstance.post('/getRate');
+  //     // if (response.data.code === 200) {
+  //     //   const [{ CHF, PLN, GBP }] = response.data.rates;
+  //     //   const rates = { CHF, PLN, GBP };
+  //     //   setExchangeRate(rates);
+  //     // }
+  //   };
+  //   getData();
+  // }, []);
 
   // function for getting current subscription
 
@@ -148,12 +148,12 @@ const BillingInformation = () => {
           setTotal(amount);
         }
       }
-      if (currency === 'CHF' || currency === 'GBP' || currency === 'PLN') {
-        if (currency === 'CHF') setUnitPrice(advancePrice * exchangeRate.CHF);
-        if (currency === 'PLN') setUnitPrice(advancePrice * exchangeRate.PLN);
-        if (currency === 'GBP') setUnitPrice(advancePrice * exchangeRate.GBP);
-        setTotal(total * 2);
-      }
+      // if (currency === 'CHF' || currency === 'GBP' || currency === 'PLN') {
+      //   if (currency === 'CHF') setUnitPrice(advancePrice * exchangeRate.CHF);
+      //   if (currency === 'PLN') setUnitPrice(advancePrice * exchangeRate.PLN);
+      //   if (currency === 'GBP') setUnitPrice(advancePrice * exchangeRate.GBP);
+      //   setTotal(total * 2);
+      // }
     } else {
       setUnitPrice(basicPrice);
       if (total) {
@@ -165,76 +165,76 @@ const BillingInformation = () => {
           setTotal(amount);
         }
       }
-      if (currency === 'CHF' || currency === 'GBP' || currency === 'PLN') {
-        if (currency === 'CHF') setUnitPrice(basicPrice * exchangeRate.CHF);
-        if (currency === 'PLN') setUnitPrice(basicPrice * exchangeRate.PLN);
-        if (currency === 'GBP') setUnitPrice(basicPrice * exchangeRate.GBP);
-        if (subscriptionType === 'month' && currency === 'CHF') {
-          setTotal(basicPrice * exchangeRate.CHF * unitsSelected);
-        }
-        if (subscriptionType === 'month' && currency === 'PLN') {
-          setTotal(basicPrice * exchangeRate.PLN * unitsSelected);
-        }
-        if (subscriptionType === 'month' && currency === 'GBP') {
-          setTotal(basicPrice * exchangeRate.GBP * unitsSelected);
-        }
-        if (subscriptionType === 'year' && currency === 'CHF') {
-          setTotal(
-            basicPrice * exchangeRate.CHF * unitsSelected * 12
-              - (basicPrice * exchangeRate.CHF * unitsSelected * 12 * discount)
-                / 100,
-          );
-        }
-        if (subscriptionType === 'year' && currency === 'PLN') {
-          setTotal(
-            basicPrice * exchangeRate.PLN * unitsSelected * 12
-              - (basicPrice * exchangeRate.PLN * unitsSelected * 12 * discount)
-                / 100,
-          );
-        }
-        if (subscriptionType === 'year' && currency === 'GBP') {
-          setTotal(
-            basicPrice * exchangeRate.GBP * unitsSelected * 12
-              - (basicPrice * exchangeRate.GBP * unitsSelected * 12 * discount)
-                / 100,
-          );
-        }
-      }
+      // if (currency === 'CHF' || currency === 'GBP' || currency === 'PLN') {
+      //   if (currency === 'CHF') setUnitPrice(basicPrice * exchangeRate.CHF);
+      //   if (currency === 'PLN') setUnitPrice(basicPrice * exchangeRate.PLN);
+      //   if (currency === 'GBP') setUnitPrice(basicPrice * exchangeRate.GBP);
+      //   if (subscriptionType === 'month' && currency === 'CHF') {
+      //     setTotal(basicPrice * exchangeRate.CHF * unitsSelected);
+      //   }
+      //   if (subscriptionType === 'month' && currency === 'PLN') {
+      //     setTotal(basicPrice * exchangeRate.PLN * unitsSelected);
+      //   }
+      //   if (subscriptionType === 'month' && currency === 'GBP') {
+      //     setTotal(basicPrice * exchangeRate.GBP * unitsSelected);
+      //   }
+      //   if (subscriptionType === 'year' && currency === 'CHF') {
+      //     setTotal(
+      //       basicPrice * exchangeRate.CHF * unitsSelected * 12
+      //         - (basicPrice * exchangeRate.CHF * unitsSelected * 12 * discount)
+      //           / 100,
+      //     );
+      //   }
+      //   if (subscriptionType === 'year' && currency === 'PLN') {
+      //     setTotal(
+      //       basicPrice * exchangeRate.PLN * unitsSelected * 12
+      //         - (basicPrice * exchangeRate.PLN * unitsSelected * 12 * discount)
+      //           / 100,
+      //     );
+      //   }
+      //   if (subscriptionType === 'year' && currency === 'GBP') {
+      //     setTotal(
+      //       basicPrice * exchangeRate.GBP * unitsSelected * 12
+      //         - (basicPrice * exchangeRate.GBP * unitsSelected * 12 * discount)
+      //           / 100,
+      //     );
+      //   }
+      // }
     }
   };
   const handleUnitChange = (event) => {
     const e = event.target.value;
     setUnitsSelected(e);
     setTotal(e * unitPrice);
-    if (currency === 'CHF' || currency === 'GBP' || currency === 'PLN') {
-      if (subscriptionType === 'month' && currency === 'CHF') {
-        setTotal(basicPrice * exchangeRate.CHF * e);
-      }
-      if (subscriptionType === 'month' && currency === 'PLN') {
-        setTotal(basicPrice * exchangeRate.PLN * e);
-      }
-      if (subscriptionType === 'month' && currency === 'GBP') {
-        setTotal(basicPrice * exchangeRate.GBP * e);
-      }
-      if (subscriptionType === 'year' && currency === 'CHF') {
-        setTotal(
-          basicPrice * exchangeRate.CHF * e * 12
-            - (basicPrice * exchangeRate.CHF * e * 12 * discount) / 100,
-        );
-      }
-      if (subscriptionType === 'year' && currency === 'PLN') {
-        setTotal(
-          basicPrice * exchangeRate.PLN * e * 12
-            - (basicPrice * exchangeRate.PLN * e * 12 * discount) / 100,
-        );
-      }
-      if (subscriptionType === 'year' && currency === 'GBP') {
-        setTotal(
-          basicPrice * exchangeRate.GBP * e * 12
-            - (basicPrice * exchangeRate.GBP * e * 12 * discount) / 100,
-        );
-      }
-    }
+    // if (currency === 'CHF' || currency === 'GBP' || currency === 'PLN') {
+    //   if (subscriptionType === 'month' && currency === 'CHF') {
+    //     setTotal(basicPrice * exchangeRate.CHF * e);
+    //   }
+    //   if (subscriptionType === 'month' && currency === 'PLN') {
+    //     setTotal(basicPrice * exchangeRate.PLN * e);
+    //   }
+    //   if (subscriptionType === 'month' && currency === 'GBP') {
+    //     setTotal(basicPrice * exchangeRate.GBP * e);
+    //   }
+    //   if (subscriptionType === 'year' && currency === 'CHF') {
+    //     setTotal(
+    //       basicPrice * exchangeRate.CHF * e * 12
+    //         - (basicPrice * exchangeRate.CHF * e * 12 * discount) / 100,
+    //     );
+    //   }
+    //   if (subscriptionType === 'year' && currency === 'PLN') {
+    //     setTotal(
+    //       basicPrice * exchangeRate.PLN * e * 12
+    //         - (basicPrice * exchangeRate.PLN * e * 12 * discount) / 100,
+    //     );
+    //   }
+    //   if (subscriptionType === 'year' && currency === 'GBP') {
+    //     setTotal(
+    //       basicPrice * exchangeRate.GBP * e * 12
+    //         - (basicPrice * exchangeRate.GBP * e * 12 * discount) / 100,
+    //     );
+    //   }
+    // }
   };
 
   const handlePlanType = (e) => {
@@ -271,79 +271,79 @@ const BillingInformation = () => {
         setTotal(amount);
       }
     }
-    if (e === 'CHF') {
-      setCurrency(e);
-      if (planType === 'basic' && subscriptionType === 'month') {
-        setUnitPrice(basicPrice * exchangeRate.CHF);
-        setTotal(basicPrice * exchangeRate.CHF * unitsSelected);
-      }
-      if (planType === 'basic' && subscriptionType === 'year') {
-        setUnitPrice(basicPrice * exchangeRate.CHF);
-        const amount = basicPrice * exchangeRate.CHF * unitsSelected * 12
-          - (basicPrice * exchangeRate.CHF * unitsSelected * 12 * discount) / 100;
+    // if (e === 'CHF') {
+    //   setCurrency(e);
+    //   if (planType === 'basic' && subscriptionType === 'month') {
+    //     setUnitPrice(basicPrice * exchangeRate.CHF);
+    //     setTotal(basicPrice * exchangeRate.CHF * unitsSelected);
+    //   }
+    //   if (planType === 'basic' && subscriptionType === 'year') {
+    //     setUnitPrice(basicPrice * exchangeRate.CHF);
+    //     const amount = basicPrice * exchangeRate.CHF * unitsSelected * 12
+    //       - (basicPrice * exchangeRate.CHF * unitsSelected * 12 * discount) / 100;
 
-        setTotal(amount);
-      }
-      if (planType === 'advance' && subscriptionType === 'month') {
-        setUnitPrice(advancePrice * exchangeRate.CHF);
-        setTotal(advancePrice * exchangeRate.CHF * unitsSelected);
-      }
-      if (planType === 'advance' && subscriptionType === 'year') {
-        setUnitPrice(advancePrice * exchangeRate.CHF);
-        const amount = advancePrice * exchangeRate.CHF * unitsSelected * 12
-          - (advancePrice * exchangeRate.CHF * unitsSelected * 12 * discount)
-            / 100;
-        setTotal(amount);
-      }
-    }
-    if (e === 'PLN') {
-      setCurrency(e);
-      if (planType === 'basic' && subscriptionType === 'month') {
-        setUnitPrice(basicPrice * exchangeRate.PLN);
-        setTotal(basicPrice * exchangeRate.PLN * unitsSelected);
-      }
-      if (planType === 'basic' && subscriptionType === 'year') {
-        setUnitPrice(basicPrice * exchangeRate.PLN);
-        const amount = basicPrice * exchangeRate.PLN * unitsSelected * 12
-          - (basicPrice * exchangeRate.PLN * unitsSelected * 12 * discount) / 100;
-        setTotal(amount);
-      }
-      if (planType === 'advance' && subscriptionType === 'month') {
-        setUnitPrice(advancePrice * exchangeRate.PLN);
-        setTotal(advancePrice * exchangeRate.PLN * unitsSelected);
-      }
-      if (planType === 'advance' && subscriptionType === 'year') {
-        setUnitPrice(advancePrice * exchangeRate.PLN);
-        const amount = advancePrice * exchangeRate.PLN * unitsSelected * 12
-          - (advancePrice * exchangeRate.PLN * unitsSelected * 12 * discount)
-            / 100;
-        setTotal(amount);
-      }
-    }
-    if (e === 'GBP') {
-      setCurrency(e);
-      if (planType === 'basic' && subscriptionType === 'month') {
-        setUnitPrice(basicPrice * exchangeRate.GBP);
-        setTotal(basicPrice * exchangeRate.GBP * unitsSelected);
-      }
-      if (planType === 'basic' && subscriptionType === 'year') {
-        setUnitPrice(basicPrice * exchangeRate.GBP);
-        const amount = basicPrice * exchangeRate.GBP * unitsSelected * 12
-          - (basicPrice * exchangeRate.GBP * unitsSelected * 12 * discount) / 100;
-        setTotal(amount);
-      }
-      if (planType === 'advance' && subscriptionType === 'month') {
-        setUnitPrice(advancePrice * exchangeRate.GBP);
-        setTotal(advancePrice * exchangeRate.GBP * unitsSelected);
-      }
-      if (planType === 'advance' && subscriptionType === 'year') {
-        setUnitPrice(advancePrice * exchangeRate.GBP);
-        const amount = advancePrice * exchangeRate.GBP * unitsSelected * 12
-          - (advancePrice * exchangeRate.GBP * unitsSelected * 12 * discount)
-            / 100;
-        setTotal(amount);
-      }
-    }
+    //     setTotal(amount);
+    //   }
+    //   if (planType === 'advance' && subscriptionType === 'month') {
+    //     setUnitPrice(advancePrice * exchangeRate.CHF);
+    //     setTotal(advancePrice * exchangeRate.CHF * unitsSelected);
+    //   }
+    //   if (planType === 'advance' && subscriptionType === 'year') {
+    //     setUnitPrice(advancePrice * exchangeRate.CHF);
+    //     const amount = advancePrice * exchangeRate.CHF * unitsSelected * 12
+    //       - (advancePrice * exchangeRate.CHF * unitsSelected * 12 * discount)
+    //         / 100;
+    //     setTotal(amount);
+    //   }
+    // }
+    // if (e === 'PLN') {
+    //   setCurrency(e);
+    //   if (planType === 'basic' && subscriptionType === 'month') {
+    //     setUnitPrice(basicPrice * exchangeRate.PLN);
+    //     setTotal(basicPrice * exchangeRate.PLN * unitsSelected);
+    //   }
+    //   if (planType === 'basic' && subscriptionType === 'year') {
+    //     setUnitPrice(basicPrice * exchangeRate.PLN);
+    //     const amount = basicPrice * exchangeRate.PLN * unitsSelected * 12
+    //       - (basicPrice * exchangeRate.PLN * unitsSelected * 12 * discount) / 100;
+    //     setTotal(amount);
+    //   }
+    //   if (planType === 'advance' && subscriptionType === 'month') {
+    //     setUnitPrice(advancePrice * exchangeRate.PLN);
+    //     setTotal(advancePrice * exchangeRate.PLN * unitsSelected);
+    //   }
+    //   if (planType === 'advance' && subscriptionType === 'year') {
+    //     setUnitPrice(advancePrice * exchangeRate.PLN);
+    //     const amount = advancePrice * exchangeRate.PLN * unitsSelected * 12
+    //       - (advancePrice * exchangeRate.PLN * unitsSelected * 12 * discount)
+    //         / 100;
+    //     setTotal(amount);
+    //   }
+    // }
+    // if (e === 'GBP') {
+    //   setCurrency(e);
+    //   if (planType === 'basic' && subscriptionType === 'month') {
+    //     setUnitPrice(basicPrice * exchangeRate.GBP);
+    //     setTotal(basicPrice * exchangeRate.GBP * unitsSelected);
+    //   }
+    //   if (planType === 'basic' && subscriptionType === 'year') {
+    //     setUnitPrice(basicPrice * exchangeRate.GBP);
+    //     const amount = basicPrice * exchangeRate.GBP * unitsSelected * 12
+    //       - (basicPrice * exchangeRate.GBP * unitsSelected * 12 * discount) / 100;
+    //     setTotal(amount);
+    //   }
+    //   if (planType === 'advance' && subscriptionType === 'month') {
+    //     setUnitPrice(advancePrice * exchangeRate.GBP);
+    //     setTotal(advancePrice * exchangeRate.GBP * unitsSelected);
+    //   }
+    //   if (planType === 'advance' && subscriptionType === 'year') {
+    //     setUnitPrice(advancePrice * exchangeRate.GBP);
+    //     const amount = advancePrice * exchangeRate.GBP * unitsSelected * 12
+    //       - (advancePrice * exchangeRate.GBP * unitsSelected * 12 * discount)
+    //         / 100;
+    //     setTotal(amount);
+    //   }
+    // }
   };
 
   const handleCouponCode = (e) => {

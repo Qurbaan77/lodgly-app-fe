@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { Form, Button } from 'antd';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { userInstance } from '../../axios/axiosconfig';
-import loader from '../../assets/images/loader.svg';
+// import loader from '../../assets/images/loader.svg';
 // Custom styling can be passed to options when creating an Element.
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -30,7 +30,9 @@ const CheckoutForm = ({
 }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const [hideLoader, setHideLoader] = useState(true);
+  // const [hideLoader, setHideLoader] = useState(true);
+  // const [disableBtn, setDisableBtn] = useState(true);
+
   // Handle real-time validation errors from the card Element.
   const handleChange = (event) => {
     if (event.error) {
@@ -39,7 +41,7 @@ const CheckoutForm = ({
   };
 
   // Handle form submission.
-  const handleSubmit = async (event) => {
+  const handleSubmit = async () => {
     // event.preventDefault();
     if (!stripe || !elements) {
       // Stripe.js has not loaded yet. Make sure to disable
@@ -51,7 +53,7 @@ const CheckoutForm = ({
     if (!result.error) {
       // Send the token to your server.
       if (total !== 0) {
-        setHideLoader(false);
+        // setHideLoader(false);
         let token;
         if (process.env.REACT_APP_ENV === 'development' || process.env.REACT_APP_ENV === 'staging') {
           token = 'tok_visa';
@@ -70,37 +72,38 @@ const CheckoutForm = ({
         const response = await userInstance.post('/charge', payload);
         const { code } = response.data;
         if (code === 400) {
-          setHideLoader(true);
+          // setHideLoader(true);
           toast.error('Please provide correct information', { containerId: 'B' });
         }
         if (code === 200) {
-          setHideLoader(true);
+          //  setHideLoader(true);
           toast.success(t('checkoutform.tooltip1'), { containerId: 'B' });
           hideBilling(true);
           getData();
           getInvoice();
         } else {
-          setHideLoader(true);
+        //  setHideLoader(true);
           toast.error(t('checkoutform.tooltip2'), { containerId: 'B' });
         }
       } else {
-        setHideLoader(true);
+        // setHideLoader(true);
         const err = 'Amount Is Empty';
         toast.error(err, { containerId: 'B' });
       }
     } else {
+      // console.log(event);
       // Inform the user if there was an error.
-      toast.error(event.error.message, { containerId: 'B' });
+      // toast.error(event.error.message, { containerId: 'B' });
     }
   };
   const { t } = useTranslation();
   return (
     <div>
-      <div className="loader" hidden={hideLoader}>
+      {/* <div className="loader" hidden={hideLoader}>
         <div className="loader-box">
           <img src={loader} alt="loader" />
         </div>
-      </div>
+      </div> */}
       {
       showCancelCheckout
         ? (
@@ -128,7 +131,7 @@ const CheckoutForm = ({
                 onChange={handleChange}
               />
             </Form.Item>
-            <Button type="primary" disabled={!stripe} htmlType="submit">
+            <Button type="primary" disabled={!unitsSelected} htmlType="submit">
               {t('checkoutform.label1')}
             </Button>
           </Form>

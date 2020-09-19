@@ -229,9 +229,9 @@ const Services = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th>Service Name</th>
-                      <th>Price</th>
-                      <th>Quantity</th>
+                      <th>{t('services.th1')}</th>
+                      <th>{t('services.th2')}</th>
+                      <th>{t('services.th3')}</th>
                       <th> </th>
                     </tr>
                   </thead>

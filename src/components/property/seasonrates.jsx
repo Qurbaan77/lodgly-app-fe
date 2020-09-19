@@ -11,6 +11,7 @@ import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
 import Addseason from './addseason';
 import DeletePopup from './deletepopup';
+import { useTranslation } from 'react-i18next';
 
 const SeasonRates = () => {
   const history = useHistory();
@@ -70,6 +71,7 @@ const SeasonRates = () => {
   const [seasonRateId, setSeasonRateId] = useState(0);
   const [seasonRatesData, setSeasonRatesData] = useState([]);
   const [showTable, setShowTable] = useState(true);
+  const { t } = useTranslation();
 
   const show = () => {
     setVisible(true);
@@ -136,15 +138,15 @@ const SeasonRates = () => {
             <div className="season-rates-content">
               <div className="season-first-section">
                 <div className="season-header">
-                  <h3>SEASON RATES</h3>
+                  <h3>{t('seasonrates.heading1')}</h3>
                   <div className="add-season">
-                    <Button onClick={show}>Add Season</Button>
+                    <Button onClick={show}>{t('seasonrates.button1')}</Button>
                   </div>
                 </div>
                 <p>
-                  Set different rates for specific date periods (up to 3 years
-                  in advance). Your season rates will overwrite your Default
-                  Rate for those periods.
+                {t('seasonrates.paragraph1')}
+                {t('seasonrates.paragraph2')}
+                {t('seasonrates.paragraph3')}
                 </p>
 
                 <div className="season-table" hidden={showTable}>
