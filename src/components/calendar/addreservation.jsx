@@ -302,7 +302,7 @@ const AddReservation = (props) => {
   const createGuestDetails = (
     <>
       {panel.map((el) => (
-        <div className="addi-box" id={el}>
+        <div className="addi-box" id={el} key={el}>
           <Row style={{ alignItems: 'center' }}>
             <Col span={6}>
               <Form.Item
@@ -334,7 +334,7 @@ const AddReservation = (props) => {
                   {countryList()
                     .getData()
                     .map((ele) => (
-                      <Select.Option value={ele.label}>
+                      <Select.Option value={ele.label} key={ele}>
                         {ele.label}
                       </Select.Option>
                     ))}
@@ -428,7 +428,7 @@ const AddReservation = (props) => {
                 onSelect={(value, event) => onSelectProperty(value, event)}
               >
                 {propertyData.map((el) => (
-                  <Select.Option value={el.id}>{el.propertyName}</Select.Option>
+                  <Select.Option value={el.id} key={el}>{el.propertyName}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -764,7 +764,7 @@ const AddReservation = (props) => {
                   >
                     <div className="service-form">
                       {servicePanel.map((ele) => (
-                        <div className="inline-form">
+                        <div className="inline-form" key={ele}>
                           <div className="delete-data">
                             <DeleteOutlined
                               onClick={() => removeServicePanel(ele)}
