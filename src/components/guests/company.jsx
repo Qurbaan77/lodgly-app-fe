@@ -6,6 +6,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 import favicon from '../../assets/images/logo-mobile.png';
 import Wrapper from '../wrapper';
+import UserLock from '../userlock/userlock';
 import companyicon from '../../assets/images/company-icon.png';
 import actionicon from '../../assets/images/action-icon.png';
 import editicon from '../../assets/images/edit-icon.png';
@@ -23,8 +24,18 @@ const CompanyList = () => {
   const [editData, showEditData] = useState({});
   const [currId, setCurrId] = useState(0);
   const [visibiltyOFDelete, setVisibiltyOFDelete] = useState(false);
+  const [subscribed, setSubscribed] = useState(true);
+  const [onTrial, setOnTrial] = useState(true);
+  const [daysLeft, setDaysLeft] = useState();
 
   const getData = useCallback(async () => {
+    const res = await userInstance.get('/getUserSubscriptionStatus');
+    if (res.data.code === 200) {
+      const [{ days, isOnTrial, isSubscribed }] = res.data.userSubsDetails;
+      setDaysLeft(parseInt(days, 10));
+      setSubscribed(JSON.parse(isSubscribed));
+      setOnTrial(JSON.parse(isOnTrial));
+    }
     const response = await userInstance.post('/getCompanyList');
     if (response.data.code === 200) {
       setCompanyData(response.data.companyData);
@@ -144,6 +155,8 @@ const CompanyList = () => {
     setVisibiltyOFDelete(false);
   };
 
+  const hasAccess = onTrial && daysLeft !== 0 ? true : subscribed;
+
   if (loading) {
     return (
       <Wrapper>
@@ -167,7 +180,15 @@ const CompanyList = () => {
     );
   }
 
-  if (companyData.length < 1) {
+  if (!hasAccess) {
+    return (
+      <Wrapper>
+        <UserLock />
+      </Wrapper>
+    );
+  }
+
+  if (companyData && companyData.length < 1) {
     return (
       <Wrapper>
         <Helmet>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
+import moment from 'moment';
 // import { useHistory } from 'react-router-dom';
 import {
   Form,
@@ -16,7 +17,10 @@ import {
 import {
   PlusSquareOutlined,
   PlusOutlined,
-  EditOutlined, DeleteOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  ClockCircleOutlined,
+  CheckOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
@@ -56,11 +60,13 @@ const AddReservation = (props) => {
   const [serviceAmt, setServiceAmt] = useState(0);
   const [serviceTax, setServiceTax] = useState(0);
   const [serviceAmount, setServiceAmount] = useState(0);
+  const [leftDays, setLeftDays] = useState(0);
   const [currentPropertyName, setCurrentPropertyName] = useState('');
   const [unitName, setUnitName] = useState('');
   const [depositType, setDepositType] = useState('€');
   const [depositAmount, setDepositAmount] = useState(null);
   const [discountAmount, setdiscountAmount] = useState(null);
+  const [showOptional, setShowOptional] = useState(true);
 
   // const [fullname, setFullname] = useState({});
   // const [email, setEmail] = useState({});
@@ -146,7 +152,8 @@ const AddReservation = (props) => {
       guestData.push(values[el]);
     });
     values.guestData = guestData;
-    if (guestData.length > 1) {
+
+    if (guestData.length > 0) {
       values.guest = guestData[0].fullName;
     } else {
       values.guest = 'No Guest';
@@ -168,6 +175,7 @@ const AddReservation = (props) => {
     values.commission = channelCommission;
     values.unitName = unitName;
     values.affiliateId = userId;
+
     const response = await reservationInstance.post('/addReservation', values);
     if (response.data.code === 200) {
       getData();
@@ -299,16 +307,32 @@ const AddReservation = (props) => {
     }
   };
 
+  const onOptionalDate = (value) => {
+    if (value) {
+      // setSelectDate(value);
+      const d1 = new Date(value._d);
+      const d2 = new Date();
+      const diff = Math.abs(d1 - d2);
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+      setLeftDays(day);
+    }
+  };
+
   const createGuestDetails = (
     <>
       {panel.map((el) => (
-        <div className="addi-box" id={el}>
+        <div className="addi-box" id={el} key={el}>
           <Row style={{ alignItems: 'center' }}>
             <Col span={6}>
               <Form.Item
                 label={t('strings.full')}
                 name={[el, 'fullName']}
                 style={{ paddingRight: 20 }}
+                rules={[
+                  {
+                    required: 'true',
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -319,6 +343,11 @@ const AddReservation = (props) => {
                 label={t('strings.email')}
                 name={[el, 'email']}
                 style={{ paddingRight: 20 }}
+                rules={[
+                  {
+                    required: 'true',
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -329,12 +358,17 @@ const AddReservation = (props) => {
                 label={t('strings.country')}
                 name={[el, 'country']}
                 style={{ paddingRight: 20 }}
+                rules={[
+                  {
+                    required: 'true',
+                  },
+                ]}
               >
                 <Select showSearch>
                   {countryList()
                     .getData()
                     .map((ele) => (
-                      <Select.Option value={ele.label}>
+                      <Select.Option value={ele.label} key={ele}>
                         {ele.label}
                       </Select.Option>
                     ))}
@@ -398,16 +432,53 @@ const AddReservation = (props) => {
                 },
               ]}
             >
-              <RangePicker onChange={onChangeDate} />
+              <RangePicker
+                defaultValue={moment()}
+                format="YYYY-MM-DD"
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onChangeDate}
+              />
             </Form.Item>
           </Col>
 
           <Col span={12}>
             <Radio.Group name="radiogroup" defaultValue={1}>
-              <Radio value={1}>{t('strings.confirmed')}</Radio>
-              <Radio value={2}>{t('strings.option')}</Radio>
+              <Radio value={1} onClick={() => setShowOptional(true)}>
+                {t('strings.confirmed')}
+              </Radio>
+              <Radio value={2} onClick={() => setShowOptional(false)}>
+                {t('strings.option')}
+              </Radio>
             </Radio.Group>
           </Col>
+
+          <Col span={24}>
+            <div className="option-content" hidden={showOptional}>
+              <p>
+                <ClockCircleOutlined />
+                {' '}
+                Option is active untill
+              </p>
+              <DatePicker
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onOptionalDate}
+              />
+              <span>
+                (days left:
+                {leftDays}
+                )
+              </span>
+              <div className="option-tag">
+                <CheckOutlined />
+                {' '}
+                Confirmed
+              </div>
+            </div>
+            <p className="checked-avail">
+              *Availability is checked automatically
+            </p>
+          </Col>
+
         </Row>
 
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
@@ -428,7 +499,7 @@ const AddReservation = (props) => {
                 onSelect={(value, event) => onSelectProperty(value, event)}
               >
                 {propertyData.map((el) => (
-                  <Select.Option value={el.id}>{el.propertyName}</Select.Option>
+                  <Select.Option value={el.id} key={el}>{el.propertyName}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -548,7 +619,7 @@ const AddReservation = (props) => {
         <Row style={{ alignItems: 'center' }}>
           <Col span={24}>
             <Form.Item style={{ marginBottom: '0' }}>
-              <Collapse accordion>
+              <Collapse defaultActiveKey={['1']} accordion>
                 <Panel
                   icon={<PlusSquareOutlined />}
                   header="Add Guest Details (Optional)"
@@ -764,7 +835,7 @@ const AddReservation = (props) => {
                   >
                     <div className="service-form">
                       {servicePanel.map((ele) => (
-                        <div className="inline-form">
+                        <div className="inline-form" key={ele}>
                           <div className="delete-data">
                             <DeleteOutlined
                               onClick={() => removeServicePanel(ele)}

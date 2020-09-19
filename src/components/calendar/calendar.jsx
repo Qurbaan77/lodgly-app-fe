@@ -13,7 +13,7 @@ import loader from '../../assets/images/cliploader.gif';
 import propertyplace from '../../assets/images/property-placeholder.png';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
 import GSTC from './GSTC';
-import { userInstance, reservationInstance } from '../../axios/axiosconfig';
+import { userInstance, reservationInstance, propertyInstance } from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
 import GroupReservation from './groupreservation';
 import favicon from '../../assets/images/logo-mobile.png';
@@ -93,6 +93,16 @@ const Calendar = () => {
   //   });
   // });
 
+  // unittypeData.forEach((ele) => {
+  //   const uttId = `utt${ele.id.toString()}`;
+  //   rows[uttId] = {
+  //     id: uttId,
+  //     label: ele.unitTypeName,
+  //     progress: 50,
+  //     expanded: false,
+  //   };
+  // });
+
   const columns = {
     percent: 100,
     data: {
@@ -162,7 +172,7 @@ const Calendar = () => {
         data2.push(filterData);
       });
     if (response.data.code === 200) {
-      setLoading(false);
+      // setLoading(false);
       setPropertyData(data2.length > 0 ? data2 : data);
     }
   }, [userId, topNavId]);
@@ -174,6 +184,7 @@ const Calendar = () => {
       setDaysLeft(parseInt(days, 10));
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
+      setLoading(false);
     }
     const response = await reservationInstance.post('/getReservation', {
       affiliateId: userId,
@@ -197,6 +208,7 @@ const Calendar = () => {
     const response = await reservationInstance.post('/getReservationCalendarData', {
       affiliateId: userId,
     });
+    console.log('getReservationCalendarData', response);
     // const { unittypeData: data0 } = response.data;
     // const { unitData: data1 } = response.data;
     if (response.data.code === 200) {
@@ -314,22 +326,25 @@ const Calendar = () => {
       propertyId: topNavId,
       affiliateId: userId,
     };
-    const response = await userInstance.post('/getUnittype', values);
-    const { unittypeData, units } = response.data;
+    const response = await propertyInstance.post('/getUnittype', values);
+    // const { unittypeData } = response.data;
     if (response.data.code === 200) {
-      unittypeData.forEach((el) => {
-        let sum = 0;
-        const arr = [];
-        units.forEach((ele) => {
-          if (el.id === ele.unittypeId) {
-            sum += 1;
-            arr.push(ele.id);
-          }
-        });
-        el.noOfUnits = sum;
-        el.units = arr;
+      response.data.unittypeData.forEach((element) => {
+        setData(JSON.parse(element.unitsData) || []);
       });
-      setData(unittypeData);
+    // unittypeData.forEach((el) => {
+    //   let sum = 0;
+    //   const arr = [];
+    //   units.forEach((ele) => {
+    //     if (el.id === ele.unittypeId) {
+    //       sum += 1;
+    //       arr.push(ele.id);
+    //     }
+    //   });
+    //   el.noOfUnits = sum;
+    //   el.units = arr;
+    // });
+    // setData(JSON.parse(unittypeData[0].unitsData));
     }
   }, [topNavId, userId]);
 
@@ -364,7 +379,15 @@ const Calendar = () => {
     );
   }
 
-  if (propertyData.length < 1) {
+  if (!hasAccess) {
+    return (
+      <Wrapper>
+        <UserLock />
+      </Wrapper>
+    );
+  }
+
+  if (propertyData && propertyData.length < 1) {
     return (
       <Wrapper>
         <Helmet>
@@ -410,47 +433,43 @@ const Calendar = () => {
         />
         <body className="calendar-page-view" />
       </Helmet>
-      {hasAccess ? (
-        <div className="calendar">
-          <div className="calendar-btn">
-            {isSubUser ? (
-              btn
-            ) : (
-              <>
-                <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                  {t('addreservation.heading31')}
-                </Button>
-                {topNavId ? enableButton : disabledButton}
-              </>
-            )}
-          </div>
-
-          <div className="calendar-calendar">
-            <GSTC config={config} onState={onState} />
-          </div>
-
-          <AddReservation
-            title={t('addreservation.heading34')}
-            visible={visible}
-            onOk={handleOk}
-            close={handleCancel}
-            wrapClassName="create-booking-modal"
-            getData={getData}
-          />
-
-          <GroupReservation
-            title={t('calendarpop.heading4')}
-            visible={visibleGroupReserv}
-            onOk={handleOk}
-            close={handleCancel}
-            userData={userData}
-            data={data}
-            getData={getData}
-          />
+      <div className="calendar">
+        <div className="calendar-btn">
+          {isSubUser ? (
+            btn
+          ) : (
+            <>
+              <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+                {t('addreservation.heading31')}
+              </Button>
+              {topNavId ? enableButton : disabledButton}
+            </>
+          )}
         </div>
-      ) : (
-        <UserLock />
-      )}
+
+        <div className="calendar-calendar">
+          <GSTC config={config} onState={onState} />
+        </div>
+
+        <AddReservation
+          title={t('addreservation.heading34')}
+          visible={visible}
+          onOk={handleOk}
+          close={handleCancel}
+          wrapClassName="create-booking-modal"
+          getData={getData}
+        />
+
+        <GroupReservation
+          title={t('calendarpop.heading4')}
+          visible={visibleGroupReserv}
+          onOk={handleOk}
+          close={handleCancel}
+          userData={userData}
+          data={data}
+          getData={getData}
+        />
+      </div>
     </Wrapper>
   );
 };

@@ -457,7 +457,7 @@ const CreateBookingPopup = (props) => {
     if (value) {
       setSelectDate(value);
       setStartDate(value[0]._d.getDate());
-      setStartDateMonth(value[0]._d.getMonth() + 1);
+      setStartDateMonth(`0${value[0]._d.getMonth() + 1}`.slice(-2));
       const now = new Date(value[0]._d);
       const days = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
       setCurrMonthDay(days);
@@ -663,7 +663,7 @@ const CreateBookingPopup = (props) => {
   const createGuestDetails = (
     <>
       {panel.map((el) => (
-        <div className="addi-box" id={el}>
+        <div className="addi-box" id={el} key={el}>
           <Row style={{ alignItems: 'center' }}>
             <Col span={6}>
               <Form.Item
@@ -958,7 +958,10 @@ const CreateBookingPopup = (props) => {
                 {' '}
                 Option is active untill
               </p>
-              <DatePicker onChange={onOptionalDate} />
+              <DatePicker
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onOptionalDate}
+              />
               <span>
                 (days left:
                 {leftDays}
@@ -994,7 +997,7 @@ const CreateBookingPopup = (props) => {
                 onSelect={(value, event) => onSelectProperty(value, event)}
               >
                 {propertyData.map((el) => (
-                  <Select.Option value={el.id}>{el.propertyName}</Select.Option>
+                  <Select.Option value={el.id} key={el}>{el.propertyName}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -1369,7 +1372,7 @@ const CreateBookingPopup = (props) => {
                   >
                     <div className="service-form">
                       {servicePanel.map((ele) => (
-                        <div className="inline-form">
+                        <div className="inline-form" key={ele}>
                           <div className="delete-data">
                             <DeleteOutlined
                               onClick={() => removeServicePanel(ele)}

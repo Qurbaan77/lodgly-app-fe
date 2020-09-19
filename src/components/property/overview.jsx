@@ -62,23 +62,27 @@ const Overview = () => {
       unitTypeV2Id: localStorage.getItem('propertyV2Id'),
     });
     if (response.data.code === 200) {
-      if (response.data.unitTypeV2Data.length > 0) {
-        const data = response.data.unitTypeV2Data[0];
-        form.setFieldsValue({
-          description: data.description,
-          propertyType: data.propertyType,
+      const data = response.data.unitTypeV2Data[0];
+      const units = JSON.parse(data.unitsData) || [];
+      units.forEach((el, i) => {
+        form2.setFieldsValue({
+          [`unit${i + 1}`]: el,
         });
-        if (data.sizeValue > 0) {
-          form2.setFieldsValue({
-            sqSelectedValue: data.sizeType,
-            sqNumber: data.sizeValue,
-          });
-        }
-        setNoOfBedRooms(data.bedRooms);
-        setNoOfGuests(data.standardGuests);
-        setNoOfUnits(data.units);
-        setSelectedAmenities(data.amenities);
+      });
+      form.setFieldsValue({
+        description: data.description,
+        propertyType: data.propertyType,
+      });
+      if (data.sizeValue > 0) {
+        form2.setFieldsValue({
+          sqSelectedValue: data.sizeType,
+          sqNumber: data.sizeValue,
+        });
       }
+      setNoOfBedRooms(data.bedRooms);
+      setNoOfGuests(data.standardGuests);
+      setNoOfUnits(data.units);
+      setSelectedAmenities(data.amenities);
     }
   }, [form, form2]);
 
@@ -135,7 +139,7 @@ const Overview = () => {
     unitsArr.forEach((i) => {
       const j = i + 1;
       const unitName = 'unit';
-      units.push(values[unitName + j]);
+      units.push(values[unitName + j] || `Unit ${j}`);
     });
     values.unitTypeV2Id = localStorage.getItem('propertyV2Id');
     values.noOfBedRooms = noOfBedRooms;
@@ -155,11 +159,6 @@ const Overview = () => {
   const createArray = (value) => {
     setNoOfUnits(value);
     setUnitsArr(Array.from(Array(value).keys()));
-    Array.from(Array(value).keys()).forEach((ele) => {
-      form2.setFieldsValue({
-        [`unit${ele + 1}`]: `Unit ${ele + 1}`,
-      });
-    });
   };
 
   return (

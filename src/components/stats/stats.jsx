@@ -108,7 +108,15 @@ const Stats = () => {
     );
   }
 
-  if (propertyData.length < 1) {
+  if (!hasAccess) {
+    return (
+      <Wrapper>
+        <UserLock />
+      </Wrapper>
+    );
+  }
+
+  if (propertyData && propertyData.length < 1) {
     return (
       <Wrapper>
         <Helmet>
@@ -165,79 +173,75 @@ const Stats = () => {
         />
         <body className="stats-page-view" />
       </Helmet>
-      {hasAccess ? (
-        <div className="stats-page">
-          <div className="page-header">
-            <h1>
-              <img src={statsIcon} alt="statsIcon" />
-              {' '}
-              {t('stats.label2')}
-            </h1>
-          </div>
-
-          <div className="container">
-            <Row>
-              <Col span={24}>
-                <div className={`accomandation-chart ${accomodationHasData}`}>
-                  <AccommodationChart
-                    topNavId={topNavId}
-                    setAccomodationHasData={setAccomodationHasData}
-                  />
-                </div>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col span={24}>
-                <div className={`occupancy-chart ${occupancyHasData}`}>
-                  <OccupancyChart
-                    topNavId={topNavId}
-                    setOccupancyHasData={setOccupancyHasData}
-                  />
-                </div>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col
-                span={16}
-                className="no-padding-mbl"
-                style={{ paddingRight: '20px' }}
-              >
-                <div
-                  className={`reservation-chart ${reservationCountryHasData}`}
-                >
-                  <ReservationCountryChart
-                    setReservationCountryHasData={setReservationCountryHasData}
-                  />
-                </div>
-              </Col>
-              <Col span={8}>
-                <div
-                  className={`reservation-chart ${reservationChannelHasData}`}
-                >
-                  <ReservationChannelChart
-                    setReservationChannelHasData={setReservationChannelHasData}
-                  />
-                </div>
-              </Col>
-            </Row>
-
-            <Row>
-              <Col span={24}>
-                <div className={`pace-chart ${paceHasData}`}>
-                  <PaceChart
-                    topNavId={topNavId}
-                    setPaceHasData={setPaceHasData}
-                  />
-                </div>
-              </Col>
-            </Row>
-          </div>
+      <div className="stats-page">
+        <div className="page-header">
+          <h1>
+            <img src={statsIcon} alt="statsIcon" />
+            {' '}
+            {t('stats.label2')}
+          </h1>
         </div>
-      ) : (
-        <UserLock />
-      )}
+
+        <div className="container">
+          <Row>
+            <Col span={24}>
+              <div className={`accomandation-chart ${accomodationHasData}`}>
+                <AccommodationChart
+                  topNavId={topNavId}
+                  setAccomodationHasData={setAccomodationHasData}
+                />
+              </div>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={24}>
+              <div className={`occupancy-chart ${occupancyHasData}`}>
+                <OccupancyChart
+                  topNavId={topNavId}
+                  setOccupancyHasData={setOccupancyHasData}
+                />
+              </div>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col
+              span={16}
+              className="no-padding-mbl"
+              style={{ paddingRight: '20px' }}
+            >
+              <div
+                className={`reservation-chart ${reservationCountryHasData}`}
+              >
+                <ReservationCountryChart
+                  setReservationCountryHasData={setReservationCountryHasData}
+                />
+              </div>
+            </Col>
+            <Col span={8}>
+              <div
+                className={`reservation-chart ${reservationChannelHasData}`}
+              >
+                <ReservationChannelChart
+                  setReservationChannelHasData={setReservationChannelHasData}
+                />
+              </div>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col span={24}>
+              <div className={`pace-chart ${paceHasData}`}>
+                <PaceChart
+                  topNavId={topNavId}
+                  setPaceHasData={setPaceHasData}
+                />
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </div>
     </Wrapper>
   );
 };

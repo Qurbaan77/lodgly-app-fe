@@ -14,7 +14,6 @@ const AlertBox = () => {
 
   const getDays = async () => {
     const res = await userInstance.post('/trialDays');
-    // console.log(res);
     // if (res.data.code === 400) {
     //   // localStorage.clear();
     //   // setRedirect(true);
@@ -49,7 +48,7 @@ const AlertBox = () => {
   // }
   return (
     <>
-      {!parseInt(isCollapsed, 10) ? (
+      {parseInt(isCollapsed, 10) !== 1 ? (
         <div className="alert-box" hidden={hideBanner}>
           <Alert
             message={`${t('propertylist.alert')} ${daysLeft} ${t(

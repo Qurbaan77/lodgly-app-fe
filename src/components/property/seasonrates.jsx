@@ -6,12 +6,12 @@ import {
   Button, Row, Col, Table, Modal,
 } from 'antd';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { propertyInstance } from '../../axios/axiosconfig';
 import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
 import Addseason from './addseason';
 import DeletePopup from './deletepopup';
-import { useTranslation } from 'react-i18next';
 
 const SeasonRates = () => {
   const history = useHistory();
@@ -144,9 +144,9 @@ const SeasonRates = () => {
                   </div>
                 </div>
                 <p>
-                {t('seasonrates.paragraph1')}
-                {t('seasonrates.paragraph2')}
-                {t('seasonrates.paragraph3')}
+                  {t('seasonrates.paragraph1')}
+                  {t('seasonrates.paragraph2')}
+                  {t('seasonrates.paragraph3')}
                 </p>
 
                 <div className="season-table" hidden={showTable}>
