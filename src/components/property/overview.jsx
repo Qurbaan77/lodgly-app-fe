@@ -63,12 +63,14 @@ const Overview = () => {
     });
     if (response.data.code === 200) {
       const data = response.data.unitTypeV2Data[0];
-      const units = JSON.parse(data.unitsData) || [];
-      units.forEach((el, i) => {
-        form2.setFieldsValue({
-          [`unit${i + 1}`]: el,
+      if (data && data.unitsData) {
+        const units = JSON.parse(data.unitsData);
+        units.forEach((el, i) => {
+          form2.setFieldsValue({
+            [`unit${i + 1}`]: el,
+          });
         });
-      });
+      }
       form.setFieldsValue({
         description: data.description,
         propertyType: data.propertyType,
