@@ -1,8 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import './calendar.css';
 import { useTranslation } from 'react-i18next';
+import CounterInput from 'react-counter-input';
 import { toast } from 'react-toastify';
 import {
   Form,
@@ -18,7 +20,12 @@ import {
   Modal,
   // Menu,
 } from 'antd';
-import { PlusSquareOutlined } from '@ant-design/icons';
+import {
+  PlusSquareOutlined,
+  EditOutlined,
+  ClockCircleOutlined,
+  CheckOutlined,
+} from '@ant-design/icons';
 import { userInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
@@ -38,9 +45,11 @@ const GroupReservation = (props) => {
   const [startDateMonth, setStartDateMonth] = useState('');
   // const [units, setUnits] = useState(0);
   // const [price, setPrice] = useState(0);
-  const [night, setNight] = useState(0);
-  const [total, setTotal] = useState(0);
+  // const [night, setNight] = useState(0);
+  // const [total, setTotal] = useState(0);
   const [currMonthDay, setCurrMonthDay] = useState(0);
+  const [showOptional, setShowOptional] = useState(true);
+  const [leftDays, setLeftDays] = useState(0);
 
   const onFinish = async (values) => {
     const unitType = [];
@@ -64,7 +73,9 @@ const GroupReservation = (props) => {
     if (res.data.code === 200) {
       getData();
       close();
-      toast.success('successfully added group reservation', { containerId: 'B' });
+      toast.success('successfully added group reservation', {
+        containerId: 'B',
+      });
     } else {
       toast.error('server error please try again', { containerId: 'B' });
     }
@@ -79,41 +90,52 @@ const GroupReservation = (props) => {
       setCurrMonthDay(days);
       // setRangeDate(value);
       setStartDate(value[0]._d.getDate());
-      setStartDateMonth(value[0]._d.getMonth() + 1);
+      setStartDateMonth(`0${value[0]._d.getMonth() + 1}`.slice(-2));
       // console.log('value[0]._d.daysInMonth()', value[0]._d.daysInMonth());
       const d1 = new Date(value[0]._d);
       //  console.log(d1.daysInMonth());
       const d2 = new Date(value[1]._d);
       const diff = Math.abs(d1 - d2);
       const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
-      setNight(day);
+      // setNight(day);
       setDaysArr(Array.from(Array(day).keys()));
       setShow(false);
     }
   };
 
-  const priceFunction = useCallback(
-    (value, i) => {
-      form.setFieldsValue({
-        [`array${i}`]: {
-          amount: Math.floor(night * value),
-        },
-      });
+  // const priceFunction = useCallback(
+  //   (value, i) => {
+  //     form.setFieldsValue({
+  //       [`array${i}`]: {
+  //         amount: Math.floor(night * value),
+  //       },
+  //     });
 
-      setTotal(0);
+  //     setTotal(0);
 
-      daysArr.forEach((el, j) => {
-        form.setFieldsValue({
-          [`array${i}`]: {
-            [`${j}`]: {
-              everyDayPrice: value,
-            },
-          },
-        });
-      });
-    },
-    [daysArr, form, night],
-  );
+  //     daysArr.forEach((el, j) => {
+  //       form.setFieldsValue({
+  //         [`array${i}`]: {
+  //           [`${j}`]: {
+  //             everyDayPrice: value,
+  //           },
+  //         },
+  //       });
+  //     });
+  //   },
+  //   [daysArr, form, night],
+  // );
+
+  const onOptionalDate = (value) => {
+    if (value) {
+      // setSelectDate(value);
+      const d1 = new Date(value._d);
+      const d2 = new Date();
+      const diff = Math.abs(d1 - d2);
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+      setLeftDays(day);
+    }
+  };
 
   return (
     <Modal
@@ -127,34 +149,63 @@ const GroupReservation = (props) => {
       </Helmet>
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
-          <Col span={24}>
+          <Col span={12}>
             <Form.Item
               label={t('strings.reservation_date')}
               name="groupname"
               style={{ paddingRight: 20 }}
+              onChange={onCalendarChange}
               rules={[
                 {
                   required: true,
                 },
               ]}
             >
-              <RangePicker onCalendarChange={onCalendarChange} />
+              <RangePicker
+                defaultValue={moment()}
+                format="YYYY-MM-DD"
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onCalendarChange}
+              />
             </Form.Item>
           </Col>
 
-          <Col span={24}>
-            <Form.Item name="radiogroup" label="Radio.Group">
-              <Radio.Group defaultValue="confirmed">
-                <Radio value="confirmed">Confirmed</Radio>
-                <Radio value="option">Option</Radio>
-              </Radio.Group>
-            </Form.Item>
+          <Col span={12}>
+            <Radio.Group defaultValue={1}>
+              <Radio value={1} onClick={() => setShowOptional(true)}>
+                {t('strings.confirmed')}
+              </Radio>
+              <Radio value={2} onClick={() => setShowOptional(false)}>
+                {t('strings.option')}
+              </Radio>
+            </Radio.Group>
           </Col>
 
           <Col span={24}>
-            <div className="availability">
-              <p>{t('calendarpop.label6')}</p>
+            <div className="option-content" hidden={showOptional}>
+              <p>
+                <ClockCircleOutlined />
+                {' '}
+                Option is active untill
+              </p>
+              <DatePicker
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onOptionalDate}
+              />
+              <span>
+                (days left:
+                {leftDays}
+                )
+              </span>
+              <div className="option-tag">
+                <CheckOutlined />
+                {' '}
+                Confirmed
+              </div>
             </div>
+            <p className="checked-avail">
+              *Availability is checked automatically
+            </p>
           </Col>
         </Row>
 
@@ -189,7 +240,6 @@ const GroupReservation = (props) => {
                 verticalAlign: 'bottom',
                 marginLeft: '4%',
               }}
-
             >
               <Input
                 name="commission"
@@ -207,129 +257,112 @@ const GroupReservation = (props) => {
         <Row
           style={{
             alignItems: 'center',
-            padding: '0px 20px',
-            // marginBottom: '20px',
-            background: '#fbfbfc',
-            paddingTop: '20px',
+            padding: '0px 0px',
           }}
           hidden={show}
         >
           {data.map((el, i) => (
-            <Col span={24} className="unit-border">
-              <div
-                className="reservation-booker select-unit-reservation"
-                id={el}
-              >
-                <Row>
-                  <Col span={12} className="unit-available">
-                    <label htmlFor="units">
-                      <input hidden />
-                      Units
-                    </label>
-                    <p>{el.unitTypeName}</p>
-                    <span>
-                      Available :
-                      {el.noOfUnits}
-                    </span>
-                  </Col>
-
-                  <Col span={12}>
-                    {/* <Form.Item label="Number of units" name={`units${i}`}> */}
-                    <Form.Item
-                      label="Number of units"
-                      name={[`array${i}`, 'units']}
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
-                    >
-                      <Select
-                        style={{ width: '50%', display: 'inline-block' }}
-                        // onSelect={(value) => setUnits(value + 1)}
-                      >
-                        {Array.from(Array(el.noOfUnits).keys()).map((ele) => (
-                          <Select.Option value={ele} key={ele + 1}>
-                            {ele + 1}
-                          </Select.Option>
-                        ))}
-                        {/* {el.units.map((ele, k) => (
-                          <Select.Option value={ele} key={k+1}>
-                            {k + 1}
-                          </Select.Option>
-                        ))} */}
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                </Row>
+            <Col span={24}>
+              <div className="select-unit">
+                <h4>Select Unit</h4>
 
                 <Row>
-                  <Col span={12}>
-                    <Form.Item
-                      label="Price per night/unit"
-                      name={[`array${i}`, 'pricePer']}
-                      rules={[
-                        {
-                          required: true,
-                        },
-                      ]}
-                    >
-                      <Input
-                        style={{
-                          width: '50%',
-                          display: 'inline-block',
-                          marginRight: '10px',
-                        }}
-                        onChange={(e) => priceFunction(e.target.value, i)}
-                      />
-                    </Form.Item>
-                  </Col>
-
-                  <Col span={12}>
-                    <Form.Item
-                      label="Total per unit type"
-                      name={[`array${i}`, 'amount']}
-                    >
-                      <Input
-                        style={{
-                          width: '50%',
-                          display: 'inline-block',
-                          marginRight: '10px',
-                        }}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </div>
-
-              <div className="price-per-night">
-                <Collapse accordion>
-                  <Panel
-                    icon={<PlusSquareOutlined />}
-                    header="Price per night"
-                    key="11"
-                  >
-                    <div className="night-container">
-                      {daysArr.map((ele, j) => (
-                        <div className="night-box">
-                          <Form.Item
-                            label={startDate + j <= currMonthDay ? `${startDate + j} : ${startDateMonth}` : `${0 + j} : ${startDateMonth + 1}`}
-                            name={[`array${i}`, ele, 'everyDayPrice']}
-                          >
-                            <Input />
-                          </Form.Item>
-                        </div>
-                      ))}
+                  <Col span={6}>
+                    <h3>Units</h3>
+                    <div className="unit-boxes">
+                      <p>{el}</p>
+                      <h5>Available: 1</h5>
                     </div>
-                  </Panel>
-                </Collapse>
+                  </Col>
+                  <Col span={6}>
+                    <h3>No of units</h3>
+                    <div className="unit-boxes">
+                      <div className="input-counter">
+                        <CounterInput min={0} max={10} />
+                      </div>
+                    </div>
+                  </Col>
+                  <Col span={6}>
+                    <h3>Price per night / units</h3>
+                    <div className="unit-boxes">
+                      <div className="input-counter">
+                        <CounterInput min={0} max={10} />
+                      </div>
+                    </div>
+                  </Col>
+                  <Col span={6}>
+                    <h3>Total per unit type</h3>
+                    <div className="unit-boxes">
+                      <div className="input-group">
+                        <Input placeholder="15,00" />
+                        <span className="eur">EUR</span>
+                      </div>
+                    </div>
+                  </Col>
 
+                  <Col span={24}>
+                    <div className="price-per-night">
+                      <Collapse accordion>
+                        <Panel
+                          icon={<PlusSquareOutlined />}
+                          header="Individual prices per night"
+                          key="11"
+                        >
+                          <div className="night-container">
+                            {daysArr.map((ele, j) => (
+                              <div className="night-box">
+                                <Form.Item
+                                  label={
+                                    startDate + j <= currMonthDay
+                                      ? `${startDate + j} / ${startDateMonth}`
+                                      : `${0 + j} / ${startDateMonth}`
+                                  }
+                                  name={[`array${i}`, ele, 'everyDayPrice']}
+                                >
+                                  <Input />
+                                </Form.Item>
+                              </div>
+                            ))}
+                          </div>
+                        </Panel>
+                      </Collapse>
+                    </div>
+                  </Col>
+                </Row>
               </div>
             </Col>
           ))}
         </Row>
 
-        <Row
+        <Row className="no-padding-col" hidden={show}>
+          <Col span={6} className="grey-bg">
+            <div className="price-discount">
+              <span>Discount %</span>
+              <Input placeholder="10,00" />
+            </div>
+          </Col>
+
+          <Col span={6} className="blue-bg">
+            <div className="price-discount-unit">
+              <h4>
+                Number of units:
+                <span>1</span>
+              </h4>
+            </div>
+          </Col>
+
+          <Col span={12} className="dark-blue-bg">
+            <div className="price-discount-cost">
+              <h4>
+                Accommondation cost:
+                <span>13,50 €</span>
+              </h4>
+              <span>Discout: 1,50 €</span>
+            </div>
+          </Col>
+        </Row>
+
+        {/* <Row
           style={{
             alignItems: 'center',
             padding: '20px 20px',
@@ -357,90 +390,75 @@ const GroupReservation = (props) => {
               </div>
             </div>
           </Col>
-        </Row>
+        </Row> */}
 
-        <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
+        <Row style={{ alignItems: 'center' }}>
           <Col span={24}>
-            <div className="reservation-booker">
-              <h4>{t('calendarpop.label7')}</h4>
+            <Collapse defaultActiveKey={['3']} accordion>
+              <Panel
+                icon={<PlusSquareOutlined />}
+                header={t('calendarpop.label7')}
+                key="3"
+              >
+                <div className="reservation-booker">
+                  <Row style={{ alignItems: 'center' }}>
+                    <Col span={6}>
+                      <Form.Item
+                        label={t('strings.full')}
+                        name="fullName"
+                        style={{ paddingRight: 20 }}
+                      >
+                        <Input />
+                      </Form.Item>
+                    </Col>
 
-              <Row style={{ alignItems: 'center' }}>
-                <Col span={12}>
-                  <Form.Item
-                    label={t('strings.full')}
-                    name="fullName"
-                    style={{ paddingRight: 20 }}
-                  >
-                    <Input />
-                  </Form.Item>
-                </Col>
+                    <Col span={6}>
+                      <Form.Item
+                        label={t('strings.email')}
+                        name="email"
+                        style={{ paddingRight: 20 }}
+                      >
+                        <Input />
+                      </Form.Item>
+                    </Col>
 
-                <Col span={12}>
-                  <Form.Item
-                    label={t('strings.email')}
-                    name="email"
-                    style={{ paddingRight: 20 }}
-                  >
-                    <Input />
-                  </Form.Item>
-                </Col>
+                    <Col span={6}>
+                      <Form.Item
+                        label={t('strings.country')}
+                        name="country"
+                        style={{ paddingRight: 20 }}
+                      >
+                        <Input />
+                      </Form.Item>
+                    </Col>
 
-                <Col span={12}>
-                  <Form.Item
-                    label={t('strings.country')}
-                    name="country"
-                    style={{ paddingRight: 20 }}
-                  >
-                    <Input />
-                  </Form.Item>
-                </Col>
+                    <Col span={6}>
+                      <Form.Item
+                        label={t('strings.phone')}
+                        name="phone"
+                        style={{ paddingRight: 20 }}
+                      >
+                        <Input type="number" minLength="9" maxLength="15" />
+                      </Form.Item>
+                    </Col>
 
-                <Col span={12}>
-                  <Form.Item
-                    label={t('strings.phone')}
-                    name="phone"
-                    style={{ paddingRight: 20 }}
-                  >
-                    <Input type="number" minLength="9" maxLength="15" />
-                  </Form.Item>
-                </Col>
-
-                {/* <Row>
-                <Col span={12}>
-                  <label htmlFor="name">
-                    <input hidden />
-                    {t('strings.full')}
-                  </label>
-                  <p>{userData.length > 0 ? userData[0].fullname : null}</p>
-                </Col>
-
-                <Col span={12}>
-                  <label htmlFor="email">
-                    <input hidden />
-                    {t('strings.email')}
-                  </label>
-                  <p>{userData.length > 0 ? userData[0].email : null}</p>
-                </Col>
-
-                <Col span={12}>
-                  <label htmlFor="phone">
-                    <input hidden />
-                    {t('strings.phone')}
-                  </label>
-                  <p>{userData.length > 0 ? userData[0].phone : null}</p>
-                </Col> */}
-
-                {/* <Col span={24}>
-              <div className="additional-edit">
-                <div>
-                  <EditOutlined />
-                  {' '}
-                  {t('addreservation.heading1')}
+                    <Col span={24}>
+                      <div
+                        className="additional-edit"
+                        // onClick={() => guestForm(el)}
+                        role="presentation"
+                      >
+                        <div>
+                          <EditOutlined />
+                          {' '}
+                          {t('bookingpop.heading2')}
+                        </div>
+                      </div>
+                    </Col>
+                  </Row>
                 </div>
-              </div>
-            </Col> */}
-              </Row>
-            </div>
+              </Panel>
+            </Collapse>
           </Col>
         </Row>
 
@@ -489,13 +507,13 @@ const GroupReservation = (props) => {
 
 GroupReservation.propTypes = {
   close: PropTypes.func,
-  data: PropTypes.func,
+  data: PropTypes.arrayOf(PropTypes.array),
   visible: PropTypes.bool,
   getData: PropTypes.func,
 };
 GroupReservation.defaultProps = {
   close: () => {},
-  data: () => {},
+  data: [],
   visible: false,
   getData: () => {},
 };

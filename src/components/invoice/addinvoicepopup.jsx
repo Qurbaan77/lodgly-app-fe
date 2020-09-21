@@ -77,8 +77,7 @@ const AdInvoicePopup = (props) => {
   }, [form]);
 
   const handleFinish = async (values) => {
-    // setShowLoader(false);
-
+    setShowLoader(false);
     const valuesCopy = values;
     valuesCopy.date = moment(valuesCopy.date._d).format('YYYY/MM/DD');
     valuesCopy.deliveryDate = moment(valuesCopy.deliveryDate._d).format(
@@ -592,7 +591,7 @@ const AdInvoicePopup = (props) => {
                   label={t('strings.discount_type')}
                 >
                   <Select
-                    defaultValue="%"
+                    initialvalue="%"
                     onSelect={(value) => handleDiscountType(value, i)}
                   >
                     <Select.Option>Select</Select.Option>
@@ -733,8 +732,8 @@ const AdInvoicePopup = (props) => {
 };
 
 AdInvoicePopup.propTypes = {
-  userData: PropTypes.objectOf(PropTypes.object),
-  property: PropTypes.objectOf(PropTypes.object),
+  userData: PropTypes.arrayOf(PropTypes.object),
+  property: PropTypes.arrayOf(PropTypes.object),
   close: PropTypes.func,
   visible: PropTypes.bool,
   handleOk: PropTypes.func,

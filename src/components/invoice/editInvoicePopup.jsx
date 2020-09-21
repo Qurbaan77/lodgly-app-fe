@@ -927,10 +927,10 @@ const EditInvoicePopup = (props) => {
 };
 
 EditInvoicePopup.propTypes = {
-  userData: PropTypes.objectOf(PropTypes.object),
-  property: PropTypes.objectOf(PropTypes.object),
-  invoiceData: PropTypes.objectOf(PropTypes.object),
-  invoiceItems: PropTypes.objectOf(PropTypes.array),
+  userData: PropTypes.arrayOf(PropTypes.object),
+  property: PropTypes.arrayOf(PropTypes.object),
+  invoiceData: PropTypes.arrayOf(PropTypes.object),
+  invoiceItems: PropTypes.arrayOf(PropTypes.object),
   setInvoiceItems: PropTypes.func,
   close: PropTypes.func,
   status: PropTypes.string,

@@ -15,12 +15,12 @@ const AddSeason = (props) => {
     const response = await propertyInstance.post('/addSeasonRates', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
-      toast.success('Season rate added successfully', { containerId: 'B' });
+      toast.success('Season rate added successfully', { containerId: 'B', toastId: 'B' });
       close();
       getData();
-      // form.resetFields();
+      form.resetFields();
     } else {
-      toast.error('server error please try again', { containerId: 'B' });
+      toast.error('server error please try again', { containerId: 'B', toastId: 'B' });
     }
   };
 
