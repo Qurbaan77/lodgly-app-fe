@@ -200,7 +200,7 @@ const Calendar = () => {
     //     }
     //   }
     // }
-  }, [userId]);
+  }, []);
 
   const getCalendarData = useCallback(async () => {
     const response = await reservationInstance.post('/getReservationCalendarData', {
