@@ -277,7 +277,7 @@ const CreateSeasonRates = () => {
         setRestriction(true);
 
         form.setFieldsValue({
-          seasonRate: data.seasonRateName,
+          seasonRateName: data.seasonRateName,
           groupname: [m1, m2],
           currency: data.currency,
           pricePerNight: data.price_per_night,
@@ -388,14 +388,18 @@ const CreateSeasonRates = () => {
                   </p>
                   <Row style={{ alignItems: 'flex-end' }}>
                     <Col span={11}>
-                      <Form.Item name="seasonRate">
+                      <Form.Item name="seasonRateName">
                         <Input placeholder="e.g. High Season or Low Season" />
                       </Form.Item>
                     </Col>
                     <Col span={2} />
                     <Col span={11}>
                       <Form.Item label="Date Periods" name="groupname">
-                        <RangePicker />
+                        <RangePicker
+                          defaultValue={moment()}
+                          format="YYYY-MM-DD"
+                          disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                        />
                       </Form.Item>
                     </Col>
                   </Row>
@@ -416,7 +420,6 @@ const CreateSeasonRates = () => {
                           {
                             required: true,
                             message: 'Please enter price!',
-                            whitespace: true,
                           },
                         ]}
                       >
@@ -538,7 +541,6 @@ const CreateSeasonRates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
@@ -551,7 +553,6 @@ const CreateSeasonRates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
@@ -564,7 +565,6 @@ const CreateSeasonRates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
@@ -577,7 +577,6 @@ const CreateSeasonRates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
@@ -590,7 +589,6 @@ const CreateSeasonRates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
@@ -603,7 +601,6 @@ const CreateSeasonRates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
@@ -616,7 +613,6 @@ const CreateSeasonRates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >

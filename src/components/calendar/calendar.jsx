@@ -36,7 +36,6 @@ const Calendar = () => {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visibleProperty, setVisibleProperty] = useState(false);
-
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ calendarWrite, userId }] = userCred || [{}];
@@ -159,7 +158,6 @@ const Calendar = () => {
   };
 
   const subs = [];
-
   const getProperty = useCallback(async () => {
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
@@ -186,10 +184,10 @@ const Calendar = () => {
       setOnTrial(JSON.parse(isOnTrial));
       setLoading(false);
     }
-    const response = await reservationInstance.post('/getReservation', {
-      affiliateId: userId,
-    });
-    console.log(response);
+    // const response = await reservationInstance.post('/getReservation', {
+    //   affiliateId: userId,
+    // });
+
     // const { reservationData: data } = response.data;
     // if (response.data.code === 200) {
     //   setLoading(false);
@@ -202,13 +200,12 @@ const Calendar = () => {
     //     }
     //   }
     // }
-  }, [userId]);
+  }, []);
 
   const getCalendarData = useCallback(async () => {
     const response = await reservationInstance.post('/getReservationCalendarData', {
       affiliateId: userId,
     });
-    console.log('getReservationCalendarData', response);
     // const { unittypeData: data0 } = response.data;
     // const { unitData: data1 } = response.data;
     if (response.data.code === 200) {
