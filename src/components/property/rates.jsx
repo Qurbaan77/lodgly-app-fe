@@ -28,6 +28,7 @@ const Rates = () => {
   const [vat, setVat] = useState(false);
   const [nav, setNav] = useState(false);
   const [visisbleCopyRate, setVisisbleCopyRate] = useState(false);
+  const [ratesId, setRatesId] = useState(0);
   // const [pricePerNIght, setPricePerNight] = useState(0);
   const { t } = useTranslation();
   const handleCancel = () => {
@@ -210,10 +211,7 @@ const Rates = () => {
   };
 
   const onFinish = async (values) => {
-    // console.log('checkInBox', checkInBox);
-    // console.log('checkOutBox', checkOutBox);
-    // console.log('value', value);
-    // console.log('values', values);
+    values.id = ratesId;
     values.unitTypeId = localStorage.getItem('propertyV2Id');
     values.notes = value;
     values.checkIn_on_monday = checkInBox.monday;
@@ -230,12 +228,10 @@ const Rates = () => {
     values.checkOut_on_friday = checkOutBox.friday;
     values.checkOut_on_saturday = checkOutBox.saturday;
     values.checkOut_on_sunday = checkOutBox.sunday;
-
     const response = await propertyInstance.post('/addRates', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
       toast.success('Rate added successfully', { containerId: 'B' });
-      // form.resetFields();
     } else {
       toast.error('server error please try again', { containerId: 'B' });
     }
@@ -249,6 +245,7 @@ const Rates = () => {
     if (response.data.code === 200) {
       if (response.data.ratesData.length > 0) {
         const data = response.data.ratesData[0];
+        setRatesId(data.id);
         setLengthOfStay(true);
         setPricePerDayWeek(true);
         setMinStayPerWeek(true);
@@ -388,7 +385,6 @@ const Rates = () => {
                           {
                             required: true,
                             message: 'Please enter price!',
-                            whitespace: true,
                           },
                         ]}
                       >
@@ -510,7 +506,6 @@ const Rates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
@@ -523,7 +518,6 @@ const Rates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
@@ -536,7 +530,6 @@ const Rates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
@@ -549,7 +542,6 @@ const Rates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
@@ -562,7 +554,6 @@ const Rates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
@@ -575,7 +566,6 @@ const Rates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
@@ -588,7 +578,6 @@ const Rates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >

@@ -1,315 +1,439 @@
 .calendar-calendar {
-    max-width: 1069px;
-    border: 1px solid #efefef;
-    background: #fff;
+  max-width: 1069px;
+  border: 1px solid #efefef;
+  background: #fff;
 }
 
 .calendar-btn {
-    margin-bottom: 50px;
+  margin-bottom: 50px;
 }
 
 .calendar-btn .border-btn {
-    background: none!important;
-    border: 1px solid #d9d9d9!important;
-    padding: 9px 20px;
-    color: #555;
+  background: none !important;
+  border: 1px solid #d9d9d9 !important;
+  padding: 9px 20px;
+  color: #555;
 }
 
-.calendar-btn .border-btn span{
-    color: #555;
+.calendar-btn .border-btn span {
+  color: #555;
 }
-
 
 .calendar-btn .ant-btn {
-    border-radius: 0;
-}
-
-
-
-
-
-.create-booking-modal.group-reservation .ant-modal {
-    width: 400px!important;
+  border-radius: 0;
 }
 
 .availability {
-    padding: 15px 0px;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 15px;
+  padding: 15px 0px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 15px;
 }
 
 .availability p {
-    margin: 0;
-    font-size: 12px;
-    color: #999;
+  margin: 0;
+  font-size: 12px;
+  color: #999;
 }
 
-
-.add-edit-data a{
-color: orange;
+.add-edit-data a {
+  color: orange;
 }
-
 
 .add-edit-data {
-    padding-bottom: 20px;
+  padding-bottom: 20px;
 }
 
-
 .reservation-booker h4 {
-    text-transform: uppercase;
-    color: #444;
-    padding-bottom: 15px;
+  text-transform: uppercase;
+  color: #444;
+  padding-bottom: 15px;
 }
 
 .reservation-booker label {
-    text-transform: uppercase;
-    font-size: 12px;
-    color: #999;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: #999;
 }
 
 .reservation-booker p {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
-
-
-
-
 
 .create-booking-modal.calendar-setting .ant-modal {
-    width: 400px!important;
+  width: 400px !important;
 }
 
-
 .calendar-setting .filter-box h4 {
-    text-transform: uppercase;
-    padding: 20px 0px;
+  text-transform: uppercase;
+  padding: 20px 0px;
 }
 
 .calendar-setting .filter-box .filter-list {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0px;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0px;
 }
 
-
-.uppercase{
-    text-transform: uppercase;
+.uppercase {
+  text-transform: uppercase;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 .create-booking-modal.reservation-setting .ant-modal {
-    width: 400px!important;
+  width: 400px !important;
 }
 
 .create-booking-modal.reservation-setting .add-edit-data {
-    text-align: right;
-    font-size: 12px;
+  text-align: right;
+  font-size: 12px;
 }
 
-.create-booking-modal.reservation-setting .add-edit-data .ant-row.ant-form-item {
-    margin: 0;
+.create-booking-modal.reservation-setting
+  .add-edit-data
+  .ant-row.ant-form-item {
+  margin: 0;
 }
 
-.create-booking-modal.reservation-setting .ant-btn, .create-booking-modal.reservation-setting .ant-btn:hover, .create-booking-modal.reservation-setting .ant-btn:focus {
-    background: #fab52c;
-    border: #fab52c;
+.create-booking-modal.reservation-setting .ant-btn,
+.create-booking-modal.reservation-setting .ant-btn:hover,
+.create-booking-modal.reservation-setting .ant-btn:focus {
+  background: #fab52c;
+  border: #fab52c;
 }
 
 .create-booking-modal.reservation-setting .ant-btn span {
-    color: #fff;
+  color: #fff;
 }
 
-.create-booking-modal.reservation-setting .ant-btn-primary, .create-booking-modal.reservation-setting .ant-btn-primary:hover, .create-booking-modal.reservation-setting .ant-btn-primary:focus {
-    background: #7FBD34;
-    border: #7FBD34;
-    border: 1px solid #7FBD34;
+.create-booking-modal.reservation-setting .ant-btn-primary,
+.create-booking-modal.reservation-setting .ant-btn-primary:hover,
+.create-booking-modal.reservation-setting .ant-btn-primary:focus {
+  background: #7fbd34;
+  border: #7fbd34;
+  border: 1px solid #7fbd34;
 }
-
-
-
 
 .reserv-id {
-    background: #f1f1f1;
-    padding: 2px 5px;
-    border-radius: 3px;
-    font-size: 12px;
-    margin-right: 10px;
-    margin-bottom: 20px;
-    display: inline-block;
+  background: #f1f1f1;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  display: inline-block;
 }
 
 .reservation-info {
-    padding: 20px 0px;
+  padding: 20px 0px;
 }
 
 .reserv-tag {
-    border: 1px solid #ddd;
-    font-size: 12px;
-    padding: 2px 5px;
-    border-radius: 2px;
+  border: 1px solid #ddd;
+  font-size: 12px;
+  padding: 2px 5px;
+  border-radius: 2px;
 }
 
 .paid {
-    text-align: right;
-    margin-bottom: 20px;
+  text-align: right;
+  margin-bottom: 20px;
 }
 
 .paid span {
-    padding-right: 10px;
+  padding-right: 10px;
 }
 
 .reservation-info h4 {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
 }
 
 .reservation-info span {
-    font-size: 12px;
+  font-size: 12px;
 }
 
-
 .user-box {
-    text-align: center;
-    margin-right: 20px;
+  text-align: center;
+  margin-right: 20px;
 }
 
 .user-box p {
-    font-size: 12px;
-    padding-top: 10px;
+  font-size: 12px;
+  padding-top: 10px;
 }
 .reservation-user {
-    border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
 .delete-reserv {
-    color: red!important;
-    font-size: 12px;
+  color: red !important;
+  font-size: 12px;
 }
 
-
 .reservation-info .ant-col:first-child span {
-    color: #000;
+  color: #000;
 }
 
 .calendar-btn .nopadding {
-    padding: 0;
+  padding: 0;
 }
 
 /*********** Group Reservation *****************/
 
-
 .unit-available p {
-    margin: 0;
+  margin: 0;
 }
 
 .unit-available span {
-    font-size: 11px;
+  font-size: 11px;
 }
 
 .unit-available label {
-    display: block;
-    height: 32px;
+  display: block;
+  height: 32px;
 }
-
 
 .select-unit-reservation .ant-row {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
-.select-unit-reservation label, .select-unit-reservation .ant-form-item-label {
-    margin-bottom: 5px;
+.select-unit-reservation label,
+.select-unit-reservation .ant-form-item-label {
+  margin-bottom: 5px;
 }
 
 .night-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    padding-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-bottom: 20px;
 }
 
 .night-box {
-    width: 25%;
-    padding: 5px 0px;
-    text-align: center;
-    padding-right: 20px;
+  width: 25%;
+  padding: 5px 0px;
+  text-align: center;
+  padding-right: 20px;
 }
 
 .discount-night {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
 .discount-night .ant-input {
-    width: 50px;
-    margin-right: 10px;
+  width: 50px;
+  margin-right: 10px;
 }
 
 .discount-box h2 {
-    margin: 0;
+  margin: 0;
 }
 
 .discount-box {
-    background: #f6f6f7;
-    padding: 20px 50px;
+  background: #f6f6f7;
+  padding: 20px 50px;
 }
 
 .discount-night span {
-    padding-right: 10px;
+  padding-right: 10px;
 }
 
 .price-per-night .ant-collapse {
-    background: transparent;
-    border: none;
+  background: transparent;
+  border: none;
 }
 
 .price-per-night .ant-collapse-item {
-    border: none;
+  border: none;
 }
 
 .price-per-night .ant-collapse .ant-collapse-header {
-    padding: 13px 0px!important;
+  padding: 13px 0px !important;
 }
 
 .price-per-night .ant-collapse-content > .ant-collapse-content-box {
-    background: transparent;
-    padding: 0;
+  background: transparent;
+  padding: 0;
 }
 
 .price-per-night .ant-collapse-content {
-    background: transparent;
-    border: none;
+  background: transparent;
+  border: none;
 }
-
 
 .select-unit-reservation {
-    padding-top: 30px;
+  padding-top: 30px;
 }
 
-.unit-border{
-    border-bottom: 1px solid #aeaeae;
+.unit-border {
+  border-bottom: 1px solid #aeaeae;
 }
 
-@media screen and (min-width:1367px){
-    .calendar-calendar {
-        max-width: 1400px;
-    }
-    
-    
+/********8 Price night ***********/
+
+.select-unit h4 {
+  font-size: 16px;
+  text-transform: uppercase;
+  color: #444444;
+  padding-bottom: 20px;
+}
+
+.select-unit h3 {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+  padding-bottom: 20px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.input-group .ant-btn-icon-only {
+  width: auto;
+  padding: 5px;
+  font-size: 10px;
+  margin: 0px 5px;
+  background: #17abc8;
+  border-color: #17abc8;
+}
+
+.input-group .ant-btn-icon-only:hover {
+  background: #17abc8;
+  border-color: #17abc8;
+}
+
+.input-group .ant-btn-icon-only span {
+  font-size: 12px;
+}
+
+.select-unit [class*='ant-col-'] {
+  padding: 0px 10px;
+}
+
+.input-group span.eur {
+  margin-left: 10px;
+}
+
+.grey-bg {
+  background: #f8f9fb;
+}
+
+.blue-bg {
+  background: #465e6c;
+}
+
+.blue-bg h4 {
+  font-size: 14px;
+  text-transform: inherit;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+.select-unit .no-padding-col [class*='ant-col-'] {
+  padding: 0;
+}
+
+.blue-bg h4 span {
+  font-weight: 900;
+  font-size: 20px;
+  padding: 0;
+}
+
+.dark-blue-bg {
+  background: #173142;
+  text-align: right;
+}
+
+.dark-blue-bg h4 {
+  font-size: 14px;
+  text-transform: inherit;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+.dark-blue-bg h4 span {
+  font-weight: 900;
+  font-size: 20px;
+}
+
+.dark-blue-bg span {
+  color: #fff;
+}
+
+.price-discount {
+  padding: 30px 10px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.price-discount span {
+  margin-right: 10px;
+  text-align: left;
+}
+
+.price-discount-unit {
+  padding: 30px 10px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.price-discount-cost {
+  padding: 30px 10px;
+}
+
+.select-unit .night-box {
+  width: 20%;
+}
+
+.select-unit .night-box label {
+  text-align: center !important;
+}
+
+.select-unit
+  .ant-collapse
+  > .ant-collapse-item
+  > .ant-collapse-header
+  .ant-collapse-arrow {
+  left: 0;
+  right: inherit;
+}
+
+.select-unit {
+  background: #f9f9f9;
+  margin-bottom: 10px;
+  padding: 10px 20px;
+}
+
+.select-unit .price-per-night .ant-collapse .ant-collapse-header {
+  padding: 13px 20px !important;
+  text-transform: inherit;
+  color: #999;
+  font-weight: 400;
+}
+
+.input-counter > div > div {
+  background: #e2e2e2;
+  width: 40px;
+  height: 40px;
+  padding: 0!important;
+  text-align: center;
+  color: #777;
+  line-height: 40px;
+  border-radius: 30px;
+  font-size: 22px;
+}
+
+@media screen and (min-width: 1367px) {
+  .calendar-calendar {
+    max-width: 1400px;
+  }
 }

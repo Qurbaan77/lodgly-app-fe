@@ -13,7 +13,7 @@ import loader from '../../assets/images/cliploader.gif';
 import propertyplace from '../../assets/images/property-placeholder.png';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
 import GSTC from './GSTC';
-import { userInstance, reservationInstance } from '../../axios/axiosconfig';
+import { userInstance, reservationInstance, propertyInstance } from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
 import GroupReservation from './groupreservation';
 import favicon from '../../assets/images/logo-mobile.png';
@@ -36,7 +36,6 @@ const Calendar = () => {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visibleProperty, setVisibleProperty] = useState(false);
-
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ calendarWrite, userId }] = userCred || [{}];
@@ -91,6 +90,16 @@ const Calendar = () => {
   //       }
   //     });
   //   });
+  // });
+
+  // unittypeData.forEach((ele) => {
+  //   const uttId = `utt${ele.id.toString()}`;
+  //   rows[uttId] = {
+  //     id: uttId,
+  //     label: ele.unitTypeName,
+  //     progress: 50,
+  //     expanded: false,
+  //   };
   // });
 
   const columns = {
@@ -149,7 +158,6 @@ const Calendar = () => {
   };
 
   const subs = [];
-
   const getProperty = useCallback(async () => {
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
@@ -176,10 +184,10 @@ const Calendar = () => {
       setOnTrial(JSON.parse(isOnTrial));
       setLoading(false);
     }
-    const response = await reservationInstance.post('/getReservation', {
-      affiliateId: userId,
-    });
-    console.log(response);
+    // const response = await reservationInstance.post('/getReservation', {
+    //   affiliateId: userId,
+    // });
+
     // const { reservationData: data } = response.data;
     // if (response.data.code === 200) {
     //   setLoading(false);
@@ -192,7 +200,7 @@ const Calendar = () => {
     //     }
     //   }
     // }
-  }, [userId]);
+  }, []);
 
   const getCalendarData = useCallback(async () => {
     const response = await reservationInstance.post('/getReservationCalendarData', {
@@ -315,22 +323,25 @@ const Calendar = () => {
       propertyId: topNavId,
       affiliateId: userId,
     };
-    const response = await userInstance.post('/getUnittype', values);
-    const { unittypeData, units } = response.data;
+    const response = await propertyInstance.post('/getUnittype', values);
+    // const { unittypeData } = response.data;
     if (response.data.code === 200) {
-      unittypeData.forEach((el) => {
-        let sum = 0;
-        const arr = [];
-        units.forEach((ele) => {
-          if (el.id === ele.unittypeId) {
-            sum += 1;
-            arr.push(ele.id);
-          }
-        });
-        el.noOfUnits = sum;
-        el.units = arr;
+      response.data.unittypeData.forEach((element) => {
+        setData(JSON.parse(element.unitsData) || []);
       });
-      setData(unittypeData);
+    // unittypeData.forEach((el) => {
+    //   let sum = 0;
+    //   const arr = [];
+    //   units.forEach((ele) => {
+    //     if (el.id === ele.unittypeId) {
+    //       sum += 1;
+    //       arr.push(ele.id);
+    //     }
+    //   });
+    //   el.noOfUnits = sum;
+    //   el.units = arr;
+    // });
+    // setData(JSON.parse(unittypeData[0].unitsData));
     }
   }, [topNavId, userId]);
 

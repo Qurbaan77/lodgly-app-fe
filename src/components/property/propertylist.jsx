@@ -254,7 +254,7 @@ const PropertyList = () => {
                       <li>
                         <img src={homeicon} alt="Unit" />
                         {' '}
-                        {el.noUnit}
+                        {el.unitsData ? JSON.parse(el.unitsData).length : 0}
                         {' '}
                         {t('strings.unit')}
                       </li>
