@@ -834,8 +834,6 @@
 
 
 "guestpopup": {
-  
- 
   "label1": "Please enter name",
   "label2": "Country of Residence",
   "label3": "Please enter country",
@@ -1125,9 +1123,7 @@
  "photos":{
   "heading1": "Photos",
   "paragraph1": "Catch a potential guest",
-  "paragraph2": "s eye with high-quality photos. Include a ",
-  "paragraph3": "variety of perspectives (interior and exterior) to give them",
-  "paragraph4": "the best overall impression of your place.",
+  "paragraph2": "s eye with high-quality photo.",
   "paragraph5": "Click or drag file to this area to upload",
   "paragraph6": "Support for a single or bulk upload."
   },
