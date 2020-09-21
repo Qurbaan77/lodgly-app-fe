@@ -87,20 +87,6 @@ const SeasonRates = () => {
     setVisible(false);
   };
 
-  const remove = async () => {
-    const values = {
-      id: seasonRateId,
-    };
-    const response = await propertyInstance.post('/deleteSeasonRate', values);
-    if (response.data.code === 200) {
-      setVisibiltyOFDelete(false);
-      getData();
-      toast.success('Successfully deleted Season', { containerId: 'B' });
-    } else {
-      toast.error('Server error please try again', { containerId: 'B' });
-    }
-  };
-
   const getData = useCallback(async () => {
     const values = {
       unitTypeId: localStorage.getItem('propertyV2Id'),
@@ -110,9 +96,25 @@ const SeasonRates = () => {
       if (response.data.seasonRateData.length > 0) {
         setShowTable(false);
         setSeasonRatesData(response.data.seasonRateData);
+      } else {
+        setShowTable(true);
       }
     }
   }, []);
+
+  const remove = async () => {
+    const values = {
+      id: seasonRateId,
+    };
+    const response = await propertyInstance.post('/deleteSeasonRate', values);
+    if (response.data.code === 200) {
+      getData();
+      setVisibiltyOFDelete(false);
+      toast.success('Successfully deleted Season', { containerId: 'B', toastId: 'B' });
+    } else {
+      toast.error('Server error please try again', { containerId: 'B', toastId: 'B' });
+    }
+  };
 
   useEffect(() => {
     getData();
