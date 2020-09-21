@@ -5,6 +5,7 @@ import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
 // import { useHistory } from 'react-router-dom';
 import { Button, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
+// import GSTC from 'gantt-schedule-timeline-calendar';
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
 import CreateProperty from '../property/createProperty';
@@ -36,6 +37,7 @@ const Calendar = () => {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visibleProperty, setVisibleProperty] = useState(false);
+  const [GSTCData, setGSTCData] = useState([]);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -208,7 +210,8 @@ const Calendar = () => {
     const response = await reservationInstance.post('/getReservationCalendarData', {
       affiliateId: userId,
     });
-    console.log('getReservationCalendarData', response);
+    console.log('getReservationCalendarData', response.data);
+    setGSTCData(response.data);
     // const { unittypeData: data0 } = response.data;
     // const { unitData: data1 } = response.data;
     if (response.data.code === 200) {
@@ -327,11 +330,13 @@ const Calendar = () => {
       affiliateId: userId,
     };
     const response = await propertyInstance.post('/getUnittype', values);
+    console.log(response.data.unittypeData);
     // const { unittypeData } = response.data;
     if (response.data.code === 200) {
-      response.data.unittypeData.forEach((element) => {
-        setData(JSON.parse(element.unitsData) || []);
-      });
+      // response.data.unittypeData.forEach((element) => {
+      //   setData(JSON.parse(element.unitsData) || []);
+      // });
+      setData(response.data.unittypeData);
     // unittypeData.forEach((el) => {
     //   let sum = 0;
     //   const arr = [];
@@ -448,7 +453,7 @@ const Calendar = () => {
         </div>
 
         <div className="calendar-calendar">
-          <GSTC config={config} onState={onState} />
+          <GSTC config={config} onState={onState} unitTypes={GSTCData} />
         </div>
 
         <AddReservation
