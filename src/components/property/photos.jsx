@@ -94,8 +94,8 @@ const Photos = () => {
                     {t('photos.paragraph1')}
                     <span>&apos;</span>
                     {t('photos.paragraph2')}
-                    {t('photos.paragraph3')}
-                    {t('photos.paragraph4')}
+                    {/* {t('photos.paragraph3')}
+                    {t('photos.paragraph4')} */}
                   </p>
                   <Form.Item>
                     <Form.Item

@@ -395,7 +395,9 @@ const CreateSeasonRates = () => {
                     <Col span={2} />
                     <Col span={11}>
                       <Form.Item label="Date Periods" name="groupname">
-                        <RangePicker />
+                        <RangePicker defaultValue={moment()}
+                                     format="YYYY-MM-DD"
+                                     disabledDate={(current) => current && current < moment().subtract(1, 'day')}  />
                       </Form.Item>
                     </Col>
                   </Row>

@@ -276,6 +276,7 @@ const Owner = () => {
                           </div>
                         </td>
                         <td>{el.email}</td>
+                       
                         <td>
                           <div className="owner-property">
                             {properties.map((ele) => {
@@ -451,13 +452,35 @@ const Owner = () => {
 
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
-                  <Form.Item
+                  {/* <Form.Item
                     label={t('owner.label13')}
                     name="document"
                     style={{ paddingRight: 20 }}
                   >
                     <Input />
-                  </Form.Item>
+                  </Form.Item> */}
+                   <Form.Item
+                  label={t('guestpopup.label4')}
+                  name="document"
+                  style={{ paddingRight: 20 }}
+
+                >
+                  <Select
+                    placeholder={t('guestpopup.label4')}
+                    name="document"
+                    rules={[
+                      {
+                        required: true,
+                        message: t('guestpopup.label5'),
+                      },
+                    ]}
+                  >
+                    <Select.Option value="Passport">Passport</Select.Option>
+                    <Select.Option value="ID Card">ID Card</Select.Option>
+                    <Select.Option value="Driving License">Driving License</Select.Option>
+                    <Select.Option value="Other">Other</Select.Option>
+                  </Select>
+                </Form.Item>
                 </Col>
 
                 <Col span={12}>
@@ -687,13 +710,28 @@ const Owner = () => {
 
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
-                  <Form.Item
-                    label={t('owner.label13')}
+                <Form.Item
+                  label={t('guestpopup.label4')}
+                  name="document"
+                  style={{ paddingRight: 20 }}
+
+                >
+                  <Select
+                    placeholder={t('guestpopup.label4')}
                     name="document"
-                    style={{ paddingRight: 20 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: t('guestpopup.label5'),
+                      },
+                    ]}
                   >
-                    <Input />
-                  </Form.Item>
+                    <Select.Option value="Passport">Passport</Select.Option>
+                    <Select.Option value="ID Card">ID Card</Select.Option>
+                    <Select.Option value="Driving License">Driving License</Select.Option>
+                    <Select.Option value="Other">Other</Select.Option>
+                  </Select>
+                </Form.Item>
                 </Col>
 
                 <Col span={12}>
