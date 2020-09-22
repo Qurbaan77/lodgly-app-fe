@@ -289,7 +289,7 @@ const App = () => {
                         component={() => <Services />}
                       />
                     ) : feature.properties ? (
-                      <PrivateRoute
+                      <SecureOverview
                         exact
                         path="/services"
                         component={() => <Services />}
@@ -409,7 +409,7 @@ const App = () => {
                         component={() => <Rates />}
                       />
                     ) : feature.properties ? (
-                      <PrivateRoute
+                      <SecureOverview
                         exact
                         path="/rates"
                         component={() => <Rates />}
@@ -425,7 +425,7 @@ const App = () => {
                         component={() => <SeasonRates />}
                       />
                     ) : feature.properties ? (
-                      <PrivateRoute
+                      <SecureOverview
                         exact
                         path="/seasonrates"
                         component={() => <SeasonRates />}
@@ -440,7 +440,7 @@ const App = () => {
                         component={() => <CreateSeasonRates />}
                       />
                     ) : feature.properties ? (
-                      <PrivateRoute
+                      <SecureOverview
                         exact
                         path="/createseasonrates"
                         component={() => <CreateSeasonRates />}
@@ -478,7 +478,7 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
-                    {isSubUser ? (
+                    {isSubUser && localStorage.getItem('propertyV2Id') ? (
                       <SecureProperty
                         exact
                         path="/overview"
@@ -493,7 +493,7 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
-                    {isSubUser ? (
+                    {isSubUser && localStorage.getItem('propertyV2Id') ? (
                       <SecureProperty
                         exact
                         path="/location"
@@ -508,7 +508,7 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
-                    {isSubUser ? (
+                    {isSubUser && localStorage.getItem('propertyV2Id') ? (
                       <SecureProperty
                         exact
                         path="/photos"

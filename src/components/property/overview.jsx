@@ -63,7 +63,7 @@ const Overview = () => {
     });
     if (response.data.code === 200) {
       const data = response.data.unitTypeV2Data[0];
-      if (data.unitsData) {
+      if (data && data.unitsData) {
         const units = JSON.parse(data.unitsData);
         units.forEach((el, i) => {
           form2.setFieldsValue({
