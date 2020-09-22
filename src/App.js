@@ -51,7 +51,7 @@ import {
   SecureStats,
   SecureBilling,
   SecureGuests,
-  // SecureOverview,
+  SecureOverview,
 } from './Routes/SecureRoute';
 import Owner from './components/owner/owner';
 import Team from './components/team/team';
@@ -485,7 +485,7 @@ const App = () => {
                         component={() => <Overview />}
                       />
                     ) : feature.properties ? (
-                      <PrivateRoute
+                      <SecureOverview
                         exact
                         path="/overview"
                         component={() => <Overview />}
@@ -500,7 +500,7 @@ const App = () => {
                         component={() => <Location />}
                       />
                     ) : feature.properties ? (
-                      <PrivateRoute
+                      <SecureOverview
                         exact
                         path="/location"
                         component={() => <Location />}
@@ -515,7 +515,7 @@ const App = () => {
                         component={() => <Photos />}
                       />
                     ) : feature.properties ? (
-                      <PrivateRoute
+                      <SecureOverview
                         exact
                         path="/photos"
                         component={() => <Photos />}

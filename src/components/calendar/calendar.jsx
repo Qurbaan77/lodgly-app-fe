@@ -448,7 +448,7 @@ const Calendar = () => {
         </div>
 
         <div className="calendar-calendar">
-          <GSTC config={config} onState={onState} unitTypes={GSTCData} />
+          <GSTC config={config} onState={onState} />
         </div>
 
         <AddReservation

@@ -138,12 +138,12 @@ export const SecureGuests = ({ component: Component, ...rest }) => (
 );
 
 export const SecureOverview = ({ component: Component, ...rest }) => {
-  const hasParam = window.location.search;
+  // const hasParam = window.location.search;
   const token = localStorage.getItem('token');
   return (
     <Route
       {...rest}
-      render={(props) => (token && hasParam ? (
+      render={(props) => (token && localStorage.getItem('propertyV2Id') ? (
         <Component {...props} {...rest} />
       ) : (
         <Redirect to="/propertylist" />
