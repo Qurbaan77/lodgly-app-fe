@@ -6,11 +6,13 @@ import {
 import {
   InboxOutlined,
 } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { propertyInstance } from '../../axios/axiosconfig';
 
 const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
   const [form] = Form.useForm();
+  const { t } = useTranslation();
   const [nav, setNav] = useState(false);
   const [panel, setPanel] = useState([]);
   const handleMenu = (e) => {
@@ -66,14 +68,14 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
       </div>
 
       <div className="edit-room-content">
-
         <h5>Most common</h5>
+        {/* t("amenitiesList.0.name") */}
         {
-            amenitiesList.slice(0, 19).map((amenities) => (
+            amenitiesList.slice(0, 19).map((amenities, i) => (
               <div className="property-selection" key={amenities.id}>
                 <div className="icon-name">
                   <InboxOutlined />
-                  <span>{amenities.name}</span>
+                  {t(`amenities.${i}.name`)}
                 </div>
                 <div className="input-counter">
                   <Switch
@@ -84,15 +86,16 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
               </div>
             ))
           }
-        <div className={`more-content ${nav ? 'show' : ''}`}>
 
+        <div className={`more-content ${nav ? 'show' : ''}`}>
           <h5>Accessibility</h5>
           {
-            amenitiesList.slice(20, 25).map((amenities) => (
+            amenitiesList.slice(20, 25).map((amenities, i) => (
               <div className="property-selection" key={amenities.id}>
                 <div className="icon-name">
                   <InboxOutlined />
-                  <span>{amenities.name}</span>
+                  {/* <span>{amenities.name}</span> */}
+                  {t(`amenities.${i + 19}.name`)}
                 </div>
                 <div className="input-counter">
                   <Switch
@@ -107,11 +110,12 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
           }
           <h5>Bedroom & Laundry</h5>
           {
-            amenitiesList.slice(26, 37).map((amenities) => (
+            amenitiesList.slice(26, 37).map((amenities, i) => (
               <div className="property-selection" key={amenities.id}>
                 <div className="icon-name">
                   <InboxOutlined />
-                  <span>{amenities.name}</span>
+                  {/* <span>{amenities.name}</span> */}
+                  {t(`amenities.${i + 25}.name`)}
                 </div>
                 <div className="input-counter">
                   <Switch onChange={() => handleChange(amenities.id)} />
@@ -121,11 +125,12 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
           }
           <h5>Cooking</h5>
           {
-            amenitiesList.slice(38, 56).map((amenities) => (
+            amenitiesList.slice(38, 56).map((amenities, i) => (
               <div className="property-selection" key={amenities.id}>
                 <div className="icon-name">
                   <InboxOutlined />
-                  <span>{amenities.name}</span>
+                  {/* <span>{amenities.name}</span> */}
+                  {t(`amenities.${i + 37}.name`)}
                 </div>
                 <div className="input-counter">
                   <Switch onChange={() => handleChange(amenities.id)} />
@@ -135,11 +140,12 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
           }
           <h5>Heating</h5>
           {
-            amenitiesList.slice(57, 64).map((amenities) => (
+            amenitiesList.slice(57, 64).map((amenities, i) => (
               <div className="property-selection" key={amenities.id}>
                 <div className="icon-name">
                   <InboxOutlined />
-                  <span>{amenities.name}</span>
+                  {/* <span>{amenities.name}</span> */}
+                  {t(`amenities.${i + 56}.name`)}
                 </div>
                 <div className="input-counter">
                   <Switch onChange={() => handleChange(amenities.id)} />
@@ -149,11 +155,11 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
           }
           <h5>Multimedia</h5>
           {
-            amenitiesList.slice(65, 76).map((amenities) => (
+            amenitiesList.slice(65, 76).map((amenities, i) => (
               <div className="property-selection" key={amenities.id}>
                 <div className="icon-name">
                   <InboxOutlined />
-                  <span>{amenities.name}</span>
+                  {t(`amenities.${i + 64}.name`)}
                 </div>
                 <div className="input-counter">
                   <Switch onChange={() => handleChange(amenities.id)} />
@@ -163,11 +169,11 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
           }
           <h5>Other</h5>
           {
-            amenitiesList.slice(77, 78).map((amenities) => (
+            amenitiesList.slice(77, 78).map((amenities, i) => (
               <div className="property-selection" key={amenities.id}>
                 <div className="icon-name">
                   <InboxOutlined />
-                  <span>{amenities.name}</span>
+                  {t(`amenities.${i + 76}.name`)}
                 </div>
                 <div className="input-counter">
                   <Switch onChange={() => handleChange(amenities.id)} />
@@ -177,11 +183,11 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
           }
           <h5>Outside</h5>
           {
-            amenitiesList.slice(79, 98).map((amenities) => (
+            amenitiesList.slice(79, 98).map((amenities, i) => (
               <div className="property-selection" key={amenities.id}>
                 <div className="icon-name">
                   <InboxOutlined />
-                  <span>{amenities.name}</span>
+                  {t(`amenities.${i + 78}.name`)}
                 </div>
                 <div className="input-counter">
                   <Switch onChange={() => handleChange(amenities.id)} />
@@ -191,11 +197,11 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
           }
           <h5>Parking</h5>
           {
-            amenitiesList.slice(99, 105).map((amenities) => (
+            amenitiesList.slice(99, 105).map((amenities, i) => (
               <div className="property-selection" key={amenities.id}>
                 <div className="icon-name">
                   <InboxOutlined />
-                  <span>{amenities.name}</span>
+                  {t(`amenities.${i + 98}.name`)}
                 </div>
                 <div className="input-counter">
                   <Switch onChange={() => handleChange(amenities.id)} />
@@ -205,11 +211,11 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
           }
           <h5>Policies</h5>
           {
-            amenitiesList.slice(106, 119).map((amenities) => (
+            amenitiesList.slice(106, 119).map((amenities, i) => (
               <div className="property-selection" key={amenities.id}>
                 <div className="icon-name">
                   <InboxOutlined />
-                  <span>{amenities.name}</span>
+                  {t(`amenities.${i + 105}.name`)}
                 </div>
                 <div className="input-counter">
                   <Switch onChange={() => handleChange(amenities.id)} />
@@ -219,11 +225,11 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
           }
           <h5>Safety</h5>
           {
-            amenitiesList.slice(120, 128).map((amenities) => (
+            amenitiesList.slice(120, 128).map((amenities, i) => (
               <div className="property-selection" key={amenities.id}>
                 <div className="icon-name">
                   <InboxOutlined />
-                  <span>{amenities.name}</span>
+                  {t(`amenities.${i + 119}.name`)}
                 </div>
                 <div className="input-counter">
                   <Switch onChange={() => handleChange(amenities.id)} />
@@ -233,11 +239,11 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
           }
           <h5>Spa</h5>
           {
-            amenitiesList.slice(129, 150).map((amenities) => (
+            amenitiesList.slice(129, 150).map((amenities, i) => (
               <div className="property-selection" key={amenities.id}>
                 <div className="icon-name">
                   <InboxOutlined />
-                  <span>{amenities.name}</span>
+                  {t(`amenities.${i + 128}.name`)}
                 </div>
                 <div className="input-counter">
                   <Switch onChange={() => handleChange(amenities.id)} />

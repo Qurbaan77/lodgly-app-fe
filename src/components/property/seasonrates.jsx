@@ -6,6 +6,7 @@ import {
   Button, Row, Col, Table, Modal,
 } from 'antd';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { propertyInstance } from '../../axios/axiosconfig';
 import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
@@ -70,6 +71,7 @@ const SeasonRates = () => {
   const [seasonRateId, setSeasonRateId] = useState(0);
   const [seasonRatesData, setSeasonRatesData] = useState([]);
   const [showTable, setShowTable] = useState(true);
+  const { t } = useTranslation();
 
   const show = () => {
     setVisible(true);
@@ -85,20 +87,6 @@ const SeasonRates = () => {
     setVisible(false);
   };
 
-  const remove = async () => {
-    const values = {
-      id: seasonRateId,
-    };
-    const response = await propertyInstance.post('/deleteSeasonRate', values);
-    if (response.data.code === 200) {
-      setVisibiltyOFDelete(false);
-      getData();
-      toast.success('Successfully deleted Season', { containerId: 'B' });
-    } else {
-      toast.error('Server error please try again', { containerId: 'B' });
-    }
-  };
-
   const getData = useCallback(async () => {
     const values = {
       unitTypeId: localStorage.getItem('propertyV2Id'),
@@ -108,9 +96,25 @@ const SeasonRates = () => {
       if (response.data.seasonRateData.length > 0) {
         setShowTable(false);
         setSeasonRatesData(response.data.seasonRateData);
+      } else {
+        setShowTable(true);
       }
     }
   }, []);
+
+  const remove = async () => {
+    const values = {
+      id: seasonRateId,
+    };
+    const response = await propertyInstance.post('/deleteSeasonRate', values);
+    if (response.data.code === 200) {
+      getData();
+      setVisibiltyOFDelete(false);
+      toast.success('Successfully deleted Season', { containerId: 'B', toastId: 'B' });
+    } else {
+      toast.error('Server error please try again', { containerId: 'B', toastId: 'B' });
+    }
+  };
 
   useEffect(() => {
     getData();
@@ -136,15 +140,15 @@ const SeasonRates = () => {
             <div className="season-rates-content">
               <div className="season-first-section">
                 <div className="season-header">
-                  <h3>SEASON RATES</h3>
+                  <h3>{t('seasonrates.heading1')}</h3>
                   <div className="add-season">
-                    <Button onClick={show}>Add Season</Button>
+                    <Button onClick={show}>{t('seasonrates.button1')}</Button>
                   </div>
                 </div>
                 <p>
-                  Set different rates for specific date periods (up to 3 years
-                  in advance). Your season rates will overwrite your Default
-                  Rate for those periods.
+                  {t('seasonrates.paragraph1')}
+                  {t('seasonrates.paragraph2')}
+                  {t('seasonrates.paragraph3')}
                 </p>
 
                 <div className="season-table" hidden={showTable}>

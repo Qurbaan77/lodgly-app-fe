@@ -57,13 +57,13 @@ const Location = () => {
     if (response.data.code === 200) {
       const data = response.data.unitTypeV2Data[0];
       form.setFieldsValue({
+        location: data.address,
         distanceIn: data.distanceIn,
       });
       if (data.distance !== null && data.direction !== null) {
         setDistance(true);
         setDirections(true);
         form.setFieldsValue({
-          location: data.address,
           direction: data.direction,
           bus: data.distance.bus,
           train: data.distance.train,
@@ -126,7 +126,7 @@ const Location = () => {
             <div className="location-content">
               <Form form={form} onFinish={onFinish}>
                 <div className="location-first-section">
-                  <h3>Location</h3>
+                  <h3>{t('location.heading1')}</h3>
                   <Row>
                     <Col span={24}>
                       <Form.Item
@@ -195,10 +195,10 @@ const Location = () => {
 
                 <div className="toggle-box-section">
                   <h3>
-                    Distances
+                    {t('location.heading2')}
                     <Switch checked={distance} onClick={() => setDistance(!distance)} />
                   </h3>
-                  <p>Add distances to nearby transport options.</p>
+                  <p>{t('location.paragraph1')}</p>
 
                   <div className={`toggle-content ${distance ? 'show' : ''}`}>
                     <div className="location-distance">
@@ -219,7 +219,7 @@ const Location = () => {
                             <div className="distance-icon">
                               <BankOutlined />
                               {' '}
-                              Bus
+                              {t('location.paragraph2')}
                             </div>
                             <div className="distance-input">
                               <Form.Item name="bus">
@@ -232,7 +232,7 @@ const Location = () => {
                             <div className="distance-icon">
                               <BankOutlined />
                               {' '}
-                              Train
+                              {t('location.paragraph3')}
                             </div>
                             <div className="distance-input">
                               <Form.Item name="train">
@@ -245,7 +245,7 @@ const Location = () => {
                             <div className="distance-icon">
                               <BankOutlined />
                               {' '}
-                              Underground
+                              {t('location.paragraph4')}
                             </div>
                             <div className="distance-input">
                               <Form.Item name="underground">
@@ -261,7 +261,7 @@ const Location = () => {
                             <div className="distance-icon">
                               <BankOutlined />
                               {' '}
-                              Motorway
+                              {t('location.paragraph5')}
                             </div>
                             <div className="distance-input">
                               <Form.Item name="motorway">
@@ -274,7 +274,7 @@ const Location = () => {
                             <div className="distance-icon">
                               <BankOutlined />
                               {' '}
-                              Airport
+                              {t('location.paragraph6')}
                             </div>
                             <div className="distance-input">
                               <Form.Item name="airport">
@@ -287,7 +287,7 @@ const Location = () => {
                             <div className="distance-icon">
                               <BankOutlined />
                               {' '}
-                              Port
+                              {t('location.paragraph7')}
                             </div>
                             <div className="distance-input">
                               <Form.Item name="port">
@@ -308,14 +308,12 @@ const Location = () => {
                     </div>
                   </div>
                 </div>
-
                 <div className="toggle-box-section">
                   <h3>
-                    Directions
+                    {t('location.heading3')}
                     <Switch checked={directions} onClick={() => setDirections(!directions)} />
                   </h3>
-                  <p>Explain how guests can reach your rental.</p>
-
+                  <p>{t('location.paragraph8')}</p>
                   <div className={`toggle-content ${directions ? 'show' : ''}`}>
                     <Row>
                       <Col span={24}>
@@ -328,7 +326,7 @@ const Location = () => {
                 </div>
                 <div className="toggle-box-button">
                   <Button type="primary" htmlType="submit" className="savebtn">
-                    Save
+                    {t('location.button1')}
                   </Button>
                 </div>
               </Form>

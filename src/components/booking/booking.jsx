@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 // import moment from 'moment';
 import './booking.css';
 import {
-  Form, Button, Row, Col, Tooltip, Tag, Select, Checkbox,
+  Form, Button, Row, Col, Tooltip, Tag, Select, Checkbox, Modal,
 } from 'antd';
 import {
   FormOutlined,
@@ -23,7 +23,7 @@ import CreateBookingPopup from './createbookingpopup';
 import EditBookingPopup from './editbookingpopup';
 import BookingFilter from './filter';
 import CreateProperty from '../property/createProperty';
-import { userInstance } from '../../axios/axiosconfig';
+import { userInstance, bookingInstance } from '../../axios/axiosconfig';
 import filterIcon from '../../assets/images/menu/filter-icon.png';
 import cancelIcon from '../../assets/images/menu/cancel-icon.png';
 import nobooking from '../../assets/images/no-booking.png';
@@ -36,6 +36,7 @@ import propertyplace from '../../assets/images/property-placeholder.png';
 import favicon from '../../assets/images/logo-mobile.png';
 // const { Panel } = Collapse;
 // const { MonthPicker, RangePicker } = DatePicker;
+import DeletePopup from '../property/deletepopup';
 
 const useForceUpdate = () => useState()[1];
 const Booking = () => {
@@ -76,6 +77,8 @@ const Booking = () => {
   const [{ bookingWrite, userId }] = userCred || [{}];
   const canWrite = bookingWrite;
   const [visibleProperty, setVisibleProperty] = useState(false);
+  const [tagStatus, setTagStatus] = useState('');
+  const [visibleOFDelete, setVisibleOFDelete] = useState(false);
   // const show = () => {
   // setVisible(true);
   // };
@@ -111,16 +114,18 @@ const Booking = () => {
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
-    const data2 = [];
-    const data = response.data.propertiesData;
-    data
-      .filter((el) => el.id === parseInt(topNavId, 10))
-      .forEach((filterData) => {
-        data2.push(filterData);
-      });
     if (response.data.code === 200) {
-      setLoading(false);
-      setPropertyData(data2.length > 0 ? data2 : data);
+      const data2 = [];
+      const data = response.data.propertiesData;
+      data
+        .filter((el) => el.id === parseInt(topNavId, 10))
+        .forEach((filterData) => {
+          data2.push(filterData);
+        });
+      if (response.data.code === 200) {
+        setLoading(false);
+        setPropertyData(data2.length > 0 ? data2 : data);
+      }
     }
   }, [userId, topNavId]);
 
@@ -132,52 +137,50 @@ const Booking = () => {
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
     }
-    const response = await userInstance.post('/getBooking', {
+    const response = await bookingInstance.post('/getBooking', {
       affiliateId: userId,
     });
     if (response.data.code === 200) {
       setLoading(false);
-    }
-    const bookingdata = response.data.bookingData;
-    const guestdata = response.data.guestData;
-    const servicedata = response.data.serviceData;
-    const guestnum = guestdata.map((el) => el.length);
-    const guestname = [];
-    const data = guestdata.map((el) => el.find((ele) => ele.id));
-    if (data.length) {
-      data.forEach((el) => {
-        if (el.fullname) {
-          guestname.push(el.fullname);
-        } else {
-          guestname.push('Unknown Guest');
-        }
+      const bookingdata = response.data.bookingData;
+      const guestdata = response.data.guestData;
+      const servicedata = response.data.serviceData[0];
+      const guestnum = guestdata.map((el) => el.length);
+      const guestname = [];
+      const data = guestdata.map((el) => el.find((ele) => ele.id));
+      if (data.length) {
+        data.forEach((el) => {
+          if (el.fullname) {
+            guestname.push(el.fullname);
+          } else {
+            guestname.push('Unknown Guest');
+          }
+        });
+      } else {
+        guestname.push('Unknown Guest');
+      }
+      guestname.push(data.fullname);
+      bookingdata.forEach((el, i) => {
+        el[`checked${i}`] = false;
+        const d1 = new Date(el.startDate);
+        const d2 = new Date(el.endDate);
+        const diff = Math.abs(d1 - d2);
+        const day = Math.floor(diff / (24 * 60 * 60 * 1000));
+        el.nights = day;
+        // el.nights = day + 1;
+        el.created_date = el.created_at.split('T', 1);
+        el.created_time = el.created_at.split('T').pop().substring(0, 5);
+        el.noOfGuest = guestnum[i];
+        el.guest = guestname[i] || 'Unknown Guest';
       });
-    } else {
-      guestname.push('Unknown Guest');
-    }
-    guestname.push(data.fullname);
-    bookingdata.forEach((el, i) => {
-      el[`checked${i}`] = false;
-      const d1 = new Date(el.startDate);
-      const d2 = new Date(el.endDate);
-      const diff = Math.abs(d1 - d2);
-      const day = Math.floor(diff / (24 * 60 * 60 * 1000));
-      el.nights = day;
-      // el.nights = day + 1;
-      el.created_date = el.created_at.split('T', 1);
-      el.created_time = el.created_at.split('T').pop().substring(0, 5);
-      el.noOfGuest = guestnum[i];
-      el.guest = guestname[i] || 'Unknown Guest';
-    });
 
-    // bookingdata.filter((el) =>
-    // el.propertyId === parseInt(localStorage.getItem('topNavId'), 10)).map((filter) =>
-    // setBookingData([filter]);
-    // );
+      // bookingdata.filter((el) =>
+      // el.propertyId === parseInt(localStorage.getItem('topNavId'), 10)).map((filter) =>
+      // setBookingData([filter]);
+      // );
 
-    // console.log('guestdata', guestdata);
-    // console.log('servicedata', servicedata);
-    if (response.data.code === 200) {
+      // console.log('guestdata', guestdata);
+      // console.log('servicedata', servicedata);
       if (topNavId) {
         const arr = [];
         bookingdata
@@ -187,8 +190,8 @@ const Booking = () => {
       } else {
         setBookingData([...bookingdata]);
         setGuestData([...guestdata]);
-        if (servicedata.length) {
-          setServiceData([...servicedata]);
+        if (servicedata && servicedata.length) {
+          setServiceData(servicedata);
         }
       }
     }
@@ -216,7 +219,8 @@ const Booking = () => {
       .map((filterGuest) => arr.push(filterGuest)));
 
     const data = [];
-    serviceData.map((el) => el.map((ele) => (ele.bookingId === values.id ? data.push(el) : null)));
+
+    serviceData.map((el) => (el.bookingId === values.id ? data.push(el) : null));
     setCurrentService(data);
     setEditCurrentGuest(arr);
     setCurrentBooking(values);
@@ -252,12 +256,18 @@ const Booking = () => {
     setVisible(false);
   };
 
+  const handleCancelDelete = () => {
+    setVisibleOFDelete(false);
+  };
+
   useEffect(() => {
     getData();
     getProperty();
   }, [getData, getProperty]);
 
   const filter = useCallback(() => {
+    // console.log('filterValues', filterValues);
+    // console.log('bookingData', bookingData);
     const copyBookingData = bookingData;
     const filterData = [];
     let startDate = 0;
@@ -265,16 +275,22 @@ const Booking = () => {
     if (filterValues.groupname) {
       startDate = filterValues.groupname[0]._d;
       endDate = filterValues.groupname[1]._d;
+      // console.log('startDate', new Date(startDate));
+      // console.log('endDate', new Date(endDate));
+      // copyBookingData.filter(
+      //   (el) => console.log(new Date(el.startDate)),
+      // );
       const data = copyBookingData.filter(
         (el) => new Date(el.startDate) >= startDate
-          || new Date(el.startDate) <= endDate,
+        && new Date(el.startDate) <= endDate,
       );
-      filterData.push(data);
+      // console.log('asdffgf', data);
+      filterData.push(...data);
     }
     if (filterValues.property) {
       const data0 = filterData.length > 0 ? filterData : copyBookingData;
       const data = data0.filter(
-        (el) => el.propertyId === filterValues.property,
+        (el) => el.unitTypeId === filterValues.property,
       );
       filterData.length = 0;
       filterData.push(...data);
@@ -294,8 +310,14 @@ const Booking = () => {
       filterData.length = 0;
       filterData.push(...data);
     }
+    if (tagStatus) {
+      const data0 = filterData.length > 0 ? filterData : copyBookingData;
+      const data = data0.filter((el) => el.status === tagStatus);
+      filterData.length = 0;
+      filterData.push(...data);
+    }
     setFilterArr(filterData);
-  }, [filterValues, bookingData]);
+  }, [filterValues, bookingData, tagStatus]);
 
   useEffect(() => {
     filter();
@@ -348,7 +370,8 @@ const Booking = () => {
   const btn1 = isSubUser && canWrite ? enableButton : disableButton;
   const btn2 = isSubUser ? btn1 : enableButton;
 
-  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+  const hasAccess = onTrial && daysLeft !== 0 ? true : subscribed;
+  // const hasAccess = false;
   const { Option } = Select;
 
   const addStatus = async (value) => {
@@ -356,13 +379,13 @@ const Booking = () => {
       status: value,
       bookingId: currentBooking.id,
     };
-    const response = await userInstance.post('/setStatus', payload);
+    const response = await bookingInstance.post('/setStatus', payload);
     if (response.data.code === 200) {
       getData();
       setStatus(value);
-      toast.success('successfully updated status', { containerId: 'B' });
+      toast.success('successfully updated status', { containerId: 'B', toastId: 'B' });
     } else {
-      toast.error('some error occurred!', { containerId: 'B' });
+      toast.error('some error occurred!', { containerId: 'B', toastId: 'B' });
     }
   };
 
@@ -418,24 +441,47 @@ const Booking = () => {
     setVisibleProperty(false);
   };
 
-  const handleDelete = async (e) => {
+  const handleDelete = (e) => {
     if (e === 'trash') {
-      const id = [];
-      checkedBooking.forEach((el) => {
-        id.push(el.id);
-      });
-      const values = {
-        bookings: id,
-      };
-      const response = await userInstance.post('/deleteBookings', values);
-      const { msg } = response.data;
-      if (response.data.code === 200) {
-        toast.success(msg, { containerId: 'B' });
-        setSelectAllCheck(false);
-        getData();
-      } else {
-        toast.error(msg, { containerId: 'B' });
-      }
+      setVisibleOFDelete(true);
+      // const id = [];
+      // checkedBooking.forEach((el) => {
+      //   id.push(el.id);
+      // });
+      // const values = {
+      //   bookings: id,
+      // };
+      // const response = await bookingInstance.post('/deleteBookings', values);
+      // const { msg } = response.data;
+      // if (response.data.code === 200) {
+      //   toast.success(msg, { containerId: 'B' });
+      //   setCheckedBooking([]);
+      //   setSelectAllCheck(false);
+      //   getData();
+      // } else {
+      //   toast.error(msg, { containerId: 'B' });
+      // }
+    }
+  };
+
+  const remove = async () => {
+    const id = [];
+    checkedBooking.forEach((el) => {
+      id.push(el.id);
+    });
+    const values = {
+      bookings: id,
+    };
+    const response = await bookingInstance.post('/deleteBookings', values);
+    const { msg } = response.data;
+    if (response.data.code === 200) {
+      toast.success(msg, { containerId: 'B' });
+      setCheckedBooking([]);
+      setSelectAllCheck(false);
+      setVisibleOFDelete(false);
+      getData();
+    } else {
+      toast.error(msg, { containerId: 'B' });
     }
   };
 
@@ -447,6 +493,14 @@ const Booking = () => {
             <img src={loader} alt="loader" />
           </div>
         </div>
+      </Wrapper>
+    );
+  }
+
+  if (!hasAccess) {
+    return (
+      <Wrapper>
+        <UserLock />
       </Wrapper>
     );
   }
@@ -533,122 +587,119 @@ const Booking = () => {
         />
         <body className="booking-page-view" />
       </Helmet>
-      {hasAccess ? (
-
-        <div className="booking">
-          <div className="container">
-            <Row>
-              <Col span={10}>
-                <div className="booking-list-conatiner">
-                  <div className="booking-filter-box">
-                    <div className="filter-section">
-                      <label htmlFor="filter">
-                        {t('booking.heading')}
-                        :
-                        <input type="text" hidden />
-                      </label>
-                      <div className="filter-item" id="filters">
-                        <Tag color="default">{t('booking.tag1')}</Tag>
-                        <Tag color="success">{t('booking.tag2')}</Tag>
-                        <Tag color="default">{t('booking.tag3')}</Tag>
-                        <Tag color="error">{t('booking.heading4')}</Tag>
-                      </div>
+      <div className="booking">
+        <div className="container">
+          <Row>
+            <Col span={10}>
+              <div className="booking-list-conatiner">
+                <div className="booking-filter-box">
+                  <div className="filter-section">
+                    <label htmlFor="filter">
+                      {t('booking.heading')}
+                      :
+                      <input type="text" hidden />
+                    </label>
+                    <div className="filter-item" id="filters">
+                      <Tag color="default" onClick={() => setTagStatus('decline')}>Decline</Tag>
+                      <Tag color="success" onClick={() => setTagStatus('open')}>Open</Tag>
+                      <Tag color="yellow" onClick={() => setTagStatus('tentative')}>Set as tentative</Tag>
+                      <Tag color="error" onClick={() => setTagStatus('booked')}>Booked</Tag>
                     </div>
-                    <Tooltip title="Filter" color="gold">
-                      <div className="filter-icon">
-                        <Button onClick={showfilter}>
-                          {' '}
-                          <img src={filterIcon} alt="filter-icon" />
-                        </Button>
-                      </div>
-                    </Tooltip>
                   </div>
-                  {mapBooking.map((el, i) => (
-                    <div
-                      key={el.id}
-                      role="presentation"
-                      className={`booking-list ${el.statusColour}`}
-                      onClick={() => selectBooking(el, i)}
-                    >
-                      <div className="filter-checkbox">
-                        <Checkbox
-                          checked={el[Object.keys(el)[32]]}
-                          onClick={() => handleCheck(el, i)}
-                        />
-                      </div>
-                      <div className="detail">
-                        <h3>{el.guest}</h3>
-                        <p>{el.propertyName}</p>
-                        <ul>
-                          <li>{moment(new Date(el.created_date)).format('DD MMM YYYY')}</li>
-                          <li>
-                            {el.nights}
-                            {' '}
-                            <ThunderboltOutlined />
-                          </li>
-                          <li>
-                            {el.noOfGuest}
-                            {' '}
-                            <UserOutlined />
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="detail-info">
-                        <span>{el.created_time}</span>
-                        <span className="green-label">
-                          {' '}
-                          €
-                          {el.totalAmount}
-                        </span>
-                      </div>
+                  <Tooltip title="Filter" color="gold">
+                    <div className="filter-icon">
+                      <Button onClick={showfilter}>
+                        {' '}
+                        <img src={filterIcon} alt="filter-icon" />
+                      </Button>
                     </div>
-                  ))}
-                  <div className="booking-filter-footer">
-                    <div className="invoice-filter-box">
+                  </Tooltip>
+                </div>
+                {mapBooking.map((el, i) => (
+                  <div
+                    key={el.id}
+                    role="presentation"
+                    className={`booking-list ${el.statusColour}`}
+                  >
+                    <div className="filter-checkbox">
                       <Checkbox
-                        checked={selectAllCheck}
-                        value={selectAllCheck}
-                        onClick={handleSelectAll}
+                        checked={el[Object.keys(el)[32]]}
+                        onClick={() => handleCheck(el, i)}
+                      />
+                    </div>
+                    <div className="detail" onClick={() => selectBooking(el, i)} role="presentation">
+                      <h3>{el.guest}</h3>
+                      <p>{el.propertyName}</p>
+                      <ul>
+                        <li>{moment(new Date(el.created_date)).format('DD MMM YYYY')}</li>
+                        <li>
+                          {el.nights}
+                          {' '}
+                          <ThunderboltOutlined />
+                        </li>
+                        <li>
+                          {el.noOfGuest}
+                          {' '}
+                          <UserOutlined />
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="detail-info">
+                      <span>{el.created_time}</span>
+                      <span className="green-label">
+                        {' '}
+                        €
+                        {el.totalAmount}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+                <div className="booking-filter-footer">
+                  <div className="invoice-filter-box">
+                    <Checkbox
+                      checked={selectAllCheck}
+                      value={selectAllCheck}
+                      onClick={handleSelectAll}
+                    >
+                      {t('strings.select_all')}
+                    </Checkbox>
+                    {checkedBooking && checkedBooking.length > 0 ? (
+                      <div
+                        className="cancel-icon"
+                        onClick={handleCancelCheck}
+                        role="presentation"
                       >
-                        {t('strings.select_all')}
-                      </Checkbox>
-                      {checkedBooking && checkedBooking.length > 0 ? (
-                        <div
-                          className="cancel-icon"
-                          onClick={handleCancelCheck}
-                          role="presentation"
-                        >
-                          <img src={cancelIcon} alt="" />
-                          {t('strings.cancel')}
-                        </div>
-                      ) : (
-                        <div className="cancel-icon" hidden>
-                          <img src={cancelIcon} alt="" />
-                          {t('strings.cancel')}
-                        </div>
-                      )}
-                      {
+                        <img src={cancelIcon} alt="" />
+                        {t('strings.cancel')}
+                      </div>
+                    ) : (
+                      <div className="cancel-icon" hidden>
+                        <img src={cancelIcon} alt="" />
+                        {t('strings.cancel')}
+                      </div>
+                    )}
+                    {
                             checkedBooking && checkedBooking.length > 0 ? <Tag color="#FB4B56">{checkedBooking.length}</Tag> : ''
                           }
 
-                      <div className="box-editing" role="presentation">
-                        <Select
-                          className="filter-menu"
-                          placeholder="Mark as"
-                          dropdownClassName="color-filter"
-                          onSelect={handleDelete}
-                        >
-                          <Option value="read">Mark as read</Option>
-                          <Option value="open">Mark as unread</Option>
-                          <Option value="replied">Mark as replied</Option>
-                          <Option value="unreplied">Mark as unreplied</Option>
-                          <Option value="trash">Move to trash</Option>
-                        </Select>
-                      </div>
+                    <div className="box-editing" role="presentation">
+                      <Select
+                        className="filter-menu"
+                        placeholder="Mark as"
+                        dropdownClassName="color-filter"
+                        onSelect={handleDelete}
+                      >
+                        <Option value="read">Mark as read</Option>
+                        <Option value="open">Mark as unread</Option>
+                        <Option value="replied">Mark as replied</Option>
+                        <Option value="unreplied">Mark as unreplied</Option>
+                        <Option value="trash">Move to trash</Option>
+                      </Select>
                     </div>
                   </div>
-                  <div className="bookin-footer">
-                    {/* <ul>
+                </div>
+                <div className="bookin-footer">
+                  {/* <ul>
                       <Tooltip title="Edit Booking" color="gold">
                         <li>
                           <img src={editIcon} alt="edit-icon" />
@@ -665,186 +716,196 @@ const Booking = () => {
                         </li>
                       </Tooltip>
                     </ul> */}
-                    {btn2}
+                  {btn2}
+                </div>
+              </div>
+            </Col>
+
+            <Col span={14}>
+              <div className="booking-details" hidden={booked}>
+                <h3>{currentBooking.guest}</h3>
+                <ul>
+                  <li>
+                    {currentBooking.night}
+                    {' '}
+                    {t('booking.label1')}
+                  </li>
+                  <li>
+                    {currentBooking.noOfGuest || 0}
+                    {' '}
+                    {t('booking.label2')}
+                  </li>
+                  <li>
+                    {t('booking.label3')}
+                    {currentBooking.id}
+                  </li>
+                </ul>
+
+                <div className="booking-box">
+                  <div className="booking-head">
+                    <div className="box-heading">
+                      <h3>{t('booking.heading3')}</h3>
+                    </div>
+
+                    <div
+                      className="box-editing"
+                      onClick={forceUpdate}
+                      role="presentation"
+                    >
+                      {edit2}
+
+                      <Select
+                        value={status}
+                        className="filter-menu"
+                        dropdownClassName="color-dropdown"
+                        onSelect={addStatus}
+                      >
+                        <Option value="booked">Booked</Option>
+                        <Option value="open">Open</Option>
+                        <Option value="tentative">Set as Tentative</Option>
+                        <Option value="decline">Decline</Option>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div className="booking-item">
+                    <div className="prorety-box">
+                      <span>{t('strings.property')}</span>
+                      <p>{currentBooking.propertyName}</p>
+                    </div>
+
+                    <div className="prorety-box">
+                      <span>{t('strings.unit')}</span>
+                      <p>{currentBooking.unitName}</p>
+                    </div>
+                  </div>
+
+                  <div className="booking-item-one">
+                    <div className="prorety-box">
+                      <span>{t('booking.heading6')}</span>
+                      <p>
+                        {currentBooking.channel}
+                        {' '}
+                        {currentBooking.commission}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="booking-item">
+                    <div className="prorety-box">
+                      <span>{t('strings.guests')}</span>
+                      <p>
+                        {currentBooking.adult}
+                        {' '}
+                        {t('strings.adults')}
+                        {' '}
+                      </p>
+                      <p>
+                        {currentBooking.children1}
+                        {' '}
+                        {t('booking.label4')}
+                        {' '}
+                      </p>
+                    </div>
+
+                    <div className="prorety-box">
+                      <span>
+                        {' '}
+                        {t('strings.date')}
+                      </span>
+                      <p>
+                        {moment(new Date(currentBooking.startDate)).format('DD MMM YY')}
+                        -
+                        {moment(new Date(currentBooking.endDate)).format('DD MMM YY')}
+                      </p>
+                      <p>
+                        {currentBooking.night}
+                        {' '}
+                        {t('booking.label5')}
+                        {' '}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </Col>
 
-              <Col span={14}>
-                <div className="booking-details" hidden={booked}>
-                  <h3>{currentBooking.guest}</h3>
-                  <ul>
-                    <li>
-                      {currentBooking.night}
-                      {' '}
-                      {t('booking.label1')}
-                    </li>
-                    <li>
-                      {currentBooking.noOfGuest || 0}
-                      {' '}
-                      {t('booking.label2')}
-                    </li>
-                    <li>
-                      {t('booking.label3')}
-                      {currentBooking.id}
-                    </li>
-                  </ul>
-
+                {currentGuest.map((el) => (
                   <div className="booking-box">
                     <div className="booking-head">
                       <div className="box-heading">
-                        <h3>{t('booking.heading3')}</h3>
+                        <h3>
+                          {' '}
+                          {t('strings.guests')}
+                        </h3>
                       </div>
 
-                      <div
-                        className="box-editing"
-                        onClick={forceUpdate}
-                        role="presentation"
-                      >
-                        {edit2}
-
-                        <Select
-                          value={status}
-                          className="filter-menu"
-                          dropdownClassName="color-dropdown"
-                          onSelect={addStatus}
-                        >
-                          <Option value="booked">Booked</Option>
-                          <Option value="open">Open</Option>
-                          <Option value="tentative">Set as Tentative</Option>
-                          <Option value="decline">Decline</Option>
-                        </Select>
+                      <div className="box-editing">
+                        <FormOutlined onClick={() => editGuest(el)} />
                       </div>
                     </div>
 
                     <div className="booking-item">
                       <div className="prorety-box">
-                        <span>{t('strings.property')}</span>
-                        <p>{currentBooking.propertyName}</p>
-                      </div>
-
-                      <div className="prorety-box">
-                        <span>{t('strings.unit')}</span>
-                        <p>{currentBooking.unitName}</p>
-                      </div>
-                    </div>
-
-                    <div className="booking-item-one">
-                      <div className="prorety-box">
-                        <span>{t('booking.heading6')}</span>
-                        <p>
-                          {currentBooking.channel}
-                          {' '}
-                          {currentBooking.commission}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="booking-item">
-                      <div className="prorety-box">
-                        <span>{t('strings.guests')}</span>
-                        <p>
-                          {currentBooking.adult}
-                          {t('strings.adults')}
-                        </p>
-                        <p>
-                          {currentBooking.children1}
-                          {' '}
-                          {t('booking.label4')}
-                          {' '}
-                        </p>
+                        <span>{t('strings.full')}</span>
+                        <p>{el.fullname}</p>
                       </div>
 
                       <div className="prorety-box">
                         <span>
                           {' '}
-                          {t('strings.date')}
+                          {t('strings.country')}
                         </span>
                         <p>
-                          {moment(new Date(currentBooking.startDate)).format('DD MMM YY')}
-                          -
-                          {moment(new Date(currentBooking.endDate)).format('DD MMM YY')}
-                        </p>
-                        <p>
-                          {currentBooking.night}
-                          {' '}
-                          {t('booking.label5')}
+                          {el.country || 'NA'}
                           {' '}
                         </p>
                       </div>
                     </div>
-                  </div>
 
-                  {currentGuest.map((el) => (
-                    <div className="booking-box">
-                      <div className="booking-head">
-                        <div className="box-heading">
-                          <h3>
-                            {' '}
-                            {t('strings.guests')}
-                          </h3>
-                        </div>
-
-                        <div className="box-editing">
-                          <FormOutlined onClick={() => editGuest(el)} />
-                        </div>
+                    <div className="booking-item">
+                      <div className="prorety-box">
+                        <span>{t('strings.email')}</span>
+                        <p>{el.email || 'NA'}</p>
                       </div>
 
-                      <div className="booking-item">
-                        <div className="prorety-box">
-                          <span>{t('strings.full')}</span>
-                          <p>{el.fullname}</p>
-                        </div>
-
-                        <div className="prorety-box">
-                          <span>
-                            {' '}
-                            {t('strings.country')}
-                          </span>
-                          <p>
-                            {el.country || 'NA'}
-                            {' '}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="booking-item">
-                        <div className="prorety-box">
-                          <span>{t('strings.email')}</span>
-                          <p>{el.email || 'NA'}</p>
-                        </div>
-
-                        <div className="prorety-box">
-                          <span>{t('strings.phone')}</span>
-                          <p>{el.phone || 'NA'}</p>
-                        </div>
-                      </div>
-
-                      <div className="booking-item-one">
-                        <div className="prorety-box">
-                          <span>{t('strings.note')}</span>
-                          <p>{el.notes}</p>
-                        </div>
+                      <div className="prorety-box">
+                        <span>{t('strings.phone')}</span>
+                        <p>{el.phone || 'NA'}</p>
                       </div>
                     </div>
-                  ))}
 
-                  <div
-                    className="additionl-link"
-                    onClick={openGuest}
-                    role="presentation"
-                  >
-                    <PlusOutlined />
-                    {t('booking.label6')}
+                    <div className="booking-item-one">
+                      <div className="prorety-box">
+                        <span>{t('strings.note')}</span>
+                        <p>{el.notes}</p>
+                      </div>
+                    </div>
                   </div>
+                ))}
+
+                <div
+                  className="additionl-link"
+                  onClick={openGuest}
+                  role="presentation"
+                >
+                  <PlusOutlined />
+                  {t('booking.label6')}
                 </div>
-              </Col>
-            </Row>
-          </div>
+              </div>
+            </Col>
+          </Row>
         </div>
-      ) : (
-        <UserLock />
-      )}
+        <Modal
+          visible={visibleOFDelete}
+          onOk={handleCancelDelete}
+          onCancel={handleCancelDelete}
+          wrapClassName="delete-modal"
+        >
+          <DeletePopup
+            dataObject={() => remove()}
+            cancel={() => handleCancelDelete()}
+          />
+        </Modal>
+      </div>
       <GuestPopup
         visible={visibleGuest}
         handleCancel={handleCancel}
@@ -883,6 +944,7 @@ const Booking = () => {
         handleCancel={handleCancel}
         handleOk={handleOk}
         setFilterValues={setFilterValues}
+        getData={getData}
       />
     </Wrapper>
   );

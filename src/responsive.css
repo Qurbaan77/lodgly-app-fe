@@ -473,8 +473,32 @@ input[type=number]{
 /******************************************************************************************************/
 
 
+@media screen and (max-width:1440px){
+ul.ant-menu.main-menu, ul.ant-menu.main-menu-mbl {
+    height: calc(55vh - 0px)!important;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 50px;
+}
+
+ul.ant-menu.main-menu::-webkit-scrollbar-track, ul.ant-menu.main-menu-mbl::-webkit-scrollbar-track{
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+ul.ant-menu.main-menu::-webkit-scrollbar, ul.ant-menu.main-menu-mbl::-webkit-scrollbar
+{
+	width: 0px;
+	background-color: #F5F5F5;
+}
+
+ul.ant-menu.main-menu::-webkit-scrollbar-thumb, ul.ant-menu.main-menu-mbl::-webkit-scrollbar-thumb
+{
+	background-color: #999;
+}
 
 
+}
 
 @media screen and (max-width:767px){
 
@@ -1064,4 +1088,13 @@ input[type=number]{
     margin-right: 0%;
     margin-left: 0%;
 }
+}
+.header-css{
+   
+    position: sticky!important;
+    width: 100%!important;
+    left: 0!important;
+    top: 0!important;
+    right: 0!important;
+    z-index: 1000!important;
 }

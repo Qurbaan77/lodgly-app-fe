@@ -7,7 +7,9 @@ import {
   Form, Input, Button, Tooltip, Modal,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { PlusOutlined, DeleteOutlined, FormOutlined } from '@ant-design/icons';
+import {
+  PlusOutlined, DeleteOutlined, FormOutlined,
+} from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import { userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
@@ -15,6 +17,7 @@ import favicon from '../../assets/images/logo-mobile.png';
 import UserLock from '../userlock/userlock';
 import loader from '../../assets/images/cliploader.gif';
 import propertyplace from '../../assets/images/property-placeholder.png';
+
 // import CreateProperty from './createProperty';
 
 const Services = () => {
@@ -29,6 +32,7 @@ const Services = () => {
   const [subscribed, setSubscribed] = useState();
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
+  const [editOpen, setEditOpen] = useState(false);
   // const [curOwner, setCurOwner] = useState();
   // const [editOpen, setEditOpen] = useState(false);
   const isSubUser = localStorage.getItem('isSubUser') || false;
@@ -103,6 +107,7 @@ const Services = () => {
   // };
 
   const edit = async (data) => {
+    setEditOpen(true);
     setVisible(true);
     form.setFieldsValue({
       serviceId: data.id,
@@ -224,9 +229,9 @@ const Services = () => {
                 <table>
                   <thead>
                     <tr>
-                      <th>Service Name</th>
-                      <th>Price</th>
-                      <th>Quantity</th>
+                      <th>{t('services.th1')}</th>
+                      <th>{t('services.th2')}</th>
+                      <th>{t('services.th3')}</th>
                       <th> </th>
                     </tr>
                   </thead>
@@ -267,14 +272,14 @@ const Services = () => {
           </div>
 
           <Modal
-            title={t('services.heading1')}
+            title={editOpen ? t('services.label19') : title}
             visible={visible}
             onOk={handleOk}
             onCancel={handleCancel}
             wrapClassName="group-modal"
           >
             <Helmet>
-              <body className={visible ? 'ant-scrolling-effect' : ''} />
+              <body className="service-page-view" />
             </Helmet>
             <Form form={form} name="basic" onFinish={onFinish}>
               <Form.Item name="serviceId">
@@ -305,7 +310,7 @@ const Services = () => {
                   },
                 ]}
               >
-                <Input autoFocus type="number" />
+                <Input type="number" />
               </Form.Item>
               <Form.Item
                 label={t('services.heading9')}
@@ -353,7 +358,7 @@ const Services = () => {
             </div>
           </div>
           <Modal
-            title={title}
+            title={t('services.label19')}
             visible={visible}
             onOk={handleOk}
             onCancel={handleCancel}
@@ -391,7 +396,7 @@ const Services = () => {
                   },
                 ]}
               >
-                <Input autoFocus type="number" />
+                <Input type="number" />
               </Form.Item>
               <Form.Item
                 label={t('services.heading9')}
@@ -433,7 +438,7 @@ const Services = () => {
             name="description"
             content="Grow your Vacation Rental with Lodgly"
           />
-          <body className="stats-page-view" />
+          <body className="service-page-view" />
         </Helmet>
         <div className="loader">
           <div className="loader-box">
@@ -451,6 +456,11 @@ const Services = () => {
           <div className="add-subuser">
             <img src={propertyplace} alt="subuser" />
             <h4>{t('services.heading1')}</h4>
+            <p>
+              Currently you don
+              <span>&apos;</span>
+              t have any services
+            </p>
             {btn2}
           </div>
         </div>
@@ -494,7 +504,7 @@ const Services = () => {
                 },
               ]}
             >
-              <Input autoFocus type="number" />
+              <Input type="number" />
             </Form.Item>
             <Form.Item
               label={t('services.heading9')}
@@ -533,7 +543,7 @@ const Services = () => {
           name="description"
           content="Grow your Vacation Rental with Lodgly"
         />
-        <body className="owner-page-view" />
+        <body className="service-page-view" />
       </Helmet>
       {hasAccess ? (
         pageContent

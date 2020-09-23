@@ -1035,3 +1035,7 @@ font-size: 11px
 .ant-form-item-label > label::after {
 display:none;
 }
+
+.filter-item .ant-tag.ant-tag-yellow {
+  background: #f7f79ea6;
+}

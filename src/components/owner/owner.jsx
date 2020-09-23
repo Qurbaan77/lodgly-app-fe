@@ -276,6 +276,7 @@ const Owner = () => {
                           </div>
                         </td>
                         <td>{el.email}</td>
+
                         <td>
                           <div className="owner-property">
                             {properties.map((ele) => {
@@ -451,12 +452,33 @@ const Owner = () => {
 
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
-                  <Form.Item
+                  {/* <Form.Item
                     label={t('owner.label13')}
                     name="document"
                     style={{ paddingRight: 20 }}
                   >
                     <Input />
+                  </Form.Item> */}
+                  <Form.Item
+                    label={t('guestpopup.label4')}
+                    name="document"
+                    style={{ paddingRight: 20 }}
+                  >
+                    <Select
+                      placeholder={t('guestpopup.label4')}
+                      name="document"
+                      rules={[
+                        {
+                          required: true,
+                          message: t('guestpopup.label5'),
+                        },
+                      ]}
+                    >
+                      <Select.Option value="Passport">Passport</Select.Option>
+                      <Select.Option value="ID Card">ID Card</Select.Option>
+                      <Select.Option value="Driving License">Driving License</Select.Option>
+                      <Select.Option value="Other">Other</Select.Option>
+                    </Select>
                   </Form.Item>
                 </Col>
 
@@ -688,11 +710,25 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    label={t('owner.label13')}
+                    label={t('guestpopup.label4')}
                     name="document"
                     style={{ paddingRight: 20 }}
                   >
-                    <Input />
+                    <Select
+                      placeholder={t('guestpopup.label4')}
+                      name="document"
+                      rules={[
+                        {
+                          required: true,
+                          message: t('guestpopup.label5'),
+                        },
+                      ]}
+                    >
+                      <Select.Option value="Passport">Passport</Select.Option>
+                      <Select.Option value="ID Card">ID Card</Select.Option>
+                      <Select.Option value="Driving License">Driving License</Select.Option>
+                      <Select.Option value="Other">Other</Select.Option>
+                    </Select>
                   </Form.Item>
                 </Col>
 
@@ -784,7 +820,15 @@ const Owner = () => {
     );
   }
 
-  if (propertyData.length < 1) {
+  if (!hasAccess) {
+    return (
+      <Wrapper>
+        <UserLock />
+      </Wrapper>
+    );
+  }
+
+  if (propertyData && propertyData.length < 1) {
     return (
       <Wrapper>
         <div className="add-team-page">
@@ -818,13 +862,9 @@ const Owner = () => {
         />
         <body className="owner-page-view" />
       </Helmet>
-      {hasAccess ? (
+      {
         pageContent
-      ) : (
-        <Wrapper>
-          <UserLock />
-        </Wrapper>
-      )}
+ }
     </>
   );
 };

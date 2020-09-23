@@ -58,6 +58,7 @@ const BookingFilter = (props) => {
   const onCancel = () => {
     form.resetFields();
     handleCancel();
+    setFilterValues({});
   };
 
   const onOk = () => {
@@ -198,7 +199,7 @@ const BookingFilter = (props) => {
                           style={{ marginRight: 10 }}
                           onClick={onCancel}
                         >
-                          Cancel
+                          Clear
                         </Button>
                         <Button type="primary" htmlType="submit">
                           OK

@@ -13,7 +13,7 @@ import loader from '../../assets/images/cliploader.gif';
 import propertyplace from '../../assets/images/property-placeholder.png';
 // import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
 import GSTC from './GSTC';
-import { userInstance } from '../../axios/axiosconfig';
+import { userInstance, reservationInstance, propertyInstance } from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
 import GroupReservation from './groupreservation';
 import favicon from '../../assets/images/logo-mobile.png';
@@ -22,11 +22,11 @@ const Calendar = () => {
   const { t } = useTranslation();
   // const history = useHistory();
   const [propertyData, setPropertyData] = useState([]);
-  const [reservationData, setReservationData] = useState([]);
-  const [guestName, setGuestName] = useState('');
+  // const [reservationData, setReservationData] = useState([]);
+  // const [guestName, setGuestName] = useState('');
   const [data, setData] = useState([]);
-  const [unitData, setUnitData] = useState([]);
-  const [unittypeData, setUnittypeData] = useState([]);
+  // const [unitData, setUnitData] = useState([]);
+  // const [unittypeData, setUnittypeData] = useState([]);
   const [visible, setVisible] = useState(false);
   const [visibleGroupReserv, setVisibleGroupReserv] = useState(false);
   const [topNavId, setTopNavId] = useState(0);
@@ -36,62 +36,71 @@ const Calendar = () => {
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visibleProperty, setVisibleProperty] = useState(false);
-
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ calendarWrite, userId }] = userCred || [{}];
   const canWrite = calendarWrite;
   const rows = {};
 
-  propertyData.forEach(() => {
-    unittypeData.forEach((ele, j) => {
-      const uttId = `utt${ele.id.toString()}`;
-      if (topNavId > 0) {
-        if (unittypeData[j].propertyId === parseInt(topNavId, 10)) {
-          rows[uttId] = {
-            id: uttId,
-            label: ele.unitTypeName,
-            progress: 50,
-            expanded: false,
-          };
-        }
-      } else {
-        rows[uttId] = {
-          id: uttId,
-          label: ele.unitTypeName,
-          progress: 50,
-          expanded: false,
-        };
-      }
+  // propertyData.forEach(() => {
+  //   unittypeData.forEach((ele, j) => {
+  //     const uttId = `utt${ele.id.toString()}`;
+  //     if (topNavId > 0) {
+  //       if (unittypeData[j].propertyId === parseInt(topNavId, 10)) {
+  //         rows[uttId] = {
+  //           id: uttId,
+  //           label: ele.unitTypeName,
+  //           progress: 50,
+  //           expanded: false,
+  //         };
+  //       }
+  //     } else {
+  //       rows[uttId] = {
+  //         id: uttId,
+  //         label: ele.unitTypeName,
+  //         progress: 50,
+  //         expanded: false,
+  //       };
+  //     }
 
-      unitData.forEach((elem, k) => {
-        const utId = `ut${elem.id.toString()}`;
-        const a = `mt_1${ele.id.toString()}`;
-        const b = `mt_2${ele.id.toString()}`;
-        rows[a] = {
-          id: a,
-          label: t('addreservation.rule1'),
-          parentId: `utt${ele.id.toString()}`,
-          progress: 50,
-        };
-        rows[b] = {
-          id: b,
-          label: t('addreservation.rule2'),
-          progress: 50,
-          parentId: `utt${ele.id.toString()}`,
-        };
-        if (elem.unittypeId === ele.id) {
-          rows[utId] = {
-            id: utId,
-            label: unitData[k].unitName,
-            progress: 50,
-            parentId: `utt${unittypeData[j].id.toString()}`,
-            expanded: false,
-          };
-        }
-      });
-    });
-  });
+  //     unitData.forEach((elem, k) => {
+  //       const utId = `ut${elem.id.toString()}`;
+  //       const a = `mt_1${ele.id.toString()}`;
+  //       const b = `mt_2${ele.id.toString()}`;
+  //       rows[a] = {
+  //         id: a,
+  //         label: t('addreservation.rule1'),
+  //         parentId: `utt${ele.id.toString()}`,
+  //         progress: 50,
+  //       };
+  //       rows[b] = {
+  //         id: b,
+  //         label: t('addreservation.rule2'),
+  //         progress: 50,
+  //         parentId: `utt${ele.id.toString()}`,
+  //       };
+  //       if (elem.unittypeId === ele.id) {
+  //         rows[utId] = {
+  //           id: utId,
+  //           label: unitData[k].unitName,
+  //           progress: 50,
+  //           parentId: `utt${unittypeData[j].id.toString()}`,
+  //           expanded: false,
+  //         };
+  //       }
+  //     });
+  //   });
+  // });
+
+  // unittypeData.forEach((ele) => {
+  //   const uttId = `utt${ele.id.toString()}`;
+  //   rows[uttId] = {
+  //     id: uttId,
+  //     label: ele.unitTypeName,
+  //     progress: 50,
+  //     expanded: false,
+  //   };
+  // });
 
   const columns = {
     percent: 100,
@@ -114,28 +123,28 @@ const Calendar = () => {
   };
 
   const items = {};
-  reservationData.forEach((element) => {
-    const id = element.id.toString();
-    const startDate = new Date(
-      element.startDate.split('T', 1).toString(),
-    ).getTime();
-    const endDate = new Date(
-      element.endDate.split('T', 1).toString(),
-    ).getTime();
-    items[id] = {
-      id,
-      rowId: `ut${element.unitId.toString()}`,
-      label: `${guestName} / ${element.totalAmount} EUR`,
-      item: '100',
-      time: {
-        start: startDate,
-        end: endDate,
-      },
-      style: {
-        background: 'blue',
-      },
-    };
-  });
+  // reservationData.forEach((element) => {
+  //   const id = element.id.toString();
+  //   const startDate = new Date(
+  //     element.startDate.split('T', 1).toString(),
+  //   ).getTime();
+  //   const endDate = new Date(
+  //     element.endDate.split('T', 1).toString(),
+  //   ).getTime();
+  //   items[id] = {
+  //     id,
+  //     rowId: `ut${element.unitId.toString()}`,
+  //     label: `${guestName} / ${element.totalAmount} EUR`,
+  //     item: '100',
+  //     time: {
+  //       start: startDate,
+  //       end: endDate,
+  //     },
+  //     style: {
+  //       background: 'blue',
+  //     },
+  //   };
+  // });
 
   const config = {
     height: 650,
@@ -149,7 +158,6 @@ const Calendar = () => {
   };
 
   const subs = [];
-
   const getProperty = useCallback(async () => {
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
@@ -162,7 +170,7 @@ const Calendar = () => {
         data2.push(filterData);
       });
     if (response.data.code === 200) {
-      setLoading(false);
+      // setLoading(false);
       setPropertyData(data2.length > 0 ? data2 : data);
     }
   }, [userId, topNavId]);
@@ -174,34 +182,36 @@ const Calendar = () => {
       setDaysLeft(parseInt(days, 10));
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
-    }
-    const response = await userInstance.post('/getReservation', {
-      affiliateId: userId,
-    });
-    const { reservationData: data } = response.data;
-    if (response.data.code === 200) {
       setLoading(false);
-      setReservationData(data);
-      if (response.data.guestData.length !== 0) {
-        if (response.data.guestData[0].length !== 0) {
-          if (response.data.guestData[0][0].fullname !== undefined) {
-            setGuestName(response.data.guestData[0][0].fullname);
-          }
-        }
-      }
     }
-  }, [userId]);
+    // const response = await reservationInstance.post('/getReservation', {
+    //   affiliateId: userId,
+    // });
+
+    // const { reservationData: data } = response.data;
+    // if (response.data.code === 200) {
+    //   setLoading(false);
+    //   setReservationData(data);
+    //   if (response.data.guestData.length !== 0) {
+    //     if (response.data.guestData[0].length !== 0) {
+    //       if (response.data.guestData[0][0].fullname !== undefined) {
+    //         setGuestName(response.data.guestData[0][0].fullname);
+    //       }
+    //     }
+    //   }
+    // }
+  }, []);
 
   const getCalendarData = useCallback(async () => {
-    const response = await userInstance.post('/getReservationCalendarData', {
+    const response = await reservationInstance.post('/getReservationCalendarData', {
       affiliateId: userId,
     });
-    const { unittypeData: data0 } = response.data;
-    const { unitData: data1 } = response.data;
+    // const { unittypeData: data0 } = response.data;
+    // const { unitData: data1 } = response.data;
     if (response.data.code === 200) {
       setLoading(false);
-      setUnittypeData(data0);
-      setUnitData(data1);
+      // setUnittypeData(data0);
+      // setUnitData(data1);
     }
   }, [userId]);
 
@@ -313,22 +323,25 @@ const Calendar = () => {
       propertyId: topNavId,
       affiliateId: userId,
     };
-    const response = await userInstance.post('/getUnittype', values);
-    const { unittypeData, units } = response.data;
+    const response = await propertyInstance.post('/getUnittype', values);
+    // const { unittypeData } = response.data;
     if (response.data.code === 200) {
-      unittypeData.forEach((el) => {
-        let sum = 0;
-        const arr = [];
-        units.forEach((ele) => {
-          if (el.id === ele.unittypeId) {
-            sum += 1;
-            arr.push(ele.id);
-          }
-        });
-        el.noOfUnits = sum;
-        el.units = arr;
+      response.data.unittypeData.forEach((element) => {
+        setData(JSON.parse(element.unitsData) || []);
       });
-      setData(unittypeData);
+    // unittypeData.forEach((el) => {
+    //   let sum = 0;
+    //   const arr = [];
+    //   units.forEach((ele) => {
+    //     if (el.id === ele.unittypeId) {
+    //       sum += 1;
+    //       arr.push(ele.id);
+    //     }
+    //   });
+    //   el.noOfUnits = sum;
+    //   el.units = arr;
+    // });
+    // setData(JSON.parse(unittypeData[0].unitsData));
     }
   }, [topNavId, userId]);
 
@@ -363,7 +376,15 @@ const Calendar = () => {
     );
   }
 
-  if (propertyData.length < 1) {
+  if (!hasAccess) {
+    return (
+      <Wrapper>
+        <UserLock />
+      </Wrapper>
+    );
+  }
+
+  if (propertyData && propertyData.length < 1) {
     return (
       <Wrapper>
         <Helmet>
@@ -409,47 +430,43 @@ const Calendar = () => {
         />
         <body className="calendar-page-view" />
       </Helmet>
-      {hasAccess ? (
-        <div className="calendar">
-          <div className="calendar-btn">
-            {isSubUser ? (
-              btn
-            ) : (
-              <>
-                <Button type="primary" icon={<PlusOutlined />} onClick={show}>
-                  {t('addreservation.heading31')}
-                </Button>
-                {topNavId ? enableButton : disabledButton}
-              </>
-            )}
-          </div>
-
-          <div className="calendar-calendar">
-            <GSTC config={config} onState={onState} />
-          </div>
-
-          <AddReservation
-            title={t('addreservation.heading34')}
-            visible={visible}
-            onOk={handleOk}
-            close={handleCancel}
-            wrapClassName="create-booking-modal"
-            getData={getData}
-          />
-
-          <GroupReservation
-            title={t('calendarpop.heading4')}
-            visible={visibleGroupReserv}
-            onOk={handleOk}
-            close={handleCancel}
-            userData={userData}
-            data={data}
-            getData={getData}
-          />
+      <div className="calendar">
+        <div className="calendar-btn">
+          {isSubUser ? (
+            btn
+          ) : (
+            <>
+              <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+                {t('addreservation.heading31')}
+              </Button>
+              {topNavId ? enableButton : disabledButton}
+            </>
+          )}
         </div>
-      ) : (
-        <UserLock />
-      )}
+
+        <div className="calendar-calendar">
+          <GSTC config={config} onState={onState} />
+        </div>
+
+        <AddReservation
+          title={t('addreservation.heading34')}
+          visible={visible}
+          onOk={handleOk}
+          close={handleCancel}
+          wrapClassName="create-booking-modal"
+          getData={getData}
+        />
+
+        <GroupReservation
+          title={t('calendarpop.heading4')}
+          visible={visibleGroupReserv}
+          onOk={handleOk}
+          close={handleCancel}
+          userData={userData}
+          data={data}
+          getData={getData}
+        />
+      </div>
     </Wrapper>
   );
 };

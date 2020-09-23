@@ -51,7 +51,7 @@ import {
   SecureStats,
   SecureBilling,
   SecureGuests,
-  // SecureOverview,
+  SecureOverview,
 } from './Routes/SecureRoute';
 import Owner from './components/owner/owner';
 import Team from './components/team/team';
@@ -289,7 +289,7 @@ const App = () => {
                         component={() => <Services />}
                       />
                     ) : feature.properties ? (
-                      <PrivateRoute
+                      <SecureOverview
                         exact
                         path="/services"
                         component={() => <Services />}
@@ -409,7 +409,7 @@ const App = () => {
                         component={() => <Rates />}
                       />
                     ) : feature.properties ? (
-                      <PrivateRoute
+                      <SecureOverview
                         exact
                         path="/rates"
                         component={() => <Rates />}
@@ -425,7 +425,7 @@ const App = () => {
                         component={() => <SeasonRates />}
                       />
                     ) : feature.properties ? (
-                      <PrivateRoute
+                      <SecureOverview
                         exact
                         path="/seasonrates"
                         component={() => <SeasonRates />}
@@ -440,7 +440,7 @@ const App = () => {
                         component={() => <CreateSeasonRates />}
                       />
                     ) : feature.properties ? (
-                      <PrivateRoute
+                      <SecureOverview
                         exact
                         path="/createseasonrates"
                         component={() => <CreateSeasonRates />}
@@ -478,14 +478,14 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
-                    {isSubUser ? (
+                    {isSubUser && localStorage.getItem('propertyV2Id') ? (
                       <SecureProperty
                         exact
                         path="/overview"
                         component={() => <Overview />}
                       />
                     ) : feature.properties ? (
-                      <PrivateRoute
+                      <SecureOverview
                         exact
                         path="/overview"
                         component={() => <Overview />}
@@ -493,14 +493,14 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
-                    {isSubUser ? (
+                    {isSubUser && localStorage.getItem('propertyV2Id') ? (
                       <SecureProperty
                         exact
                         path="/location"
                         component={() => <Location />}
                       />
                     ) : feature.properties ? (
-                      <PrivateRoute
+                      <SecureOverview
                         exact
                         path="/location"
                         component={() => <Location />}
@@ -508,14 +508,14 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
-                    {isSubUser ? (
+                    {isSubUser && localStorage.getItem('propertyV2Id') ? (
                       <SecureProperty
                         exact
                         path="/photos"
                         component={() => <Photos />}
                       />
                     ) : feature.properties ? (
-                      <PrivateRoute
+                      <SecureOverview
                         exact
                         path="/photos"
                         component={() => <Photos />}

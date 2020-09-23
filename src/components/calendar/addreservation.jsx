@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
+import moment from 'moment';
 // import { useHistory } from 'react-router-dom';
 import {
   Form,
@@ -16,12 +17,15 @@ import {
 import {
   PlusSquareOutlined,
   PlusOutlined,
-  EditOutlined, DeleteOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  ClockCircleOutlined,
+  CheckOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
 import { toast } from 'react-toastify';
-import { userInstance } from '../../axios/axiosconfig';
+import { userInstance, reservationInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
 
@@ -56,11 +60,13 @@ const AddReservation = (props) => {
   const [serviceAmt, setServiceAmt] = useState(0);
   const [serviceTax, setServiceTax] = useState(0);
   const [serviceAmount, setServiceAmount] = useState(0);
+  const [leftDays, setLeftDays] = useState(0);
   const [currentPropertyName, setCurrentPropertyName] = useState('');
   const [unitName, setUnitName] = useState('');
   const [depositType, setDepositType] = useState('€');
   const [depositAmount, setDepositAmount] = useState(null);
   const [discountAmount, setdiscountAmount] = useState(null);
+  const [showOptional, setShowOptional] = useState(true);
 
   // const [fullname, setFullname] = useState({});
   // const [email, setEmail] = useState({});
@@ -146,7 +152,8 @@ const AddReservation = (props) => {
       guestData.push(values[el]);
     });
     values.guestData = guestData;
-    if (guestData.length > 1) {
+
+    if (guestData.length > 0) {
       values.guest = guestData[0].fullName;
     } else {
       values.guest = 'No Guest';
@@ -168,7 +175,8 @@ const AddReservation = (props) => {
     values.commission = channelCommission;
     values.unitName = unitName;
     values.affiliateId = userId;
-    const response = await userInstance.post('/addReservation', values);
+
+    const response = await reservationInstance.post('/addReservation', values);
     if (response.data.code === 200) {
       getData();
       close();
@@ -204,7 +212,10 @@ const AddReservation = (props) => {
     setTotal(sum);
   };
 
-  const fun1 = async (value, event) => {
+  const onSelectProperty = async (value, event) => {
+    propertyData
+      .filter((el) => el.id === parseInt(value, 10))
+      .map((filter) => setUnitData(JSON.parse(filter.unitType[0].unitsData) || []));
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
@@ -213,17 +224,17 @@ const AddReservation = (props) => {
     };
     const response = await userInstance.post('/getService', payload);
     const data = response.data.servicData;
-    const response2 = await userInstance.post('/getUnit', payload);
-    const data2 = response2.data.unitData;
+    // const response2 = await userInstance.post('/getUnit', payload);
+    // const data2 = response2.data.unitData;
     const response3 = await userInstance.post('/getUnittype', payload);
     const data3 = response3.data.unittypeData;
     if (response.data.code === 200) {
       setServiceData(data);
     }
 
-    if (response2.data.code === 200) {
-      setUnitData(data2);
-    }
+    // if (response2.data.code === 200) {
+    //   setUnitData(data2);
+    // }
 
     if (response3.data.code === 200) {
       setUnitTypeData(data3);
@@ -285,27 +296,43 @@ const AddReservation = (props) => {
     }
   };
 
-  const fun4 = (value) => {
+  const onChangeDate = (value) => {
     setReservationDate(value);
     if (value) {
       const d1 = new Date(value[0]._d);
       const d2 = new Date(value[1]._d);
       const diff = Math.abs(d1 - d2);
-      const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000));
       setNight(day);
+    }
+  };
+
+  const onOptionalDate = (value) => {
+    if (value) {
+      // setSelectDate(value);
+      const d1 = new Date(value._d);
+      const d2 = new Date();
+      const diff = Math.abs(d1 - d2);
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+      setLeftDays(day);
     }
   };
 
   const createGuestDetails = (
     <>
       {panel.map((el) => (
-        <div className="addi-box" id={el}>
+        <div className="addi-box" id={el} key={el}>
           <Row style={{ alignItems: 'center' }}>
             <Col span={6}>
               <Form.Item
                 label={t('strings.full')}
                 name={[el, 'fullName']}
                 style={{ paddingRight: 20 }}
+                rules={[
+                  {
+                    required: 'true',
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -316,6 +343,11 @@ const AddReservation = (props) => {
                 label={t('strings.email')}
                 name={[el, 'email']}
                 style={{ paddingRight: 20 }}
+                rules={[
+                  {
+                    required: 'true',
+                  },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -326,12 +358,17 @@ const AddReservation = (props) => {
                 label={t('strings.country')}
                 name={[el, 'country']}
                 style={{ paddingRight: 20 }}
+                rules={[
+                  {
+                    required: 'true',
+                  },
+                ]}
               >
                 <Select showSearch>
                   {countryList()
                     .getData()
                     .map((ele) => (
-                      <Select.Option value={ele.label}>
+                      <Select.Option value={ele.label} key={ele}>
                         {ele.label}
                       </Select.Option>
                     ))}
@@ -387,7 +424,7 @@ const AddReservation = (props) => {
               label={t('addreservation.heading2')}
               name="groupname"
               style={{ paddingRight: 20 }}
-              onChange={fun4}
+              onChange={onChangeDate}
               rules={[
                 {
                   required: true,
@@ -395,16 +432,53 @@ const AddReservation = (props) => {
                 },
               ]}
             >
-              <RangePicker onChange={fun4} />
+              <RangePicker
+                defaultValue={moment()}
+                format="YYYY-MM-DD"
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onChangeDate}
+              />
             </Form.Item>
           </Col>
 
           <Col span={12}>
             <Radio.Group name="radiogroup" defaultValue={1}>
-              <Radio value={1}>{t('strings.confirmed')}</Radio>
-              <Radio value={2}>{t('strings.option')}</Radio>
+              <Radio value={1} onClick={() => setShowOptional(true)}>
+                {t('strings.confirmed')}
+              </Radio>
+              <Radio value={2} onClick={() => setShowOptional(false)}>
+                {t('strings.option')}
+              </Radio>
             </Radio.Group>
           </Col>
+
+          <Col span={24}>
+            <div className="option-content" hidden={showOptional}>
+              <p>
+                <ClockCircleOutlined />
+                {' '}
+                Option is active untill
+              </p>
+              <DatePicker
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onOptionalDate}
+              />
+              <span>
+                (days left:
+                {leftDays}
+                )
+              </span>
+              <div className="option-tag">
+                <CheckOutlined />
+                {' '}
+                Confirmed
+              </div>
+            </div>
+            <p className="checked-avail">
+              *Availability is checked automatically
+            </p>
+          </Col>
+
         </Row>
 
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
@@ -422,10 +496,10 @@ const AddReservation = (props) => {
             >
               <Select
                 placeholder={t('strings.select')}
-                onSelect={(value, event) => fun1(value, event)}
+                onSelect={(value, event) => onSelectProperty(value, event)}
               >
                 {propertyData.map((el) => (
-                  <Select.Option value={el.id}>{el.propertyName}</Select.Option>
+                  <Select.Option value={el.id} key={el}>{el.propertyName}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -447,10 +521,9 @@ const AddReservation = (props) => {
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => fun3(value, event)}
               >
-                {/* {unitData.map((el) => (
-                  <Select.Option value={el.id}>{el.unitName}</Select.Option>
-                ))} */}
-                <Select.Option value="unit 1">Unit 1</Select.Option>
+                {unitData.map((el, i) => (
+                  <Select.Option value={i}>{el}</Select.Option>
+                ))}
               </Select>
             </Form.Item>
           </Col>
@@ -546,7 +619,7 @@ const AddReservation = (props) => {
         <Row style={{ alignItems: 'center' }}>
           <Col span={24}>
             <Form.Item style={{ marginBottom: '0' }}>
-              <Collapse accordion>
+              <Collapse defaultActiveKey={['1']} accordion>
                 <Panel
                   icon={<PlusSquareOutlined />}
                   header="Add Guest Details (Optional)"
@@ -620,14 +693,16 @@ const AddReservation = (props) => {
                       type="number"
                       placeholder="0,00"
                       value={price}
-                      disabled="true"
                       rules={[
                         {
                           required: true,
                           message: t('addreservation.heading9'),
                         },
                       ]}
-                      onChange={(e) => setPrice(e.target.value)}
+                      onChange={(e) => {
+                        setPrice(e.target.value);
+                        setAccomodation(night * e.target.value);
+                      }}
                     />
                   </Form.Item>
                   <label htmlFor="number">
@@ -672,9 +747,11 @@ const AddReservation = (props) => {
                       setDiscount(e.target.value);
                       setdiscountAmount(e.target.value);
                       if (discountType === '€') {
-                        setAccomodation(amt - e.target.value);
+                        setAccomodation(night * price - e.target.value);
                       } else {
-                        setAccomodation(amt - amt * (e.target.value / 100));
+                        setAccomodation(
+                          night * price - (night * price * e.target.value) / 100,
+                        );
                       }
                     }}
                   />
@@ -699,9 +776,8 @@ const AddReservation = (props) => {
                   <Input
                     type="number"
                     value={
-                      discountType === '€'
-                        ? amt - discountAmount
-                        : amt - amt * (discountAmount / 100)
+                      discountType === '€' ? discountAmount : (night * price * discountAmount) / 100
+                      // : amt - amt * (discountAmount / 100)
                     }
                     onBlur={(e) => setAccomodation(e.target.value)}
                   />
@@ -759,7 +835,7 @@ const AddReservation = (props) => {
                   >
                     <div className="service-form">
                       {servicePanel.map((ele) => (
-                        <div className="inline-form">
+                        <div className="inline-form" key={ele}>
                           <div className="delete-data">
                             <DeleteOutlined
                               onClick={() => removeServicePanel(ele)}
@@ -853,9 +929,9 @@ const AddReservation = (props) => {
                 <h4>
                   {t('addreservation.heading26')}
                   :
-                  {' '}
-                  {Math.round(total * 100) / 100
-                    + Math.round(accomodation * 100) / 100}
+                  {accomodation + serviceAmount}
+                  {/* {Math.round(total * 100) / 100
+                    + Math.round(accomodation * 100) / 100} */}
                   {' '}
                   €
                 </h4>

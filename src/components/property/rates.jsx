@@ -6,6 +6,7 @@ import {
 } from 'antd';
 import ReactQuill from 'react-quill';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import { propertyInstance } from '../../axios/axiosconfig';
 import CopyRatePopup from './copyratepopup';
 import Wrapper from '../wrapper';
@@ -27,20 +28,21 @@ const Rates = () => {
   const [vat, setVat] = useState(false);
   const [nav, setNav] = useState(false);
   const [visisbleCopyRate, setVisisbleCopyRate] = useState(false);
+  const [ratesId, setRatesId] = useState(0);
   // const [pricePerNIght, setPricePerNight] = useState(0);
-
+  const { t } = useTranslation();
   const handleCancel = () => {
     setVisisbleCopyRate(false);
   };
 
   const days = {
-    monday: false,
-    tuesday: false,
-    wednesday: false,
-    thursday: false,
-    friday: false,
-    saturday: false,
-    sunday: false,
+    monday: true,
+    tuesday: true,
+    wednesday: true,
+    thursday: true,
+    friday: true,
+    saturday: true,
+    sunday: true,
   };
   const [checkInBox, setCheckInBox] = useState(days);
   const [checkOutBox, setCheckOutBox] = useState(days);
@@ -48,6 +50,7 @@ const Rates = () => {
     checkIn: false,
     checkOut: false,
   });
+  const [currency, setCurrency] = useState('$');
 
   function customPeriodChange(e) {
     setShowCustomNights(e.target.checked);
@@ -209,10 +212,7 @@ const Rates = () => {
   };
 
   const onFinish = async (values) => {
-    // console.log('checkInBox', checkInBox);
-    // console.log('checkOutBox', checkOutBox);
-    // console.log('value', value);
-    // console.log('values', values);
+    values.id = ratesId;
     values.unitTypeId = localStorage.getItem('propertyV2Id');
     values.notes = value;
     values.checkIn_on_monday = checkInBox.monday;
@@ -229,12 +229,10 @@ const Rates = () => {
     values.checkOut_on_friday = checkOutBox.friday;
     values.checkOut_on_saturday = checkOutBox.saturday;
     values.checkOut_on_sunday = checkOutBox.sunday;
-
     const response = await propertyInstance.post('/addRates', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
       toast.success('Rate added successfully', { containerId: 'B' });
-      // form.resetFields();
     } else {
       toast.error('server error please try again', { containerId: 'B' });
     }
@@ -248,6 +246,7 @@ const Rates = () => {
     if (response.data.code === 200) {
       if (response.data.ratesData.length > 0) {
         const data = response.data.ratesData[0];
+        setRatesId(data.id);
         setLengthOfStay(true);
         setPricePerDayWeek(true);
         setMinStayPerWeek(true);
@@ -314,9 +313,25 @@ const Rates = () => {
     // eslint-disable-next-line
   }, []);
 
+  const onChangePricePerNight = (pricePerNight) => {
+    form.setFieldsValue({
+      priceOnMon: pricePerNight,
+      priceOnTues: pricePerNight,
+      priceOnWed: pricePerNight,
+      priceOnThu: pricePerNight,
+      priceOnFri: pricePerNight,
+      priceOnSat: pricePerNight,
+      priceOnSun: pricePerNight,
+    });
+  };
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  const handleCurrencySelect = (e) => {
+    setCurrency(e === 'usd' ? '$' : '€');
+  };
 
   return (
     <Wrapper>
@@ -338,12 +353,12 @@ const Rates = () => {
             <div className="rates-content">
               <Form form={form} onFinish={onFinish}>
                 <div className="rate-first-section">
-                  <h3>Rates</h3>
+                  <h3>{t('rates.heading1')}</h3>
                   <Row>
                     <Col span={12}>
                       <Form.Item name="rateName">
                         <Input
-                          placeholder="Default Rate"
+                          placeholder={t('rates.placeholder1')}
                           // defaultValue="Default Rate"
                         />
                       </Form.Item>
@@ -351,9 +366,12 @@ const Rates = () => {
                     <Col span={1} />
                     <Col span={8}>
                       <Form.Item name="currency">
-                        <Select placeholder="USD">
-                          <Select.Option value="usd">USD</Select.Option>
-                          <Select.Option value="euro">EURO</Select.Option>
+                        <Select
+                          placeholder={t('rates.placeholder2')}
+                          onSelect={handleCurrencySelect}
+                        >
+                          <Select.Option value="usd">{t('rates.option1')}</Select.Option>
+                          <Select.Option value="eur">{t('rates.option2')}</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
@@ -361,11 +379,11 @@ const Rates = () => {
                 </div>
 
                 <div className="rate-second-section">
-                  <h3>Price per night & Min stay</h3>
+                  <h3>{t('rates.heading2')}</h3>
                   <p>
-                    Set the default price per night and minimum stay guests will
-                    see for your listing and check how the values are displayed
-                    in your website
+                    {t('rates.paragraph1')}
+                    {t('rates.paragraph2')}
+                    {t('rates.paragraph3')}
                   </p>
                   <Row>
                     <Col span={6}>
@@ -375,19 +393,19 @@ const Rates = () => {
                           {
                             required: true,
                             message: 'Please enter price!',
-                            whitespace: true,
                           },
                         ]}
                       >
                         <Input
-                          placeholder="$"
+                          placeholder={currency}
+                          onChange={(e) => onChangePricePerNight(e.target.value)}
                         />
                       </Form.Item>
                     </Col>
                     <Col span={1} />
                     <Col span={6}>
                       <Form.Item name="minStay">
-                        <Input placeholder="nights 1" />
+                        <Input placeholder={t('rates.placeholder4')} />
                       </Form.Item>
                     </Col>
                   </Row>
@@ -395,17 +413,16 @@ const Rates = () => {
 
                 <div className="toggle-box-section">
                   <h3>
-                    Length-of-stay prices
+                    {t('rates.heading3')}
                     {' '}
                     <Switch
                       checked={lengthOfStay}
-
                       onClick={() => setLengthOfStay(!lengthOfStay)}
                     />
                   </h3>
                   <p>
-                    Set discounted prices for reservations that are 7 nights or
-                    longer. Add additional prices per week and per month.
+                    {t('rates.paragraph4')}
+                    {t('rates.paragraph5')}
                   </p>
 
                   <div
@@ -414,13 +431,13 @@ const Rates = () => {
                     <Row>
                       <Col span={6}>
                         <Form.Item name="weeklyPrice" label="Weekly">
-                          <Input placeholder="$" />
+                          <Input placeholder={t('rates.placeholder5')} />
                         </Form.Item>
                       </Col>
                       <Col span={1} />
                       <Col span={6}>
                         <Form.Item name="monthlyPrice" label="Monthly">
-                          <Input placeholder="$" />
+                          <Input placeholder={t('rates.placeholder5')} />
                         </Form.Item>
                       </Col>
                       <Col span={1} />
@@ -430,7 +447,7 @@ const Rates = () => {
                           label={`${customNights} Nights`}
                           hidden={!showCustomNights}
                         >
-                          <Input placeholder="$" />
+                          <Input placeholder={t('rates.placeholder5')} />
                         </Form.Item>
                       </Col>
                     </Row>
@@ -438,14 +455,14 @@ const Rates = () => {
                       <Col span={24}>
                         <Form.Item className="custom-period">
                           <Checkbox onChange={customPeriodChange}>
-                            Custom Period
+                            {t('rates.check')}
                           </Checkbox>
                           <Input
                             onChange={customInputChange}
                             disabled={disabledInput}
                             defaultValue={customNights}
                           />
-                          <span>Nights</span>
+                          <span>{t('rates.span1')}</span>
                         </Form.Item>
                       </Col>
                     </Row>
@@ -454,33 +471,32 @@ const Rates = () => {
 
                 <div className="toggle-box-section">
                   <h3>
-                    Price per weekday
+                    {t('rates.heading4')}
                     {' '}
                     <Switch
                       checked={pricePerDayWeek}
-
                       onClick={() => setPricePerDayWeek(!pricePerDayWeek)}
                     />
                   </h3>
                   <p>
-                    Set here a different nightly rate depending on the day of
-                    the week. In case you have both
+                    {t('rates.paragraph6')}
+                    {t('rates.paragraph7')}
                     {' '}
                     <span>&quot;</span>
-                    Price per night
+                    {t('rates.paragraph8')}
                     <span>&quot;</span>
                     {' '}
-                    and
+                    {t('rates.paragraph9')}
                     <span>&quot;</span>
-                    Price per weekday
-                    <span>&quot;</span>
-                    {' '}
-                    settings,
-                    <span>&quot;</span>
-                    Price per weekday
+                    {t('rates.paragraph10')}
                     <span>&quot;</span>
                     {' '}
-                    will be applied.
+                    {t('rates.paragraph11')}
+                    <span>&quot;</span>
+                    {t('rates.paragraph12')}
+                    <span>&quot;</span>
+                    {' '}
+                    {t('rates.paragraph13')}
                   </p>
 
                   <div
@@ -498,89 +514,82 @@ const Rates = () => {
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
-                            <Input placeholder="$" />
+                            <Input placeholder={t('rates.placeholder6')} />
                           </Form.Item>
                           <Form.Item
-                            label="Tu"
+                            label={t('rates.label1')}
                             name="priceOnTues"
                             rules={[
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
-                            <Input placeholder="$" />
+                            <Input placeholder={t('rates.placeholder7')} />
                           </Form.Item>
                           <Form.Item
-                            label="We"
+                            label={t('rates.label2')}
                             name="priceOnWed"
                             rules={[
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
                             <Input placeholder="$" />
                           </Form.Item>
                           <Form.Item
-                            label="Th"
+                            label={t('rates.label3')}
                             name="priceOnThu"
                             rules={[
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
-                            <Input placeholder="$" />
+                            <Input placeholder={t('rates.placeholder8')} />
                           </Form.Item>
                           <Form.Item
-                            label="Fr"
+                            label={t('rates.label4')}
                             name="priceOnFri"
                             rules={[
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
-                            <Input placeholder="$" />
+                            <Input placeholder={t('rates.placeholder9')} />
                           </Form.Item>
                           <Form.Item
-                            label="Sa"
+                            label={t('rates.label5')}
                             name="priceOnSat"
                             rules={[
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
-                            <Input placeholder="$" />
+                            <Input placeholder={t('rates.placeholder10')} />
                           </Form.Item>
                           <Form.Item
-                            label="Su"
+                            label={t('rates.label6')}
                             name="priceOnSun"
                             rules={[
                               {
                                 required: true,
                                 message: 'Input must be valid number!',
-                                whitespace: true,
                               },
                             ]}
                           >
-                            <Input placeholder="$" />
+                            <Input placeholder={t('rates.placeholder11')} />
                           </Form.Item>
                         </div>
                       </Col>
@@ -590,7 +599,7 @@ const Rates = () => {
 
                 <div className="toggle-box-section">
                   <h3>
-                    Minimum stay per weekday
+                    {t('rates.heading5')}
                     {' '}
                     <Switch
                       checked={minStayPerWeek}
@@ -599,8 +608,8 @@ const Rates = () => {
                     />
                   </h3>
                   <p>
-                    Set a different minimum stay depending on the day of the
-                    week.
+                    {t('rates.paragraph14')}
+                    {t('rates.paragraph15')}
                   </p>
 
                   <div
@@ -610,98 +619,49 @@ const Rates = () => {
                       <Col span={24}>
                         <div className="weekend-input">
                           <Form.Item
-                            label="Mo"
+                            label={t('rates.label7')}
                             name="minStayOnMon"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
-                            <Input placeholder="1" />
+                            <Input placeholder={t('rates.placeholder12')} />
                           </Form.Item>
                           <Form.Item
-                            label="Tu"
+                            label={t('rates.label8')}
                             name="minStayOnTues"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
-                            <Input placeholder="1" />
+                            <Input placeholder={t('rates.placeholder12')} />
                           </Form.Item>
                           <Form.Item
-                            label="We"
+                            label={t('rates.label2')}
                             name="minStayOnWed"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
-                            <Input placeholder="1" />
+                            <Input placeholder={t('rates.placeholder12')} />
                           </Form.Item>
                           <Form.Item
-                            label="Th"
+                            label={t('rates.label3')}
                             name="minStayOnThu"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
-                            <Input placeholder="1" />
+                            <Input placeholder={t('rates.placeholder12')} />
                           </Form.Item>
                           <Form.Item
-                            label="Fr"
+                            label={t('rates.label4')}
                             name="minStayOnFri"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
-                            <Input placeholder="1" />
+                            <Input placeholder={t('rates.placeholder12')} />
                           </Form.Item>
                           <Form.Item
-                            label="Sa"
+                            label={t('rates.label5')}
                             name="minStayOnSat"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
-                            <Input placeholder="1" />
+                            <Input placeholder={t('rates.placeholder12')} />
                           </Form.Item>
                           <Form.Item
-                            label="Su"
+                            label={t('rates.label6')}
                             name="minStayOnSun"
-                            rules={[
-                              {
-                                required: true,
-                                message: 'Input must be valid number!',
-                                whitespace: true,
-                              },
-                            ]}
                           >
-                            <Input placeholder="1" />
+                            <Input placeholder={t('rates.placeholder12')} />
                           </Form.Item>
                           <Form.Item>
-                            <span>nights</span>
+                            <span>{t('rates.span2')}</span>
                           </Form.Item>
                         </div>
                       </Col>
@@ -711,7 +671,7 @@ const Rates = () => {
 
                 <div className="toggle-box-section">
                   <h3>
-                    Occupancy
+                    {t('rates.heading6')}
                     {' '}
                     <Switch
                       checked={occupancy}
@@ -719,7 +679,7 @@ const Rates = () => {
                       onClick={() => setOccupancy(!occupancy)}
                     />
                   </h3>
-                  <p>Set an extra charge per Person per Night.</p>
+                  <p>{t('rates.paragraph16')}</p>
 
                   <div className={`toggle-content ${occupancy ? 'show' : ''}`}>
                     <Row>
@@ -734,23 +694,23 @@ const Rates = () => {
                           //   },
                           // ]}
                         >
-                          <Input placeholder="$" />
-                          <span>after</span>
+                          <Input placeholder={currency} />
+                          <span>{t('rates.span3')}</span>
                         </Form.Item>
 
                       </Col>
                       <Col span={1} />
                       <Col span={6}>
                         <Form.Item name="extraGuest">
-                          <Select placeholder="1st Guest">
+                          <Select placeholder={t('rates.placeholder13')}>
                             <Select.Option value="1">
-                              1st Guest
+                              {t('rates.option3')}
                             </Select.Option>
                             <Select.Option value="2">
-                              2nd Guest
+                              {t('rates.option4')}
                             </Select.Option>
                             <Select.Option value="3">
-                              3rd Guest
+                              {t('rates.option5')}
                             </Select.Option>
                           </Select>
                         </Form.Item>
@@ -761,7 +721,7 @@ const Rates = () => {
 
                 <div className="toggle-box-section">
                   <h3>
-                    Short stay premium
+                    {t('rates.heading7')}
                     {' '}
                     <Switch
                       checked={shortStay}
@@ -770,8 +730,8 @@ const Rates = () => {
                     />
                   </h3>
                   <p>
-                    Increase your nightly rate if a guest stays only for a short
-                    time.
+                    {t('rates.paragraph17')}
+                    {t('rates.paragraph18')}
                   </p>
 
                   <div className={`toggle-content ${shortStay ? 'show' : ''}`}>
@@ -789,10 +749,9 @@ const Rates = () => {
                           // ]}
                         >
                           {' '}
-                          <span>A short stay has no more than</span>
-                          <Input type="number" placeholder="nights" />
+                          <span>{t('rates.span4')}</span>
+                          <Input type="number" placeholder={t('rates.placeholder14')} />
                         </Form.Item>
-
                       </Col>
 
                       <Col span={24}>
@@ -807,8 +766,8 @@ const Rates = () => {
                           //   },
                           // ]}
                         >
-                          <span>Extra charge per night</span>
-                          <Input type="number" placeholder="$" />
+                          <span>{t('rates.span5')}</span>
+                          <Input type="number" placeholder={t('rates.placeholder5')} />
                         </Form.Item>
 
                       </Col>
@@ -818,7 +777,7 @@ const Rates = () => {
 
                 <div className="toggle-box-section">
                   <h3>
-                    Check-in/Check-out restrictions
+                    {t('rates.heading8')}
                     {' '}
                     <Switch
                       checked={restriction}
@@ -827,8 +786,8 @@ const Rates = () => {
                     />
                   </h3>
                   <p>
-                    Restrict check-ins and check-outs to certain days of the
-                    week.
+                    {t('rates.paragraph19')}
+                    {t('rates.paragraph20')}
                   </p>
 
                   <div
@@ -837,51 +796,51 @@ const Rates = () => {
                     <Row>
                       <Col span={24}>
                         <div className="checkin-box">
-                          <span className="checkin-label">Check in</span>
+                          <span className="checkin-label">{t('rates.span6')}</span>
 
-                          <Form.Item name="monday" label="Mo">
+                          <Form.Item name="monday" label={t('rates.label7')}>
                             <Checkbox
                               value={checkInBox.monday}
                               onChange={handleCheckInBox}
                               checked={checkInBox.monday}
                             />
                           </Form.Item>
-                          <Form.Item name="tuesday" label="Tu">
+                          <Form.Item name="tuesday" label={t('rates.label8')}>
                             <Checkbox
                               value={checkInBox.tuesday}
                               onChange={handleCheckInBox}
                               checked={checkInBox.tuesday}
                             />
                           </Form.Item>
-                          <Form.Item name="wednesday" label="We">
+                          <Form.Item name="wednesday" label={t('rates.labe2')}>
                             <Checkbox
                               value={checkInBox.wednesday}
                               onChange={handleCheckInBox}
                               checked={checkInBox.wednesday}
                             />
                           </Form.Item>
-                          <Form.Item name="thursday" label="Th">
+                          <Form.Item name="thursday" label={t('rates.label3')}>
                             <Checkbox
                               value={checkInBox.thursday}
                               onChange={handleCheckInBox}
                               checked={checkInBox.thursday}
                             />
                           </Form.Item>
-                          <Form.Item name="friday" label="Fr">
+                          <Form.Item name="friday" label={t('rates.label4')}>
                             <Checkbox
                               value={checkInBox.friday}
                               onChange={handleCheckInBox}
                               checked={checkInBox.friday}
                             />
                           </Form.Item>
-                          <Form.Item name="saturday" label="Sa">
+                          <Form.Item name="saturday" label={t('rates.label5')}>
                             <Checkbox
                               value={checkInBox.saturday}
                               onChange={handleCheckInBox}
                               checked={checkInBox.saturday}
                             />
                           </Form.Item>
-                          <Form.Item name="sunday" label="Su">
+                          <Form.Item name="sunday" label={t('rates.label6')}>
                             <Checkbox
                               value={checkInBox.sunday}
                               onChange={handleCheckInBox}
@@ -891,7 +850,7 @@ const Rates = () => {
 
                           <Form.Item
                             className="check-selectall"
-                            label="Select all"
+                            label={t('rates.label9')}
                           >
                             <Checkbox
                               value={selectAll.checkIn}
@@ -901,50 +860,50 @@ const Rates = () => {
                         </div>
 
                         <div className="checkin-box">
-                          <span className="checkin-label">Check out</span>
-                          <Form.Item name="monday" label="Mo">
+                          <span className="checkin-label">{t('rates.span7')}</span>
+                          <Form.Item name="monday" label={t('rates.label7')}>
                             <Checkbox
                               value={checkOutBox.monday}
                               onChange={handleCheckOutBox}
                               checked={checkOutBox.monday}
                             />
                           </Form.Item>
-                          <Form.Item name="tuesday" label="Tu">
+                          <Form.Item name="tuesday" label={t('rates.label8')}>
                             <Checkbox
                               value={checkOutBox.tuesday}
                               onChange={handleCheckOutBox}
                               checked={checkOutBox.tuesday}
                             />
                           </Form.Item>
-                          <Form.Item name="wednesday" label="We">
+                          <Form.Item name="wednesday" label={t('rates.label2')}>
                             <Checkbox
                               value={checkOutBox.wednesday}
                               onChange={handleCheckOutBox}
                               checked={checkOutBox.wednesday}
                             />
                           </Form.Item>
-                          <Form.Item name="thursday" label="Th">
+                          <Form.Item name="thursday" label={t('rates.label3')}>
                             <Checkbox
                               value={checkOutBox.thursday}
                               onChange={handleCheckOutBox}
                               checked={checkOutBox.thursday}
                             />
                           </Form.Item>
-                          <Form.Item name="friday" label="Fr">
+                          <Form.Item name="friday" label={t('rates.label4')}>
                             <Checkbox
                               value={checkOutBox.friday}
                               onChange={handleCheckOutBox}
                               checked={checkOutBox.friday}
                             />
                           </Form.Item>
-                          <Form.Item name="saturday" label="Sa">
+                          <Form.Item name="saturday" label={t('rates.label5')}>
                             <Checkbox
                               value={checkOutBox.saturday}
                               onChange={handleCheckOutBox}
                               checked={checkOutBox.saturday}
                             />
                           </Form.Item>
-                          <Form.Item name="sunday" label="Su">
+                          <Form.Item name="sunday" label={t('rates.label6')}>
                             <Checkbox
                               value={checkOutBox.sunday}
                               onChange={handleCheckOutBox}
@@ -954,7 +913,7 @@ const Rates = () => {
 
                           <Form.Item
                             className="check-selectall"
-                            label="Select all"
+                            label={t('rates.label9')}
                           >
                             <Checkbox
                               value={selectAll.checkOut}
@@ -969,25 +928,24 @@ const Rates = () => {
 
                 <div className="toggle-box-section">
                   <h3>
-                    Sales tax / VAT
+                    {t('rates.heading9')}
                     {' '}
                     <Switch
                       checked={vat}
                       onClick={() => setVat(!vat)}
                     />
                   </h3>
-                  <p>Set the sales tax / VAT for your room rate.</p>
-
+                  <p>{t('rates.paragraph21')}</p>
                   <div className={`toggle-content ${vat ? 'show' : ''}`}>
                     <Row>
                       <Col span={8}>
                         <Form.Item name="tax">
-                          <Select placeholder="Prices incl. sales tax / VAT">
+                          <Select placeholder={t('rates.placeholder15')}>
                             <Select.Option value="include">
-                              Prices incl. sales tax / VAT
+                              {t('rates.option6')}
                             </Select.Option>
                             <Select.Option value="exclude">
-                              Prices excl. sales tax / VAT
+                              {t('rates.option7')}
                             </Select.Option>
                           </Select>
                         </Form.Item>
@@ -995,17 +953,17 @@ const Rates = () => {
                       <Col span={1} />
                       <Col span={6}>
                         <Form.Item name="taxPer">
-                          <Input placeholder="% 0" />
+                          <Input placeholder={t('rates.placeholder16')} />
                         </Form.Item>
                       </Col>
                       <Col span={24} className="sales-text">
                         <span>
-                          If you chose included: the guest pays your nightly
-                          cost
+                          {t('rates.span8')}
+                          {t('rates.span9')}
                         </span>
                         <span>
-                          If you chose excluded: the guest pays your nightly
-                          cost + tax
+                          {t('rates.span10')}
+                          {t('rates.span11')}
                         </span>
                       </Col>
                     </Row>
@@ -1014,11 +972,11 @@ const Rates = () => {
 
                 <div className="toggle-box-section">
                   <h3>
-                    Rates notes
+                    {t('rates.heading10')}
                     {' '}
                     <Switch checked={nav} onClick={() => setNav(!nav)} />
                   </h3>
-                  <p>Provide more information about your rates and policies.</p>
+                  <p>{t('rates.paragraph22')}</p>
 
                   <div className={`toggle-content ${nav ? 'show' : ''}`}>
                     <Row>
@@ -1033,16 +991,15 @@ const Rates = () => {
                     </Row>
                   </div>
                 </div>
-
                 <div className="toggle-box-button">
                   <Button
                     className="gray-btn"
                     onClick={() => setVisisbleCopyRate(true)}
                   >
-                    Copy Rates
+                    {t('rates.button1')}
                   </Button>
                   <Button type="primary" htmlType="submit">
-                    Save
+                    {t('rates.button2')}
                   </Button>
                 </div>
               </Form>

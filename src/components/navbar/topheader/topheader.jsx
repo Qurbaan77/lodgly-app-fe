@@ -118,7 +118,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
   return (
     <Header
       theme="light"
-      className="site-layout-background"
+      className="site-layout-background header-css"
       style={{ padding: 0 }}
     >
       <Button className="menu-btn" onClick={() => setMenuToggle(!menutoggle)}>

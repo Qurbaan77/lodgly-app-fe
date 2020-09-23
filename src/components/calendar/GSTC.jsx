@@ -32,11 +32,11 @@ const GSTCWrapper = ({ config, onState }) => {
 };
 
 GSTCWrapper.propTypes = {
-  config: PropTypes.string,
+  config: PropTypes.objectOf(PropTypes.object),
   onState: PropTypes.func,
 };
 GSTCWrapper.defaultProps = {
-  config: '',
+  config: {},
   onState: () => {},
 };
 

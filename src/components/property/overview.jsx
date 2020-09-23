@@ -9,6 +9,7 @@ import { InboxOutlined, CloseOutlined } from '@ant-design/icons';
 import Helmet from 'react-helmet';
 import CounterInput from 'react-counter-input';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import favicon from '../../assets/images/logo-mobile.png';
 import Wrapper from '../wrapper';
 import { propertyInstance, userInstance } from '../../axios/axiosconfig';
@@ -26,6 +27,7 @@ const Overview = () => {
   const [amenitiesList, setAmenitiesList] = useState([]);
   const [propertyName, setPropertyName] = useState('');
   const [propertyDescription, setPropertyDescription] = useState('');
+  const [noOfBedRooms, setNoOfBedRooms] = useState(0);
   const [noOfGuests, setNoOfGuests] = useState(0);
   const [noOfUnits, setNoOfUnits] = useState(0);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
@@ -40,8 +42,9 @@ const Overview = () => {
   const [transateLanguage, setTranslateLanguage] = useState([]);
 
   const refSelect = useRef(null);
+  const [unitsArr, setUnitsArr] = useState([]);
   // const [unitTypeV2Data, setUnitTypeV2Data] = useState({});
-
+  const { t } = useTranslation();
   const showEditSleeping = () => {
     setVisible(true);
   };
@@ -75,21 +78,29 @@ const Overview = () => {
       unitTypeV2Id: localStorage.getItem('propertyV2Id'),
     });
     if (response.data.code === 200) {
-      if (response.data.unitTypeV2Data.length > 0) {
-        const data = response.data.unitTypeV2Data[0];
-        form.setFieldsValue({
-          propertyType: data.propertyType,
-        });
-        if (data.sizeValue > 0) {
+      const data = response.data.unitTypeV2Data[0];
+      if (data && data.unitsData) {
+        const units = JSON.parse(data.unitsData);
+        units.forEach((el, i) => {
           form2.setFieldsValue({
-            sqSelectedValue: data.sizeType,
-            sqNumber: data.sizeValue,
+            [`unit${i + 1}`]: el,
           });
-        }
-        setNoOfGuests(data.standardGuests);
-        setNoOfUnits(data.units);
-        setSelectedAmenities(data.amenities);
+        });
       }
+      form.setFieldsValue({
+        description: data.description,
+        propertyType: data.propertyType,
+      });
+      if (data.sizeValue > 0) {
+        form2.setFieldsValue({
+          sqSelectedValue: data.sizeType,
+          sqNumber: data.sizeValue,
+        });
+      }
+      setNoOfBedRooms(data.bedRooms);
+      setNoOfGuests(data.standardGuests);
+      setNoOfUnits(data.units);
+      setSelectedAmenities(data.amenities);
     }
   }, [form, form2]);
 
@@ -134,7 +145,6 @@ const Overview = () => {
   }, []);
 
   const { TextArea } = Input;
-
   const handleRentalTypeSelect = async (value) => {
     if (propertyName && propertyDescription) {
       const propertyId = localStorage.getItem('propertyV2Id');
@@ -162,9 +172,17 @@ const Overview = () => {
   };
 
   const onFinishPropertyInfo = async (values) => {
+    const units = [];
+    unitsArr.forEach((i) => {
+      const j = i + 1;
+      const unitName = 'unit';
+      units.push(values[unitName + j] || `Unit ${j}`);
+    });
     values.unitTypeV2Id = localStorage.getItem('propertyV2Id');
+    values.noOfBedRooms = noOfBedRooms;
     values.noOfGuests = noOfGuests;
     values.noOfUnits = noOfUnits;
+    values.unitsData = JSON.stringify(units);
     const response = await propertyInstance.post('/updatePropertyInfo', values);
     if (response.data.code === 200) {
       getData();
@@ -309,6 +327,11 @@ const Overview = () => {
     else if (languageAction.languageAction === 'remove') setShowRemove(true);
   }, [languageAction]);
 
+  const createArray = (value) => {
+    setNoOfUnits(value);
+    setUnitsArr(Array.from(Array(value).keys()));
+  };
+
   return (
     <Wrapper>
       <Helmet>
@@ -392,13 +415,14 @@ const Overview = () => {
                     </div>
                   </div>
 
+                  <h3>{t('overview.heading1')}</h3>
                   <Row>
                     <Col span={24}>
                       <Form.Item name="name">
                         <Input
                           value={propertyName}
                           onChange={(e) => setPropertyName(e.target.value)}
-                          placeholder="Name"
+                          placeholder={t('overview.placeholder1')}
                         />
                       </Form.Item>
                     </Col>
@@ -406,8 +430,8 @@ const Overview = () => {
                     <Col span={24}>
                       <Form.Item name="description">
                         <TextArea
-                          value={propertyDescription}
-                          placeholder="Description"
+                        value={propertyDescription}
+                          placeholder={propertyDescription}
                           rows={4}
                           onChange={(e) => setPropertyDescription(e.target.value)}
                         />
@@ -417,46 +441,71 @@ const Overview = () => {
                 </div>
 
                 <div className="overview-second-section">
-                  <h3>Rental Type</h3>
-
+                  <h3>{t('overview.heading2')}</h3>
                   <Row>
                     <Col span={12}>
                       <Form.Item name="propertyType">
                         <Select
-                          placeholder="Select"
+                          placeholder={t('overview.placeholder3')}
                           onSelect={handleRentalTypeSelect}
                         >
-                          <Select.Option value="Apartment">
-                            Apartment
+                          <Select.Option value="Holiday House">
+                            {t('overview.option1')}
                           </Select.Option>
-                          <Select.Option value="Chalet">Chalet</Select.Option>
+                          <Select.Option value="Holiday Apartment">
+                            {t('overview.option2')}
+                          </Select.Option>
                           <Select.Option value="Bed and Breakfast">
-                            Bed and Breakfast
+                            {t('overview.option3')}
                           </Select.Option>
                           <Select.Option value="Boat House">
-                            Boat House
+                            {t('overview.option4')}
                           </Select.Option>
-                          <Select.Option value="Guest House">
-                            Guest House
+                          <Select.Option value="Bungalow">
+                            {t('overview.option5')}
                           </Select.Option>
-                          <Select.Option value="Hotel">Hotel</Select.Option>
-                          <Select.Option value="Lodge">Lodge</Select.Option>
-                          <Select.Option value="Resort">Resort</Select.Option>
-                          <Select.Option value="Villa">Villa</Select.Option>
-                          <Select.Option value="Castle">Castle</Select.Option>
-                          <Select.Option value="Aparthotel">
-                            Aparthotel
+                          <Select.Option value="Cabin">
+                            {t('overview.option6')}
                           </Select.Option>
-                          <Select.Option value="Camping">Camping</Select.Option>
-                          <Select.Option value="Cottage">Cottage</Select.Option>
-                          <Select.Option value="House">House</Select.Option>
-                          {/* <Select.Option value="Inn">Inn</Select.Option>
-                          <Select.Option value="Hostel">Hostel</Select.Option>
-                          <Select.Option value="Motel">Motel</Select.Option>
+                          <Select.Option value="Agritourism">
+                            {t('overview.option7')}
+                          </Select.Option>
+                          <Select.Option value="Mobile House">
+                            {t('overview.option8')}
+                          </Select.Option>
+                          <Select.Option value="Villa">
+                            {t('overview.option9')}
+                          </Select.Option>
+                          <Select.Option value="Room">
+                            {t('overview.option10')}
+                          </Select.Option>
+                          <Select.Option value="Hotel">
+                            {t('overview.option11')}
+                          </Select.Option>
+                          <Select.Option value="Camping">
+                            {t('overview.option12')}
+                          </Select.Option>
+                          <Select.Option value="Student Housing">
+                            {t('overview.option13')}
+                          </Select.Option>
+                          <Select.Option value="Resort">
+                            {t('overview.option14')}
+                          </Select.Option>
+                          <Select.Option value="Inn">
+                            {t('overview.option15')}
+                          </Select.Option>
+                          <Select.Option value="Hostel">
+                            {t('overview.option16')}
+                          </Select.Option>
+                          <Select.Option value="Motel">
+                            {t('overview.option17')}
+                          </Select.Option>
                           <Select.Option value="Hospital">
-                            Hospital
+                            {t('overview.option18')}
                           </Select.Option>
-                          <Select.Option value="Pousada">Pousada</Select.Option> */}
+                          <Select.Option value="Pousada">
+                            {t('overview.option19')}
+                          </Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
@@ -465,19 +514,22 @@ const Overview = () => {
 
                 <div className="overview-third-section">
                   <Form form={form2} onFinish={onFinishPropertyInfo}>
-                    <h3>Property Info</h3>
-
-                    <p>Add key facts about your place</p>
+                    <h3>{t('overview.heading3')}</h3>
+                    <p>{t('overview.paragraph1')}</p>
                     <Row>
                       <Col span={24}>
                         <Form.Item
                           className="property-info-unit"
                           name="sqSelectedValue"
-                          label="What's the size of your property?"
+                          label={t('overview.label1')}
                         >
                           <Select placeholder="SQ FT">
-                            <Select.Option value="SQ FT">SQ FT</Select.Option>
-                            <Select.Option value="SQ MT">SQ MT</Select.Option>
+                            <Select.Option value="SQ FT">
+                              {t('overview.option20')}
+                            </Select.Option>
+                            <Select.Option value="SQ MT">
+                              {t('overview.option21')}
+                            </Select.Option>
                           </Select>
                         </Form.Item>
 
@@ -495,7 +547,18 @@ const Overview = () => {
                           <Input placeholder="0.00" />
                         </Form.Item>
 
-                        <Form.Item label="How many guests can your place accommodate?">
+                        <Form.Item label={t('overview.label4')}>
+                          <div className="input-counter">
+                            <CounterInput
+                              min={0}
+                              max={30}
+                              count={noOfBedRooms}
+                              onCountChange={(count) => setNoOfBedRooms(count)}
+                            />
+                          </div>
+                        </Form.Item>
+
+                        <Form.Item label={t('overview.label2')}>
                           <div className="input-counter">
                             <CounterInput
                               min={0}
@@ -508,55 +571,63 @@ const Overview = () => {
 
                         <Form.Item
                           // name="units"
-                          label="How many units of this rental do you have?"
+                          label={t('overview.label3')}
                         >
                           <div className="input-counter">
                             <CounterInput
                               min={0}
                               max={10}
                               count={noOfUnits}
-                              onCountChange={(count) => setNoOfUnits(count)}
+                              onCountChange={(count) => createArray(count)}
                             />
                           </div>
                         </Form.Item>
+                        {unitsArr.map((el) => (
+                          <Form.Item
+                            className="property-info-unit"
+                            label="Units Name"
+                            name={`unit${el + 1}`}
+                          >
+                            <Input placeholder={`Unit ${el + 1}`} />
+                          </Form.Item>
+                        ))}
                       </Col>
                     </Row>
                     <div>
-                      <Button
-                        type="primary"
-                        htmlType="submit"
-                        disabled={!(noOfUnits > 0 && noOfGuests > 0)}
-                      >
-                        Save
+                      <Button type="primary" htmlType="submit" disabled={!(noOfUnits > 0 && noOfGuests > 0)}>
+                        {t('overview.button1')}
                       </Button>
                     </div>
                   </Form>
                 </div>
 
                 <div className="overview-fourth-section">
-                  <h3>Sleeping arrangements</h3>
-                  <p>Show guests what the sleeping arrangements are.</p>
+                  <h3>{t('overview.heading4')}</h3>
+                  <p>{t('overview.paragraph2')}</p>
                   <Button onClick={() => showEditSleeping()}>
-                    Edit sleeping arrangements
+                    {t('overview.button2')}
                   </Button>
                 </div>
 
                 <div className="overview-fifth-section">
-                  <h3>Room</h3>
+                  <h3>{t('overview.heading5')}</h3>
                   <p>
-                    What
+                    {t('overview.paragraph3')}
                     <span>&apos;</span>
-                    s the distribution of your rental
+                    {t('overview.paragraph4')}
                     <span>&apos;</span>
-                    s other rooms?
+                    {t('overview.paragraph5')}
                   </p>
-                  <Button onClick={() => show1()}>Edit rooms</Button>
+                  <Button onClick={() => show1()}>
+                    {' '}
+                    {t('overview.button3')}
+                  </Button>
                 </div>
 
                 <div className="overview-sixth-section">
-                  <h3>Rental amenities</h3>
-                  <p>What amenities does your rental offer?</p>
-                  <Button onClick={() => show2()}>Edit amenities</Button>
+                  <h3>{t('overview.heading6')}</h3>
+                  <p>{t('overview.paragraph6')}</p>
+                  <Button onClick={() => show2()}>{t('overview.button4')}</Button>
                 </div>
               </Form>
             </div>
@@ -565,7 +636,7 @@ const Overview = () => {
       </div>
 
       <Modal
-        title="Edit sleeping arrangements"
+        title={t('overview.title1')}
         visible={visible}
         onOk={handleCancel}
         onCancel={handleCancel}
@@ -577,12 +648,11 @@ const Overview = () => {
         <div className="cross-btn">
           <CloseOutlined onClick={handleCancel} />
         </div>
-
         <SleepingArrangement handleCancel={handleCancel} />
       </Modal>
 
       <Modal
-        title="Edit rooms"
+        title={t('overview.title2')}
         visible={visible1}
         onOk={handleCancel1}
         onCancel={handleCancel1}
@@ -599,7 +669,7 @@ const Overview = () => {
       </Modal>
 
       <Modal
-        title="Edit your property Amenities"
+        title={t('overview.title3')}
         visible={visible2}
         onOk={handleCancel2}
         onCancel={handleCancel2}
@@ -684,7 +754,7 @@ const SleepingArrangement = ({ handleCancel }) => {
   const [queenSizeBed, setQueenSizeBed] = useState(0);
   const [sofaBed, setSofaBed] = useState(0);
   const [singleBed, setSingleBed] = useState(0);
-
+  const { t } = useTranslation();
   const getData = async () => {
     const response = await propertyInstance.post('/fetchUnittypeData', {
       unitTypeV2Id: localStorage.getItem('propertyV2Id'),
@@ -740,14 +810,14 @@ const SleepingArrangement = ({ handleCancel }) => {
   }, []);
 
   return (
-    <Form form={form} onFinish={onFinishSleeping}>
-      <h3>EDIT SLEEPING ARRANGEMENTS</h3>
-      <p>Let your guests know what the sleeping arrangements are.</p>
 
+    <Form form={form} onFinish={onFinishSleeping}>
+      <h3>{t('overview.heading7')}</h3>
+      <p>{t('overview.paragraph7')}</p>
       <div className="property-selection">
         <div className="icon-name">
           <InboxOutlined />
-          <span>Baby crib</span>
+          <span>{t('overview.span1')}</span>
         </div>
         <div className="input-counter">
           <CounterInput
@@ -762,7 +832,7 @@ const SleepingArrangement = ({ handleCancel }) => {
       <div className="property-selection">
         <div className="icon-name">
           <InboxOutlined />
-          <span>Child bed</span>
+          <span>{t('overview.span2')}</span>
         </div>
         <div className="input-counter">
           <CounterInput
@@ -777,7 +847,7 @@ const SleepingArrangement = ({ handleCancel }) => {
       <div className="property-selection">
         <div className="icon-name">
           <InboxOutlined />
-          <span>Double bed</span>
+          <span>{t('overview.span3')}</span>
         </div>
         <div className="input-counter">
           <CounterInput
@@ -792,7 +862,7 @@ const SleepingArrangement = ({ handleCancel }) => {
       <div className="property-selection">
         <div className="icon-name">
           <InboxOutlined />
-          <span>Fold-away bed</span>
+          <span>{t('overview.span4')}</span>
         </div>
         <div className="input-counter">
           <CounterInput
@@ -807,7 +877,7 @@ const SleepingArrangement = ({ handleCancel }) => {
       <div className="property-selection">
         <div className="icon-name">
           <InboxOutlined />
-          <span>King-size bed</span>
+          <span>{t('overview.span5')}</span>
         </div>
         <div className="input-counter">
           <CounterInput
@@ -822,7 +892,7 @@ const SleepingArrangement = ({ handleCancel }) => {
       <div className="property-selection">
         <div className="icon-name">
           <InboxOutlined />
-          <span>Loft bed</span>
+          <span>{t('overview.span6')}</span>
         </div>
         <div className="input-counter">
           <CounterInput
@@ -837,7 +907,7 @@ const SleepingArrangement = ({ handleCancel }) => {
       <div className="property-selection">
         <div className="icon-name">
           <InboxOutlined />
-          <span>Queen-size bed</span>
+          <span>{t('overview.span7')}</span>
         </div>
         <div className="input-counter">
           <CounterInput
@@ -852,7 +922,7 @@ const SleepingArrangement = ({ handleCancel }) => {
       <div className="property-selection">
         <div className="icon-name">
           <InboxOutlined />
-          <span>Sofa bed</span>
+          <span>{t('overview.span8')}</span>
         </div>
         <div className="input-counter">
           <CounterInput
@@ -867,7 +937,7 @@ const SleepingArrangement = ({ handleCancel }) => {
       <div className="property-selection">
         <div className="icon-name">
           <InboxOutlined />
-          <span>Single bed</span>
+          <span>{t('overview.span9')}</span>
         </div>
         <div className="input-counter">
           <CounterInput
@@ -881,10 +951,10 @@ const SleepingArrangement = ({ handleCancel }) => {
 
       <div className="property-btns">
         <Button onClick={handleCancel} className="border-btn">
-          Back
+          {t('overview.button5')}
         </Button>
         <Button type="primary" htmlType="submit">
-          Save
+          {t('overview.button6')}
         </Button>
       </div>
     </Form>
@@ -931,7 +1001,7 @@ const EditRooms = ({ handleCancel1 }) => {
   const [terraceShared, setTerraceShared] = useState(0);
   const [toiletShared, setToiletShared] = useState(0);
   const [workroomShared, setWorkroomShared] = useState(0);
-
+  const { t } = useTranslation();
   const getData = async () => {
     const response = await propertyInstance.post('/fetchUnittypeData', {
       unitTypeV2Id: localStorage.getItem('propertyV2Id'),
@@ -1004,18 +1074,19 @@ const EditRooms = ({ handleCancel1 }) => {
 
   return (
     <Form form={form} onFinish={onFinishEditRoom}>
-      <h3>EDIT ROOMS</h3>
+      <h3>{t('overview.heading8')}</h3>
       <p>
-        What other rooms does your property have? Whichever rooms you choose
+        What other rooms does your property
+        have? Whichever rooms you choose
         here will be shown on your website.
       </p>
 
       <div className="edit-room-content">
-        <h5>Private</h5>
+        <h5>{t('overview.heading9')}</h5>
         <div className="property-selection">
           <div className="icon-name">
             <InboxOutlined />
-            <span>Balcony (private)</span>
+            <span>{t('overview.span10')}</span>
           </div>
           <div className="input-counter">
             <CounterInput
@@ -1030,7 +1101,7 @@ const EditRooms = ({ handleCancel1 }) => {
         <div className="property-selection">
           <div className="icon-name">
             <InboxOutlined />
-            <span>Bathroom (private)</span>
+            <span>{t('overview.span11')}</span>
           </div>
           <div className="input-counter">
             <CounterInput
@@ -1045,7 +1116,7 @@ const EditRooms = ({ handleCancel1 }) => {
         <div className="property-selection">
           <div className="icon-name">
             <InboxOutlined />
-            <span>Bedroom (private)</span>
+            <span>{t('overview.span12')}</span>
           </div>
           <div className="input-counter">
             <CounterInput
@@ -1060,7 +1131,7 @@ const EditRooms = ({ handleCancel1 }) => {
         <div className="property-selection">
           <div className="icon-name">
             <InboxOutlined />
-            <span>Dining room (private)</span>
+            <span>{t('overview.span13')}</span>
           </div>
           <div className="input-counter">
             <CounterInput
@@ -1075,7 +1146,7 @@ const EditRooms = ({ handleCancel1 }) => {
         <div className="property-selection">
           <div className="icon-name">
             <InboxOutlined />
-            <span>Kitchen (private)</span>
+            <span>{t('overview.span14')}</span>
           </div>
           <div className="input-counter">
             <CounterInput
@@ -1090,7 +1161,7 @@ const EditRooms = ({ handleCancel1 }) => {
         <div className="property-selection">
           <div className="icon-name">
             <InboxOutlined />
-            <span>Living room (private)</span>
+            <span>{t('overview.span15')}</span>
           </div>
           <div className="input-counter">
             <CounterInput
@@ -1105,7 +1176,7 @@ const EditRooms = ({ handleCancel1 }) => {
         <div className="property-selection">
           <div className="icon-name">
             <InboxOutlined />
-            <span>Playroom (private)</span>
+            <span>{t('overview.span16')}</span>
           </div>
           <div className="input-counter">
             <CounterInput
@@ -1120,7 +1191,7 @@ const EditRooms = ({ handleCancel1 }) => {
         <div className="property-selection">
           <div className="icon-name">
             <InboxOutlined />
-            <span>Terrace (private)</span>
+            <span>{t('overview.span17')}</span>
           </div>
           <div className="input-counter">
             <CounterInput
@@ -1135,7 +1206,7 @@ const EditRooms = ({ handleCancel1 }) => {
         <div className="property-selection">
           <div className="icon-name">
             <InboxOutlined />
-            <span>Toilet (private)</span>
+            <span>{t('overview.span18')}</span>
           </div>
           <div className="input-counter">
             <CounterInput
@@ -1150,7 +1221,7 @@ const EditRooms = ({ handleCancel1 }) => {
         <div className="property-selection">
           <div className="icon-name">
             <InboxOutlined />
-            <span>Workroom (private)</span>
+            <span>{t('overview.span19')}</span>
           </div>
           <div className="input-counter">
             <CounterInput
@@ -1163,12 +1234,11 @@ const EditRooms = ({ handleCancel1 }) => {
         </div>
 
         <div className={`more-content ${nav ? 'show' : ''}`}>
-          <h5>Shared</h5>
-
+          <h5>{t('overview.heading10')}</h5>
           <div className="property-selection">
             <div className="icon-name">
               <InboxOutlined />
-              <span>Balcony (shared)</span>
+              <span>{t('overview.span20')}</span>
             </div>
             <div className="input-counter">
               <CounterInput
@@ -1183,7 +1253,7 @@ const EditRooms = ({ handleCancel1 }) => {
           <div className="property-selection">
             <div className="icon-name">
               <InboxOutlined />
-              <span>Bathroom (shared)</span>
+              <span>{t('overview.span21')}</span>
             </div>
             <div className="input-counter">
               <CounterInput
@@ -1198,7 +1268,7 @@ const EditRooms = ({ handleCancel1 }) => {
           <div className="property-selection">
             <div className="icon-name">
               <InboxOutlined />
-              <span>Bedroom (shared)</span>
+              <span>{t('overview.span22')}</span>
             </div>
             <div className="input-counter">
               <CounterInput
@@ -1213,7 +1283,7 @@ const EditRooms = ({ handleCancel1 }) => {
           <div className="property-selection">
             <div className="icon-name">
               <InboxOutlined />
-              <span>Dining room (shared)</span>
+              <span>{t('overview.span23')}</span>
             </div>
             <div className="input-counter">
               <CounterInput
@@ -1228,7 +1298,7 @@ const EditRooms = ({ handleCancel1 }) => {
           <div className="property-selection">
             <div className="icon-name">
               <InboxOutlined />
-              <span>Kitchen (shared)</span>
+              <span>{t('overview.span24')}</span>
             </div>
             <div className="input-counter">
               <CounterInput
@@ -1243,7 +1313,7 @@ const EditRooms = ({ handleCancel1 }) => {
           <div className="property-selection">
             <div className="icon-name">
               <InboxOutlined />
-              <span>Living room (shared)</span>
+              <span>{t('overview.span25')}</span>
             </div>
             <div className="input-counter">
               <CounterInput
@@ -1258,7 +1328,7 @@ const EditRooms = ({ handleCancel1 }) => {
           <div className="property-selection">
             <div className="icon-name">
               <InboxOutlined />
-              <span>Playroom (shared)</span>
+              <span>{t('overview.span26')}</span>
             </div>
             <div className="input-counter">
               <CounterInput
@@ -1273,7 +1343,7 @@ const EditRooms = ({ handleCancel1 }) => {
           <div className="property-selection">
             <div className="icon-name">
               <InboxOutlined />
-              <span>Terrace (shared)</span>
+              <span>{t('overview.span27')}</span>
             </div>
             <div className="input-counter">
               <CounterInput
@@ -1288,7 +1358,7 @@ const EditRooms = ({ handleCancel1 }) => {
           <div className="property-selection">
             <div className="icon-name">
               <InboxOutlined />
-              <span>Toilet (shared)</span>
+              <span>{t('overview.span28')}</span>
             </div>
             <div className="input-counter">
               <CounterInput
@@ -1303,7 +1373,7 @@ const EditRooms = ({ handleCancel1 }) => {
           <div className="property-selection">
             <div className="icon-name">
               <InboxOutlined />
-              <span>Workroom (shared)</span>
+              <span>{t('overview.span29')}</span>
             </div>
             <div className="input-counter">
               <CounterInput
@@ -1327,10 +1397,10 @@ const EditRooms = ({ handleCancel1 }) => {
 
       <div className="property-btns">
         <Button onClick={handleCancel1} className="border-btn">
-          Back
+          {t('overview.button7')}
         </Button>
         <Button type="primary" htmlType="submit">
-          Save
+          {t('overview.button8')}
         </Button>
       </div>
     </Form>
