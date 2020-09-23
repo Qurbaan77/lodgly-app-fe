@@ -16,14 +16,12 @@ const createInstance = () => {
 
 exports.getInstance = createInstance();
 
-exports.translate = (text, targetLanguage) =>
-  exports
-    .getInstance()
-    .translate(text, targetLanguage)
-    .then(([translation]) => translation);
+exports.translate = (text, targetLanguage) => exports
+  .getInstance()
+  .translate(text, targetLanguage)
+  .then(([translation]) => translation);
 
-exports.getLanguagesList = () =>
-  exports
-    .getInstance()
-    .getLanguages()
-    .then(([languages]) => languages);
+exports.getLanguagesList = () => exports
+  .getInstance()
+  .getLanguages()
+  .then(([languages]) => languages);
