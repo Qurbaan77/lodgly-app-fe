@@ -59,6 +59,7 @@ const PropertyList = () => {
     const response = await propertyInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
+    console.log('response', response);
     // const data2 = [];
     const data = response.data.propertiesData;
     // data
@@ -69,6 +70,8 @@ const PropertyList = () => {
     if (response.data.code === 200) {
       setLoading(false);
       // setPropertyData(data2.length > 0 ? data2 : data);
+      // const filtered = data.filter((prop) => prop.unitTypeName.includes((el) => el.lang === 'en'));
+      // console.log('this', filtered);
       setPropertyData(data);
     }
     await userInstance.get('/getSubscriptionStatus');
@@ -214,17 +217,22 @@ const PropertyList = () => {
                   </div>
                   <div
                     className="property-img-box"
-                    onClick={() => handlePropertyClick(el.id)}
+                    onClick={() => handlePropertyClick(el.propertyId)}
                     role="presentation"
                   >
                     <img src={el.image || property1} alt="property" />
                   </div>
                   <div
                     className="property-info"
-                    onClick={() => handlePropertyClick(el.id)}
+                    onClick={() => handlePropertyClick(el.propertyId)}
                     role="presentation"
                   >
-                    <h3>{el.unitTypeName}</h3>
+                    {/* <h3>{el.unitTypeName[0].name}</h3> */}
+                    {el.unitTypeName
+                      && el.unitTypeName
+                        .filter((e) => e.lang === 'en')
+                        .map((name) => <h3>{name.name}</h3>)}
+
                     <span>{el.created_at.split('T', 1)}</span>
                     <ul>
                       <li hidden>

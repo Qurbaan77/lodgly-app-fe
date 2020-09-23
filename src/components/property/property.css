@@ -1058,7 +1058,27 @@ margin: 0;
   text-transform: uppercase;
 }
 
+.overview-input select {
+    border: 1px solid #eaeaea !important;
+    border-radius: 0;
+    padding: 8px 15px !important;
+    height: auto;
+    width: 100%;
+}
 
+.overview-flex .overview-input {
+    width: 30%;
+
+}
+
+
+.overview-flex{
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 25px;
+}
 .ql-toolbar.ql-snow {
   border: 1px solid #eaeaea!important;
 }
