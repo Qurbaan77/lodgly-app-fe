@@ -15,8 +15,8 @@ import Wrapper from '../wrapper';
 import { propertyInstance, userInstance } from '../../axios/axiosconfig';
 import EditAmenities from './EditAmenities';
 
-import { languageAvailable } from '../../config/language';
-import { translate } from '../../config/translation';
+import languageAvailable from '../../config/language';
+import translate from '../../config/translation';
 
 const Overview = () => {
   const [form] = Form.useForm();
