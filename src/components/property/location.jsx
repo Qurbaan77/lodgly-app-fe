@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Prompt } from 'react-router'
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
@@ -27,9 +28,11 @@ const Location = () => {
   const [distance, setDistance] = useState(false);
   const [directions, setDirections] = useState(false);
   const [placeHolderValue, setPlaceHolderValue] = useState('km');
+  const [saved, setSaved] = useState(false);
 
   const handleAddressChange = (address) => {
     setAddress(...address);
+   
   };
 
   const handleAddressSelect = async (address) => {
@@ -76,6 +79,12 @@ const Location = () => {
     }
   }, [form]);
 
+  const shouldBlockNavigation = () => {
+    const shouldBlockNavigation = true;
+      //  if(saved===false){
+      //  }
+  }
+
   const onFinish = async (values) => {
     values.unitTypeV2Id = localStorage.getItem('propertyV2Id');
     values.country = country;
@@ -94,6 +103,7 @@ const Location = () => {
     values.distance = JSON.stringify(obj);
     const response = await propertyInstance.post('/updateLocation', values);
     if (response.data.code === 200) {
+      setSaved(true);
       getData();
       toast.success('Changes have been saved', {
         containerId: 'B',
@@ -104,10 +114,20 @@ const Location = () => {
 
   useEffect(() => {
     getData();
-  }, [getData]);
+    if (saved === false && address!='') {
+      window.onbeforeunload = () => true
+    } else {
+      window.onbeforeunload = undefined
+    }
+  }, [getData, saved, address]);
 
   return (
-    <Wrapper>
+    <React.Fragment>
+    <Prompt
+      when={saved === false && address!='' ? shouldBlockNavigation : ''}
+      message='You have unsaved changes, are you sure you want to leave?'
+    />
+    {<Wrapper>
       <Helmet>
         <link rel="icon" href={favicon} />
         <title>
@@ -143,7 +163,7 @@ const Location = () => {
                           value={address}
                           onChange={handleAddressChange}
                           onSelect={handleAddressSelect}
-                        >
+                        >        
                           {({
                             getInputProps,
                             suggestions,
@@ -335,6 +355,8 @@ const Location = () => {
         </Row>
       </div>
     </Wrapper>
+    }
+    </React.Fragment>
   );
 };
 
