@@ -37,7 +37,7 @@ const Location = () => {
     const getLatLang = await getLatLng(geocodeAddress[0]);
     const addressComponent = geocodeAddress[0].address_components.reverse();
     const zip = addressComponent[0].long_name;
-    const country = addressComponent[1].long_name;
+    const country = addressComponent[1].short_name;
     const state = addressComponent[2].long_name;
     const city = addressComponent[3].long_name;
     setlatLng(getLatLang);

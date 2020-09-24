@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/prefer-default-export
-export const languageAvailable = [
+const languageAvailable = [
   {
     name: 'Arabic',
     nativeName: 'العربية',
@@ -146,3 +145,5 @@ export const languageAvailable = [
     langCode: 'vi',
   },
 ];
+
+export default languageAvailable;
