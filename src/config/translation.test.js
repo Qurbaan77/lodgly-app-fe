@@ -14,10 +14,14 @@ const createInstance = () => {
   };
 };
 
-const getInstance = createInstance();
+exports.getInstance = createInstance();
 
-const translate = (text, targetLanguage) => getInstance()
+exports.translate = (text, targetLanguage) => exports
+  .getInstance()
   .translate(text, targetLanguage)
   .then(([translation]) => translation);
 
-export default translate;
+exports.getLanguagesList = () => exports
+  .getInstance()
+  .getLanguages()
+  .then(([languages]) => languages);

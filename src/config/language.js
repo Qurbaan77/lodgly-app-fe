@@ -145,5 +145,4 @@ const languageAvailable = [
     langCode: 'vi',
   },
 ];
-
 export default languageAvailable;

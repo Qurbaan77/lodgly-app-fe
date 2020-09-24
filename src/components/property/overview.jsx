@@ -88,7 +88,6 @@ const Overview = () => {
         });
       }
       form.setFieldsValue({
-        description: data.description,
         propertyType: data.propertyType,
       });
       if (data.sizeValue > 0) {
@@ -275,7 +274,7 @@ const Overview = () => {
     }
   };
 
-  const handleTranslation = async (e) => {
+  const handleTranslation = async () => {
     if (propertyName && propertyDescription) {
       const translatedName = await translate(propertyName, languageSelected);
       const translatedDescription = await translate(
@@ -431,7 +430,7 @@ const Overview = () => {
                       <Form.Item name="description">
                         <TextArea
                           value={propertyDescription}
-                          placeholder={propertyDescription}
+                          placeholder=""
                           rows={4}
                           onChange={(e) => setPropertyDescription(e.target.value)}
                         />
@@ -594,7 +593,11 @@ const Overview = () => {
                       </Col>
                     </Row>
                     <div>
-                      <Button type="primary" htmlType="submit" disabled={!(noOfUnits > 0 && noOfGuests > 0)}>
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        disabled={!(noOfUnits > 0 && noOfGuests > 0)}
+                      >
                         {t('overview.button1')}
                       </Button>
                     </div>
@@ -627,7 +630,9 @@ const Overview = () => {
                 <div className="overview-sixth-section">
                   <h3>{t('overview.heading6')}</h3>
                   <p>{t('overview.paragraph6')}</p>
-                  <Button onClick={() => show2()}>{t('overview.button4')}</Button>
+                  <Button onClick={() => show2()}>
+                    {t('overview.button4')}
+                  </Button>
                 </div>
               </Form>
             </div>
@@ -810,7 +815,6 @@ const SleepingArrangement = ({ handleCancel }) => {
   }, []);
 
   return (
-
     <Form form={form} onFinish={onFinishSleeping}>
       <h3>{t('overview.heading7')}</h3>
       <p>{t('overview.paragraph7')}</p>
@@ -1076,8 +1080,7 @@ const EditRooms = ({ handleCancel1 }) => {
     <Form form={form} onFinish={onFinishEditRoom}>
       <h3>{t('overview.heading8')}</h3>
       <p>
-        What other rooms does your property
-        have? Whichever rooms you choose
+        What other rooms does your property have? Whichever rooms you choose
         here will be shown on your website.
       </p>
 
