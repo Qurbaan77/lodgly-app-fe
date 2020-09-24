@@ -79,9 +79,6 @@ const Location = () => {
     }
   }, [form]);
 
-  const shouldBlockNavigation = () => {
-     
-  }
 
   const onFinish = async (values) => {
     values.unitTypeV2Id = localStorage.getItem('propertyV2Id');
@@ -112,7 +109,7 @@ const Location = () => {
 
   useEffect(() => {
     getData();
-    if (saved === false && address!=='') {
+    if (!saved && address) {
       window.onbeforeunload = () => true
     } else {
       window.onbeforeunload = undefined
@@ -122,7 +119,7 @@ const Location = () => {
   return (
     <React.Fragment>
     <Prompt
-      when={saved === false && address!=='' ? shouldBlockNavigation : ''}
+      when={!saved && address ? true : false}
       message='You have unsaved changes, are you sure you want to leave?'
     />
     {<Wrapper>
