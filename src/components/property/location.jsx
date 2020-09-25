@@ -61,7 +61,7 @@ const Location = () => {
       form.setFieldsValue({
         distanceIn: data.distanceIn,
       });
-      if (data.distance !== null && data.direction !== null) {
+      if (data.address !== null && data.direction !== null && data.distance !== null) {
         setDistance(true);
         setDirections(true);
         form.setFieldsValue({
