@@ -80,7 +80,7 @@ const Overview = () => {
     if (response.data.code === 200 && response.status !== 204) {
       const data = response.data.unitTypeV2Data[0];
       if (data && data.unitsData) {
-        const units = JSON.parse(data.unitsData);
+        const units = JSON.parse(data.unitsData || []);
         units.forEach((el, i) => {
           form2.setFieldsValue({
             [`unit${i + 1}`]: el,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
@@ -136,10 +136,6 @@ const GroupReservation = (props) => {
       setLeftDays(day);
     }
   };
-
-  useEffect(() => {
-    console.log(data);
-  }, []);
 
   return (
     <Modal

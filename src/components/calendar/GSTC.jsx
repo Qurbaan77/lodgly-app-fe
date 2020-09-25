@@ -25,7 +25,7 @@ export default function GSTCWrapper({ config, onState }) {
 
   useEffect(() => () => {
     if (gstc) {
-      gstc.app.destroy();
+      // gstc.app.destroy();
     }
   },
   []);

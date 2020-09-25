@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Prompt } from 'react-router'
+import { Prompt } from 'react-router';
 import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
@@ -32,7 +32,6 @@ const Location = () => {
 
   const handleAddressChange = (address) => {
     setAddress(...address);
-   
   };
 
   const handleAddressSelect = async (address) => {
@@ -79,7 +78,6 @@ const Location = () => {
     }
   }, [form]);
 
-
   const onFinish = async (values) => {
     values.unitTypeV2Id = localStorage.getItem('propertyV2Id');
     values.country = country;
@@ -110,248 +108,247 @@ const Location = () => {
   useEffect(() => {
     getData();
     if (!saved && address) {
-      window.onbeforeunload = () => true
+      window.onbeforeunload = () => true;
     } else {
-      window.onbeforeunload = undefined
+      window.onbeforeunload = undefined;
     }
   }, [getData, saved, address]);
 
   return (
-    <React.Fragment>
-    <Prompt
-      when={!saved && address ? true : false}
-      message='You have unsaved changes, are you sure you want to leave?'
-    />
-    {<Wrapper>
-      <Helmet>
-        <link rel="icon" href={favicon} />
-        <title>
-          Lodgly - Comprehensive Vacation Rental Property Management
-        </title>
-        <meta
-          name="description"
-          content="Grow your Vacation Rental with Lodgly"
-        />
-        <body className="location-page-view" />
-      </Helmet>
+    <>
+      <Prompt
+        when={!!(!saved && address)}
+        message="You have unsaved changes, are you sure you want to leave?"
+      />
+      <Wrapper>
+        <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <body className="location-page-view" />
+        </Helmet>
 
-      <div className="location">
-        <Row>
-          <Col span={24}>
-            <div className="location-content">
-              <Form form={form} onFinish={onFinish}>
-                <div className="location-first-section">
-                  <h3>{t('location.heading1')}</h3>
-                  <Row>
-                    <Col span={24}>
-                      <Form.Item
-                        name="location"
-                        rules={[
-                          {
-                            required: true,
-                            message: 'Please enter the location',
-                            whitespace: true,
-                          },
-                        ]}
-                      >
-                        <PlacesAutocomplete
-                          value={address}
-                          onChange={handleAddressChange}
-                          onSelect={handleAddressSelect}
-                        >        
-                          {({
-                            getInputProps,
-                            suggestions,
-                            getSuggestionItemProps,
-                            loading,
-                          }) => (
-                            <div>
-                              <Input
-                                {...getInputProps({
-                                  placeholder: t('strings.searchplaces'),
-                                  className: 'location-search-input',
-                                })}
-                              />
-                              <div className="autocomplete-dropdown-container">
-                                {loading && <div>Loading...</div>}
-                                {suggestions.map((suggestion) => {
-                                  const className = suggestion.active
-                                    ? 'suggestion-item--active'
-                                    : 'suggestion-item';
-                                  // inline style for demonstration purpose
-                                  const style = suggestion.active
-                                    ? {
-                                      backgroundColor: '#fafafa',
-                                      cursor: 'pointer',
-                                    }
-                                    : {
-                                      backgroundColor: '#ffffff',
-                                      cursor: 'pointer',
-                                    };
-                                  return (
-                                    <div
-                                      {...getSuggestionItemProps(suggestion, {
-                                        className,
-                                        style,
-                                      })}
-                                    >
-                                      <span>{suggestion.description}</span>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          )}
-                        </PlacesAutocomplete>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-                </div>
-
-                <div className="toggle-box-section">
-                  <h3>
-                    {t('location.heading2')}
-                    <Switch checked={distance} onClick={() => setDistance(!distance)} />
-                  </h3>
-                  <p>{t('location.paragraph1')}</p>
-
-                  <div className={`toggle-content ${distance ? 'show' : ''}`}>
-                    <div className="location-distance">
-                      <Row>
-                        <Col span={24}>
-                          <div className="location-radio">
-                            <Form.Item name="distanceIn">
-                              <Radio.Group name="radiogroup">
-                                <Radio value="km" onClick={() => setPlaceHolderValue('km')}>Kilometers</Radio>
-                                <Radio value="mi" onClick={() => setPlaceHolderValue('mi')}>Miles</Radio>
-                              </Radio.Group>
-                            </Form.Item>
-                          </div>
-                        </Col>
-
-                        <Col span={12}>
-                          <div className="distance-box">
-                            <div className="distance-icon">
-                              <BankOutlined />
-                              {' '}
-                              {t('location.paragraph2')}
-                            </div>
-                            <div className="distance-input">
-                              <Form.Item name="bus">
-                                <Input placeholder={placeHolderValue} />
-                              </Form.Item>
-                            </div>
-                          </div>
-
-                          <div className="distance-box">
-                            <div className="distance-icon">
-                              <BankOutlined />
-                              {' '}
-                              {t('location.paragraph3')}
-                            </div>
-                            <div className="distance-input">
-                              <Form.Item name="train">
-                                <Input placeholder={placeHolderValue} />
-                              </Form.Item>
-                            </div>
-                          </div>
-
-                          <div className="distance-box">
-                            <div className="distance-icon">
-                              <BankOutlined />
-                              {' '}
-                              {t('location.paragraph4')}
-                            </div>
-                            <div className="distance-input">
-                              <Form.Item name="underground">
-                                <Input placeholder={placeHolderValue} />
-                              </Form.Item>
-
-                            </div>
-                          </div>
-                        </Col>
-
-                        <Col span={12}>
-                          <div className="distance-box">
-                            <div className="distance-icon">
-                              <BankOutlined />
-                              {' '}
-                              {t('location.paragraph5')}
-                            </div>
-                            <div className="distance-input">
-                              <Form.Item name="motorway">
-                                <Input placeholder={placeHolderValue} />
-                              </Form.Item>
-                            </div>
-                          </div>
-
-                          <div className="distance-box">
-                            <div className="distance-icon">
-                              <BankOutlined />
-                              {' '}
-                              {t('location.paragraph6')}
-                            </div>
-                            <div className="distance-input">
-                              <Form.Item name="airport">
-                                <Input placeholder={placeHolderValue} />
-                              </Form.Item>
-                            </div>
-                          </div>
-
-                          <div className="distance-box">
-                            <div className="distance-icon">
-                              <BankOutlined />
-                              {' '}
-                              {t('location.paragraph7')}
-                            </div>
-                            <div className="distance-input">
-                              <Form.Item name="port">
-                                <Input placeholder={placeHolderValue} />
-                              </Form.Item>
-                            </div>
-                          </div>
-                        </Col>
-
-                        <Col span={24}>
-                          <p>
-                            If the distance from your rental is less than 1km
-                            (e.g. 200m), then enter the distance in decimal
-                            numbers (e.g. 0.2).
-                          </p>
-                        </Col>
-                      </Row>
-                    </div>
-                  </div>
-                </div>
-                <div className="toggle-box-section">
-                  <h3>
-                    {t('location.heading3')}
-                    <Switch checked={directions} onClick={() => setDirections(!directions)} />
-                  </h3>
-                  <p>{t('location.paragraph8')}</p>
-                  <div className={`toggle-content ${directions ? 'show' : ''}`}>
+        <div className="location">
+          <Row>
+            <Col span={24}>
+              <div className="location-content">
+                <Form form={form} onFinish={onFinish}>
+                  <div className="location-first-section">
+                    <h3>{t('location.heading1')}</h3>
                     <Row>
                       <Col span={24}>
-                        <Form.Item name="direction">
-                          <TextArea placeholder="Description" rows={4} />
+                        <Form.Item
+                          name="location"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Please enter the location',
+                              whitespace: true,
+                            },
+                          ]}
+                        >
+                          <PlacesAutocomplete
+                            value={address}
+                            onChange={handleAddressChange}
+                            onSelect={handleAddressSelect}
+                          >
+                            {({
+                              getInputProps,
+                              suggestions,
+                              getSuggestionItemProps,
+                              loading,
+                            }) => (
+                              <div>
+                                <Input
+                                  {...getInputProps({
+                                    placeholder: t('strings.searchplaces'),
+                                    className: 'location-search-input',
+                                  })}
+                                />
+                                <div className="autocomplete-dropdown-container">
+                                  {loading && <div>Loading...</div>}
+                                  {suggestions.map((suggestion) => {
+                                    const className = suggestion.active
+                                      ? 'suggestion-item--active'
+                                      : 'suggestion-item';
+                                    // inline style for demonstration purpose
+                                    const style = suggestion.active
+                                      ? {
+                                        backgroundColor: '#fafafa',
+                                        cursor: 'pointer',
+                                      }
+                                      : {
+                                        backgroundColor: '#ffffff',
+                                        cursor: 'pointer',
+                                      };
+                                    return (
+                                      <div
+                                        {...getSuggestionItemProps(suggestion, {
+                                          className,
+                                          style,
+                                        })}
+                                      >
+                                        <span>{suggestion.description}</span>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            )}
+                          </PlacesAutocomplete>
                         </Form.Item>
                       </Col>
                     </Row>
                   </div>
-                </div>
-                <div className="toggle-box-button">
-                  <Button type="primary" htmlType="submit" className="savebtn">
-                    {t('location.button1')}
-                  </Button>
-                </div>
-              </Form>
-            </div>
-          </Col>
-        </Row>
-      </div>
-    </Wrapper>
-    }
-    </React.Fragment>
+
+                  <div className="toggle-box-section">
+                    <h3>
+                      {t('location.heading2')}
+                      <Switch checked={distance} onClick={() => setDistance(!distance)} />
+                    </h3>
+                    <p>{t('location.paragraph1')}</p>
+
+                    <div className={`toggle-content ${distance ? 'show' : ''}`}>
+                      <div className="location-distance">
+                        <Row>
+                          <Col span={24}>
+                            <div className="location-radio">
+                              <Form.Item name="distanceIn">
+                                <Radio.Group name="radiogroup">
+                                  <Radio value="km" onClick={() => setPlaceHolderValue('km')}>Kilometers</Radio>
+                                  <Radio value="mi" onClick={() => setPlaceHolderValue('mi')}>Miles</Radio>
+                                </Radio.Group>
+                              </Form.Item>
+                            </div>
+                          </Col>
+
+                          <Col span={12}>
+                            <div className="distance-box">
+                              <div className="distance-icon">
+                                <BankOutlined />
+                                {' '}
+                                {t('location.paragraph2')}
+                              </div>
+                              <div className="distance-input">
+                                <Form.Item name="bus">
+                                  <Input placeholder={placeHolderValue} />
+                                </Form.Item>
+                              </div>
+                            </div>
+
+                            <div className="distance-box">
+                              <div className="distance-icon">
+                                <BankOutlined />
+                                {' '}
+                                {t('location.paragraph3')}
+                              </div>
+                              <div className="distance-input">
+                                <Form.Item name="train">
+                                  <Input placeholder={placeHolderValue} />
+                                </Form.Item>
+                              </div>
+                            </div>
+
+                            <div className="distance-box">
+                              <div className="distance-icon">
+                                <BankOutlined />
+                                {' '}
+                                {t('location.paragraph4')}
+                              </div>
+                              <div className="distance-input">
+                                <Form.Item name="underground">
+                                  <Input placeholder={placeHolderValue} />
+                                </Form.Item>
+
+                              </div>
+                            </div>
+                          </Col>
+
+                          <Col span={12}>
+                            <div className="distance-box">
+                              <div className="distance-icon">
+                                <BankOutlined />
+                                {' '}
+                                {t('location.paragraph5')}
+                              </div>
+                              <div className="distance-input">
+                                <Form.Item name="motorway">
+                                  <Input placeholder={placeHolderValue} />
+                                </Form.Item>
+                              </div>
+                            </div>
+
+                            <div className="distance-box">
+                              <div className="distance-icon">
+                                <BankOutlined />
+                                {' '}
+                                {t('location.paragraph6')}
+                              </div>
+                              <div className="distance-input">
+                                <Form.Item name="airport">
+                                  <Input placeholder={placeHolderValue} />
+                                </Form.Item>
+                              </div>
+                            </div>
+
+                            <div className="distance-box">
+                              <div className="distance-icon">
+                                <BankOutlined />
+                                {' '}
+                                {t('location.paragraph7')}
+                              </div>
+                              <div className="distance-input">
+                                <Form.Item name="port">
+                                  <Input placeholder={placeHolderValue} />
+                                </Form.Item>
+                              </div>
+                            </div>
+                          </Col>
+
+                          <Col span={24}>
+                            <p>
+                              If the distance from your rental is less than 1km
+                              (e.g. 200m), then enter the distance in decimal
+                              numbers (e.g. 0.2).
+                            </p>
+                          </Col>
+                        </Row>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="toggle-box-section">
+                    <h3>
+                      {t('location.heading3')}
+                      <Switch checked={directions} onClick={() => setDirections(!directions)} />
+                    </h3>
+                    <p>{t('location.paragraph8')}</p>
+                    <div className={`toggle-content ${directions ? 'show' : ''}`}>
+                      <Row>
+                        <Col span={24}>
+                          <Form.Item name="direction">
+                            <TextArea placeholder="Description" rows={4} />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                    </div>
+                  </div>
+                  <div className="toggle-box-button">
+                    <Button type="primary" htmlType="submit" className="savebtn">
+                      {t('location.button1')}
+                    </Button>
+                  </div>
+                </Form>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </Wrapper>
+    </>
   );
 };
 

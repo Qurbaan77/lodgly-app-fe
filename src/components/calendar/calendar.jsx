@@ -54,39 +54,7 @@ const Calendar = () => {
   const [itemsData, setItemsData] = useState({});
   const [rowsData, setRowsData] = useState({});
 
-  const { GSTCID } = GSTC.api;
-
-  const rows = {};
-  for (let i = 0; i < 5; i++) {
-    const withParent = i > 0 && i % 2 === 0;
-    const id = GSTCID(i);
-    rows[id] = {
-      id,
-      label: `Lorem ipsum ${i}`,
-      parentId: withParent ? GSTCID(i - 1) : undefined,
-      expanded: false,
-    };
-  }
-  const columns = {
-    percent: 100,
-    resizer: {
-      inRealTime: false,
-      dots: 0,
-    },
-    data: {
-      [GSTCID('label')]: {
-        id: GSTCID('label'),
-        data: 'label',
-        sortable: 'label',
-        expander: true,
-        isHTML: false,
-        width: 200,
-        header: {
-          content: 'Select Unit Type',
-        },
-      },
-    },
-  };
+  // const { GSTCID } = GSTC.api;
   const bookmarks = {
     now: {
       time: GSTC.api.date().valueOf(),
@@ -158,16 +126,6 @@ const Calendar = () => {
           onCreate: [
             ({ time, row, vido: { html } }) => {
               if (row.meta && row.meta.context === 'rate') {
-                const onCellClick = (row, time) => {
-                  alert(
-                    `Cell for row ${
-                      GSTC.api.sourceID(row.id)
-                    } ${
-                      time.leftGlobalDate.format('YYYY-MM-DD')
-                    } clicked!`,
-                  );
-                };
-
                 let cellValue = '-';
 
                 if (ratesData[row.parentId]) {
@@ -190,41 +148,11 @@ const Calendar = () => {
 
                 return html`
                   <div
-                    class="gstc__chart-timeline-grid-row-cell--content"
-                    @click=${() => onCellClick(row, time)}
-                  >
                     ${cellValue}
                   </div>
                 `;
-              } if (row && row.meta && row.meta.context === 'type') {
-                // show how many events are in Unit Types
-
-                const items = itemsData;
-
-                let count = 0;
-                for (const itemId in items) {
-                  const item = items[itemId];
-
-                  if (row.$data.children.includes(item.rowId)) {
-                    if (
-                      (item.time.start >= time.leftGlobal
-                        && item.time.start <= time.rightGlobal)
-                      || (item.time.end >= time.leftGlobal
-                        && item.time.end <= time.rightGlobal)
-                      || (item.time.start <= time.leftGlobal
-                        && item.time.end >= time.rightGlobal)
-                    ) {
-                      count = +1;
-                    }
-                  }
-                }
-
-                return html`
-                  <div class="gstc__chart-timeline-grid-row-cell--content">
-                    ${count}
-                  </div>
-                `;
               }
+              return undefined;
             },
           ],
         },
