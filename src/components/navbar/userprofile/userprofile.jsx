@@ -72,11 +72,13 @@ const UserProfile = ({ userName, imgState, propertyImg }) => {
     ) {
       const propertyId = localStorage.getItem('propertyV2Id');
       const getPropertyData = async () => {
-        const response = await propertyInstance.post('/getProperty', { propertyId });
+        const response = await propertyInstance.post('/getProperty', {
+          propertyId,
+        });
         if (response.data.code === 200) {
-          const { unitTypeName, image } = response.data.propertyData[0];
-          setPropertyName(unitTypeName);
-          setPropertyImage(image);
+          const { name, image } = response.data;
+          if (name[0]) setPropertyName(name[0].name);
+          if (image) setPropertyImage(image);
         }
       };
       getPropertyData();

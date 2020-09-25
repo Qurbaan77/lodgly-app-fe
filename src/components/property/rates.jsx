@@ -50,6 +50,7 @@ const Rates = () => {
     checkIn: false,
     checkOut: false,
   });
+  const [currency, setCurrency] = useState('$');
 
   function customPeriodChange(e) {
     setShowCustomNights(e.target.checked);
@@ -328,6 +329,10 @@ const Rates = () => {
     fetchData();
   }, [fetchData]);
 
+  const handleCurrencySelect = (e) => {
+    setCurrency(e === 'usd' ? '$' : '€');
+  };
+
   return (
     <Wrapper>
       <Helmet>
@@ -361,9 +366,12 @@ const Rates = () => {
                     <Col span={1} />
                     <Col span={8}>
                       <Form.Item name="currency">
-                        <Select placeholder={t('rates.placeholder2')}>
+                        <Select
+                          placeholder={t('rates.placeholder2')}
+                          onSelect={handleCurrencySelect}
+                        >
                           <Select.Option value="usd">{t('rates.option1')}</Select.Option>
-                          <Select.Option value="euro">{t('rates.option2')}</Select.Option>
+                          <Select.Option value="eur">{t('rates.option2')}</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>
@@ -389,7 +397,7 @@ const Rates = () => {
                         ]}
                       >
                         <Input
-                          placeholder={t('rates.placeholder3')}
+                          placeholder={currency}
                           onChange={(e) => onChangePricePerNight(e.target.value)}
                         />
                       </Form.Item>
@@ -686,7 +694,7 @@ const Rates = () => {
                           //   },
                           // ]}
                         >
-                          <Input placeholder="$" />
+                          <Input placeholder={currency} />
                           <span>{t('rates.span3')}</span>
                         </Form.Item>
 
