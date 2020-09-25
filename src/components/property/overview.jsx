@@ -430,7 +430,7 @@ const Overview = () => {
                       <Form.Item name="description">
                         <TextArea
                           value={propertyDescription}
-                          placeholder=""
+                          placeholder="Description"
                           rows={4}
                           onChange={(e) => setPropertyDescription(e.target.value)}
                         />
