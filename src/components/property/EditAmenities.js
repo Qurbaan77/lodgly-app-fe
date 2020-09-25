@@ -31,7 +31,7 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
 
   const onFinish = async (values) => {
     values.amenities = JSON.stringify(panel);
-    values.unitTypeV2Id = localStorage.getItem('propertyV2Id');
+    values.unitTypeV2Id = localStorage.getItem('unitTypeV2Id');
     const response = await propertyInstance.post('/updateAmenities', values);
     if (response.data.code === 200) {
       // getData();

@@ -105,7 +105,7 @@ const PropertyList = () => {
 
   const handlePropertyClick = (id) => {
     // localStorage.setItem('propertyId', id);
-    localStorage.setItem('propertyV2Id', id);
+    localStorage.setItem('unitTypeV2Id', id);
     // history.push(`/overview/?pid=${id}`);
     history.push('/overview');
   };

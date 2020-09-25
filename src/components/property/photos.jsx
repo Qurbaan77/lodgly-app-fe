@@ -12,7 +12,7 @@ import favicon from '../../assets/images/logo-mobile.png';
 import { server } from '../../config/keys';
 
 const Photos = () => {
-  const unitTypeV2Id = localStorage.getItem('propertyV2Id');
+  const unitTypeV2Id = localStorage.getItem('unitTypeV2Id');
   const organizationid = localStorage.getItem('organizationid');
   const [propertyImage, setPropertyImage] = useState('');
   const { t } = useTranslation();
@@ -25,7 +25,7 @@ const Photos = () => {
 
   const getData = async () => {
     const response = await propertyInstance.post('/fetchUnittypeData', {
-      unitTypeV2Id: localStorage.getItem('propertyV2Id'),
+      unitTypeV2Id: localStorage.getItem('unitTypeV2Id'),
     });
     if (response.data.code === 200) {
       if (response.data.unitTypeV2Data.length > 0) {
@@ -60,7 +60,7 @@ const Photos = () => {
   }, []);
 
   const removePhoto = async () => {
-    const res = await propertyInstance.post('/removePropertyPhoto', { unitTypeV2Id: localStorage.getItem('propertyV2Id') });
+    const res = await propertyInstance.post('/removePropertyPhoto', { unitTypeV2Id: localStorage.getItem('unitTypeV2Id') });
     if (res.data.code === 200) {
       getData();
       toast.success('photo removed successfully', { containerId: 'B' });

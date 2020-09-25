@@ -24,7 +24,7 @@ const CopyRatePopup = (props) => {
     if (response.data.code === 200) {
       if (response.data.ratesData.length > 0) {
         const data = response.data.ratesData[0];
-        data.newUnitType = localStorage.getItem('propertyV2Id');
+        data.newUnitType = localStorage.getItem('unitTypeV2Id');
         const res = await propertyInstance.post('copyRates', data);
         const statusCode = res.data.code;
         if (statusCode === 200) {

@@ -89,7 +89,7 @@ const SeasonRates = () => {
 
   const getData = useCallback(async () => {
     const values = {
-      unitTypeId: localStorage.getItem('propertyV2Id'),
+      unitTypeId: localStorage.getItem('unitTypeV2Id'),
     };
     const response = await propertyInstance.post('/getSeasonRates', values);
     if (response.data.code === 200) {

@@ -150,7 +150,7 @@ const Services = () => {
   };
 
   const onFinish = async (values) => {
-    values.propertyNo = localStorage.getItem('propertyV2Id');
+    values.propertyNo = localStorage.getItem('unitTypeV2Id');
     // console.log(values);
     const response = await userInstance.post('/addService', values);
     const statusCode = response.data.code;
@@ -176,7 +176,7 @@ const Services = () => {
       setOnTrial(JSON.parse(isOnTrial));
     }
     const values = {
-      propertyId: localStorage.getItem('propertyV2Id'),
+      propertyId: localStorage.getItem('unitTypeV2Id'),
     };
     const response = await userInstance.post('/getService', values);
     const data = response.data.servicData;

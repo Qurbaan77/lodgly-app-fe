@@ -23,7 +23,6 @@ const CreateProperty = ({ visible, onCancel }) => {
     copyValues.affiliateId = userId;
     const response = await propertyInstance.post('/addProperty', copyValues);
     if (response.data.code === 200) {
-      localStorage.setItem('propertyV2Id', response.data.savedData);
       localStorage.setItem('unitTypeV2Id', response.data.unitTypeV2Id);
       history.push('/overview');
     }
