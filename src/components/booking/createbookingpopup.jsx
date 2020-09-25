@@ -164,7 +164,7 @@ const CreateBookingPopup = (props) => {
       guestData.push(values[el]);
     });
     values.guestData = guestData;
-    if (guestData.length > 1) {
+    if (guestData.length > 0) {
       values.guest = guestData[0].fullName;
     } else {
       values.guest = 'No Guest';
@@ -186,7 +186,14 @@ const CreateBookingPopup = (props) => {
     values.commission = channelCommission;
     values.unitName = unitName;
     values.affiliateId = userId;
-
+    const priceOnEachDay = {};
+    const startDate = values.groupname[0];
+    daysArr.forEach((el) => {
+      const date = moment(startDate).add(el, 'day').format('YYYY-MM-DD');
+      const price = values[`everyDayPrice${el}`];
+      priceOnEachDay[date] = price;
+    });
+    values.priceOnEachDay = priceOnEachDay * 100;
     const response = await bookingInstance.post('/addBooking', values);
     if (response.data.code === 200) {
       getData();
@@ -197,7 +204,6 @@ const CreateBookingPopup = (props) => {
     }
     form.resetFields();
   };
-
   // const handleChange = (e) => {
   //   console.log('handleChange', e.target.value);
   // };
