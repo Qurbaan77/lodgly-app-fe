@@ -87,9 +87,11 @@ const Overview = () => {
           });
         });
       }
-      form.setFieldsValue({
-        propertyType: data.propertyType,
-      });
+      if (data.propertyType !== null) {
+        form.setFieldsValue({
+          propertyType: data.propertyType,
+        });
+      }
       if (data.sizeValue > 0) {
         form2.setFieldsValue({
           sqSelectedValue: data.sizeType,
@@ -520,6 +522,12 @@ const Overview = () => {
                         <Form.Item
                           className="property-info-unit"
                           name="sqSelectedValue"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Please select the type',
+                            },
+                          ]}
                           label={t('overview.label1')}
                         >
                           <Select placeholder="SQ FT">
