@@ -1,3 +1,7 @@
+import GSTC from 'gantt-schedule-timeline-calendar';
+
+const formatToId = (ids) => GSTC.api.GSTCID(ids.join('-'));
+
 const serialize = (unitTypes) => {
   const units = {};
   const bookings = {};
@@ -5,8 +9,7 @@ const serialize = (unitTypes) => {
 
   unitTypes.data.forEach((unitType) => {
     const context = 'type';
-    const unitTypeId = `utt${unitType.id}`;
-    // const unitTypeId = formatToId([context, unitType.id]);
+    const unitTypeId = formatToId([context, unitType.id]);
 
     units[unitTypeId] = {
       id: unitTypeId,
@@ -24,8 +27,7 @@ const serialize = (unitTypes) => {
 
     ['Price per night', 'Minimum stay'].forEach((label, index) => {
       const context = 'rate';
-      const rateId = `rt${unitTypeId}`;
-      // const rateId = formatToId([context, unitTypeId, index + 1]);
+      const rateId = formatToId([context, unitTypeId, index + 1]);
 
       units[rateId] = {
         id: rateId,
@@ -42,11 +44,10 @@ const serialize = (unitTypes) => {
 
     unitType.units.data.forEach((unit) => {
       const context = 'unit';
-      const unitId = `ut${unit.id}`;
-      // const unitId = formatToId([context, unit.id]);
+      const unitId = formatToId([context, unit.id]);
 
       unit.bookings.data.forEach((booking) => {
-        const bookingId = `bt${booking.id}`;
+        const bookingId = formatToId(['booking', booking.id]);
 
         bookings[bookingId] = {
           id: bookingId,

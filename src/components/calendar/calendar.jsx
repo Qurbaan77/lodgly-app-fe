@@ -2,32 +2,39 @@ import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import './calendar.css';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
-// import { useHistory } from 'react-router-dom';
 import { Button, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
-// import GSTC from 'gantt-schedule-timeline-calendar';
+
+import GSTC from 'gantt-schedule-timeline-calendar/dist/gstc.esm.min';
+import { Plugin as ItemMovement } from 'gantt-schedule-timeline-calendar/dist/plugins/item-movement.esm.min';
+import { Plugin as ItemResizing } from 'gantt-schedule-timeline-calendar/dist/plugins/item-resizing.esm.min';
+import { Plugin as TimelinePointer } from 'gantt-schedule-timeline-calendar/dist/plugins/timeline-pointer.esm.min';
+import { Plugin as Selection } from 'gantt-schedule-timeline-calendar/dist/plugins/selection.esm.min';
+import { Plugin as CalendarScroll } from 'gantt-schedule-timeline-calendar/dist/plugins/calendar-scroll.esm.min';
+import { Plugin as HighlightWeekends } from 'gantt-schedule-timeline-calendar/dist/plugins/highlight-weekends.esm.min';
+import { Plugin as TimeBookmarks } from 'gantt-schedule-timeline-calendar/dist/plugins/time-bookmarks.esm.min';
+
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
 import CreateProperty from '../property/createProperty';
 import loader from '../../assets/images/cliploader.gif';
-// import nobooking from '../../assets/images/no-booking.png';
 import propertyplace from '../../assets/images/property-placeholder.png';
-// import GSTC from '../../../node_modules/react-gantt-schedule-timeline-calendar';
-import GSTC from './GSTC';
-import { userInstance, reservationInstance, propertyInstance } from '../../axios/axiosconfig';
+import GSTCWrapper from './GSTC';
+import {
+  userInstance,
+  reservationInstance,
+  propertyInstance,
+} from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
 import GroupReservation from './groupreservation';
 import favicon from '../../assets/images/logo-mobile.png';
+import getUnitTypes from './api.mock';
+import serialize from './serializer';
 
 const Calendar = () => {
   const { t } = useTranslation();
-  // const history = useHistory();
   const [propertyData, setPropertyData] = useState([]);
-  // const [reservationData, setReservationData] = useState([]);
-  // const [guestName, setGuestName] = useState('');
   const [data, setData] = useState([]);
-  // const [unitData, setUnitData] = useState([]);
-  // const [unittypeData, setUnittypeData] = useState([]);
   const [visible, setVisible] = useState(false);
   const [visibleGroupReserv, setVisibleGroupReserv] = useState(false);
   const [topNavId, setTopNavId] = useState(0);
@@ -41,124 +48,198 @@ const Calendar = () => {
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ calendarWrite, userId }] = userCred || [{}];
   const canWrite = calendarWrite;
+  // const rows = {};
+  // const items = {};
+  const [ratesData, setRatesData] = useState({});
+  const [itemsData, setItemsData] = useState({});
+  const [rowsData, setRowsData] = useState({});
+
+  const { GSTCID } = GSTC.api;
+
   const rows = {};
-
-  // propertyData.forEach(() => {
-  //   unittypeData.forEach((ele, j) => {
-  //     const uttId = `utt${ele.id.toString()}`;
-  //     if (topNavId > 0) {
-  //       if (unittypeData[j].propertyId === parseInt(topNavId, 10)) {
-  //         rows[uttId] = {
-  //           id: uttId,
-  //           label: ele.unitTypeName,
-  //           progress: 50,
-  //           expanded: false,
-  //         };
-  //       }
-  //     } else {
-  //       rows[uttId] = {
-  //         id: uttId,
-  //         label: ele.unitTypeName,
-  //         progress: 50,
-  //         expanded: false,
-  //       };
-  //     }
-
-  //     unitData.forEach((elem, k) => {
-  //       const utId = `ut${elem.id.toString()}`;
-  //       const a = `mt_1${ele.id.toString()}`;
-  //       const b = `mt_2${ele.id.toString()}`;
-  //       rows[a] = {
-  //         id: a,
-  //         label: t('addreservation.rule1'),
-  //         parentId: `utt${ele.id.toString()}`,
-  //         progress: 50,
-  //       };
-  //       rows[b] = {
-  //         id: b,
-  //         label: t('addreservation.rule2'),
-  //         progress: 50,
-  //         parentId: `utt${ele.id.toString()}`,
-  //       };
-  //       if (elem.unittypeId === ele.id) {
-  //         rows[utId] = {
-  //           id: utId,
-  //           label: unitData[k].unitName,
-  //           progress: 50,
-  //           parentId: `utt${unittypeData[j].id.toString()}`,
-  //           expanded: false,
-  //         };
-  //       }
-  //     });
-  //   });
-  // });
-
-  // unittypeData.forEach((ele) => {
-  //   const uttId = `utt${ele.id.toString()}`;
-  //   rows[uttId] = {
-  //     id: uttId,
-  //     label: ele.unitTypeName,
-  //     progress: 50,
-  //     expanded: false,
-  //   };
-  // });
-
+  for (let i = 0; i < 5; i++) {
+    const withParent = i > 0 && i % 2 === 0;
+    const id = GSTCID(i);
+    rows[id] = {
+      id,
+      label: `Lorem ipsum ${i}`,
+      parentId: withParent ? GSTCID(i - 1) : undefined,
+      expanded: false,
+    };
+  }
   const columns = {
     percent: 100,
+    resizer: {
+      inRealTime: false,
+      dots: 0,
+    },
     data: {
-      id: {
-        id: 'id',
-        width: 100,
-        expander: true,
-        header: {},
-      },
-      label: {
-        id: 'label',
+      [GSTCID('label')]: {
+        id: GSTCID('label'),
         data: 'label',
+        sortable: 'label',
+        expander: true,
+        isHTML: false,
         width: 200,
         header: {
-          content: 'Label',
+          content: 'Select Unit Type',
         },
       },
     },
   };
-
-  const items = {};
-  // reservationData.forEach((element) => {
-  //   const id = element.id.toString();
-  //   const startDate = new Date(
-  //     element.startDate.split('T', 1).toString(),
-  //   ).getTime();
-  //   const endDate = new Date(
-  //     element.endDate.split('T', 1).toString(),
-  //   ).getTime();
-  //   items[id] = {
-  //     id,
-  //     rowId: `ut${element.unitId.toString()}`,
-  //     label: `${guestName} / ${element.totalAmount} EUR`,
-  //     item: '100',
-  //     time: {
-  //       start: startDate,
-  //       end: endDate,
-  //     },
-  //     style: {
-  //       background: 'blue',
-  //     },
-  //   };
-  // });
-
+  const bookmarks = {
+    now: {
+      time: GSTC.api.date().valueOf(),
+      color: '#3498DB',
+      label: 'Now',
+    },
+  };
   const config = {
-    height: 650,
+    licenseKey:
+      '====BEGIN LICENSE KEY====\nPSrbPlWbN+L6Q8B4bFCeEDK7VBbGc3TYF3jktFHPhMkV88gAPVJskFHl7pb74RLyOWGaVU+OPmYSObp6YGRMdp2vd5h/xw1DCliYFwvQfjGxAToTFIKZLP2DhtHb1l7M8NBrH5ddx5ObRt+BC6NG7kkkyeHgcYpl8pXDcN/7g4Bkx/ftb9U+FJmQtMabRm/hrwR/816M17Q+7z/1txlUHU1k44+bEdFRrthxUWU1qHfS1SV5mpGln45VTEXUWgFSa5rEd1OOmQlpN+iFRa9ccUx/QhigyPIDnLa67QrqwHg9QK7S0wpVmRCDTwOFUEDlxv5hQ8/B3jc99qti+AaYlw==||U2FsdGVkX1/xP3UKRdywvlLBAtCno8MP87jBvymNPreULM/q7jTnfPPRJOd8WH6MpHdxqtek3Tel3140YqKx9XemBzb3UJg/Gy5JQBQlla3KCq4lQl6Oup4HMFKTFy+n7Vzqex0DDeFEhQ+JDvNe7T4Ujc9YE8d0HdBlVMRKNvRRm3z8SVMzs0C5tXJ4C2dn\nAvm4yWPjVHzPAJgPDQwN3k07gYJ1CL0yj9zkB4+urvvyfBDat3+CM/ZrLrO4ec+ywXqD3fYTSp1RrAoyyXT0x7DXT7hRbN4OyV5u7u8CeTsFP53qXAdm5ficGxDu9ewLEPse/Qzj8LZ3aN8OwtweUpDRw/LbOeWajgeXHaWPpZ0lsEwoHmfTuyyYE7wMKgL23wDjRBVn6tcnkG5+J6KOpJtiXBbPW+o8L0wHVrCgF7qBOwC2LV/KKv+SZysKU0zfWr9fOAuNgTqxR4WRXGIXiBu30zo8qzWwKKE6QTUVV+15duG+H8d8wtkuZ4X8idGWlewE2y9afufPCxxKnQTguQ==\n====END LICENSE KEY====',
+    plugins: [
+      HighlightWeekends(),
+      TimelinePointer(),
+      Selection(),
+      ItemMovement(),
+      ItemResizing(),
+      CalendarScroll(),
+      TimeBookmarks({
+        bookmarks,
+      }),
+    ],
     list: {
-      rows,
-      columns,
+      toggle: {
+        display: false,
+      },
+      row: {
+        height: 50,
+      },
+      rows: rowsData,
+      columns: {
+        percent: 100,
+        resizer: {
+          inRealTime: false,
+          dots: 0,
+        },
+        data: {
+          label: {
+            id: 'label',
+            data: 'label',
+            expander: true,
+            width: 160,
+            minWidth: 120,
+            header: {
+              content: 'Select unit types',
+            },
+          },
+        },
+      },
     },
     chart: {
-      items,
+      item: {
+        height: 50,
+      },
+      items: itemsData,
+      time: {
+        from: GSTC.api
+          .date()
+          .startOf('month')
+          .valueOf(),
+        to: GSTC.api
+          .date()
+          .add(2, 'months')
+          .endOf('month')
+          .valueOf(),
+        zoom: 21,
+      },
+      grid: {
+        cell: {
+          onCreate: [
+            ({ time, row, vido: { html } }) => {
+              if (row.meta && row.meta.context === 'rate') {
+                const onCellClick = (row, time) => {
+                  alert(
+                    `Cell for row ${
+                      GSTC.api.sourceID(row.id)
+                    } ${
+                      time.leftGlobalDate.format('YYYY-MM-DD')
+                    } clicked!`,
+                  );
+                };
+
+                let cellValue = '-';
+
+                if (ratesData[row.parentId]) {
+                  const unitTypeRates = ratesData[row.parentId].find(
+                    ({ date }) => date >= time.leftGlobal && date <= time.rightGlobal,
+                  );
+
+                  if (unitTypeRates) {
+                    switch (row.meta.id) {
+                      case 1:
+                        cellValue = unitTypeRates.pricePerNight;
+                        break;
+                      case 2:
+                        cellValue = unitTypeRates.minStay;
+                        break;
+                      default:
+                    }
+                  }
+                }
+
+                return html`
+                  <div
+                    class="gstc__chart-timeline-grid-row-cell--content"
+                    @click=${() => onCellClick(row, time)}
+                  >
+                    ${cellValue}
+                  </div>
+                `;
+              } if (row && row.meta && row.meta.context === 'type') {
+                // show how many events are in Unit Types
+
+                const items = itemsData;
+
+                let count = 0;
+                for (const itemId in items) {
+                  const item = items[itemId];
+
+                  if (row.$data.children.includes(item.rowId)) {
+                    if (
+                      (item.time.start >= time.leftGlobal
+                        && item.time.start <= time.rightGlobal)
+                      || (item.time.end >= time.leftGlobal
+                        && item.time.end <= time.rightGlobal)
+                      || (item.time.start <= time.leftGlobal
+                        && item.time.end >= time.rightGlobal)
+                    ) {
+                      count = +1;
+                    }
+                  }
+                }
+
+                return html`
+                  <div class="gstc__chart-timeline-grid-row-cell--content">
+                    ${count}
+                  </div>
+                `;
+              }
+            },
+          ],
+        },
+      },
+    },
+    scroll: {
+      vertical: { precise: false },
     },
   };
 
   const subs = [];
+  useEffect(() => {
+    subs.forEach((unsub) => unsub());
+  });
+
   const getProperty = useCallback(async () => {
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
@@ -185,34 +266,22 @@ const Calendar = () => {
       setOnTrial(JSON.parse(isOnTrial));
       setLoading(false);
     }
-    // const response = await reservationInstance.post('/getReservation', {
-    //   affiliateId: userId,
-    // });
-
-    // const { reservationData: data } = response.data;
-    // if (response.data.code === 200) {
-    //   setLoading(false);
-    //   setReservationData(data);
-    //   if (response.data.guestData.length !== 0) {
-    //     if (response.data.guestData[0].length !== 0) {
-    //       if (response.data.guestData[0][0].fullname !== undefined) {
-    //         setGuestName(response.data.guestData[0][0].fullname);
-    //       }
-    //     }
-    //   }
-    // }
   }, []);
 
   const getCalendarData = useCallback(async () => {
-    const response = await reservationInstance.post('/getReservationCalendarData', {
-      affiliateId: userId,
-    });
-    // const { unittypeData: data0 } = response.data;
-    // const { unitData: data1 } = response.data;
+    const response = await reservationInstance.post(
+      '/getReservationCalendarData',
+      {
+        affiliateId: userId,
+      },
+    );
+    const [rows, rates, items] = await getUnitTypes().then(serialize);
+    setRowsData(rows);
+    setRatesData(rates);
+    setItemsData(items);
+
     if (response.data.code === 200) {
       setLoading(false);
-      // setUnittypeData(data0);
-      // setUnitData(data1);
     }
   }, [userId]);
 
@@ -221,10 +290,6 @@ const Calendar = () => {
     getProperty();
     getCalendarData();
   }, [getData, getProperty, getCalendarData]);
-
-  useEffect(() => {
-    subs.forEach((unsub) => unsub());
-  });
 
   const show = () => {
     setVisible(true);
@@ -249,19 +314,22 @@ const Calendar = () => {
   };
 
   function onState(state) {
-    // state.update("config.chart.items", items => {
-    //   items.time.end = today.getTime() + 2 * 24 * 60 * 60 * 1000;
-    //   return items;
-    // });
-    subs.push(
-      state.subscribe('config.chart.items', () => {
-        // console.log('items changed', items);
-      }),
-    );
-    subs.push(
-      state.subscribe('config.list.rows', () => {
-        // console.log('rows changed', rows);
-      }),
+    state.subscribe('config.list.rows', (rows) => {
+      console.log('[DEBUG] rows changed', rows);
+    });
+
+    state.subscribe(
+      'config.chart.items.:id',
+      (bulk, eventInfo) => {
+        if (eventInfo.type === 'update' && eventInfo.params.id) {
+          const itemId = eventInfo.params.id;
+          console.log(
+            `[DEBUG] item ${itemId} changed`,
+            state.get(`config.chart.items.${itemId}`),
+          );
+        }
+      },
+      { bulk: true },
     );
   }
 
@@ -332,19 +400,19 @@ const Calendar = () => {
       //   setData(JSON.parse(element.unitsData) || []);
       // });
       setData(response.data.unittypeData);
-    // unittypeData.forEach((el) => {
-    //   let sum = 0;
-    //   const arr = [];
-    //   units.forEach((ele) => {
-    //     if (el.id === ele.unittypeId) {
-    //       sum += 1;
-    //       arr.push(ele.id);
-    //     }
-    //   });
-    //   el.noOfUnits = sum;
-    //   el.units = arr;
-    // });
-    // setData(JSON.parse(unittypeData[0].unitsData));
+      // unittypeData.forEach((el) => {
+      //   let sum = 0;
+      //   const arr = [];
+      //   units.forEach((ele) => {
+      //     if (el.id === ele.unittypeId) {
+      //       sum += 1;
+      //       arr.push(ele.id);
+      //     }
+      //   });
+      //   el.noOfUnits = sum;
+      //   el.units = arr;
+      // });
+      // setData(JSON.parse(unittypeData[0].unitsData));
     }
   }, [topNavId, userId]);
 
@@ -415,7 +483,10 @@ const Calendar = () => {
             </Button>
           </div>
         </div>
-        <CreateProperty visible={visibleProperty} onCancel={closeCreateProperty} />
+        <CreateProperty
+          visible={visibleProperty}
+          onCancel={closeCreateProperty}
+        />
       </Wrapper>
     );
   }
@@ -448,7 +519,7 @@ const Calendar = () => {
         </div>
 
         <div className="calendar-calendar">
-          <GSTC config={config} onState={onState} />
+          <GSTCWrapper config={config} onState={onState} />
         </div>
 
         <AddReservation

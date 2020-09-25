@@ -102,6 +102,7 @@ const AddProperty = () => {
     values.propertyNo = No;
     values.affiliateId = userId;
     const response = await userInstance.post('/addProperty', values);
+    console.log(response);
     const statusCode = response.data.code;
     if (statusCode === 200) {
       toast.success('property added successfully', { containerId: 'B' });
