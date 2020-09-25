@@ -68,7 +68,7 @@ const UserProfile = ({ userName, imgState, propertyImg }) => {
       || pathname.includes('rates')
       || pathname.includes('seasonrates')
       || pathname.includes('channelmanager')
-      || pathname.includes('/services')
+      || pathname.includes('services')
     ) {
       const propertyId = localStorage.getItem('propertyV2Id');
       const getPropertyData = async () => {

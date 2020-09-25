@@ -65,19 +65,9 @@ const PropertyList = () => {
     const response = await propertyInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
-    console.log('response', response);
-    // const data2 = [];
     const data = response.data.propertiesData;
-    // data
-    //   .filter((el) => el.id === parseInt(topNavId, 10))
-    //   .forEach((filterData) => {
-    //     data2.push(filterData);
-    //   });
     if (response.data.code === 200) {
       setLoading(false);
-      // setPropertyData(data2.length > 0 ? data2 : data);
-      // const filtered = data.filter((prop) => prop.unitTypeName.includes((el) => el.lang === 'en'));
-      // console.log('this', filtered);
       setPropertyData(data);
     }
     await userInstance.get('/getSubscriptionStatus');

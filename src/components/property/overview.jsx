@@ -77,9 +77,9 @@ const Overview = () => {
     const response = await propertyInstance.post('/fetchUnittypeData', {
       unitTypeV2Id: localStorage.getItem('propertyV2Id'),
     });
-    if (response.data.code === 200) {
+    if (response.data.code === 200 && response.status !== 204) {
       const data = response.data.unitTypeV2Data[0];
-      if (data && data.unitsData) {
+      if (data && data.unitsData !== null) {
         const units = JSON.parse(data.unitsData);
         units.forEach((el, i) => {
           form2.setFieldsValue({
@@ -430,7 +430,7 @@ const Overview = () => {
                       <Form.Item name="description">
                         <TextArea
                           value={propertyDescription}
-                          placeholder=""
+                          placeholder="Description"
                           rows={4}
                           onChange={(e) => setPropertyDescription(e.target.value)}
                         />
