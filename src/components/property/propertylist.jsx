@@ -214,7 +214,7 @@ const PropertyList = () => {
           <div className="property-list">
             {propertyData && propertyData.length > 0 ? (
               propertyData.map((el) => (
-                <div className="property">
+                <div className="property" key={el.id}>
                   <div className="property-edit-delete">
                     <Dropdown overlay={menu} trigger={['click']}>
                       <div className="ant-dropdown-link">

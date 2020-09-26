@@ -458,7 +458,9 @@ input[type=number]{
 }
 
 
-
+.ant-upload-list-item:hover .ant-upload-list-item-card-actions-btn {
+    display: none !important;
+}
 
 
 
