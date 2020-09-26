@@ -235,8 +235,8 @@ const CreateBookingPopup = (props) => {
 
   const onSelectProperty = async (value, event) => {
     propertyData
-      .filter((el) => el.id === parseInt(value, 10))
-      .map((filter) => setUnitData(JSON.parse(filter.unitsData) || []));
+      .filter((el) => el.id === value)
+      .map((filter) => setUnitData(filter.unitsData && JSON.parse(filter.unitsData)));
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
@@ -1002,12 +1002,10 @@ const CreateBookingPopup = (props) => {
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => onSelectProperty(value, event)}
               >
-                {propertyData.map((el) => (
-                  <Select.Option value={el.id} key={el}>
+                {propertyData && propertyData.map((el) => (
+                  <Select.Option value={el.id} key={el.id}>
                     {el.unitTypeName
-                      && el.unitTypeName
-                        .filter((e) => e.lang === 'en')
-                        .map((name) => name.name)}
+                  && el.unitTypeName.filter((e) => e.lang === 'en').map((name) => <h3 key={name}>{name.name}</h3>)}
                   </Select.Option>
                 ))}
               </Select>
@@ -1030,8 +1028,8 @@ const CreateBookingPopup = (props) => {
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => onSelectUnit(value, event)}
               >
-                {unitData.map((el, i) => (
-                  <Select.Option value={i}>{el}</Select.Option>
+                {unitData && unitData.map((el, i) => (
+                  <Select.Option value={i} key={el}>{el}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -1229,7 +1227,7 @@ const CreateBookingPopup = (props) => {
                     placeholder="0 nights"
                     name="nights"
                     value={night}
-                    disabled="true"
+                    disabled
                     onChange={(e) => setNight(e.target.value)}
                   />
                   <label htmlFor="amount">
@@ -1336,7 +1334,7 @@ const CreateBookingPopup = (props) => {
               <div className="per-night-content" hidden={upDown}>
                 <div className="night-container">
                   {daysArr.map((ele, j) => (
-                    <div className="night-box">
+                    <div className="night-box" key={ele}>
                       <Form.Item
                         label={
                           startDate + j <= currMonthDay
