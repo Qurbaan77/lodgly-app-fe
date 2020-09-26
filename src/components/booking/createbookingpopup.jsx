@@ -31,7 +31,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { CountryDropdown } from 'react-country-region-selector';
 import countryList from 'react-select-country-list';
-import { userInstance, bookingInstance } from '../../axios/axiosconfig';
+import { userInstance, bookingInstance, propertyInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
 
@@ -209,7 +209,7 @@ const CreateBookingPopup = (props) => {
   // };
 
   const getPropertyData = useCallback(async () => {
-    const response = await userInstance.post('/fetchProperty', {
+    const response = await propertyInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
     const data = response.data.propertiesData;
@@ -236,7 +236,7 @@ const CreateBookingPopup = (props) => {
   const onSelectProperty = async (value, event) => {
     propertyData
       .filter((el) => el.id === parseInt(value, 10))
-      .map((filter) => setUnitData(JSON.parse(filter.unitType[0].unitsData) || []));
+      .map((filter) => setUnitData(JSON.parse(filter.unitsData) || []));
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
@@ -1003,7 +1003,12 @@ const CreateBookingPopup = (props) => {
                 onSelect={(value, event) => onSelectProperty(value, event)}
               >
                 {propertyData.map((el) => (
-                  <Select.Option value={el.id} key={el}>{el.propertyName}</Select.Option>
+                  <Select.Option value={el.id} key={el}>
+                    {el.unitTypeName
+                      && el.unitTypeName
+                        .filter((e) => e.lang === 'en')
+                        .map((name) => name.name)}
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>
