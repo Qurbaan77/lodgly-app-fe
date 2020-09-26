@@ -213,6 +213,7 @@ const CreateBookingPopup = (props) => {
       affiliateId: userId,
     });
     const data = response.data.propertiesData;
+    console.log('fetch property data', data);
     if (response.data.code === 200) {
       setPropertyData(data);
     }
@@ -236,7 +237,10 @@ const CreateBookingPopup = (props) => {
   const onSelectProperty = async (value, event) => {
     propertyData
       .filter((el) => el.id === value)
-      .map((filter) => setUnitData(filter.unitsData && JSON.parse(filter.unitsData)));
+      .map((filter) => {
+        console.log('create booking', filter.unitsData);
+        return setUnitData(filter.unitsData && JSON.parse(filter.unitsData));
+      });
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {

@@ -162,7 +162,10 @@ const UserProfile = ({ userName, imgState, propertyImg }) => {
 };
 
 UserProfile.propTypes = {
-  imgState: PropTypes.element,
+  imgState: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+  ]),
   propertyImg: PropTypes.string,
   userName: PropTypes.string,
 };
