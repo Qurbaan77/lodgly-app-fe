@@ -1,3 +1,6 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable guard-for-in */
+/* eslint-disable no-alert */
 import React, { useEffect, useState, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import './calendar.css';
@@ -9,7 +12,6 @@ import GSTC from 'gantt-schedule-timeline-calendar/dist/gstc.esm.min';
 import { Plugin as ItemMovement } from 'gantt-schedule-timeline-calendar/dist/plugins/item-movement.esm.min';
 import { Plugin as ItemResizing } from 'gantt-schedule-timeline-calendar/dist/plugins/item-resizing.esm.min';
 import { Plugin as TimelinePointer } from 'gantt-schedule-timeline-calendar/dist/plugins/timeline-pointer.esm.min';
-import { Plugin as Selection } from 'gantt-schedule-timeline-calendar/dist/plugins/selection.esm.min';
 import { Plugin as CalendarScroll } from 'gantt-schedule-timeline-calendar/dist/plugins/calendar-scroll.esm.min';
 import { Plugin as HighlightWeekends } from 'gantt-schedule-timeline-calendar/dist/plugins/highlight-weekends.esm.min';
 import { Plugin as TimeBookmarks } from 'gantt-schedule-timeline-calendar/dist/plugins/time-bookmarks.esm.min';
@@ -28,8 +30,6 @@ import {
 import AddReservation from './addreservation';
 import GroupReservation from './groupreservation';
 import favicon from '../../assets/images/logo-mobile.png';
-import getUnitTypes from './api.mock';
-import serialize from './serializer';
 
 const Calendar = () => {
   const { t } = useTranslation();
@@ -48,13 +48,85 @@ const Calendar = () => {
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ calendarWrite, userId }] = userCred || [{}];
   const canWrite = calendarWrite;
-  // const rows = {};
-  // const items = {};
-  const [ratesData, setRatesData] = useState({});
-  const [itemsData, setItemsData] = useState({});
-  const [rowsData, setRowsData] = useState({});
+  const [unitTypes, setUnitTypes] = useState([]);
 
   // const { GSTCID } = GSTC.api;
+
+  const formatToId = (ids) => GSTC.api.GSTCID(ids.join('-'));
+  const rows = {};
+  const items = {};
+  const rates = {};
+  unitTypes.forEach((unitType) => {
+    const context = 'type';
+    const unitTypeId = formatToId([context, unitType.id]);
+
+    rates[unitTypeId] = unitType.rates.data;
+
+    rows[unitTypeId] = {
+      id: unitTypeId,
+      label: unitType.name.filter((e) => e.lang === 'en').map((name) => name.name),
+      meta: {
+        id: unitType.id,
+        context,
+      },
+      expanded: true,
+      height: 26,
+      classNames: [`gstc__list-column-row--${context}`],
+    };
+
+    ['Price per night', 'Minimum stay'].forEach((label, index) => {
+      const context = 'rate';
+      const rateId = formatToId([context, unitTypeId, index + 1]);
+
+      rows[rateId] = {
+        id: rateId,
+        meta: {
+          id: index + 1,
+          context,
+        },
+        parentId: unitTypeId,
+        label,
+        height: 26,
+        classNames: [`gstc__list-column-row--${context}`],
+      };
+    });
+
+    unitType.units.data.forEach((unit) => {
+      const context = 'unit';
+      const unitId = formatToId([context, unit.id]);
+
+      unit.bookings.data.forEach((booking) => {
+        const bookingId = formatToId(['booking', booking.id]);
+
+        items[bookingId] = {
+          id: bookingId,
+          top: 4,
+          label: ({ vido: { html } }) => html`<strong>${booking.guestName}</strong> - ${booking.price}`,
+          rowId: unitId,
+          height: 26,
+          time: {
+            start: booking.from,
+            end: booking.to,
+          },
+          style: {
+            background: unit.color,
+          },
+        };
+      });
+
+      rows[unitId] = {
+        id: unitId,
+        meta: {
+          id: unit.id,
+          context,
+        },
+        parentId: unitTypeId,
+        label: unit.name,
+        classNames: [`gstc__list-column-row--${context}`],
+      };
+    });
+  });
+
   const bookmarks = {
     now: {
       time: GSTC.api.date().valueOf(),
@@ -68,7 +140,7 @@ const Calendar = () => {
     plugins: [
       HighlightWeekends(),
       TimelinePointer(),
-      Selection(),
+      // Selection(),
       ItemMovement(),
       ItemResizing(),
       CalendarScroll(),
@@ -83,7 +155,7 @@ const Calendar = () => {
       row: {
         height: 50,
       },
-      rows: rowsData,
+      rows,
       columns: {
         percent: 100,
         resizer: {
@@ -108,7 +180,7 @@ const Calendar = () => {
       item: {
         height: 50,
       },
-      items: itemsData,
+      items,
       time: {
         from: GSTC.api
           .date()
@@ -126,31 +198,67 @@ const Calendar = () => {
           onCreate: [
             ({ time, row, vido: { html } }) => {
               if (row.meta && row.meta.context === 'rate') {
+                const onCellClick = (row, time) => {
+                  alert(
+                    `Cell for row ${
+                      GSTC.api.sourceID(row.id)
+                    } ${
+                      time.leftGlobalDate.format('YYYY-MM-DD')
+                    } clicked!`,
+                  );
+                };
+
                 let cellValue = '-';
 
-                if (ratesData[row.parentId]) {
-                  const unitTypeRates = ratesData[row.parentId].find(
+                if (rates[row.parentId]) {
+                  const unitTypeRates = rates[row.parentId].find(
                     ({ date }) => date >= time.leftGlobal && date <= time.rightGlobal,
                   );
 
                   if (unitTypeRates) {
                     switch (row.meta.id) {
+                      default: break;
                       case 1:
                         cellValue = unitTypeRates.pricePerNight;
                         break;
                       case 2:
                         cellValue = unitTypeRates.minStay;
                         break;
-                      default:
                     }
                   }
                 }
 
-                return html`
-                  <div
-                    ${cellValue}
-                  </div>
-                `;
+                return html`<div
+                  class="gstc__chart-timeline-grid-row-cell--content"
+                  @click=${() => onCellClick(row, time)}
+                >
+                  ${cellValue}
+                </div>`;
+              } if (row && row.meta && row.meta.context === 'type') {
+                // show how many events are in Unit Types
+                let count = 0;
+                for (const itemId in items) {
+                  const item = items[itemId];
+
+                  if (row.$data.children.includes(item.rowId)) {
+                    if (
+                      (item.time.start >= time.leftGlobal
+                        && item.time.start <= time.rightGlobal)
+                      || (item.time.end >= time.leftGlobal
+                        && item.time.end <= time.rightGlobal)
+                      || (item.time.start <= time.leftGlobal
+                        && item.time.end >= time.rightGlobal)
+                    ) {
+                      count = +1;
+                    }
+                  }
+                }
+
+                return html` <div
+                  class="gstc__chart-timeline-grid-row-cell--content"
+                >
+                  ${count}
+                </div>`;
               }
               return undefined;
             },
@@ -203,13 +311,11 @@ const Calendar = () => {
         affiliateId: userId,
       },
     );
-    const [rows, rates, items] = await getUnitTypes().then(serialize);
-    setRowsData(rows);
-    setRatesData(rates);
-    setItemsData(items);
-
     if (response.data.code === 200) {
-      setLoading(false);
+      if (response.data.data && response.data.data.length > 0) {
+        setLoading(false);
+        setUnitTypes(response.data.data);
+      }
     }
   }, [userId]);
 
