@@ -274,7 +274,7 @@ const GroupReservation = (props) => {
                       <h5>
                         Available:
                         {' '}
-                        {el.unitsData ? (JSON.parse(el.unitsData)).length : 0}
+                        {el.unitsData ? el.unitsData.length : 0}
                       </h5>
                     </div>
                   </Col>

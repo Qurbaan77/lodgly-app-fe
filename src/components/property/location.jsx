@@ -115,12 +115,15 @@ const Location = () => {
 
   useEffect(() => {
     getData();
+  }, [getData]);
+
+  useEffect(() => {
     if (!saved && address) {
       window.onbeforeunload = () => true;
     } else {
       window.onbeforeunload = undefined;
     }
-  }, [getData, saved, address]);
+  }, [saved, address]);
 
   return (
     <>
