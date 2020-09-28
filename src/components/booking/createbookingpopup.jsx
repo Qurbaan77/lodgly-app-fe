@@ -213,6 +213,7 @@ const CreateBookingPopup = (props) => {
       affiliateId: userId,
     });
     const data = response.data.propertiesData;
+    console.log('fetch property data', data);
     if (response.data.code === 200) {
       setPropertyData(data);
     }

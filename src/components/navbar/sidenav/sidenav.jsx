@@ -430,8 +430,14 @@ const Sidenav = ({
 };
 
 Sidenav.propTypes = {
-  img: PropTypes.element,
-  propertyImage: PropTypes.element,
+  img: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+  ]),
+  propertyImage: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+  ]),
   name: PropTypes.string,
   getUserInfo: PropTypes.func,
   menutoggle: PropTypes.bool,
