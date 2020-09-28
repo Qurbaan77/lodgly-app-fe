@@ -81,11 +81,7 @@ const Overview = () => {
     if (response.data.code === 200 && response.status !== 204) {
       const data = response.data.unitTypeV2Data[0];
       if (data && data.unitsData) {
-        data.unitsData.forEach((el, i) => {
-          form2.setFieldsValue({
-            [`unit${i + 1}`]: el,
-          });
-        });
+        data.unitsData.map((el, i) => form2.setFieldsValue({ [`unit${i + 1}`]: el }));
       }
       if (data.propertyType !== null) {
         form.setFieldsValue({
