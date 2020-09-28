@@ -236,7 +236,7 @@ const CreateBookingPopup = (props) => {
   const onSelectProperty = async (value, event) => {
     propertyData
       .filter((el) => el.id === value)
-      .map((filter) => setUnitData(filter.unitsData && JSON.parse(filter.unitsData)));
+      .map((filter) => setUnitData(filter.unitsData));
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
