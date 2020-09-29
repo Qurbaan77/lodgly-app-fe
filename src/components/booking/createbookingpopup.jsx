@@ -180,7 +180,7 @@ const CreateBookingPopup = (props) => {
       serviceDataNew.push(values[ele]);
     });
     values.serviceData = serviceDataNew;
-    values.propertyName = currentPropertyName;
+    values.propertyName = currentPropertyName[0].props.children;
     values.propertyId = currentPropertyId;
     values.channel = channel;
     values.commission = channelCommission;
@@ -194,6 +194,7 @@ const CreateBookingPopup = (props) => {
       priceOnEachDay[date] = price;
     });
     values.priceOnEachDay = priceOnEachDay * 100;
+    console.log(values);
     const response = await bookingInstance.post('/addBooking', values);
     if (response.data.code === 200) {
       getData();
@@ -1006,7 +1007,7 @@ const CreateBookingPopup = (props) => {
                 {propertyData && propertyData.map((el) => (
                   <Select.Option value={el.id} key={el.id}>
                     {el.unitTypeName
-                  && el.unitTypeName.filter((e) => e.lang === 'en').map((name) => <h3 key={name}>{name.name}</h3>)}
+                  && el.unitTypeName.filter((e) => e.lang === 'en').map((name) => <p key={name}>{name.name}</p>)}
                   </Select.Option>
                 ))}
               </Select>

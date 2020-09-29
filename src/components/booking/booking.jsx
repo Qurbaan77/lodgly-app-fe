@@ -144,7 +144,7 @@ const Booking = () => {
       setLoading(false);
       const bookingdata = response.data.bookingData;
       const guestdata = response.data.guestData;
-      const servicedata = response.data.serviceData[0];
+      const servicedata = response.data.serviceData;
       const guestnum = guestdata.map((el) => el.length);
       const guestname = [];
       const data = guestdata.map((el) => el.find((ele) => ele.id));
@@ -202,6 +202,7 @@ const Booking = () => {
   }, [topNavId]);
 
   const selectBooking = (values) => {
+    console.log(values);
     setStatus(values.status);
     values.startDate = values.startDate.slice(0, 10);
     values.endDate = values.endDate.slice(0, 10);
@@ -220,7 +221,10 @@ const Booking = () => {
 
     const data = [];
 
-    serviceData.map((el) => (el.bookingId === values.id ? data.push(el) : null));
+    // serviceData.map((el) => (el.bookingId === values.id ? data.push(el) : null));
+    serviceData.forEach((service) => {
+      service.map((el) => (el.bookingId === values.id ? data.push(el) : null));
+    });
     setCurrentService(data);
     setEditCurrentGuest(arr);
     setCurrentBooking(values);

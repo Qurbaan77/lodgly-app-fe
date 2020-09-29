@@ -49,6 +49,7 @@ const Editbookingpopup = (props) => {
     setBooked,
     getData,
   } = props;
+  console.log(currentService);
   const [form] = Form.useForm();
   // const [test, setTest] = useState(false);
   // const [visible, setVisible] = useState(false);
