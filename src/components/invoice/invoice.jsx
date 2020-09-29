@@ -222,13 +222,13 @@ const Invoice = () => {
   }, [userId]);
   const handleCheck = (el) => {
     invoiceData.forEach((element) => {
-      if (el.id === element.id && element[Object.keys(el)[20]] === true) {
-        element[Object.keys(el)[20]] = false;
+      if (el.id === element.id && element[Object.keys(el)[21]] === true) {
+        element[Object.keys(el)[21]] = false;
       } else if (
         el.id === element.id
-        && element[Object.keys(el)[20]] === false
+        && element[Object.keys(el)[21]] === false
       ) {
-        element[Object.keys(el)[20]] = true;
+        element[Object.keys(el)[21]] = true;
       }
     });
     setInvoiceData(invoiceData);
@@ -288,7 +288,7 @@ const Invoice = () => {
         .reverse()
         .slice(pagination.minValue, pagination.maxValue)
         .forEach((el) => {
-          el[Object.keys(el)[20]] = false;
+          el[Object.keys(el)[21]] = false;
         });
       setInvoiceData(invoiceData);
       setCheckedInvoice([]);
@@ -299,10 +299,10 @@ const Invoice = () => {
         .reverse()
         .slice(pagination.minValue, pagination.maxValue)
         .forEach((el) => {
-          el[Object.keys(el)[20]] = true;
+          el[Object.keys(el)[21]] = true;
         });
       const data = invoiceData.filter(
-        (el) => el[Object.keys(el)[20]] !== false,
+        (el) => el[Object.keys(el)[21]] !== false,
       );
       setInvoiceData(invoiceData);
       setCheckedInvoice(data);
@@ -318,7 +318,7 @@ const Invoice = () => {
       .reverse()
       .slice(pagination.minValue, pagination.maxValue)
       .forEach((el) => {
-        el[Object.keys(el)[20]] = false;
+        el[Object.keys(el)[21]] = false;
       });
     setInvoiceData(invoiceData);
     setCheckedInvoice([]);
@@ -787,7 +787,7 @@ const Invoice = () => {
                           <tr key={el.id}>
                             <td>
                               <Checkbox
-                                checked={el[Object.keys(el)[20]]}
+                                checked={el[Object.keys(el)[21]]}
                                 onClick={() => handleCheck(el, i)}
                               />
                               {el.date.slice(0, 10)}

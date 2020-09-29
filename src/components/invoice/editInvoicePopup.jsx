@@ -159,6 +159,9 @@ const EditInvoicePopup = (props) => {
     valuesCopy.propertyId = property[0].id;
     valuesCopy.deleteInvoiceItemId = deleteInvoiceItemId;
     valuesCopy.label = invoiceData.label;
+    if (invoiceData.logo) {
+      valuesCopy.logo = invoiceData.logo;
+    }
     if (issueState) valuesCopy.status = 'Issued';
     const res = issueState
       ? await userInstance.post('/invoicedraft', valuesCopy)
