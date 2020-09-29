@@ -17,7 +17,7 @@ import {
   Upload,
 } from 'antd';
 import {
-  PlusOutlined, CloseOutlined, UserOutlined, UploadOutlined,
+  PlusOutlined, CloseOutlined, UploadOutlined,
 } from '@ant-design/icons';
 
 import moment from 'moment';
