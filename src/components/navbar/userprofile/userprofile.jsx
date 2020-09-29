@@ -70,7 +70,7 @@ const UserProfile = ({ userName, imgState, propertyImg }) => {
       || pathname.includes('channelmanager')
       || pathname.includes('services')
     ) {
-      const propertyId = localStorage.getItem('propertyV2Id');
+      const propertyId = localStorage.getItem('unitTypeV2Id');
       const getPropertyData = async () => {
         const response = await propertyInstance.post('/getProperty', {
           propertyId,
@@ -162,7 +162,10 @@ const UserProfile = ({ userName, imgState, propertyImg }) => {
 };
 
 UserProfile.propTypes = {
-  imgState: PropTypes.element,
+  imgState: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+  ]),
   propertyImg: PropTypes.string,
   userName: PropTypes.string,
 };

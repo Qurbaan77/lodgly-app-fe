@@ -105,7 +105,7 @@ const PropertyList = () => {
 
   const handlePropertyClick = (id) => {
     // localStorage.setItem('propertyId', id);
-    localStorage.setItem('propertyV2Id', id);
+    localStorage.setItem('unitTypeV2Id', id);
     // history.push(`/overview/?pid=${id}`);
     history.push('/overview');
   };
@@ -214,7 +214,7 @@ const PropertyList = () => {
           <div className="property-list">
             {propertyData && propertyData.length > 0 ? (
               propertyData.map((el) => (
-                <div className="property">
+                <div className="property" key={el.id}>
                   <div className="property-edit-delete">
                     <Dropdown overlay={menu} trigger={['click']}>
                       <div className="ant-dropdown-link">

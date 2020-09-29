@@ -142,7 +142,7 @@ export const SecureOverview = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={(props) => (token && localStorage.getItem('propertyV2Id') ? (
+      render={(props) => (token && localStorage.getItem('unitTypeV2Id') ? (
         <Component {...props} {...rest} />
       ) : (
         <Redirect to="/propertylist" />

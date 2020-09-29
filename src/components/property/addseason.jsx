@@ -11,7 +11,7 @@ const AddSeason = (props) => {
   const [form] = Form.useForm();
   const { close, getData } = props;
   const onFinish = async (values) => {
-    values.unitTypeId = localStorage.getItem('propertyV2Id');
+    values.unitTypeId = localStorage.getItem('unitTypeV2Id');
     const response = await propertyInstance.post('/addSeasonRates', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {

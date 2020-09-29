@@ -54,32 +54,40 @@ const Location = () => {
 
   const getData = useCallback(async () => {
     const response = await propertyInstance.post('/fetchUnittypeData', {
-      unitTypeV2Id: localStorage.getItem('propertyV2Id'),
+      unitTypeV2Id: localStorage.getItem('unitTypeV2Id'),
     });
     if (response.data.code === 200) {
       const data = response.data.unitTypeV2Data[0];
       form.setFieldsValue({
         distanceIn: data.distanceIn,
       });
-      if (data.address !== null && data.direction !== null && data.distance !== null) {
-        setDistance(true);
-        setDirections(true);
+      if (data.address !== null) {
         form.setFieldsValue({
           location: data.address,
-          direction: data.direction,
-          bus: data.distance.bus,
-          train: data.distance.train,
-          underground: data.distance.underground,
-          motorway: data.distance.motorway,
-          airport: data.distance.airport,
-          port: data.distance.port,
         });
+        if (JSON.stringify(data.distance) !== '{}') {
+          setDistance(true);
+          form.setFieldsValue({
+            bus: data.distance.bus,
+            train: data.distance.train,
+            underground: data.distance.underground,
+            motorway: data.distance.motorway,
+            airport: data.distance.airport,
+            port: data.distance.port,
+          });
+        }
+        if (data.direction !== null) {
+          setDirections(true);
+          form.setFieldsValue({
+            direction: data.direction,
+          });
+        }
       }
     }
   }, [form]);
 
   const onFinish = async (values) => {
-    values.unitTypeV2Id = localStorage.getItem('propertyV2Id');
+    values.unitTypeV2Id = localStorage.getItem('unitTypeV2Id');
     values.country = country;
     values.latLng = latLng;
     values.state = state;
@@ -107,12 +115,15 @@ const Location = () => {
 
   useEffect(() => {
     getData();
+  }, [getData]);
+
+  useEffect(() => {
     if (!saved && address) {
       window.onbeforeunload = () => true;
     } else {
       window.onbeforeunload = undefined;
     }
-  }, [getData, saved, address]);
+  }, [saved, address]);
 
   return (
     <>

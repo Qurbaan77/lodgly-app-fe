@@ -213,7 +213,7 @@ const Rates = () => {
 
   const onFinish = async (values) => {
     values.id = ratesId;
-    values.unitTypeId = localStorage.getItem('propertyV2Id');
+    values.unitTypeId = localStorage.getItem('unitTypeV2Id');
     values.notes = value;
     values.checkIn_on_monday = checkInBox.monday;
     values.checkIn_on_tuesday = checkInBox.tuesday;
@@ -240,7 +240,7 @@ const Rates = () => {
 
   const fetchData = useCallback(async () => {
     const payload = {
-      unittypeId: localStorage.getItem('propertyV2Id'),
+      unittypeId: localStorage.getItem('unitTypeV2Id'),
     };
     const response = await propertyInstance.post('getRates', payload);
     if (response.data.code === 200) {

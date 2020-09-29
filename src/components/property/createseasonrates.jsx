@@ -230,7 +230,7 @@ const CreateSeasonRates = () => {
   const onFinish = async (values) => {
     const params = queryString.parse(window.location.search);
     values.id = params.seasonRateId;
-    values.unitTypeId = localStorage.getItem('propertyV2Id');
+    values.unitTypeId = localStorage.getItem('unitTypeV2Id');
     values.checkIn_on_monday = checkInBox.monday;
     values.checkIn_on_tuesday = checkInBox.tuesday;
     values.checkIn_on_wednesday = checkInBox.wednesday;

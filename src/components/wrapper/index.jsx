@@ -65,7 +65,18 @@ Wrapper.propTypes = {
   // getUserInfo: PropTypes.func,
   userName: PropTypes.string,
   fun: PropTypes.func,
-  children: PropTypes.string,
+  children: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.bool,
+    PropTypes.func,
+    PropTypes.number,
+    PropTypes.object,
+    PropTypes.string,
+    PropTypes.symbol,
+    PropTypes.node,
+    PropTypes.element,
+    PropTypes.elementType,
+  ]),
   onChange: PropTypes.func,
 };
 Wrapper.defaultProps = {

@@ -478,7 +478,7 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
-                    {isSubUser && localStorage.getItem('propertyV2Id') ? (
+                    {isSubUser && localStorage.getItem('unitTypeV2Id') ? (
                       <SecureProperty
                         exact
                         path="/overview"
@@ -493,7 +493,7 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
-                    {isSubUser && localStorage.getItem('propertyV2Id') ? (
+                    {isSubUser && localStorage.getItem('unitTypeV2Id') ? (
                       <SecureProperty
                         exact
                         path="/location"
@@ -508,7 +508,7 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
-                    {isSubUser && localStorage.getItem('propertyV2Id') ? (
+                    {isSubUser && localStorage.getItem('unitTypeV2Id') ? (
                       <SecureProperty
                         exact
                         path="/photos"

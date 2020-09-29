@@ -75,21 +75,19 @@ const Overview = () => {
 
   const getData = useCallback(async () => {
     const response = await propertyInstance.post('/fetchUnittypeData', {
-      unitTypeV2Id: localStorage.getItem('propertyV2Id'),
+      unitTypeV2Id: localStorage.getItem('unitTypeV2Id'),
     });
+    console.log(response);
     if (response.data.code === 200 && response.status !== 204) {
       const data = response.data.unitTypeV2Data[0];
-      if (data && data.unitsData !== null) {
-        const units = JSON.parse(data.unitsData);
-        units.forEach((el, i) => {
-          form2.setFieldsValue({
-            [`unit${i + 1}`]: el,
-          });
+      if (data && data.unitsData) {
+        data.unitsData.map((el, i) => form2.setFieldsValue({ [`unit${i + 1}`]: el }));
+      }
+      if (data.propertyType !== null) {
+        form.setFieldsValue({
+          propertyType: data.propertyType,
         });
       }
-      form.setFieldsValue({
-        propertyType: data.propertyType,
-      });
       if (data.sizeValue > 0) {
         form2.setFieldsValue({
           sqSelectedValue: data.sizeType,
@@ -110,7 +108,7 @@ const Overview = () => {
         setAmenitiesList(res.data.amenities);
       }
     };
-    const propertyId = localStorage.getItem('propertyV2Id');
+    const propertyId = localStorage.getItem('unitTypeV2Id');
     const getPropertyName = async () => {
       const response = await propertyInstance.get(
         `/fetchTranslated/en/${propertyId}`,
@@ -146,7 +144,7 @@ const Overview = () => {
   const { TextArea } = Input;
   const handleRentalTypeSelect = async (value) => {
     if (propertyName && propertyDescription) {
-      const propertyId = localStorage.getItem('propertyV2Id');
+      const propertyId = localStorage.getItem('unitTypeV2Id');
       const engPropertyName = await translate(propertyName, 'en');
       const payload = {
         propertyName: engPropertyName.trim(),
@@ -177,7 +175,7 @@ const Overview = () => {
       const unitName = 'unit';
       units.push(values[unitName + j] || `Unit ${j}`);
     });
-    values.unitTypeV2Id = localStorage.getItem('propertyV2Id');
+    values.unitTypeV2Id = localStorage.getItem('unitTypeV2Id');
     values.noOfBedRooms = noOfBedRooms;
     values.noOfGuests = noOfGuests;
     values.noOfUnits = noOfUnits;
@@ -193,7 +191,7 @@ const Overview = () => {
   };
 
   const handleAddLanguage = async () => {
-    const propertyId = localStorage.getItem('propertyV2Id');
+    const propertyId = localStorage.getItem('unitTypeV2Id');
     const language = languageSelection;
     const res = await propertyInstance.post('/addLanguage', {
       propertyId,
@@ -216,7 +214,7 @@ const Overview = () => {
   };
 
   const getLanguages = async () => {
-    const propertyId = localStorage.getItem('propertyV2Id');
+    const propertyId = localStorage.getItem('unitTypeV2Id');
     const res = await propertyInstance.get(`/languages/${propertyId}`);
     if (res.status === 200) {
       setLanguageList([res.data.language]);
@@ -224,7 +222,7 @@ const Overview = () => {
   };
 
   const handleRemoveLanguage = async () => {
-    const propertyId = localStorage.getItem('propertyV2Id');
+    const propertyId = localStorage.getItem('unitTypeV2Id');
     const language = languageSelection;
     const res = await propertyInstance.post('/removeLanguage', {
       propertyId,
@@ -253,7 +251,7 @@ const Overview = () => {
       (el) => Object.keys(el)[0] !== e.target.value,
     );
     setTranslateLanguage(filteredLang);
-    const propertyId = localStorage.getItem('propertyV2Id');
+    const propertyId = localStorage.getItem('unitTypeV2Id');
     const response = await propertyInstance.get(
       `/fetchTranslated/${e.target.value}/${propertyId}`,
     );
@@ -286,7 +284,7 @@ const Overview = () => {
         lang: languageSelected,
         description: translatedDescription,
       };
-      const propertyId = localStorage.getItem('propertyV2Id');
+      const propertyId = localStorage.getItem('unitTypeV2Id');
       const payload = { nameObject, descriptionObject, propertyId };
       const {
         status,
@@ -520,6 +518,12 @@ const Overview = () => {
                         <Form.Item
                           className="property-info-unit"
                           name="sqSelectedValue"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Please select the type',
+                            },
+                          ]}
                           label={t('overview.label1')}
                         >
                           <Select placeholder="SQ FT">
@@ -762,7 +766,7 @@ const SleepingArrangement = ({ handleCancel }) => {
   const { t } = useTranslation();
   const getData = async () => {
     const response = await propertyInstance.post('/fetchUnittypeData', {
-      unitTypeV2Id: localStorage.getItem('propertyV2Id'),
+      unitTypeV2Id: localStorage.getItem('unitTypeV2Id'),
     });
     if (response.data.code === 200) {
       if (response.data.unitTypeV2Data.length > 0) {
@@ -794,7 +798,7 @@ const SleepingArrangement = ({ handleCancel }) => {
       sofaBed,
       singleBed,
     };
-    values.unitTypeV2Id = localStorage.getItem('propertyV2Id');
+    values.unitTypeV2Id = localStorage.getItem('unitTypeV2Id');
     values.sleepingArrangement = JSON.stringify(obj);
     const response = await propertyInstance.post(
       '/updateSleepingArrangement',
@@ -1008,7 +1012,7 @@ const EditRooms = ({ handleCancel1 }) => {
   const { t } = useTranslation();
   const getData = async () => {
     const response = await propertyInstance.post('/fetchUnittypeData', {
-      unitTypeV2Id: localStorage.getItem('propertyV2Id'),
+      unitTypeV2Id: localStorage.getItem('unitTypeV2Id'),
     });
     if (response.data.code === 200) {
       const data = response.data.unitTypeV2Data[0];
@@ -1059,7 +1063,7 @@ const EditRooms = ({ handleCancel1 }) => {
       toiletShared,
       workroomShared,
     };
-    values.unitTypeV2Id = localStorage.getItem('propertyV2Id');
+    values.unitTypeV2Id = localStorage.getItem('unitTypeV2Id');
     values.rooms = JSON.stringify(obj);
     const response = await propertyInstance.post('/updateEditRooms', values);
     if (response.data.code === 200) {
