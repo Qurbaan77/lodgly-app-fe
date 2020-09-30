@@ -19,8 +19,12 @@ const Thankyou = () => (
               <img src={logo} alt="Logo" />
             </div>
             <div className="thank-you-box">
-              <h1>Thank You for Register</h1>
-              <p>One of our team members will get in touch with you shortly!</p>
+              <h1>Your request was received by our Technical Team</h1>
+              <p>
+                We will connect your properties
+                within 48 hours and will send you the
+                confirmation email
+              </p>
             </div>
           </div>
         </div>

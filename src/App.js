@@ -59,6 +59,12 @@ import Profile from './components/profile/profile';
 import BillingInformation from './components/profile/billinginformation';
 import Invoice from './components/invoice/invoice';
 import Stats from './components/stats/stats';
+
+import Channel from './components/channelmanager/channelmanager';
+import ChannelBooking from './components/channelmanager/channelbooking';
+import ChannelExpedia from './components/channelmanager/channelexpedia';
+import ChannelAirbnb from './components/channelmanager/channelairbnb';
+
 import PageNotFound from './components/404/404';
 import './responsive.css';
 
@@ -527,6 +533,11 @@ const App = () => {
                     {/* <SecureOverview exact path="/overview" component={() => <Overview />} />
                     <SecureOverview exact path="/location" component={() => <Location />} />
                     <SecureOverview exact path="/photos" component={() => <Photos />} /> */}
+
+                    <Route exact path="/channel" component={() => <Channel />} />
+                    <Route exact path="/channelbooking" component={() => <ChannelBooking />} />
+                    <Route exact path="/channelexpedia" component={() => <ChannelExpedia />} />
+                    <Route exact path="/channelairbnb" component={() => <ChannelAirbnb />} />
 
                     <Route component={PageNotFound} />
 

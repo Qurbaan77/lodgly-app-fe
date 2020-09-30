@@ -8,13 +8,13 @@ import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 
-import GSTC from 'gantt-schedule-timeline-calendar/dist/gstc.esm.min';
-import { Plugin as ItemMovement } from 'gantt-schedule-timeline-calendar/dist/plugins/item-movement.esm.min';
-import { Plugin as ItemResizing } from 'gantt-schedule-timeline-calendar/dist/plugins/item-resizing.esm.min';
-import { Plugin as TimelinePointer } from 'gantt-schedule-timeline-calendar/dist/plugins/timeline-pointer.esm.min';
-import { Plugin as CalendarScroll } from 'gantt-schedule-timeline-calendar/dist/plugins/calendar-scroll.esm.min';
-import { Plugin as HighlightWeekends } from 'gantt-schedule-timeline-calendar/dist/plugins/highlight-weekends.esm.min';
-import { Plugin as TimeBookmarks } from 'gantt-schedule-timeline-calendar/dist/plugins/time-bookmarks.esm.min';
+import GSTC from 'gantt-schedule-timeline-calendar';
+// import { Plugin as ItemMovement } from 'gantt-schedule-timeline-calendar/dist/plugins/item-movement.esm.min';
+// import { Plugin as ItemResizing } from 'gantt-schedule-timeline-calendar/dist/plugins/item-resizing.esm.min';
+// import { Plugin as TimelinePointer } from 'gantt-schedule-timeline-calendar/dist/plugins/timeline-pointer.esm.min';
+// import { Plugin as CalendarScroll } from 'gantt-schedule-timeline-calendar/dist/plugins/calendar-scroll.esm.min';
+// import { Plugin as HighlightWeekends } from 'gantt-schedule-timeline-calendar/dist/plugins/highlight-weekends.esm.min';
+// import { Plugin as TimeBookmarks } from 'gantt-schedule-timeline-calendar/dist/plugins/time-bookmarks.esm.min';
 
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
@@ -137,17 +137,17 @@ const Calendar = () => {
   const config = {
     licenseKey:
       '====BEGIN LICENSE KEY====\nPSrbPlWbN+L6Q8B4bFCeEDK7VBbGc3TYF3jktFHPhMkV88gAPVJskFHl7pb74RLyOWGaVU+OPmYSObp6YGRMdp2vd5h/xw1DCliYFwvQfjGxAToTFIKZLP2DhtHb1l7M8NBrH5ddx5ObRt+BC6NG7kkkyeHgcYpl8pXDcN/7g4Bkx/ftb9U+FJmQtMabRm/hrwR/816M17Q+7z/1txlUHU1k44+bEdFRrthxUWU1qHfS1SV5mpGln45VTEXUWgFSa5rEd1OOmQlpN+iFRa9ccUx/QhigyPIDnLa67QrqwHg9QK7S0wpVmRCDTwOFUEDlxv5hQ8/B3jc99qti+AaYlw==||U2FsdGVkX1/xP3UKRdywvlLBAtCno8MP87jBvymNPreULM/q7jTnfPPRJOd8WH6MpHdxqtek3Tel3140YqKx9XemBzb3UJg/Gy5JQBQlla3KCq4lQl6Oup4HMFKTFy+n7Vzqex0DDeFEhQ+JDvNe7T4Ujc9YE8d0HdBlVMRKNvRRm3z8SVMzs0C5tXJ4C2dn\nAvm4yWPjVHzPAJgPDQwN3k07gYJ1CL0yj9zkB4+urvvyfBDat3+CM/ZrLrO4ec+ywXqD3fYTSp1RrAoyyXT0x7DXT7hRbN4OyV5u7u8CeTsFP53qXAdm5ficGxDu9ewLEPse/Qzj8LZ3aN8OwtweUpDRw/LbOeWajgeXHaWPpZ0lsEwoHmfTuyyYE7wMKgL23wDjRBVn6tcnkG5+J6KOpJtiXBbPW+o8L0wHVrCgF7qBOwC2LV/KKv+SZysKU0zfWr9fOAuNgTqxR4WRXGIXiBu30zo8qzWwKKE6QTUVV+15duG+H8d8wtkuZ4X8idGWlewE2y9afufPCxxKnQTguQ==\n====END LICENSE KEY====',
-    plugins: [
-      HighlightWeekends(),
-      TimelinePointer(),
-      // Selection(),
-      ItemMovement(),
-      ItemResizing(),
-      CalendarScroll(),
-      TimeBookmarks({
-        bookmarks,
-      }),
-    ],
+    // plugins: [
+    //   HighlightWeekends(),
+    //   TimelinePointer(),
+    //   // Selection(),
+    //   ItemMovement(),
+    //   ItemResizing(),
+    //   CalendarScroll(),
+    //   TimeBookmarks({
+    //     bookmarks,
+    //   }),
+    // ],
     list: {
       toggle: {
         display: false,
