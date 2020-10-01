@@ -202,7 +202,6 @@ const Booking = () => {
   }, [topNavId]);
 
   const selectBooking = (values) => {
-    console.log(values);
     setStatus(values.status);
     values.startDate = values.startDate.slice(0, 10);
     values.endDate = values.endDate.slice(0, 10);

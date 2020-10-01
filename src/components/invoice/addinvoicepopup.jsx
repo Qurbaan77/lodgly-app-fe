@@ -318,7 +318,7 @@ const AdInvoicePopup = (props) => {
               <h4>
                 <img src={propertyIcon} alt="property" />
                 {' '}
-                {property.length ? property[0].propertyName : ''}
+                {property.length ? property[0].unitTypeName[0].name : ''}
               </h4>
               <p>{property.length ? property[0].address : ''}</p>
             </div>

@@ -1,11 +1,12 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import './thankyou.css';
+import Wrapper from '../wrapper';
 import logo from '../../assets/images/logo.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
 
 const Thankyou = () => (
-  <>
+  <Wrapper>
     <Helmet>
       <link rel="icon" href={favicon} />
       <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
@@ -30,7 +31,7 @@ const Thankyou = () => (
         </div>
       </div>
     </div>
-  </>
+  </Wrapper>
 );
 
 export default Thankyou;

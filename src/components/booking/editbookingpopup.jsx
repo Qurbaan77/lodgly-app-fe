@@ -19,7 +19,7 @@ import {
 import {
   PlusSquareOutlined,
   PlusOutlined,
-  EditOutlined,
+  // EditOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +32,7 @@ const { Panel } = Collapse;
 // const { Option } = Select;
 
 const { RangePicker } = DatePicker;
-let i = 1;
+const i = 1;
 
 const Editbookingpopup = (props) => {
   const { t } = useTranslation();
@@ -49,7 +49,6 @@ const Editbookingpopup = (props) => {
     setBooked,
     getData,
   } = props;
-  console.log(currentService);
   const [form] = Form.useForm();
   // const [test, setTest] = useState(false);
   // const [visible, setVisible] = useState(false);
@@ -59,7 +58,7 @@ const Editbookingpopup = (props) => {
   const [children1, setChildren1] = useState(0);
   const [children2, setChildren2] = useState(0);
   const [channelCommission, setChannelCommission] = useState(5);
-  const [panel, setPanel] = useState([1]);
+  // const [panel, setPanel] = useState([1]);
   const [serviceState, setServiceState] = useState([]);
   // const [arrValue, setArrValue] = useState(2);
   const [price, setPrice] = useState(0);
@@ -120,8 +119,8 @@ const Editbookingpopup = (props) => {
         depositType: editBookingValues.depositType,
       });
       // setGuest(editCurrentGuest);
-      if (editCurrentGuest.length) {
-        editCurrentGuest.forEach((el) => {
+      if (editCurrentGuest && editCurrentGuest.length) {
+        editCurrentGuest.forEach((el, i) => {
           form.setFieldsValue({
             [`fullName${i}`]: el.fullname,
             [`email${i}`]: el.email,
@@ -193,12 +192,6 @@ const Editbookingpopup = (props) => {
   // const Cancel = () => {
   //   setVisible(false);
   // };
-
-  const addMore = () => {
-    i += 1;
-    setEditCurrentGuest(editCurrentGuest.concat([{}]));
-    setPanel([...panel, i]);
-  };
 
   const addMoreService = async () => {
     // if (currentService.length) {
@@ -467,16 +460,32 @@ const Editbookingpopup = (props) => {
     setNight(day);
   };
 
-  const removePanel = (e) => {
-    const id = e.currentTarget.parentNode.getAttribute('data-key');
-    editCurrentGuest.forEach((el, j) => {
-      if (parseInt(id, 10) === j) {
-        setDeleteGuestId(el.id);
-      }
-    });
+  const addMore = () => {
+    if (editCurrentGuest && editCurrentGuest.length > 0) {
+      let i;
+      editCurrentGuest.forEach((el) => {
+        i = el.id;
+      });
+      setEditCurrentGuest(editCurrentGuest.concat([{ id: i + 1 }]));
+    }
+    // i += 1;
+    // setEditCurrentGuest(editCurrentGuest.concat([{}]));
+    // setPanel([...panel, i]);
+  };
 
-    const data0 = editCurrentGuest.filter((el, j) => j !== parseInt(id, 10));
-    setEditCurrentGuest([...data0]);
+  const removePanel = (panel) => {
+    setDeleteGuestId(panel.id);
+    const data = editCurrentGuest.filter((el) => el.id !== panel.id);
+    setEditCurrentGuest([...data]);
+    // const id = e.currentTarget.parentNode.getAttribute('data-key');
+    // editCurrentGuest.forEach((el, j) => {
+    //   if (parseInt(id, 10) === j) {
+    //     setDeleteGuestId(el.id);
+    //   }
+    // });
+    // const data0 = editCurrentGuest.filter((el, j) => j !== parseInt(id, 10));
+    // console.log('data0', data0);
+    // setEditCurrentGuest([...data0]);
   };
 
   const handleRemoveEditServicePanel = (ele) => {
@@ -711,7 +720,7 @@ const Editbookingpopup = (props) => {
                               <Form.Item
                                 id={el.id}
                                 label={t('strings.email')}
-                                name={`email${i}`}
+                                name={`email${j}`}
                                 style={{ paddingRight: 20 }}
                               >
                                 <Input type="email" />
@@ -722,7 +731,7 @@ const Editbookingpopup = (props) => {
                               <Form.Item
                                 id={el.id}
                                 label={t('strings.country')}
-                                name={`country${i}`}
+                                name={`country${j}`}
                                 style={{ paddingRight: 20 }}
                               >
                                 <Select showSearch>
@@ -743,7 +752,7 @@ const Editbookingpopup = (props) => {
                             <Col span={6}>
                               <Form.Item
                                 label={t('strings.phone')}
-                                name={`phone${i}`}
+                                name={`phone${j}`}
                                 style={{ paddingRight: 20 }}
                               >
                                 <Input
@@ -755,7 +764,7 @@ const Editbookingpopup = (props) => {
                               </Form.Item>
                             </Col>
 
-                            <Col span={24}>
+                            {/* <Col span={24}>
                               <div className="additional-edit">
                                 <div>
                                   <EditOutlined />
@@ -763,11 +772,11 @@ const Editbookingpopup = (props) => {
                                   Edit/Additional Data
                                 </div>
                               </div>
-                            </Col>
+                            </Col> */}
                           </Row>
 
                           <div className="delete-data" data-key={i}>
-                            <DeleteOutlined onClick={(e) => removePanel(e)} />
+                            <DeleteOutlined onClick={() => removePanel(el)} />
                           </div>
                         </div>
                       ))

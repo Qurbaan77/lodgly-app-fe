@@ -283,7 +283,7 @@ const App = () => {
                       path="/reset"
                       component={() => <Reset />}
                     />
-                    <LoginRoute
+                    <PrivateRoute
                       exact
                       path="/thankyou"
                       component={() => <Thankyou />}

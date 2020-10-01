@@ -370,8 +370,8 @@ const Rates = () => {
                           placeholder={t('rates.placeholder2')}
                           onSelect={handleCurrencySelect}
                         >
-                          <Select.Option value="usd">{t('rates.option1')}</Select.Option>
-                          <Select.Option value="eur">{t('rates.option2')}</Select.Option>
+                          <Select.Option value="USD">{t('rates.option1')}</Select.Option>
+                          <Select.Option value="EUR">{t('rates.option2')}</Select.Option>
                         </Select>
                       </Form.Item>
                     </Col>

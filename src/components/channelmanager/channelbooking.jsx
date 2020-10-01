@@ -4,7 +4,7 @@ import { Link, useHistory } from 'react-router-dom';
 import {
   Steps, Button, Alert, Select, Form, Input,
 } from 'antd';
-// import { toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import favicon from '../../assets/images/logo-mobile.png';
 import Wrapper from '../wrapper';
 import booking1 from '../../assets/images/channelmanager/booking-1.png';
@@ -12,9 +12,10 @@ import booking2 from '../../assets/images/channelmanager/booking-2.png';
 import booking3 from '../../assets/images/channelmanager/booking-3.png';
 import booking4 from '../../assets/images/channelmanager/booking-4.png';
 import booking5 from '../../assets/images/channelmanager/booking-5.png';
+import loader from '../../assets/images/cliploader.gif';
 
 import './channel.css';
-import { propertyInstance } from '../../axios/axiosconfig';
+import { channelInstance, propertyInstance } from '../../axios/axiosconfig';
 
 const { Step } = Steps;
 
@@ -172,24 +173,29 @@ const ChannelBookingForm = () => {
   const history = useHistory();
 
   const [properties, setProperties] = useState([]);
+  const [showLoader, setshowLoader] = useState(true);
+  // const [disbaleBtn, setDisableBtn] = useState(true);
 
-  const handleSubmit = async () => {
-    history.push('/thankyou');
-    // console.log(values);
-    // const res1 = await channelInstance.post('/checkRates', values);
-    // // console.log(res1);
-    // if (res1.data.code === 200) {
-    // //   console.log(res1.data.msg);
-    //   const res = await channelInstance.post('/activateChannel', values);
-    //   //   console.log(res);
-    //   if (res.data.code === 200) {
-    //     history.push('/thankyou');
-    //   }
-    // } else if (res1.data.code === 401) {
-    //   toast.error(res1.data.msg, { containerId: 'B' });
-    // } else {
-    //   toast.error('some error occured', { containerId: 'B' });
-    // }
+  const handleSubmit = async (values) => {
+    setshowLoader(false);
+    console.log(values);
+    const res1 = await channelInstance.post('/checkRates', values);
+    console.log(res1);
+    if (res1.data.code === 200) {
+      console.log(res1.data.msg);
+      const res = await channelInstance.post('/activateChannel', values);
+      console.log(res);
+      if (res.data.code === 200) {
+        setshowLoader(true);
+        history.push('/thankyou');
+      }
+    } else if (res1.data.code === 401) {
+      setshowLoader(true);
+      toast.error(res1.data.msg, { containerId: 'B' });
+    } else {
+      setshowLoader(true);
+      toast.error('some error occured', { containerId: 'B' });
+    }
   };
 
   //   function handleChange(value) {
@@ -210,18 +216,22 @@ const ChannelBookingForm = () => {
   return (
 
     <div className="channel-booking-form">
-
+      <div className="loader" hidden={showLoader}>
+        <div className="loader-box">
+          <img src={loader} alt="loader" />
+        </div>
+      </div>
       <Form onFinish={handleSubmit}>
-        <Form.Item label="Email" name="email">
+        <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please fill the email field' }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item label="Properties that you want to connect" name="properties">
+        <Form.Item label="Properties that you want to connect" name="properties" rules={[{ required: true, message: 'Please select the properties you want to map' }]}>
           <Select mode="multiple" style={{ width: '100%' }}>
             {
                 properties.map((property) => (
                   <Option
-                   //  value={property.propertyName}
+                    // value={property.propertyName}
                     label={property.propertyName}
                     key={property.id}
                   >
@@ -231,7 +241,7 @@ const ChannelBookingForm = () => {
             }
           </Select>
         </Form.Item>
-        <Form.Item>
+        <Form.Item className="submit-btn">
           <Button type="primary" htmlType="submit">
             Submit
           </Button>

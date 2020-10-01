@@ -41,7 +41,7 @@ import propertyplace from '../../assets/images/property-placeholder.png';
 import nobooking from '../../assets/images/no-booking.png';
 import AdInvoicePopup from './addinvoicepopup';
 import EditInvoicePopup from './editInvoicePopup';
-import { userInstance } from '../../axios/axiosconfig';
+import { propertyInstance, userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 import UserLock from '../userlock/userlock';
 import CreateProperty from '../property/createProperty';
@@ -206,9 +206,10 @@ const Invoice = () => {
       setInvoiceItems(inb.data.invoiceItems);
       setPage(false);
     }
-    const res = await userInstance.post('/fetchProperty', {
+    const res = await propertyInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
+    console.log(res);
     if (res.data.code === 200) {
       setLoading(false);
       setPropertyInfo(res.data.propertiesData);
@@ -243,7 +244,7 @@ const Invoice = () => {
   useEffect(() => {
     setTopNavId(parseInt(localStorage.getItem('topNavId'), 10));
     const data = propertyInfo.filter(
-      (property) => property.id === parseInt(localStorage.getItem('topNavId'), 10),
+      (property) => property.propertyId === parseInt(localStorage.getItem('topNavId'), 10),
     );
     setCurrentPropertyInfo(data);
   }, [topNavId, propertyInfo]);
