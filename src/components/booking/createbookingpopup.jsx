@@ -694,6 +694,15 @@ const CreateBookingPopup = (props) => {
 
   const update = useUpdate();
 
+  // const handleServiceName = (value, i) => {
+  //   servicePanel.forEach((el, j) => {
+  //     if (i === j) {
+  //       el.serviceName = value;
+  //     }
+  //   });
+  //   setServicePanel(servicePanel);
+  // };
+
   const handleServiceQuantity = (e, ele, i) => {
     servicePanel.forEach((el, j) => {
       if (i === j) {
@@ -1462,7 +1471,7 @@ const CreateBookingPopup = (props) => {
                               <Select
                                 style={{ width: '100px' }}
                                 placeholder={t('bookingpop.rule7')}
-                                onSelect={(value) => onSelectServices(value, ele, i)}
+                                onSelect={(value) => onSelectServices(value, i)}
                               >
                                 {serviceData.map((element) => (
                                   <Select.Option value={element.serviceName}>

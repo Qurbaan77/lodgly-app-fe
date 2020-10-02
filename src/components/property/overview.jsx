@@ -77,7 +77,6 @@ const Overview = () => {
     const response = await propertyInstance.post('/fetchUnittypeData', {
       unitTypeV2Id: localStorage.getItem('unitTypeV2Id'),
     });
-    console.log(response);
     if (response.data.code === 200 && response.status !== 204) {
       const data = response.data.unitTypeV2Data[0];
       if (data && data.unitsData) {

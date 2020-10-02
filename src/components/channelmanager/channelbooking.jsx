@@ -3,6 +3,8 @@ import Helmet from 'react-helmet';
 import { Link, useHistory } from 'react-router-dom';
 import {
   Steps, Button, Alert, Select, Form, Input,
+   Row,
+  Col,
 } from 'antd';
 import { toast } from 'react-toastify';
 import favicon from '../../assets/images/logo-mobile.png';
@@ -36,13 +38,15 @@ const ChannelBooking = () => {
 
   return (
     <Wrapper>
-
       <Helmet>
         <link rel="icon" href={favicon} />
         <title>
           Lodgly - Comprehensive Vacation Rental Property Management
         </title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
         <body className="channel-booking-page-view" />
       </Helmet>
 
@@ -53,16 +57,18 @@ const ChannelBooking = () => {
           ))}
         </Steps>
         <div className="steps-content">{steps[current].content}</div>
-        <div className="steps-action">
+        <div className="steps-action1 previous">
           {current > 0 && (
             <Button
               style={{ margin: '0 8px' }}
               onClick={() => setCurrent(current - 1)}
+              className=""
             >
               Previous
             </Button>
           )}
-
+        </div>
+        <div className="steps-action ">
           {current < steps.length - 1 && (
             <Button type="primary" onClick={() => setCurrent(current + 1)}>
               Continue
@@ -78,7 +84,6 @@ const ChannelBooking = () => {
           )} */}
         </div>
       </div>
-
     </Wrapper>
   );
 };
@@ -86,9 +91,7 @@ const ChannelBooking = () => {
 export default ChannelBooking;
 
 const ChannelBookingContent = () => (
-
   <div className="channel-booking-content">
-
     <h2>Booking.com</h2>
     <p>Guide to connect and map booking.com to Channex</p>
 
@@ -103,28 +106,40 @@ const ChannelBookingContent = () => (
       type="info"
       showIcon
     />
-
-    <img src={booking1} alt="Booking" />
+    <Row>
+      <Col span={3} />
+      <Col span={18}>
+        <img src={booking1} alt="Booking" />
+      </Col>
+      <Col span={3} />
+    </Row>
 
     <p>
-      Copy the property code at the top
-      of the navigation, you will need this later inside
-      Channex to connect the account
+      Copy the property code at the top of the navigation, you will need this
+      later inside Channex to connect the account
     </p>
     <p>
       Click on Account
-      {'>'}
-      {' '}
-      Connectivity Provider
+      {'>'} Connectivity Provider
     </p>
 
     <h3>Choose Provider Screen</h3>
-
+     <Row>
+      <Col span={3} />
+      <Col span={18}>
     <img src={booking2} alt="Booking" />
-
+     </Col>
+     <Col span={3} />
+     </Row>
     <p>Click on &quot;Search&quot;</p>
-
-    <img src={booking3} alt="Booking" />
+      <Row>
+        <Col span={3} />
+        <Col span={18} >
+           <img src={booking3} alt="Booking" />
+        </Col>
+        <Col span={3} />
+      </Row>
+   
 
     <p>Type &quot;Channex&quot; and it will find Channex.io on the list.</p>
 
@@ -133,39 +148,51 @@ const ChannelBookingContent = () => (
       type="error"
       showIcon
     />
-
-    <img src={booking4} alt="Booking" />
-
+     <Row>
+        <Col span={3} />
+        <Col span={18} >
+       <img src={booking4} alt="Booking" />
+         </Col>
+          <Col span={3} />
+          </Row>
     <p>
-      Once channex is selected on the
-      list it will show the summary box,
-      just click &quot;Next&quot;
+      Once channex is selected on the list it will show the summary box, just
+      click &quot;Next&quot;
     </p>
 
     <h3>Agree the XML Service Agreement</h3>
-
+   <Row>
+        <Col span={3} />
+        <Col span={18} >
     <img src={booking5} alt="Booking" />
-
+    </Col>
+       <Col span={3} />
+       </Row>
     <p>
-      Click on the checkbox to agree the
-      terms and conditions and then the
+      Click on the checkbox to agree the terms and conditions and then the
       &quot;Yes, I accept&quot; button.
     </p>
 
     <p>No other things needs to be done or completed on this form</p>
+   <Row>
+     <Col span={3} />
+        <Col span={18} >
+          <img src={booking5} alt="Booking" />
+        </Col>
+        <Col span={3} />
+   </Row>
+   
 
-    <img src={booking5} alt="Booking" />
-
-    <p>Now you will be in a waiting status, until Channex accepts the connection</p>
+    <p>
+      Now you will be in a waiting status, until Channex accepts the connection
+    </p>
 
     <Alert
       description="You can go to map the property in Channex immediately even though Channex has not accepted the property yet. But at this stage you cannot go live (just mapping)"
       type="info"
       showIcon
     />
-
   </div>
-
 );
 
 const ChannelBookingForm = () => {
@@ -221,6 +248,7 @@ const ChannelBookingForm = () => {
           <img src={loader} alt="loader" />
         </div>
       </div>
+    
       <Form onFinish={handleSubmit}>
         <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please fill the email field' }]}>
           <Input />

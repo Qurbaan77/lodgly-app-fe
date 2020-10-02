@@ -91,9 +91,16 @@
 }
 
 .steps-action {
-    padding-top: 50px;
+       padding-top: 50px;
+       margin-top:150px!important;
     text-align: center;
+}
+.previous{
+      padding-top: 0px!important;
+    margin-top: -123px!important;
+    text-align: left!important;
 }
 .submit-btn{
     text-align: right;
+        margin-top: 50px;
 }

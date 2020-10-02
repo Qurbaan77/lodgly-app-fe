@@ -62,7 +62,7 @@ const AlertBox = () => {
             type="warning"
             showIcon
             closable
-            onClose={handleClose}
+            onClose={() => handleClose}
           />
         </div>
       ) : (

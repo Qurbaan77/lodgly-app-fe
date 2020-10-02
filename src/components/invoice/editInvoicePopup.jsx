@@ -95,7 +95,7 @@ const EditInvoicePopup = (props) => {
       setVatId(invoiceData.vat);
       setAddress(invoiceData.address);
       // setItemState(invoiceItems);
-      if (invoiceItems.length) {
+      if (invoiceItems && invoiceItems.length) {
         invoiceItems.forEach((el, i) => {
           form.setFieldsValue({
             [`itemDescription${i}`]: el.itemDescription,
