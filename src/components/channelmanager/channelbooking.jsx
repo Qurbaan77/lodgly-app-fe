@@ -205,6 +205,7 @@ const ChannelBookingForm = () => {
 
   const handleSubmit = async (values) => {
     setshowLoader(false);
+    values.channelToMap = 'booking.com';
     const res1 = await channelInstance.post('/checkRates', values);
     if (res1.data.code === 200) {
       const res = await channelInstance.post('/activateChannel', values);
