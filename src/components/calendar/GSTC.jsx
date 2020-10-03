@@ -1,31 +1,37 @@
-import React, { useCallback, useEffect } from 'react';
+import React, {
+  useCallback, useEffect, useRef,
+} from 'react';
 import './calendar.css';
 import PropTypes from 'prop-types';
 import GSTC from 'gantt-schedule-timeline-calendar';
 import 'gantt-schedule-timeline-calendar/dist/style.css';
 
 export { GSTC };
-let gstc;
-export default function GSTCWrapper({ config, onState }) {
-  const state = GSTC.api.stateFromConfig(config);
-  onState(state);
-
+export default function GSTCWrapper({ config, onLoad, previousMonth }) {
+  const gstc = useRef(null);
+  const mounted = useRef(false);
   const callback = useCallback(
     (node) => {
-      if (node) {
-        // @ts-ignore
-        gstc = GSTC({
-          element: node,
-          state,
+      if (node && !mounted.current) {
+        node.addEventListener('gstc-loaded', () => {
+          onLoad(gstc.current);
         });
+        gstc.current = GSTC({
+          element: node,
+          state: config.current
+            ? GSTC.api.stateFromConfig(config.current)
+            : GSTC.api.stateFromConfig(config),
+        });
+        mounted.current = true;
       }
     },
-    [state],
+    [config, onLoad, previousMonth],
   );
 
   useEffect(() => () => {
     if (gstc) {
-      // gstc.app.destroy();
+      // console.log('Taureet Sir', gstc);
+      // gstc.current.destroy();
     }
   },
   []);
@@ -39,9 +45,11 @@ GSTCWrapper.propTypes = {
     PropTypes.object,
     PropTypes.array,
   ]),
-  onState: PropTypes.func,
+  onLoad: PropTypes.func,
+  previousMonth: PropTypes.func,
 };
 GSTCWrapper.defaultProps = {
   config: {},
-  onState: () => {},
+  onLoad: () => {},
+  previousMonth: () => {},
 };

@@ -524,6 +524,15 @@
 .gstc__chart-timeline-grid-row-cell.current {
   background: rgba(0, 104, 255, 0.1);
 }
+.gstc__chart-timeline-grid-row-cell.gstc__selecting {
+  background: rgba(0, 104, 255, 0.1) !important;
+}
+.gstc__chart-timeline-grid-row-cell.gstc__selected {
+  background: rgba(0, 104, 255, 0.1) !important;
+}
+.gstc__chart-timeline-grid-row-cell.current {
+  background: rgba(0, 104, 255, 0.1);
+}
 .gstc__chart-timeline-grid-row-cell--content {
   line-height: 28px;
   color: #78787a;
@@ -548,8 +557,65 @@
   border-bottom: 1px solid rgba(147, 158, 185, 0.3);
 }
 
+.gstc__list-column-header--search {
+  color: #000;
+  padding: 0;
+  height: auto;
+  margin: 0;
+  border-top: none;
+}
+
+.gstc__list-column-header-content .gstc__list-column-row-expander-toggle {
+  padding-left: 0;
+  background: #fff;
+}
+
+.gstc__list-column-header-resizer-dots.gstc__list-column-header-resizer-dots--label {
+  padding: 0;
+}
+
+.gstc__chart-calendar-date-content.gstc__chart-calendar-date-content--month.gstc-current {
+  padding: 5px 10px;
+}
+
+.year-select .ant-btn {
+  border: none;
+  color: #f9b42b;
+  box-shadow: none;
+}
+
 @media screen and (min-width: 1367px) {
   .calendar-calendar {
     max-width: 1400px;
   }
+}
+/* .calendar-btn{
+  display: flex;
+} */
+.year-select{
+  text-align: right;
+  margin-top: -50px;
+}
+.year-btn{
+  color: #f9b42b!important;
+  background-color: #fbfbfc;
+}
+.year-btn:hover{
+  color: #f9b42b!important;
+  background-color: #fbfbfc;
+}
+.year-btn::focus{
+  color: #f9b42b!important;
+  background-color: #fbfbfc;
+}
+.year-btn span{
+  color: #f9b42b!important;
+  
+}
+.year-btn:hover, .year-btn:focus{
+  color: #f9b42b!important;
+  background-color: #fbfbfc;
+  border: none!important;
+  outline: none!important;
+  
 }

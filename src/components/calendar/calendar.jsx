@@ -1,7 +1,9 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-alert */
-import React, { useEffect, useState, useCallback } from 'react';
+import React, {
+  useEffect, useState, useCallback, useRef,
+} from 'react';
 import Helmet from 'react-helmet';
 import './calendar.css';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
@@ -15,13 +17,14 @@ import { Plugin as TimelinePointer } from 'gantt-schedule-timeline-calendar/dist
 import { Plugin as CalendarScroll } from 'gantt-schedule-timeline-calendar/dist/plugins/calendar-scroll.esm.min';
 import { Plugin as HighlightWeekends } from 'gantt-schedule-timeline-calendar/dist/plugins/highlight-weekends.esm.min';
 import { Plugin as TimeBookmarks } from 'gantt-schedule-timeline-calendar/dist/plugins/time-bookmarks.esm.min';
-
+import { Plugin as Selection } from 'gantt-schedule-timeline-calendar/dist/plugins/selection.esm.min';
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
 import CreateProperty from '../property/createProperty';
 import loader from '../../assets/images/cliploader.gif';
 import propertyplace from '../../assets/images/property-placeholder.png';
 import GSTCWrapper from './GSTC';
+// import GSTCWrapperV2 from './GSTCV2';
 import {
   userInstance,
   reservationInstance,
@@ -29,6 +32,7 @@ import {
 } from '../../axios/axiosconfig';
 import AddReservation from './addreservation';
 import GroupReservation from './groupreservation';
+import Reservation from './reservation';
 import favicon from '../../assets/images/logo-mobile.png';
 
 const Calendar = () => {
@@ -49,10 +53,11 @@ const Calendar = () => {
   const [{ calendarWrite, userId }] = userCred || [{}];
   const canWrite = calendarWrite;
   const [unitTypes, setUnitTypes] = useState([]);
-
-  // const { GSTCID } = GSTC.api;
-
-  const formatToId = (ids) => GSTC.api.GSTCID(ids.join('-'));
+  const [calendarBookingDate, setCalendarBookingDate] = useState([]);
+  const [GSTCobj, setGSTCobj] = useState({});
+  const [currentDate, setCurrenData] = useState(GSTC.api.date().format('MMMM YYYY'));
+  const [visibleResrevation, setVisibleResrevation] = useState(false);
+  const formatToId = (ids) => GSTC.api.GSTCID(ids.toString());
   const rows = {};
   const items = {};
   const rates = {};
@@ -64,7 +69,7 @@ const Calendar = () => {
 
     rows[unitTypeId] = {
       id: unitTypeId,
-      label: unitType.name.filter((e) => e.lang === 'en').map((name) => name.name),
+      label: ({ vido: { html } }) => unitType.name.filter((e) => e.lang === 'en').map((name) => html`<strong>${name.name}</strong>`),
       meta: {
         id: unitType.id,
         context,
@@ -134,15 +139,31 @@ const Calendar = () => {
       label: 'Now',
     },
   };
+
   const config = {
     licenseKey:
       '====BEGIN LICENSE KEY====\nPSrbPlWbN+L6Q8B4bFCeEDK7VBbGc3TYF3jktFHPhMkV88gAPVJskFHl7pb74RLyOWGaVU+OPmYSObp6YGRMdp2vd5h/xw1DCliYFwvQfjGxAToTFIKZLP2DhtHb1l7M8NBrH5ddx5ObRt+BC6NG7kkkyeHgcYpl8pXDcN/7g4Bkx/ftb9U+FJmQtMabRm/hrwR/816M17Q+7z/1txlUHU1k44+bEdFRrthxUWU1qHfS1SV5mpGln45VTEXUWgFSa5rEd1OOmQlpN+iFRa9ccUx/QhigyPIDnLa67QrqwHg9QK7S0wpVmRCDTwOFUEDlxv5hQ8/B3jc99qti+AaYlw==||U2FsdGVkX1/xP3UKRdywvlLBAtCno8MP87jBvymNPreULM/q7jTnfPPRJOd8WH6MpHdxqtek3Tel3140YqKx9XemBzb3UJg/Gy5JQBQlla3KCq4lQl6Oup4HMFKTFy+n7Vzqex0DDeFEhQ+JDvNe7T4Ujc9YE8d0HdBlVMRKNvRRm3z8SVMzs0C5tXJ4C2dn\nAvm4yWPjVHzPAJgPDQwN3k07gYJ1CL0yj9zkB4+urvvyfBDat3+CM/ZrLrO4ec+ywXqD3fYTSp1RrAoyyXT0x7DXT7hRbN4OyV5u7u8CeTsFP53qXAdm5ficGxDu9ewLEPse/Qzj8LZ3aN8OwtweUpDRw/LbOeWajgeXHaWPpZ0lsEwoHmfTuyyYE7wMKgL23wDjRBVn6tcnkG5+J6KOpJtiXBbPW+o8L0wHVrCgF7qBOwC2LV/KKv+SZysKU0zfWr9fOAuNgTqxR4WRXGIXiBu30zo8qzWwKKE6QTUVV+15duG+H8d8wtkuZ4X8idGWlewE2y9afufPCxxKnQTguQ==\n====END LICENSE KEY====',
     plugins: [
       HighlightWeekends(),
       TimelinePointer(),
-      // Selection(),
-      ItemMovement(),
+      Selection({
+        items: true,
+        showOverlay: false,
+        onSelected: (selected, last) => {
+          console.log('onSelect', { selected, last });
+          setCalendarBookingDate(selected);
+          return selected;
+        },
+        // events: {
+        //   onEnd: (selected, last) => {
+        //     console.log('onSelect', { selected, last });
+        //     setCalendarBookingDate(selected);
+        //     return last;
+        //   },
+        // },
+      }),
       ItemResizing(),
+      ItemMovement(),
       CalendarScroll(),
       TimeBookmarks({
         bookmarks,
@@ -170,7 +191,9 @@ const Calendar = () => {
             width: 160,
             minWidth: 120,
             header: {
-              content: 'Select unit types',
+              content: ({ vido: { html } }) => html`<div class="gstc__list-column-header--search">
+                  Select unit types
+                </div>`,
             },
           },
         },
@@ -239,7 +262,6 @@ const Calendar = () => {
                 let count = 0;
                 for (const itemId in items) {
                   const item = items[itemId];
-
                   if (row.$data.children.includes(item.rowId)) {
                     if (
                       (item.time.start >= time.leftGlobal
@@ -272,9 +294,60 @@ const Calendar = () => {
   };
 
   const subs = [];
-  useEffect(() => {
+  const calendarRenderFunction = () => {
     subs.forEach((unsub) => unsub());
-  });
+  };
+
+  useEffect(() => {
+    calendarRenderFunction();
+  }, [unitTypes]);
+
+  function onLoad(gstc) {
+    setGSTCobj(gstc);
+    if (JSON.stringify(rows) !== '{}') {
+      subs.push(
+        gstc.state.subscribe('config.chart.items', (items) => {
+          console.log('items changed', items);
+        }),
+      );
+      subs.push(
+        gstc.state.subscribe('config.list.rows', (rows) => {
+          console.log('rows changed', rows);
+        }),
+      );
+    }
+  }
+
+  const previousMonth = () => {
+    console.log('currentDate', currentDate);
+    if (!GSTCobj.state) return;
+    let date;
+    GSTCobj.state.update('config.chart.time', (time) => {
+      date = GSTC.api.date(time.from).subtract(1, 'month').startOf('day');
+      setCurrenData(date.format('MMMM YYYY'));
+      return {
+        ...time,
+        from: date.valueOf(),
+        to: date.add(12, 'month').endOf('day').valueOf(),
+      };
+    });
+    GSTCobj.api.scrollToTime(date.valueOf());
+  };
+
+  const nextMonth = () => {
+    if (!GSTCobj.state) return;
+    let date;
+    GSTCobj.state.update('config.chart.time', (time) => {
+      date = GSTC.api.date(time.from).add(1, 'month').endOf('day');
+      setCurrenData(date.format('MMMM YYYY'));
+      return {
+        ...time,
+        from: date.valueOf(),
+        to: date.add(12, 'month').endOf('day').valueOf(),
+      };
+    });
+    GSTCobj.api.scrollToTime(date.valueOf());
+  };
 
   const getProperty = useCallback(async () => {
     const response = await userInstance.post('/fetchProperty', {
@@ -311,6 +384,7 @@ const Calendar = () => {
         affiliateId: userId,
       },
     );
+    console.log('response', response);
     if (response.data.code === 200) {
       if (response.data.data && response.data.data.length > 0) {
         setLoading(false);
@@ -319,10 +393,15 @@ const Calendar = () => {
     }
   }, [userId]);
 
+  // useEffect(() => {
+  //   getCalendarData();
+  // }, [getCalendarData]);
+
   useEffect(() => {
+    onLoad();
     getData();
-    getProperty();
     getCalendarData();
+    getProperty();
   }, [getData, getProperty, getCalendarData]);
 
   const show = () => {
@@ -346,26 +425,6 @@ const Calendar = () => {
   const closeCreateProperty = () => {
     setVisibleProperty(false);
   };
-
-  function onState(state) {
-    state.subscribe('config.list.rows', (rows) => {
-      console.log('[DEBUG] rows changed', rows);
-    });
-
-    state.subscribe(
-      'config.chart.items.:id',
-      (bulk, eventInfo) => {
-        if (eventInfo.type === 'update' && eventInfo.params.id) {
-          const itemId = eventInfo.params.id;
-          console.log(
-            `[DEBUG] item ${itemId} changed`,
-            state.get(`config.chart.items.${itemId}`),
-          );
-        }
-      },
-      { bulk: true },
-    );
-  }
 
   const btn = isSubUser && canWrite ? (
     <>
@@ -428,25 +487,8 @@ const Calendar = () => {
     };
     const response = await propertyInstance.post('/getUnittype', values);
     console.log(response.data.unittypeData);
-    // const { unittypeData } = response.data;
     if (response.data.code === 200) {
-      // response.data.unittypeData.forEach((element) => {
-      //   setData(JSON.parse(element.unitsData) || []);
-      // });
       setData(response.data.unittypeData);
-      // unittypeData.forEach((el) => {
-      //   let sum = 0;
-      //   const arr = [];
-      //   units.forEach((ele) => {
-      //     if (el.id === ele.unittypeId) {
-      //       sum += 1;
-      //       arr.push(ele.id);
-      //     }
-      //   });
-      //   el.noOfUnits = sum;
-      //   el.units = arr;
-      // });
-      // setData(JSON.parse(unittypeData[0].unitsData));
     }
   }, [topNavId, userId]);
 
@@ -550,19 +592,38 @@ const Calendar = () => {
               {topNavId ? enableButton : disabledButton}
             </>
           )}
+          <div className="year-select">
+            <Button className="year-btn" onClick={previousMonth}>❮</Button>
+            <span>
+              {currentDate}
+            </span>
+            <Button className="year-btn" onClick={nextMonth}>❯</Button>
+          </div>
         </div>
 
         <div className="calendar-calendar">
-          <GSTCWrapper config={config} onState={onState} />
+          {JSON.stringify(rows) !== '{}' ? (
+            <GSTCWrapper config={config} onLoad={onLoad} />
+          )
+            : (
+              <></>
+            )}
+          {/* <GSTCWrapper config={config} onLoad={onLoad} /> */}
         </div>
+
+        {/* <div className="calendar-calendar">
+            <GSTCWrapperV2 />
+        </div> */}
 
         <AddReservation
           title={t('addreservation.heading34')}
           visible={visible}
+          setVisible={setVisible}
           onOk={handleOk}
           close={handleCancel}
           wrapClassName="create-booking-modal"
           getData={getData}
+          calendarBookingDate={calendarBookingDate}
         />
 
         <GroupReservation
@@ -573,6 +634,10 @@ const Calendar = () => {
           userData={userData}
           data={data}
           getData={getData}
+        />
+
+        <Reservation
+          calendarBookingDate={calendarBookingDate}
         />
       </div>
     </Wrapper>

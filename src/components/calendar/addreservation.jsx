@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import moment from 'moment';
-// import { useHistory } from 'react-router-dom';
 import {
   Form,
   Select,
@@ -25,7 +24,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
 import { toast } from 'react-toastify';
-import { userInstance, reservationInstance } from '../../axios/axiosconfig';
+import { userInstance, reservationInstance, propertyInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
 
@@ -36,7 +35,7 @@ let j = 1;
 const AddReservation = (props) => {
   const { t } = useTranslation();
   const {
-    getData, close, visible, handleOk,
+    getData, close, visible, setVisible, handleOk, calendarBookingDate,
   } = props;
   const [form] = Form.useForm();
   // const [visible1, setVisible1] = useState(false);
@@ -132,6 +131,33 @@ const AddReservation = (props) => {
     setServicePanel([...oldarray]);
   };
 
+  useEffect(() => {
+    if (Object.values(calendarBookingDate).length > 0) {
+      if (Object.values(calendarBookingDate)[0].length > 0) {
+        setVisible(true);
+        const selectedDates = Object.values(calendarBookingDate)[0];
+        const propertyId = selectedDates[0].row.parentId.split(',')[1];
+        const unitName = selectedDates[0].row.label;
+        const lastElement = selectedDates.length;
+        const m1 = moment(selectedDates[0].time.leftGlobal);
+        const m2 = moment(selectedDates[lastElement - 1].time.leftGlobal);
+        const diff = Math.abs(m1 - m2);
+        const day = Math.floor(diff / (24 * 60 * 60 * 1000));
+        setNight(day);
+        const unitTypeName = propertyData
+          .filter((el) => el.id === parseInt(propertyId, 10))
+          .map((filter) => filter.unitTypeName);
+        form.setFieldsValue({
+          groupname: [m1, m2],
+          property: unitTypeName[0]
+            .filter((e) => e.lang === 'en')
+            .map((name) => name.name),
+          // unit: unitName,
+        });
+      }
+    }
+  }, [calendarBookingDate]);
+
   const onFinish = async (values) => {
     values.perNight = price;
     values.nights = night;
@@ -179,7 +205,7 @@ const AddReservation = (props) => {
     const response = await reservationInstance.post('/addReservation', values);
     if (response.data.code === 200) {
       getData();
-      close();
+      window.location.reload();
       toast.success('successfully added reservation', { containerId: 'B' });
     } else {
       toast.error('server error please try again', { containerId: 'B' });
@@ -193,7 +219,7 @@ const AddReservation = (props) => {
   // };
 
   const getPropertyData = useCallback(async () => {
-    const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
+    const response = await propertyInstance.post('/fetchProperty', { affiliateId: userId });
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
       setPropertyData(data);
@@ -215,7 +241,7 @@ const AddReservation = (props) => {
   const onSelectProperty = async (value, event) => {
     propertyData
       .filter((el) => el.id === parseInt(value, 10))
-      .map((filter) => setUnitData(JSON.parse(filter.unitType[0].unitsData) || []));
+      .map((filter) => setUnitData(filter.unitDataV2));
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
@@ -499,7 +525,11 @@ const AddReservation = (props) => {
                 onSelect={(value, event) => onSelectProperty(value, event)}
               >
                 {propertyData.map((el) => (
-                  <Select.Option value={el.id} key={el}>{el.propertyName}</Select.Option>
+                  <Select.Option value={el.id} key={el}>
+                    {el.unitTypeName
+                      .filter((e) => e.lang === 'en')
+                      .map((name) => name.name)}
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -521,8 +551,8 @@ const AddReservation = (props) => {
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => fun3(value, event)}
               >
-                {unitData.map((el, i) => (
-                  <Select.Option value={i}>{el}</Select.Option>
+                {unitData.map((el) => (
+                  <Select.Option value={el.id} key={el.id}>{el.unitName}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -1038,12 +1068,16 @@ AddReservation.propTypes = {
   handleOk: PropTypes.func,
   getData: PropTypes.func,
   visible: PropTypes.bool,
+  setVisible: PropTypes.bool,
+  calendarBookingDate: PropTypes.func,
 };
 AddReservation.defaultProps = {
   close: () => {},
   handleOk: () => {},
   getData: () => {},
   visible: false,
+  setVisible: false,
+  calendarBookingDate: () => {},
 };
 
 export default AddReservation;
