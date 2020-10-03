@@ -826,8 +826,9 @@
   "label22":"Services",
   "label23":"Property settings, invoice settings and channel manager settings",
   "label24":"Owner",
-  "label25":"Role"
- 
+  "label25":"Role",
+ "label26": "Channel Manager",
+ "label27": "connecting your properties to different channels like Airbnb, Booking.com, Expedia"
 },
 
 

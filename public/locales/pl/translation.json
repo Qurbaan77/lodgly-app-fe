@@ -870,8 +870,9 @@
   "label22":"Usługi",
   "label23":"Ustawienia usługi, ustawienia faktur i ustawienia channel managera",
   "label24":"Właściciel",
-  "label25":"Rola"
- 
+  "label25":"Rola",
+  "label26": "Channel Manager",
+  "label27": "łącząc swoje obiekty z różnymi kanałami, takimi jak Airbnb, Booking.com, Expedia"
 },
 
 

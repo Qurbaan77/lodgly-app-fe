@@ -3,7 +3,7 @@ import Helmet from 'react-helmet';
 import { Link, useHistory } from 'react-router-dom';
 import {
   Steps, Button, Alert, Select, Form, Input,
-   Row,
+  Row,
   Col,
 } from 'antd';
 import { toast } from 'react-toastify';
@@ -120,26 +120,27 @@ const ChannelBookingContent = () => (
     </p>
     <p>
       Click on Account
-      {'>'} Connectivity Provider
+      {'>'}
+      {' '}
+      Connectivity Provider
     </p>
 
     <h3>Choose Provider Screen</h3>
-     <Row>
+    <Row>
       <Col span={3} />
       <Col span={18}>
-    <img src={booking2} alt="Booking" />
-     </Col>
-     <Col span={3} />
-     </Row>
+        <img src={booking2} alt="Booking" />
+      </Col>
+      <Col span={3} />
+    </Row>
     <p>Click on &quot;Search&quot;</p>
-      <Row>
-        <Col span={3} />
-        <Col span={18} >
-           <img src={booking3} alt="Booking" />
-        </Col>
-        <Col span={3} />
-      </Row>
-   
+    <Row>
+      <Col span={3} />
+      <Col span={18}>
+        <img src={booking3} alt="Booking" />
+      </Col>
+      <Col span={3} />
+    </Row>
 
     <p>Type &quot;Channex&quot; and it will find Channex.io on the list.</p>
 
@@ -148,40 +149,39 @@ const ChannelBookingContent = () => (
       type="error"
       showIcon
     />
-     <Row>
-        <Col span={3} />
-        <Col span={18} >
-       <img src={booking4} alt="Booking" />
-         </Col>
-          <Col span={3} />
-          </Row>
+    <Row>
+      <Col span={3} />
+      <Col span={18}>
+        <img src={booking4} alt="Booking" />
+      </Col>
+      <Col span={3} />
+    </Row>
     <p>
       Once channex is selected on the list it will show the summary box, just
       click &quot;Next&quot;
     </p>
 
     <h3>Agree the XML Service Agreement</h3>
-   <Row>
-        <Col span={3} />
-        <Col span={18} >
-    <img src={booking5} alt="Booking" />
-    </Col>
-       <Col span={3} />
-       </Row>
+    <Row>
+      <Col span={3} />
+      <Col span={18}>
+        <img src={booking5} alt="Booking" />
+      </Col>
+      <Col span={3} />
+    </Row>
     <p>
       Click on the checkbox to agree the terms and conditions and then the
       &quot;Yes, I accept&quot; button.
     </p>
 
     <p>No other things needs to be done or completed on this form</p>
-   <Row>
-     <Col span={3} />
-        <Col span={18} >
-          <img src={booking5} alt="Booking" />
-        </Col>
-        <Col span={3} />
-   </Row>
-   
+    <Row>
+      <Col span={3} />
+      <Col span={18}>
+        <img src={booking5} alt="Booking" />
+      </Col>
+      <Col span={3} />
+    </Row>
 
     <p>
       Now you will be in a waiting status, until Channex accepts the connection
@@ -205,13 +205,9 @@ const ChannelBookingForm = () => {
 
   const handleSubmit = async (values) => {
     setshowLoader(false);
-    console.log(values);
     const res1 = await channelInstance.post('/checkRates', values);
-    console.log(res1);
     if (res1.data.code === 200) {
-      console.log(res1.data.msg);
       const res = await channelInstance.post('/activateChannel', values);
-      console.log(res);
       if (res.data.code === 200) {
         setshowLoader(true);
         history.push('/thankyou');
@@ -248,7 +244,7 @@ const ChannelBookingForm = () => {
           <img src={loader} alt="loader" />
         </div>
       </div>
-    
+
       <Form onFinish={handleSubmit}>
         <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please fill the email field' }]}>
           <Input />
