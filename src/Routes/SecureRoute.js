@@ -25,6 +25,8 @@ const [
     billingWrite,
     guestsRead,
     guestsWrite,
+    channelRead,
+    channelWrite,
   },
 ] = subUserCred || [{}];
 
@@ -34,7 +36,7 @@ export const SecureBooking = ({ component: Component, ...rest }) => (
     render={(props) => (bookingRead || bookingWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
+      <Redirect to="/notauthorize" />
     ))}
   />
 );
@@ -45,7 +47,7 @@ export const SecureCalendar = ({ component: Component, ...rest }) => (
     render={(props) => (calendarRead || calendarWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
+      <Redirect to="/notauthorize" />
     ))}
   />
 );
@@ -56,7 +58,7 @@ export const SecureProperty = ({ component: Component, ...rest }) => (
     render={(props) => (propertiesRead || propertiesWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
+      <Redirect to="/notauthorize" />
     ))}
   />
 );
@@ -67,7 +69,7 @@ export const SecureTeam = ({ component: Component, ...rest }) => (
     render={(props) => (teamRead || teamWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
+      <Redirect to="/notauthorize" />
     ))}
   />
 );
@@ -78,7 +80,7 @@ export const SecureOwner = ({ component: Component, ...rest }) => (
     render={(props) => (ownerRead || ownerWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
+      <Redirect to="/notauthorize" />
     ))}
   />
 );
@@ -89,7 +91,7 @@ export const SecureInvoice = ({ component: Component, ...rest }) => (
     render={(props) => (invoicesRead || invoicesWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
+      <Redirect to="/notauthorize" />
     ))}
   />
 );
@@ -99,7 +101,7 @@ export const SecureService = ({ component: Component, ...rest }) => (
     render={(props) => (serviceRead || serviceWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
+      <Redirect to="/notauthorize" />
     ))}
   />
 );
@@ -110,7 +112,7 @@ export const SecureStats = ({ component: Component, ...rest }) => (
     render={(props) => (statsRead || statsWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
+      <Redirect to="/notauthorize" />
     ))}
   />
 );
@@ -121,7 +123,7 @@ export const SecureBilling = ({ component: Component, ...rest }) => (
     render={(props) => (billingRead && billingWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
+      <Redirect to="/notauthorize" />
     ))}
   />
 );
@@ -132,7 +134,7 @@ export const SecureGuests = ({ component: Component, ...rest }) => (
     render={(props) => (guestsRead && guestsWrite ? (
       <Component {...props} {...rest} />
     ) : (
-      <Redirect to="/" />
+      <Redirect to="/notauthorize" />
     ))}
   />
 );
@@ -142,13 +144,31 @@ export const SecureOverview = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={(props) => (token && localStorage.getItem('propertyV2Id') ? (
+      render={(props) => (token && localStorage.getItem('unitTypeV2Id') ? (
         <Component {...props} {...rest} />
       ) : (
         <Redirect to="/propertylist" />
       ))}
     />
   );
+};
+export const SecureChannel = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) => (channelRead && channelWrite ? (
+      <Component {...props} {...rest} />
+    ) : (
+      <Redirect to="/notauthorize" />
+    ))}
+  />
+);
+
+SecureChannel.propTypes = {
+  component: PropTypes.func,
+};
+
+SecureChannel.defaultProps = {
+  component: () => {},
 };
 
 SecureOverview.propTypes = {

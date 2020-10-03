@@ -270,8 +270,12 @@ const GroupReservation = (props) => {
                   <Col span={6}>
                     <h3>Units</h3>
                     <div className="unit-boxes">
-                      <p>{el}</p>
-                      <h5>Available: 1</h5>
+                      <p>{el.unitTypeName}</p>
+                      <h5>
+                        Available:
+                        {' '}
+                        {el.unitsData ? el.unitsData.length : 0}
+                      </h5>
                     </div>
                   </Col>
                   <Col span={6}>

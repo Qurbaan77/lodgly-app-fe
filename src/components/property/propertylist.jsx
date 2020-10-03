@@ -65,16 +65,9 @@ const PropertyList = () => {
     const response = await propertyInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
-    // const data2 = [];
     const data = response.data.propertiesData;
-    // data
-    //   .filter((el) => el.id === parseInt(topNavId, 10))
-    //   .forEach((filterData) => {
-    //     data2.push(filterData);
-    //   });
     if (response.data.code === 200) {
       setLoading(false);
-      // setPropertyData(data2.length > 0 ? data2 : data);
       setPropertyData(data);
     }
     await userInstance.get('/getSubscriptionStatus');
@@ -112,7 +105,7 @@ const PropertyList = () => {
 
   const handlePropertyClick = (id) => {
     // localStorage.setItem('propertyId', id);
-    localStorage.setItem('propertyV2Id', id);
+    localStorage.setItem('unitTypeV2Id', id);
     // history.push(`/overview/?pid=${id}`);
     history.push('/overview');
   };
@@ -221,7 +214,7 @@ const PropertyList = () => {
           <div className="property-list">
             {propertyData && propertyData.length > 0 ? (
               propertyData.map((el) => (
-                <div className="property">
+                <div className="property" key={el.id}>
                   <div className="property-edit-delete">
                     <Dropdown overlay={menu} trigger={['click']}>
                       <div className="ant-dropdown-link">
@@ -231,17 +224,22 @@ const PropertyList = () => {
                   </div>
                   <div
                     className="property-img-box"
-                    onClick={() => handlePropertyClick(el.id)}
+                    onClick={() => handlePropertyClick(el.propertyId)}
                     role="presentation"
                   >
                     <img src={el.image || property1} alt="property" />
                   </div>
                   <div
                     className="property-info"
-                    onClick={() => handlePropertyClick(el.id)}
+                    onClick={() => handlePropertyClick(el.propertyId)}
                     role="presentation"
                   >
-                    <h3>{el.unitTypeName}</h3>
+                    {/* <h3>{el.unitTypeName[0].name}</h3> */}
+                    {el.unitTypeName
+                      && el.unitTypeName
+                        .filter((e) => e.lang === 'en')
+                        .map((name) => <h3>{name.name}</h3>)}
+
                     <span>{el.created_at.split('T', 1)}</span>
                     <ul>
                       <li hidden>
@@ -254,7 +252,7 @@ const PropertyList = () => {
                       <li>
                         <img src={homeicon} alt="Unit" />
                         {' '}
-                        {el.unitsData ? JSON.parse(el.unitsData).length : 0}
+                        {el.units}
                         {' '}
                         {t('strings.unit')}
                       </li>

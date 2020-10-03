@@ -14,8 +14,11 @@ import {
   Modal,
   Row,
   Col,
+  Upload,
 } from 'antd';
-import { PlusOutlined, CloseOutlined } from '@ant-design/icons';
+import {
+  PlusOutlined, CloseOutlined, UploadOutlined,
+} from '@ant-design/icons';
 
 import moment from 'moment';
 import propertyIcon from '../../assets/images/menu/property-icon-orange.png';
@@ -23,6 +26,7 @@ import propertyIcon from '../../assets/images/menu/property-icon-orange.png';
 import deleteIcon from '../../assets/images/menu/delete-icon-red.png';
 import loader from '../../assets/images/cliploader.gif';
 import { userInstance } from '../../axios/axiosconfig';
+import { server } from '../../config/keys';
 
 const AdInvoicePopup = (props) => {
   const { t } = useTranslation();
@@ -55,6 +59,7 @@ const AdInvoicePopup = (props) => {
   const [impression, setImpression] = useState('');
   const [total, setTotal] = useState([0]);
   const [discountType, setDiscountType] = useState('%');
+  const [logoUrl, setLogoUrl] = useState('');
   useEffect(() => {
     const ddate = new Date();
     const ftime = `${ddate.getHours()}:${ddate.getMinutes()}:${ddate.getSeconds()}`;
@@ -98,10 +103,13 @@ const AdInvoicePopup = (props) => {
     valuesCopy.userEmail = userData[0].email;
     valuesCopy.email = email;
     valuesCopy.total = total.reduce((a, b) => a + (b || 0), 0);
-    valuesCopy.propertyName = property[0].propertyName;
+    valuesCopy.propertyName = property[0].unitTypeName[0].name;
     valuesCopy.propertyAddress = property[0].address;
     valuesCopy.website = property[0].website;
     valuesCopy.propertyId = property[0].id;
+    if (logoUrl) {
+      valuesCopy.logo = logoUrl;
+    }
     const { clientName } = valuesCopy;
     valuesCopy.impression = impression;
     valuesCopy.label = `INVOICE ${
@@ -267,6 +275,27 @@ const AdInvoicePopup = (props) => {
     });
     setPricePanel(pricePanel);
   };
+  const organizationid = localStorage.getItem('organizationid');
+  const unitTypeV2Id = localStorage.getItem('propertyV2Id');
+  const logoProps = {
+    name: 'file',
+    multiple: false,
+    // action: `http://localhost:3001/users/propertyPicture/${id}`,
+    // action: `${server}/users/propertyPicture/${id}`,
+    action: `${server}/properties/propertyPicture?unitTypeV2Id=${unitTypeV2Id}&organizationid=${organizationid}`,
+    onChange(info) {
+      if (info.file.status === 'done') {
+        setLogoUrl(info.file.response.image);
+        toast.success(`${info.file.name} file uploaded successfully`, {
+          containerId: 'B',
+        });
+      } else if (info.file.status === 'error') {
+        toast.error(`${info.file.name} file upload failed.`, {
+          containerId: 'B',
+        });
+      }
+    },
+  };
   return (
     <Modal
       title={t('invoice.heading1')}
@@ -289,7 +318,7 @@ const AdInvoicePopup = (props) => {
               <h4>
                 <img src={propertyIcon} alt="property" />
                 {' '}
-                {property.length ? property[0].propertyName : ''}
+                {property.length ? property[0].unitTypeName[0].name : ''}
               </h4>
               <p>{property.length ? property[0].address : ''}</p>
             </div>
@@ -677,7 +706,36 @@ const AdInvoicePopup = (props) => {
                 onChange={(e) => setImpression(e.target.value)}
               />
             </Form.Item>
+          </Col>
+          <Col span={6} className="m-top-30">
+            <Form.Item className="upload-image">
+              <Upload.Dragger {...logoProps} className="upload">
+                {
+                  logoUrl
+                    ? (
+                      <div>
+                        <img src={logoUrl} alt="logo" />
+                      </div>
+                    )
+                    : (
 
+                      <p className="ant-upload-drag-icon">
+                        {/* <UserOutlined /> */}
+
+                        <UploadOutlined className="logoimage" />
+                        {' '}
+
+                      </p>
+
+                    )
+                }
+                <h5 className="upload-text">Upload your own logo</h5>
+              </Upload.Dragger>
+
+            </Form.Item>
+
+          </Col>
+          <Col span={24} className="m-top-30">
             <p className="web-info">
               {property.length ? property[0].address : ''}
               {' '}

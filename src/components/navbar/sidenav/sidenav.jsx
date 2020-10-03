@@ -54,6 +54,7 @@ const Sidenav = ({
   const [hideOwner, setHideOwner] = useState(false);
   const [disableProperties, setDisableProperties] = useState(false);
   const [disableGuests, setDisableGuests] = useState(false);
+  const [hideChannel, setHideChannel] = useState(false);
   // const [propertyId, setPropertyId] = useState();
   const isSubUser = localStorage.getItem('isSubUser');
   const subUserCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -68,6 +69,7 @@ const Sidenav = ({
       userId,
       ownerRead,
       guestsRead,
+      channelRead,
     },
   ] = subUserCred || [{}];
 
@@ -135,6 +137,13 @@ const Sidenav = ({
     } else {
       setDisableGuests(true);
     }
+    if (!isSubUser) {
+      setHideChannel(false);
+    } else if (channelRead) {
+      setHideChannel(false);
+    } else {
+      setHideChannel(true);
+    }
   }, [
     bookingRead,
     calendarRead,
@@ -145,6 +154,7 @@ const Sidenav = ({
     teamRead,
     ownerRead,
     guestsRead,
+    channelRead,
   ]);
   const getData = useCallback(async () => {
     const values = {
@@ -156,7 +166,7 @@ const Sidenav = ({
       // getFeature(featureData);
       const [
         {
-          booking, calendar, properties, team, invoice, owner, stats, guests,
+          booking, calendar, properties, team, invoice, owner, stats, guests, channelManager,
         },
       ] = featureData;
       setHideBooking(isSubUser ? !bookingRead : !booking);
@@ -167,6 +177,7 @@ const Sidenav = ({
       setHideOwner(!isSubUser ? !owner : !ownerRead);
       setHideStats(!isSubUser ? !stats : !statsRead);
       setDisableGuests(!isSubUser ? !guests : !guestsRead);
+      setHideChannel(!isSubUser ? !channelManager : !channelRead);
     }
     // const Id = localStorage.getItem('propertyId');
     // const response = await userInstance.post('/fetchProperty', {
@@ -190,6 +201,7 @@ const Sidenav = ({
     ownerRead,
     statsRead,
     guestsRead,
+    channelRead,
     isSubUser,
   ]);
 
@@ -342,6 +354,10 @@ const Sidenav = ({
           </Menu.Item>
         </SubMenu>
 
+        <Menu.Item className="channel-nav" hidden={hideChannel}>
+          <img src={channelIcon} alt="channel" />
+          <Link to="/channel">{t('sidebar.menu14')}</Link>
+        </Menu.Item>
         <Menu.Item className="team-nav" hidden={hideTeam}>
           <img src={teamIcon} alt="team" />
           <Link to="/team">{t('sidebar.menu5')}</Link>
@@ -362,81 +378,6 @@ const Sidenav = ({
           <Link to="/owner">{t('sidebar.menu9')}</Link>
         </Menu.Item>
       </Menu>
-
-      {/* <Menu
-        className={`main-menu-mbl ${nav ? 'show' : ''}`}
-        theme="light"
-        mode="inline"
-        style={{ height: '100%' }}
-      >
-        <span
-          className="submenu-heading"
-          onClick={() => handleMenu('close')}
-          role="presentation"
-        >
-          <Link
-            to="/propertylist"
-            onClick={() => localStorage.removeItem('propertyId')}
-          >
-            <ArrowLeftOutlined />
-            {' '}
-            {currProperty}
-          </Link>
-        </span>
-        <Menu.Item className="detail-nav">
-          <img src={propertyDetailIcon} alt="property" />
-          <Link to="/property">{t('sidebar.menu11')}</Link>
-        </Menu.Item>
-        <Menu.Item className="unit-nav">
-          <img src={unitIcon} alt="unit" />
-          <Link to="/unittype">{t('sidebar.menu12')}</Link>
-        </Menu.Item>
-        <Menu.Item className="channel-nav">
-          <img src={channelIcon} alt="channel" />
-          <Link to="/channelmanager">{t('sidebar.menu14')}</Link>
-        </Menu.Item>
-
-        <Menu.Item className="service-nav" hidden={hideService}>
-          <ApartmentOutlined />
-          <Link to="/services">{t('sidebar.menu15')}</Link>
-        </Menu.Item>
-      </Menu> */}
-
-      {/* <Menu
-        className={`main-menu-mbl ${ratesNav ? 'show' : ''}`}
-        theme="light"
-        mode="inline"
-        style={{ height: '100%' }}
-      >
-        <span
-          className="submenu-heading"
-          onClick={() => handleMenu('close')}
-          role="presentation"
-        >
-          <Link
-            to="/unittype"
-            onClick={() => localStorage.removeItem('unittype')}
-          >
-            <ArrowLeftOutlined />
-            {' '}
-            Unit Types
-          </Link>
-        </span>
-        <Menu.Item className="unit-nav">
-          <img src={propertyDetailIcon} alt="property" />
-          <Link to="/addunittype">Units</Link>
-        </Menu.Item>
-
-        <Menu.Item className="rates-nav">
-          <img src={unitIcon} alt="unit" />
-          <Link to="/rates">Rates</Link>
-        </Menu.Item>
-
-        <Menu.Item className="season-nav">
-          <img src={channelIcon} alt="channel" />
-          <Link to="/seasonrates">Season Rates</Link>
-        </Menu.Item>
-      </Menu> */}
 
       <Menu
         className={`main-menu-mbl ${propertyNav ? 'show' : ''}`}
@@ -487,9 +428,9 @@ const Sidenav = ({
           <Link to="/services">{t('sidebar.menu15')}</Link>
         </Menu.Item>
 
-        <Menu.Item className="channel-nav">
+        <Menu.Item className="channel-nav" hidden={hideChannel}>
           <img src={channelIcon} alt="channel" />
-          <Link to="channelmanager">{t('sidebar.menu14')}</Link>
+          <Link to="/channel">{t('sidebar.menu14')}</Link>
         </Menu.Item>
       </Menu>
 
@@ -505,8 +446,14 @@ const Sidenav = ({
 };
 
 Sidenav.propTypes = {
-  img: PropTypes.element,
-  propertyImage: PropTypes.element,
+  img: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+  ]),
+  propertyImage: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+  ]),
   name: PropTypes.string,
   getUserInfo: PropTypes.func,
   menutoggle: PropTypes.bool,

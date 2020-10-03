@@ -41,7 +41,7 @@ import propertyplace from '../../assets/images/property-placeholder.png';
 import nobooking from '../../assets/images/no-booking.png';
 import AdInvoicePopup from './addinvoicepopup';
 import EditInvoicePopup from './editInvoicePopup';
-import { userInstance } from '../../axios/axiosconfig';
+import { propertyInstance, userInstance } from '../../axios/axiosconfig';
 import DeletePopup from './deletepopup';
 import UserLock from '../userlock/userlock';
 import CreateProperty from '../property/createProperty';
@@ -206,9 +206,10 @@ const Invoice = () => {
       setInvoiceItems(inb.data.invoiceItems);
       setPage(false);
     }
-    const res = await userInstance.post('/fetchProperty', {
+    const res = await propertyInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
+    console.log(res);
     if (res.data.code === 200) {
       setLoading(false);
       setPropertyInfo(res.data.propertiesData);
@@ -222,13 +223,13 @@ const Invoice = () => {
   }, [userId]);
   const handleCheck = (el) => {
     invoiceData.forEach((element) => {
-      if (el.id === element.id && element[Object.keys(el)[20]] === true) {
-        element[Object.keys(el)[20]] = false;
+      if (el.id === element.id && element[Object.keys(el)[21]] === true) {
+        element[Object.keys(el)[21]] = false;
       } else if (
         el.id === element.id
-        && element[Object.keys(el)[20]] === false
+        && element[Object.keys(el)[21]] === false
       ) {
-        element[Object.keys(el)[20]] = true;
+        element[Object.keys(el)[21]] = true;
       }
     });
     setInvoiceData(invoiceData);
@@ -243,7 +244,7 @@ const Invoice = () => {
   useEffect(() => {
     setTopNavId(parseInt(localStorage.getItem('topNavId'), 10));
     const data = propertyInfo.filter(
-      (property) => property.id === parseInt(localStorage.getItem('topNavId'), 10),
+      (property) => property.propertyId === parseInt(localStorage.getItem('topNavId'), 10),
     );
     setCurrentPropertyInfo(data);
   }, [topNavId, propertyInfo]);
@@ -288,7 +289,7 @@ const Invoice = () => {
         .reverse()
         .slice(pagination.minValue, pagination.maxValue)
         .forEach((el) => {
-          el[Object.keys(el)[20]] = false;
+          el[Object.keys(el)[21]] = false;
         });
       setInvoiceData(invoiceData);
       setCheckedInvoice([]);
@@ -299,10 +300,10 @@ const Invoice = () => {
         .reverse()
         .slice(pagination.minValue, pagination.maxValue)
         .forEach((el) => {
-          el[Object.keys(el)[20]] = true;
+          el[Object.keys(el)[21]] = true;
         });
       const data = invoiceData.filter(
-        (el) => el[Object.keys(el)[20]] !== false,
+        (el) => el[Object.keys(el)[21]] !== false,
       );
       setInvoiceData(invoiceData);
       setCheckedInvoice(data);
@@ -318,7 +319,7 @@ const Invoice = () => {
       .reverse()
       .slice(pagination.minValue, pagination.maxValue)
       .forEach((el) => {
-        el[Object.keys(el)[20]] = false;
+        el[Object.keys(el)[21]] = false;
       });
     setInvoiceData(invoiceData);
     setCheckedInvoice([]);
@@ -787,7 +788,7 @@ const Invoice = () => {
                           <tr key={el.id}>
                             <td>
                               <Checkbox
-                                checked={el[Object.keys(el)[20]]}
+                                checked={el[Object.keys(el)[21]]}
                                 onClick={() => handleCheck(el, i)}
                               />
                               {el.date.slice(0, 10)}

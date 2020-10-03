@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState, useEffect, useCallback, useRef,
+} from 'react';
 import PropTypes from 'prop-types';
 import {
   Button, Modal, Row, Col, Form, Select, Input,
@@ -13,6 +15,9 @@ import Wrapper from '../wrapper';
 import { propertyInstance, userInstance } from '../../axios/axiosconfig';
 import EditAmenities from './EditAmenities';
 
+import languageAvailable from '../../config/language';
+import translate from '../../config/translation';
+
 const Overview = () => {
   const [form] = Form.useForm();
   const [form2] = Form.useForm();
@@ -26,6 +31,17 @@ const Overview = () => {
   const [noOfGuests, setNoOfGuests] = useState(0);
   const [noOfUnits, setNoOfUnits] = useState(0);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
+
+  const [showAdd, setShowAdd] = useState(false);
+  const [showRemove, setShowRemove] = useState(false);
+  const [languageAction, setLanguageAction] = useState('');
+  const [languageSelection, setLanguageSelection] = useState({});
+  const [languageList, setLanguageList] = useState([]);
+  const [languageToFilter, setLanguageToFilter] = useState('');
+  const [languageSelected, setLanguageSelected] = useState('');
+  const [transateLanguage, setTranslateLanguage] = useState([]);
+
+  const refSelect = useRef(null);
   const [unitsArr, setUnitsArr] = useState([]);
   // const [unitTypeV2Data, setUnitTypeV2Data] = useState({});
   const { t } = useTranslation();
@@ -59,22 +75,18 @@ const Overview = () => {
 
   const getData = useCallback(async () => {
     const response = await propertyInstance.post('/fetchUnittypeData', {
-      unitTypeV2Id: localStorage.getItem('propertyV2Id'),
+      unitTypeV2Id: localStorage.getItem('unitTypeV2Id'),
     });
-    if (response.data.code === 200) {
+    if (response.data.code === 200 && response.status !== 204) {
       const data = response.data.unitTypeV2Data[0];
       if (data && data.unitsData) {
-        const units = JSON.parse(data.unitsData);
-        units.forEach((el, i) => {
-          form2.setFieldsValue({
-            [`unit${i + 1}`]: el,
-          });
+        data.unitsData.map((el, i) => form2.setFieldsValue({ [`unit${i + 1}`]: el }));
+      }
+      if (data.propertyType !== null) {
+        form.setFieldsValue({
+          propertyType: data.propertyType,
         });
       }
-      form.setFieldsValue({
-        description: data.description,
-        propertyType: data.propertyType,
-      });
       if (data.sizeValue > 0) {
         form2.setFieldsValue({
           sqSelectedValue: data.sizeType,
@@ -95,15 +107,28 @@ const Overview = () => {
         setAmenitiesList(res.data.amenities);
       }
     };
-    const propertyId = localStorage.getItem('propertyV2Id');
+    const propertyId = localStorage.getItem('unitTypeV2Id');
     const getPropertyName = async () => {
-      const res = await userInstance.post('/getPropertyName', { propertyId });
-      if (res.data.code === 200) {
-        const { propertyName: name } = res.data.propertyName[0];
-        setPropertyName(name);
-        form.setFieldsValue({
-          name,
-        });
+      const response = await propertyInstance.get(
+        `/fetchTranslated/en/${propertyId}`,
+      );
+      if (response.status === 200) {
+        const { filteredName, filteredDescription } = response.data;
+        const name = typeof filteredName !== 'undefined' && filteredName.length > 0
+          ? filteredName[0].name
+          : '';
+        const description = typeof filteredDescription !== 'undefined'
+          && filteredDescription.length > 0
+          ? filteredDescription[0].description
+          : '';
+        if (name && description) {
+          setPropertyName(name);
+          setPropertyDescription(description);
+          form.setFieldsValue({
+            name,
+            description,
+          });
+        }
       }
     };
     getPropertyName();
@@ -111,15 +136,21 @@ const Overview = () => {
     getData();
   }, [form, getData]);
 
+  useEffect(() => {
+    getLanguages();
+  }, []);
+
   const { TextArea } = Input;
   const handleRentalTypeSelect = async (value) => {
     if (propertyName && propertyDescription) {
-      const propertyId = localStorage.getItem('propertyV2Id');
+      const propertyId = localStorage.getItem('unitTypeV2Id');
+      const engPropertyName = await translate(propertyName, 'en');
       const payload = {
-        propertyName: propertyName.trim(),
+        propertyName: engPropertyName.trim(),
         propertyDescription: propertyDescription.trim(),
         propertyType: value,
         propertyId,
+        languageSelected,
       };
       await propertyInstance.post('/updateUnitTypeoverview', payload);
     } else {
@@ -143,7 +174,7 @@ const Overview = () => {
       const unitName = 'unit';
       units.push(values[unitName + j] || `Unit ${j}`);
     });
-    values.unitTypeV2Id = localStorage.getItem('propertyV2Id');
+    values.unitTypeV2Id = localStorage.getItem('unitTypeV2Id');
     values.noOfBedRooms = noOfBedRooms;
     values.noOfGuests = noOfGuests;
     values.noOfUnits = noOfUnits;
@@ -157,6 +188,140 @@ const Overview = () => {
       });
     }
   };
+
+  const handleAddLanguage = async () => {
+    const propertyId = localStorage.getItem('unitTypeV2Id');
+    const language = languageSelection;
+    const res = await propertyInstance.post('/addLanguage', {
+      propertyId,
+      language,
+    });
+    if (res.status === 200) {
+      getLanguages();
+      toast.success(res.data.msg, {
+        containerId: 'B',
+        toastId: 'B',
+      });
+      setLanguageSelection([]);
+    } else {
+      toast.success(res.data.msg, {
+        containerId: 'B',
+        toastId: 'B',
+      });
+    }
+    setShowAdd(false);
+  };
+
+  const getLanguages = async () => {
+    const propertyId = localStorage.getItem('unitTypeV2Id');
+    const res = await propertyInstance.get(`/languages/${propertyId}`);
+    if (res.status === 200) {
+      setLanguageList([res.data.language]);
+    }
+  };
+
+  const handleRemoveLanguage = async () => {
+    const propertyId = localStorage.getItem('unitTypeV2Id');
+    const language = languageSelection;
+    const res = await propertyInstance.post('/removeLanguage', {
+      propertyId,
+      language,
+      filterLang: languageToFilter,
+    });
+    if (res.status === 200) {
+      getLanguages();
+      toast.success(res.data.msg, {
+        containerId: 'B',
+        toastId: 'B',
+      });
+      setLanguageSelection([]);
+    } else {
+      toast.error(res.data.msg, {
+        containerId: 'B',
+        toastId: 'B',
+      });
+    }
+    setShowRemove(false);
+  };
+
+  const setTranslate = async (e) => {
+    setLanguageSelected(e.target.value);
+    const filteredLang = languageList[0].filter(
+      (el) => Object.keys(el)[0] !== e.target.value,
+    );
+    setTranslateLanguage(filteredLang);
+    const propertyId = localStorage.getItem('unitTypeV2Id');
+    const response = await propertyInstance.get(
+      `/fetchTranslated/${e.target.value}/${propertyId}`,
+    );
+    if (response) {
+      const {
+        data: { filteredDescription, filteredName },
+      } = response;
+      const name = filteredName.length > 0 ? filteredName[0].name : '';
+      const description = filteredDescription.length > 0
+        ? filteredDescription[0].description
+        : '';
+      setPropertyDescription(description);
+      setPropertyName(name);
+      form.setFieldsValue({
+        name,
+        description,
+      });
+    }
+  };
+
+  const handleTranslation = async () => {
+    if (propertyName && propertyDescription) {
+      const translatedName = await translate(propertyName, languageSelected);
+      const translatedDescription = await translate(
+        propertyDescription,
+        languageSelected,
+      );
+      const nameObject = { lang: languageSelected, name: translatedName };
+      const descriptionObject = {
+        lang: languageSelected,
+        description: translatedDescription,
+      };
+      const propertyId = localStorage.getItem('unitTypeV2Id');
+      const payload = { nameObject, descriptionObject, propertyId };
+      const {
+        status,
+        data: { msg, pName, pDescription },
+      } = await propertyInstance.post('/saveTranslation', payload);
+      if (status === 200) {
+        setPropertyDescription(pDescription.description);
+        setPropertyName(pName.name);
+        form.setFieldsValue({
+          name: pName.name,
+          description: pDescription.description,
+        });
+        toast.success(msg, {
+          containerId: 'B',
+          toastId: 'B',
+        });
+      } else {
+        toast.error(msg, {
+          containerId: 'B',
+          toastId: 'B',
+        });
+      }
+    } else {
+      toast.error('Miissing Property Details', {
+        containerId: 'B',
+        toastId: 'B',
+      });
+    }
+  };
+
+  const handleReset = ({ current }) => {
+    current.selectedIndex = '0';
+  };
+
+  useEffect(() => {
+    if (languageAction.languageAction === 'add') setShowAdd(true);
+    else if (languageAction.languageAction === 'remove') setShowRemove(true);
+  }, [languageAction]);
 
   const createArray = (value) => {
     setNoOfUnits(value);
@@ -183,6 +348,69 @@ const Overview = () => {
             <div className="overview-content">
               <Form form={form} onFinish={handleFinish}>
                 <div className="overview-first-section">
+                  <h3>OverView</h3>
+
+                  <div className="overview-flex">
+                    <div className="overview-input">
+                      <select
+                        onChange={(e) => {
+                          setTranslate(e);
+                        }}
+                      >
+                        <option selected disabled>
+                          Select Language
+                        </option>
+                        {languageList[0]
+                          && languageList[0].map((el) => (
+                            <option value={Object.keys(el)[0]}>
+                              {Object.values(el)}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+
+                    <div className="overview-input">
+                      <select
+                        name="languageAction"
+                        onChange={(e) => {
+                          setLanguageAction({
+                            ...languageAction,
+                            [e.target.name]: e.target.value,
+                          });
+                          handleReset(refSelect);
+                        }}
+                        defaultValue={languageAction}
+                        ref={refSelect}
+                      >
+                        <option value="Select" selected>
+                          Languages
+                        </option>
+                        <option value="add">Add Langauge</option>
+                        <option value="remove">Remove Langauge</option>
+                      </select>
+                    </div>
+
+                    <div className="overview-input">
+                      <select
+                        onChange={(e) => {
+                          handleTranslation(e);
+                        }}
+                      >
+                        <option value="Traslate" selected disabled>
+                          Translate
+                        </option>
+                        {transateLanguage
+                          && transateLanguage.map((el) => (
+                            <option value={Object.keys(el)}>
+                              {`${Object.keys(
+                                el,
+                              )[0].toLocaleUpperCase()}  >  ${languageSelected.toLocaleUpperCase()}`}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
+
                   <h3>{t('overview.heading1')}</h3>
                   <Row>
                     <Col span={24}>
@@ -198,7 +426,8 @@ const Overview = () => {
                     <Col span={24}>
                       <Form.Item name="description">
                         <TextArea
-                          placeholder={t('overview.placeholder2')}
+                          value={propertyDescription}
+                          placeholder="Description"
                           rows={4}
                           onChange={(e) => setPropertyDescription(e.target.value)}
                         />
@@ -288,6 +517,12 @@ const Overview = () => {
                         <Form.Item
                           className="property-info-unit"
                           name="sqSelectedValue"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Please select the type',
+                            },
+                          ]}
                           label={t('overview.label1')}
                         >
                           <Select placeholder="SQ FT">
@@ -361,7 +596,11 @@ const Overview = () => {
                       </Col>
                     </Row>
                     <div>
-                      <Button type="primary" htmlType="submit" disabled={!(noOfUnits > 0 && noOfGuests > 0)}>
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        disabled={!(noOfUnits > 0 && noOfGuests > 0)}
+                      >
                         {t('overview.button1')}
                       </Button>
                     </div>
@@ -394,7 +633,9 @@ const Overview = () => {
                 <div className="overview-sixth-section">
                   <h3>{t('overview.heading6')}</h3>
                   <p>{t('overview.paragraph6')}</p>
-                  <Button onClick={() => show2()}>{t('overview.button4')}</Button>
+                  <Button onClick={() => show2()}>
+                    {t('overview.button4')}
+                  </Button>
                 </div>
               </Form>
             </div>
@@ -455,6 +696,55 @@ const Overview = () => {
           selectedAmenities={selectedAmenities}
         />
       </Modal>
+
+      <Modal
+        title="Add Language"
+        visible={showAdd}
+        onOk={handleAddLanguage}
+        // confirmLoading={confirmLoading}
+        onCancel={() => setShowAdd(false)}
+      >
+        <div className="overview-input">
+          <select
+            name="languageSelection"
+            onChange={(e) => {
+              setLanguageSelection({
+                [e.target.value]: e.target.selectedOptions[0].text,
+              });
+            }}
+          >
+            {languageAvailable
+              && languageAvailable.map((lang) => (
+                <option value={lang.langCode}>{lang.name}</option>
+              ))}
+          </select>
+        </div>
+      </Modal>
+
+      <Modal
+        title="Remove Language"
+        visible={showRemove}
+        onOk={handleRemoveLanguage}
+        // confirmLoading={confirmLoading}
+        onCancel={() => setShowRemove(false)}
+      >
+        <div className="overview-input">
+          <select
+            name="languageSelection"
+            onChange={(e) => {
+              setLanguageSelection({
+                [e.target.value]: e.target.selectedOptions[0].text,
+              });
+              setLanguageToFilter(e.target.value);
+            }}
+          >
+            {languageList[0]
+              && languageList[0].map((el) => (
+                <option value={Object.keys(el)[0]}>{Object.values(el)}</option>
+              ))}
+          </select>
+        </div>
+      </Modal>
     </Wrapper>
   );
 };
@@ -475,7 +765,7 @@ const SleepingArrangement = ({ handleCancel }) => {
   const { t } = useTranslation();
   const getData = async () => {
     const response = await propertyInstance.post('/fetchUnittypeData', {
-      unitTypeV2Id: localStorage.getItem('propertyV2Id'),
+      unitTypeV2Id: localStorage.getItem('unitTypeV2Id'),
     });
     if (response.data.code === 200) {
       if (response.data.unitTypeV2Data.length > 0) {
@@ -507,9 +797,12 @@ const SleepingArrangement = ({ handleCancel }) => {
       sofaBed,
       singleBed,
     };
-    values.unitTypeV2Id = localStorage.getItem('propertyV2Id');
+    values.unitTypeV2Id = localStorage.getItem('unitTypeV2Id');
     values.sleepingArrangement = JSON.stringify(obj);
-    const response = await propertyInstance.post('/updateSleepingArrangement', values);
+    const response = await propertyInstance.post(
+      '/updateSleepingArrangement',
+      values,
+    );
     if (response.data.code === 200) {
       getData();
       handleCancel();
@@ -525,7 +818,6 @@ const SleepingArrangement = ({ handleCancel }) => {
   }, []);
 
   return (
-
     <Form form={form} onFinish={onFinishSleeping}>
       <h3>{t('overview.heading7')}</h3>
       <p>{t('overview.paragraph7')}</p>
@@ -719,7 +1011,7 @@ const EditRooms = ({ handleCancel1 }) => {
   const { t } = useTranslation();
   const getData = async () => {
     const response = await propertyInstance.post('/fetchUnittypeData', {
-      unitTypeV2Id: localStorage.getItem('propertyV2Id'),
+      unitTypeV2Id: localStorage.getItem('unitTypeV2Id'),
     });
     if (response.data.code === 200) {
       const data = response.data.unitTypeV2Data[0];
@@ -770,7 +1062,7 @@ const EditRooms = ({ handleCancel1 }) => {
       toiletShared,
       workroomShared,
     };
-    values.unitTypeV2Id = localStorage.getItem('propertyV2Id');
+    values.unitTypeV2Id = localStorage.getItem('unitTypeV2Id');
     values.rooms = JSON.stringify(obj);
     const response = await propertyInstance.post('/updateEditRooms', values);
     if (response.data.code === 200) {
@@ -791,8 +1083,7 @@ const EditRooms = ({ handleCancel1 }) => {
     <Form form={form} onFinish={onFinishEditRoom}>
       <h3>{t('overview.heading8')}</h3>
       <p>
-        What other rooms does your property
-        have? Whichever rooms you choose
+        What other rooms does your property have? Whichever rooms you choose
         here will be shown on your website.
       </p>
 

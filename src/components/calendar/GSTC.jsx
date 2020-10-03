@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect } from 'react';
+import './calendar.css';
 import PropTypes from 'prop-types';
 import GSTC from 'gantt-schedule-timeline-calendar';
 import 'gantt-schedule-timeline-calendar/dist/style.css';
 
+export { GSTC };
 let gstc;
-const GSTCWrapper = ({ config, onState }) => {
-  // @ts-ignore
+export default function GSTCWrapper({ config, onState }) {
   const state = GSTC.api.stateFromConfig(config);
   onState(state);
 
@@ -26,18 +27,21 @@ const GSTCWrapper = ({ config, onState }) => {
     if (gstc) {
       // gstc.app.destroy();
     }
-  });
+  },
+  []);
 
   return <div ref={callback} />;
-};
+}
 
 GSTCWrapper.propTypes = {
-  config: PropTypes.objectOf(PropTypes.object),
+  config: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+    PropTypes.array,
+  ]),
   onState: PropTypes.func,
 };
 GSTCWrapper.defaultProps = {
   config: {},
   onState: () => {},
 };
-
-export default GSTCWrapper;

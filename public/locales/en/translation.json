@@ -826,8 +826,9 @@
   "label22":"Services",
   "label23":"Property settings, invoice settings and channel manager settings",
   "label24":"Owner",
-  "label25":"Role"
- 
+  "label25":"Role",
+ "label26": "Channel Manager",
+ "label27": "connecting your properties to different channels like Airbnb, Booking.com, Expedia"
 },
 
 
@@ -1182,8 +1183,8 @@
    "span10": "If you chose excluded: the guest pays your nightly",
    "span11": "cost + tax",
    "check": "Custom Period",
-   "paragraph1": "Set the default price per night and minimum stay guests will",
-   "paragraph2": "see for your listing and check how the values are displayed",
+   "paragraph1": "Set the default price per night and minimum stay guests will ",
+   "paragraph2": "see for your listing and check how the values are displayed ",
    "paragraph3": "in your website",
    "paragraph4": "Set discounted prices for reservations that are 7 nights or",
    "paragraph5": "longer. Add additional prices per week and per month.",
@@ -1211,8 +1212,8 @@
    {
      "heading1": "SEASON RATES",
      "button1": "Add Season",
-     "paragraph1": "Set different rates for specific date periods (up to 3 years",
-     "paragraph2": "in advance). Your season rates will overwrite your Default",
+     "paragraph1": "Set different rates for specific date periods (up to 3 ",
+     "paragraph2": "years in advance). Your season rates will overwrite your Default",
      "paragraph3": "Rate for those periods."
    }
 

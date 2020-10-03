@@ -424,12 +424,128 @@
   background: #e2e2e2;
   width: 40px;
   height: 40px;
-  padding: 0!important;
+  padding: 0 !important;
   text-align: center;
   color: #777;
   line-height: 40px;
   border-radius: 30px;
   font-size: 22px;
+}
+
+.gstc {
+  width: 100%;
+  margin: 0;
+  background: transparent;
+}
+
+.gstc__list-column-header-content {
+  line-height: 0;
+}
+.gstc__list-column-header-content
+  .gstc__list-column-header-resizer-container--label {
+  padding: 0;
+}
+.gstc__list-column-header--search {
+  background: #fff;
+  height: calc(100% - 24px);
+  margin-top: 25px;
+  border-top: 1px solid rgba(147, 158, 185, 0.3);
+  padding: 25px;
+  font-weight: normal;
+  font-size: 10px;
+  color: #3e3f42;
+}
+.gstc__list-column-row {
+  border: none;
+  border-top: 1px solid rgba(147, 158, 185, 0.1);
+  border-right: 1px solid rgba(147, 158, 185, 0.3);
+}
+.gstc__list-column-header {
+  border-right: 1px solid rgba(147, 158, 185, 0.3);
+}F
+.gstc__chart-calendar-date {
+  color: #3e3f42;
+  text-transform: uppercase;
+}
+.gstc__chart-calendar-date .gstc__chart-calendar-date-content--month {
+  font-size: 12px;
+  padding: 0 0 0 10px;
+}
+.gstc__chart-calendar-date .gstc-date-top {
+  font-weight: 500;
+  font-size: 13px;
+}
+.gstc__chart-calendar-date .gstc-date-small {
+  font-size: 9px;
+}
+
+.gstc__chart-calendar-date--day.gstc__chart-calendar-date--main-date {
+  background: #fff;
+  border-top: 1px solid rgba(147, 158, 185, 0.3);
+  border-right: 1px solid rgba(147, 158, 185, 0.3);
+}
+.gstc__chart-calendar-date--day.gstc__chart-calendar-date--main-date.gstc-current {
+  color: #fff;
+  box-shadow: none;
+  background: #5d96f7;
+}
+.gstc__list-column-rows .gstc__list-column-row--type,
+.gstc__chart-timeline-grid-row--type {
+  border-top: 1px solid rgba(147, 158, 185, 0.3);
+  background: rgba(147, 158, 185, 0.1);
+  color: #3e3f42;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+.gstc__list-column-rows .gstc__list-column-row--rate,
+.gstc__chart-timeline-grid-row--rate {
+  background: #fbfbfb;
+  color: #3e3f42;
+  font-size: 12px;
+}
+.gstc__list-column-rows .gstc__list-column-row--unit,
+.gstc__chart-timeline-grid-row--unit {
+  background: #fff;
+  color: #7d7c7f;
+  font-size: 12px;
+}
+.gstc__chart-timeline-grid-row {
+  border-top: 1px solid rgba(147, 158, 185, 0.1);
+}
+.gstc__chart-timeline-grid-row.gstc__chart-timeline-grid-row--type {
+  border-top: 1px solid rgba(147, 158, 185, 0.3);
+}
+.gstc__chart-timeline-grid-row-cell {
+  border: none;
+  border-right: 1px solid rgba(147, 158, 185, 0.3);
+  border-bottom: 1px solid rgba(147, 158, 185, 0.1);
+}
+.gstc__chart-timeline-grid-row-cell.current {
+  background: rgba(0, 104, 255, 0.1);
+}
+.gstc__chart-timeline-grid-row-cell--content {
+  line-height: 28px;
+  color: #78787a;
+}
+.gstc__chart-timeline-items-row-item {
+  border-radius: 16px;
+  height: 24px;
+}
+.gstc__chart-timeline-items-row-item
+  .gstc__chart-timeline-items-row-item-label {
+  color: #1ab2a7;
+  line-height: 20px;
+  font-size: 11px;
+}
+.gstc__chart-timeline-items-row-item
+  .gstc__chart-timeline-items-row-item-label--wrap {
+  width: 100%;
+  display: flex;
+}
+.gstc__list-column-row:last-child,
+.gstc__chart-timeline-grid-row:last-child {
+  border-bottom: 1px solid rgba(147, 158, 185, 0.3);
 }
 
 @media screen and (min-width: 1367px) {

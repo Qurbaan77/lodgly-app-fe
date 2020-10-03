@@ -30,6 +30,9 @@ const EditSubUserPopup = (props) => {
   const [guestsRead, setGuestsRead] = useState(false);
   const [guestsWrite, setGuestsWrite] = useState(false);
   const [guestsDelete, setGuestsDelete] = useState(false);
+  const [channelRead, setChannelRead] = useState(false);
+  const [channelWrite, setChannelWrite] = useState(false);
+  const [channelDelete, setChannelDelete] = useState(false);
   const [teamRead, setTeamRead] = useState(false);
   const [teamWrite, setTeamWrite] = useState(false);
   const [teamDelete, setTeamDelete] = useState(false);
@@ -66,6 +69,9 @@ const EditSubUserPopup = (props) => {
     setCalendarRead(subUserData.calendarRead);
     setCalendarWrite(subUserData.calendarWrite);
     setCalendarDelete(subUserData.calendarDelete);
+    setChannelRead(subUserData.channelRead);
+    setChannelWrite(subUserData.channelWrite);
+    setChannelDelete(subUserData.channelDelete);
     setGuestsRead(subUserData.guestsRead);
     setGuestsWrite(subUserData.guestsWrite);
     setGuestsDelete(subUserData.guestsDelete);
@@ -111,6 +117,9 @@ const EditSubUserPopup = (props) => {
       setCalendarRead(true);
       setCalendarWrite(true);
       setCalendarDelete(true);
+      setChannelRead(true);
+      setChannelWrite(true);
+      setChannelDelete(true);
       setGuestsRead(true);
       setGuestsWrite(true);
       setGuestsDelete(true);
@@ -142,6 +151,9 @@ const EditSubUserPopup = (props) => {
       setCalendarRead(true);
       setCalendarWrite(true);
       setCalendarDelete(false);
+      setChannelRead(true);
+      setChannelWrite(true);
+      setChannelDelete(false);
       setGuestsRead(true);
       setGuestsWrite(true);
       setGuestsDelete(false);
@@ -174,6 +186,9 @@ const EditSubUserPopup = (props) => {
         setCalendarRead(true);
         setCalendarWrite(false);
         setCalendarDelete(false);
+        setChannelRead(true);
+        setChannelWrite(false);
+        setChannelDelete(false);
         setGuestsRead(true);
         setGuestsWrite(false);
         setGuestsDelete(false);
@@ -212,6 +227,9 @@ const EditSubUserPopup = (props) => {
     setCalendarRead(false);
     setCalendarWrite(false);
     setCalendarDelete(false);
+    setChannelRead(false);
+    setChannelWrite(false);
+    setChannelDelete(false);
     setGuestsRead(false);
     setGuestsWrite(false);
     setGuestsDelete(false);
@@ -245,6 +263,9 @@ const EditSubUserPopup = (props) => {
     values.calendarRead = calendarRead;
     values.calendarWrite = calendarWrite;
     values.calendarDelete = calendarDelete;
+    values.channelRead = channelRead;
+    values.channelWrite = channelWrite;
+    values.channelDelete = channelDelete;
     values.guestsRead = guestsRead;
     values.guestsWrite = guestsWrite;
     values.guestsDelete = guestsDelete;
@@ -305,6 +326,12 @@ const EditSubUserPopup = (props) => {
     ? setCalendarWrite(false) : setCalendarWrite(true));
   const handleCalendarDelete = (e) => (e.target.value ? setCalendarDelete(false)
     : setCalendarDelete(true));
+  const handleChannelRead = (e) => (e.target.value ? setChannelRead(false)
+    : setChannelRead(true));
+  const handleChannelWrite = (e) => (e.target.value ? setChannelWrite(false)
+    : setChannelWrite(true));
+  const handleChannelDelete = (e) => (e.target.value ? setChannelDelete(false)
+    : setChannelDelete(true));
   const handleGuestsRead = (e) => (e.target.value ? setGuestsRead(false) : setGuestsRead(true));
   const handleGuestsWrite = (e) => (e.target.value ? setGuestsWrite(false) : setGuestsWrite(true));
   const handleGuestsDelete = (e) => (e.target.value ? setGuestsDelete(false)
@@ -349,7 +376,7 @@ const EditSubUserPopup = (props) => {
       wrapClassName="guest-modal sub-user"
     >
       <Helmet>
-        <body className={visible ? 'ant-scrolling-effect' : ''} />
+        <body className="ant-scrolling-effect" />
       </Helmet>
       <div className="cross-btn">
         <CloseOutlined onClick={handleCross} />
@@ -568,6 +595,38 @@ const EditSubUserPopup = (props) => {
                     />
                   </td>
                   <td>{t('subuserpopup.label12')}</td>
+                </tr>
+
+                <tr>
+                  <td>
+                    {' '}
+                    {t('subuserpopup.label26')}
+                  </td>
+                  <td>
+                    <Checkbox
+                      value={channelRead}
+                      onChange={(e) => handleChannelRead(e)}
+                      checked={channelRead}
+                      onClick={handleCustomCheck}
+                    />
+                  </td>
+                  <td>
+                    <Checkbox
+                      value={channelWrite}
+                      onChange={(e) => handleChannelWrite(e)}
+                      checked={channelWrite}
+                      onClick={handleCustomCheck}
+                    />
+                  </td>
+                  <td>
+                    <Checkbox
+                      value={channelDelete}
+                      onChange={(e) => handleChannelDelete(e)}
+                      checked={channelDelete}
+                      onClick={handleCustomCheck}
+                    />
+                  </td>
+                  <td>{t('subuserpopup.label27')}</td>
                 </tr>
 
                 <tr>

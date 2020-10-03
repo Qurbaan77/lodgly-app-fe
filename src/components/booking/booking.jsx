@@ -123,7 +123,7 @@ const Booking = () => {
           data2.push(filterData);
         });
       if (response.data.code === 200) {
-        setLoading(false);
+        // setLoading(false);
         setPropertyData(data2.length > 0 ? data2 : data);
       }
     }
@@ -141,10 +141,9 @@ const Booking = () => {
       affiliateId: userId,
     });
     if (response.data.code === 200) {
-      setLoading(false);
       const bookingdata = response.data.bookingData;
       const guestdata = response.data.guestData;
-      const servicedata = response.data.serviceData[0];
+      const servicedata = response.data.serviceData;
       const guestnum = guestdata.map((el) => el.length);
       const guestname = [];
       const data = guestdata.map((el) => el.find((ele) => ele.id));
@@ -194,6 +193,7 @@ const Booking = () => {
           setServiceData(servicedata);
         }
       }
+      setLoading(false);
     }
   }, [userId, topNavId]);
 
@@ -220,7 +220,10 @@ const Booking = () => {
 
     const data = [];
 
-    serviceData.map((el) => (el.bookingId === values.id ? data.push(el) : null));
+    // serviceData.map((el) => (el.bookingId === values.id ? data.push(el) : null));
+    serviceData.forEach((service) => {
+      service.map((el) => (el.bookingId === values.id ? data.push(el) : null));
+    });
     setCurrentService(data);
     setEditCurrentGuest(arr);
     setCurrentBooking(values);
@@ -539,7 +542,7 @@ const Booking = () => {
     );
   }
 
-  if (mapBooking.length < 1) {
+  if (bookingData.length < 1) {
     return (
       <Wrapper>
         <Helmet>

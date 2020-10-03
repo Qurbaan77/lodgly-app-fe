@@ -10,7 +10,7 @@ import 'antd/dist/antd.css';
 import AddProperty from './components/property/addproperty';
 import PropertyList from './components/property/propertylist';
 import UnitType from './components/property/unittype';
-import ChannelManager from './components/property/channelmanager';
+// import ChannelManager from './components/property/channelmanager';
 import Groups from './components/property/group';
 import Task from './components/property/task';
 import AdminLogin from './components/admin-panel/login/login';
@@ -34,7 +34,7 @@ import SeasonRates from './components/property/seasonrates';
 import CreateSeasonRates from './components/property/createseasonrates';
 import GuestList from './components/guests/guests';
 import CompanyList from './components/guests/company';
-
+import NotAuthorize from './components/userlock/UserNotAuhtorize';
 import Overview from './components/property/overview';
 import Location from './components/property/location';
 import Photos from './components/property/photos';
@@ -52,6 +52,7 @@ import {
   SecureBilling,
   SecureGuests,
   SecureOverview,
+  SecureChannel,
 } from './Routes/SecureRoute';
 import Owner from './components/owner/owner';
 import Team from './components/team/team';
@@ -59,6 +60,12 @@ import Profile from './components/profile/profile';
 import BillingInformation from './components/profile/billinginformation';
 import Invoice from './components/invoice/invoice';
 import Stats from './components/stats/stats';
+
+import Channel from './components/channelmanager/channelmanager';
+import ChannelBooking from './components/channelmanager/channelbooking';
+import ChannelExpedia from './components/channelmanager/channelexpedia';
+import ChannelAirbnb from './components/channelmanager/channelairbnb';
+
 import PageNotFound from './components/404/404';
 import './responsive.css';
 
@@ -66,7 +73,7 @@ const App = () => {
   const initialState = {
     booking: true,
     calendar: true,
-    channelmanager: true,
+    channelManager: true,
     invoice: true,
     owner: true,
     properties: true,
@@ -81,6 +88,7 @@ const App = () => {
       setFeature(data[0]);
     }
   }, []);
+  console.log(feature);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   return (
@@ -123,7 +131,7 @@ const App = () => {
                         feature={feature.properties}
                       />
                     ) : (
-                      <LoginRoute exact path="/" component={() => <Login />} />
+                      <PrivateRoute exact path="/addproperty" component={() => <NotAuthorize />} />
                     )}
 
                     {isSubUser ? (
@@ -139,7 +147,7 @@ const App = () => {
                         component={() => <PropertyList />}
                       />
                     ) : (
-                      <LoginRoute exact path="/" component={() => <Login />} />
+                      <PrivateRoute exact path="/propertylist" component={() => <NotAuthorize />} />
                     )}
 
                     {isSubUser ? (
@@ -168,11 +176,11 @@ const App = () => {
                       path="/task"
                       component={() => <Task />}
                     />
-                    <PrivateRoute
+                    {/* <PrivateRoute
                       exact
                       path="/channelmanager"
                       component={() => <ChannelManager />}
-                    />
+                    /> */}
                     <Route
                       exact
                       path="/admin"
@@ -277,7 +285,7 @@ const App = () => {
                       path="/reset"
                       component={() => <Reset />}
                     />
-                    <LoginRoute
+                    <PrivateRoute
                       exact
                       path="/thankyou"
                       component={() => <Thankyou />}
@@ -295,7 +303,7 @@ const App = () => {
                         component={() => <Services />}
                       />
                     ) : (
-                      <LoginRoute exact path="/" component={() => <Login />} />
+                      <PrivateRoute exact path="/services" component={() => <NotAuthorize />} />
                     )}
 
                     {isSubUser ? (
@@ -311,7 +319,7 @@ const App = () => {
                         component={() => <Calendar />}
                       />
                     ) : (
-                      <LoginRoute exact path="/" component={() => <Login />} />
+                      <PrivateRoute exact path="/calendar" component={() => <NotAuthorize />} />
                     )}
 
                     <PrivateRoute
@@ -333,7 +341,7 @@ const App = () => {
                         component={() => <Owner />}
                       />
                     ) : (
-                      <LoginRoute exact path="/" component={() => <Login />} />
+                      <PrivateRoute exact path="/owner" component={() => <NotAuthorize />} />
                     )}
 
                     {/* Additional Work */}
@@ -351,7 +359,7 @@ const App = () => {
                         component={() => <Team />}
                       />
                     ) : (
-                      <LoginRoute exact path="/" component={() => <Login />} />
+                      <PrivateRoute exact path="/team" component={() => <NotAuthorize />} />
                     )}
 
                     <PrivateRoute
@@ -385,7 +393,7 @@ const App = () => {
                         component={() => <Stats />}
                       />
                     ) : (
-                      <LoginRoute exact path="/" component={() => <Login />} />
+                      <PrivateRoute exact path="/stats" component={() => <NotAuthorize />} />
                     )}
                     {isSubUser ? (
                       <SecureInvoice
@@ -400,7 +408,7 @@ const App = () => {
                         component={() => <Invoice />}
                       />
                     ) : (
-                      <LoginRoute exact path="/" component={() => <Login />} />
+                      <PrivateRoute exact path="/invoice" component={() => <NotAuthorize />} />
                     )}
                     {isSubUser ? (
                       <SecureProperty
@@ -415,7 +423,7 @@ const App = () => {
                         component={() => <Rates />}
                       />
                     ) : (
-                      <LoginRoute exact path="/" component={() => <Login />} />
+                      <PrivateRoute exact path="/rates" component={() => <NotAuthorize />} />
                     )}
 
                     {isSubUser ? (
@@ -431,7 +439,7 @@ const App = () => {
                         component={() => <SeasonRates />}
                       />
                     ) : (
-                      <LoginRoute exact path="/" component={() => <Login />} />
+                      <PrivateRoute exact path="/seasonrates" component={() => <NotAuthorize />} />
                     )}
                     {isSubUser ? (
                       <SecureProperty
@@ -461,7 +469,7 @@ const App = () => {
                         component={() => <GuestList />}
                       />
                     ) : (
-                      <LoginRoute exact path="/" component={() => <Login />} />
+                      <PrivateRoute exact path="/guests" component={() => <NotAuthorize />} />
                     )}
                     {isSubUser ? (
                       <SecureProperty
@@ -478,7 +486,7 @@ const App = () => {
                     ) : (
                       <LoginRoute exact path="/" component={() => <Login />} />
                     )}
-                    {isSubUser && localStorage.getItem('propertyV2Id') ? (
+                    {isSubUser && localStorage.getItem('unitTypeV2Id') ? (
                       <SecureProperty
                         exact
                         path="/overview"
@@ -491,9 +499,9 @@ const App = () => {
                         component={() => <Overview />}
                       />
                     ) : (
-                      <LoginRoute exact path="/" component={() => <Login />} />
+                      <PrivateRoute exact path="/overview" component={() => <NotAuthorize />} />
                     )}
-                    {isSubUser && localStorage.getItem('propertyV2Id') ? (
+                    {isSubUser && localStorage.getItem('unitTypeV2Id') ? (
                       <SecureProperty
                         exact
                         path="/location"
@@ -506,9 +514,9 @@ const App = () => {
                         component={() => <Location />}
                       />
                     ) : (
-                      <LoginRoute exact path="/" component={() => <Login />} />
+                      <PrivateRoute exact path="/location" component={() => <NotAuthorize />} />
                     )}
-                    {isSubUser && localStorage.getItem('propertyV2Id') ? (
+                    {isSubUser && localStorage.getItem('unitTypeV2Id') ? (
                       <SecureProperty
                         exact
                         path="/photos"
@@ -521,12 +529,77 @@ const App = () => {
                         component={() => <Photos />}
                       />
                     ) : (
-                      <LoginRoute exact path="/" component={() => <Login />} />
+                      <PrivateRoute exact path="/photos" component={() => <NotAuthorize />} />
                     )}
 
                     {/* <SecureOverview exact path="/overview" component={() => <Overview />} />
                     <SecureOverview exact path="/location" component={() => <Location />} />
                     <SecureOverview exact path="/photos" component={() => <Photos />} /> */}
+                    {isSubUser ? (
+                      <SecureChannel
+                        exact
+                        path="/channel"
+                        component={() => <Channel />}
+                      />
+                    ) : feature.channelManager ? (
+                      <PrivateRoute
+                        exact
+                        path="/channel"
+                        component={() => <Channel />}
+                      />
+                    ) : (
+                      <PrivateRoute exact path="/channel" component={() => <NotAuthorize />} />
+                    )}
+                    {isSubUser ? (
+                      <SecureChannel
+                        exact
+                        path="/channelbooking"
+                        component={() => <ChannelBooking />}
+                      />
+                    ) : feature.channelManager ? (
+                      <PrivateRoute
+                        exact
+                        path="/channelbooking"
+                        component={() => <ChannelBooking />}
+                      />
+                    ) : (
+                      <PrivateRoute exact path="/channelbooking" component={() => <NotAuthorize />} />
+                    )}
+                    {isSubUser ? (
+                      <SecureChannel
+                        exact
+                        path="/channelexpedia"
+                        component={() => <ChannelExpedia />}
+                      />
+                    ) : feature.channelManager ? (
+                      <PrivateRoute
+                        exact
+                        path="/channelexpedia"
+                        component={() => <ChannelExpedia />}
+                      />
+                    ) : (
+                      <PrivateRoute exact path="/channelexpedia" component={() => <NotAuthorize />} />
+                    )}
+                    {isSubUser ? (
+                      <SecureChannel
+                        exact
+                        path="/channelairbnb"
+                        component={() => <ChannelAirbnb />}
+                      />
+                    ) : feature.channelManager ? (
+                      <PrivateRoute
+                        exact
+                        path="/channelairbnb"
+                        component={() => <ChannelAirbnb />}
+                      />
+                    ) : (
+                      <PrivateRoute exact path="/channelairbnb" component={() => <NotAuthorize />} />
+                    )}
+                    {/* <Route exact path="/channel" component={() => <Channel />} />
+                    <Route exact path="/channelbooking" component={() => <ChannelBooking />} />
+                    <Route exact path="/channelexpedia" component={() => <ChannelExpedia />} />
+                    <Route exact path="/channelairbnb" component={() => <ChannelAirbnb />} /> */}
+                    <Route exact path="/notauthorize" component={NotAuthorize} />
 
                     <Route component={PageNotFound} />
 

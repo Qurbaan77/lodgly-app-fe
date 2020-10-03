@@ -37,6 +37,7 @@ const EditInvoicePopup = (props) => {
     handleOk,
     handleCancel,
   } = props;
+  console.log(property);
   function useUpdate() {
     const [, setTick] = useState(0);
     const update = useCallback(() => {
@@ -95,7 +96,7 @@ const EditInvoicePopup = (props) => {
       setVatId(invoiceData.vat);
       setAddress(invoiceData.address);
       // setItemState(invoiceItems);
-      if (invoiceItems.length) {
+      if (invoiceItems && invoiceItems.length) {
         invoiceItems.forEach((el, i) => {
           form.setFieldsValue({
             [`itemDescription${i}`]: el.itemDescription,
@@ -153,12 +154,15 @@ const EditInvoicePopup = (props) => {
     valuesCopy.email = email;
     const { clientName } = valuesCopy;
     valuesCopy.total = total;
-    valuesCopy.propertyName = property[0].propertyName;
+    valuesCopy.propertyName = property[0].unitTypeName[0].name;
     valuesCopy.propertyAddress = property[0].address;
     valuesCopy.website = property[0].website;
     valuesCopy.propertyId = property[0].id;
     valuesCopy.deleteInvoiceItemId = deleteInvoiceItemId;
     valuesCopy.label = invoiceData.label;
+    if (invoiceData.logo) {
+      valuesCopy.logo = invoiceData.logo;
+    }
     if (issueState) valuesCopy.status = 'Issued';
     const res = issueState
       ? await userInstance.post('/invoicedraft', valuesCopy)
@@ -434,7 +438,7 @@ const EditInvoicePopup = (props) => {
               <h4>
                 <img src={propertyIcon} alt="property" />
                 {' '}
-                {property.length ? property[0].propertyName : ''}
+                {property.length ? property[0].unitTypeName[0].name : ''}
               </h4>
               <p>{property.length ? property[0].address : ''}</p>
             </div>
