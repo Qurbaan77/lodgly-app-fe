@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import './guests.css';
@@ -28,22 +28,42 @@ const UpdateGuestPopup = (props) => {
   const [form] = Form.useForm();
   const guestData = editValues;
   // const [country, setCountry] = useState(null);
-  const m1 = moment(guestData.dob);
+  useEffect(() => {
+    if (Object.keys(guestData).length) {
+      const m1 = moment(guestData.dob);
+      form.setFieldsValue({
+        id: guestData.id,
+        fullName: guestData.fullname,
+        country: guestData.country,
+        email: guestData.email,
+        phone: guestData.phone,
+        dob: guestData.dob && m1,
+        // dob: guestData.dob,
+        gender: guestData.gender,
+        typeOfDoc: guestData.typeOfDoc,
+        docNo: guestData.docNo,
+        // citizenShip: guestData.citizenShip,
+        place: guestData.place,
+        notes: guestData.notes,
+      });
+    }
+  }, [guestData, form]);
+  // const m1 = moment(guestData.dob);
 
-  form.setFieldsValue({
-    id: guestData.id,
-    fullName: guestData.fullname,
-    country: guestData.country,
-    email: guestData.email,
-    phone: guestData.phone,
-    gender: guestData.gender,
-    typeOfDoc: guestData.typeOfDoc,
-    dob: m1,
-    docNo: guestData.docNo,
-    // citizenShip: guestData.citizenShip,
-    place: guestData.place,
-    notes: guestData.notes,
-  });
+  // form.setFieldsValue({
+  //   id: guestData.id,
+  //   fullName: guestData.fullname,
+  //   country: guestData.country,
+  //   email: guestData.email,
+  //   phone: guestData.phone,
+  //   gender: guestData.gender,
+  //   typeOfDoc: guestData.typeOfDoc,
+  //   dob: m1,
+  //   docNo: guestData.docNo,
+  //   // citizenShip: guestData.citizenShip,
+  //   place: guestData.place,
+  //   notes: guestData.notes,
+  // });
   const disabledDate = (current) => current > moment().subtract(18, 'y') || current > moment();
 
   const onFinish = async (values) => {
