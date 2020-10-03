@@ -30,3 +30,9 @@ export const adminInstance = axios.create({
   baseURL: `${server}/admin`,
   withCredentials: true,
 });
+
+export const channelInstance = axios.create({
+  baseURL: `${server}/channel`,
+  withCredentials: true,
+  headers: { 'x-custom-header': token },
+});

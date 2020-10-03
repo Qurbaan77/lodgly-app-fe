@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import './booking.css';
@@ -13,6 +13,7 @@ import {
   Row,
   Col,
   Modal,
+  Select,
 } from 'antd';
 // import Toaster from '../toaster/toaster';
 import moment from 'moment';
@@ -28,22 +29,27 @@ const GuestPopup = (props) => {
   const [form] = Form.useForm();
   const guestData = editValues;
   // const [country, setCountry] = useState(null);
-  const m1 = moment(guestData.dob);
-  form.setFieldsValue({
-    id: guestData.id,
-    fullName: guestData.fullname,
-    country: guestData.country,
-    email: guestData.email,
-    phone: guestData.phone,
-    dob: m1,
-    // dob: guestData.dob,
-    gender: guestData.gender,
-    typeOfDoc: guestData.typeOfDoc,
-    docNo: guestData.docNo,
-    // citizenShip: guestData.citizenShip,
-    place: guestData.place,
-    notes: guestData.notes,
-  });
+
+  useEffect(() => {
+    if (Object.keys(guestData).length) {
+      const m1 = moment(guestData.dob);
+      form.setFieldsValue({
+        id: guestData.id,
+        fullName: guestData.fullname,
+        country: guestData.country,
+        email: guestData.email,
+        phone: guestData.phone,
+        dob: guestData.dob && m1,
+        // dob: guestData.dob,
+        gender: guestData.gender,
+        typeOfDoc: guestData.typeOfDoc,
+        docNo: guestData.docNo,
+        // citizenShip: guestData.citizenShip,
+        place: guestData.place,
+        notes: guestData.notes,
+      });
+    }
+  }, [guestData, form]);
 
   const onFinish = async (values) => {
     values.bookingId = localStorage.getItem('bookingId');
@@ -73,7 +79,7 @@ const GuestPopup = (props) => {
       wrapClassName="guest-modal"
     >
       <Helmet>
-        <body className={visible ? 'ant-scrolling-effect' : ''} />
+        <body className="ant-scrolling-effect" />
       </Helmet>
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center' }}>
@@ -169,7 +175,12 @@ const GuestPopup = (props) => {
               ]}
             >
 
-              <Input />
+              <Select>
+                <Select.Option value="Passport">Passport </Select.Option>
+                <Select.Option value="ID Card">ID Card </Select.Option>
+                <Select.Option value="Driving License">Driving License </Select.Option>
+                <Select.Option value="Other">Other </Select.Option>
+              </Select>
             </Form.Item>
           </Col>
 

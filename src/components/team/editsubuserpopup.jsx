@@ -349,7 +349,7 @@ const EditSubUserPopup = (props) => {
       wrapClassName="guest-modal sub-user"
     >
       <Helmet>
-        <body className={visible ? 'ant-scrolling-effect' : ''} />
+        <body className="ant-scrolling-effect" />
       </Helmet>
       <div className="cross-btn">
         <CloseOutlined onClick={handleCross} />

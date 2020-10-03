@@ -95,7 +95,7 @@ const EditInvoicePopup = (props) => {
       setVatId(invoiceData.vat);
       setAddress(invoiceData.address);
       // setItemState(invoiceItems);
-      if (invoiceItems.length) {
+      if (invoiceItems && invoiceItems.length) {
         invoiceItems.forEach((el, i) => {
           form.setFieldsValue({
             [`itemDescription${i}`]: el.itemDescription,
@@ -159,6 +159,9 @@ const EditInvoicePopup = (props) => {
     valuesCopy.propertyId = property[0].id;
     valuesCopy.deleteInvoiceItemId = deleteInvoiceItemId;
     valuesCopy.label = invoiceData.label;
+    if (invoiceData.logo) {
+      valuesCopy.logo = invoiceData.logo;
+    }
     if (issueState) valuesCopy.status = 'Issued';
     const res = issueState
       ? await userInstance.post('/invoicedraft', valuesCopy)

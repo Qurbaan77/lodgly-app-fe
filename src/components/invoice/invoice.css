@@ -604,3 +604,17 @@
   .invoice-wrapper-expand .invoice-filter{
   min-height: 100vh;
   }
+  /* .upload-image{
+    border: 1px solid #eaeaea !important;
+  } */
+  .logoimage{
+    font-size: 35px!important;
+    background-color: white;
+  }
+  .ant-upload-drag-icon {
+    background-color: white;
+}
+
+.upload{
+  background-color: white!important;
+}

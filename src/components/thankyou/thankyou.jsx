@@ -1,11 +1,12 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import './thankyou.css';
+import Wrapper from '../wrapper';
 import logo from '../../assets/images/logo.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
 
 const Thankyou = () => (
-  <>
+  <Wrapper>
     <Helmet>
       <link rel="icon" href={favicon} />
       <title>Lodgly - Comprehensive Vacation Rental Property Management</title>
@@ -19,14 +20,18 @@ const Thankyou = () => (
               <img src={logo} alt="Logo" />
             </div>
             <div className="thank-you-box">
-              <h1>Thank You for Register</h1>
-              <p>One of our team members will get in touch with you shortly!</p>
+              <h1>Your request was received by our Technical Team</h1>
+              <p>
+                We will connect your properties
+                within 48 hours and will send you the
+                confirmation email
+              </p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </>
+  </Wrapper>
 );
 
 export default Thankyou;

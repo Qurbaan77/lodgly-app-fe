@@ -342,6 +342,10 @@ const Sidenav = ({
           </Menu.Item>
         </SubMenu>
 
+        <Menu.Item className="channel-nav">
+          <img src={channelIcon} alt="channel" />
+          <Link to="/channel">{t('sidebar.menu14')}</Link>
+        </Menu.Item>
         <Menu.Item className="team-nav" hidden={hideTeam}>
           <img src={teamIcon} alt="team" />
           <Link to="/team">{t('sidebar.menu5')}</Link>
@@ -414,7 +418,7 @@ const Sidenav = ({
 
         <Menu.Item className="channel-nav">
           <img src={channelIcon} alt="channel" />
-          <Link to="channelmanager">{t('sidebar.menu14')}</Link>
+          <Link to="/channel">{t('sidebar.menu14')}</Link>
         </Menu.Item>
       </Menu>
 

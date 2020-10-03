@@ -230,7 +230,7 @@ const TeamListing = () => {
                             <div className="team-pic">
                               <Avatar
                                 color="#fab52c"
-                                name={el.role}
+                                name={el.email}
                                 round="50px"
                                 size="50px"
                               />

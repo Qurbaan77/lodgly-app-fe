@@ -116,10 +116,10 @@ const Profile = () => {
 
   const personalInfoFinish = async (values) => {
     const copyValues = values;
-    copyValues.address = values.address.trim();
-    copyValues.fullname = values.fullname.trim();
-    copyValues.email = values.email.trim();
-    copyValues.phone = values.phone.trim();
+    copyValues.address = values.address && values.address.trim();
+    copyValues.fullname = values.fullname && values.fullname.trim();
+    copyValues.email = values.email && values.email.trim();
+    copyValues.phone = values.phone && values.phone.trim();
     const companyName = window.location.hostname.split('.');
     copyValues.name = companyName[0];
     const response = await userInstance.post('/updatePersonalInfo', copyValues);
