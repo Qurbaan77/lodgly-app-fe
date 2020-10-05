@@ -342,7 +342,7 @@ const Overview = () => {
         <body className="overview-page-view" />
       </Helmet>
 
-      <div className="overview">
+      <div className="overview overview-space">
         <Row>
           <Col span={24}>
             <div className="overview-content">
