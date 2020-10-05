@@ -1,8 +1,5 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable guard-for-in */
-/* eslint-disable no-alert */
 import React, {
-  useEffect, useState, useCallback, useRef,
+  useEffect, useState, useCallback,
 } from 'react';
 import Helmet from 'react-helmet';
 import './calendar.css';
@@ -24,7 +21,6 @@ import CreateProperty from '../property/createProperty';
 import loader from '../../assets/images/cliploader.gif';
 import propertyplace from '../../assets/images/property-placeholder.png';
 import GSTCWrapper from './GSTC';
-// import GSTCWrapperV2 from './GSTCV2';
 import {
   userInstance,
   reservationInstance,
@@ -56,7 +52,6 @@ const Calendar = () => {
   const [calendarBookingDate, setCalendarBookingDate] = useState([]);
   const [GSTCobj, setGSTCobj] = useState({});
   const [currentDate, setCurrenData] = useState(GSTC.api.date().format('MMMM YYYY'));
-  const [visibleResrevation, setVisibleResrevation] = useState(false);
   const formatToId = (ids) => GSTC.api.GSTCID(ids.toString());
   const rows = {};
   const items = {};
@@ -149,8 +144,7 @@ const Calendar = () => {
       Selection({
         items: true,
         showOverlay: false,
-        onSelected: (selected, last) => {
-          console.log('onSelect', { selected, last });
+        onSelected: (selected) => {
           setCalendarBookingDate(selected);
           return selected;
         },
@@ -260,20 +254,22 @@ const Calendar = () => {
               } if (row && row.meta && row.meta.context === 'type') {
                 // show how many events are in Unit Types
                 let count = 0;
-                for (const itemId in items) {
-                  const item = items[itemId];
-                  if (row.$data.children.includes(item.rowId)) {
-                    if (
-                      (item.time.start >= time.leftGlobal
-                        && item.time.start <= time.rightGlobal)
-                      || (item.time.end >= time.leftGlobal
-                        && item.time.end <= time.rightGlobal)
-                      || (item.time.start <= time.leftGlobal
-                        && item.time.end >= time.rightGlobal)
-                    ) {
-                      count = +1;
+                if (items.length > 0) {
+                  items.forEach((itemId) => {
+                    const item = items[itemId];
+                    if (row.$data.children.includes(item.rowId)) {
+                      if (
+                        (item.time.start >= time.leftGlobal
+                          && item.time.start <= time.rightGlobal)
+                        || (item.time.end >= time.leftGlobal
+                          && item.time.end <= time.rightGlobal)
+                        || (item.time.start <= time.leftGlobal
+                          && item.time.end >= time.rightGlobal)
+                      ) {
+                        count = +1;
+                      }
                     }
-                  }
+                  });
                 }
 
                 return html` <div
@@ -294,13 +290,9 @@ const Calendar = () => {
   };
 
   const subs = [];
-  const calendarRenderFunction = () => {
-    subs.forEach((unsub) => unsub());
-  };
-
   useEffect(() => {
-    calendarRenderFunction();
-  }, [unitTypes]);
+    subs.forEach((unsub) => unsub());
+  });
 
   function onLoad(gstc) {
     setGSTCobj(gstc);
@@ -319,7 +311,6 @@ const Calendar = () => {
   }
 
   const previousMonth = () => {
-    console.log('currentDate', currentDate);
     if (!GSTCobj.state) return;
     let date;
     GSTCobj.state.update('config.chart.time', (time) => {
@@ -384,7 +375,6 @@ const Calendar = () => {
         affiliateId: userId,
       },
     );
-    console.log('response', response);
     if (response.data.code === 200) {
       if (response.data.data && response.data.data.length > 0) {
         setLoading(false);
@@ -393,12 +383,7 @@ const Calendar = () => {
     }
   }, [userId]);
 
-  // useEffect(() => {
-  //   getCalendarData();
-  // }, [getCalendarData]);
-
   useEffect(() => {
-    onLoad();
     getData();
     getCalendarData();
     getProperty();
@@ -624,6 +609,7 @@ const Calendar = () => {
           wrapClassName="create-booking-modal"
           getData={getData}
           calendarBookingDate={calendarBookingDate}
+          setCalendarBookingDate={setCalendarBookingDate}
         />
 
         <GroupReservation

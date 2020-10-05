@@ -209,7 +209,6 @@ const Invoice = () => {
     const res = await propertyInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
-    console.log(res);
     if (res.data.code === 200) {
       setLoading(false);
       setPropertyInfo(res.data.propertiesData);

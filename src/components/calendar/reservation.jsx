@@ -1,44 +1,41 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import Avatar from 'react-avatar';
 import { toast } from 'react-toastify';
 import './calendar.css';
 import {
   Form,
-  Select,
   Input,
   Switch,
-  Radio,
-  DatePicker,
+  // DatePicker,
   Button,
   // Checkbox,
   Row,
   Col,
-  Avatar,
-  Collapse,
+  // Avatar,
+  // Collapse,
   Modal,
   // Menu,
 } from 'antd';
 import {
   PlusOutlined,
-  PlusSquareOutlined,
   BellOutlined,
   DeleteOutlined,
   FormOutlined,
 } from '@ant-design/icons';
 import DeletePopup from '../property/deletepopup';
+import EditReservation from './editreservation';
 import { reservationInstance } from '../../axios/axiosconfig';
-import Wrapper from '../wrapper';
-
-const { Panel } = Collapse;
-
-const { RangePicker } = DatePicker;
 
 const Reservation = ({ calendarBookingDate }) => {
   const [visible, setVisible] = useState(false);
   const [visibleOfDelete, setVisibleOfDelete] = useState(false);
+  const [editvisible, setEditVisible] = useState(false);
   const [currReservationId, setCurrReservationId] = useState(0);
   const [reservationData, setReservationData] = useState({});
+  const [guestArray, setGuestArray] = useState([]);
+  const [serviceArray, setServiceArray] = useState([]);
   const [nights, setNights] = useState(0);
   function onChange() {}
 
@@ -67,43 +64,37 @@ const Reservation = ({ calendarBookingDate }) => {
     }
   };
 
-  const getReservationData = async () => {
+  const getReservationData = useCallback(async () => {
     if (Object.values(calendarBookingDate).length > 0) {
       if (Object.values(calendarBookingDate)[1].length > 0) {
-        console.log('calendarBookingDate', Object.values(calendarBookingDate)[1][0].id.split(',')[1]);
         const Id = parseInt(Object.values(calendarBookingDate)[1][0].id.split(',')[1], 10);
+        setCurrReservationId(Id);
         const values = {
           id: Id,
         };
         const response = await reservationInstance.post('/getParticularReservation', values);
-        console.log('response', response);
+        // console.log('response', response);
         if (response.data.code === 200) {
           const data = response.data.reservationData[0];
+          const guestData = response.data.guestData[0];
+          const serviceData = response.data.serviceData[0];
           const d1 = new Date(data.startDate);
           const d2 = new Date(data.endDate);
           const diff = Math.abs(d1 - d2);
           const day = Math.floor(diff / (24 * 60 * 60 * 1000));
           setNights(day);
           setReservationData(data);
-          console.log('data', data);
+          setGuestArray(guestData);
+          setServiceArray(serviceData);
         }
         setVisible(true);
       }
     }
-  };
+  }, [calendarBookingDate]);
 
   useEffect(() => {
-    // if (Object.values(calendarBookingDate).length > 0) {
-    //   if (Object.values(calendarBookingDate)[1].length > 0) {
-    //     console.log('calendarBookingDate', Object.values(calendarBookingDate)[1][0].id.split(',')[1]);
-    //     const Id = parseInt(Object.values(calendarBookingDate)[1][0].id.split(',')[1], 10);
-    //     setCurrReservationId(Id);
-    //     getReservationData();
-    //     setVisible(true);
-    //   }
-    // }
     getReservationData();
-  }, [calendarBookingDate]);
+  }, [getReservationData]);
 
   return (
     <Modal
@@ -112,7 +103,7 @@ const Reservation = ({ calendarBookingDate }) => {
       visible={visible}
       onOk={handleOk}
       onCancel={close}
-      wrapClassName="create-booking-modal"
+      wrapClassName="create-booking-modal reservation-setting"
     >
       <Form name="basic">
         <Row
@@ -259,14 +250,20 @@ const Reservation = ({ calendarBookingDate }) => {
           className="reservation-user"
           style={{ alignItems: 'center', padding: '0px 20px' }}
         >
+          {guestArray.map((el) => (
+            <div className="user-box" key={el.id}>
+              {/* <Avatar
+                name={el.fullname}
+                style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
+                KB
+              </Avatar> */}
+              <Avatar name={el.fullname} round size="50" color="#f56a00" />
+              <p>{el.fullname}</p>
+            </div>
+          ))}
           <div className="user-box">
-            <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>
-              KB
-            </Avatar>
-            <p>Kurtis Baraccano</p>
-          </div>
-          <div className="user-box">
-            <Avatar icon={<PlusOutlined />} />
+            {/* <Avatar icon={<PlusOutlined />} /> */}
+            <Avatar icon={<PlusOutlined />} round size="50" name="+" color="#D3D3D3" />
             <p>Add Guest</p>
           </div>
         </Row>
@@ -281,7 +278,12 @@ const Reservation = ({ calendarBookingDate }) => {
         >
           <Col span={24}>
             <Form.Item style={{ textAlign: 'center' }}>
-              <Button style={{ marginRight: 10 }}>Edit Reservation</Button>
+              <Button
+                style={{ marginRight: 10 }}
+                onClick={() => setEditVisible(true)}
+              >
+                Edit Reservation
+              </Button>
               <Button type="primary" htmlType="submit" icon={<PlusOutlined />}>
                 Check In
               </Button>
@@ -308,15 +310,29 @@ const Reservation = ({ calendarBookingDate }) => {
           cancel={() => handleCancelDelete()}
         />
       </Modal>
+      <EditReservation
+        title="Edit Reservation"
+        editvisible={editvisible}
+        setEditVisible={setEditVisible}
+        setVisible={setVisible}
+        reservationData={reservationData}
+        guestArray={guestArray}
+        setGuestArray={setGuestArray}
+        serviceArray={serviceArray}
+        setServiceArray={setServiceArray}
+      />
     </Modal>
   );
 };
 
 Reservation.propTypes = {
-  calendarBookingDate: PropTypes.func,
+  calendarBookingDate: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+  ]),
 };
 Reservation.defaultProps = {
-  calendarBookingDate: () => {},
+  calendarBookingDate: {},
 };
 
 export default Reservation;

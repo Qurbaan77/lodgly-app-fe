@@ -7,7 +7,7 @@ import GSTC from 'gantt-schedule-timeline-calendar';
 import 'gantt-schedule-timeline-calendar/dist/style.css';
 
 export { GSTC };
-export default function GSTCWrapper({ config, onLoad, previousMonth }) {
+export default function GSTCWrapper({ config, onLoad }) {
   const gstc = useRef(null);
   const mounted = useRef(false);
   const callback = useCallback(
@@ -25,7 +25,7 @@ export default function GSTCWrapper({ config, onLoad, previousMonth }) {
         mounted.current = true;
       }
     },
-    [config, onLoad, previousMonth],
+    [config, onLoad],
   );
 
   useEffect(() => () => {
@@ -46,10 +46,8 @@ GSTCWrapper.propTypes = {
     PropTypes.array,
   ]),
   onLoad: PropTypes.func,
-  previousMonth: PropTypes.func,
 };
 GSTCWrapper.defaultProps = {
   config: {},
   onLoad: () => {},
-  previousMonth: () => {},
 };
