@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Helmet from 'react-helmet';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
-  Steps, Button, message, Alert, Select, Form, Input,
+  Steps, Button, Select, Form, Input, Row, Col,
 } from 'antd';
+import { toast } from 'react-toastify';
 import favicon from '../../assets/images/logo-mobile.png';
 import Wrapper from '../wrapper';
-import booking1 from '../../assets/images/channelmanager/booking-1.png';
-import booking2 from '../../assets/images/channelmanager/booking-2.png';
-import booking3 from '../../assets/images/channelmanager/booking-3.png';
-import booking4 from '../../assets/images/channelmanager/booking-4.png';
-import booking5 from '../../assets/images/channelmanager/booking-5.png';
-
+import expedia1 from '../../assets/images/channelmanager/expedia-1.png';
+import expedia2 from '../../assets/images/channelmanager/expedia-2.png';
+import loader from '../../assets/images/cliploader.gif';
 import './channel.css';
+import { channelInstance, propertyInstance } from '../../axios/axiosconfig';
 
 const { Step } = Steps;
 
@@ -50,117 +49,69 @@ const ChannelExpedia = () => {
           ))}
         </Steps>
         <div className="steps-content">{steps[current].content}</div>
-        <div className="steps-action">
+        <div className="steps-action1 previous">
           {current > 0 && (
             <Button
               style={{ margin: '0 8px' }}
               onClick={() => setCurrent(current - 1)}
+              className=""
             >
               Previous
             </Button>
           )}
-
+        </div>
+        <div className="steps-action ">
           {current < steps.length - 1 && (
             <Button type="primary" onClick={() => setCurrent(current + 1)}>
               Continue
             </Button>
           )}
-          {current === steps.length - 1 && (
+          {/* {current === steps.length - 1 && (
             <Button
               type="primary"
-              onClick={() => message.success('Your request was recieved by our Technical Team. We will connect your properties within 48 hours and will send you a confirmation email.')}
+              onClick={handleSubmit}
             >
               Submit
             </Button>
-          )}
-
+          )} */}
         </div>
       </div>
-
     </Wrapper>
   );
 };
 
 export default ChannelExpedia;
-
 const ChannelBookingContent = () => (
 
   <div className="channel-booking-content">
 
-    <h2>Booking.com</h2>
-    <p>Guide to connect and map booking.com to Channex</p>
-
-    <h3>Request connection to Channex.io in booking extranet</h3>
+    <h2>Expedia</h2>
+    <p>How to connect and map to Expedia</p>
+    <hr className="line-section" />
+    <h3>Request the connection with Channex</h3>
     <p>
-      Login to the admin for the property here:
-      <Link to="https://account.booking.com/">https://account.booking.com</Link>
+      In the Expedia extranet please go to
+      &quot;Rooms and Rates&quot; and then &quot;Connectivity Settings&quot;
     </p>
+    <Row>
+      <Col md={5} />
+      <Col md={14}>
+        <img src={expedia1} alt="Expedia" className="m-300" />
+      </Col>
+    </Row>
 
-    <Alert
-      description="This step is best done by the property since booking.com have 2 step security with passcodes sent to the phone."
-      type="info"
-      showIcon
-    />
-
-    <img src={booking1} alt="Booking" />
-
+    <p>Typically Expedia will require 2 factor authentication to access this page</p>
+    <Row>
+      <Col md={3} />
+      <Col md={18}>
+        <img src={expedia2} alt="Expedia" />
+      </Col>
+    </Row>
     <p>
-      Copy the property code at the top
-      of the navigation, you will need this later inside
-      Channex to connect the account
+      Once this has been completed the
+      user should choose Channex for both options
+      of Connectivity and bookings.
     </p>
-    <p>
-      Click on Account
-      {'>'}
-      {' '}
-      Connectivity Provider
-    </p>
-
-    <h3>Choose Provider Screen</h3>
-
-    <img src={booking2} alt="Booking" />
-
-    <p>Click on &quot;Search&quot;</p>
-
-    <img src={booking3} alt="Booking" />
-
-    <p>Type &quot;Channex&quot; and it will find Channex.io on the list.</p>
-
-    <Alert
-      description="You have to type the whole word Channex since it wont find it otherwise."
-      type="error"
-      showIcon
-    />
-
-    <img src={booking4} alt="Booking" />
-
-    <p>
-      Once channex is selected on the
-      list it will show the summary box,
-      just click &quot;Next&quot;
-    </p>
-
-    <h3>Agree the XML Service Agreement</h3>
-
-    <img src={booking5} alt="Booking" />
-
-    <p>
-      Click on the checkbox to agree the
-      terms and conditions and then the
-      &quot;Yes, I accept&quot; button.
-    </p>
-
-    <p>No other things needs to be done or completed on this form</p>
-
-    <img src={booking5} alt="Booking" />
-
-    <p>Now you will be in a waiting status, until Channex accepts the connection</p>
-
-    <Alert
-      description="You can go to map the property in Channex immediately even though Channex has not accepted the property yet. But at this stage you cannot go live (just mapping)"
-      type="info"
-      showIcon
-    />
 
   </div>
 
@@ -168,29 +119,79 @@ const ChannelBookingContent = () => (
 
 const ChannelBookingForm = () => {
   const { Option } = Select;
+  const history = useHistory();
 
-  const children = [];
-  for (let i = 10; i < 36; i = +1) {
-    children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-  }
+  const [properties, setProperties] = useState([]);
+  const [showLoader, setshowLoader] = useState(true);
+  // const [disbaleBtn, setDisableBtn] = useState(true);
 
-  function handleChange(value) {
-    console.log(`selected ${value}`);
-  }
+  const handleSubmit = async (values) => {
+    setshowLoader(false);
+    values.channelToMap = 'expedia';
+    const res1 = await channelInstance.post('/checkRates', values);
+    if (res1.data.code === 200) {
+      const res = await channelInstance.post('/activateChannel', values);
+      if (res.data.code === 200) {
+        setshowLoader(true);
+        history.push('/thankyou');
+      }
+    } else if (res1.data.code === 401) {
+      setshowLoader(true);
+      toast.error(res1.data.msg, { containerId: 'B' });
+    } else {
+      setshowLoader(true);
+      toast.error('some error occured', { containerId: 'B' });
+    }
+  };
+
+  //   function handleChange(value) {
+  //     // console.log(`selected ${value}`);
+  //   }
+
+  useEffect(() => {
+    const getData = async () => {
+      const res = await propertyInstance.get('/getPropertyName');
+      //   console.log(res);
+      if (res.data.code === 200) {
+        setProperties(res.data.propertyData);
+      }
+    };
+    getData();
+  }, []);
 
   return (
 
     <div className="channel-booking-form">
+      <div className="loader" hidden={showLoader}>
+        <div className="loader-box">
+          <img src={loader} alt="loader" />
+        </div>
+      </div>
 
-      <Form>
-        <Form.Item label="Email">
+      <Form onFinish={handleSubmit}>
+        <Form.Item label="Email" name="email" rules={[{ required: true, message: 'Please fill the email field' }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item label="Properties that you want to connect">
-          <Select mode="tags" style={{ width: '100%' }} onChange={handleChange}>
-            {children}
+        <Form.Item label="Properties that you want to connect" name="properties" rules={[{ required: true, message: 'Please select the properties you want to map' }]}>
+          <Select mode="multiple" style={{ width: '100%' }}>
+            {
+                properties.map((property) => (
+                  <Option
+                    // value={property.propertyName}
+                    label={property.propertyName}
+                    key={property.id}
+                  >
+                    {property.propertyName}
+                  </Option>
+                ))
+            }
           </Select>
+        </Form.Item>
+        <Form.Item className="submit-btn">
+          <Button type="primary" htmlType="submit">
+            Submit
+          </Button>
         </Form.Item>
       </Form>
 

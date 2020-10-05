@@ -103,7 +103,7 @@ const AdInvoicePopup = (props) => {
     valuesCopy.userEmail = userData[0].email;
     valuesCopy.email = email;
     valuesCopy.total = total.reduce((a, b) => a + (b || 0), 0);
-    valuesCopy.propertyName = property[0].propertyName;
+    valuesCopy.propertyName = property[0].unitTypeName[0].name;
     valuesCopy.propertyAddress = property[0].address;
     valuesCopy.website = property[0].website;
     valuesCopy.propertyId = property[0].id;
