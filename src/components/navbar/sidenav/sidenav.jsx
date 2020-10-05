@@ -213,7 +213,6 @@ const Sidenav = ({
     if (
       (pathname === '/property'
         || pathname === '/unittype'
-        || pathname === '/channelmanager'
         || pathname === '/services'
         || pathname === '/groups'
         || pathname === '/task')
@@ -245,7 +244,6 @@ const Sidenav = ({
         || pathname.includes('photos')
         || pathname.includes('rates')
         || pathname.includes('seasonrates')
-        || pathname.includes('channelmanager')
         || pathname.includes('/services')
       )
       && propertyNav === false
@@ -428,10 +426,10 @@ const Sidenav = ({
           <Link to="/services">{t('sidebar.menu15')}</Link>
         </Menu.Item>
 
-        <Menu.Item className="channel-nav" hidden={hideChannel}>
+        {/* <Menu.Item className="channel-nav" hidden={hideChannel}>
           <img src={channelIcon} alt="channel" />
           <Link to="/channel">{t('sidebar.menu14')}</Link>
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu>
 
       <div className="company-ip">
