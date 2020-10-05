@@ -125,10 +125,10 @@ const Profile = () => {
     const response = await userInstance.post('/updatePersonalInfo', copyValues);
     const statusCode = response.data.code;
     if (statusCode === 200) {
-      toast.success('Profile Updated Successfully', { containerId: 'B' });
+      toast.success('Profile Updated Successfully', { containerId: 'B', toastId: 'B' });
       getUserInfo();
     } else {
-      toast.error('server error please try again', { containerId: 'B' });
+      toast.error('server error please try again', { containerId: 'B', toastId: 'A' });
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     // form1.resetFields();
@@ -138,9 +138,9 @@ const Profile = () => {
     const response = await userInstance.post('/updateOrganisation', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
-      toast.success('Company Data Saved Successfully', { containerId: 'B' });
+      toast.success('Company Data Saved Successfully', { containerId: 'B', toastId: 'C' });
     } else {
-      toast.error('server error please try again', { containerId: 'B' });
+      toast.error('server error please try again', { containerId: 'B', toastId: 'D' });
     }
     getCompanyInfo();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -151,9 +151,9 @@ const Profile = () => {
     const response = await userInstance.post('/changePassword', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
-      toast.success('Password changed successfully', { containerId: 'B' });
+      toast.success('Password changed successfully', { containerId: 'B', toastId: 'E' });
     } else {
-      toast.error('server error please try again', { containerId: 'B' });
+      toast.error('server error please try again', { containerId: 'B', toastId: 'F' });
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form3.resetFields();
@@ -178,10 +178,10 @@ const Profile = () => {
     const response = await userInstance.post('/updateTimeZone', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
-      toast.success('Time Zone Saved Successfully', { containerId: 'B' });
+      toast.success('Time Zone Saved Successfully', { containerId: 'B', toastId: 'F' });
       getUserInfo();
     } else {
-      toast.error('server error please try again', { containerId: 'B' });
+      toast.error('server error please try again', { containerId: 'B', toastId: 'G' });
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form2.resetFields();

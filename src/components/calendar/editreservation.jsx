@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import './booking.css';
-import { toast } from 'react-toastify';
+import moment from 'moment';
 import {
   Form,
   Select,
@@ -12,154 +11,131 @@ import {
   Button,
   Row,
   Col,
-  Collapse,
-  Modal,
+  Collapse, Modal,
 } from 'antd';
 import {
   PlusSquareOutlined,
   PlusOutlined,
   DeleteOutlined,
+  ClockCircleOutlined,
+  CheckOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
-import moment from 'moment';
-import { bookingInstance, propertyInstance, userInstance } from '../../axios/axiosconfig';
+import { toast } from 'react-toastify';
+import { userInstance, reservationInstance, propertyInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
-const { RangePicker } = DatePicker;
-const i = 1;
 
-const Editbookingpopup = (props) => {
+const { RangePicker } = DatePicker;
+let i = 1;
+
+const EditReservation = (props) => {
   const { t } = useTranslation();
   const {
-    editBookingValues,
-    editCurrentGuest,
-    setEditCurrentGuest,
-    currentService,
-    setCurrentService,
-    close,
-    visible,
-    handleOk,
-    handleCancel,
-    setBooked,
-    getData,
+    editvisible,
+    setEditVisible,
+    setVisible,
+    reservationData,
+    guestArray,
+    setGuestArray,
+    serviceArray,
+    setServiceArray,
   } = props;
   const [form] = Form.useForm();
+  // const [visible1, setVisible1] = useState(false);
+  // const [radio, setRadio] = useState(1);
   const [channel, setChannel] = useState('');
-  const [adult, setAdult] = useState(0);
-  const [children1, setChildren1] = useState(0);
-  const [children2, setChildren2] = useState(0);
-  const [channelCommission, setChannelCommission] = useState(5);
+  // const [children1, setChildren1] = useState(0);
+  // const [children2, setChildren2] = useState(0);
+  const [channelCommission, setChannelCommission] = useState(null);
+  const [panel, setPanel] = useState([1]);
+  // const [servicePanel, setServicePanel] = useState([100]);
+  // const [arrValue, setArrValue] = useState(2);
   const [price, setPrice] = useState(0);
   const [night, setNight] = useState(0);
   const [amt, setAmt] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [discountType, setDiscountType] = useState('%');
   const [accomodation, setAccomodation] = useState(0);
+  // const [total, setTotal] = useState(0);
   const [deposit, setDeposit] = useState(0);
   // const [servicePrice, setServicePrice] = useState(0);
   // const [serviceAmt, setServiceAmt] = useState(0);
   // const [serviceTax, setServiceTax] = useState(0);
+  // const [serviceAmount, setServiceAmount] = useState(0);
+  const [leftDays, setLeftDays] = useState(0);
+  const [editServicePanel, setEditServicePanel] = useState([]);
   const [unitName, setUnitName] = useState('');
   const [depositType, setDepositType] = useState('€');
   const [depositAmount, setDepositAmount] = useState(null);
   const [discountAmount, setdiscountAmount] = useState(null);
-  const [editServicePanel, setEditServicePanel] = useState([]);
-  const [deleteGuestId, setDeleteGuestId] = useState(null);
-  const [deleteServiceId, setDeleteServiceId] = useState(null);
+  const [showOptional, setShowOptional] = useState(true);
+
+  // const [fullname, setFullname] = useState({});
+  // const [email, setEmail] = useState({});
+  // const [phone, setPhone] = useState({});
+  // const [country, setCountry] = useState({});
   const [serviceData, setServiceData] = useState([]);
   const [unitData, setUnitData] = useState([]);
   // const [currentUnit, setCurrentUnit] = useState({});
-  // const [unitTypeData, setUnitTypeData] = useState([]);
-  const [unitId, setUnitId] = useState(null);
-  // const [propertyData, setPropertyData] = useState([]);
-  const [propertyName, setPropertyName] = useState('');
-  // const history = useHistory();
-  const { nights, perNight } = editBookingValues;
-  const updateFields = useCallback(() => {
-    if (visible) {
-      fun1((editBookingValues.unitTypeId));
-      const m1 = moment(editBookingValues.startDate);
-      const m2 = moment(editBookingValues.endDate);
-      const data = editBookingValues.discountType === '%'
-        ? (nights * perNight * editBookingValues.discount) / 100
-        : editBookingValues.discount;
-      form.setFieldsValue({
-        groupname: [m1, m2],
-        property: editBookingValues.propertyName,
-        unit: editBookingValues.unitName,
-        adult: editBookingValues.adult,
-        children1: editBookingValues.children1,
-        children2: editBookingValues.children2,
-        perNight: editBookingValues.perNight,
-        nights: editBookingValues.nights,
-        discount: editBookingValues.discount,
-        discountType: editBookingValues.discountType,
-        discountTotal: data,
-        deposit: editBookingValues.deposit,
-        depositType: editBookingValues.depositType,
-      });
-      // setGuest(editCurrentGuest);
-      if (editCurrentGuest && editCurrentGuest.length) {
-        editCurrentGuest.forEach((el, i) => {
-          form.setFieldsValue({
-            [`fullName${i}`]: el.fullname,
-            [`email${i}`]: el.email,
-            [`country${i}`]: el.country,
-            [`phone${i}`]: el.phone,
-          });
-        });
-      }
-      if (currentService && currentService.length > 0) {
-        currentService.forEach((el, i) => {
-          form.setFieldsValue({
-            [`serviceName${i}`]: el.serviceName,
-            [`servicePrice${i}`]: el.servicePrice,
-            [`serviceQuantity${i}`]: el.quantity,
-            [`serviceTax${i}`]: el.serviceTax,
-            [`serviceAmount${i}`]: el.serviceAmount,
-          });
-        });
-      }
-      // setServiceState(currentService);
-      setPropertyName(editBookingValues.propertyName);
-      setUnitName(editBookingValues.unitName);
-      setUnitId(editBookingValues.unitId);
-      setChannel(editBookingValues.channel);
-      setChannelCommission(editBookingValues.commission);
-      setAdult(editBookingValues.adult);
-      setChildren1(editBookingValues.children1);
-      setChildren2(editBookingValues.children2);
-      setPrice(editBookingValues.perNight);
-      setNight(editBookingValues.nights);
-      setDiscount(editBookingValues.discount);
-      setDiscountType(editBookingValues.discountType);
-      setdiscountAmount(editBookingValues.discount);
-      setDeposit(editBookingValues.deposit);
-      setDepositType(editBookingValues.depositType);
-      setAmt(editBookingValues.nights * editBookingValues.perNight);
-      setAccomodation(editBookingValues.accomodation);
-      // setAccomodation(
-      //   editBookingValues.nights * editBookingValues.perNight
-      //     - (editBookingValues.nights
-      //       * editBookingValues.perNight
-      //       * editBookingValues.discount)
-      //       / 100,
-      // );
-    }
-  }, [
-    currentService,
-    editBookingValues,
-    editCurrentGuest,
-    form,
-    nights,
-    perNight,
-    visible,
-  ]);
 
-  useEffect(() => {
-    updateFields();
-  }, [visible, updateFields]);
+  // const [propertyData, setPropertyData] = useState([]);
+  // const [currentPropertyId, setCurrentPropertyId] = useState(null);
+  // const [reservationDate, setReservationDate] = useState(null);
+  const [unitId, setUnitId] = useState(null);
+  const [propertyName, setPropertyName] = useState('');
+  const [deleteServiceId, setDeleteServiceId] = useState(null);
+  // const history = useHistory();
+
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  const [{ userId }] = userCred || [{}];
+
+  const close = () => {
+    form.resetFields();
+    setVisible(false);
+    setEditVisible(false);
+  };
+
+  const addMore = () => {
+    if (guestArray && guestArray.length > 0) {
+      let i;
+      guestArray.forEach((el) => {
+        i = el.id;
+      });
+      setGuestArray(guestArray.concat([{ id: i + 1 }]));
+    }
+    i += 1;
+    setPanel([...panel, i]);
+  };
+
+  const removePanel = () => {
+    const oldarray = [...panel];
+    oldarray.pop();
+    setPanel([...oldarray]);
+  };
+
+  const addMoreService = async () => {
+    let i;
+    serviceArray.forEach((el) => {
+      i = el.id;
+    });
+    setServiceArray(serviceArray.concat([{ id: i + 1 }]));
+  };
+
+  // const removeServicePanel = () => {
+  //   if (serviceAmount !== 0) {
+  //     const sum = parseInt(total, 10) - parseInt(serviceAmount, 10);
+  //     setServiceAmount(0);
+  //     setServicePrice(0);
+  //     setServiceTax(0);
+  //     setServiceAmt(0);
+  //     setTotal(sum);
+  //   }
+  //   const oldarray = [...servicePanel];
+  //   oldarray.pop();
+  //   setServicePanel([...oldarray]);
+  // };
 
   function useUpdate() {
     const [, setTick] = useState(0);
@@ -171,223 +147,170 @@ const Editbookingpopup = (props) => {
 
   const update = useUpdate();
 
-  // const show = () => {
-  //   setVisible(true);
-  // };
-
-  // const close = () => {
-  //   setNotifyType('');
-  // };
-
-  // const Ok = () => {
-  //   setVisible(false);
-  // };
-
-  // const Cancel = () => {
-  //   setVisible(false);
-  // };
-
-  const addMoreService = async () => {
-    // if (currentService.length) {
-    let i;
-    currentService.forEach((el) => {
-      i = el.id;
-    });
-    setCurrentService(currentService.concat([{ id: i + 1 }]));
-    // const value = localStorage.getItem('propertyId');
-    // fun1(value);
-    // }
-  };
+  const updateFields = useCallback(() => {
+    if (editvisible) {
+      onSelectProperty((reservationData.unitTypeId));
+      const m1 = moment(reservationData.startDate);
+      const m2 = moment(reservationData.endDate);
+      const data = reservationData.discountType === '%'
+        ? (reservationData.night * reservationData.perNight * reservationData.discount) / 100
+        : reservationData.discount;
+      form.setFieldsValue({
+        groupname: [m1, m2],
+        property: reservationData.propertyName,
+        unit: reservationData.unitName,
+        adult: reservationData.adult,
+        children1: reservationData.children1,
+        children2: reservationData.children2,
+        perNight: reservationData.perNight,
+        nights: reservationData.night,
+        discount: reservationData.discount,
+        discountType: reservationData.discountType,
+        discountTotal: data,
+        deposit: reservationData.deposit,
+        depositType: reservationData.depositType,
+      });
+      if (guestArray && guestArray.length) {
+        guestArray.forEach((el, i) => {
+          form.setFieldsValue({
+            [`fullname${i}`]: el.fullname,
+            [`email${i}`]: el.email,
+            [`country${i}`]: el.country,
+            [`phone${i}`]: el.phone,
+          });
+        });
+      }
+      if (serviceArray && serviceArray.length > 0) {
+        serviceArray.forEach((el, i) => {
+          form.setFieldsValue({
+            [`serviceName${i}`]: el.serviceName,
+            [`servicePrice${i}`]: el.servicePrice,
+            [`serviceQuantity${i}`]: el.quantity,
+            [`serviceTax${i}`]: el.serviceTax,
+            [`serviceAmount${i}`]: el.serviceAmount,
+          });
+        });
+      }
+      setPropertyName(reservationData.propertyName);
+      setUnitName(reservationData.unitName);
+      setUnitId(reservationData.unitId);
+      setChannel(reservationData.channel);
+      setChannelCommission(reservationData.commission);
+      setPrice(reservationData.perNight);
+      setNight(reservationData.night);
+      setDiscount(reservationData.discount);
+      setDiscountType(reservationData.discountType);
+      setdiscountAmount(reservationData.discount);
+      setDeposit(reservationData.deposit);
+      setDepositType(reservationData.depositType);
+      setAmt(reservationData.night * reservationData.perNight);
+      setAccomodation(reservationData.accomodation);
+    }
+  }, [
+    serviceArray,
+    guestArray,
+    reservationData,
+    form,
+    editvisible,
+  ]);
 
   const onFinish = async (values) => {
-    values.id = localStorage.getItem('bookingId');
+    values.reservationId = reservationData.id;
     values.perNight = price;
     values.nights = night;
     values.amt = amt;
     values.discountType = discountType;
     values.discount = discount;
+    values.deposit = deposit;
+    values.depositType = depositType;
     values.accomodation = accomodation;
-    // values.acknowledge = radio;
+    const serviceDataNew = [];
     values.totalAmount = accomodation
-      + currentService
+      + serviceArray
         .map((service) => service.serviceAmount)
         .reduce((a, b) => a + (b || 0), 0);
-    // values.total = parseInt(total) + parseInt(accomodation);
-    // values.deposit = deposit;
-
-    if (editCurrentGuest.length) {
-      editCurrentGuest.forEach((el) => {
-        const f = 'fullName';
+    if (guestArray.length) {
+      guestArray.forEach((el, i) => {
+        const f = 'fullname';
         const e = 'email';
         const c = 'country';
         const p = 'phone';
-        // el.id = el.id || null;
-        el.bookingId = el.bookingId || localStorage.getItem('bookingId');
+        el.reservationId = reservationData.id;
         el.fullname = values[f + i];
         el.email = values[e + i];
         el.country = values[c + i];
         el.phone = values[p + i];
       });
     }
-
-    values.guestData = editCurrentGuest;
-    if (editCurrentGuest.length > 1) {
-      values.guest = editCurrentGuest[0].fullName;
+    values.guestData = guestArray;
+    if (guestArray.length > 0) {
+      values.guest = guestArray[0].fullName;
     } else {
       values.guest = 'No Guest';
     }
-    // if (currentService && currentService.length) {
-    //   currentService.forEach((el) => {
-    //     const n = 'serviceName';
-    //     const p = 'servicePrice';
-    //     const q = 'serviceQuantity';
-    //     const t = 'serviceTax';
-    //     el.id = el.id || null;
-    //     el.bookingId = el.bookingId || localStorage.getItem('bookingId');
-    //     el.serviceName = values[n + i];
-    //     el.servicePrice = values[p + i];
-    //     el.serviceQuantity = values[q + i];
-    //     el.serviceTax = values[t + i];
-    //     el.serviceAmount = el.servicePrice * el.serviceQuantity
-    //       + (el.servicePrice * el.serviceQuantity * el.serviceTax) / 100;
-    //   });
-    // }
-
-    values.serviceData = currentService && currentService;
-    values.noOfservices = currentService && currentService.length;
-    values.propertyName = propertyName;
+    values.serviceData = serviceDataNew;
     values.channel = channel;
     values.commission = channelCommission;
     values.unitName = unitName;
     values.unit = unitId;
-    values.deleteGuestId = deleteGuestId;
-    values.deleteServiceId = deleteServiceId;
-    const [{ userId }] = JSON.parse(localStorage.getItem('userCred')) || [{}];
+    values.unitTypeId = reservationData.unitTypeId;
     values.affiliateId = userId;
-    const response = await bookingInstance.post('/changeBooking', values);
+    values.deleteServiceId = deleteServiceId;
+    const response = await reservationInstance.post('/changeReservation', values);
     if (response.data.code === 200) {
-      getData();
-      setBooked(true);
-      close();
-      toast.success('booking changed successfully', { containerId: 'B' });
+      window.location.reload();
+      toast.success('successfully added reservation', { containerId: 'B' });
     } else {
-      toast.error('some error occurred!', { containerId: 'B' });
+      toast.error('server error please try again', { containerId: 'B' });
     }
 
     form.resetFields();
   };
-  // const calculateTotal = (servicetax, el) => {
-  //   setServiceTax(servicetax);
+
+  useEffect(() => {
+    updateFields();
+  }, [updateFields]);
+
+  // const getPropertyData = useCallback(async () => {
+  //   const response = await propertyInstance.post('/fetchProperty', { affiliateId: userId });
+  //   const data = response.data.propertiesData;
+  //   if (response.data.code === 200) {
+  //     setPropertyData(data);
+  //   }
+  // }, [userId]);
+
+  // useEffect(() => {
+  //   getPropertyData();
+  // }, [getPropertyData]);
+
+  // const calculateTotal = () => {
   //   const calculate = servicePrice * serviceAmt
-  //     - (servicePrice * serviceAmt * servicetax) / 100;
-  //   // setServiceAmount(calculate);
-  //   if (el.id) {
-  //     currentService.forEach((ele) => {
-  //       if (ele.id === el.id) {
-  //         el.serviceAmount = calculate;
-  //         // setServiceAmount(el.serviceAmount);
-  //       }
-  //     });
-  //     // setServiceState(currentService);
-  //   } else {
-  //     // const sum = parseFloat(total) + calculate;
-  //     // setServiceAmount(calculate);
-
-  //     // setServiceAmount(calculate);
-  //     // setTotal(sum);
-  //   }
-  // };
-
-  // const calculateTotal = (el) => {
-  //   setServiceTax(el.servicetax);
-  //   console.log("el==>",el);
-  //   const calculate =
-  // (servicePrice * serviceAmt) -
-  // ((servicePrice * serviceAmt *
-  // el.servicetax) / 100);
-  //   console.log(calculate);
+  //     + servicePrice * serviceAmt * (serviceTax / 100);
+  //   const sum = parseInt(total, 10) + parseInt(calculate, 10);
   //   setServiceAmount(calculate);
-  //   if (el.id) {
-  //     currentService.forEach((ele) => {
-  //       if (ele.id === el.id) {
-  //         el.serviceAmount = calculate;
-  //       }
-  //     });
-  //     setServiceState(currentService);
-  //   } else {
-  //     const sum = parseFloat(total) + calculate;
-  //     setServiceAmount(calculate);
-  //     // setServiceAmount(calculate);
-  //     // setTotal(sum);
-  //   }
+  //   setTotal(sum);
   // };
-  const fun1 = async (value) => {
+
+  const onSelectProperty = async (value) => {
     const payload = {
       propertyId: value,
     };
     const response = await userInstance.post('/getService', payload);
     const data = response.data.servicData;
-    // const response2 = await userInstance.post('/getUnit', payload);
-    // const data2 = response2.data.unitData;
-    // console.log('unit data', data2);
     const response3 = await propertyInstance.post('/getUnittype', payload);
     if (response.data.code === 200) {
       setServiceData(data);
     }
     if (response3.data.code === 200) {
-      const data3 = response3.data.unittypeData[0];
-      const dataUnit = data3.unitsData;
+      const dataUnit = response3.data.unitData;
       setUnitData(dataUnit);
     }
   };
-  const preventTypeE = (evt) => {
-    if (
-      evt.which === 64
-      || evt.which === 35
-      || evt.which === 36
-      || evt.which === 37
-      || evt.which === 94
-      || evt.which === 38
-      || evt.which === 42
-      || evt.which === 40
-      || evt.which === 41
-      || evt.which === 95
-      || evt.which === 45
-      || evt.which === 61
-      || evt.which === 43
-      || evt.which === 126
-      || evt.which === 96
-      || evt.which === 48
-      || evt.which === 49
-      || evt.which === 50
-      || evt.which === 51
-      || evt.which === 52
-      || evt.which === 53
-      || evt.which === 54
-      || evt.which === 55
-      || evt.which === 56
-      || evt.which === 57
-      || evt.which === 91
-      || evt.which === 92
-      || evt.which === 93
-      || evt.which === 123
-      || evt.which === 124
-      || evt.which === 125
-      || evt.which === 33
-      || evt.which === 34
-      || evt.which === 44
-      || evt.which === 47
-      || evt.which === 60
-      || evt.which === 62
-    ) {
-      evt.preventDefault();
-    }
-  };
 
-  // const handleServiceName = (value) => {
+  // const fun2 = (value) => {
   //   serviceData
   //     .filter((el) => el.serviceName === value)
-  //     .map((filterService) => setEditServicePanel(filterService));
+  //     .map((filterService) => setCurrentService(filterService));
 
   //   // unitData
   //   //   .filter((el) => el.propertyId === value)
@@ -400,17 +323,6 @@ const Editbookingpopup = (props) => {
       .map((el) => el.id);
     setUnitId(data);
     const unitname = event.children || event;
-    // // const [unit] = unitData
-    //   .filter((el) => el.unitName === unitname)
-    //   .map((el) => el.unittypeId);
-    // unitTypeData.forEach((el) => {
-    //   if (el.id === unit) {
-    //     setPrice(el.perNight);
-    //     form.setFieldsValue({ perNight: el.perNight });
-    //     setAmt(night * el.perNight);
-    //     setAccomodation(night * el.perNight);
-    //   }
-    // });
     setUnitName(unitname);
   };
   const fun5 = (value, event) => {
@@ -423,12 +335,12 @@ const Editbookingpopup = (props) => {
   const handleDiscount = (value) => {
     setDiscountType(value);
     if (value === '%') {
-      const data = (night * price * discountAmount) / 100;
+      const data = amt * (discountAmount / 100);
       setDiscount(data);
-      setAccomodation(night * price - data);
+      setAccomodation(amt - data);
     } else {
       setDiscount(discountAmount);
-      setAccomodation(night * price - discountAmount);
+      setAccomodation(amt - discountAmount);
     }
   };
 
@@ -448,75 +360,54 @@ const Editbookingpopup = (props) => {
   };
 
   const onChangeDate = (value) => {
-    const d1 = new Date(value[0]._d);
-    const d2 = new Date(value[1]._d);
-    const diff = Math.abs(d1 - d2);
-    const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
-    setNight(day);
-  };
-
-  const addMore = () => {
-    if (editCurrentGuest && editCurrentGuest.length > 0) {
-      let i;
-      editCurrentGuest.forEach((el) => {
-        i = el.id;
-      });
-      setEditCurrentGuest(editCurrentGuest.concat([{ id: i + 1 }]));
+    if (value) {
+      const d1 = new Date(value[0]._d);
+      const d2 = new Date(value[1]._d);
+      const diff = Math.abs(d1 - d2);
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000));
+      setNight(day);
     }
-    // i += 1;
-    // setEditCurrentGuest(editCurrentGuest.concat([{}]));
-    // setPanel([...panel, i]);
-  };
-
-  const removePanel = (panel) => {
-    setDeleteGuestId(panel.id);
-    const data = editCurrentGuest.filter((el) => el.id !== panel.id);
-    setEditCurrentGuest([...data]);
-    // const id = e.currentTarget.parentNode.getAttribute('data-key');
-    // editCurrentGuest.forEach((el, j) => {
-    //   if (parseInt(id, 10) === j) {
-    //     setDeleteGuestId(el.id);
-    //   }
-    // });
-    // const data0 = editCurrentGuest.filter((el, j) => j !== parseInt(id, 10));
-    // console.log('data0', data0);
-    // setEditCurrentGuest([...data0]);
   };
 
   const handleRemoveEditServicePanel = (ele) => {
     setDeleteServiceId(ele.id);
-    const data = currentService.filter((el) => el.id !== ele.id);
-    setCurrentService([...data]);
+    const data = serviceArray.filter((el) => el.id !== ele.id);
+    setServiceArray([...data]);
   };
-  const handleAdult = (e) => setAdult(e);
-  const handleChildren1 = (e) => setChildren1(e);
-  const handleChildren2 = (e) => setChildren2(e);
-  // const handlename = (event, value) => console.log(event.target, value);
 
-  /**
-   * New service handler functions because why not
-   */
+  const onOptionalDate = (value) => {
+    if (value) {
+      // setSelectDate(value);
+      const d1 = new Date(value._d);
+      const d2 = new Date();
+      const diff = Math.abs(d1 - d2);
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+      setLeftDays(day);
+    }
+  };
+
+  // service handlers
   const handleServiceName = (value, el) => {
     serviceData
       .filter((el) => el.serviceName === value)
       .map((filterService) => setEditServicePanel(filterService));
-    currentService.forEach((ele) => {
+    serviceArray.forEach((ele) => {
       if (ele.id === el.id) {
         ele.serviceName = value;
       }
     });
-    setCurrentService(currentService);
+    setServiceArray(serviceArray);
   };
 
   const handleServicePrice = (value, el, i) => {
-    currentService.forEach((ele) => {
+    serviceArray.forEach((ele) => {
       if (ele.id === el.id) {
         ele.servicePrice = value;
         ele.serviceAmount = value * ele.quantity
          + (value * ele.quantity * ele.serviceTax) / 100;
       }
     });
-    setCurrentService(currentService);
+    setServiceArray(serviceArray);
     form.setFieldsValue({
       [`serviceAmount${i}`]:
          value * el.quantity
@@ -525,7 +416,7 @@ const Editbookingpopup = (props) => {
     update();
   };
   const handleServiceQuantity = (e, el, i) => {
-    currentService.forEach((ele) => {
+    serviceArray.forEach((ele) => {
       if (ele.id === el.id) {
         ele.quantity = e.target.value;
         ele.serviceAmount = ele.servicePrice * e.target.value
@@ -537,11 +428,11 @@ const Editbookingpopup = (props) => {
         });
       }
     });
-    setCurrentService(currentService);
+    setServiceArray(serviceArray);
     update();
   };
   const handleServiceTax = (e, el, i) => {
-    currentService.forEach((ele) => {
+    serviceArray.forEach((ele) => {
       if (ele.id === el.id) {
         ele.serviceTax = e.target.value;
         ele.serviceAmount = ele.servicePrice * ele.quantity
@@ -553,51 +444,163 @@ const Editbookingpopup = (props) => {
         });
       }
     });
-    setCurrentService(currentService);
+    setServiceArray(serviceArray);
     update();
   };
 
+  const createGuestDetails = (
+    <>
+      {guestArray.length
+        ? guestArray.map((el, j) => (
+          <div className="addi-box" id={el} key={el}>
+            <Row style={{ alignItems: 'center' }}>
+              <Col span={6}>
+                <Form.Item
+                  label={t('strings.full')}
+                  name={`fullname${j}`}
+                  style={{ paddingRight: 20 }}
+                  rules={[
+                    {
+                      required: 'true',
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+
+              <Col span={6}>
+                <Form.Item
+                  label={t('strings.email')}
+                  name={`email${j}`}
+                  style={{ paddingRight: 20 }}
+                  rules={[
+                    {
+                      required: 'true',
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
+
+              <Col span={6}>
+                <Form.Item
+                  label={t('strings.country')}
+                  name={`country${j}`}
+                  style={{ paddingRight: 20 }}
+                  rules={[
+                    {
+                      required: 'true',
+                    },
+                  ]}
+                >
+                  <Select showSearch>
+                    {countryList()
+                      .getData()
+                      .map((ele) => (
+                        <Select.Option value={ele.label} key={ele}>
+                          {ele.label}
+                        </Select.Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+
+              <Col span={6}>
+                <Form.Item
+                  label={t('strings.phone')}
+                  name={`phone${j}`}
+                  style={{ paddingRight: 20 }}
+                >
+                  <Input type="number" minLength="9" maxLength="15" />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <div className="delete-data">
+              <DeleteOutlined onClick={removePanel} />
+            </div>
+          </div>
+        )) : null}
+    </>
+  );
+
   return (
     <Modal
-      title={t('editbookingpopup.heading1')}
-      name="modal2"
-      visible={visible}
-      onOk={handleOk}
-      onCancel={handleCancel}
+      title={t('addreservation.heading15')}
+      name="modal1"
+      visible={editvisible}
+      onOk={close}
+      onCancel={close}
       wrapClassName="create-booking-modal"
     >
       <Helmet>
-        <body className="ant-scrolling-effect" />
+        <body className={editvisible ? 'ant-scrolling-effect' : ''} />
       </Helmet>
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={12}>
             <Form.Item
-              label={t('editbookingpopup.heading16')}
+              label={t('addreservation.heading2')}
               name="groupname"
               style={{ paddingRight: 20 }}
               onChange={onChangeDate}
               rules={[
                 {
                   required: true,
-                  message: t('editbookingpopup.heading17'),
+                  message: t('addreservation.heading3'),
                 },
               ]}
             >
-              <RangePicker onChange={onChangeDate} />
+              <RangePicker
+                disabled={false}
+                defaultValue={moment()}
+                format="YYYY-MM-DD"
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onChangeDate}
+              />
             </Form.Item>
           </Col>
 
           <Col span={12}>
-            <Radio.Group
-              name="radiogroup"
-              defaultValue={1}
-              // onChange={(e) => setRadio(e.target.value)}
-            >
-              <Radio value={1}>{t('strings.confirmed')}</Radio>
-              <Radio value={2}>{t('strings.option')}</Radio>
+            <Radio.Group name="radiogroup" defaultValue={1}>
+              <Radio value={1} onClick={() => setShowOptional(true)}>
+                {t('strings.confirmed')}
+              </Radio>
+              <Radio value={2} onClick={() => setShowOptional(false)}>
+                {t('strings.option')}
+              </Radio>
             </Radio.Group>
           </Col>
+
+          <Col span={24}>
+            <div className="option-content" hidden={showOptional}>
+              <p>
+                <ClockCircleOutlined />
+                {' '}
+                Option is active untill
+              </p>
+              <DatePicker
+                disabledDate={(current) => current && current < moment().subtract(1, 'day')}
+                onChange={onOptionalDate}
+              />
+              <span>
+                (days left:
+                {leftDays}
+                )
+              </span>
+              <div className="option-tag">
+                <CheckOutlined />
+                {' '}
+                Confirmed
+              </div>
+            </div>
+            <p className="checked-avail">
+              *Availability is checked automatically
+            </p>
+          </Col>
+
         </Row>
 
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
@@ -609,11 +612,11 @@ const Editbookingpopup = (props) => {
               rules={[
                 {
                   required: true,
-                  message: t('editbookingpopup.heading2'),
+                  message: t('addreservation.heading4'),
                 },
               ]}
             >
-              <Input value={propertyName} disabled="true" />
+              <Input value={propertyName} disabled />
             </Form.Item>
           </Col>
 
@@ -622,22 +625,21 @@ const Editbookingpopup = (props) => {
               label={t('strings.unit')}
               name="unit"
               style={{ paddingRight: 20 }}
-              rules={[
-                {
-                  required: true,
-                  message: t('editbookingpopup.heading3'),
-                },
-              ]}
+              // rules={[
+              //   {
+              //     required: true,
+              //     message: t('addreservation.heading5'),
+              //   },
+              // ]}
             >
               <Select
+                disabled={false}
                 placeholder={t('strings.select')}
                 onSelect={(value) => fun3(value)}
                 value={unitName}
               >
-                {unitData && unitData.map((el) => (
-                  <Select.Option value={el} key={el}>
-                    {el}
-                  </Select.Option>
+                {unitData.map((el) => (
+                  <Select.Option value={el.id} key={el.id}>{el.unitName}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -646,11 +648,11 @@ const Editbookingpopup = (props) => {
           <Col span={8}>
             <Form.Item
               className="comision"
-              label={t('editbookingpopup.heading4')}
+              label={t('addreservation.heading6')}
               name="channel"
             >
               <Select
-                placeholder={t('strings.select')}
+                placeholder="Select"
                 onSelect={(value, event) => fun5(value, event)}
                 value={channel}
                 style={{ width: '70%', display: 'inline-block' }}
@@ -672,7 +674,7 @@ const Editbookingpopup = (props) => {
                 rules={[
                   {
                     required: true,
-                    message: t('editbookingpopup.heading5'),
+                    message: t('addreservation.heading8'),
                   },
                 ]}
               />
@@ -689,16 +691,11 @@ const Editbookingpopup = (props) => {
               rules={[
                 {
                   required: true,
-                  message: t('editbookingpopup.heading6'),
+                  message: t('addreservation.heading9'),
                 },
               ]}
             >
-              <Select
-                placeholder={t('strings.select')}
-                value={adult}
-                onSelect={(e) => handleAdult(e)}
-              >
-                <Select.Option value="0">0</Select.Option>
+              <Select placeholder={t('strings.select')}>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -710,16 +707,11 @@ const Editbookingpopup = (props) => {
 
           <Col span={8}>
             <Form.Item
-              label={t('editbookingpopup.heading7')}
+              label={t('addreservation.heading10')}
               name="children1"
               style={{ paddingRight: 20 }}
             >
-              <Select
-                placeholder={t('strings.select')}
-                value={children1}
-                onSelect={(e) => handleChildren1(e)}
-              >
-                <Select.Option value="0">0</Select.Option>
+              <Select placeholder={t('strings.select')}>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -730,13 +722,8 @@ const Editbookingpopup = (props) => {
           </Col>
 
           <Col span={8}>
-            <Form.Item label={t('editbookingpopup.heading8')} name="children2">
-              <Select
-                placeholder={t('strings.select')}
-                value={children2}
-                onSelect={(e) => handleChildren2(e)}
-              >
-                <Select.Option value="0">0</Select.Option>
+            <Form.Item label={t('addreservation.heading11')} name="children2">
+              <Select placeholder="Select">
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -750,107 +737,25 @@ const Editbookingpopup = (props) => {
         <Row style={{ alignItems: 'center' }}>
           <Col span={24}>
             <Form.Item style={{ marginBottom: '0' }}>
-              <Collapse accordion defaultActiveKey={['1']}>
+              <Collapse defaultActiveKey={['1']} accordion>
                 <Panel
                   icon={<PlusSquareOutlined />}
-                  header={t('editbookingpopup.heading9')}
+                  header="Add Guest Details (Optional)"
                   key="1"
                 >
                   <div className="additional-guest">
-                    {editCurrentGuest.length
-                      ? editCurrentGuest.map((el, j) => (
-                        <div className="addi-box" key={el.id} data-key={j}>
-                          <Row style={{ alignItems: 'center' }}>
-                            <Col span={6}>
-                              <Form.Item
-                                id={el.id}
-                                label={t('strings.full')}
-                                name={`fullName${j}`}
-                                style={{ paddingRight: 20 }}
-                              >
-                                <Input
-                                  defaultValue={el.fullname}
-                                  onKeyPress={preventTypeE}
-                                />
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={6}>
-                              <Form.Item
-                                id={el.id}
-                                label={t('strings.email')}
-                                name={`email${j}`}
-                                style={{ paddingRight: 20 }}
-                              >
-                                <Input type="email" />
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={6}>
-                              <Form.Item
-                                id={el.id}
-                                label={t('strings.country')}
-                                name={`country${j}`}
-                                style={{ paddingRight: 20 }}
-                              >
-                                <Select showSearch>
-                                  {countryList()
-                                    .getData()
-                                    .map((ele) => (
-                                      <Select.Option
-                                        value={ele.label}
-                                        key={ele.label}
-                                      >
-                                        {ele.label}
-                                      </Select.Option>
-                                    ))}
-                                </Select>
-                              </Form.Item>
-                            </Col>
-
-                            <Col span={6}>
-                              <Form.Item
-                                label={t('strings.phone')}
-                                name={`phone${j}`}
-                                style={{ paddingRight: 20 }}
-                              >
-                                <Input
-                                    // onChange={(e) => setPhone(e.target.value)}
-                                  type="number"
-                                  minLength="9"
-                                  maxLength="15"
-                                />
-                              </Form.Item>
-                            </Col>
-
-                            {/* <Col span={24}>
-                              <div className="additional-edit">
-                                <div>
-                                  <EditOutlined />
-                                  {' '}
-                                  Edit/Additional Data
-                                </div>
-                              </div>
-                            </Col> */}
-                          </Row>
-
-                          <div className="delete-data" data-key={i}>
-                            <DeleteOutlined onClick={() => removePanel(el)} />
-                          </div>
-                        </div>
-                      ))
-                      : null}
+                    {createGuestDetails}
 
                     <Row>
                       <Col span={24}>
                         <div
-                          role="presentation"
                           className="additional-add"
                           onClick={addMore}
+                          role="presentation"
                         >
                           <PlusOutlined />
                           {' '}
-                          {t('editbookingpopup.heading11')}
+                          {t('addreservation.heading12')}
                         </div>
                       </Col>
                     </Row>
@@ -859,7 +764,7 @@ const Editbookingpopup = (props) => {
 
                 <Panel
                   icon={<PlusSquareOutlined />}
-                  header={t('editbookingpopup.heading12')}
+                  header="Add Notes (Optional)"
                   key="2"
                 >
                   <div className="add-notes">
@@ -871,7 +776,7 @@ const Editbookingpopup = (props) => {
 
                 <Panel
                   icon={<PlusSquareOutlined />}
-                  header={t('editbookingpopup.heading13')}
+                  header="Add Internal Notes (Optional)"
                   key="3"
                   name="notes"
                 >
@@ -890,45 +795,47 @@ const Editbookingpopup = (props) => {
           <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
             <Col span={8}>
               <Form.Item>
-                <p>{t('editbookingpopup.heading15')}</p>
+                <p>{t('addreservation.heading18')}</p>
               </Form.Item>
             </Col>
 
             <Col span={16}>
               <Form.Item>
                 <div className="inline-form">
-                  <label htmlFor="price">
+                  <label htmlFor="abc">
                     <input hidden />
-                    {t('editbookingpopup.heading14')}
+                    {t('addreservation.heading19')}
                   </label>
                   <Form.Item name="perNight">
                     <Input
                       type="number"
                       placeholder="0,00"
                       value={price}
-                      disabled="true"
                       rules={[
                         {
                           required: true,
-                          message: t('editbookingpopup.heading6'),
+                          message: t('addreservation.heading9'),
                         },
                       ]}
-                      onChange={(e) => setPrice(e.target.value)}
+                      onChange={(e) => {
+                        setPrice(e.target.value);
+                        setAccomodation(night * e.target.value);
+                      }}
                     />
                   </Form.Item>
-                  <label htmlFor="x">
+                  <label htmlFor="number">
                     <input hidden />
                     X
                   </label>
                   <Input
                     type="number"
-                    placeholder={t('editbookingpopup.heading27')}
+                    placeholder={t('addreservation.heading30')}
                     name="nights"
                     value={night}
                     disabled="true"
                     onChange={(e) => setNight(e.target.value)}
                   />
-                  <label htmlFor="equal">
+                  <label htmlFor="amount">
                     <input hidden />
                     =
                   </label>
@@ -947,61 +854,52 @@ const Editbookingpopup = (props) => {
                 </div>
 
                 <div className="inline-form">
-                  <label htmlFor="dis">
+                  <label htmlFor="discount">
                     <input hidden />
-                    {t('editbookingpopup.heading18')}
+                    {t('addreservation.heading20')}
                   </label>
-                  <Form.Item name="discount">
-                    <Input
-                      value={discount}
-                      type="number"
-                      placeholder="0,00"
-                      onChange={(e) => {
-                        setDiscount(e.target.value);
-                        setdiscountAmount(e.target.value);
-                        if (discountType === '€') {
-                          setAccomodation(night * price - e.target.value);
-                        } else {
-                          setAccomodation(
-                            night * price
-                              - (night * price * e.target.value) / 100,
-                          );
-                        }
-                      }}
-                    />
-                  </Form.Item>
-                  <label htmlFor="dis">
+                  <Input
+                    type="number"
+                    placeholder="0,00"
+                    onChange={(e) => {
+                      setDiscount(e.target.value);
+                      setdiscountAmount(e.target.value);
+                      if (discountType === '€') {
+                        setAccomodation(night * price - e.target.value);
+                      } else {
+                        setAccomodation(
+                          night * price - (night * price * e.target.value) / 100,
+                        );
+                      }
+                    }}
+                  />
+                  <label htmlFor="discount">
                     <input hidden />
                     X
                   </label>
                   <Form.Item name="discountType">
                     <Select
-                      placeholder={t('editbookingpopup.heading28')}
+                      placeholder={t('addreservation.heading21')}
                       onSelect={(value) => handleDiscount(value)}
                       defaultValue="%"
-                      // defaultValue={discountType}
                     >
                       <Select.Option value="€">€</Select.Option>
                       <Select.Option value="%">%</Select.Option>
                     </Select>
                   </Form.Item>
-                  <label htmlFor="dis">
+                  <label htmlFor="equal">
                     <input hidden />
                     =
                   </label>
-                  <Form.Item name="discountTotal">
-                    <Input
-                      type="number"
-                      value={
-                        discountType === '€'
-                          ? discountAmount
-                          : (night * price * discountAmount) / 100
-                      }
-                      onBlur={(e) => setAccomodation(e.target.value)}
-                    />
-                  </Form.Item>
-
-                  <label htmlFor="dis">
+                  <Input
+                    type="number"
+                    value={
+                      discountType === '€' ? discountAmount : (night * price * discountAmount) / 100
+                      // : amt - amt * (discountAmount / 100)
+                    }
+                    onBlur={(e) => setAccomodation(e.target.value)}
+                  />
+                  <label htmlFor="eur">
                     <input hidden />
                     EUR
                   </label>
@@ -1013,12 +911,12 @@ const Editbookingpopup = (props) => {
           <Row style={{ alignItems: 'center' }}>
             <Col span={24}>
               <div className="per-night">
-                <label htmlFor="dis">
+                <label htmlFor="night">
                   <input hidden />
-                  {t('editbookingpopup.heading19')}
+                  {t('addreservation.heading22')}
                 </label>
                 <span>
-                  {t('editbookingpopup.heading20')}
+                  {t('addreservation.heading23')}
                   :
                 </span>
                 <span className="amnt">
@@ -1031,13 +929,13 @@ const Editbookingpopup = (props) => {
 
             <Col span={24}>
               <div
-                role="presentation"
                 className="srvice-heading"
                 onClick={addMoreService}
+                role="presentation"
               >
                 <PlusOutlined />
                 {' '}
-                {t('editbookingpopup.heading21')}
+                {t('addreservation.heading24')}
               </div>
             </Col>
 
@@ -1054,9 +952,9 @@ const Editbookingpopup = (props) => {
                     key="1"
                   >
                     <div className="service-form">
-                      {currentService.length
-                        ? currentService.map((el, j) => (
-                          <div className="inline-form">
+                      {serviceArray.length
+                        ? serviceArray.map((el, j) => (
+                          <div className="inline-form" key={el.id}>
                             <div className="delete-data">
                               <DeleteOutlined
                                 onClick={() => handleRemoveEditServicePanel(el)}
@@ -1146,79 +1044,55 @@ const Editbookingpopup = (props) => {
                               EUR
                             </label>
                           </div>
-                        ))
-                        : null}
+                        )) : null}
                     </div>
                   </Panel>
                 </Collapse>
               </Form.Item>
             </Col>
+
             <Col span={24}>
               <div className="amnt-total">
                 <h4>
                   {accomodation
-                    + currentService
+                    + serviceArray
                       .map((service) => service.serviceAmount)
                       .reduce((a, b) => a + (b || 0), 0)}
-                  {/* {serviceState.length === 0 ? (
-                    <> */}
-                  {/* Total:
-                      {' '}
-                      {accomodation + currentService
-                        && currentService
-                          .map((service) => service.serviceAmount)
-                          .reduce((a, b) => a + (b || 0), 0)} */}
-                  {/* {Math.round(accomodation) + Math.round(serviceAmount)} */}
+                  {/* {t('addreservation.heading26')}
+                  :
+                  {accomodation + serviceAmount} */}
                   {/* {Math.round(total * 100) / 100
-                        + Math.round(accomodation * 100) / 100} */}
+                    + Math.round(accomodation * 100) / 100} */}
                   {' '}
-                  {/* €
-                    </>
-                  ) : (
-                    <> */}
-                  {/* Total:
-                      {' '}
-                      {accomodation + currentService
-                        && currentService
-                          .map((service) => service.serviceAmount)
-                          .reduce((a, b) => a + (b || 0), 0)} */}
-                  {/* {Math.round(total * 100) / 100
-                        + Math.round(accomodation * 100) / 100
-                        + serviceState
-                          .map((el) => el.serviceAmount)
-                          .reduce((a, b) => a + (b || 0), 0)} */}
-                  {/* {' '}
-                      €
-                    </>
-                  )} */}
+                  €
                 </h4>
               </div>
 
               <div className="deposit">
-                <label htmlFor="deposit">
+                <label htmlFor="discount">
                   <input hidden />
-                  {t('editbookingpopup.heading23')}
+                  {t('addreservation.heading27')}
                 </label>
 
                 <div className="inline-form">
-                  <label htmlFor="depo">
+                  <label htmlFor="deposit">
                     <input hidden />
-                    {t('editbookingpopup.heading29')}
+                    {t('addreservation.heading28')}
                   </label>
 
                   <Input
                     name="deposit"
                     type="number"
-                    value={deposit}
                     placeholder="0,00"
                     onChange={(e) => {
                       setDeposit(e.target.value);
                       setDepositAmount(e.target.value);
                     }}
                   />
+                  {/* <Input type='number' placeholder='%' /> */}
                   <Form.Item name="depositType">
                     <Select
-                      placeholder={t('editbookingpopup.heading24')}
+                      placeholder="Deposit type"
                       onSelect={(value) => handleDeposit(value)}
                       defaultValue="€"
                     >
@@ -1232,8 +1106,8 @@ const Editbookingpopup = (props) => {
 
             <Col span={24}>
               <div className="outstanding">
-                <label htmlFor="acco">
-                  {t('editbookingpopup.heading29')}
+                <label htmlFor="depo">
+                  {t('addreservation.heading28')}
                   :
                   {' '}
                   <span>
@@ -1243,21 +1117,18 @@ const Editbookingpopup = (props) => {
                       : `${deposit}€`}
                   </span>
                 </label>
-                <label htmlFor="amou">
-                  {t('editbookingpopup.heading25')}
+                <label htmlFor="amount">
+                  {t('addreservation.heading29')}
                   :
                   {' '}
                   <span>
                     {Math.round(
                       accomodation
-                        + currentService
+                        + serviceArray
                           .map((service) => service.serviceAmount)
                           .reduce((a, b) => a + (b || 0), 0)
                         - deposit,
                     )}
-                    {/* {Math.round(total * 100) / 100
-                      + Math.round(accomodation * 100) / 100
-                      - deposit} */}
                     €
                   </span>
                 </label>
@@ -1280,8 +1151,6 @@ const Editbookingpopup = (props) => {
                 style={{ marginRight: 10 }}
                 onClick={() => {
                   close();
-                  setDiscount(0);
-                  setdiscountAmount(0);
                 }}
               >
                 {t('strings.cancel')}
@@ -1298,32 +1167,35 @@ const Editbookingpopup = (props) => {
     </Modal>
   );
 };
-Editbookingpopup.propTypes = {
-  editBookingValues: PropTypes.objectOf(PropTypes.object),
-  editCurrentGuest: PropTypes.arrayOf(PropTypes.array),
-  setEditCurrentGuest: PropTypes.func,
-  currentService: PropTypes.arrayOf(PropTypes.array),
-  setCurrentService: PropTypes.func,
-  close: PropTypes.func,
-  visible: PropTypes.bool,
-  handleOk: PropTypes.func,
-  handleCancel: PropTypes.func,
-  setBooked: PropTypes.func,
-  getData: PropTypes.func,
+
+EditReservation.propTypes = {
+  editvisible: PropTypes.bool,
+  setEditVisible: PropTypes.func,
+  setVisible: PropTypes.func,
+  reservationData: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.number,
+  ]),
+  guestArray: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+  ]),
+  setGuestArray: PropTypes.func,
+  serviceArray: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+  ]),
+  setServiceArray: PropTypes.func,
+};
+EditReservation.defaultProps = {
+  editvisible: false,
+  setEditVisible: () => {},
+  setVisible: () => {},
+  reservationData: {},
+  guestArray: {},
+  setGuestArray: () => {},
+  serviceArray: {},
+  setServiceArray: () => {},
 };
 
-Editbookingpopup.defaultProps = {
-  close: () => {},
-  visible: false,
-  handleOk: () => {},
-  handleCancel: () => {},
-  setBooked: () => {},
-  getData: () => {},
-  setEditCurrentGuest: () => {},
-  setCurrentService: () => {},
-  editBookingValues: {},
-  editCurrentGuest: [],
-  currentService: [],
-};
-
-export default Editbookingpopup;
+export default EditReservation;

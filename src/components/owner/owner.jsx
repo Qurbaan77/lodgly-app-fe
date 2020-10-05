@@ -28,7 +28,7 @@ import owner from '../../assets/images/profile_user.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
 import loader from '../../assets/images/cliploader.gif';
 import subuser from '../../assets/images/subuser.jpg';
-import { userInstance } from '../../axios/axiosconfig';
+import { userInstance, propertyInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
 import CreateProperty from '../property/createProperty';
 
@@ -95,7 +95,7 @@ const Owner = () => {
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
     }
-    const response = await userInstance.post('/fetchProperty', {
+    const response = await propertyInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
     const data = response.data.propertiesData;
@@ -125,17 +125,19 @@ const Owner = () => {
   const edit = async (data) => {
     setEditOpen(true);
     const m1 = moment(data.dob);
-    const response = await userInstance.post('/fetchProperty', {
+    const response = await propertyInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
     if (response.data.code === 200) {
-      const data2 = response.data.propertiesData;
+      const propertyArray = response.data.propertiesData;
       setVisible(true);
       const selectedProperty = [];
       const arr = [];
-      const data3 = data2.filter((el) => el.ownerId === data.id);
-      data3.forEach((filter) => {
-        selectedProperty.push(filter.propertyName);
+      const filterArray = propertyArray.filter((el) => el.ownerId === data.id);
+      filterArray.forEach((filter) => {
+        selectedProperty.push(filter.unitTypeName
+          .filter((e) => e.lang === 'en')
+          .map((name) => name.name));
         arr.push(filter.id);
       });
 
@@ -509,7 +511,10 @@ const Owner = () => {
                     onSelect={(e) => handlePropertySelect(e)}
                   >
                     {propertyData.map((el) => (
-                      <Option value={el.id}>{el.propertyName}</Option>
+                      <Option value={el.id}>
+                        {el.unitTypeName
+                  && el.unitTypeName.filter((e) => e.lang === 'en').map((name) => <p key={name}>{name.name}</p>)}
+                      </Option>
                     ))}
                   </Select>
                 </Form.Item>
@@ -759,7 +764,10 @@ const Owner = () => {
                     onSelect={(e) => handlePropertySelect(e)}
                   >
                     {propertyData.map((el) => (
-                      <Option value={el.id}>{el.propertyName}</Option>
+                      <Option value={el.id}>
+                        {el.unitTypeName
+                  && el.unitTypeName.filter((e) => e.lang === 'en').map((name) => <p key={name}>{name.name}</p>)}
+                      </Option>
                     ))}
                   </Select>
                 </Form.Item>
@@ -828,7 +836,7 @@ const Owner = () => {
     );
   }
 
-  if (propertyData && propertyData.length < 1) {
+  if (properties && properties.length < 1) {
     return (
       <Wrapper>
         <div className="add-team-page">
