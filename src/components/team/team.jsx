@@ -36,7 +36,7 @@ const TeamListing = () => {
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  const [{ teamWrite: canWrite, userId, teamDelete }] = userCred || [{}];
+  const [{ teamWrite: canWrite, userId }] = userCred || [{}];
 
   const show = () => {
     setVisible(true);
@@ -181,7 +181,7 @@ const TeamListing = () => {
       {subUser.length ? (
         <Wrapper>
           <div className="team-page">
-            <div className="page-header">
+            <div className="page-header teampage">
               <h1>
                 <PartitionOutlined />
                 {' '}
@@ -215,7 +215,7 @@ const TeamListing = () => {
                         {t('team.status')}
                       </th>
 
-                      <th>Actions</th>
+                      <th className="action">Actions</th>
                     </tr>
                   </thead>
 
@@ -241,7 +241,7 @@ const TeamListing = () => {
                                 {i + 1} */}
                                 {/* {el.fullname} */}
 
-                                {el.fullname ? el.fullname : 'Sub User'}
+                                {el.fullname ? el.fullname : '-'}
                               </h5>
                               <span>{t('team.label5')}</span>
                             </div>
@@ -285,7 +285,7 @@ const TeamListing = () => {
                               onClick={() => showEditSubUser(el, i)}
                             />
                             <DeleteOutlined
-                              hidden={isSubUser ? !teamDelete : false}
+                              hidden={isSubUser}
                               onClick={() => showDeletePopup(el, i)}
                             />
                           </div>

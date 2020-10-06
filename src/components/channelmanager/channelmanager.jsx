@@ -80,17 +80,19 @@ const Channel = () => {
           <div className="channel-manager-box">
             <Link to="/channelairbnb">
               <img src={airbnb} alt="Airbnb" />
-              {/* {' '}
-              <p>enabled</p> */}
+
             </Link>
+            <p className="active">Active</p>
           </div>
 
           <div className="channel-manager-box">
             <Link to="/channelbooking"><img src={booking} alt="Booking" /></Link>
+            <p className="disabled">Active</p>
           </div>
 
           <div className="channel-manager-box">
             <Link to="/channelexpedia"><img src={expedia} alt="Expedia" /></Link>
+            <p className="active">Active</p>
           </div>
 
         </div>

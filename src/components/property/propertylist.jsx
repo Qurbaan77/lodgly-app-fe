@@ -249,14 +249,18 @@ const PropertyList = () => {
                         {' '}
                         {t('strings.unit_t')}
                       </li>
-                      <li>
+                      <li className="unit">
                         <img src={homeicon} alt="Unit" />
                         {' '}
                         {el.units}
                         {' '}
                         {t('strings.unit')}
                       </li>
+                      {/* <li className="complete">
+                        Complete Property
+                      </li> */}
                     </ul>
+                    <button type="submit" value="complete" className="complete">Complete Property</button>
                   </div>
                 </div>
               ))
