@@ -27,7 +27,7 @@ import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
 import loader from '../../assets/images/cliploader.gif';
 // import { Table } from 'antd';
-import invoice from '../../assets/images/invoice.jpg';
+import invoice from '../../assets/images/invoice.png';
 import invoiceIcon from '../../assets/images/menu/invoice-icon.png';
 import filterIcon from '../../assets/images/menu/filter-icon.png';
 // import editIcon from '../../assets/images/menu/pencil-icon.png';

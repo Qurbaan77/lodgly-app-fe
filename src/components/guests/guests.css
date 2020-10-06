@@ -7,7 +7,7 @@
 }
 
 .guest-table .custom-table table td {
-    padding: 30px 20px;
+    padding: 10px 20px;
     font-size: 13px;
     cursor: pointer;
 }
@@ -27,7 +27,7 @@ border-right: 1px solid #efecec;
 
 
 .guest-table .custom-table table th {
-    padding: 10px 20px;
+    padding: 0px 0px;
 }
 
 .guest-table .custom-table table thead {
@@ -57,7 +57,8 @@ border-right: 1px solid #efecec;
 
 .guest-list .page-header {
     padding-bottom: 0;
-    padding: 20px;
+    padding-left: 20px;
+    padding-top: 20px;
 }
 
 
@@ -66,7 +67,7 @@ border-right: 1px solid #efecec;
 }
 
 .guest-info-table h3 {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 600;
     margin: 0;
 }

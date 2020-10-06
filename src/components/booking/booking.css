@@ -1039,3 +1039,10 @@ display:none;
 .filter-item .ant-tag.ant-tag-yellow {
   background: #f7f79ea6;
 }
+select#basic_1_country {
+  border: 1px solid #eaeaea !important;
+  border-radius: 0;
+  padding: 8px 15px !important;
+  height: auto;
+  width: 100%;
+}

@@ -295,3 +295,6 @@
 .overview-space{
     margin: -50px -41px!important;
 }
+.property-list{
+    justify-content: space-between;
+}
