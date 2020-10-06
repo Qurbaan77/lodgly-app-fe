@@ -254,7 +254,7 @@
 }
 
 .season-table {
-    height: 332px;
+    /* height: 332px; */
     overflow: auto;
 }
 
@@ -291,3 +291,7 @@
     display: none;
 }
 
+/*****overview space ***********/
+.overview-space{
+    margin: -50px -41px!important;
+}

@@ -2,7 +2,6 @@ import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
 import moment from 'moment';
-// import { useHistory } from 'react-router-dom';
 import {
   Form,
   Select,
@@ -25,18 +24,17 @@ import {
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
 import { toast } from 'react-toastify';
-import { userInstance, reservationInstance } from '../../axios/axiosconfig';
+import { userInstance, reservationInstance, propertyInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
 
 const { RangePicker } = DatePicker;
 let i = 1;
-let j = 1;
 
 const AddReservation = (props) => {
   const { t } = useTranslation();
   const {
-    getData, close, visible, handleOk,
+    getData, visible, setVisible, calendarBookingDate, setCalendarBookingDate,
   } = props;
   const [form] = Form.useForm();
   // const [visible1, setVisible1] = useState(false);
@@ -46,20 +44,27 @@ const AddReservation = (props) => {
   // const [children2, setChildren2] = useState(0);
   const [channelCommission, setChannelCommission] = useState(null);
   const [panel, setPanel] = useState([1]);
-  const [servicePanel, setServicePanel] = useState([100]);
+  const [servicePanel, setServicePanel] = useState([{
+    serviceName: '',
+    servicePrice: 0,
+    serviceQuantity: 0,
+    serviceTax: 0,
+    serviceTotal: 0,
+  }]);
   // const [arrValue, setArrValue] = useState(2);
+  const [serviceTotalArr, setServiceTotalArr] = useState([0]);
   const [price, setPrice] = useState(0);
   const [night, setNight] = useState(0);
   const [amt, setAmt] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [discountType, setDiscountType] = useState('%');
   const [accomodation, setAccomodation] = useState(0);
-  const [total, setTotal] = useState(0);
+  // const [total, setTotal] = useState(0);
   const [deposit, setDeposit] = useState(0);
-  const [servicePrice, setServicePrice] = useState(0);
-  const [serviceAmt, setServiceAmt] = useState(0);
-  const [serviceTax, setServiceTax] = useState(0);
-  const [serviceAmount, setServiceAmount] = useState(0);
+  // const [servicePrice, setServicePrice] = useState(0);
+  // const [serviceAmt, setServiceAmt] = useState(0);
+  // const [serviceTax, setServiceTax] = useState(0);
+  // const [serviceAmount, setServiceAmount] = useState(0);
   const [leftDays, setLeftDays] = useState(0);
   const [currentPropertyName, setCurrentPropertyName] = useState('');
   const [unitName, setUnitName] = useState('');
@@ -81,26 +86,30 @@ const AddReservation = (props) => {
   const [propertyData, setPropertyData] = useState([]);
   const [currentPropertyId, setCurrentPropertyId] = useState(null);
   const [reservationDate, setReservationDate] = useState(null);
+  const [unitId, setUnitId] = useState(null);
+  const [unitTypeId, setUnitTypeId] = useState(null);
+  const [selectDisable, setSelectDisable] = useState(false);
   // const history = useHistory();
 
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ userId }] = userCred || [{}];
 
-  // const show = () => {
-  //   setVisible(true);
-  // };
+  function useUpdate() {
+    const [, setTick] = useState(0);
+    const update = useCallback(() => {
+      setTick((tick) => tick + 1);
+    }, []);
+    return update;
+  }
 
-  // const close = () => {
-  //   setNotifyType('');
-  // };
+  const update = useUpdate();
 
-  // const Ok = () => {
-  //   setVisible1(false);
-  // };
-
-  // const Cancel = () => {
-  //   setVisible(false);
-  // };
+  const close = () => {
+    form.resetFields();
+    setCalendarBookingDate([]);
+    setSelectDisable(false);
+    setVisible(false);
+  };
 
   const addMore = () => {
     i += 1;
@@ -114,27 +123,90 @@ const AddReservation = (props) => {
   };
 
   const addMoreService = async () => {
-    j += 1;
-    setServicePanel([...servicePanel, j]);
+    const oldarray = [...servicePanel];
+    oldarray.push({
+      serviceName: '',
+      servicePrice: 0,
+      serviceQuantity: 0,
+      serviceTax: 0,
+      serviceTotal: 0,
+    });
+    setServicePanel(oldarray);
+    // j += 1;
+    // setServicePanel([...servicePanel, j]);
   };
 
   const removeServicePanel = () => {
-    if (serviceAmount !== 0) {
-      const sum = parseInt(total, 10) - parseInt(serviceAmount, 10);
-      setServiceAmount(0);
-      setServicePrice(0);
-      setServiceTax(0);
-      setServiceAmt(0);
-      setTotal(sum);
-    }
+    // if (serviceAmount !== 0) {
+    //   const sum = parseInt(total, 10) - parseInt(serviceAmount, 10);
+    //   setServiceAmount(0);
+    //  //  setServicePrice(0);
+    //   setServiceTax(0);
+    //  //  setServiceAmt(0);
+    //   setTotal(sum);
+    // }
     const oldarray = [...servicePanel];
     oldarray.pop();
     setServicePanel([...oldarray]);
   };
 
+  const getServices = useCallback(async (propertyId) => {
+    const payload = {
+      propertyId,
+    };
+    const response = await userInstance.post('/getService', payload);
+    const data = response.data.servicData;
+    if (response.data.code === 200) {
+      setServiceData(data);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (Object.values(calendarBookingDate).length > 0) {
+      if (Object.values(calendarBookingDate)[0].length > 0) {
+        setVisible(true);
+        setSelectDisable(true);
+        const selectedDates = Object.values(calendarBookingDate)[0];
+        const propertyId = parseInt(selectedDates[0].row.parentId.split(',')[1], 10);
+        getServices(propertyId);
+        setUnitTypeId(propertyId);
+        const unitId = parseInt(selectedDates[0].id.split(',')[1].split('-')[0], 10);
+        setUnitId(unitId);
+        const unitName = selectedDates[0].row.label;
+        const lastElement = selectedDates.length;
+        const m1 = moment(selectedDates[0].time.leftGlobal);
+        const m2 = moment(selectedDates[lastElement - 1].time.leftGlobal);
+        const diff = Math.abs(m1 - m2);
+        const day = Math.floor(diff / (24 * 60 * 60 * 1000));
+        setNight(day);
+        const unitTypeName = propertyData
+          .filter((el) => el.id === propertyId)
+          .map((filter) => filter.unitTypeName);
+        const name = unitTypeName[0]
+          .filter((e) => e.lang === 'en')
+          .map((name) => name.name);
+        setCurrentPropertyName(name);
+        form.setFieldsValue({
+          groupname: [m1, m2],
+          property: propertyId,
+          propertyName: name,
+          unit: unitName,
+        });
+        setUnitName(unitName);
+      }
+    }
+  }, [
+    calendarBookingDate,
+    getServices,
+    form,
+    propertyData,
+    setPropertyData,
+    setVisible,
+  ]);
+
   const onFinish = async (values) => {
     values.perNight = price;
-    values.nights = night;
+    values.night = night;
     values.amt = amt;
     values.discountType = discountType;
     values.discount = discount;
@@ -143,9 +215,8 @@ const AddReservation = (props) => {
     values.accomodation = accomodation;
 
     const guestData = [];
-    const serviceDataNew = [];
     // values.acknowledge = radio;
-    values.totalAmount = parseInt(total, 10) + parseInt(accomodation, 10);
+    values.totalAmount = serviceTotalArr.reduce((a, b) => a + (b || 0), 0) + accomodation;
     // values.total = parseInt(total) + parseInt(accomodation);
 
     panel.forEach((el) => {
@@ -158,28 +229,23 @@ const AddReservation = (props) => {
     } else {
       values.guest = 'No Guest';
     }
-
-    servicePanel.forEach((ele) => {
-      const data = values[ele].servicePrice * values[ele].serviceQuantity
-        + (values[ele].servicePrice
-          * values[ele].serviceQuantity
-          * values[ele].serviceTax)
-          / 100;
-      values[ele].serviceAmount = data;
-      serviceDataNew.push(values[ele]);
-    });
-    values.serviceData = serviceDataNew;
+    values.serviceData = servicePanel;
     values.propertyName = currentPropertyName;
     values.propertyId = currentPropertyId;
     values.channel = channel;
     values.commission = channelCommission;
     values.unitName = unitName;
+    if (Object.values(calendarBookingDate).length > 0) {
+      if (Object.values(calendarBookingDate)[0].length > 0) {
+        values.unit = unitId;
+        values.unitTypeId = unitTypeId;
+      }
+    }
     values.affiliateId = userId;
-
     const response = await reservationInstance.post('/addReservation', values);
     if (response.data.code === 200) {
       getData();
-      close();
+      window.location.reload();
       toast.success('successfully added reservation', { containerId: 'B' });
     } else {
       toast.error('server error please try again', { containerId: 'B' });
@@ -188,12 +254,8 @@ const AddReservation = (props) => {
     form.resetFields();
   };
 
-  // const handleChange = (e) => {
-  //   console.log('handleChange', e.target.value);
-  // };
-
   const getPropertyData = useCallback(async () => {
-    const response = await userInstance.post('/fetchProperty', { affiliateId: userId });
+    const response = await propertyInstance.post('/fetchProperty', { affiliateId: userId });
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
       setPropertyData(data);
@@ -204,18 +266,75 @@ const AddReservation = (props) => {
     getPropertyData();
   }, [getPropertyData]);
 
-  const calculateTotal = () => {
-    const calculate = servicePrice * serviceAmt
-      + servicePrice * serviceAmt * (serviceTax / 100);
-    const sum = parseInt(total, 10) + parseInt(calculate, 10);
-    setServiceAmount(calculate);
-    setTotal(sum);
+  const onSelectServices = (value, i) => {
+    serviceData
+      .filter((el) => el.serviceName === value)
+      .map((filterService) => setCurrentService(filterService));
+    servicePanel.forEach((el, j) => {
+      if (i === j) {
+        el.serviceName = value;
+      }
+    });
+    setServicePanel(servicePanel);
+    // unitData
+    //   .filter((el) => el.propertyId === value)
+    //   .map((filterUnit) => setCurrentUnit(filterUnit));
   };
+
+  const handleServiceQuantity = (e, ele, i) => {
+    servicePanel.forEach((el, j) => {
+      if (i === j) {
+        el.serviceQuantity = e.target.value;
+        el.serviceTotal = el.servicePrice * e.target.value;
+        form.setFieldsValue({
+          [`serviceTotal${i}`]: el.servicePrice * e.target.value,
+        });
+      }
+    });
+    setServicePanel(servicePanel);
+    update();
+    const item = servicePanel.map((panel) => panel.serviceTotal);
+    setServiceTotalArr(item);
+  };
+  const handleServicePrice = (value, i) => {
+    servicePanel.forEach((el, j) => {
+      if (i === j) {
+        el.servicePrice = value;
+      }
+    });
+    setServicePanel(servicePanel);
+    update();
+  };
+  const handleServiceTax = (e, ele, i) => {
+    servicePanel.forEach((el, j) => {
+      if (i === j) {
+        el.serviceTax = e.target.value;
+        el.serviceTotal = el.servicePrice * el.serviceQuantity
+        + (el.servicePrice * el.serviceQuantity * e.target.value) / 100;
+        form.setFieldsValue({
+          [`serviceTotal${i}`]: el.servicePrice * el.serviceQuantity
+          + (el.servicePrice * el.serviceQuantity * e.target.value) / 100,
+        });
+      }
+    });
+    setServicePanel(servicePanel);
+    update();
+    const item = servicePanel.map((panel) => panel.serviceTotal);
+    setServiceTotalArr(item);
+  };
+
+  // const calculateTotal = () => {
+  //   const calculate = servicePrice * serviceAmt
+  //     + servicePrice * serviceAmt * (serviceTax / 100);
+  //   const sum = parseInt(total, 10) + parseInt(calculate, 10);
+  //   setServiceAmount(calculate);
+  //   setTotal(sum);
+  // };
 
   const onSelectProperty = async (value, event) => {
     propertyData
       .filter((el) => el.id === parseInt(value, 10))
-      .map((filter) => setUnitData(JSON.parse(filter.unitType[0].unitsData) || []));
+      .map((filter) => setUnitData(filter.unitDataV2));
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
@@ -241,15 +360,15 @@ const AddReservation = (props) => {
     }
   };
 
-  const fun2 = (value) => {
-    serviceData
-      .filter((el) => el.serviceName === value)
-      .map((filterService) => setCurrentService(filterService));
+  // const fun2 = (value) => {
+  //   serviceData
+  //     .filter((el) => el.serviceName === value)
+  //     .map((filterService) => setCurrentService(filterService));
 
-    // unitData
-    //   .filter((el) => el.propertyId === value)
-    //   .map((filterUnit) => setCurrentUnit(filterUnit));
-  };
+  //   // unitData
+  //   //   .filter((el) => el.propertyId === value)
+  //   //   .map((filterUnit) => setCurrentUnit(filterUnit));
+  // };
 
   const fun3 = (value, event) => {
     const unitname = event.children;
@@ -288,8 +407,8 @@ const AddReservation = (props) => {
   const handleDeposit = (value) => {
     setDepositType(value);
     if (value === '%') {
-      const mon = Math.round(total * 100) / 100 + Math.round(accomodation * 100) / 100;
-      const data = mon * (depositAmount / 100);
+      const mon = Math.round(accomodation + serviceTotalArr.reduce((a, b) => a + (b || 0), 0));
+      const data = (mon * depositAmount) / 100;
       setDeposit(data);
     } else {
       setDeposit(depositAmount);
@@ -410,7 +529,7 @@ const AddReservation = (props) => {
       title={t('addreservation.heading15')}
       name="modal1"
       visible={visible}
-      onOk={handleOk}
+      onOk={close}
       onCancel={close}
       wrapClassName="create-booking-modal"
     >
@@ -433,6 +552,7 @@ const AddReservation = (props) => {
               ]}
             >
               <RangePicker
+                disabled={selectDisable}
                 defaultValue={moment()}
                 format="YYYY-MM-DD"
                 disabledDate={(current) => current && current < moment().subtract(1, 'day')}
@@ -495,11 +615,16 @@ const AddReservation = (props) => {
               ]}
             >
               <Select
+                disabled={selectDisable}
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => onSelectProperty(value, event)}
               >
                 {propertyData.map((el) => (
-                  <Select.Option value={el.id} key={el}>{el.propertyName}</Select.Option>
+                  <Select.Option value={el.id} key={el}>
+                    {el.unitTypeName
+                      .filter((e) => e.lang === 'en')
+                      .map((name) => name.name)}
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -518,11 +643,12 @@ const AddReservation = (props) => {
               // ]}
             >
               <Select
+                disabled={selectDisable}
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => fun3(value, event)}
               >
-                {unitData.map((el, i) => (
-                  <Select.Option value={i}>{el}</Select.Option>
+                {unitData.map((el) => (
+                  <Select.Option value={el.id} key={el.id}>{el.unitName}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -834,7 +960,7 @@ const AddReservation = (props) => {
                     key="1"
                   >
                     <div className="service-form">
-                      {servicePanel.map((ele) => (
+                      {servicePanel && servicePanel.map((ele, i) => (
                         <div className="inline-form" key={ele}>
                           <div className="delete-data">
                             <DeleteOutlined
@@ -842,11 +968,11 @@ const AddReservation = (props) => {
                             />
                           </div>
                           <Col span={4}>
-                            <Form.Item name={[ele, 'serviceName']}>
+                            <Form.Item name={`serviceName${i}`}>
                               <Select
                                 style={{ width: '100px' }}
-                                placeholder="Select Service"
-                                onSelect={(value, event) => fun2(value, event)}
+                                placeholder={t('bookingpop.rule7')}
+                                onSelect={(value) => onSelectServices(value, i)}
                               >
                                 {serviceData.map((element) => (
                                   <Select.Option value={element.serviceName}>
@@ -857,10 +983,10 @@ const AddReservation = (props) => {
                             </Form.Item>
                           </Col>
                           <Col span={4}>
-                            <Form.Item name={[ele, 'servicePrice']}>
+                            <Form.Item name={`servicePrice${i}`}>
                               <Select
-                                placeholder="Rate"
-                                onSelect={(value) => setServicePrice(value)}
+                                placeholder={t('bookingpop.rule9')}
+                                onSelect={(value) => handleServicePrice(value, i)}
                               >
                                 <Select.Option
                                   value={currentService.servicePrice}
@@ -876,11 +1002,11 @@ const AddReservation = (props) => {
                             X
                           </label>
                           <Col span={4}>
-                            <Form.Item name={[ele, 'serviceQuantity']}>
+                            <Form.Item name={`serviceQuantity${i}`}>
                               <Input
                                 type="number"
-                                placeholder={t('addreservation.heading25')}
-                                onChange={(e) => setServiceAmt(e.target.value)}
+                                placeholder={t('bookingpop.rule8')}
+                                onChange={(e) => handleServiceQuantity(e, ele, i)}
                               />
                             </Form.Item>
                           </Col>
@@ -890,11 +1016,13 @@ const AddReservation = (props) => {
                             +
                           </label>
                           <Col span={4}>
-                            <Form.Item name={[ele, 'serviceTax']}>
+                            <Form.Item name={`serviceTax${i}`}>
                               <Input
                                 type="number"
-                                placeholder="%"
-                                onChange={(e) => setServiceTax(e.target.value)}
+                                placeholder="Tax"
+                                // onBlur={calculateTotal}
+                               // value={serviceTax}
+                                onChange={(e) => handleServiceTax(e, ele, i)}
                               />
                             </Form.Item>
                           </Col>
@@ -903,11 +1031,13 @@ const AddReservation = (props) => {
                             <input hidden />
                             =
                           </label>
+
                           <Col span={4}>
-                            <Form.Item name={[ele, 'serviceAmount']}>
+                            {/* <label htmlFor="eur">{serviceAmount}</label> */}
+                            <Form.Item name={`serviceTotal${i}`}>
                               <Input
-                                value={serviceAmount}
-                                onBlur={calculateTotal}
+                                value={ele.serviceTotal}
+                                // onBlur={calculateTotal}
                               />
                             </Form.Item>
                           </Col>
@@ -929,7 +1059,7 @@ const AddReservation = (props) => {
                 <h4>
                   {t('addreservation.heading26')}
                   :
-                  {accomodation + serviceAmount}
+                  {accomodation + serviceTotalArr.reduce((a, b) => a + (b || 0), 0) }
                   {/* {Math.round(total * 100) / 100
                     + Math.round(accomodation * 100) / 100} */}
                   {' '}
@@ -991,9 +1121,11 @@ const AddReservation = (props) => {
                   :
                   {' '}
                   <span>
-                    {Math.round(total * 100) / 100
+                    {Math.round(accomodation
+                     + serviceTotalArr.reduce((a, b) => a + (b || 0), 0) - deposit)}
+                    {/* {Math.round(total * 100) / 100
                       + Math.round(accomodation * 100) / 100
-                      - deposit}
+                      - deposit} */}
                     €
                   </span>
                 </label>
@@ -1034,16 +1166,21 @@ const AddReservation = (props) => {
 };
 
 AddReservation.propTypes = {
-  close: PropTypes.func,
-  handleOk: PropTypes.func,
   getData: PropTypes.func,
   visible: PropTypes.bool,
+  setVisible: PropTypes.func,
+  calendarBookingDate: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+  ]),
+  setCalendarBookingDate: PropTypes.func,
 };
 AddReservation.defaultProps = {
-  close: () => {},
-  handleOk: () => {},
   getData: () => {},
   visible: false,
+  setVisible: () => {},
+  calendarBookingDate: {},
+  setCalendarBookingDate: () => {},
 };
 
 export default AddReservation;
