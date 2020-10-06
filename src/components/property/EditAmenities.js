@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button, Form, Input, Switch,
@@ -15,6 +15,8 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
   const { t } = useTranslation();
   const [nav, setNav] = useState(false);
   const [panel, setPanel] = useState([]);
+  const [searchedAmenities, setSearchedAmenities] = useState([]);
+  const [searchKeyword, setSearchKeyword] = useState('');
   const handleMenu = (e) => {
     if (e === 'open') {
       setNav(true);
@@ -51,6 +53,79 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
     return undefined;
   };
 
+  function useUpdate() {
+    const [, setTick] = useState(0);
+    const update = useCallback(() => {
+      setTick((tick) => tick + 1);
+    }, []);
+    return update;
+  }
+
+  const update = useUpdate();
+
+  const handleSearch = () => {
+    const oldState = [];
+    amenitiesList.map((amenities) => {
+      if (amenities.name.includes(searchKeyword)) {
+        oldState.push(amenities);
+      }
+      return oldState;
+    });
+    setSearchedAmenities(oldState);
+    update();
+  };
+  if (searchedAmenities && searchedAmenities.length > 0) {
+    return (
+      <>
+        <h3>EDIT YOUR PROPERTY AMENITIES</h3>
+        <p>
+          What amenities does this rental offer? Browse through the
+          list and check the appropriate amenities for your rental.
+        </p>
+        <div className="amenities-search">
+          <Form.Item>
+            <Input
+              placeholder="Search"
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              onPressEnter={handleSearch}
+            />
+          </Form.Item>
+        </div>
+        {
+          searchedAmenities.filter((v, i, a) => a
+            .findIndex((t) => t.name === v.name) === i).map((el) => (
+              <div className="property-selection" key={el.id}>
+                <div className="icon-name">
+                  <InboxOutlined />
+                  {el.name}
+                </div>
+                <div className="input-counter">
+                  <Switch
+                    checked={isSelected(el.id)}
+                    onChange={() => handleChange(el.id)}
+                  />
+                </div>
+              </div>
+          ))
+        }
+        {/* searchedAmenities.flter((amenities, i) => (
+            <div className="property-selection" key={amenities.id}>
+              <div className="icon-name">
+                <InboxOutlined />
+                {amenities.name}
+              </div>
+              <div className="input-counter">
+                <Switch
+                  checked={isSelected(amenities.id)}
+                  onChange={() => handleChange(amenities.id)}
+                />
+              </div>
+            </div>
+          )) */}
+      </>
+    );
+  }
+
   return (
     <Form form={form} onFinish={onFinish}>
       <h3>EDIT YOUR PROPERTY AMENITIES</h3>
@@ -63,6 +138,8 @@ const EditAmenities = ({ handleCancel2, amenitiesList, selectedAmenities }) => {
         <Form.Item>
           <Input
             placeholder="Search"
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            onPressEnter={handleSearch}
           />
         </Form.Item>
       </div>
