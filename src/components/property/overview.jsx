@@ -328,6 +328,12 @@ const Overview = () => {
     setUnitsArr(Array.from(Array(value).keys()));
   };
 
+  const negativeCheck = (e) => {
+    if (e.keyCode === 109) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <Wrapper>
       <Helmet>
@@ -546,7 +552,7 @@ const Overview = () => {
                             },
                           ]}
                         >
-                          <Input placeholder="0.00" />
+                          <Input placeholder="0.00" onKeyDown={negativeCheck} />
                         </Form.Item>
 
                         <Form.Item label={t('overview.label4')}>

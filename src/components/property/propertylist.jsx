@@ -238,7 +238,7 @@ const PropertyList = () => {
                     {el.unitTypeName
                       && el.unitTypeName
                         .filter((e) => e.lang === 'en')
-                        .map((name) => <h3>{name.name}</h3>)}
+                        .map((name) => <h3 key={el}>{name.name}</h3>)}
 
                     <span>{el.created_at.split('T', 1)}</span>
                     <ul>

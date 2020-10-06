@@ -102,6 +102,7 @@ const Profile = () => {
         subdomain: body[0].name,
       });
 
+      setCountry(body[0].country);
       form4.setFieldsValue({
         companyName: body[0].companyName,
         address: body[0].address,
@@ -116,7 +117,7 @@ const Profile = () => {
 
   const personalInfoFinish = async (values) => {
     const copyValues = values;
-    copyValues.address = values.address && values.address.trim();
+    // copyValues.address = values.address && values.address.trim();
     copyValues.fullname = values.fullname && values.fullname.trim();
     copyValues.email = values.email && values.email.trim();
     copyValues.phone = values.phone && values.phone.trim();
@@ -161,7 +162,7 @@ const Profile = () => {
 
   const props = {
     name: 'file',
-    multiple: false,
+    multiple: true,
     action: `${server}/users/photo?userid=${userId}&organizationid=${organizationid}`,
     onChange(info) {
       if (info.file.status === 'done') {
@@ -343,7 +344,7 @@ const Profile = () => {
                             </Form.Item>
                           </Col>
 
-                          <Col span={24}>
+                          {/* <Col span={24}>
                             <Form.Item
                               label={t('strings.address')}
                               name="address"
@@ -356,7 +357,7 @@ const Profile = () => {
                             <Form.Item label={t('strings.phone')} name="phone">
                               <Input />
                             </Form.Item>
-                          </Col>
+                          </Col> */}
 
                           <Col span={12}>
                             <Form.Item>
@@ -656,7 +657,7 @@ const Profile = () => {
                           </Col>
 
                           <Col span={24}>
-                            <Form.Item name="zip" label="Vat ID">
+                            <Form.Item name="vatId" label="Vat ID">
                               <Input />
                             </Form.Item>
                           </Col>
