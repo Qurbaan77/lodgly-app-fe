@@ -88,6 +88,7 @@ const Invoice = () => {
     paymentMethod: '',
   });
   const [visibleProperty, setVisibleProperty] = useState(false);
+  const [logo, setLogo] = useState('');
 
   function useUpdate() {
     const [, setTick] = useState(0);
@@ -201,6 +202,9 @@ const Invoice = () => {
     if (inb.data.code === 200) {
       inb.data.invoiceData.forEach((el, i) => {
         el[`checked${i}`] = false;
+        if (el.logo) {
+          setLogo(el.logo);
+        }
       });
       setInvoiceData(inb.data.invoiceData);
       setInvoiceItems(inb.data.invoiceItems);
@@ -558,6 +562,7 @@ const Invoice = () => {
             property={currentPropertyInfo}
             label={1}
             close={close}
+            logo={logo}
           />
         </Wrapper>
       ) : (
@@ -934,6 +939,7 @@ const Invoice = () => {
             property={currentPropertyInfo}
             label={label}
             close={close}
+            logo={logo}
           />
 
           <EditInvoicePopup
@@ -946,6 +952,7 @@ const Invoice = () => {
             invoiceItems={currentInvoiceItems}
             setInvoiceItems={setCurrentInvoiceItems}
             showDeleteWarning={showpopup}
+            logo={logo}
           />
 
           <DeletePopup

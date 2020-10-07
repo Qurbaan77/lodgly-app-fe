@@ -283,6 +283,12 @@ const Sidenav = ({
     history.push('/booking');
   };
 
+  const handleBack = () => {
+    history.push('/propertylist');
+    localStorage.removeItem('property');
+    handleMenu('close');
+  };
+
   return (
     <Sider
       theme="light"
@@ -389,8 +395,9 @@ const Sidenav = ({
       >
         <span
           className="submenu-heading"
-          onClick={() => handleMenu('close')}
+         // onClick={() => handleMenu('close')}
           role="presentation"
+          onClick={handleBack}
         >
           <Link
             to="/propertylist"
