@@ -34,6 +34,7 @@ const AdInvoicePopup = (props) => {
   const {
     userData, property, label, visible, handleCancel, handleOk, logo,
   } = props;
+  console.log('Property in Invoice', property);
   const [draftBtn, setDraftBtn] = useState(false);
   const [time, setTime] = useState(null);
   const [date, setDate] = useState(null);

@@ -38,18 +38,20 @@ const Location = () => {
     const geocodeAddress = await geocodeByAddress(address);
     const getLatLang = await getLatLng(geocodeAddress[0]);
     const addressComponent = geocodeAddress[0].address_components.reverse();
-    const zip = addressComponent[0].long_name;
-    const country = addressComponent[1].short_name;
-    const state = addressComponent[2].long_name;
-    const city = addressComponent[3].long_name;
-    setlatLng(getLatLang);
-    setCountry(country);
-    setState(state);
-    setCity(city);
-    setZip(zip);
-    form.setFieldsValue({
-      location: address,
-    });
+    if (addressComponent && addressComponent.length > 0) {
+      const zip = addressComponent[0] && addressComponent[0].long_name;
+      const country = addressComponent[1] && addressComponent[1].short_name;
+      const state = addressComponent[2] && addressComponent[2].long_name;
+      const city = addressComponent[3] && addressComponent[3].long_name;
+      setlatLng(getLatLang);
+      setCountry(country);
+      setState(state);
+      setCity(city);
+      setZip(zip);
+      form.setFieldsValue({
+        location: address,
+      });
+    }
   };
 
   const getData = useCallback(async () => {
