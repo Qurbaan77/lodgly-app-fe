@@ -13,8 +13,11 @@ import {
   Modal,
   Row,
   Col,
+  Upload,
 } from 'antd';
-import { PlusOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
+import {
+  PlusOutlined, DeleteOutlined, CloseOutlined, UploadOutlined,
+} from '@ant-design/icons';
 import moment from 'moment';
 import { toast } from 'react-toastify';
 import propertyIcon from '../../assets/images/menu/property-icon-orange.png';
@@ -23,6 +26,7 @@ import pdfIcon from '../../assets/images/menu/pdf-white.png';
 import deleteIcon from '../../assets/images/menu/delete-icon-red.png';
 import loader from '../../assets/images/cliploader.gif';
 import { userInstance } from '../../axios/axiosconfig';
+import { server } from '../../config/keys';
 
 const EditInvoicePopup = (props) => {
   const { t } = useTranslation();
@@ -36,8 +40,8 @@ const EditInvoicePopup = (props) => {
     visible,
     handleOk,
     handleCancel,
+    logo,
   } = props;
-  console.log(property);
   function useUpdate() {
     const [, setTick] = useState(0);
     const update = useCallback(() => {
@@ -67,6 +71,7 @@ const EditInvoicePopup = (props) => {
   // const [itemState, setItemState] = useState([]);
   const [issueState, setIssueState] = useState(false);
   const [download, setDownload] = useState(false);
+  const [logoUrl, setLogoUrl] = useState('');
   // const [total, setTotal] = useState([0]);
   //  const [discountType, setDiscountType] = useState('%');
   const updateValues = useCallback(() => {
@@ -416,6 +421,27 @@ const EditInvoicePopup = (props) => {
     ) {
       evt.preventDefault();
     }
+  };
+  const organizationid = localStorage.getItem('organizationid');
+  const unitTypeV2Id = localStorage.getItem('propertyV2Id');
+  const logoProps = {
+    name: 'file',
+    multiple: false,
+    // action: `http://localhost:3001/users/propertyPicture/${id}`,
+    // action: `${server}/users/propertyPicture/${id}`,
+    action: `${server}/properties/propertyPicture?unitTypeV2Id=${unitTypeV2Id}&organizationid=${organizationid}`,
+    onChange(info) {
+      if (info.file.status === 'done') {
+        setLogoUrl(info.file.response.image);
+        toast.success(`${info.file.name} file uploaded successfully`, {
+          containerId: 'B',
+        });
+      } else if (info.file.status === 'error') {
+        toast.error(`${info.file.name} file upload failed.`, {
+          containerId: 'B',
+        });
+      }
+    },
   };
   return (
     <Modal
@@ -821,7 +847,46 @@ const EditInvoicePopup = (props) => {
             >
               <Input.TextArea />
             </Form.Item>
+          </Col>
+          <Col span={6} className="m-top-30">
+            <Form.Item className="upload-image">
+              <Upload.Dragger {...logoProps} className="upload">
+                {
+                 logoUrl
+                   ? (
+                     <div>
+                       <img src={logoUrl} alt="logo" />
+                     </div>
+                   )
+                   : logo
+                     ? (
+                       <div>
+                         <img src={logo} alt="logo" />
+                       </div>
+                     )
+                     : (
 
+                       <p className="ant-upload-drag-icon">
+                         {/* <UserOutlined /> */}
+
+                         <UploadOutlined className="logoimage" />
+                         {' '}
+
+                       </p>
+
+                     )
+                }
+                {
+                  !logo
+                    ? <h5 className="upload-text">Upload your own logo</h5>
+                    : null
+                }
+              </Upload.Dragger>
+
+            </Form.Item>
+
+          </Col>
+          <Col span={24} className="m-top-30">
             <p className="web-info">
               {property.length ? property[0].address : ''}
               {' '}
@@ -943,6 +1008,7 @@ EditInvoicePopup.propTypes = {
   handleCancel: PropTypes.func,
   showDeleteWarning: PropTypes.func,
   getData: PropTypes.func,
+  logo: PropTypes.string,
 };
 EditInvoicePopup.defaultProps = {
   userData: {},
@@ -957,5 +1023,6 @@ EditInvoicePopup.defaultProps = {
   handleCancel: () => {},
   showDeleteWarning: () => {},
   getData: () => {},
+  logo: '',
 };
 export default EditInvoicePopup;

@@ -8,7 +8,7 @@ import airbnb from '../../assets/images/channelmanager/airbnb.png';
 import booking from '../../assets/images/channelmanager/booking.png';
 import expedia from '../../assets/images/channelmanager/expedia.png';
 import './channel.css';
-import { userInstance } from '../../axios/axiosconfig';
+import { channelInstance, userInstance } from '../../axios/axiosconfig';
 import loader from '../../assets/images/cliploader.gif';
 
 const Channel = () => {
@@ -16,9 +16,21 @@ const Channel = () => {
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
   const [loading, setLoading] = useState(true);
+  const [channelStatus, setChannelStatus] = useState({
+    airbnb: false,
+    booking: false,
+    expedia: false,
+  });
 
   useEffect(() => {
     const getData = async () => {
+      const response = await channelInstance.get('/channelStatus');
+      if (response.data.code === 200) {
+        const { airbnb, booking, expedia } = response.data;
+        setChannelStatus({
+          ...channelStatus, airbnb, booking, expedia,
+        });
+      }
       const res = await userInstance.get('/getUserSubscriptionStatus');
       if (res.data.code === 200) {
         const [{ days, isOnTrial, isSubscribed }] = res.data.userSubsDetails;
@@ -80,19 +92,30 @@ const Channel = () => {
           <div className="channel-manager-box">
             <Link to="/channelairbnb">
               <img src={airbnb} alt="Airbnb" />
-
             </Link>
-            <p className="active">Active</p>
+            {
+              channelStatus.airbnb
+                ? <p className="active">Active</p>
+                : <p className="disabled">Disabled</p>
+            }
           </div>
 
           <div className="channel-manager-box">
             <Link to="/channelbooking"><img src={booking} alt="Booking" /></Link>
-            <p className="disabled">Active</p>
+            {
+              channelStatus.booking
+                ? <p className="active">Active</p>
+                : <p className="disabled">Disabled</p>
+            }
           </div>
 
           <div className="channel-manager-box">
             <Link to="/channelexpedia"><img src={expedia} alt="Expedia" /></Link>
-            <p className="active">Active</p>
+            {
+              channelStatus.expedia
+                ? <p className="active">Active</p>
+                : <p className="disabled">Disabled</p>
+            }
           </div>
 
         </div>

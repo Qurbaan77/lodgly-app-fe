@@ -32,7 +32,7 @@ const AdInvoicePopup = (props) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const {
-    userData, property, label, visible, handleCancel, handleOk,
+    userData, property, label, visible, handleCancel, handleOk, logo,
   } = props;
   const [draftBtn, setDraftBtn] = useState(false);
   const [time, setTime] = useState(null);
@@ -212,11 +212,13 @@ const AdInvoicePopup = (props) => {
     setTotal(item);
   };
   const handleDiscount = (e, i) => {
-    if ((e.target.value < 1 || e.target.value > 100) && discountType === '%') {
-      toast.error('Please Enter Discount in the Range of 0 to 100', { containerId: 'B', toastId: 'ABC' });
+    if ((e.target.value > 100) && discountType === '%') {
       form.setFieldsValue({
         [`discount${i}`]: 100,
-
+      });
+    } else if ((e.target.value < 0) && discountType === '%') {
+      form.setFieldsValue({
+        [`discount${i}`]: 0,
       });
     } else {
       pricePanel.forEach((el, j) => {
@@ -606,6 +608,7 @@ const AdInvoicePopup = (props) => {
               <Col span={3}>
                 <Form.Item name={`discount${i}`} label="Discount">
                   <Input
+                    defaultValue="0"
                     value={ele.itemDiscount}
                     type="number"
                     onKeyPress={preventTypeE}
@@ -620,10 +623,9 @@ const AdInvoicePopup = (props) => {
                   label={t('strings.discount_type')}
                 >
                   <Select
-                    initialvalue="%"
+                    defaultValue="%"
                     onSelect={(value) => handleDiscountType(value, i)}
                   >
-                    <Select.Option>Select</Select.Option>
                     <Select.Option value="%">%</Select.Option>
                     <Select.Option value="€">€</Select.Option>
                   </Select>
@@ -711,25 +713,35 @@ const AdInvoicePopup = (props) => {
             <Form.Item className="upload-image">
               <Upload.Dragger {...logoProps} className="upload">
                 {
-                  logoUrl
-                    ? (
-                      <div>
-                        <img src={logoUrl} alt="logo" />
-                      </div>
-                    )
-                    : (
+                 logoUrl
+                   ? (
+                     <div>
+                       <img src={logoUrl} alt="logo" />
+                     </div>
+                   )
+                   : logo
+                     ? (
+                       <div>
+                         <img src={logo} alt="logo" />
+                       </div>
+                     )
+                     : (
 
-                      <p className="ant-upload-drag-icon">
-                        {/* <UserOutlined /> */}
+                       <p className="ant-upload-drag-icon">
+                         {/* <UserOutlined /> */}
 
-                        <UploadOutlined className="logoimage" />
-                        {' '}
+                         <UploadOutlined className="logoimage" />
+                         {' '}
 
-                      </p>
+                       </p>
 
-                    )
+                     )
                 }
-                <h5 className="upload-text">Upload your own logo</h5>
+                {
+                  !logo
+                    ? <h5 className="upload-text">Upload your own logo</h5>
+                    : null
+                }
               </Upload.Dragger>
 
             </Form.Item>
@@ -798,6 +810,7 @@ AdInvoicePopup.propTypes = {
   handleCancel: PropTypes.func,
   getData: PropTypes.func,
   label: PropTypes.number,
+  logo: PropTypes.string,
 };
 AdInvoicePopup.defaultProps = {
   userData: {},
@@ -808,6 +821,7 @@ AdInvoicePopup.defaultProps = {
   handleCancel: () => {},
   getData: () => {},
   label: 0,
+  logo: '',
 };
 
 export default AdInvoicePopup;
