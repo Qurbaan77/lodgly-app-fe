@@ -238,7 +238,7 @@ const PropertyList = () => {
                     {el.unitTypeName
                       && el.unitTypeName
                         .filter((e) => e.lang === 'en')
-                        .map((name) => <h3>{name.name}</h3>)}
+                        .map((name) => <h3 key={el}>{name.name}</h3>)}
 
                     <span>{el.created_at.split('T', 1)}</span>
                     <ul>
@@ -249,14 +249,18 @@ const PropertyList = () => {
                         {' '}
                         {t('strings.unit_t')}
                       </li>
-                      <li>
+                      <li className="unit">
                         <img src={homeicon} alt="Unit" />
                         {' '}
                         {el.units}
                         {' '}
                         {t('strings.unit')}
                       </li>
+                      {/* <li className="complete">
+                        Complete Property
+                      </li> */}
                     </ul>
+                    <button type="submit" value="complete" className="complete">Complete Property</button>
                   </div>
                 </div>
               ))

@@ -34,6 +34,8 @@ const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 const Sidenav = ({
+  imgState,
+  userName,
   img,
   propertyImage,
   name,
@@ -301,6 +303,8 @@ const Sidenav = ({
       </div>
 
       <UserProfile
+        userName={userName}
+        imgState={imgState}
         img={img}
         propertyImg={propertyImage}
         name={name}
@@ -444,6 +448,11 @@ const Sidenav = ({
 };
 
 Sidenav.propTypes = {
+  userName: PropTypes.string,
+  imgState: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+  ]),
   img: PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.string,
@@ -458,6 +467,8 @@ Sidenav.propTypes = {
   handleMenuSide: PropTypes.func,
 };
 Sidenav.defaultProps = {
+  userName: '',
+  imgState: '',
   img: '',
   propertyImage: '',
   name: '',

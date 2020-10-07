@@ -197,3 +197,14 @@ border-right: 1px solid #efecec;
 .custom-table.subuser-table thead tr th:nth-child(4) {
     width: 100px;
 }
+/* .team-page{
+    margin: -40px -45px!important;
+    padding: 4px!important;
+}
+.teampage{
+    padding-bottom: 0px!important;
+    padding-left: 10px;
+} */
+.action{
+    text-align: right;
+}

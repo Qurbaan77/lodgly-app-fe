@@ -181,7 +181,7 @@ const TeamListing = () => {
       {subUser.length ? (
         <Wrapper>
           <div className="team-page">
-            <div className="page-header">
+            <div className="page-header teampage">
               <h1>
                 <PartitionOutlined />
                 {' '}
@@ -215,7 +215,7 @@ const TeamListing = () => {
                         {t('team.status')}
                       </th>
 
-                      <th>Actions</th>
+                      <th className="action">Actions</th>
                     </tr>
                   </thead>
 
