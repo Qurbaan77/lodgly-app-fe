@@ -16,20 +16,18 @@ const Channel = () => {
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
   const [loading, setLoading] = useState(true);
-  const [channelStatus, setChannelStatus] = useState({
-    airbnb: false,
-    booking: false,
-    expedia: false,
-  });
+  const [airbnbActive, setAirbnb] = useState(false);
+  const [bookingActive, setBooking] = useState(false);
+  const [expediaActive, setExpedia] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
       const response = await channelInstance.get('/channelStatus');
       if (response.data.code === 200) {
         const { airbnb, booking, expedia } = response.data;
-        setChannelStatus({
-          ...channelStatus, airbnb, booking, expedia,
-        });
+        setAirbnb(airbnb);
+        setBooking(booking);
+        setExpedia(expedia);
       }
       const res = await userInstance.get('/getUserSubscriptionStatus');
       if (res.data.code === 200) {
@@ -94,7 +92,7 @@ const Channel = () => {
               <img src={airbnb} alt="Airbnb" />
             </Link>
             {
-              channelStatus.airbnb
+              airbnbActive
                 ? <p className="active">Active</p>
                 : <p className="disabled">Disabled</p>
             }
@@ -103,7 +101,7 @@ const Channel = () => {
           <div className="channel-manager-box">
             <Link to="/channelbooking"><img src={booking} alt="Booking" /></Link>
             {
-              channelStatus.booking
+              bookingActive
                 ? <p className="active">Active</p>
                 : <p className="disabled">Disabled</p>
             }
@@ -112,7 +110,7 @@ const Channel = () => {
           <div className="channel-manager-box">
             <Link to="/channelexpedia"><img src={expedia} alt="Expedia" /></Link>
             {
-              channelStatus.expedia
+              expediaActive
                 ? <p className="active">Active</p>
                 : <p className="disabled">Disabled</p>
             }
