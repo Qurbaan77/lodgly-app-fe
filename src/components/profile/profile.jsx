@@ -57,6 +57,7 @@ const Profile = () => {
   // const [image, setImage] = useState('');
 
   const getUserInfo = useCallback(async () => {
+    const split = new Date().toString().match(/([A-Z]+[+-][0-9]+.*)/)[1];
     const response0 = await userInstance.get('/getUserSubscriptionStatus');
     if (response0.data.code === 200) {
       const [
@@ -85,7 +86,7 @@ const Profile = () => {
         phone: body[0].phone,
       });
       form2.setFieldsValue({
-        timezone: body[0].timeZone,
+        timezone: body[0].timeZone || split,
       });
     }
   }, [form1, form2]);
