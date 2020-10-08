@@ -171,6 +171,7 @@ const Sidenav = ({
           booking, calendar, properties, team, invoice, owner, stats, guests, channelManager,
         },
       ] = featureData;
+      const channelper = channelManager === 1 && channelRead === 1;
       setHideBooking(isSubUser ? !bookingRead : !booking);
       setHidecalendar(isSubUser ? !calendarRead : !calendar);
       setDisableProperties(!isSubUser ? !properties : !propertiesRead);
@@ -179,7 +180,8 @@ const Sidenav = ({
       setHideOwner(!isSubUser ? !owner : !ownerRead);
       setHideStats(!isSubUser ? !stats : !statsRead);
       setDisableGuests(!isSubUser ? !guests : !guestsRead);
-      setHideChannel(!isSubUser ? !channelManager : !channelRead);
+      // setHideChannel(!isSubUser ? !channelManager : !channelManager && !channelRead);
+      setHideChannel(isSubUser ? !channelper : channelManager !== 1);
     }
     // const Id = localStorage.getItem('propertyId');
     // const response = await userInstance.post('/fetchProperty', {
@@ -206,6 +208,7 @@ const Sidenav = ({
     channelRead,
     isSubUser,
   ]);
+  console.log('hide channel', hideChannel);
 
   const [nav, setNav] = useState(false);
   const [ratesNav, setRatesNav] = useState(false);
