@@ -167,7 +167,9 @@ const Owner = () => {
   };
 
   const onFinish = async (values) => {
+    const companyName = window.location.hostname.split('.');
     const copyValues = values;
+    copyValues.company = companyName[0];
     if (selectedPropertyId && selectedPropertyId.length > 0) {
       copyValues.properties = selectedPropertyId;
     }
