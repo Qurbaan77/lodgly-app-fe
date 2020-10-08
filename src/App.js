@@ -535,12 +535,14 @@ const App = () => {
                     {/* <SecureOverview exact path="/overview" component={() => <Overview />} />
                     <SecureOverview exact path="/location" component={() => <Location />} />
                     <SecureOverview exact path="/photos" component={() => <Photos />} /> */}
-                    {isSubUser ? (
+                    {isSubUser ? feature.channelManager ? (
                       <SecureChannel
                         exact
                         path="/channel"
                         component={() => <Channel />}
                       />
+                    ) : (
+                      <PrivateRoute exact path="/channel" component={() => <NotAuthorize />} />
                     ) : feature.channelManager ? (
                       <PrivateRoute
                         exact
@@ -550,12 +552,14 @@ const App = () => {
                     ) : (
                       <PrivateRoute exact path="/channel" component={() => <NotAuthorize />} />
                     )}
-                    {isSubUser ? (
+                    {isSubUser ? feature.channelManager ? (
                       <SecureChannel
                         exact
                         path="/channelbooking"
                         component={() => <ChannelBooking />}
                       />
+                    ) : (
+                      <PrivateRoute exact path="/channel" component={() => <NotAuthorize />} />
                     ) : feature.channelManager ? (
                       <PrivateRoute
                         exact
@@ -565,12 +569,14 @@ const App = () => {
                     ) : (
                       <PrivateRoute exact path="/channelbooking" component={() => <NotAuthorize />} />
                     )}
-                    {isSubUser ? (
+                    {isSubUser ? feature.channelManager ? (
                       <SecureChannel
                         exact
                         path="/channelexpedia"
                         component={() => <ChannelExpedia />}
                       />
+                    ) : (
+                      <PrivateRoute exact path="/channel" component={() => <NotAuthorize />} />
                     ) : feature.channelManager ? (
                       <PrivateRoute
                         exact
@@ -580,12 +586,14 @@ const App = () => {
                     ) : (
                       <PrivateRoute exact path="/channelexpedia" component={() => <NotAuthorize />} />
                     )}
-                    {isSubUser ? (
+                    {isSubUser ? feature.channelManager ? (
                       <SecureChannel
                         exact
                         path="/channelairbnb"
                         component={() => <ChannelAirbnb />}
                       />
+                    ) : (
+                      <PrivateRoute exact path="/channel" component={() => <NotAuthorize />} />
                     ) : feature.channelManager ? (
                       <PrivateRoute
                         exact
