@@ -120,12 +120,12 @@ const CreateBookingPopup = (props) => {
   };
 
   const removePanel = () => {
-    const oldarray = [...servicePanel];
-    oldarray.pop();
-    setServicePanel([...servicePanel]);
-    // const oldarray = [...panel];
+    // const oldarray = [...servicePanel];
     // oldarray.pop();
-    // setPanel([...oldarray]);
+    // setServicePanel([...servicePanel]);
+    const oldarray = [...panel];
+    oldarray.pop();
+    setPanel([...oldarray]);
   };
 
   const addMoreService = async () => {
@@ -1169,7 +1169,7 @@ const CreateBookingPopup = (props) => {
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => onSelectAdult(value, event)}
               >
-                <Select.Option value="">--Select--</Select.Option>
+                <Select.Option value="0">0</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -1186,7 +1186,7 @@ const CreateBookingPopup = (props) => {
               style={{ paddingRight: 20 }}
             >
               <Select placeholder={t('strings.select')}>
-                <Select.Option value="">--Select--</Select.Option>
+                <Select.Option value="0">0</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>

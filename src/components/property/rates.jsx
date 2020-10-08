@@ -247,14 +247,14 @@ const Rates = () => {
       if (response.data.ratesData.length > 0) {
         const data = response.data.ratesData[0];
         setRatesId(data.id);
-        setLengthOfStay(true);
-        setPricePerDayWeek(true);
-        setMinStayPerWeek(true);
-        setOccupancy(true);
-        setshortStay(true);
-        setRestriction(true);
-        setVat(true);
-        setNav(true);
+        setLengthOfStay(false);
+        setPricePerDayWeek(false);
+        setMinStayPerWeek(false);
+        setOccupancy(false);
+        setshortStay(false);
+        setRestriction(false);
+        setVat(false);
+        setNav(false);
 
         form.setFieldsValue({
           rateName: data.rateName,
@@ -331,6 +331,12 @@ const Rates = () => {
 
   const handleCurrencySelect = (e) => {
     setCurrency(e === 'usd' ? '$' : '€');
+  };
+
+  const negativeCheck = (e) => {
+    if (e.keyCode === 109) {
+      e.preventDefault();
+    }
   };
 
   return (
@@ -416,7 +422,7 @@ const Rates = () => {
                     {t('rates.heading3')}
                     {' '}
                     <Switch
-                      checked={lengthOfStay}
+                      // checked={lengthOfStay}
                       onClick={() => setLengthOfStay(!lengthOfStay)}
                     />
                   </h3>
@@ -474,7 +480,7 @@ const Rates = () => {
                     {t('rates.heading4')}
                     {' '}
                     <Switch
-                      checked={pricePerDayWeek}
+                      // checked={pricePerDayWeek}
                       onClick={() => setPricePerDayWeek(!pricePerDayWeek)}
                     />
                   </h3>
@@ -602,8 +608,7 @@ const Rates = () => {
                     {t('rates.heading5')}
                     {' '}
                     <Switch
-                      checked={minStayPerWeek}
-
+                      // checked={minStayPerWeek}
                       onClick={() => setMinStayPerWeek(!minStayPerWeek)}
                     />
                   </h3>
@@ -674,8 +679,7 @@ const Rates = () => {
                     {t('rates.heading6')}
                     {' '}
                     <Switch
-                      checked={occupancy}
-
+                      // checked={occupancy}
                       onClick={() => setOccupancy(!occupancy)}
                     />
                   </h3>
@@ -724,8 +728,7 @@ const Rates = () => {
                     {t('rates.heading7')}
                     {' '}
                     <Switch
-                      checked={shortStay}
-
+                      // checked={shortStay}
                       onClick={() => setshortStay(!shortStay)}
                     />
                   </h3>
@@ -780,8 +783,7 @@ const Rates = () => {
                     {t('rates.heading8')}
                     {' '}
                     <Switch
-                      checked={restriction}
-
+                      // checked={restriction}
                       onClick={() => setRestriction(!restriction)}
                     />
                   </h3>
@@ -931,7 +933,7 @@ const Rates = () => {
                     {t('rates.heading9')}
                     {' '}
                     <Switch
-                      checked={vat}
+                      // checked={vat}
                       onClick={() => setVat(!vat)}
                     />
                   </h3>
@@ -953,7 +955,7 @@ const Rates = () => {
                       <Col span={1} />
                       <Col span={6}>
                         <Form.Item name="taxPer">
-                          <Input placeholder={t('rates.placeholder16')} />
+                          <Input placeholder={t('rates.placeholder16')} onKeyDown={negativeCheck} />
                         </Form.Item>
                       </Col>
                       <Col span={24} className="sales-text">
@@ -974,7 +976,10 @@ const Rates = () => {
                   <h3>
                     {t('rates.heading10')}
                     {' '}
-                    <Switch checked={nav} onClick={() => setNav(!nav)} />
+                    <Switch
+                      checked={nav}
+                      onClick={() => setNav(!nav)}
+                    />
                   </h3>
                   <p>{t('rates.paragraph22')}</p>
 

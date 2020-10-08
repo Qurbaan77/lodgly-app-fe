@@ -696,6 +696,7 @@ const EditReservation = (props) => {
               ]}
             >
               <Select placeholder={t('strings.select')}>
+                <Select.Option value="0">0</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -712,6 +713,7 @@ const EditReservation = (props) => {
               style={{ paddingRight: 20 }}
             >
               <Select placeholder={t('strings.select')}>
+                <Select.Option value="0">0</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -724,6 +726,7 @@ const EditReservation = (props) => {
           <Col span={8}>
             <Form.Item label={t('addreservation.heading11')} name="children2">
               <Select placeholder="Select">
+                <Select.Option value="0">0</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
