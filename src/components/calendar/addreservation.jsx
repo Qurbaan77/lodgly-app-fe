@@ -24,7 +24,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
 import { toast } from 'react-toastify';
-import { userInstance, reservationInstance, propertyInstance } from '../../axios/axiosconfig';
+import {
+  userInstance, propertyInstance, bookingInstance,
+} from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
 
@@ -242,7 +244,7 @@ const AddReservation = (props) => {
       }
     }
     values.affiliateId = userId;
-    const response = await reservationInstance.post('/addReservation', values);
+    const response = await bookingInstance.post('/addBooking', values);
     if (response.data.code === 200) {
       getData();
       window.location.reload();

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
 import moment from 'moment';
 import {
   Form,
@@ -23,7 +22,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
 import { toast } from 'react-toastify';
-import { userInstance, reservationInstance, propertyInstance } from '../../axios/axiosconfig';
+import {
+  userInstance, propertyInstance, bookingInstance,
+} from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
 
@@ -149,6 +150,7 @@ const EditReservation = (props) => {
 
   const updateFields = useCallback(() => {
     if (editvisible) {
+      // setVisible(false);
       onSelectProperty((reservationData.unitTypeId));
       const m1 = moment(reservationData.startDate);
       const m2 = moment(reservationData.endDate);
@@ -215,7 +217,7 @@ const EditReservation = (props) => {
   ]);
 
   const onFinish = async (values) => {
-    values.reservationId = reservationData.id;
+    values.id = reservationData.id;
     values.perNight = price;
     values.nights = night;
     values.amt = amt;
@@ -235,7 +237,7 @@ const EditReservation = (props) => {
         const e = 'email';
         const c = 'country';
         const p = 'phone';
-        el.reservationId = reservationData.id;
+        el.bookingId = reservationData.id;
         el.fullname = values[f + i];
         el.email = values[e + i];
         el.country = values[c + i];
@@ -256,7 +258,7 @@ const EditReservation = (props) => {
     values.unitTypeId = reservationData.unitTypeId;
     values.affiliateId = userId;
     values.deleteServiceId = deleteServiceId;
-    const response = await reservationInstance.post('/changeReservation', values);
+    const response = await bookingInstance.post('/changeBooking', values);
     if (response.data.code === 200) {
       window.location.reload();
       toast.success('successfully added reservation', { containerId: 'B' });
@@ -535,9 +537,6 @@ const EditReservation = (props) => {
       onCancel={close}
       wrapClassName="create-booking-modal"
     >
-      <Helmet>
-        <body className={editvisible ? 'ant-scrolling-effect' : ''} />
-      </Helmet>
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={12}>
