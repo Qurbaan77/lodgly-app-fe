@@ -165,7 +165,8 @@ const TeamListing = () => {
 
   if (loading) {
     return (
-      <Wrapper>
+    // <Wrapper>
+      <>
         <Helmet>
           <link rel="icon" href={favicon} />
           <title>
@@ -182,7 +183,8 @@ const TeamListing = () => {
             <img src={loader} alt="loader" />
           </div>
         </div>
-      </Wrapper>
+      </>
+    // </Wrapper>
     );
   }
 

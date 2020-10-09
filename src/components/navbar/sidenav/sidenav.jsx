@@ -29,6 +29,7 @@ import unitIcon from '../../../assets/images/menu/unit-type-icon.png';
 import channelIcon from '../../../assets/images/menu/channel-icon.png';
 import closeicon from '../../../assets/images/menu/close-icon.png';
 // import arrow from '../../../assets/images/Polygon.png';
+// import loader from '../../../assets/images/cliploader.gif';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
@@ -56,7 +57,7 @@ const Sidenav = ({
   const [hideOwner, setHideOwner] = useState(false);
   const [disableProperties, setDisableProperties] = useState(false);
   const [disableGuests, setDisableGuests] = useState(false);
-  const [hideChannel, setHideChannel] = useState(false);
+  const [hideChannel, setHideChannel] = useState(true);
   // const [propertyId, setPropertyId] = useState();
   const isSubUser = localStorage.getItem('isSubUser');
   const subUserCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -208,7 +209,6 @@ const Sidenav = ({
     channelRead,
     isSubUser,
   ]);
-  console.log('hide channel', hideChannel);
 
   const [nav, setNav] = useState(false);
   const [ratesNav, setRatesNav] = useState(false);
@@ -291,6 +291,15 @@ const Sidenav = ({
     localStorage.removeItem('property');
     handleMenu('close');
   };
+  // if (loading) {
+  //   return (
+  //     <div className="loader">
+  //       <div className="loader-box">
+  //         <img src={loader} alt="loader" />
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <Sider

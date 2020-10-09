@@ -827,7 +827,8 @@ const Owner = () => {
 
   if (loading) {
     return (
-      <Wrapper>
+    //  <Wrapper>
+      <>
         <Helmet>
           <link rel="icon" href={favicon} />
           <title>
@@ -844,7 +845,8 @@ const Owner = () => {
             <img src={loader} alt="loader" />
           </div>
         </div>
-      </Wrapper>
+      </>
+    // </Wrapper>
     );
   }
 

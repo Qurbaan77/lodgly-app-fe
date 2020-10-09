@@ -87,7 +87,8 @@ const Stats = () => {
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   if (loading) {
     return (
-      <Wrapper>
+    // <Wrapper>
+      <>
         <Helmet>
           <link rel="icon" href={favicon} />
           <title>
@@ -104,7 +105,8 @@ const Stats = () => {
             <img src={loader} alt="loader" />
           </div>
         </div>
-      </Wrapper>
+      </>
+    // </Wrapper>
     );
   }
 

@@ -43,7 +43,8 @@ const Channel = () => {
 
   if (loading) {
     return (
-      <Wrapper>
+    // <Wrapper>
+      <>
         <Helmet>
           <link rel="icon" href={favicon} />
           <title>
@@ -60,7 +61,8 @@ const Channel = () => {
             <img src={loader} alt="loader" />
           </div>
         </div>
-      </Wrapper>
+      </>
+    // </Wrapper>
     );
   }
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
