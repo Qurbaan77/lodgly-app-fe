@@ -10,7 +10,7 @@ import {
   DeleteOutlined,
   FormOutlined,
   PartitionOutlined,
-  MoreOutlined,
+  // MoreOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import SubUserPopup from './subuserpopup';
@@ -196,17 +196,17 @@ const TeamListing = () => {
       {subUser.length ? (
         <Wrapper>
           <Helmet>
-          <link rel="icon" href={favicon} />
-          <title>
-            Lodgly - Comprehensive Vacation Rental Property Management
-          </title>
-          <meta
-            name="description"
-            content="Grow your Vacation Rental with Lodgly"
-          />
-          <html className="team-page-view" />
-          <body className="team-page-view" />
-        </Helmet>
+            <link rel="icon" href={favicon} />
+            <title>
+              Lodgly - Comprehensive Vacation Rental Property Management
+            </title>
+            <meta
+              name="description"
+              content="Grow your Vacation Rental with Lodgly"
+            />
+            <html className="team-page-view" />
+            <body className="team-page-view" />
+          </Helmet>
           <div className="team-page">
             <div className="page-header teampage">
               <h1>
@@ -307,9 +307,9 @@ const TeamListing = () => {
                           ''
                         )} */}
                         <td>
-                        <div className="action-icon1 "> 
-                        <img className="action-icon" src={actionicon} alt="" />
-                        </div>
+                          <div className="action-icon1 ">
+                            <img className="action-icon" src={actionicon} alt="" />
+                          </div>
                           <div className="team-action">
                             <FormOutlined
                               onClick={() => showEditSubUser(el, i)}
@@ -327,7 +327,7 @@ const TeamListing = () => {
               </div>
             </div>
             <div className="page-footer teampage">
-              
+
               <Button type="primary" icon={<PlusOutlined />} onClick={show}>
                 {t('team.label1')}
               </Button>
@@ -359,17 +359,17 @@ const TeamListing = () => {
       ) : (
         <Wrapper>
           <Helmet>
-          <link rel="icon" href={favicon} />
-          <title>
-            Lodgly - Comprehensive Vacation Rental Property Management
-          </title>
-          <meta
-            name="description"
-            content="Grow your Vacation Rental with Lodgly"
-          />
-          <html className="team-page-view" />
-          <body className="team-page-view" />
-        </Helmet>
+            <link rel="icon" href={favicon} />
+            <title>
+              Lodgly - Comprehensive Vacation Rental Property Management
+            </title>
+            <meta
+              name="description"
+              content="Grow your Vacation Rental with Lodgly"
+            />
+            <html className="team-page-view" />
+            <body className="team-page-view" />
+          </Helmet>
           <div className="add-team-page">
             <div className="add-subuser">
               <img src={subuser} alt="subuser" />

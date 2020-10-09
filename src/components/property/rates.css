@@ -70,7 +70,7 @@
 
 .weekend-input {
     display: flex;
-    align-items: start;
+    align-items: flex-start;
 }
 
 .weekend-input .ant-form-item {
