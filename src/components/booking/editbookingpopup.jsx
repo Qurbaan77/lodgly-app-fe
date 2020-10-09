@@ -78,6 +78,7 @@ const Editbookingpopup = (props) => {
   const { nights, perNight } = editBookingValues;
   const updateFields = useCallback(() => {
     if (visible) {
+      console.log(editBookingValues);
       fun1((editBookingValues.unitTypeId));
       const m1 = moment(editBookingValues.startDate);
       const m2 = moment(editBookingValues.endDate);
@@ -92,7 +93,7 @@ const Editbookingpopup = (props) => {
         children1: editBookingValues.children1,
         children2: editBookingValues.children2,
         perNight: editBookingValues.perNight,
-        nights: editBookingValues.nights,
+        nights: editBookingValues.night,
         discount: editBookingValues.discount,
         discountType: editBookingValues.discountType,
         discountTotal: data,
@@ -131,7 +132,7 @@ const Editbookingpopup = (props) => {
       setChildren1(editBookingValues.children1);
       setChildren2(editBookingValues.children2);
       setPrice(editBookingValues.perNight);
-      setNight(editBookingValues.nights);
+      setNight(editBookingValues.night);
       setDiscount(editBookingValues.discount);
       setDiscountType(editBookingValues.discountType);
       setdiscountAmount(editBookingValues.discount);
@@ -200,29 +201,34 @@ const Editbookingpopup = (props) => {
   };
 
   const onFinish = async (values) => {
-    values.id = localStorage.getItem('bookingId');
+    const { pathname } = window.location;
+    if (pathname === '/calendar') {
+      values.id = editBookingValues.id;
+    } else {
+      values.id = localStorage.getItem('bookingId');
+    }
     values.perNight = price;
     values.nights = night;
     values.amt = amt;
     values.discountType = discountType;
     values.discount = discount;
     values.accomodation = accomodation;
-    // values.acknowledge = radio;
     values.totalAmount = accomodation
       + currentService
         .map((service) => service.serviceAmount)
         .reduce((a, b) => a + (b || 0), 0);
-    // values.total = parseInt(total) + parseInt(accomodation);
-    // values.deposit = deposit;
 
     if (editCurrentGuest.length) {
-      editCurrentGuest.forEach((el) => {
+      editCurrentGuest.forEach((el, i) => {
         const f = 'fullName';
         const e = 'email';
         const c = 'country';
         const p = 'phone';
-        // el.id = el.id || null;
-        el.bookingId = el.bookingId || localStorage.getItem('bookingId');
+        if (pathname === '/calendar') {
+          el.bookingId = editBookingValues.id;
+        } else {
+          el.bookingId = localStorage.getItem('bookingId');
+        }
         el.fullname = values[f + i];
         el.email = values[e + i];
         el.country = values[c + i];
@@ -236,23 +242,6 @@ const Editbookingpopup = (props) => {
     } else {
       values.guest = 'No Guest';
     }
-    // if (currentService && currentService.length) {
-    //   currentService.forEach((el) => {
-    //     const n = 'serviceName';
-    //     const p = 'servicePrice';
-    //     const q = 'serviceQuantity';
-    //     const t = 'serviceTax';
-    //     el.id = el.id || null;
-    //     el.bookingId = el.bookingId || localStorage.getItem('bookingId');
-    //     el.serviceName = values[n + i];
-    //     el.servicePrice = values[p + i];
-    //     el.serviceQuantity = values[q + i];
-    //     el.serviceTax = values[t + i];
-    //     el.serviceAmount = el.servicePrice * el.serviceQuantity
-    //       + (el.servicePrice * el.serviceQuantity * el.serviceTax) / 100;
-    //   });
-    // }
-
     values.serviceData = currentService && currentService;
     values.noOfservices = currentService && currentService.length;
     values.propertyName = propertyName;
@@ -266,6 +255,9 @@ const Editbookingpopup = (props) => {
     values.affiliateId = userId;
     const response = await bookingInstance.post('/changeBooking', values);
     if (response.data.code === 200) {
+      if (pathname === '/calendar') {
+        window.location.reload();
+      }
       getData();
       setBooked(true);
       close();
@@ -331,12 +323,12 @@ const Editbookingpopup = (props) => {
     // const data2 = response2.data.unitData;
     // console.log('unit data', data2);
     const response3 = await propertyInstance.post('/getUnittype', payload);
+    console.log('response3', response3);
     if (response.data.code === 200) {
       setServiceData(data);
     }
     if (response3.data.code === 200) {
-      const data3 = response3.data.unittypeData[0];
-      const dataUnit = data3.unitsData;
+      const dataUnit = response3.data.unitData;
       setUnitData(dataUnit);
     }
   };
@@ -448,11 +440,13 @@ const Editbookingpopup = (props) => {
   };
 
   const onChangeDate = (value) => {
-    const d1 = new Date(value[0]._d);
-    const d2 = new Date(value[1]._d);
-    const diff = Math.abs(d1 - d2);
-    const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
-    setNight(day);
+    if (value) {
+      const d1 = new Date(value[0]._d);
+      const d2 = new Date(value[1]._d);
+      const diff = Math.abs(d1 - d2);
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+      setNight(day);
+    }
   };
 
   const addMore = () => {

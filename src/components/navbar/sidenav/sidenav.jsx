@@ -29,11 +29,14 @@ import unitIcon from '../../../assets/images/menu/unit-type-icon.png';
 import channelIcon from '../../../assets/images/menu/channel-icon.png';
 import closeicon from '../../../assets/images/menu/close-icon.png';
 // import arrow from '../../../assets/images/Polygon.png';
+// import loader from '../../../assets/images/cliploader.gif';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 const Sidenav = ({
+  imgState,
+  userName,
   img,
   propertyImage,
   name,
@@ -54,7 +57,7 @@ const Sidenav = ({
   const [hideOwner, setHideOwner] = useState(false);
   const [disableProperties, setDisableProperties] = useState(false);
   const [disableGuests, setDisableGuests] = useState(false);
-  const [hideChannel, setHideChannel] = useState(false);
+  const [hideChannel, setHideChannel] = useState(true);
   // const [propertyId, setPropertyId] = useState();
   const isSubUser = localStorage.getItem('isSubUser');
   const subUserCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -169,6 +172,7 @@ const Sidenav = ({
           booking, calendar, properties, team, invoice, owner, stats, guests, channelManager,
         },
       ] = featureData;
+      const channelper = channelManager === 1 && channelRead === 1;
       setHideBooking(isSubUser ? !bookingRead : !booking);
       setHidecalendar(isSubUser ? !calendarRead : !calendar);
       setDisableProperties(!isSubUser ? !properties : !propertiesRead);
@@ -177,7 +181,8 @@ const Sidenav = ({
       setHideOwner(!isSubUser ? !owner : !ownerRead);
       setHideStats(!isSubUser ? !stats : !statsRead);
       setDisableGuests(!isSubUser ? !guests : !guestsRead);
-      setHideChannel(!isSubUser ? !channelManager : !channelRead);
+      // setHideChannel(!isSubUser ? !channelManager : !channelManager && !channelRead);
+      setHideChannel(isSubUser ? !channelper : channelManager !== 1);
     }
     // const Id = localStorage.getItem('propertyId');
     // const response = await userInstance.post('/fetchProperty', {
@@ -281,6 +286,21 @@ const Sidenav = ({
     history.push('/booking');
   };
 
+  const handleBack = () => {
+    history.push('/propertylist');
+    localStorage.removeItem('property');
+    handleMenu('close');
+  };
+  // if (loading) {
+  //   return (
+  //     <div className="loader">
+  //       <div className="loader-box">
+  //         <img src={loader} alt="loader" />
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
   return (
     <Sider
       theme="light"
@@ -301,6 +321,8 @@ const Sidenav = ({
       </div>
 
       <UserProfile
+        userName={userName}
+        imgState={imgState}
         img={img}
         propertyImg={propertyImage}
         name={name}
@@ -385,8 +407,9 @@ const Sidenav = ({
       >
         <span
           className="submenu-heading"
-          onClick={() => handleMenu('close')}
+         // onClick={() => handleMenu('close')}
           role="presentation"
+          onClick={handleBack}
         >
           <Link
             to="/propertylist"
@@ -444,6 +467,11 @@ const Sidenav = ({
 };
 
 Sidenav.propTypes = {
+  userName: PropTypes.string,
+  imgState: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+  ]),
   img: PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.string,
@@ -458,6 +486,8 @@ Sidenav.propTypes = {
   handleMenuSide: PropTypes.func,
 };
 Sidenav.defaultProps = {
+  userName: '',
+  imgState: '',
   img: '',
   propertyImage: '',
   name: '',

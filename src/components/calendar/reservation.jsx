@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import Helmet from 'react-helmet';
 import moment from 'moment';
 import Avatar from 'react-avatar';
 import { toast } from 'react-toastify';
@@ -25,7 +26,8 @@ import {
   FormOutlined,
 } from '@ant-design/icons';
 import DeletePopup from '../property/deletepopup';
-import EditReservation from './editreservation';
+import EditBookingPopup from '../booking/editbookingpopup';
+// import EditReservation from './editreservation';
 import { reservationInstance } from '../../axios/axiosconfig';
 
 const Reservation = ({ calendarBookingDate }) => {
@@ -49,6 +51,10 @@ const Reservation = ({ calendarBookingDate }) => {
 
   const handleCancelDelete = () => {
     setVisibleOfDelete(false);
+  };
+
+  const handleCancel = () => {
+    setEditVisible(false);
   };
 
   const remove = async () => {
@@ -92,6 +98,10 @@ const Reservation = ({ calendarBookingDate }) => {
     }
   }, [calendarBookingDate]);
 
+  // const showEditReservation = () => {
+  //   setEditVisible(true);
+  //   setVisible(false);
+  // };
   useEffect(() => {
     getReservationData();
   }, [getReservationData]);
@@ -105,6 +115,9 @@ const Reservation = ({ calendarBookingDate }) => {
       onCancel={close}
       wrapClassName="create-booking-modal reservation-setting"
     >
+      <Helmet>
+        <body className={visible ? 'ant-scrolling-effect' : ''} />
+      </Helmet>
       <Form name="basic">
         <Row
           className="reservation-info"
@@ -310,7 +323,7 @@ const Reservation = ({ calendarBookingDate }) => {
           cancel={() => handleCancelDelete()}
         />
       </Modal>
-      <EditReservation
+      {/* <EditReservation
         title="Edit Reservation"
         editvisible={editvisible}
         setEditVisible={setEditVisible}
@@ -320,6 +333,18 @@ const Reservation = ({ calendarBookingDate }) => {
         setGuestArray={setGuestArray}
         serviceArray={serviceArray}
         setServiceArray={setServiceArray}
+      /> */}
+
+      <EditBookingPopup
+        visible={editvisible}
+        handleCancel={handleCancel}
+        handleOk={handleOk}
+        editBookingValues={reservationData}
+        // currentBooking={currentBooking}
+        editCurrentGuest={guestArray}
+        setEditCurrentGuest={setGuestArray}
+        currentService={serviceArray}
+        setCurrentService={setServiceArray}
       />
     </Modal>
   );

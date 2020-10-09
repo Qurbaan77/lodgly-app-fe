@@ -80,7 +80,7 @@ const Overview = () => {
     if (response.data.code === 200 && response.status !== 204) {
       const data = response.data.unitTypeV2Data[0];
       if (data && data.unitsData !== null) {
-        data.unitsData.forEach((el, i) => form2.setFieldsValue({ [`unit${i + 1}`]: el }));
+        JSON.parse(data.unitsData).forEach((el, i) => form2.setFieldsValue({ [`unit${i + 1}`]: el }));
       }
       if (data.propertyType !== null) {
         form.setFieldsValue({
@@ -328,6 +328,12 @@ const Overview = () => {
     setUnitsArr(Array.from(Array(value).keys()));
   };
 
+  const negativeCheck = (e) => {
+    if (e.keyCode === 109) {
+      e.preventDefault();
+    }
+  };
+
   return (
     <Wrapper>
       <Helmet>
@@ -348,7 +354,7 @@ const Overview = () => {
             <div className="overview-content">
               <Form form={form} onFinish={handleFinish}>
                 <div className="overview-first-section">
-                  <h3>OverView</h3>
+                  <h3>{t('overview.heading1')}</h3>
 
                   <div className="overview-flex">
                     <div className="overview-input">
@@ -411,7 +417,6 @@ const Overview = () => {
                     </div>
                   </div>
 
-                  <h3>{t('overview.heading1')}</h3>
                   <Row>
                     <Col span={24}>
                       <Form.Item name="name">
@@ -546,7 +551,7 @@ const Overview = () => {
                             },
                           ]}
                         >
-                          <Input placeholder="0.00" />
+                          <Input placeholder="0.00" onKeyDown={negativeCheck} />
                         </Form.Item>
 
                         <Form.Item label={t('overview.label4')}>

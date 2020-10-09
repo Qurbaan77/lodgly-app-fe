@@ -224,13 +224,13 @@ const GuestList = () => {
 
   if (loading) {
     return (
-      <Wrapper>
+     // <Wrapper>
         <div className="loader">
           <div className="loader-box">
             <img src={loader} alt="loader" />
           </div>
         </div>
-      </Wrapper>
+     // </Wrapper>
     );
   }
 

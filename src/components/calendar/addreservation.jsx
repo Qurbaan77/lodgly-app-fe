@@ -24,7 +24,9 @@ import {
 import { useTranslation } from 'react-i18next';
 import countryList from 'react-select-country-list';
 import { toast } from 'react-toastify';
-import { userInstance, reservationInstance, propertyInstance } from '../../axios/axiosconfig';
+import {
+  userInstance, propertyInstance, bookingInstance,
+} from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
 
@@ -242,7 +244,7 @@ const AddReservation = (props) => {
       }
     }
     values.affiliateId = userId;
-    const response = await reservationInstance.post('/addReservation', values);
+    const response = await bookingInstance.post('/addBooking', values);
     if (response.data.code === 200) {
       getData();
       window.location.reload();
@@ -704,6 +706,7 @@ const AddReservation = (props) => {
               ]}
             >
               <Select placeholder={t('strings.select')}>
+                <Select.Option value="0">0</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -720,6 +723,7 @@ const AddReservation = (props) => {
               style={{ paddingRight: 20 }}
             >
               <Select placeholder={t('strings.select')}>
+                <Select.Option value="0">0</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -732,6 +736,7 @@ const AddReservation = (props) => {
           <Col span={8}>
             <Form.Item label={t('addreservation.heading11')} name="children2">
               <Select placeholder="Select">
+                <Select.Option value="0">0</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>

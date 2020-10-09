@@ -41,7 +41,14 @@ let i = 1;
 
 const CreateBookingPopup = (props) => {
   const {
-    getData, close, visible, handleOk, handleCancel,
+    getData,
+    close,
+    visible,
+    setVisible,
+    handleOk,
+    handleCancel,
+    calendarBookingDate,
+    setCalendarBookingDate,
   } = props;
   const { t } = useTranslation();
   const [form] = Form.useForm();
@@ -98,6 +105,9 @@ const CreateBookingPopup = (props) => {
   const [currentPropertyId, setCurrentPropertyId] = useState(null);
   const [noOfAdult, setNoOfAdult] = useState(0);
   const [guestEle, setGuestEle] = useState(0);
+  const [unitId, setUnitId] = useState(null);
+  const [unitTypeId, setUnitTypeId] = useState(null);
+  const [selectDisable, setSelectDisable] = useState(false);
   // const [ratesData, setRatesData] = useState({});
   // const history = useHistory();
   // const regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
@@ -106,6 +116,8 @@ const CreateBookingPopup = (props) => {
 
   const hidePopUp = () => {
     close();
+    setCalendarBookingDate([]);
+    setSelectDisable(false);
     form.resetFields();
   };
 
@@ -120,12 +132,12 @@ const CreateBookingPopup = (props) => {
   };
 
   const removePanel = () => {
-    const oldarray = [...servicePanel];
-    oldarray.pop();
-    setServicePanel([...servicePanel]);
-    // const oldarray = [...panel];
+    // const oldarray = [...servicePanel];
     // oldarray.pop();
-    // setPanel([...oldarray]);
+    // setServicePanel([...servicePanel]);
+    const oldarray = [...panel];
+    oldarray.pop();
+    setPanel([...oldarray]);
   };
 
   const addMoreService = async () => {
@@ -156,7 +168,63 @@ const CreateBookingPopup = (props) => {
     setServicePanel([...oldarray]);
   };
 
+  const getServices = useCallback(async (propertyId) => {
+    const payload = {
+      propertyId,
+    };
+    const response = await userInstance.post('/getService', payload);
+    const data = response.data.servicData;
+    if (response.data.code === 200) {
+      setServiceData(data);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (Object.values(calendarBookingDate).length > 0) {
+      if (Object.values(calendarBookingDate)[0].length > 0) {
+        setVisible(true);
+        setSelectDisable(true);
+        const selectedDates = Object.values(calendarBookingDate)[0];
+        const propertyId = parseInt(selectedDates[0].row.parentId.split(',')[1], 10);
+        getServices(propertyId);
+        setUnitTypeId(propertyId);
+        const unitId = parseInt(selectedDates[0].id.split(',')[1].split('-')[0], 10);
+        setUnitId(unitId);
+        const unitName = selectedDates[0].row.label;
+        const lastElement = selectedDates.length;
+        const m1 = moment(selectedDates[0].time.leftGlobal);
+        const m2 = moment(selectedDates[lastElement - 1].time.leftGlobal);
+        const diff = Math.abs(m1 - m2);
+        const day = Math.floor(diff / (24 * 60 * 60 * 1000));
+        setDaysArr(Array.from(Array(day).keys()));
+        setNight(day);
+        const unitTypeName = propertyData
+          .filter((el) => el.id === propertyId)
+          .map((filter) => filter.unitTypeName);
+        const name = unitTypeName[0]
+          .filter((e) => e.lang === 'en')
+          .map((name) => name.name);
+        setCurrentPropertyName(name);
+        form.setFieldsValue({
+          groupname: [m1, m2],
+          property: propertyId,
+          propertyName: name,
+          unit: unitName,
+        });
+        setUnitName(unitName);
+      }
+    }
+  }, [
+    calendarBookingDate,
+    getServices,
+    form,
+    propertyData,
+    setPropertyData,
+    setVisible,
+  ]);
+
   const onFinish = async (values) => {
+    const { pathname } = window.location;
     values.perNight = price;
     values.nights = night;
     values.amt = amt;
@@ -165,14 +233,8 @@ const CreateBookingPopup = (props) => {
     values.deposit = deposit;
     values.depositType = depositType;
     values.accomodation = accomodation;
-
     const guestData = [];
-    // const serviceDataNew = [];
     values.totalAmount = serviceTotalArr.reduce((a, b) => a + (b || 0), 0) + accomodation;
-    // values.acknowledge = radio;
-    // values.totalAmount = parseInt(total, 10) + parseInt(accomodation, 10);
-    // values.total = parseInt(total) + parseInt(accomodation);
-
     panel.forEach((el) => {
       guestData.push(values[el]);
     });
@@ -182,22 +244,20 @@ const CreateBookingPopup = (props) => {
     } else {
       values.guest = 'No Guest';
     }
-
-    // servicePanel.forEach((ele) => {
-    //   const data = values[ele].servicePrice * values[ele].serviceQuantity
-    //     + (values[ele].servicePrice
-    //       * values[ele].serviceQuantity
-    //       * values[ele].serviceTax)
-    //       / 100;
-    //   values[ele].serviceAmount = data;
-    //   serviceDataNew.push(values[ele]);
-    // });
     values.serviceData = servicePanel;
-    values.propertyName = currentPropertyName[0].props.children;
     values.propertyId = currentPropertyId;
     values.channel = channel;
     values.commission = channelCommission;
     values.unitName = unitName;
+    if (Object.values(calendarBookingDate).length > 0) {
+      if (Object.values(calendarBookingDate)[0].length > 0) {
+        values.unit = unitId;
+        values.unitTypeId = unitTypeId;
+        values.propertyName = currentPropertyName;
+      }
+    } else {
+      values.propertyName = currentPropertyName[0].props.children;
+    }
     values.affiliateId = userId;
     const priceOnEachDay = {};
     const startDate = values.groupname[0];
@@ -209,6 +269,9 @@ const CreateBookingPopup = (props) => {
     values.priceOnEachDay = priceOnEachDay * 100;
     const response = await bookingInstance.post('/addBooking', values);
     if (response.data.code === 200) {
+      if (pathname === '/calendar') {
+        window.location.reload();
+      }
       getData();
       close();
       toast.success('Booking created successfully!', { containerId: 'B' });
@@ -217,9 +280,6 @@ const CreateBookingPopup = (props) => {
     }
     form.resetFields();
   };
-  // const handleChange = (e) => {
-  //   console.log('handleChange', e.target.value);
-  // };
 
   const getPropertyData = useCallback(async () => {
     const response = await propertyInstance.post('/fetchProperty', {
@@ -249,7 +309,7 @@ const CreateBookingPopup = (props) => {
   const onSelectProperty = async (value, event) => {
     propertyData
       .filter((el) => el.id === value)
-      .map((filter) => setUnitData(filter.unitsData));
+      .map((filter) => setUnitData(filter.unitDataV2));
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
@@ -476,8 +536,7 @@ const CreateBookingPopup = (props) => {
   };
   const disabledDate = (current) => current > moment().subtract(18, 'y') || current > moment();
 
-  const onChangeDate = (value) => {
-    // { minDate : startdate}
+  const onChangeDate = useCallback((value) => {
     if (value) {
       setSelectDate(value);
       setStartDate(value[0]._d.getDate());
@@ -492,7 +551,7 @@ const CreateBookingPopup = (props) => {
       setNight(day);
       setDaysArr(Array.from(Array(day).keys()));
     }
-  };
+  }, []);
 
   const onOptionalDate = (value) => {
     if (value) {
@@ -1017,6 +1076,7 @@ const CreateBookingPopup = (props) => {
 
             >
               <RangePicker
+                disabled={selectDisable}
                 defaultValue={moment()}
                 format="YYYY-MM-DD"
                 disabledDate={(current) => current && current < moment().subtract(1, 'day')}
@@ -1078,6 +1138,7 @@ const CreateBookingPopup = (props) => {
               ]}
             >
               <Select
+                disabled={selectDisable}
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => onSelectProperty(value, event)}
               >
@@ -1104,11 +1165,12 @@ const CreateBookingPopup = (props) => {
               ]}
             >
               <Select
+                disabled={selectDisable}
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => onSelectUnit(value, event)}
               >
-                {unitData && unitData.map((el, i) => (
-                  <Select.Option value={i} key={el}>{el}</Select.Option>
+                {unitData && unitData.map((el) => (
+                  <Select.Option value={el.id} key={el.id}>{el.unitName}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -1169,7 +1231,7 @@ const CreateBookingPopup = (props) => {
                 placeholder={t('strings.select')}
                 onSelect={(value, event) => onSelectAdult(value, event)}
               >
-                <Select.Option value="">--Select--</Select.Option>
+                <Select.Option value="0">0</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -1186,7 +1248,7 @@ const CreateBookingPopup = (props) => {
               style={{ paddingRight: 20 }}
             >
               <Select placeholder={t('strings.select')}>
-                <Select.Option value="">--Select--</Select.Option>
+                <Select.Option value="0">0</Select.Option>
                 <Select.Option value="1">1</Select.Option>
                 <Select.Option value="2">2</Select.Option>
                 <Select.Option value="3">3</Select.Option>
@@ -1669,6 +1731,12 @@ CreateBookingPopup.propTypes = {
   handleOk: PropTypes.func,
   getData: PropTypes.func,
   visible: PropTypes.bool,
+  setVisible: PropTypes.func,
+  calendarBookingDate: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+  ]),
+  setCalendarBookingDate: PropTypes.func,
 };
 CreateBookingPopup.defaultProps = {
   close: () => {},
@@ -1676,6 +1744,9 @@ CreateBookingPopup.defaultProps = {
   handleOk: () => {},
   getData: () => {},
   visible: false,
+  setVisible: () => {},
+  calendarBookingDate: {},
+  setCalendarBookingDate: () => {},
 };
 
 export default CreateBookingPopup;

@@ -269,12 +269,12 @@ const CreateSeasonRates = () => {
           m1 = moment(data.startDate);
           m2 = moment(data.endDate);
         }
-        setLengthOfStay(true);
-        setPricePerDayWeek(true);
-        setMinStayPerWeek(true);
-        setOccupancy(true);
-        setshortStay(true);
-        setRestriction(true);
+        setLengthOfStay(false);
+        setPricePerDayWeek(false);
+        setMinStayPerWeek(false);
+        setOccupancy(false);
+        setshortStay(false);
+        setRestriction(false);
 
         form.setFieldsValue({
           seasonRateName: data.seasonRateName,
@@ -443,7 +443,7 @@ const CreateSeasonRates = () => {
                     Length-of-stay prices
                     {' '}
                     <Switch
-                      checked={lengthOfStay}
+                      // checked={lengthOfStay}
                       onClick={() => setLengthOfStay(!lengthOfStay)}
                     />
                   </h3>
@@ -501,7 +501,7 @@ const CreateSeasonRates = () => {
                     Price per weekday
                     {' '}
                     <Switch
-                      checked={pricePerDayWeek}
+                      // checked={pricePerDayWeek}
                       onClick={() => setPricePerDayWeek(!pricePerDayWeek)}
                     />
                   </h3>
@@ -629,7 +629,7 @@ const CreateSeasonRates = () => {
                     Minimum stay per weekday
                     {' '}
                     <Switch
-                      checked={minStayPerWeek}
+                      // checked={minStayPerWeek}
                       onClick={() => setMinStayPerWeek(!minStayPerWeek)}
                     />
                   </h3>
@@ -700,7 +700,7 @@ const CreateSeasonRates = () => {
                     Occupancy
                     {' '}
                     <Switch
-                      checked={occupancy}
+                      // checked={occupancy}
                       onClick={() => setOccupancy(!occupancy)}
                     />
                   </h3>
@@ -742,7 +742,7 @@ const CreateSeasonRates = () => {
                     Short stay premium
                     {' '}
                     <Switch
-                      checked={shortStay}
+                      // checked={shortStay}
                       onClick={() => setshortStay(!shortStay)}
                     />
                   </h3>
@@ -796,7 +796,7 @@ const CreateSeasonRates = () => {
                     Check-in/Check-out restrictions
                     {' '}
                     <Switch
-                      checked={restriction}
+                      // checked={restriction}
                       onClick={() => setRestriction(!restriction)}
                     />
                   </h3>

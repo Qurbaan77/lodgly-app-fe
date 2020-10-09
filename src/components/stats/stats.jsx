@@ -87,7 +87,8 @@ const Stats = () => {
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   if (loading) {
     return (
-      <Wrapper>
+    // <Wrapper>
+      <>
         <Helmet>
           <link rel="icon" href={favicon} />
           <title>
@@ -104,7 +105,8 @@ const Stats = () => {
             <img src={loader} alt="loader" />
           </div>
         </div>
-      </Wrapper>
+      </>
+    // </Wrapper>
     );
   }
 
@@ -370,11 +372,11 @@ const AccommodationChart = ({ topNavId, setAccomodationHasData }) => {
 
 AccommodationChart.propTypes = {
   topNavId: PropTypes.number,
-  setAccomodationHasData: PropTypes.string,
+  setAccomodationHasData: PropTypes.func,
 };
 AccommodationChart.defaultProps = {
   topNavId: 0,
-  setAccomodationHasData: '',
+  setAccomodationHasData: () => {},
 };
 
 const OccupancyChart = ({ topNavId, setOccupancyHasData }) => {
@@ -497,11 +499,11 @@ const OccupancyChart = ({ topNavId, setOccupancyHasData }) => {
 
 OccupancyChart.propTypes = {
   topNavId: PropTypes.number,
-  setOccupancyHasData: PropTypes.string,
+  setOccupancyHasData: PropTypes.func,
 };
 OccupancyChart.defaultProps = {
   topNavId: 0,
-  setOccupancyHasData: '',
+  setOccupancyHasData: () => {},
 };
 
 const ReservationCountryChart = ({ setReservationCountryHasData }) => {
@@ -578,10 +580,10 @@ const ReservationCountryChart = ({ setReservationCountryHasData }) => {
 };
 
 ReservationCountryChart.propTypes = {
-  setReservationCountryHasData: PropTypes.string,
+  setReservationCountryHasData: PropTypes.func,
 };
 ReservationCountryChart.defaultProps = {
-  setReservationCountryHasData: '',
+  setReservationCountryHasData: () => {},
 };
 
 const ReservationChannelChart = () => {
@@ -760,9 +762,9 @@ const PaceChart = ({ topNavId, setPaceHasData }) => {
 
 PaceChart.propTypes = {
   topNavId: PropTypes.number,
-  setPaceHasData: PropTypes.string,
+  setPaceHasData: PropTypes.func,
 };
 PaceChart.defaultProps = {
   topNavId: 0,
-  setPaceHasData: '',
+  setPaceHasData: () => {},
 };

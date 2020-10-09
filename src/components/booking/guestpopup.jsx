@@ -108,7 +108,7 @@ const GuestPopup = (props) => {
               name="country"
               rules={[{ required: true, message: t('guestpopup.label3') }]}
             >
-              <CountryDropdown className="country-select"/>
+              <CountryDropdown className="country-select" />
             </Form.Item>
           </Col>
 

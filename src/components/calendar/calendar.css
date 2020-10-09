@@ -619,3 +619,11 @@
   outline: none!important;
   
 }
+
+.year-select .ant-btn {
+  background: transparent;
+}
+
+.gstc__list-column-header-content .gstc__list-column-row-expander-toggle, .gstc__list-column-header--search{
+  line-height: 72px
+  }

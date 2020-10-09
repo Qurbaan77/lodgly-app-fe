@@ -35,6 +35,7 @@ const TeamListing = () => {
   const [visibleDeletePopup, setVisibleDeletePopup] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [permission, setPermission] = useState([]);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -73,6 +74,15 @@ const TeamListing = () => {
   const closeEditSubUser = () => {
     setVisibleSubUser(false);
   };
+  useEffect(() => {
+    const getData = async () => {
+      const res = await userInstance.post('/getFeature', { affiliateId: userId });
+      if (res.data.code === 200) {
+        setPermission(res.data.featureData);
+      }
+    };
+    getData();
+  }, [userId]);
 
   const handleDeleteSubUser = async () => {
     const payload = {
@@ -157,7 +167,8 @@ const TeamListing = () => {
 
   if (loading) {
     return (
-      <Wrapper>
+    // <Wrapper>
+      <>
         <Helmet>
           <link rel="icon" href={favicon} />
           <title>
@@ -175,7 +186,8 @@ const TeamListing = () => {
             <img src={loader} alt="loader" />
           </div>
         </div>
-      </Wrapper>
+      </>
+    // </Wrapper>
     );
   }
 
@@ -327,6 +339,7 @@ const TeamListing = () => {
             onCancel={handleCancel}
             close={closeSubUser}
             getData={getData}
+            permission={permission}
           />
           <EditSubUserPopup
             visible={visibleSubUser}
@@ -335,6 +348,7 @@ const TeamListing = () => {
             close={closeEditSubUser}
             subUserData={currentSubUser}
             getData={getData}
+            permission={permission}
           />
           <DeletePopup
             visible={visibleDeletePopup}
@@ -370,6 +384,7 @@ const TeamListing = () => {
             onCancel={handleCancel}
             close={closeSubUser}
             getData={getData}
+            permission={permission}
           />
         </Wrapper>
       )}

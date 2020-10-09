@@ -26,7 +26,8 @@ import {
   reservationInstance,
   propertyInstance,
 } from '../../axios/axiosconfig';
-import AddReservation from './addreservation';
+import CreateBookingPopup from '../booking/createbookingpopup';
+// import AddReservation from './addreservation';
 import GroupReservation from './groupreservation';
 import Reservation from './reservation';
 import favicon from '../../assets/images/logo-mobile.png';
@@ -600,11 +601,23 @@ const Calendar = () => {
             <GSTCWrapperV2 />
         </div> */}
 
-        <AddReservation
+        {/* <AddReservation
           title={t('addreservation.heading34')}
           visible={visible}
           setVisible={setVisible}
           onOk={handleOk}
+          close={handleCancel}
+          wrapClassName="create-booking-modal"
+          getData={getData}
+          calendarBookingDate={calendarBookingDate}
+          setCalendarBookingDate={setCalendarBookingDate}
+        /> */}
+
+        <CreateBookingPopup
+          visible={visible}
+          setVisible={setVisible}
+          handleCancel={handleCancel}
+          handleOk={handleOk}
           close={handleCancel}
           wrapClassName="create-booking-modal"
           getData={getData}

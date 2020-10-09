@@ -140,7 +140,7 @@ const Owner = () => {
           .map((name) => name.name));
         arr.push(filter.id);
       });
-
+      setCountry(data.country);
       form.setFieldsValue({
         id: data.id,
         firstname: data.fname,
@@ -151,7 +151,7 @@ const Owner = () => {
         gender: data.gender,
         country: data.country,
         citizenship: data.citizenship,
-        address: data.address,
+        // address: data.address,
         document: data.typeofdoc,
         documentnumber: data.docNo,
         notes: data.notes,
@@ -167,7 +167,9 @@ const Owner = () => {
   };
 
   const onFinish = async (values) => {
+    const companyName = window.location.hostname.split('.');
     const copyValues = values;
+    copyValues.company = companyName[0];
     if (selectedPropertyId && selectedPropertyId.length > 0) {
       copyValues.properties = selectedPropertyId;
     }
@@ -425,16 +427,26 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    label={t('owner.label11')}
+                    label={t('strings.citizenship')}
                     name="country"
                     style={{ paddingRight: 20 }}
                   >
                     <CountryDropdown onChange={(val) => setCountry(val)} />
                   </Form.Item>
                 </Col>
+
+                <Col span={12}>
+                  <Form.Item
+                    label={t('owner.label12')}
+                    name="citizenship"
+                    style={{ paddingRight: 20 }}
+                  >
+                    <RegionDropdown country={country} />
+                  </Form.Item>
+                </Col>
               </Row>
 
-              <Row style={{ alignItems: 'center' }}>
+              {/* <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
                     label={t('strings.citizenship')}
@@ -450,7 +462,7 @@ const Owner = () => {
                     <Input />
                   </Form.Item>
                 </Col>
-              </Row>
+              </Row> */}
 
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
@@ -685,16 +697,26 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    label={t('owner.label11')}
+                    label={t('strings.citizenship')}
                     name="country"
                     style={{ paddingRight: 20 }}
                   >
                     <CountryDropdown onChange={(val) => setCountry(val)} />
                   </Form.Item>
                 </Col>
+
+                <Col span={12}>
+                  <Form.Item
+                    label={t('owner.label12')}
+                    name="citizenship"
+                    style={{ paddingRight: 20 }}
+                  >
+                    <RegionDropdown country={country} />
+                  </Form.Item>
+                </Col>
               </Row>
 
-              <Row style={{ alignItems: 'center' }}>
+              {/* <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
                     label={t('strings.citizenship')}
@@ -710,7 +732,7 @@ const Owner = () => {
                     <Input />
                   </Form.Item>
                 </Col>
-              </Row>
+              </Row> */}
 
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
@@ -807,7 +829,8 @@ const Owner = () => {
 
   if (loading) {
     return (
-      <Wrapper>
+    //  <Wrapper>
+      <>
         <Helmet>
           <link rel="icon" href={favicon} />
           <title>
@@ -824,7 +847,8 @@ const Owner = () => {
             <img src={loader} alt="loader" />
           </div>
         </div>
-      </Wrapper>
+      </>
+    // </Wrapper>
     );
   }
 

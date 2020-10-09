@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import Helmet from 'react-helmet';
 import PropTypes from 'prop-types';
 import { CloseOutlined } from '@ant-design/icons';
 import {
@@ -44,6 +45,9 @@ const EditCompany = (props) => {
       onCancel={handleCancel}
       wrapClassName="guest-modal add-company-modal"
     >
+      <Helmet>
+        <body className={visible ? 'ant-scrolling-effect' : ''} />
+      </Helmet>
       <div className="cross-btn">
         <CloseOutlined onClick={handleCancel} />
       </div>
