@@ -121,6 +121,17 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
       className="site-layout-background header-css"
       style={{ padding: 0 }}
     >
+      <div
+          className="search-box"
+          onClick={() => setSearchToggle(!searchtoggle)}
+          role="presentation"
+        >
+          <Input
+            placeholder={t('header.placeholder1')}
+            allowClear
+            prefix={<SearchOutlined />}
+          />
+        </div>
       <Button className="menu-btn" onClick={() => setMenuToggle(!menutoggle)}>
         <img src={menuicon} alt="menu" />
       </Button>
@@ -130,13 +141,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
       </div>
 
       <div className="header-property">
-        <div
-          className="search-box"
-          onClick={() => setSearchToggle(!searchtoggle)}
-          role="presentation"
-        >
-          <SearchOutlined />
-        </div>
+       
 
         <Dropdown overlay={menu} trigger={['click']} disabled={isOnProperty}>
           <div
@@ -149,7 +154,12 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
             <VerticalAlignMiddleOutlined />
           </div>
         </Dropdown>
-
+        <div
+          className={`search-content ${searchtoggle ? 'search-expand' : ''}`}
+        >
+          <SearchOutlined />
+          
+        </div>
         <div className="property-mbl">
           <Dropdown overlay={menu} trigger={['click']}>
             <div onClick={(e) => selectProperty(e)} role="presentation">
@@ -158,15 +168,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
           </Dropdown>
         </div>
 
-        <div
-          className={`search-content ${searchtoggle ? 'search-expand' : ''}`}
-        >
-          <Input
-            placeholder={t('header.placeholder1')}
-            allowClear
-            prefix={<SearchOutlined />}
-          />
-        </div>
+        
       </div>
 
       {/* <div className="language">

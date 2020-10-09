@@ -427,7 +427,7 @@ const SubUserPopup = ({
                       onClick={handleCustomCheck}
                     />
                   </th>
-                  <th>{t('subuserpopup.label6')}</th>
+                  <th className="desc">{t('subuserpopup.label6')}</th>
                 </tr>
               </thead>
             </table>
@@ -467,7 +467,7 @@ const SubUserPopup = ({
                       onClick={handleCustomCheck}
                     />
                   </th>
-                  <th>
+                  <th className="desc">
                     {' '}
                     {t('subuserpopup.label8')}
                   </th>
@@ -646,7 +646,7 @@ const SubUserPopup = ({
                       onClick={handleCustomCheck}
                     />
                   </th>
-                  <th>
+                  <th className="desc">
                     {' '}
                     {t('subuserpopup.label19')}
                   </th>
@@ -689,7 +689,7 @@ const SubUserPopup = ({
                       onClick={handleCustomCheck}
                     />
                   </th>
-                  <th>
+                  <th className="desc">
                     {' '}
                     {t('subuserpopup.label21')}
                   </th>
@@ -732,7 +732,7 @@ const SubUserPopup = ({
                       onClick={handleCustomCheck}
                     />
                   </th>
-                  <th>{t('subuserpopup.label23')}</th>
+                  <th className="desc">{t('subuserpopup.label23')}</th>
                 </tr>
               </thead>
             </table>
@@ -768,7 +768,7 @@ const SubUserPopup = ({
                       onClick={handleCustomCheck}
                     />
                   </th>
-                  <th>
+                  <th className="desc">
                     Property settings, invoice settings and channel manager
                     settings
                   </th>
@@ -808,7 +808,7 @@ const SubUserPopup = ({
                       onClick={handleCustomCheck}
                     />
                   </th>
-                  <th>Billing, Upgrade/downgrade plans</th>
+                  <th className="desc">Billing, Upgrade/downgrade plans</th>
                 </tr>
               </thead>
             </table>

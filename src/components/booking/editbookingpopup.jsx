@@ -1310,6 +1310,7 @@ Editbookingpopup.propTypes = {
   handleCancel: PropTypes.func,
   setBooked: PropTypes.func,
   getData: PropTypes.func,
+  
 };
 
 Editbookingpopup.defaultProps = {

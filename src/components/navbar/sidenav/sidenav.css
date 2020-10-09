@@ -1,3 +1,6 @@
+.search-box span.ant-input-affix-wrapper:focus {
+  box-shadow: none!important;
+}
 .trigger {
   font-size: 18px;
   line-height: 64px;
@@ -95,7 +98,7 @@ width: 50px;
 
 .ant-layout-header {
 display: flex;
-justify-content: flex-end;
+justify-content: space-between;
 align-items: center;
 position: relative;
 }
@@ -124,11 +127,33 @@ top: 12px;
 }
 
 .search-box {
-display: none;
-padding-right: 30px;
+/* display: none; */
+padding-left: 30px;
+width: inherit;
 vertical-align: middle;
+margin-top: -10px;
 }
-
+.search-box span.ant-input-affix-wrapper {
+  border: none;
+}
+.search-box span.ant-input-affix-wrapper:hover {
+  border-color: white!important;
+ 
+}
+.search-box span.ant-input-affix-wrapper:foc {
+  border-color: white!important;
+ 
+}
+.search-box .ant-input{
+  border: none!important;
+}
+.search-box .ant-input:focus, .ant-input-focused{
+border: none!important;
+}
+/* .search-box span.ant-input-affix-wrapper:focus {
+  border: none;
+  box-shadow: none!important;
+} */
 .search-box span {
   font-size: 18px;
   color: #d6d6d6;
@@ -256,4 +281,12 @@ margin-right: 10px;
   position: fixed;
   width: 199px;
     left: 0;
+}
+.ant-input-affix-wrapper > input.ant-input:focus {
+  -webkit-box-shadow: none;
+  box-shadow: none!important;
+}
+.search-box span.ant-input-affix-wrapper {
+  border: none;
+  box-shadow: none;
 }

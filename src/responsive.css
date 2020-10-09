@@ -32,10 +32,6 @@
 }
 
 
-.search-content .ant-input {
-    border: none!important;
-}
-
 .search-content {
     padding: 0px 10px;
     margin-top: -15px;
@@ -474,8 +470,16 @@ input[type=number]{
 
 /******************************************************************************************************/
 
+@media screen and (min-width:768px){
 
+.page-footer button{
+    display: none;
+}
+  
+  
+}
 @media screen and (max-width:1440px){
+  
 ul.ant-menu.main-menu, ul.ant-menu.main-menu-mbl {
     height: calc(55vh - 0px)!important;
     overflow-y: auto;
@@ -502,16 +506,41 @@ ul.ant-menu.main-menu::-webkit-scrollbar-thumb, ul.ant-menu.main-menu-mbl::-webk
 
 }
 
-@media screen and (max-width:767px){
+
+
+@media screen and (max-width:768px){
 
 
     /*********** Global ***********/   
-    
+   
+    .subuser-fields-section .ant-col.ant-col-10 {
+        flex: 60%;
+        max-width: 35%;
+    }
+    .subuser-fields-section .ant-row.ant-form-item{
+        padding-right: 20px!important;
+    }
+    .ant-col .ant-form-item-label label{
+        margin-bottom: -15px;
+    }
+    .search-box {
+        display: none!important;
+        padding-left: 30px;
+        vertical-align: middle;
+        }
     
     .profile-container .ant-collapse-header {
         display: block;
     }
-    
+    .search-content {
+        padding: 0px 20px;
+        margin-top: 10px;
+        display: block!important;
+    }
+    .subuser-fields-section .ant-form-item-control-input-content {
+        justify-content: flex-end;
+        display: flex;
+    }
     .wrapper .side-menu {
         width: 0!important;
         flex: 0!important;
@@ -645,11 +674,11 @@ ul.ant-menu.main-menu::-webkit-scrollbar-thumb, ul.ant-menu.main-menu-mbl::-webk
 
     .page-header {
         justify-content: center;
-        flex-wrap: wrap;
+        /* flex-wrap: wrap; */
     }
     .page-header h1 {
         width: 100%;
-        text-align: center;
+        /* text-align: center; */
     }
     
 
@@ -949,13 +978,15 @@ ul.ant-menu.main-menu::-webkit-scrollbar-thumb, ul.ant-menu.main-menu-mbl::-webk
 .custom-table {
     overflow-x: auto;
 }
-.team-action {
-    opacity: 1;
-}
+
 .group-action {
     opacity: 1;
 }
-
+.team-action {
+    text-align: right;
+    cursor: pointer;
+    margin-top: -30px;
+}
 .panel-box.units .group-action {
     opacity: 1;
 }
@@ -1075,7 +1106,29 @@ ul.ant-menu.main-menu::-webkit-scrollbar-thumb, ul.ant-menu.main-menu-mbl::-webk
 }
 }
 
-
+@media screen and (max-width:767px){
+    .page-footer
+    { position: absolute;
+     bottom: 0;
+     width: 100%;
+     display: flex;
+     justify-content: center;}
+ 
+ .page-header button{
+     display: none;
+}
+    .subuser-fields-section .ant-col.ant-col-10 {
+        flex: 60%;
+        max-width: 75%;
+    }
+    .subuser-fields-section .ant-row.ant-form-item{
+        padding-right: 0px!important;
+    }
+    .subuser-fields-section .ant-form-item-control-input-content {
+        justify-content: space-between;
+        display: flex;
+    }
+}
 
 
 

@@ -10,6 +10,7 @@ import {
   DeleteOutlined,
   FormOutlined,
   PartitionOutlined,
+  MoreOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import SubUserPopup from './subuserpopup';
@@ -20,6 +21,7 @@ import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
 import DeletePopup from './deletepopup';
 import loader from '../../assets/images/cliploader.gif';
+import actionicon from '../../assets/images/action-icon.png';
 
 const TeamListing = () => {
   const { t } = useTranslation();
@@ -165,7 +167,8 @@ const TeamListing = () => {
             name="description"
             content="Grow your Vacation Rental with Lodgly"
           />
-          <body className="stats-page-view" />
+          <html className="team-page-view" />
+          <body className="team-page-view" />
         </Helmet>
         <div className="loader">
           <div className="loader-box">
@@ -180,6 +183,18 @@ const TeamListing = () => {
     <>
       {subUser.length ? (
         <Wrapper>
+          <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <html className="team-page-view" />
+          <body className="team-page-view" />
+        </Helmet>
           <div className="team-page">
             <div className="page-header teampage">
               <h1>
@@ -240,7 +255,7 @@ const TeamListing = () => {
                                 {/* Sub User
                                 {i + 1} */}
                                 {/* {el.fullname} */}
-
+                                {console.log(el)}
                                 {el.fullname ? el.fullname : '-'}
                               </h5>
                               <span>{t('team.label5')}</span>
@@ -248,15 +263,15 @@ const TeamListing = () => {
                           </div>
                         </td>
 
-                        <td>{el.email}</td>
-                        <td>
+                        <td className="email">{el.email}</td>
+                        <td className="readdata">
                           {el.role === 'fullaccess'
                             ? 'Full Access'
                             : el.role === 'read'
                               ? 'Read'
                               : 'Write'}
                         </td>
-                        <td>
+                        <td className="status">
                           {el.status === 0 ? (
                             <Button
                               type="primary"
@@ -280,6 +295,9 @@ const TeamListing = () => {
                           ''
                         )} */}
                         <td>
+                        <div className="action-icon1 "> 
+                        <img className="action-icon" src={actionicon} alt="" />
+                        </div>
                           <div className="team-action">
                             <FormOutlined
                               onClick={() => showEditSubUser(el, i)}
@@ -295,6 +313,12 @@ const TeamListing = () => {
                   </tbody>
                 </table>
               </div>
+            </div>
+            <div className="page-footer teampage">
+              
+              <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+                {t('team.label1')}
+              </Button>
             </div>
           </div>
           <SubUserPopup
@@ -320,6 +344,18 @@ const TeamListing = () => {
         </Wrapper>
       ) : (
         <Wrapper>
+          <Helmet>
+          <link rel="icon" href={favicon} />
+          <title>
+            Lodgly - Comprehensive Vacation Rental Property Management
+          </title>
+          <meta
+            name="description"
+            content="Grow your Vacation Rental with Lodgly"
+          />
+          <html className="team-page-view" />
+          <body className="team-page-view" />
+        </Helmet>
           <div className="add-team-page">
             <div className="add-subuser">
               <img src={subuser} alt="subuser" />
@@ -350,6 +386,7 @@ const TeamListing = () => {
           name="description"
           content="Grow your Vacation Rental with Lodgly"
         />
+        <html className="team-page-view" />
         <body className="team-page-view" />
       </Helmet>
       {hasAccess ? (

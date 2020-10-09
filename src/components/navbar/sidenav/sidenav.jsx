@@ -338,7 +338,7 @@ const Sidenav = ({
           title={(
             <div>
               <img src={guestIcon} alt="guest-icon" />
-              <Link to="/guests">{t('sidebar.menu4')}</Link>
+              {t('sidebar.menu4')}
             </div>
           )}
         >

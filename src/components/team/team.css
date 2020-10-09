@@ -10,8 +10,11 @@
     padding: 20px 20px;
     border-top: 1px solid #efecec;
     border-bottom: 1px solid #efecec;
-    font-size: 13px;
+    
     cursor: pointer;
+    font-size: 14px;
+    color: #3E3F42;
+    line-height: 18px;
 }
 
 .custom-table table tr:hover td {
@@ -34,8 +37,19 @@ border-right: 1px solid #efecec;
 
 .custom-table table th {
     padding: 10px 20px;
+    font-weight: normal;
+    /* color: #959598; */
+    font-size: 12px;
+    text-transform: uppercase;
+    color: rgba(62, 63, 66, 0.5);
+    line-height: 18px;
 }
-
+.custom-table table th:first-child {
+  width: 23%;
+}
+.custom-table table th:last-child {
+    width: 40%;
+  }
 .custom-table table thead {
     background: #fbfbfc;
 }
@@ -64,9 +78,12 @@ border-right: 1px solid #efecec;
 }
 
 .team-title h5 {
-    font-size: 15px;
-    margin: 0;
-    font-weight: 500;
+       /* font-size: 15px; */
+       margin: 0;
+       font-size: 14px;
+       line-height: 28px;
+       font-weight: 700;
+       color: #3E3F42;
 }
 
 .team-title span {
@@ -109,8 +126,26 @@ border-right: 1px solid #efecec;
     border: none;
     padding: 10px 20px;
     font-size: 12px;
+    line-height: 18px;
+    color: #3E3F42;
+    text-transform: uppercase;
 }
-
+.custom-table.subuser-table table td:last-child {
+    border: none;
+    padding: 10px 20px;
+    font-size: 12px;
+    line-height: 15px;
+    color: rgba(62, 63, 66, 0.5);
+  text-transform: lowercase;
+}
+.desc{
+    border: none;
+    padding: 10px 20px;
+    font-size: 12px;
+    line-height: 15px;
+    color: rgba(62, 63, 66, 0.5);
+  text-transform: lowercase!important;
+}
 .custom-table.subuser-table table tr {
     border: none;
 }
@@ -136,8 +171,10 @@ border-right: 1px solid #efecec;
 
 .custom-table.subuser-table thead tr th:first-child {
     width: 200px;
+    font-size: 12px;
+    color: #3E3F42;
+    line-height: 18px;
 }
-
 .custom-table.subuser-table thead tr th:nth-child(2) {
     width: 70px;
 }
@@ -151,10 +188,10 @@ border-right: 1px solid #efecec;
     font-size: 12px;
 }
 
-
+/* 
 .custom-table.subuser-table thead tr th {
     text-transform: inherit;
-}
+} */
 
 
 .add-team-page {
@@ -197,14 +234,69 @@ border-right: 1px solid #efecec;
 .custom-table.subuser-table thead tr th:nth-child(4) {
     width: 100px;
 }
-/* .team-page{
-    margin: -40px -45px!important;
-    padding: 4px!important;
-}
 .teampage{
-    padding-bottom: 0px!important;
-    padding-left: 10px;
-} */
+    padding: 15px 20px 10px 10px!important;
+}
+.teampage button span{
+    font-size: 14px;
+line-height: 22px;
+}
+.teampage h1 {
+      
+       font-weight: 600;
+       font-size: 18px; 
+       color: #3E3F42;
+       line-height: 28px;
+}
 .action{
     text-align: right;
+}
+.team-page-view .ant-layout-content {
+    margin: 0!important;
+    padding: 0!important;
+}
+.email{
+    font-size: 14px;
+    line-height: 18px;
+    color: #3E3F42;
+    font-weight: 600;
+}
+.readdata{
+    font-size: 14px;
+    line-height: 22px;
+    color: #3E3F42;
+    font-weight: normal;
+}
+
+.action-icon1 {
+    position: relative;
+    max-width: 445px;
+    width: 100%;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    top: 10px;
+}
+/* .custom-table table tr:hover .action-icon1{
+    opacity: 0;
+} */
+.custom-table table tr:hover .action-icon1{
+    opacity: 0;
+}
+.subuser-fields-section .ant-form-item-label > label {
+    /* color: #999!important; */
+    font-size: 12px!important;
+    line-height: 18px!important;
+    text-transform: uppercase!important;
+    color: rgba(62, 63, 66, 0.5)!important;
+}
+input#basic_email::placeholder {
+    /* color: red; */
+    color: #3E3F42;
+    font-size: 12px;
+line-height: 18px;
+}
+.subuser-fields-section button.ant-btn.ant-btn-primary {
+    padding: 10px 50px;
 }
