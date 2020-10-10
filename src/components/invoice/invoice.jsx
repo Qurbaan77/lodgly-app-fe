@@ -189,7 +189,9 @@ const Invoice = () => {
   // }, [userId, topNavId]);
 
   const getData = useCallback(async () => {
-    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    const response0 = await userInstance.post('/getUserSubscriptionStatus', {
+      affiliateId: userId,
+    });
     if (response0.data.code === 200) {
       const [
         { days, isOnTrial, isSubscribed },
@@ -476,9 +478,9 @@ const Invoice = () => {
 
   if (loading) {
     return (
-     // <Wrapper>
-       <>
-       <Helmet>
+      // <Wrapper>
+      <>
+        <Helmet>
           <link rel="icon" href={favicon} />
           <title>
             Lodgly - Comprehensive Vacation Rental Property Management
@@ -494,8 +496,8 @@ const Invoice = () => {
             <img src={loader} alt="loader" />
           </div>
         </div>
-    </>
-     // </Wrapper>
+      </>
+      // </Wrapper>
     );
   }
 
@@ -775,7 +777,6 @@ const Invoice = () => {
                   <table>
                     <thead>
                       <tr>
-
                         <th>{t('strings.date')}</th>
                         <th>{t('strings.label')}</th>
                         <th>{t('strings.type')}</th>
@@ -799,20 +800,41 @@ const Invoice = () => {
                               />
                               {el.date.slice(0, 10)}
                             </td>
-                            <td onClick={() => showEditInvoice(el, i)} role="presentation">
+                            <td
+                              onClick={() => showEditInvoice(el, i)}
+                              role="presentation"
+                            >
                               {el.label
                                 || `INVOICE ${
                                   el.id
                                 } - ${new Date().getFullYear()}`}
                             </td>
-                            <td onClick={() => showEditInvoice(el, i)} role="presentation">{el.type || 'Invoice'}</td>
-                            <td onClick={() => showEditInvoice(el, i)} role="presentation">{el.clientName}</td>
-                            <td onClick={() => showEditInvoice(el, i)} role="presentation">
+                            <td
+                              onClick={() => showEditInvoice(el, i)}
+                              role="presentation"
+                            >
+                              {el.type || 'Invoice'}
+                            </td>
+                            <td
+                              onClick={() => showEditInvoice(el, i)}
+                              role="presentation"
+                            >
+                              {el.clientName}
+                            </td>
+                            <td
+                              onClick={() => showEditInvoice(el, i)}
+                              role="presentation"
+                            >
                               {el.total}
                               {' '}
                               EUR
                             </td>
-                            <td onClick={() => showEditInvoice(el, i)} role="presentation">{el.status}</td>
+                            <td
+                              onClick={() => showEditInvoice(el, i)}
+                              role="presentation"
+                            >
+                              {el.status}
+                            </td>
                             <td>
                               <div className="action-icon">
                                 <MoreOutlined />
@@ -994,7 +1016,10 @@ const Invoice = () => {
             </Button>
           </div>
         </div>
-        <CreateProperty visible={visibleProperty} onCancel={closeCreateProperty} />
+        <CreateProperty
+          visible={visibleProperty}
+          onCancel={closeCreateProperty}
+        />
       </Wrapper>
     );
   }
@@ -1011,7 +1036,7 @@ const Invoice = () => {
         />
         <body className="invoice-page-view" />
       </Helmet>
-      { pageContent }
+      {pageContent}
     </>
   );
 };

@@ -173,14 +173,22 @@ const Sidenav = ({
         },
       ] = featureData;
       const channelper = channelManager === 1 && channelRead === 1;
-      setHideBooking(isSubUser ? !bookingRead : !booking);
-      setHidecalendar(isSubUser ? !calendarRead : !calendar);
-      setDisableProperties(!isSubUser ? !properties : !propertiesRead);
-      setHideTeam(!isSubUser ? !team : !teamRead);
-      setHideInvoice(!isSubUser ? !invoice : !invoicesRead);
-      setHideOwner(!isSubUser ? !owner : !ownerRead);
-      setHideStats(!isSubUser ? !stats : !statsRead);
-      setDisableGuests(!isSubUser ? !guests : !guestsRead);
+      const bookingper = booking === 1 && bookingRead === 1;
+      const calendarper = calendar === 1 && calendarRead === 1;
+      const propertiesper = properties === 1 && propertiesRead === 1;
+      const teamper = team === 1 && teamRead === 1;
+      const invoiceper = invoice === 1 && invoicesRead === 1;
+      const ownerper = owner === 1 && ownerRead === 1;
+      const statsper = stats === 1 && statsRead === 1;
+      const guestsper = guests === 1 && guestsRead === 1;
+      setHideBooking(isSubUser ? !bookingper : booking !== 1);
+      setHidecalendar(isSubUser ? !calendarper : calendar !== 1);
+      setDisableProperties(isSubUser ? !propertiesper : properties !== 1);
+      setHideTeam(isSubUser ? !teamper : team !== 1);
+      setHideInvoice(isSubUser ? !invoiceper : invoice !== 1);
+      setHideOwner(isSubUser ? !ownerper : owner !== 1);
+      setHideStats(isSubUser ? !statsper : stats !== 1);
+      setDisableGuests(isSubUser ? !guestsper : guests !== 1);
       // setHideChannel(!isSubUser ? !channelManager : !channelManager && !channelRead);
       setHideChannel(isSubUser ? !channelper : channelManager !== 1);
     }

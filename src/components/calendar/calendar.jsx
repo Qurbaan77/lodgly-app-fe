@@ -359,7 +359,9 @@ const Calendar = () => {
   }, [userId, topNavId]);
 
   const getData = useCallback(async () => {
-    const res = await userInstance.get('/getUserSubscriptionStatus');
+    const res = await userInstance.post('/getUserSubscriptionStatus', {
+      affiliateId: userId,
+    });
     if (res.data.code === 200) {
       const [{ days, isOnTrial, isSubscribed }] = res.data.userSubsDetails;
       setDaysLeft(parseInt(days, 10));
@@ -367,7 +369,7 @@ const Calendar = () => {
       setOnTrial(JSON.parse(isOnTrial));
       setLoading(false);
     }
-  }, []);
+  }, [userId]);
 
   const getCalendarData = useCallback(async () => {
     const response = await reservationInstance.post(

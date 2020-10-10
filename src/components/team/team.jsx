@@ -115,7 +115,7 @@ const TeamListing = () => {
 
   // keep function reference
   const getData = useCallback(async () => {
-    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    const response0 = await userInstance.post('/getUserSubscriptionStatus', { affiliateId: userId });
     if (response0.data.code === 200) {
       const [
         { days, isOnTrial, isSubscribed },

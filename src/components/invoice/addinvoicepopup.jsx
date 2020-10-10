@@ -437,7 +437,7 @@ const AdInvoicePopup = (props) => {
                     <DatePicker
                       value={dueDate}
                       onChange={(e) => {
-                        const d2 = moment(e._id).format('MM/DD/YYYY');
+                        const d2 = e && moment(e._id).format('MM/DD/YYYY');
                         setDueDate(d2);
                       }}
                     />

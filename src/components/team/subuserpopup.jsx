@@ -13,7 +13,6 @@ import { userInstance } from '../../axios/axiosconfig';
 const SubUserPopup = ({
   visible, handleOk, handleCancel, close, getData, permission,
 }) => {
-  console.log(permission);
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [bookingRead, setBookingRead] = useState(false);
