@@ -180,22 +180,22 @@ const Booking = () => {
 
       // console.log('guestdata', guestdata);
       // console.log('servicedata', servicedata);
-      if (topNavId) {
-        const arr = [];
-        bookingdata
-          .filter((el) => el.propertyId === parseInt(topNavId, 10))
-          .map((filter) => arr.push(filter));
-        setBookingData(arr);
-      } else {
-        setBookingData([...bookingdata]);
-        setGuestData([...guestdata]);
-        if (servicedata && servicedata.length) {
-          setServiceData(servicedata);
-        }
+      // if (topNavId) {
+      //   const arr = [];
+      //   bookingdata
+      //     .filter((el) => el.propertyId === parseInt(topNavId, 10))
+      //     .map((filter) => arr.push(filter));
+      //   setBookingData(arr);
+      // } else {
+      setBookingData([...bookingdata]);
+      setGuestData([...guestdata]);
+      if (servicedata && servicedata.length) {
+        setServiceData(servicedata);
       }
+      // }
       setLoading(false);
     }
-  }, [userId, topNavId]);
+  }, [userId]);
 
   useEffect(() => {
     setTopNavId(localStorage.getItem('topNavId'));

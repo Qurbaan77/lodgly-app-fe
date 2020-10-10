@@ -62,7 +62,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
 
   useEffect(() => {
     const { pathname } = window.location;
-    if (pathname === '/propertylist') {
+    if (pathname === '/propertylist' || pathname === '/booking') {
       setIsOnProperty(true);
     }
     async function getData() {

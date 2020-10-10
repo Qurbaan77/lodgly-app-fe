@@ -267,7 +267,6 @@ const TeamListing = () => {
                                 {/* Sub User
                                 {i + 1} */}
                                 {/* {el.fullname} */}
-                                {console.log(el)}
                                 {el.fullname ? el.fullname : '-'}
                               </h5>
                               <span>{t('team.label5')}</span>
