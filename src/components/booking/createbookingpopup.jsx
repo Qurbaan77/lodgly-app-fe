@@ -182,36 +182,41 @@ const CreateBookingPopup = (props) => {
   useEffect(() => {
     if (Object.values(calendarBookingDate).length > 0) {
       if (Object.values(calendarBookingDate)[0].length > 0) {
-        setVisible(true);
-        setSelectDisable(true);
         const selectedDates = Object.values(calendarBookingDate)[0];
-        const propertyId = parseInt(selectedDates[0].row.parentId.split(',')[1], 10);
-        getServices(propertyId);
-        setUnitTypeId(propertyId);
-        const unitId = parseInt(selectedDates[0].id.split(',')[1].split('-')[0], 10);
-        setUnitId(unitId);
-        const unitName = selectedDates[0].row.label;
-        const lastElement = selectedDates.length;
-        const m1 = moment(selectedDates[0].time.leftGlobal);
-        const m2 = moment(selectedDates[lastElement - 1].time.leftGlobal);
-        const diff = Math.abs(m1 - m2);
-        const day = Math.floor(diff / (24 * 60 * 60 * 1000));
-        setDaysArr(Array.from(Array(day).keys()));
-        setNight(day);
-        const unitTypeName = propertyData
-          .filter((el) => el.id === propertyId)
-          .map((filter) => filter.unitTypeName);
-        const name = unitTypeName[0]
-          .filter((e) => e.lang === 'en')
-          .map((name) => name.name);
-        setCurrentPropertyName(name);
-        form.setFieldsValue({
-          groupname: [m1, m2],
-          property: propertyId,
-          propertyName: name,
-          unit: unitName,
-        });
-        setUnitName(unitName);
+        if (selectedDates[0].row.parentId !== undefined) {
+          if (selectedDates[0].row.label !== 'Price per night'
+          && selectedDates[0].row.label !== 'Minimum stay') {
+            setVisible(true);
+            setSelectDisable(true);
+            const propertyId = parseInt(selectedDates[0].row.parentId.split(',')[1], 10);
+            getServices(propertyId);
+            setUnitTypeId(propertyId);
+            const unitId = parseInt(selectedDates[0].id.split(',')[1].split('-')[0], 10);
+            setUnitId(unitId);
+            const unitName = selectedDates[0].row.label;
+            const lastElement = selectedDates.length;
+            const m1 = moment(selectedDates[0].time.leftGlobal);
+            const m2 = moment(selectedDates[lastElement - 1].time.leftGlobal);
+            const diff = Math.abs(m1 - m2);
+            const day = Math.floor(diff / (24 * 60 * 60 * 1000));
+            setDaysArr(Array.from(Array(day).keys()));
+            setNight(day);
+            const unitTypeName = propertyData
+              .filter((el) => el.id === propertyId)
+              .map((filter) => filter.unitTypeName);
+            const name = unitTypeName[0]
+              .filter((e) => e.lang === 'en')
+              .map((name) => name.name);
+            setCurrentPropertyName(name);
+            form.setFieldsValue({
+              groupname: [m1, m2],
+              property: propertyId,
+              propertyName: name,
+              unit: unitName,
+            });
+            setUnitName(unitName);
+          }
+        }
       }
     }
   }, [
@@ -272,6 +277,10 @@ const CreateBookingPopup = (props) => {
       if (pathname === '/calendar') {
         window.location.reload();
       }
+      setAccomodation(0);
+      setNight(0);
+      setAmt(0);
+      setDaysArr([]);
       getData();
       close();
       toast.success('Booking created successfully!', { containerId: 'B' });

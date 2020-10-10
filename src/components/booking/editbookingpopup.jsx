@@ -607,7 +607,7 @@ const Editbookingpopup = (props) => {
                 },
               ]}
             >
-              <Input value={propertyName} disabled="true" />
+              <Input value={propertyName} disabled />
             </Form.Item>
           </Col>
 
@@ -1050,7 +1050,7 @@ const Editbookingpopup = (props) => {
                     <div className="service-form">
                       {currentService.length
                         ? currentService.map((el, j) => (
-                          <div className="inline-form">
+                          <div className="inline-form" key={el.id}>
                             <div className="delete-data">
                               <DeleteOutlined
                                 onClick={() => handleRemoveEditServicePanel(el)}
@@ -1293,10 +1293,19 @@ const Editbookingpopup = (props) => {
   );
 };
 Editbookingpopup.propTypes = {
-  editBookingValues: PropTypes.objectOf(PropTypes.object),
-  editCurrentGuest: PropTypes.arrayOf(PropTypes.array),
+  editBookingValues: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.number,
+  ]),
+  editCurrentGuest: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+  ]),
   setEditCurrentGuest: PropTypes.func,
-  currentService: PropTypes.arrayOf(PropTypes.array),
+  currentService: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+  ]),
   setCurrentService: PropTypes.func,
   close: PropTypes.func,
   visible: PropTypes.bool,
@@ -1304,7 +1313,7 @@ Editbookingpopup.propTypes = {
   handleCancel: PropTypes.func,
   setBooked: PropTypes.func,
   getData: PropTypes.func,
-  
+
 };
 
 Editbookingpopup.defaultProps = {

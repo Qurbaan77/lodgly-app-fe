@@ -79,7 +79,7 @@ const Reservation = ({ calendarBookingDate }) => {
           id: Id,
         };
         const response = await reservationInstance.post('/getParticularReservation', values);
-        // console.log('response', response);
+        console.log('response', response);
         if (response.data.code === 200) {
           const data = response.data.reservationData[0];
           const guestData = response.data.guestData[0];
@@ -90,7 +90,9 @@ const Reservation = ({ calendarBookingDate }) => {
           const day = Math.floor(diff / (24 * 60 * 60 * 1000));
           setNights(day);
           setReservationData(data);
-          setGuestArray(guestData);
+          if (guestData !== undefined) {
+            setGuestArray(guestData);
+          }
           setServiceArray(serviceData);
         }
         setVisible(true);

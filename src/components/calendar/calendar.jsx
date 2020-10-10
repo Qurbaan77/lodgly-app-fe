@@ -378,6 +378,7 @@ const Calendar = () => {
         affiliateId: userId,
       },
     );
+    console.log('response', response);
     if (response.data.code === 200) {
       if (response.data.data && response.data.data.length > 0) {
         setLoading(false);
