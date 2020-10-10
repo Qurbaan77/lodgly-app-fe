@@ -476,9 +476,9 @@ const Invoice = () => {
 
   if (loading) {
     return (
-     // <Wrapper>
-       <>
-       <Helmet>
+    // <Wrapper>
+      <>
+        <Helmet>
           <link rel="icon" href={favicon} />
           <title>
             Lodgly - Comprehensive Vacation Rental Property Management
@@ -494,8 +494,8 @@ const Invoice = () => {
             <img src={loader} alt="loader" />
           </div>
         </div>
-    </>
-     // </Wrapper>
+      </>
+    // </Wrapper>
     );
   }
 
