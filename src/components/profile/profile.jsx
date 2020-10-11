@@ -56,9 +56,12 @@ const Profile = () => {
   const [country, setCountry] = useState(null);
   // const [image, setImage] = useState('');
 
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  const [{ userId: userid }] = userCred || [{}];
+
   const getUserInfo = useCallback(async () => {
     const split = new Date().toString().match(/([A-Z]+[+-][0-9]+.*)/)[1];
-    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    const response0 = await userInstance.post('/getUserSubscriptionStatus', { affilateId: userid });
     if (response0.data.code === 200) {
       const [
         { days, isOnTrial, isSubscribed },
@@ -89,7 +92,7 @@ const Profile = () => {
         timezone: body[0].timeZone || split,
       });
     }
-  }, [form1, form2]);
+  }, [form1, form2, userid]);
 
   const getCompanyInfo = useCallback(async () => {
     const companyName = window.location.hostname.split('.');

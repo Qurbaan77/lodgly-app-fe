@@ -60,7 +60,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
     setMenu(menu1);
   };
 
-  useEffect(() => {
+  useEffect(() => { 
     const { pathname } = window.location;
     if (pathname === '/propertylist' || pathname === '/booking' || pathname === '/calendar') {
       setIsOnProperty(true);

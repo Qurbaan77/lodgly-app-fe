@@ -37,10 +37,13 @@ const Groups = () => {
   const [visible2, setVisible2] = useState(false);
   const [group, setGroup] = useState([]);
   const [currGroupId, setCurrGroupId] = useState(null);
-  const [subscribed, setSubscribed] = useState();
-  const [onTrial, setOnTrial] = useState(true);
-  const [daysLeft, setDaysLeft] = useState();
+  // const [subscribed, setSubscribed] = useState();
+  // const [onTrial, setOnTrial] = useState(true);
+  // const [daysLeft, setDaysLeft] = useState();
   const history = useHistory();
+
+  // const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  // const [{ userId }] = userCred || [{}];
 
   useEffect(() => {
     getData();
@@ -84,15 +87,15 @@ const Groups = () => {
   };
 
   const getData = async () => {
-    const res = await userInstance.get('/getUserSubscriptionStatus');
-    if (res.data.code === 200) {
-      const [{
-        days, isOnTrial, isSubscribed,
-      }] = res.data.userSubsDetails;
-      setDaysLeft(parseInt(days, 10));
-      setSubscribed(JSON.parse(isSubscribed));
-      setOnTrial(JSON.parse(isOnTrial));
-    }
+    // const res = await userInstance.post('/getUserSubscriptionStatus', { affiliateId: userId });
+    // if (res.data.code === 200) {
+    //   const [{
+    //     days, isOnTrial, isSubscribed,
+    //   }] = res.data.userSubsDetails;
+    //   setDaysLeft(parseInt(days, 10));
+    //   setSubscribed(JSON.parse(isSubscribed));
+    //   setOnTrial(JSON.parse(isOnTrial));
+    // }
     const values = {
       propertyId: localStorage.getItem('propertyId'),
     };
@@ -131,7 +134,8 @@ const Groups = () => {
     history.push('/task');
   };
 
-  const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+  // const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
+  const hasAccess = true;
   return (
     <Wrapper>
       <Helmet>

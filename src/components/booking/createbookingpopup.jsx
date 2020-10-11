@@ -154,7 +154,8 @@ const CreateBookingPopup = (props) => {
     // setServicePanel([...servicePanel, j]);
   };
 
-  const removeServicePanel = () => {
+  const removeServicePanel = (el, i) => {
+    // servicePanel.splice(i, 1);
     // if (serviceAmount !== 0) {
     //   const sum = parseInt(total, 10) - parseInt(serviceAmount, 10);
     //   setServiceAmount(0);
@@ -164,8 +165,11 @@ const CreateBookingPopup = (props) => {
     //   setTotal(sum);
     // }
     const oldarray = [...servicePanel];
-    oldarray.pop();
+    oldarray.splice(i, 1);
     setServicePanel([...oldarray]);
+    const oldServiceTotal = [...serviceTotalArr];
+    oldServiceTotal.splice(i, 1);
+    setServiceTotalArr([...oldServiceTotal]);
   };
 
   const getServices = useCallback(async (propertyId) => {
@@ -968,6 +972,7 @@ const CreateBookingPopup = (props) => {
                   name={[guestEle, 'dob']}
                   label={t('strings.dob')}
                   style={{ paddingRight: 20 }}
+                  initialValue={moment().subtract(18, 'years')}
                 >
                   <DatePicker disabledDate={disabledDate} />
                 </Form.Item>
@@ -1534,7 +1539,7 @@ const CreateBookingPopup = (props) => {
                         <div className="inline-form" key={ele}>
                           <div className="delete-data">
                             <DeleteOutlined
-                              onClick={() => removeServicePanel(ele)}
+                              onClick={() => removeServicePanel(ele, i)}
                             />
                           </div>
                           <Col span={4}>

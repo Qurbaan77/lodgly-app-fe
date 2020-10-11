@@ -101,7 +101,7 @@ const UnitType = () => {
   };
 
   const getData = useCallback(async () => {
-    const res = await userInstance.get('/getUserSubscriptionStatus');
+    const res = await userInstance.post('/getUserSubscriptionStatus', { affiliateId: userId });
     if (res.data.code === 200) {
       const [{
         days, isOnTrial, isSubscribed,

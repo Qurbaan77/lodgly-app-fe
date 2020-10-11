@@ -633,6 +633,7 @@ const Booking = () => {
                     <div className="detail" onClick={() => selectBooking(el, i)} role="presentation">
                       <h3>{el.guest}</h3>
                       <p>{el.propertyName}</p>
+                      <p>{el.unitName}</p>
                       <ul>
                         <li>{moment(new Date(el.created_date)).format('DD MMM YYYY')}</li>
                         <li>
@@ -832,7 +833,7 @@ const Booking = () => {
                 </div>
 
                 {currentGuest.map((el) => (
-                  <div className="booking-box">
+                  <div className="booking-box" key={el.id}>
                     <div className="booking-head">
                       <div className="box-heading">
                         <h3>

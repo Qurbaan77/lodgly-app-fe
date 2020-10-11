@@ -67,22 +67,25 @@ const Stats = () => {
     }
   }, [userId, topNavId]);
 
-  const getData = async () => {
-    const response0 = await userInstance.get('/getUserSubscriptionStatus');
-    if (response0.data.code === 200) {
-      const [
-        { days, isOnTrial, isSubscribed },
-      ] = response0.data.userSubsDetails;
-      setDaysLeft(days);
-      setSubscribed(isSubscribed);
-      setOnTrial(isOnTrial);
-    }
-  };
+  
   useEffect(() => {
     setTopNavId(localStorage.getItem('topNavId'));
+    const getData = async () => {
+      const response0 = await userInstance.post('/getUserSubscriptionStatus', {
+        affiliateId: userId,
+      });
+      if (response0.data.code === 200) {
+        const [
+          { days, isOnTrial, isSubscribed },
+        ] = response0.data.userSubsDetails;
+        setDaysLeft(days);
+        setSubscribed(isSubscribed);
+        setOnTrial(isOnTrial);
+      }
+    };
     getData();
     getProperty();
-  }, [getProperty]);
+  }, [getProperty, userId]);
 
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
   if (loading) {

@@ -86,7 +86,7 @@ const Owner = () => {
   };
 
   const getPropertyData = useCallback(async () => {
-    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    const response0 = await userInstance.post('/getUserSubscriptionStatus', { affiliateId: userId });
     if (response0.data.code === 200) {
       const [
         { days, isOnTrial, isSubscribed },
@@ -147,7 +147,7 @@ const Owner = () => {
         secondname: data.lname,
         email: data.email,
         phone: data.phone,
-        dob: m1,
+        dob: data.dob && m1,
         gender: data.gender,
         country: data.country,
         citizenship: data.citizenship,
@@ -263,7 +263,11 @@ const Owner = () => {
                     {ownerData.map((el) => (
                       <tr>
                         <td>
-                          <div className="owner-info" onClick={() => edit(el)} role="presentation">
+                          <div
+                            className="owner-info"
+                            onClick={() => edit(el)}
+                            role="presentation"
+                          >
                             <div className="owner-pic">
                               <img src={owner} alt="ownerImage" />
                             </div>
@@ -272,8 +276,7 @@ const Owner = () => {
                               <span>
                                 {el.citizenship !== null
                                   ? `${el.citizenship},`
-                                  : ''}
-                                {' '}
+                                  : ''}{' '}
                                 {el.country !== null ? `${el.country},` : ''}
                               </span>
                             </div>
@@ -407,10 +410,9 @@ const Owner = () => {
                         required: true,
                       },
                     ]}
+                    initialValue={moment().subtract(18, 'years')}
                   >
-                    <DatePicker
-                      disabledDate={disabledDate}
-                    />
+                    <DatePicker disabledDate={disabledDate} />
                   </Form.Item>
                 </Col>
 
@@ -490,7 +492,9 @@ const Owner = () => {
                     >
                       <Select.Option value="Passport">Passport</Select.Option>
                       <Select.Option value="ID Card">ID Card</Select.Option>
-                      <Select.Option value="Driving License">Driving License</Select.Option>
+                      <Select.Option value="Driving License">
+                        Driving License
+                      </Select.Option>
                       <Select.Option value="Other">Other</Select.Option>
                     </Select>
                   </Form.Item>
@@ -524,8 +528,10 @@ const Owner = () => {
                   >
                     {propertyData.map((el) => (
                       <Option value={el.id}>
-                        {el.unitTypeName
-                  && el.unitTypeName.filter((e) => e.lang === 'en').map((name) => <p key={name}>{name.name}</p>)}
+                        {el.unitTypeName &&
+                          el.unitTypeName
+                            .filter((e) => e.lang === 'en')
+                            .map((name) => <p key={name}>{name.name}</p>)}
                       </Option>
                     ))}
                   </Select>
@@ -677,10 +683,9 @@ const Owner = () => {
                         required: true,
                       },
                     ]}
+                    initialValue={moment().subtract(18, 'years')}
                   >
-                    <DatePicker
-                      disabledDate={disabledDate}
-                    />
+                    <DatePicker disabledDate={disabledDate} />
                   </Form.Item>
                 </Col>
 
@@ -753,7 +758,9 @@ const Owner = () => {
                     >
                       <Select.Option value="Passport">Passport</Select.Option>
                       <Select.Option value="ID Card">ID Card</Select.Option>
-                      <Select.Option value="Driving License">Driving License</Select.Option>
+                      <Select.Option value="Driving License">
+                        Driving License
+                      </Select.Option>
                       <Select.Option value="Other">Other</Select.Option>
                     </Select>
                   </Form.Item>
@@ -787,8 +794,10 @@ const Owner = () => {
                   >
                     {propertyData.map((el) => (
                       <Option value={el.id}>
-                        {el.unitTypeName
-                  && el.unitTypeName.filter((e) => e.lang === 'en').map((name) => <p key={name}>{name.name}</p>)}
+                        {el.unitTypeName &&
+                          el.unitTypeName
+                            .filter((e) => e.lang === 'en')
+                            .map((name) => <p key={name}>{name.name}</p>)}
                       </Option>
                     ))}
                   </Select>
