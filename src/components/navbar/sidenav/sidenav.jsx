@@ -7,6 +7,7 @@ import { Layout, Menu } from 'antd';
 import {
   ArrowLeftOutlined,
   ApartmentOutlined,
+ // CheckOutlined,
 } from '@ant-design/icons';
 
 import logo from '../../../assets/images/logo.png';
@@ -430,21 +431,29 @@ const Sidenav = ({
         </span>
         <Menu.Item className="overview-nav">
           <img src={propertyIcon} alt="property" />
+          <div className="menu-dot" />
+          {/* <div className="menu-check"><CheckOutlined /></div> */}
           <Link to="/overview">{t('sidenav.menu1')}</Link>
         </Menu.Item>
 
         <Menu.Item className="location-nav">
           <img src={statsIcon} alt="property" />
+          <div className="menu-dot" />
+          {/* <div className="menu-check"><CheckOutlined /></div> */}
           <Link to="/location">{t('sidenav.menu2')}</Link>
         </Menu.Item>
 
         <Menu.Item className="photos-nav">
           <img src={guestIcon} alt="unit" />
+          <div className="menu-dot" />
+          {/* <div className="menu-check"><CheckOutlined /></div> */}
           <Link to="photos">{t('sidenav.menu3')}</Link>
         </Menu.Item>
 
         <Menu.Item className="rates-nav">
           <img src={unitIcon} alt="unit" />
+          <div className="menu-dot" />
+          {/* <div className="menu-check"><CheckOutlined /></div> */}
           <Link to="rates">{t('sidenav.menu4')}</Link>
         </Menu.Item>
 
