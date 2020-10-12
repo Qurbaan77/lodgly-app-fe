@@ -1056,3 +1056,9 @@ select#basic_1_country {
   margin: 0!important;
   padding: 0!important;
 }
+.guest-modal button.ant-btn {
+  margin-bottom: 50px;
+}
+.create-booking-modal button.ant-btn {
+  margin-bottom: 50px;
+}

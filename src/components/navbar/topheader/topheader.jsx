@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import {
   Dropdown, Layout, Menu, Button, Input,
 } from 'antd';
@@ -17,6 +18,7 @@ const { Header } = Layout;
 
 const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
   const { t } = useTranslation();
+  const history = useHistory();
 
   // const changeLanguage = useCallback((event) => {
   //   i18n.changeLanguage(event);
@@ -136,7 +138,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
         <img src={menuicon} alt="menu" />
       </Button>
 
-      <div className="mobile-logo">
+      <div className="mobile-logo" onClick={() => history.push("/booking")}>
         <img src={mbllogo} alt="logo" />
       </div>
 

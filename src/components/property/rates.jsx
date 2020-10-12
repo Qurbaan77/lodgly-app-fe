@@ -814,7 +814,7 @@ const Rates = () => {
                               checked={checkInBox.tuesday}
                             />
                           </Form.Item>
-                          <Form.Item name="wednesday" label={t('rates.labe2')}>
+                          <Form.Item name="wednesday" label={t('rates.label2')}>
                             <Checkbox
                               value={checkInBox.wednesday}
                               onChange={handleCheckInBox}
@@ -849,7 +849,6 @@ const Rates = () => {
                               checked={checkInBox.sunday}
                             />
                           </Form.Item>
-
                           <Form.Item
                             className="check-selectall"
                             label={t('rates.label9')}
