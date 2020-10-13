@@ -31,7 +31,7 @@ const GuestPopup = (props) => {
   // const [country, setCountry] = useState(null);
 
   useEffect(() => {
-    const initialValue = moment().subtract(18, 'years')
+    const initialValue = moment().subtract(18, 'years');
     if (Object.keys(guestData).length) {
       const m1 = moment(guestData.dob);
       form.setFieldsValue({

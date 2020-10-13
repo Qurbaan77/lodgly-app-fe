@@ -67,7 +67,6 @@ const Stats = () => {
     }
   }, [userId, topNavId]);
 
-  
   useEffect(() => {
     setTopNavId(localStorage.getItem('topNavId'));
     const getData = async () => {
