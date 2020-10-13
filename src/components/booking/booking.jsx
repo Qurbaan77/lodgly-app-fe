@@ -130,7 +130,7 @@ const Booking = () => {
   }, [userId, topNavId]);
 
   const getData = useCallback(async () => {
-    const res = await userInstance.get('/getUserSubscriptionStatus');
+    const res = await userInstance.post('/getUserSubscriptionStatus', { affiliateId: userId });
     if (res.data.code === 200) {
       const [{ days, isOnTrial, isSubscribed }] = res.data.userSubsDetails;
       setDaysLeft(parseInt(days, 10));
@@ -180,22 +180,22 @@ const Booking = () => {
 
       // console.log('guestdata', guestdata);
       // console.log('servicedata', servicedata);
-      if (topNavId) {
-        const arr = [];
-        bookingdata
-          .filter((el) => el.propertyId === parseInt(topNavId, 10))
-          .map((filter) => arr.push(filter));
-        setBookingData(arr);
-      } else {
-        setBookingData([...bookingdata]);
-        setGuestData([...guestdata]);
-        if (servicedata && servicedata.length) {
-          setServiceData(servicedata);
-        }
+      // if (topNavId) {
+      //   const arr = [];
+      //   bookingdata
+      //     .filter((el) => el.propertyId === parseInt(topNavId, 10))
+      //     .map((filter) => arr.push(filter));
+      //   setBookingData(arr);
+      // } else {
+      setBookingData([...bookingdata]);
+      setGuestData([...guestdata]);
+      if (servicedata && servicedata.length) {
+        setServiceData(servicedata);
       }
+      // }
       setLoading(false);
     }
-  }, [userId, topNavId]);
+  }, [userId]);
 
   useEffect(() => {
     setTopNavId(localStorage.getItem('topNavId'));
@@ -490,13 +490,13 @@ const Booking = () => {
 
   if (loading) {
     return (
-      <Wrapper>
-        <div className="loader">
-          <div className="loader-box">
-            <img src={loader} alt="loader" />
-          </div>
+    // <Wrapper>
+      <div className="loader">
+        <div className="loader-box">
+          <img src={loader} alt="loader" />
         </div>
-      </Wrapper>
+      </div>
+    // </Wrapper>
     );
   }
 
@@ -633,6 +633,7 @@ const Booking = () => {
                     <div className="detail" onClick={() => selectBooking(el, i)} role="presentation">
                       <h3>{el.guest}</h3>
                       <p>{el.propertyName}</p>
+                      <p>{el.unitName}</p>
                       <ul>
                         <li>{moment(new Date(el.created_date)).format('DD MMM YYYY')}</li>
                         <li>
@@ -832,7 +833,7 @@ const Booking = () => {
                 </div>
 
                 {currentGuest.map((el) => (
-                  <div className="booking-box">
+                  <div className="booking-box" key={el.id}>
                     <div className="booking-head">
                       <div className="box-heading">
                         <h3>

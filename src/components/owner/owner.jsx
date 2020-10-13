@@ -28,7 +28,7 @@ import owner from '../../assets/images/profile_user.jpg';
 import favicon from '../../assets/images/logo-mobile.png';
 import loader from '../../assets/images/cliploader.gif';
 import subuser from '../../assets/images/subuser.jpg';
-import { userInstance } from '../../axios/axiosconfig';
+import { userInstance, propertyInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
 import CreateProperty from '../property/createProperty';
 
@@ -86,7 +86,7 @@ const Owner = () => {
   };
 
   const getPropertyData = useCallback(async () => {
-    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    const response0 = await userInstance.post('/getUserSubscriptionStatus', { affiliateId: userId });
     if (response0.data.code === 200) {
       const [
         { days, isOnTrial, isSubscribed },
@@ -95,7 +95,7 @@ const Owner = () => {
       setSubscribed(JSON.parse(isSubscribed));
       setOnTrial(JSON.parse(isOnTrial));
     }
-    const response = await userInstance.post('/fetchProperty', {
+    const response = await propertyInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
     const data = response.data.propertiesData;
@@ -125,31 +125,33 @@ const Owner = () => {
   const edit = async (data) => {
     setEditOpen(true);
     const m1 = moment(data.dob);
-    const response = await userInstance.post('/fetchProperty', {
+    const response = await propertyInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
     if (response.data.code === 200) {
-      const data2 = response.data.propertiesData;
+      const propertyArray = response.data.propertiesData;
       setVisible(true);
       const selectedProperty = [];
       const arr = [];
-      const data3 = data2.filter((el) => el.ownerId === data.id);
-      data3.forEach((filter) => {
-        selectedProperty.push(filter.propertyName);
+      const filterArray = propertyArray.filter((el) => el.ownerId === data.id);
+      filterArray.forEach((filter) => {
+        selectedProperty.push(filter.unitTypeName
+          .filter((e) => e.lang === 'en')
+          .map((name) => name.name));
         arr.push(filter.id);
       });
-
+      setCountry(data.country);
       form.setFieldsValue({
         id: data.id,
         firstname: data.fname,
         secondname: data.lname,
         email: data.email,
         phone: data.phone,
-        dob: m1,
+        dob: data.dob && m1,
         gender: data.gender,
         country: data.country,
         citizenship: data.citizenship,
-        address: data.address,
+        // address: data.address,
         document: data.typeofdoc,
         documentnumber: data.docNo,
         notes: data.notes,
@@ -165,7 +167,9 @@ const Owner = () => {
   };
 
   const onFinish = async (values) => {
+    const companyName = window.location.hostname.split('.');
     const copyValues = values;
+    copyValues.company = companyName[0];
     if (selectedPropertyId && selectedPropertyId.length > 0) {
       copyValues.properties = selectedPropertyId;
     }
@@ -259,7 +263,11 @@ const Owner = () => {
                     {ownerData.map((el) => (
                       <tr>
                         <td>
-                          <div className="owner-info" onClick={() => edit(el)} role="presentation">
+                          <div
+                            className="owner-info"
+                            onClick={() => edit(el)}
+                            role="presentation"
+                          >
                             <div className="owner-pic">
                               <img src={owner} alt="ownerImage" />
                             </div>
@@ -403,10 +411,9 @@ const Owner = () => {
                         required: true,
                       },
                     ]}
+                    initialValue={moment().subtract(18, 'years')}
                   >
-                    <DatePicker
-                      disabledDate={disabledDate}
-                    />
+                    <DatePicker disabledDate={disabledDate} />
                   </Form.Item>
                 </Col>
 
@@ -423,16 +430,26 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    label={t('owner.label11')}
+                    label={t('strings.citizenship')}
                     name="country"
                     style={{ paddingRight: 20 }}
                   >
                     <CountryDropdown onChange={(val) => setCountry(val)} />
                   </Form.Item>
                 </Col>
+
+                <Col span={12}>
+                  <Form.Item
+                    label={t('owner.label12')}
+                    name="citizenship"
+                    style={{ paddingRight: 20 }}
+                  >
+                    <RegionDropdown country={country} />
+                  </Form.Item>
+                </Col>
               </Row>
 
-              <Row style={{ alignItems: 'center' }}>
+              {/* <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
                     label={t('strings.citizenship')}
@@ -448,7 +465,7 @@ const Owner = () => {
                     <Input />
                   </Form.Item>
                 </Col>
-              </Row>
+              </Row> */}
 
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
@@ -476,7 +493,9 @@ const Owner = () => {
                     >
                       <Select.Option value="Passport">Passport</Select.Option>
                       <Select.Option value="ID Card">ID Card</Select.Option>
-                      <Select.Option value="Driving License">Driving License</Select.Option>
+                      <Select.Option value="Driving License">
+                        Driving License
+                      </Select.Option>
                       <Select.Option value="Other">Other</Select.Option>
                     </Select>
                   </Form.Item>
@@ -509,7 +528,12 @@ const Owner = () => {
                     onSelect={(e) => handlePropertySelect(e)}
                   >
                     {propertyData.map((el) => (
-                      <Option value={el.id}>{el.propertyName}</Option>
+                      <Option value={el.id}>
+                        {el.unitTypeName
+                          && el.unitTypeName
+                            .filter((e) => e.lang === 'en')
+                            .map((name) => <p key={name}>{name.name}</p>)}
+                      </Option>
                     ))}
                   </Select>
                 </Form.Item>
@@ -660,10 +684,9 @@ const Owner = () => {
                         required: true,
                       },
                     ]}
+                    initialValue={moment().subtract(18, 'years')}
                   >
-                    <DatePicker
-                      disabledDate={disabledDate}
-                    />
+                    <DatePicker disabledDate={disabledDate} />
                   </Form.Item>
                 </Col>
 
@@ -680,16 +703,26 @@ const Owner = () => {
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
-                    label={t('owner.label11')}
+                    label={t('strings.citizenship')}
                     name="country"
                     style={{ paddingRight: 20 }}
                   >
                     <CountryDropdown onChange={(val) => setCountry(val)} />
                   </Form.Item>
                 </Col>
+
+                <Col span={12}>
+                  <Form.Item
+                    label={t('owner.label12')}
+                    name="citizenship"
+                    style={{ paddingRight: 20 }}
+                  >
+                    <RegionDropdown country={country} />
+                  </Form.Item>
+                </Col>
               </Row>
 
-              <Row style={{ alignItems: 'center' }}>
+              {/* <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
                   <Form.Item
                     label={t('strings.citizenship')}
@@ -705,7 +738,7 @@ const Owner = () => {
                     <Input />
                   </Form.Item>
                 </Col>
-              </Row>
+              </Row> */}
 
               <Row style={{ alignItems: 'center' }}>
                 <Col span={12}>
@@ -726,7 +759,9 @@ const Owner = () => {
                     >
                       <Select.Option value="Passport">Passport</Select.Option>
                       <Select.Option value="ID Card">ID Card</Select.Option>
-                      <Select.Option value="Driving License">Driving License</Select.Option>
+                      <Select.Option value="Driving License">
+                        Driving License
+                      </Select.Option>
                       <Select.Option value="Other">Other</Select.Option>
                     </Select>
                   </Form.Item>
@@ -759,7 +794,12 @@ const Owner = () => {
                     onSelect={(e) => handlePropertySelect(e)}
                   >
                     {propertyData.map((el) => (
-                      <Option value={el.id}>{el.propertyName}</Option>
+                      <Option value={el.id}>
+                        {el.unitTypeName
+                          && el.unitTypeName
+                            .filter((e) => e.lang === 'en')
+                            .map((name) => <p key={name}>{name.name}</p>)}
+                      </Option>
                     ))}
                   </Select>
                 </Form.Item>
@@ -799,7 +839,8 @@ const Owner = () => {
 
   if (loading) {
     return (
-      <Wrapper>
+    //  <Wrapper>
+      <>
         <Helmet>
           <link rel="icon" href={favicon} />
           <title>
@@ -816,7 +857,8 @@ const Owner = () => {
             <img src={loader} alt="loader" />
           </div>
         </div>
-      </Wrapper>
+      </>
+    // </Wrapper>
     );
   }
 
@@ -828,7 +870,7 @@ const Owner = () => {
     );
   }
 
-  if (propertyData && propertyData.length < 1) {
+  if (properties && properties.length < 1) {
     return (
       <Wrapper>
         <div className="add-team-page">

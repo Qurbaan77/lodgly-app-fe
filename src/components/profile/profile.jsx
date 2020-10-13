@@ -56,8 +56,12 @@ const Profile = () => {
   const [country, setCountry] = useState(null);
   // const [image, setImage] = useState('');
 
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  const [{ userId: userid }] = userCred || [{}];
+
   const getUserInfo = useCallback(async () => {
-    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    const split = new Date().toString().match(/([A-Z]+[+-][0-9]+.*)/)[1];
+    const response0 = await userInstance.post('/getUserSubscriptionStatus', { affilateId: userid });
     if (response0.data.code === 200) {
       const [
         { days, isOnTrial, isSubscribed },
@@ -85,10 +89,10 @@ const Profile = () => {
         phone: body[0].phone,
       });
       form2.setFieldsValue({
-        timezone: body[0].timeZone,
+        timezone: body[0].timeZone || split,
       });
     }
-  }, [form1, form2]);
+  }, [form1, form2, userid]);
 
   const getCompanyInfo = useCallback(async () => {
     const companyName = window.location.hostname.split('.');
@@ -102,6 +106,7 @@ const Profile = () => {
         subdomain: body[0].name,
       });
 
+      setCountry(body[0].country);
       form4.setFieldsValue({
         companyName: body[0].companyName,
         address: body[0].address,
@@ -116,7 +121,7 @@ const Profile = () => {
 
   const personalInfoFinish = async (values) => {
     const copyValues = values;
-    copyValues.address = values.address && values.address.trim();
+    // copyValues.address = values.address && values.address.trim();
     copyValues.fullname = values.fullname && values.fullname.trim();
     copyValues.email = values.email && values.email.trim();
     copyValues.phone = values.phone && values.phone.trim();
@@ -125,10 +130,10 @@ const Profile = () => {
     const response = await userInstance.post('/updatePersonalInfo', copyValues);
     const statusCode = response.data.code;
     if (statusCode === 200) {
-      toast.success('Profile Updated Successfully', { containerId: 'B' });
+      toast.success('Profile Updated Successfully', { containerId: 'B', toastId: 'B' });
       getUserInfo();
     } else {
-      toast.error('server error please try again', { containerId: 'B' });
+      toast.error('server error please try again', { containerId: 'B', toastId: 'A' });
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     // form1.resetFields();
@@ -138,9 +143,9 @@ const Profile = () => {
     const response = await userInstance.post('/updateOrganisation', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
-      toast.success('Company Data Saved Successfully', { containerId: 'B' });
+      toast.success('Company Data Saved Successfully', { containerId: 'B', toastId: 'C' });
     } else {
-      toast.error('server error please try again', { containerId: 'B' });
+      toast.error('server error please try again', { containerId: 'B', toastId: 'D' });
     }
     getCompanyInfo();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -151,9 +156,9 @@ const Profile = () => {
     const response = await userInstance.post('/changePassword', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
-      toast.success('Password changed successfully', { containerId: 'B' });
+      toast.success('Password changed successfully', { containerId: 'B', toastId: 'E' });
     } else {
-      toast.error('server error please try again', { containerId: 'B' });
+      toast.error('server error please try again', { containerId: 'B', toastId: 'F' });
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form3.resetFields();
@@ -161,7 +166,7 @@ const Profile = () => {
 
   const props = {
     name: 'file',
-    multiple: false,
+    multiple: true,
     action: `${server}/users/photo?userid=${userId}&organizationid=${organizationid}`,
     onChange(info) {
       if (info.file.status === 'done') {
@@ -178,10 +183,10 @@ const Profile = () => {
     const response = await userInstance.post('/updateTimeZone', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
-      toast.success('Time Zone Saved Successfully', { containerId: 'B' });
+      toast.success('Time Zone Saved Successfully', { containerId: 'B', toastId: 'F' });
       getUserInfo();
     } else {
-      toast.error('server error please try again', { containerId: 'B' });
+      toast.error('server error please try again', { containerId: 'B', toastId: 'G' });
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     form2.resetFields();
@@ -343,7 +348,7 @@ const Profile = () => {
                             </Form.Item>
                           </Col>
 
-                          <Col span={24}>
+                          {/* <Col span={24}>
                             <Form.Item
                               label={t('strings.address')}
                               name="address"
@@ -356,7 +361,7 @@ const Profile = () => {
                             <Form.Item label={t('strings.phone')} name="phone">
                               <Input />
                             </Form.Item>
-                          </Col>
+                          </Col> */}
 
                           <Col span={12}>
                             <Form.Item>
@@ -656,7 +661,7 @@ const Profile = () => {
                           </Col>
 
                           <Col span={24}>
-                            <Form.Item name="zip" label="Vat ID">
+                            <Form.Item name="vatId" label="Vat ID">
                               <Input />
                             </Form.Item>
                           </Col>

@@ -8,7 +8,7 @@ const AlertBox = () => {
   const { t } = useTranslation();
   const location = useLocation();
 
-  const [daysLeft, setDaysLeft] = useState(14);
+  const [daysLeft, setDaysLeft] = useState(7);
   const [hideBanner, setHideBanner] = useState(false);
   // const [redirect, setRedirect] = useState(false);
 
@@ -19,6 +19,7 @@ const AlertBox = () => {
     //   // setRedirect(true);
     // }
     if (!res.data.isOnTrial) {
+      console.log('called 1');
       localStorage.setItem('collapse', 1);
     }
     setDaysLeft(res.data.remainingDays);
@@ -38,6 +39,7 @@ const AlertBox = () => {
   }, [location]);
 
   const handleClose = () => {
+    console.log('called 2');
     localStorage.setItem('collapse', 1);
   };
 

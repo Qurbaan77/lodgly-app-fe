@@ -27,7 +27,7 @@ import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
 import loader from '../../assets/images/cliploader.gif';
 // import { Table } from 'antd';
-import invoice from '../../assets/images/invoice.jpg';
+import invoice from '../../assets/images/invoice.png';
 import invoiceIcon from '../../assets/images/menu/invoice-icon.png';
 import filterIcon from '../../assets/images/menu/filter-icon.png';
 // import editIcon from '../../assets/images/menu/pencil-icon.png';
@@ -88,6 +88,7 @@ const Invoice = () => {
     paymentMethod: '',
   });
   const [visibleProperty, setVisibleProperty] = useState(false);
+  const [logo, setLogo] = useState('');
 
   function useUpdate() {
     const [, setTick] = useState(0);
@@ -188,7 +189,9 @@ const Invoice = () => {
   // }, [userId, topNavId]);
 
   const getData = useCallback(async () => {
-    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    const response0 = await userInstance.post('/getUserSubscriptionStatus', {
+      affiliateId: userId,
+    });
     if (response0.data.code === 200) {
       const [
         { days, isOnTrial, isSubscribed },
@@ -201,6 +204,9 @@ const Invoice = () => {
     if (inb.data.code === 200) {
       inb.data.invoiceData.forEach((el, i) => {
         el[`checked${i}`] = false;
+        if (el.logo) {
+          setLogo(el.logo);
+        }
       });
       setInvoiceData(inb.data.invoiceData);
       setInvoiceItems(inb.data.invoiceItems);
@@ -209,7 +215,6 @@ const Invoice = () => {
     const res = await propertyInstance.post('/fetchProperty', {
       affiliateId: userId,
     });
-    console.log(res);
     if (res.data.code === 200) {
       setLoading(false);
       setPropertyInfo(res.data.propertiesData);
@@ -473,7 +478,8 @@ const Invoice = () => {
 
   if (loading) {
     return (
-      <Wrapper>
+      // <Wrapper>
+      <>
         <Helmet>
           <link rel="icon" href={favicon} />
           <title>
@@ -490,7 +496,8 @@ const Invoice = () => {
             <img src={loader} alt="loader" />
           </div>
         </div>
-      </Wrapper>
+      </>
+      // </Wrapper>
     );
   }
 
@@ -559,6 +566,7 @@ const Invoice = () => {
             property={currentPropertyInfo}
             label={1}
             close={close}
+            logo={logo}
           />
         </Wrapper>
       ) : (
@@ -769,7 +777,6 @@ const Invoice = () => {
                   <table>
                     <thead>
                       <tr>
-
                         <th>{t('strings.date')}</th>
                         <th>{t('strings.label')}</th>
                         <th>{t('strings.type')}</th>
@@ -793,20 +800,41 @@ const Invoice = () => {
                               />
                               {el.date.slice(0, 10)}
                             </td>
-                            <td onClick={() => showEditInvoice(el, i)} role="presentation">
+                            <td
+                              onClick={() => showEditInvoice(el, i)}
+                              role="presentation"
+                            >
                               {el.label
                                 || `INVOICE ${
                                   el.id
                                 } - ${new Date().getFullYear()}`}
                             </td>
-                            <td onClick={() => showEditInvoice(el, i)} role="presentation">{el.type || 'Invoice'}</td>
-                            <td onClick={() => showEditInvoice(el, i)} role="presentation">{el.clientName}</td>
-                            <td onClick={() => showEditInvoice(el, i)} role="presentation">
+                            <td
+                              onClick={() => showEditInvoice(el, i)}
+                              role="presentation"
+                            >
+                              {el.type || 'Invoice'}
+                            </td>
+                            <td
+                              onClick={() => showEditInvoice(el, i)}
+                              role="presentation"
+                            >
+                              {el.clientName}
+                            </td>
+                            <td
+                              onClick={() => showEditInvoice(el, i)}
+                              role="presentation"
+                            >
                               {el.total}
                               {' '}
                               EUR
                             </td>
-                            <td onClick={() => showEditInvoice(el, i)} role="presentation">{el.status}</td>
+                            <td
+                              onClick={() => showEditInvoice(el, i)}
+                              role="presentation"
+                            >
+                              {el.status}
+                            </td>
                             <td>
                               <div className="action-icon">
                                 <MoreOutlined />
@@ -935,6 +963,7 @@ const Invoice = () => {
             property={currentPropertyInfo}
             label={label}
             close={close}
+            logo={logo}
           />
 
           <EditInvoicePopup
@@ -947,6 +976,7 @@ const Invoice = () => {
             invoiceItems={currentInvoiceItems}
             setInvoiceItems={setCurrentInvoiceItems}
             showDeleteWarning={showpopup}
+            logo={logo}
           />
 
           <DeletePopup
@@ -986,7 +1016,10 @@ const Invoice = () => {
             </Button>
           </div>
         </div>
-        <CreateProperty visible={visibleProperty} onCancel={closeCreateProperty} />
+        <CreateProperty
+          visible={visibleProperty}
+          onCancel={closeCreateProperty}
+        />
       </Wrapper>
     );
   }
@@ -1003,7 +1036,7 @@ const Invoice = () => {
         />
         <body className="invoice-page-view" />
       </Helmet>
-      { pageContent }
+      {pageContent}
     </>
   );
 };

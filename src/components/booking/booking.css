@@ -80,7 +80,7 @@
   }
   
   .booking-list h3 {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   margin: 0;
   padding-bottom: 5px;
@@ -189,6 +189,11 @@
   text-align: center;
   padding: 30px;
   background: #fff;
+  margin-top: 180px;
+  border-top: 1px solid #eaeaea;
+  position: absolute;
+  bottom: 70px;
+  width: 100%;
   }
   
   .bookin-footer ul {
@@ -402,10 +407,11 @@
   }
   
   .booking-filter-box {
-  padding: 30px;
+  padding: 20px 15px 0px 15px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  border-bottom: 1px solid #efefef;
   }
   
   .booking-filter-box label {
@@ -855,7 +861,7 @@ font-size: 11px
   
   .filter-checkbox {
   padding-right: 20px;
-  width:70px;
+  width:45px;
   }
   
   .booking .ant-checkbox-checked::after {
@@ -903,7 +909,7 @@ font-size: 11px
   
   }
   
-  .booking-list.red .detail::before {content: "";width: 8px;height: 8px;background: #FB4B56;border-radius: 100%;position: absolute;left: -10px;top: 30px;}
+  .booking-list.red .detail::before {content: "";width: 8px;height: 8px;background: #FB4B56;border-radius: 100%;position: absolute;left: -10px;top: 9px;}
   
   .booking-list.red .detail {
   padding-left: 10px;
@@ -1038,4 +1044,21 @@ display:none;
 
 .filter-item .ant-tag.ant-tag-yellow {
   background: #f7f79ea6;
+}
+select#basic_1_country {
+  border: 1px solid #eaeaea !important;
+  border-radius: 0;
+  padding: 8px 15px !important;
+  height: auto;
+  width: 100%;
+}
+.booking-page-view .ant-layout-content {
+  margin: 0!important;
+  padding: 0!important;
+}
+.guest-modal button.ant-btn {
+  margin-bottom: 50px;
+}
+.create-booking-modal button.ant-btn {
+  margin-bottom: 50px;
 }

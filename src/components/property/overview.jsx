@@ -29,7 +29,7 @@ const Overview = () => {
   const [propertyDescription, setPropertyDescription] = useState('');
   const [noOfBedRooms, setNoOfBedRooms] = useState(0);
   const [noOfGuests, setNoOfGuests] = useState(0);
-  const [noOfUnits, setNoOfUnits] = useState(0);
+  const [noOfUnits, setNoOfUnits] = useState(1);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
 
   const [showAdd, setShowAdd] = useState(false);
@@ -40,9 +40,14 @@ const Overview = () => {
   const [languageToFilter, setLanguageToFilter] = useState('');
   const [languageSelected, setLanguageSelected] = useState('');
   const [transateLanguage, setTranslateLanguage] = useState([]);
+  const [unitsPanel, setUnitsPanel] = useState([
+    {
+      unitName: 'unit 1',
+    },
+  ]);
 
   const refSelect = useRef(null);
-  const [unitsArr, setUnitsArr] = useState([]);
+  const [deletedUnitsId, setDeletedUnitsId] = useState([]);
   // const [unitTypeV2Data, setUnitTypeV2Data] = useState({});
   const { t } = useTranslation();
   const showEditSleeping = () => {
@@ -79,8 +84,18 @@ const Overview = () => {
     });
     if (response.data.code === 200 && response.status !== 204) {
       const data = response.data.unitTypeV2Data[0];
-      if (data && data.unitsData) {
-        data.unitsData.map((el, i) => form2.setFieldsValue({ [`unit${i + 1}`]: el }));
+      if (data && data.unitV2Data.length) {
+        setUnitsPanel(data.unitV2Data);
+        setNoOfUnits(data.unitV2Data.length);
+        data.unitV2Data.forEach((el, i) => {
+          form2.setFieldsValue({
+            [`unit${i}`]: el.unitName,
+          });
+        });
+      }
+      if (data && data.unitsData !== null) {
+        // (data.unitV2Data).forEach((el, i) =>
+        // form2.setFieldsValue({ [`unit${i + 1}`]: el.unitName }));
       }
       if (data.propertyType !== null) {
         form.setFieldsValue({
@@ -95,7 +110,7 @@ const Overview = () => {
       }
       setNoOfBedRooms(data.bedRooms);
       setNoOfGuests(data.standardGuests);
-      setNoOfUnits(data.units);
+      /// setNoOfUnits(data.units);
       setSelectedAmenities(data.amenities);
     }
   }, [form, form2]);
@@ -141,18 +156,20 @@ const Overview = () => {
   }, []);
 
   const { TextArea } = Input;
-  const handleRentalTypeSelect = async (value) => {
+  const handleOverview = async () => {
     if (propertyName && propertyDescription) {
       const propertyId = localStorage.getItem('unitTypeV2Id');
       const engPropertyName = await translate(propertyName, 'en');
       const payload = {
         propertyName: engPropertyName.trim(),
         propertyDescription: propertyDescription.trim(),
-        propertyType: value,
         propertyId,
         languageSelected,
       };
-      await propertyInstance.post('/updateUnitTypeoverview', payload);
+      const res = await propertyInstance.post('/updateUnitTypeoverview', payload);
+      if (res.data.code === 200) {
+        toast.success('Data updates successfully', { containerId: 'B', toastId: 'AV' });
+      }
     } else {
       if (!propertyName) {
         toast.error('Property name can not be empty', {
@@ -166,19 +183,31 @@ const Overview = () => {
       });
     }
   };
+  const handleRentalTypeSelect = async (value) => {
+    const propertyId = localStorage.getItem('unitTypeV2Id');
+    const payload = {
+      propertyType: value,
+      propertyId,
+    };
+    const res = await propertyInstance.post('/changeRentalType', payload);
+    if (res.data.code === 200) {
+      toast.success('Data updated successfully');
+    }
+  };
 
   const onFinishPropertyInfo = async (values) => {
-    const units = [];
-    unitsArr.forEach((i) => {
-      const j = i + 1;
-      const unitName = 'unit';
-      units.push(values[unitName + j] || `Unit ${j}`);
-    });
+    // const units = [];
+    // unitsArr.forEach((i) => {
+    //   const j = i + 1;
+    //   const unitName = 'unit';
+    //   units.push(values[unitName + j] || `Unit ${j}`);
+    // });
     values.unitTypeV2Id = localStorage.getItem('unitTypeV2Id');
     values.noOfBedRooms = noOfBedRooms;
     values.noOfGuests = noOfGuests;
     values.noOfUnits = noOfUnits;
-    values.unitsData = JSON.stringify(units);
+    values.unitsData = unitsPanel;
+    values.deletedUnitArray = deletedUnitsId;
     const response = await propertyInstance.post('/updatePropertyInfo', values);
     if (response.data.code === 200) {
       getData();
@@ -323,9 +352,57 @@ const Overview = () => {
     else if (languageAction.languageAction === 'remove') setShowRemove(true);
   }, [languageAction]);
 
-  const createArray = (value) => {
-    setNoOfUnits(value);
-    setUnitsArr(Array.from(Array(value).keys()));
+  /**
+   * New units handling functions
+   */
+  const onUnitChange = (e, el, i) => {
+    if (el.id) {
+      unitsPanel.forEach((unit) => {
+        if (unit.id === el.id) {
+          unit.unitName = e.target.value;
+        }
+      });
+      setUnitsPanel(unitsPanel);
+    } else {
+      unitsPanel.forEach((unit, j) => {
+        if (i === j) {
+          unit.unitName = e.target.value;
+        }
+      });
+      setUnitsPanel(unitsPanel);
+    }
+  };
+  /**
+   * increasing unit boxes
+   */
+  const createUnits = () => {
+    setNoOfUnits(noOfUnits + 1);
+    // setUnitsArr(Array.from(Array(value).keys()));
+    const oldArray = [...unitsPanel];
+    oldArray.push({
+      unitName: `unit ${noOfUnits + 1}`,
+    });
+    setUnitsPanel(oldArray);
+  };
+
+  /**
+   * Descreasing unit boxes
+   */
+  const removeUnitBox = () => {
+    setNoOfUnits(noOfUnits - 1);
+    const oldArray = [...unitsPanel];
+    const removedUnit = oldArray.pop();
+    if (removedUnit.id) {
+      const deletedUnitArray = [...deletedUnitsId];
+      deletedUnitArray.push(removedUnit.id);
+      setDeletedUnitsId(deletedUnitArray);
+    }
+    setUnitsPanel(oldArray);
+  };
+  const negativeCheck = (e) => {
+    if (e.keyCode === 109) {
+      e.preventDefault();
+    }
   };
 
   return (
@@ -342,13 +419,13 @@ const Overview = () => {
         <body className="overview-page-view" />
       </Helmet>
 
-      <div className="overview">
+      <div className="overview overview-space">
         <Row>
           <Col span={24}>
             <div className="overview-content">
               <Form form={form} onFinish={handleFinish}>
                 <div className="overview-first-section">
-                  <h3>OverView</h3>
+                  <h3>{t('overview.heading1')}</h3>
 
                   <div className="overview-flex">
                     <div className="overview-input">
@@ -411,7 +488,6 @@ const Overview = () => {
                     </div>
                   </div>
 
-                  <h3>{t('overview.heading1')}</h3>
                   <Row>
                     <Col span={24}>
                       <Form.Item name="name">
@@ -431,6 +507,11 @@ const Overview = () => {
                           rows={4}
                           onChange={(e) => setPropertyDescription(e.target.value)}
                         />
+                      </Form.Item>
+                    </Col>
+                    <Col span={24}>
+                      <Form.Item name="description">
+                        <Button onClick={handleOverview}>save</Button>
                       </Form.Item>
                     </Col>
                   </Row>
@@ -546,7 +627,7 @@ const Overview = () => {
                             },
                           ]}
                         >
-                          <Input placeholder="0.00" />
+                          <Input placeholder="0.00" onKeyDown={negativeCheck} />
                         </Form.Item>
 
                         <Form.Item label={t('overview.label4')}>
@@ -576,21 +657,30 @@ const Overview = () => {
                           label={t('overview.label3')}
                         >
                           <div className="input-counter">
-                            <CounterInput
+                            <div className="counter-input-box">
+                              <Button onClick={removeUnitBox}>-</Button>
+                              <span>{noOfUnits}</span>
+                              <Button onClick={createUnits}>+</Button>
+                            </div>
+
+                            {/* <CounterInput
                               min={0}
                               max={10}
-                              count={noOfUnits}
-                              onCountChange={(count) => createArray(count)}
-                            />
+                              // count={noOfUnits}
+                              onCountChange={createArray}
+                            /> */}
                           </div>
                         </Form.Item>
-                        {unitsArr.map((el) => (
+                        {unitsPanel.map((el, i) => (
                           <Form.Item
                             className="property-info-unit"
                             label="Units Name"
-                            name={`unit${el + 1}`}
+                            name={`unit${i}`}
                           >
-                            <Input placeholder={`Unit ${el + 1}`} />
+                            <Input
+                              onChange={(e) => onUnitChange(e, el, i)}
+                              placeholder={el.unitName}
+                            />
                           </Form.Item>
                         ))}
                       </Col>

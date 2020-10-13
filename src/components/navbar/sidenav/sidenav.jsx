@@ -7,6 +7,7 @@ import { Layout, Menu } from 'antd';
 import {
   ArrowLeftOutlined,
   ApartmentOutlined,
+ // CheckOutlined,
 } from '@ant-design/icons';
 
 import logo from '../../../assets/images/logo.png';
@@ -29,11 +30,14 @@ import unitIcon from '../../../assets/images/menu/unit-type-icon.png';
 import channelIcon from '../../../assets/images/menu/channel-icon.png';
 import closeicon from '../../../assets/images/menu/close-icon.png';
 // import arrow from '../../../assets/images/Polygon.png';
+// import loader from '../../../assets/images/cliploader.gif';
 
 const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 const Sidenav = ({
+  imgState,
+  userName,
   img,
   propertyImage,
   name,
@@ -54,7 +58,7 @@ const Sidenav = ({
   const [hideOwner, setHideOwner] = useState(false);
   const [disableProperties, setDisableProperties] = useState(false);
   const [disableGuests, setDisableGuests] = useState(false);
-  const [hideChannel, setHideChannel] = useState(false);
+  const [hideChannel, setHideChannel] = useState(true);
   // const [propertyId, setPropertyId] = useState();
   const isSubUser = localStorage.getItem('isSubUser');
   const subUserCred = JSON.parse(localStorage.getItem('subUserCred'));
@@ -169,15 +173,25 @@ const Sidenav = ({
           booking, calendar, properties, team, invoice, owner, stats, guests, channelManager,
         },
       ] = featureData;
-      setHideBooking(isSubUser ? !bookingRead : !booking);
-      setHidecalendar(isSubUser ? !calendarRead : !calendar);
-      setDisableProperties(!isSubUser ? !properties : !propertiesRead);
-      setHideTeam(!isSubUser ? !team : !teamRead);
-      setHideInvoice(!isSubUser ? !invoice : !invoicesRead);
-      setHideOwner(!isSubUser ? !owner : !ownerRead);
-      setHideStats(!isSubUser ? !stats : !statsRead);
-      setDisableGuests(!isSubUser ? !guests : !guestsRead);
-      setHideChannel(!isSubUser ? !channelManager : !channelRead);
+      const channelper = channelManager === 1 && channelRead === 1;
+      const bookingper = booking === 1 && bookingRead === 1;
+      const calendarper = calendar === 1 && calendarRead === 1;
+      const propertiesper = properties === 1 && propertiesRead === 1;
+      const teamper = team === 1 && teamRead === 1;
+      const invoiceper = invoice === 1 && invoicesRead === 1;
+      const ownerper = owner === 1 && ownerRead === 1;
+      const statsper = stats === 1 && statsRead === 1;
+      const guestsper = guests === 1 && guestsRead === 1;
+      setHideBooking(isSubUser ? !bookingper : booking !== 1);
+      setHidecalendar(isSubUser ? !calendarper : calendar !== 1);
+      setDisableProperties(isSubUser ? !propertiesper : properties !== 1);
+      setHideTeam(isSubUser ? !teamper : team !== 1);
+      setHideInvoice(isSubUser ? !invoiceper : invoice !== 1);
+      setHideOwner(isSubUser ? !ownerper : owner !== 1);
+      setHideStats(isSubUser ? !statsper : stats !== 1);
+      setDisableGuests(isSubUser ? !guestsper : guests !== 1);
+      // setHideChannel(!isSubUser ? !channelManager : !channelManager && !channelRead);
+      setHideChannel(isSubUser ? !channelper : channelManager !== 1);
     }
     // const Id = localStorage.getItem('propertyId');
     // const response = await userInstance.post('/fetchProperty', {
@@ -213,7 +227,6 @@ const Sidenav = ({
     if (
       (pathname === '/property'
         || pathname === '/unittype'
-        || pathname === '/channelmanager'
         || pathname === '/services'
         || pathname === '/groups'
         || pathname === '/task')
@@ -245,7 +258,6 @@ const Sidenav = ({
         || pathname.includes('photos')
         || pathname.includes('rates')
         || pathname.includes('seasonrates')
-        || pathname.includes('channelmanager')
         || pathname.includes('/services')
       )
       && propertyNav === false
@@ -283,6 +295,21 @@ const Sidenav = ({
     history.push('/booking');
   };
 
+  const handleBack = () => {
+    history.push('/propertylist');
+    localStorage.removeItem('property');
+    handleMenu('close');
+  };
+  // if (loading) {
+  //   return (
+  //     <div className="loader">
+  //       <div className="loader-box">
+  //         <img src={loader} alt="loader" />
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
   return (
     <Sider
       theme="light"
@@ -303,6 +330,8 @@ const Sidenav = ({
       </div>
 
       <UserProfile
+        userName={userName}
+        imgState={imgState}
         img={img}
         propertyImg={propertyImage}
         name={name}
@@ -340,7 +369,7 @@ const Sidenav = ({
           title={(
             <div>
               <img src={guestIcon} alt="guest-icon" />
-              <Link to="/guests">{t('sidebar.menu4')}</Link>
+              {t('sidebar.menu4')}
             </div>
           )}
         >
@@ -387,8 +416,9 @@ const Sidenav = ({
       >
         <span
           className="submenu-heading"
-          onClick={() => handleMenu('close')}
+         // onClick={() => handleMenu('close')}
           role="presentation"
+          onClick={handleBack}
         >
           <Link
             to="/propertylist"
@@ -401,21 +431,29 @@ const Sidenav = ({
         </span>
         <Menu.Item className="overview-nav">
           <img src={propertyIcon} alt="property" />
+          <div className="menu-dot" />
+          {/* <div className="menu-check"><CheckOutlined /></div> */}
           <Link to="/overview">{t('sidenav.menu1')}</Link>
         </Menu.Item>
 
         <Menu.Item className="location-nav">
           <img src={statsIcon} alt="property" />
+          <div className="menu-dot" />
+          {/* <div className="menu-check"><CheckOutlined /></div> */}
           <Link to="/location">{t('sidenav.menu2')}</Link>
         </Menu.Item>
 
         <Menu.Item className="photos-nav">
           <img src={guestIcon} alt="unit" />
+          <div className="menu-dot" />
+          {/* <div className="menu-check"><CheckOutlined /></div> */}
           <Link to="photos">{t('sidenav.menu3')}</Link>
         </Menu.Item>
 
         <Menu.Item className="rates-nav">
           <img src={unitIcon} alt="unit" />
+          <div className="menu-dot" />
+          {/* <div className="menu-check"><CheckOutlined /></div> */}
           <Link to="rates">{t('sidenav.menu4')}</Link>
         </Menu.Item>
 
@@ -428,10 +466,10 @@ const Sidenav = ({
           <Link to="/services">{t('sidebar.menu15')}</Link>
         </Menu.Item>
 
-        <Menu.Item className="channel-nav" hidden={hideChannel}>
+        {/* <Menu.Item className="channel-nav" hidden={hideChannel}>
           <img src={channelIcon} alt="channel" />
           <Link to="/channel">{t('sidebar.menu14')}</Link>
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu>
 
       <div className="company-ip">
@@ -446,6 +484,11 @@ const Sidenav = ({
 };
 
 Sidenav.propTypes = {
+  userName: PropTypes.string,
+  imgState: PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.string,
+  ]),
   img: PropTypes.oneOfType([
     PropTypes.element,
     PropTypes.string,
@@ -460,6 +503,8 @@ Sidenav.propTypes = {
   handleMenuSide: PropTypes.func,
 };
 Sidenav.defaultProps = {
+  userName: '',
+  imgState: '',
   img: '',
   propertyImage: '',
   name: '',

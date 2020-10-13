@@ -38,6 +38,13 @@ const Photos = () => {
   const props = {
     name: 'file',
     multiple: false,
+    // beforeUpload(file) {
+    //   const isLt2M = file.size / 1024 / 1024 < 2;
+    //   if (!isLt2M) {
+    //     toast.error('Image must smaller than 2MB!');
+    //   }
+    //   return isLt2M;
+    // },
     // action: `http://localhost:3001/users/propertyPicture/${id}`,
     // action: `${server}/users/propertyPicture/${id}`,
     action: `${server}/properties/propertyPicture?unitTypeV2Id=${unitTypeV2Id}&organizationid=${organizationid}`,
@@ -122,9 +129,9 @@ const Photos = () => {
                                 <p className="ant-upload-text">
                                   {t('photos.paragraph5')}
                                 </p>
-                                <p className="ant-upload-hint">
+                                {/* <p className="ant-upload-hint">
                                   {t('photos.paragraph6')}
-                                </p>
+                                </p> */}
                               </>
                             )
                       }

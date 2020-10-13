@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import Helmet from 'react-helmet';
 import moment from 'moment';
 import {
   Form,
@@ -16,7 +15,6 @@ import {
 import {
   PlusSquareOutlined,
   PlusOutlined,
-  EditOutlined,
   DeleteOutlined,
   ClockCircleOutlined,
   CheckOutlined,
@@ -33,10 +31,17 @@ const { Panel } = Collapse;
 const { RangePicker } = DatePicker;
 let i = 1;
 
-const AddReservation = (props) => {
+const EditReservation = (props) => {
   const { t } = useTranslation();
   const {
-    getData, visible, setVisible, calendarBookingDate, setCalendarBookingDate,
+    editvisible,
+    setEditVisible,
+    setVisible,
+    reservationData,
+    guestArray,
+    setGuestArray,
+    serviceArray,
+    setServiceArray,
   } = props;
   const [form] = Form.useForm();
   // const [visible1, setVisible1] = useState(false);
@@ -46,15 +51,8 @@ const AddReservation = (props) => {
   // const [children2, setChildren2] = useState(0);
   const [channelCommission, setChannelCommission] = useState(null);
   const [panel, setPanel] = useState([1]);
-  const [servicePanel, setServicePanel] = useState([{
-    serviceName: '',
-    servicePrice: 0,
-    serviceQuantity: 0,
-    serviceTax: 0,
-    serviceTotal: 0,
-  }]);
+  // const [servicePanel, setServicePanel] = useState([100]);
   // const [arrValue, setArrValue] = useState(2);
-  const [serviceTotalArr, setServiceTotalArr] = useState([0]);
   const [price, setPrice] = useState(0);
   const [night, setNight] = useState(0);
   const [amt, setAmt] = useState(0);
@@ -68,7 +66,7 @@ const AddReservation = (props) => {
   // const [serviceTax, setServiceTax] = useState(0);
   // const [serviceAmount, setServiceAmount] = useState(0);
   const [leftDays, setLeftDays] = useState(0);
-  const [currentPropertyName, setCurrentPropertyName] = useState('');
+  const [editServicePanel, setEditServicePanel] = useState([]);
   const [unitName, setUnitName] = useState('');
   const [depositType, setDepositType] = useState('€');
   const [depositAmount, setDepositAmount] = useState(null);
@@ -80,40 +78,34 @@ const AddReservation = (props) => {
   // const [phone, setPhone] = useState({});
   // const [country, setCountry] = useState({});
   const [serviceData, setServiceData] = useState([]);
-  const [currentService, setCurrentService] = useState({});
   const [unitData, setUnitData] = useState([]);
   // const [currentUnit, setCurrentUnit] = useState({});
-  const [unitTypeData, setUnitTypeData] = useState([]);
 
-  const [propertyData, setPropertyData] = useState([]);
-  const [currentPropertyId, setCurrentPropertyId] = useState(null);
-  const [reservationDate, setReservationDate] = useState(null);
+  // const [propertyData, setPropertyData] = useState([]);
+  // const [currentPropertyId, setCurrentPropertyId] = useState(null);
+  // const [reservationDate, setReservationDate] = useState(null);
   const [unitId, setUnitId] = useState(null);
-  const [unitTypeId, setUnitTypeId] = useState(null);
-  const [selectDisable, setSelectDisable] = useState(false);
+  const [propertyName, setPropertyName] = useState('');
+  const [deleteServiceId, setDeleteServiceId] = useState(null);
   // const history = useHistory();
 
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
   const [{ userId }] = userCred || [{}];
 
-  function useUpdate() {
-    const [, setTick] = useState(0);
-    const update = useCallback(() => {
-      setTick((tick) => tick + 1);
-    }, []);
-    return update;
-  }
-
-  const update = useUpdate();
-
   const close = () => {
     form.resetFields();
-    setCalendarBookingDate([]);
-    setSelectDisable(false);
     setVisible(false);
+    setEditVisible(false);
   };
 
   const addMore = () => {
+    if (guestArray && guestArray.length > 0) {
+      let i;
+      guestArray.forEach((el) => {
+        i = el.id;
+      });
+      setGuestArray(guestArray.concat([{ id: i + 1 }]));
+    }
     i += 1;
     setPanel([...panel, i]);
   };
@@ -125,128 +117,149 @@ const AddReservation = (props) => {
   };
 
   const addMoreService = async () => {
-    const oldarray = [...servicePanel];
-    oldarray.push({
-      serviceName: '',
-      servicePrice: 0,
-      serviceQuantity: 0,
-      serviceTax: 0,
-      serviceTotal: 0,
+    let i;
+    serviceArray.forEach((el) => {
+      i = el.id;
     });
-    setServicePanel(oldarray);
-    // j += 1;
-    // setServicePanel([...servicePanel, j]);
+    setServiceArray(serviceArray.concat([{ id: i + 1 }]));
   };
 
-  const removeServicePanel = () => {
-    // if (serviceAmount !== 0) {
-    //   const sum = parseInt(total, 10) - parseInt(serviceAmount, 10);
-    //   setServiceAmount(0);
-    //  //  setServicePrice(0);
-    //   setServiceTax(0);
-    //  //  setServiceAmt(0);
-    //   setTotal(sum);
-    // }
-    const oldarray = [...servicePanel];
-    oldarray.pop();
-    setServicePanel([...oldarray]);
-  };
+  // const removeServicePanel = () => {
+  //   if (serviceAmount !== 0) {
+  //     const sum = parseInt(total, 10) - parseInt(serviceAmount, 10);
+  //     setServiceAmount(0);
+  //     setServicePrice(0);
+  //     setServiceTax(0);
+  //     setServiceAmt(0);
+  //     setTotal(sum);
+  //   }
+  //   const oldarray = [...servicePanel];
+  //   oldarray.pop();
+  //   setServicePanel([...oldarray]);
+  // };
 
-  const getServices = useCallback(async (propertyId) => {
-    const payload = {
-      propertyId,
-    };
-    const response = await userInstance.post('/getService', payload);
-    const data = response.data.servicData;
-    if (response.data.code === 200) {
-      setServiceData(data);
-    }
-  }, []);
+  function useUpdate() {
+    const [, setTick] = useState(0);
+    const update = useCallback(() => {
+      setTick((tick) => tick + 1);
+    }, []);
+    return update;
+  }
 
-  useEffect(() => {
-    if (Object.values(calendarBookingDate).length > 0) {
-      if (Object.values(calendarBookingDate)[0].length > 0) {
-        setVisible(true);
-        setSelectDisable(true);
-        const selectedDates = Object.values(calendarBookingDate)[0];
-        const propertyId = parseInt(selectedDates[0].row.parentId.split(',')[1], 10);
-        getServices(propertyId);
-        setUnitTypeId(propertyId);
-        const unitId = parseInt(selectedDates[0].id.split(',')[1].split('-')[0], 10);
-        setUnitId(unitId);
-        const unitName = selectedDates[0].row.label;
-        const lastElement = selectedDates.length;
-        const m1 = moment(selectedDates[0].time.leftGlobal);
-        const m2 = moment(selectedDates[lastElement - 1].time.leftGlobal);
-        const diff = Math.abs(m1 - m2);
-        const day = Math.floor(diff / (24 * 60 * 60 * 1000));
-        setNight(day);
-        const unitTypeName = propertyData
-          .filter((el) => el.id === propertyId)
-          .map((filter) => filter.unitTypeName);
-        const name = unitTypeName[0]
-          .filter((e) => e.lang === 'en')
-          .map((name) => name.name);
-        setCurrentPropertyName(name);
-        form.setFieldsValue({
-          groupname: [m1, m2],
-          property: propertyId,
-          propertyName: name,
-          unit: unitName,
+  const update = useUpdate();
+
+  const updateFields = useCallback(() => {
+    if (editvisible) {
+      // setVisible(false);
+      onSelectProperty((reservationData.unitTypeId));
+      const m1 = moment(reservationData.startDate);
+      const m2 = moment(reservationData.endDate);
+      const data = reservationData.discountType === '%'
+        ? (reservationData.night * reservationData.perNight * reservationData.discount) / 100
+        : reservationData.discount;
+      form.setFieldsValue({
+        groupname: [m1, m2],
+        property: reservationData.propertyName,
+        unit: reservationData.unitName,
+        adult: reservationData.adult,
+        children1: reservationData.children1,
+        children2: reservationData.children2,
+        perNight: reservationData.perNight,
+        nights: reservationData.night,
+        discount: reservationData.discount,
+        discountType: reservationData.discountType,
+        discountTotal: data,
+        deposit: reservationData.deposit,
+        depositType: reservationData.depositType,
+      });
+      if (guestArray && guestArray.length) {
+        guestArray.forEach((el, i) => {
+          form.setFieldsValue({
+            [`fullname${i}`]: el.fullname,
+            [`email${i}`]: el.email,
+            [`country${i}`]: el.country,
+            [`phone${i}`]: el.phone,
+          });
         });
-        setUnitName(unitName);
       }
+      if (serviceArray && serviceArray.length > 0) {
+        serviceArray.forEach((el, i) => {
+          form.setFieldsValue({
+            [`serviceName${i}`]: el.serviceName,
+            [`servicePrice${i}`]: el.servicePrice,
+            [`serviceQuantity${i}`]: el.quantity,
+            [`serviceTax${i}`]: el.serviceTax,
+            [`serviceAmount${i}`]: el.serviceAmount,
+          });
+        });
+      }
+      setPropertyName(reservationData.propertyName);
+      setUnitName(reservationData.unitName);
+      setUnitId(reservationData.unitId);
+      setChannel(reservationData.channel);
+      setChannelCommission(reservationData.commission);
+      setPrice(reservationData.perNight);
+      setNight(reservationData.night);
+      setDiscount(reservationData.discount);
+      setDiscountType(reservationData.discountType);
+      setdiscountAmount(reservationData.discount);
+      setDeposit(reservationData.deposit);
+      setDepositType(reservationData.depositType);
+      setAmt(reservationData.night * reservationData.perNight);
+      setAccomodation(reservationData.accomodation);
     }
   }, [
-    calendarBookingDate,
-    getServices,
+    serviceArray,
+    guestArray,
+    reservationData,
     form,
-    propertyData,
-    setPropertyData,
-    setVisible,
+    editvisible,
   ]);
 
   const onFinish = async (values) => {
+    values.id = reservationData.id;
     values.perNight = price;
-    values.night = night;
+    values.nights = night;
     values.amt = amt;
     values.discountType = discountType;
     values.discount = discount;
     values.deposit = deposit;
     values.depositType = depositType;
     values.accomodation = accomodation;
-
-    const guestData = [];
-    // values.acknowledge = radio;
-    values.totalAmount = serviceTotalArr.reduce((a, b) => a + (b || 0), 0) + accomodation;
-    // values.total = parseInt(total) + parseInt(accomodation);
-
-    panel.forEach((el) => {
-      guestData.push(values[el]);
-    });
-    values.guestData = guestData;
-
-    if (guestData.length > 0) {
-      values.guest = guestData[0].fullName;
+    const serviceDataNew = [];
+    values.totalAmount = accomodation
+      + serviceArray
+        .map((service) => service.serviceAmount)
+        .reduce((a, b) => a + (b || 0), 0);
+    if (guestArray.length) {
+      guestArray.forEach((el, i) => {
+        const f = 'fullname';
+        const e = 'email';
+        const c = 'country';
+        const p = 'phone';
+        el.bookingId = reservationData.id;
+        el.fullname = values[f + i];
+        el.email = values[e + i];
+        el.country = values[c + i];
+        el.phone = values[p + i];
+      });
+    }
+    values.guestData = guestArray;
+    if (guestArray.length > 0) {
+      values.guest = guestArray[0].fullName;
     } else {
       values.guest = 'No Guest';
     }
-    values.serviceData = servicePanel;
-    values.propertyName = currentPropertyName;
-    values.propertyId = currentPropertyId;
+    values.serviceData = serviceDataNew;
     values.channel = channel;
     values.commission = channelCommission;
     values.unitName = unitName;
-    if (Object.values(calendarBookingDate).length > 0) {
-      if (Object.values(calendarBookingDate)[0].length > 0) {
-        values.unit = unitId;
-        values.unitTypeId = unitTypeId;
-      }
-    }
+    values.unit = unitId;
+    values.unitTypeId = reservationData.unitTypeId;
     values.affiliateId = userId;
-    const response = await bookingInstance.post('/addBooking', values);
+    values.deleteServiceId = deleteServiceId;
+    const response = await bookingInstance.post('/changeBooking', values);
     if (response.data.code === 200) {
-      getData();
       window.location.reload();
       toast.success('successfully added reservation', { containerId: 'B' });
     } else {
@@ -256,74 +269,21 @@ const AddReservation = (props) => {
     form.resetFields();
   };
 
-  const getPropertyData = useCallback(async () => {
-    const response = await propertyInstance.post('/fetchProperty', { affiliateId: userId });
-    const data = response.data.propertiesData;
-    if (response.data.code === 200) {
-      setPropertyData(data);
-    }
-  }, [userId]);
-
   useEffect(() => {
-    getPropertyData();
-  }, [getPropertyData]);
+    updateFields();
+  }, [updateFields]);
 
-  const onSelectServices = (value, i) => {
-    serviceData
-      .filter((el) => el.serviceName === value)
-      .map((filterService) => setCurrentService(filterService));
-    servicePanel.forEach((el, j) => {
-      if (i === j) {
-        el.serviceName = value;
-      }
-    });
-    setServicePanel(servicePanel);
-    // unitData
-    //   .filter((el) => el.propertyId === value)
-    //   .map((filterUnit) => setCurrentUnit(filterUnit));
-  };
+  // const getPropertyData = useCallback(async () => {
+  //   const response = await propertyInstance.post('/fetchProperty', { affiliateId: userId });
+  //   const data = response.data.propertiesData;
+  //   if (response.data.code === 200) {
+  //     setPropertyData(data);
+  //   }
+  // }, [userId]);
 
-  const handleServiceQuantity = (e, ele, i) => {
-    servicePanel.forEach((el, j) => {
-      if (i === j) {
-        el.serviceQuantity = e.target.value;
-        el.serviceTotal = el.servicePrice * e.target.value;
-        form.setFieldsValue({
-          [`serviceTotal${i}`]: el.servicePrice * e.target.value,
-        });
-      }
-    });
-    setServicePanel(servicePanel);
-    update();
-    const item = servicePanel.map((panel) => panel.serviceTotal);
-    setServiceTotalArr(item);
-  };
-  const handleServicePrice = (value, i) => {
-    servicePanel.forEach((el, j) => {
-      if (i === j) {
-        el.servicePrice = value;
-      }
-    });
-    setServicePanel(servicePanel);
-    update();
-  };
-  const handleServiceTax = (e, ele, i) => {
-    servicePanel.forEach((el, j) => {
-      if (i === j) {
-        el.serviceTax = e.target.value;
-        el.serviceTotal = el.servicePrice * el.serviceQuantity
-        + (el.servicePrice * el.serviceQuantity * e.target.value) / 100;
-        form.setFieldsValue({
-          [`serviceTotal${i}`]: el.servicePrice * el.serviceQuantity
-          + (el.servicePrice * el.serviceQuantity * e.target.value) / 100,
-        });
-      }
-    });
-    setServicePanel(servicePanel);
-    update();
-    const item = servicePanel.map((panel) => panel.serviceTotal);
-    setServiceTotalArr(item);
-  };
+  // useEffect(() => {
+  //   getPropertyData();
+  // }, [getPropertyData]);
 
   // const calculateTotal = () => {
   //   const calculate = servicePrice * serviceAmt
@@ -333,32 +293,19 @@ const AddReservation = (props) => {
   //   setTotal(sum);
   // };
 
-  const onSelectProperty = async (value, event) => {
-    propertyData
-      .filter((el) => el.id === parseInt(value, 10))
-      .map((filter) => setUnitData(filter.unitDataV2));
-    setCurrentPropertyName(event.children);
-    setCurrentPropertyId(value);
+  const onSelectProperty = async (value) => {
     const payload = {
-      reservationDate,
       propertyId: value,
     };
     const response = await userInstance.post('/getService', payload);
     const data = response.data.servicData;
-    // const response2 = await userInstance.post('/getUnit', payload);
-    // const data2 = response2.data.unitData;
-    const response3 = await userInstance.post('/getUnittype', payload);
-    const data3 = response3.data.unittypeData;
+    const response3 = await propertyInstance.post('/getUnittype', payload);
     if (response.data.code === 200) {
       setServiceData(data);
     }
-
-    // if (response2.data.code === 200) {
-    //   setUnitData(data2);
-    // }
-
     if (response3.data.code === 200) {
-      setUnitTypeData(data3);
+      const dataUnit = response3.data.unitData;
+      setUnitData(dataUnit);
     }
   };
 
@@ -372,19 +319,12 @@ const AddReservation = (props) => {
   //   //   .map((filterUnit) => setCurrentUnit(filterUnit));
   // };
 
-  const fun3 = (value, event) => {
-    const unitname = event.children;
-    const [unit] = unitData
-      .filter((el) => el.unitName === unitname)
-      .map((el) => el.unittypeId);
-    unitTypeData.forEach((el) => {
-      if (el.id === unit) {
-        setPrice(el.perNight);
-        form.setFieldsValue({ perNight: el.perNight });
-        setAmt(night * el.perNight);
-        setAccomodation(night * el.perNight);
-      }
-    });
+  const fun3 = (event) => {
+    const [data] = unitData
+      .filter((el) => el.unitName !== event)
+      .map((el) => el.id);
+    setUnitId(data);
+    const unitname = event.children || event;
     setUnitName(unitname);
   };
   const fun5 = (value, event) => {
@@ -409,16 +349,19 @@ const AddReservation = (props) => {
   const handleDeposit = (value) => {
     setDepositType(value);
     if (value === '%') {
-      const mon = Math.round(accomodation + serviceTotalArr.reduce((a, b) => a + (b || 0), 0));
-      const data = (mon * depositAmount) / 100;
+      // const mon = Math.round(total * 100) / 100 + Math.round(accomodation * 100) / 100;
+      // const data = mon * (depositAmount / 100);
+      const data = (night * price * discountAmount) / 100;
+      setDiscount(data);
+      setAccomodation(night * price - data);
       setDeposit(data);
     } else {
-      setDeposit(depositAmount);
+      setDiscount(discountAmount);
+      setAccomodation(night * price - discountAmount);
     }
   };
 
   const onChangeDate = (value) => {
-    setReservationDate(value);
     if (value) {
       const d1 = new Date(value[0]._d);
       const d2 = new Date(value[1]._d);
@@ -426,6 +369,12 @@ const AddReservation = (props) => {
       const day = Math.floor(diff / (24 * 60 * 60 * 1000));
       setNight(day);
     }
+  };
+
+  const handleRemoveEditServicePanel = (ele) => {
+    setDeleteServiceId(ele.id);
+    const data = serviceArray.filter((el) => el.id !== ele.id);
+    setServiceArray([...data]);
   };
 
   const onOptionalDate = (value) => {
@@ -439,90 +388,143 @@ const AddReservation = (props) => {
     }
   };
 
+  // service handlers
+  const handleServiceName = (value, el) => {
+    serviceData
+      .filter((el) => el.serviceName === value)
+      .map((filterService) => setEditServicePanel(filterService));
+    serviceArray.forEach((ele) => {
+      if (ele.id === el.id) {
+        ele.serviceName = value;
+      }
+    });
+    setServiceArray(serviceArray);
+  };
+
+  const handleServicePrice = (value, el, i) => {
+    serviceArray.forEach((ele) => {
+      if (ele.id === el.id) {
+        ele.servicePrice = value;
+        ele.serviceAmount = value * ele.quantity
+         + (value * ele.quantity * ele.serviceTax) / 100;
+      }
+    });
+    setServiceArray(serviceArray);
+    form.setFieldsValue({
+      [`serviceAmount${i}`]:
+         value * el.quantity
+         + (value * el.quantity * el.serviceTax) / 100,
+    });
+    update();
+  };
+  const handleServiceQuantity = (e, el, i) => {
+    serviceArray.forEach((ele) => {
+      if (ele.id === el.id) {
+        ele.quantity = e.target.value;
+        ele.serviceAmount = ele.servicePrice * e.target.value
+        + (ele.servicePrice * e.target.value * ele.serviceTax) / 100;
+        form.setFieldsValue({
+          [`serviceAmount${i}`]:
+             ele.servicePrice * e.target.value
+             + (ele.servicePrice * e.target.value * ele.serviceTax) / 100,
+        });
+      }
+    });
+    setServiceArray(serviceArray);
+    update();
+  };
+  const handleServiceTax = (e, el, i) => {
+    serviceArray.forEach((ele) => {
+      if (ele.id === el.id) {
+        ele.serviceTax = e.target.value;
+        ele.serviceAmount = ele.servicePrice * ele.quantity
+        + (ele.servicePrice * ele.quantity * e.target.value) / 100;
+        form.setFieldsValue({
+          [`serviceAmount${i}`]:
+            ele.servicePrice * ele.quantity
+            + (ele.servicePrice * ele.quantity * e.target.value) / 100,
+        });
+      }
+    });
+    setServiceArray(serviceArray);
+    update();
+  };
+
   const createGuestDetails = (
     <>
-      {panel.map((el) => (
-        <div className="addi-box" id={el} key={el}>
-          <Row style={{ alignItems: 'center' }}>
-            <Col span={6}>
-              <Form.Item
-                label={t('strings.full')}
-                name={[el, 'fullName']}
-                style={{ paddingRight: 20 }}
-                rules={[
-                  {
-                    required: 'true',
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
+      {guestArray.length
+        ? guestArray.map((el, j) => (
+          <div className="addi-box" id={el} key={el}>
+            <Row style={{ alignItems: 'center' }}>
+              <Col span={6}>
+                <Form.Item
+                  label={t('strings.full')}
+                  name={`fullname${j}`}
+                  style={{ paddingRight: 20 }}
+                  rules={[
+                    {
+                      required: 'true',
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
 
-            <Col span={6}>
-              <Form.Item
-                label={t('strings.email')}
-                name={[el, 'email']}
-                style={{ paddingRight: 20 }}
-                rules={[
-                  {
-                    required: 'true',
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
+              <Col span={6}>
+                <Form.Item
+                  label={t('strings.email')}
+                  name={`email${j}`}
+                  style={{ paddingRight: 20 }}
+                  rules={[
+                    {
+                      required: 'true',
+                    },
+                  ]}
+                >
+                  <Input />
+                </Form.Item>
+              </Col>
 
-            <Col span={6}>
-              <Form.Item
-                label={t('strings.country')}
-                name={[el, 'country']}
-                style={{ paddingRight: 20 }}
-                rules={[
-                  {
-                    required: 'true',
-                  },
-                ]}
-              >
-                <Select showSearch>
-                  {countryList()
-                    .getData()
-                    .map((ele) => (
-                      <Select.Option value={ele.label} key={ele}>
-                        {ele.label}
-                      </Select.Option>
-                    ))}
-                </Select>
-              </Form.Item>
-            </Col>
+              <Col span={6}>
+                <Form.Item
+                  label={t('strings.country')}
+                  name={`country${j}`}
+                  style={{ paddingRight: 20 }}
+                  rules={[
+                    {
+                      required: 'true',
+                    },
+                  ]}
+                >
+                  <Select showSearch>
+                    {countryList()
+                      .getData()
+                      .map((ele) => (
+                        <Select.Option value={ele.label} key={ele}>
+                          {ele.label}
+                        </Select.Option>
+                      ))}
+                  </Select>
+                </Form.Item>
+              </Col>
 
-            <Col span={6}>
-              <Form.Item
-                label={t('strings.phone')}
-                name={[el, 'phone']}
-                style={{ paddingRight: 20 }}
-              >
-                <Input type="number" minLength="9" maxLength="15" />
-              </Form.Item>
-            </Col>
+              <Col span={6}>
+                <Form.Item
+                  label={t('strings.phone')}
+                  name={`phone${j}`}
+                  style={{ paddingRight: 20 }}
+                >
+                  <Input type="number" minLength="9" maxLength="15" />
+                </Form.Item>
+              </Col>
+            </Row>
 
-            <Col span={24}>
-              <div className="additional-edit">
-                <div>
-                  <EditOutlined />
-                  {' '}
-                  {t('addreservation.heading1')}
-                </div>
-              </div>
-            </Col>
-          </Row>
-
-          <div className="delete-data">
-            <DeleteOutlined onClick={removePanel} />
+            <div className="delete-data">
+              <DeleteOutlined onClick={removePanel} />
+            </div>
           </div>
-        </div>
-      ))}
+        )) : null}
     </>
   );
 
@@ -530,14 +532,11 @@ const AddReservation = (props) => {
     <Modal
       title={t('addreservation.heading15')}
       name="modal1"
-      visible={visible}
+      visible={editvisible}
       onOk={close}
       onCancel={close}
       wrapClassName="create-booking-modal"
     >
-      <Helmet>
-        <body className={visible ? 'ant-scrolling-effect' : ''} />
-      </Helmet>
       <Form form={form} name="basic" onFinish={onFinish}>
         <Row style={{ alignItems: 'center', padding: '0px 20px' }}>
           <Col span={12}>
@@ -554,7 +553,7 @@ const AddReservation = (props) => {
               ]}
             >
               <RangePicker
-                disabled={selectDisable}
+                disabled={false}
                 defaultValue={moment()}
                 format="YYYY-MM-DD"
                 disabledDate={(current) => current && current < moment().subtract(1, 'day')}
@@ -616,19 +615,7 @@ const AddReservation = (props) => {
                 },
               ]}
             >
-              <Select
-                disabled={selectDisable}
-                placeholder={t('strings.select')}
-                onSelect={(value, event) => onSelectProperty(value, event)}
-              >
-                {propertyData.map((el) => (
-                  <Select.Option value={el.id} key={el}>
-                    {el.unitTypeName
-                      .filter((e) => e.lang === 'en')
-                      .map((name) => name.name)}
-                  </Select.Option>
-                ))}
-              </Select>
+              <Input value={propertyName} disabled />
             </Form.Item>
           </Col>
 
@@ -645,9 +632,10 @@ const AddReservation = (props) => {
               // ]}
             >
               <Select
-                disabled={selectDisable}
+                disabled={false}
                 placeholder={t('strings.select')}
-                onSelect={(value, event) => fun3(value, event)}
+                onSelect={(value) => fun3(value)}
+                value={unitName}
               >
                 {unitData.map((el) => (
                   <Select.Option value={el.id} key={el.id}>{el.unitName}</Select.Option>
@@ -665,6 +653,7 @@ const AddReservation = (props) => {
               <Select
                 placeholder="Select"
                 onSelect={(value, event) => fun5(value, event)}
+                value={channel}
                 style={{ width: '70%', display: 'inline-block' }}
               >
                 <Select.Option value="Airbnb">Airbnb</Select.Option>
@@ -965,94 +954,99 @@ const AddReservation = (props) => {
                     key="1"
                   >
                     <div className="service-form">
-                      {servicePanel && servicePanel.map((ele, i) => (
-                        <div className="inline-form" key={ele}>
-                          <div className="delete-data">
-                            <DeleteOutlined
-                              onClick={() => removeServicePanel(ele)}
-                            />
-                          </div>
-                          <Col span={4}>
-                            <Form.Item name={`serviceName${i}`}>
-                              <Select
-                                style={{ width: '100px' }}
-                                placeholder={t('bookingpop.rule7')}
-                                onSelect={(value) => onSelectServices(value, i)}
-                              >
-                                {serviceData.map((element) => (
-                                  <Select.Option value={element.serviceName}>
-                                    {element.serviceName}
-                                  </Select.Option>
-                                ))}
-                              </Select>
-                            </Form.Item>
-                          </Col>
-                          <Col span={4}>
-                            <Form.Item name={`servicePrice${i}`}>
-                              <Select
-                                placeholder={t('bookingpop.rule9')}
-                                onSelect={(value) => handleServicePrice(value, i)}
-                              >
-                                <Select.Option
-                                  value={currentService.servicePrice}
+                      {serviceArray.length
+                        ? serviceArray.map((el, j) => (
+                          <div className="inline-form" key={el.id}>
+                            <div className="delete-data">
+                              <DeleteOutlined
+                                onClick={() => handleRemoveEditServicePanel(el)}
+                              />
+                            </div>
+                            <Col span={4}>
+                              <Form.Item name={`serviceName${j}`}>
+                                <Select
+                                  style={{ width: '100px' }}
+                                  placeholder="Select Service"
+                                  onSelect={(value) => handleServiceName(value, el, j)}
                                 >
-                                  {currentService.servicePrice}
-                                </Select.Option>
-                              </Select>
-                            </Form.Item>
-                          </Col>
+                                  {serviceData.map((ele) => (
+                                    <Select.Option value={ele.serviceName}>
+                                      {ele.serviceName}
+                                    </Select.Option>
+                                  ))}
+                                </Select>
+                              </Form.Item>
+                            </Col>
+                            <Col span={4}>
+                              <Form.Item name={`servicePrice${j}`}>
+                                <Select
+                                  placeholder="Rate"
+                                  onSelect={(value) => handleServicePrice(value, el, j)}
+                                >
+                                  <Select.Option
+                                    value={editServicePanel.servicePrice}
+                                  >
+                                    {editServicePanel.servicePrice}
+                                  </Select.Option>
+                                </Select>
+                              </Form.Item>
+                            </Col>
 
-                          <label htmlFor="x">
-                            <input hidden />
-                            X
-                          </label>
-                          <Col span={4}>
-                            <Form.Item name={`serviceQuantity${i}`}>
-                              <Input
-                                type="number"
-                                placeholder={t('bookingpop.rule8')}
-                                onChange={(e) => handleServiceQuantity(e, ele, i)}
-                              />
-                            </Form.Item>
-                          </Col>
+                            <label htmlFor="dis">
+                              <input hidden />
+                              X
+                            </label>
+                            <Col span={4}>
+                              <Form.Item name={`serviceQuantity${j}`}>
+                                <Input
+                                  type="number"
+                                  placeholder="Quantity"
+                                  onChange={(e) => handleServiceQuantity(e, el, j)}
+                                />
+                              </Form.Item>
+                            </Col>
 
-                          <label htmlFor="plus">
-                            <input hidden />
-                            +
-                          </label>
-                          <Col span={4}>
-                            <Form.Item name={`serviceTax${i}`}>
-                              <Input
-                                type="number"
-                                placeholder="Tax"
-                                // onBlur={calculateTotal}
-                               // value={serviceTax}
-                                onChange={(e) => handleServiceTax(e, ele, i)}
-                              />
-                            </Form.Item>
-                          </Col>
+                            <label htmlFor="dis">
+                              <input hidden />
+                              +
+                            </label>
+                            <Col span={4}>
+                              <Form.Item name={`serviceTax${j}`}>
+                                <Input
+                                  type="number"
+                                  placeholder="Tax"
+                                    // onBlur={calculateTotal}
+                                  value={el.serviceTax}
+                                  onChange={(e) => handleServiceTax(e, el, j)}
+                                />
+                              </Form.Item>
+                            </Col>
 
-                          <label htmlFor="equal">
-                            <input hidden />
-                            =
-                          </label>
+                            <label htmlFor="dis">
+                              <input hidden />
+                              =
+                            </label>
 
-                          <Col span={4}>
-                            {/* <label htmlFor="eur">{serviceAmount}</label> */}
-                            <Form.Item name={`serviceTotal${i}`}>
-                              <Input
-                                value={ele.serviceTotal}
-                                // onBlur={calculateTotal}
-                              />
-                            </Form.Item>
-                          </Col>
-
-                          <label htmlFor="eur">
-                            <input hidden />
-                            EUR
-                          </label>
-                        </div>
-                      ))}
+                            <Col span={4}>
+                              <Form.Item name={`serviceAmount${j}`}>
+                                <Input
+                                  readOnly
+                                  type="number"
+                                  placeholder="Total"
+                                    // onBlur={calculateTotal}
+                                  value={el.serviceAmount}
+                                />
+                              </Form.Item>
+                              {/* <label htmlFor="eur">
+                                {serviceAmount}
+                              </label> */}
+                            </Col>
+                            <label htmlFor="eur">
+                              <input hidden />
+                              EUR
+                            </label>
+                          </div>
+                        )) : null}
                     </div>
                   </Panel>
                 </Collapse>
@@ -1062,9 +1056,13 @@ const AddReservation = (props) => {
             <Col span={24}>
               <div className="amnt-total">
                 <h4>
-                  {t('addreservation.heading26')}
+                  {accomodation
+                    + serviceArray
+                      .map((service) => service.serviceAmount)
+                      .reduce((a, b) => a + (b || 0), 0)}
+                  {/* {t('addreservation.heading26')}
                   :
-                  {accomodation + serviceTotalArr.reduce((a, b) => a + (b || 0), 0) }
+                  {accomodation + serviceAmount} */}
                   {/* {Math.round(total * 100) / 100
                     + Math.round(accomodation * 100) / 100} */}
                   {' '}
@@ -1126,11 +1124,13 @@ const AddReservation = (props) => {
                   :
                   {' '}
                   <span>
-                    {Math.round(accomodation
-                     + serviceTotalArr.reduce((a, b) => a + (b || 0), 0) - deposit)}
-                    {/* {Math.round(total * 100) / 100
-                      + Math.round(accomodation * 100) / 100
-                      - deposit} */}
+                    {Math.round(
+                      accomodation
+                        + serviceArray
+                          .map((service) => service.serviceAmount)
+                          .reduce((a, b) => a + (b || 0), 0)
+                        - deposit,
+                    )}
                     €
                   </span>
                 </label>
@@ -1170,22 +1170,34 @@ const AddReservation = (props) => {
   );
 };
 
-AddReservation.propTypes = {
-  getData: PropTypes.func,
-  visible: PropTypes.bool,
+EditReservation.propTypes = {
+  editvisible: PropTypes.bool,
+  setEditVisible: PropTypes.func,
   setVisible: PropTypes.func,
-  calendarBookingDate: PropTypes.oneOfType([
+  reservationData: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.number,
+  ]),
+  guestArray: PropTypes.oneOfType([
     PropTypes.object,
     PropTypes.array,
   ]),
-  setCalendarBookingDate: PropTypes.func,
+  setGuestArray: PropTypes.func,
+  serviceArray: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+  ]),
+  setServiceArray: PropTypes.func,
 };
-AddReservation.defaultProps = {
-  getData: () => {},
-  visible: false,
+EditReservation.defaultProps = {
+  editvisible: false,
+  setEditVisible: () => {},
   setVisible: () => {},
-  calendarBookingDate: {},
-  setCalendarBookingDate: () => {},
+  reservationData: {},
+  guestArray: {},
+  setGuestArray: () => {},
+  serviceArray: {},
+  setServiceArray: () => {},
 };
 
-export default AddReservation;
+export default EditReservation;

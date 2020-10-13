@@ -618,3 +618,6 @@
 .upload{
   background-color: white!important;
 }
+.additional-add-item {
+  cursor: pointer;
+}
