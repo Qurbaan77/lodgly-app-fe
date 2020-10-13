@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import Helmet from 'react-helmet';
 import './calendar.css';
+import { toast } from 'react-toastify';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +25,7 @@ import GSTCWrapper from './GSTC';
 import {
   userInstance,
   reservationInstance,
+  bookingInstance,
   propertyInstance,
 } from '../../axios/axiosconfig';
 import CreateBookingPopup from '../booking/createbookingpopup';
@@ -57,11 +59,13 @@ const Calendar = () => {
   const rows = {};
   const items = {};
   const rates = {};
+  const normalRates = {};
   unitTypes.forEach((unitType) => {
     const context = 'type';
     const unitTypeId = formatToId([context, unitType.id]);
 
     rates[unitTypeId] = unitType.rates.data;
+    normalRates[unitTypeId] = unitType.normalRates.data;
 
     rows[unitTypeId] = {
       id: unitTypeId,
@@ -136,6 +140,44 @@ const Calendar = () => {
     },
   };
 
+  const updateBooking = async (values) => {
+    // console.log('144', values);
+    if (values) {
+      const payload = {
+        id: values.items.after[0].id.split(',')[1],
+        time: values.items.after[0].time,
+        bookedUnit: values.items.after[0].rowId.split(',')[1],
+      };
+      const response = await bookingInstance.post('/changeBookingTimeUnit', payload);
+      if (response.data.code === 200) {
+        window.location.reload();
+        getData();
+        toast.success('booking changed successfully', { containerId: 'B' });
+      } else {
+        toast.error('some error occurred!', { containerId: 'B' });
+      }
+    }
+  };
+
+  // const changeUnit = async (values) => {
+  //   console.log('162', values);
+  //   if (values) {
+  //     const payload = {
+  //       id: values.items.after[0].id.split(',')[1],
+  //       time: values.items.after[0].time,
+  //       bookedUnit: values.items.after[0].rowId.split(',')[1],
+  //     };
+  //     const response = await bookingInstance.post('/changeUnit', payload);
+  //     if (response.data.code === 200) {
+  //       window.location.reload();
+  //       getData();
+  //       toast.success('booking changed successfully', { containerId: 'B' });
+  //     } else {
+  //       toast.error('some error occurred!', { containerId: 'B' });
+  //     }
+  //   }
+  // };
+
   const config = {
     licenseKey:
         '====BEGIN LICENSE KEY====\noddF5NdcBlSfkABvo+pwAz232z2xS7joDn3BeGFpJ3XfrMRM45zs/s520icFTHUdv3nNBI5u6zPiurB4hDDXxAnRSvkCJIeSYq9Ta/+mzLuC0/jqmxPEs4bWavgrS6oYya854uwx9OY11Reevs2EGcNZr+wMezDTYtMCgg4S3YysSzzXcCWhP7hS6tMEQk7/e5tyNV+4ja+Gj83fGp/3p0svtGEvvGCN3RPR423jzhCUY9vChapm747ZqrSKq4CMcMO1W7JRimrLelafp6u0IAulqtvs5Tc8CriBVD7p5onyfsNnfUrlo2kJ7TUGqXmG7OhX1GU6TVAVpSdVj79L7Q==||U2FsdGVkX18e5jL65t6rCn7qJVQcyScpf+pTL+NW9wufZD5VNylnAj2uFj80jSK8eoj5dcshslkzshDkemWkwovgjx7VTLUIWb0nBolCm/PKd9/nqQ4alhyDt5G/MFrSzJNJUY25kIZlraYY3oKlSHkQLS8kv/EaTE5n8E67yw+W9fPSlffrBKh+t4fYmfQ+\ngDJ616Dy5YW3MZWfRD7wnMtjhB9gJJA+omJ7GTf9q6/NIlgGxPAjDH0f9+1Zm0jjcSfrMS7q8Ekq1AmYxrbX6J89o466APwxA6lv+oZdR0IOf/tunEhvyFwf2E1NC9ZNKnuC13xszHACnFKVTqE6K9MagYqqIiMJugAWpSptZQLZohSQZarm019iLqLCy9GvgCwj0Q552fA1iExlzD6wu6Up/PPJcUJwHrGrH96j5mBAzhEIj2Maos32LxD2secJAbVfZuJEQ+wl1OE4zopO5ut+fV7s5Uwsob5V+nFwG2gMC3gGu71J+UZIs2WTQ9Gs4wl77eNYsD5rH5wkUOIwMw==\n====END LICENSE KEY====',
@@ -149,16 +191,23 @@ const Calendar = () => {
           setCalendarBookingDate(selected);
           return selected;
         },
-        // events: {
-        //   onEnd: (selected, last) => {
-        //     console.log('onSelect', { selected, last });
-        //     setCalendarBookingDate(selected);
-        //     return last;
-        //   },
-        // },
       }),
-      ItemResizing(),
-      ItemMovement(),
+      ItemResizing({
+        events: {
+          onEnd: (params) => {
+            updateBooking(params);
+            return params.items.before;
+          },
+        },
+      }),
+      ItemMovement({
+        events: {
+          onEnd: (params) => {
+            updateBooking(params);
+            return params.items.before;
+          },
+        },
+      }),
       CalendarScroll(),
       TimeBookmarks({
         bookmarks,
@@ -228,11 +277,25 @@ const Calendar = () => {
 
                 let cellValue = '-';
 
+                if (normalRates[row.parentId]) {
+                  const unitTypeRates = normalRates[row.parentId];
+                  if (unitTypeRates.length > 0) {
+                    switch (row.meta.id) {
+                      default: break;
+                      case 1:
+                        cellValue = unitTypeRates[0].pricePerNight;
+                        break;
+                      case 2:
+                        cellValue = unitTypeRates[0].minStay;
+                        break;
+                    }
+                  }
+                }
+
                 if (rates[row.parentId]) {
                   const unitTypeRates = rates[row.parentId].find(
                     ({ date }) => date >= time.leftGlobal && date <= time.rightGlobal,
                   );
-
                   if (unitTypeRates) {
                     switch (row.meta.id) {
                       default: break;

@@ -406,18 +406,6 @@ const CreateBookingPopup = (props) => {
     //   .map((filterUnit) => setCurrentUnit(filterUnit));
   };
 
-  // const enumerateDaysBetweenDates = (startDate, endDate) => {
-  //   const dates = [];
-  //   const currDate = moment(startDate).startOf('day');
-  //   const lastDate = moment(endDate).startOf('day');
-
-  //   do {
-  //     dates.push(currDate.clone().toDate());
-  //   } while (currDate.add(1, 'days').diff(lastDate) < 1);
-
-  //   return dates;
-  // };
-
   const onSelectAdult = (value) => {
     setNoOfAdult(value);
 
@@ -817,6 +805,26 @@ const CreateBookingPopup = (props) => {
     setServiceTotalArr(item);
   };
 
+  const checkBooking = async (rule, value) => {
+    const payload = {
+      bookedUnit: value,
+    };
+    const response = await bookingInstance.post('/getAllBooking', payload);
+    if (response.data.code === 200) {
+      const data = response.data.allBookingData;
+      if (data.length > 0) {
+        const d1 = new Date(selectDate[0]._d);
+        const d2 = new Date(selectDate[1]._d);
+        const filterBooking = data.filter((el) => d1 >= new Date(el.startDate)
+        && d2 <= new Date(el.endDate));
+        if (filterBooking.length > 0) {
+          return Promise.reject(new Error('The Unit is already booked on the dates you selected'));
+        }
+      }
+    }
+    return true;
+  };
+
   const createGuestDetails = (
     <>
       {panel.map((el) => (
@@ -1175,6 +1183,9 @@ const CreateBookingPopup = (props) => {
                 {
                   required: true,
                   message: t('bookingpop.rule3'),
+                },
+                {
+                  validator: checkBooking,
                 },
               ]}
             >

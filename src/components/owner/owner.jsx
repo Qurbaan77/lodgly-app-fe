@@ -276,7 +276,8 @@ const Owner = () => {
                               <span>
                                 {el.citizenship !== null
                                   ? `${el.citizenship},`
-                                  : ''}{' '}
+                                  : ''}
+                                {' '}
                                 {el.country !== null ? `${el.country},` : ''}
                               </span>
                             </div>
@@ -528,8 +529,8 @@ const Owner = () => {
                   >
                     {propertyData.map((el) => (
                       <Option value={el.id}>
-                        {el.unitTypeName &&
-                          el.unitTypeName
+                        {el.unitTypeName
+                          && el.unitTypeName
                             .filter((e) => e.lang === 'en')
                             .map((name) => <p key={name}>{name.name}</p>)}
                       </Option>
@@ -794,8 +795,8 @@ const Owner = () => {
                   >
                     {propertyData.map((el) => (
                       <Option value={el.id}>
-                        {el.unitTypeName &&
-                          el.unitTypeName
+                        {el.unitTypeName
+                          && el.unitTypeName
                             .filter((e) => e.lang === 'en')
                             .map((name) => <p key={name}>{name.name}</p>)}
                       </Option>
