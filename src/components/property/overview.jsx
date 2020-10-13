@@ -156,18 +156,20 @@ const Overview = () => {
   }, []);
 
   const { TextArea } = Input;
-  const handleRentalTypeSelect = async (value) => {
+  const handleOverview = async () => {
     if (propertyName && propertyDescription) {
       const propertyId = localStorage.getItem('unitTypeV2Id');
       const engPropertyName = await translate(propertyName, 'en');
       const payload = {
         propertyName: engPropertyName.trim(),
         propertyDescription: propertyDescription.trim(),
-        propertyType: value,
         propertyId,
         languageSelected,
       };
-      await propertyInstance.post('/updateUnitTypeoverview', payload);
+      const res = await propertyInstance.post('/updateUnitTypeoverview', payload);
+      if (res.data.code === 200) {
+        toast.success('Data updates successfully', { containerId: 'B', toastId: 'AV' });
+      }
     } else {
       if (!propertyName) {
         toast.error('Property name can not be empty', {
@@ -179,6 +181,17 @@ const Overview = () => {
         containerId: 'B',
         toastId: 'B',
       });
+    }
+  };
+  const handleRentalTypeSelect = async (value) => {
+    const propertyId = localStorage.getItem('unitTypeV2Id');
+    const payload = {
+      propertyType: value,
+      propertyId,
+    };
+    const res = await propertyInstance.post('/changeRentalType', payload);
+    if (res.data.code === 200) {
+      toast.success('Data updated successfully');
     }
   };
 
@@ -494,6 +507,11 @@ const Overview = () => {
                           rows={4}
                           onChange={(e) => setPropertyDescription(e.target.value)}
                         />
+                      </Form.Item>
+                    </Col>
+                    <Col span={24}>
+                      <Form.Item name="description">
+                        <Button onClick={handleOverview}>save</Button>
                       </Form.Item>
                     </Col>
                   </Row>

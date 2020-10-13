@@ -280,7 +280,7 @@ const TeamListing = () => {
                             ? 'Full Access'
                             : el.role === 'read'
                               ? 'Read'
-                              : 'Write'}
+                              : el.role === 'write' ? 'Write' : 'Custom'}
                         </td>
                         <td className="status">
                           {el.status === 0 ? (
