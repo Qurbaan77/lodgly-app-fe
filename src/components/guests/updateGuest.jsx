@@ -149,6 +149,7 @@ const UpdateGuestPopup = (props) => {
               name="dob"
               label={t('strings.dob')}
               style={{ paddingRight: 20 }}
+              initialValue={moment().subtract(18, 'years')}
             >
               <DatePicker
                 disabledDate={disabledDate}

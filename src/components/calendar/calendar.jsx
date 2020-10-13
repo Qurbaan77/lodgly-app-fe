@@ -1,21 +1,21 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable guard-for-in */
-/* eslint-disable no-alert */
-import React, { useEffect, useState, useCallback } from 'react';
+import React, {
+  useEffect, useState, useCallback,
+} from 'react';
 import Helmet from 'react-helmet';
 import './calendar.css';
+import { toast } from 'react-toastify';
 import { PlusOutlined, TeamOutlined } from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
 import { useTranslation } from 'react-i18next';
 
-import GSTC from 'gantt-schedule-timeline-calendar';
-// import { Plugin as ItemMovement } from 'gantt-schedule-timeline-calendar/dist/plugins/item-movement.esm.min';
-// import { Plugin as ItemResizing } from 'gantt-schedule-timeline-calendar/dist/plugins/item-resizing.esm.min';
-// import { Plugin as TimelinePointer } from 'gantt-schedule-timeline-calendar/dist/plugins/timeline-pointer.esm.min';
-// import { Plugin as CalendarScroll } from 'gantt-schedule-timeline-calendar/dist/plugins/calendar-scroll.esm.min';
-// import { Plugin as HighlightWeekends } from 'gantt-schedule-timeline-calendar/dist/plugins/highlight-weekends.esm.min';
-// import { Plugin as TimeBookmarks } from 'gantt-schedule-timeline-calendar/dist/plugins/time-bookmarks.esm.min';
-
+import GSTC from 'gantt-schedule-timeline-calendar/dist/gstc.esm.min';
+import { Plugin as ItemMovement } from 'gantt-schedule-timeline-calendar/dist/plugins/item-movement.esm.min';
+import { Plugin as ItemResizing } from 'gantt-schedule-timeline-calendar/dist/plugins/item-resizing.esm.min';
+import { Plugin as TimelinePointer } from 'gantt-schedule-timeline-calendar/dist/plugins/timeline-pointer.esm.min';
+import { Plugin as CalendarScroll } from 'gantt-schedule-timeline-calendar/dist/plugins/calendar-scroll.esm.min';
+import { Plugin as HighlightWeekends } from 'gantt-schedule-timeline-calendar/dist/plugins/highlight-weekends.esm.min';
+import { Plugin as TimeBookmarks } from 'gantt-schedule-timeline-calendar/dist/plugins/time-bookmarks.esm.min';
+import { Plugin as Selection } from 'gantt-schedule-timeline-calendar/dist/plugins/selection.esm.min';
 import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
 import CreateProperty from '../property/createProperty';
@@ -25,10 +25,13 @@ import GSTCWrapper from './GSTC';
 import {
   userInstance,
   reservationInstance,
+  bookingInstance,
   propertyInstance,
 } from '../../axios/axiosconfig';
-import AddReservation from './addreservation';
+import CreateBookingPopup from '../booking/createbookingpopup';
+// import AddReservation from './addreservation';
 import GroupReservation from './groupreservation';
+import Reservation from './reservation';
 import favicon from '../../assets/images/logo-mobile.png';
 
 const Calendar = () => {
@@ -49,22 +52,24 @@ const Calendar = () => {
   const [{ calendarWrite, userId }] = userCred || [{}];
   const canWrite = calendarWrite;
   const [unitTypes, setUnitTypes] = useState([]);
-
-  // const { GSTCID } = GSTC.api;
-
-  const formatToId = (ids) => GSTC.api.GSTCID(ids.join('-'));
+  const [calendarBookingDate, setCalendarBookingDate] = useState([]);
+  const [GSTCobj, setGSTCobj] = useState({});
+  const [currentDate, setCurrenData] = useState(GSTC.api.date().format('MMMM YYYY'));
+  const formatToId = (ids) => GSTC.api.GSTCID(ids.toString());
   const rows = {};
   const items = {};
   const rates = {};
+  const normalRates = {};
   unitTypes.forEach((unitType) => {
     const context = 'type';
     const unitTypeId = formatToId([context, unitType.id]);
 
     rates[unitTypeId] = unitType.rates.data;
+    normalRates[unitTypeId] = unitType.normalRates.data;
 
     rows[unitTypeId] = {
       id: unitTypeId,
-      label: unitType.name.filter((e) => e.lang === 'en').map((name) => name.name),
+      label: ({ vido: { html } }) => unitType.name.filter((e) => e.lang === 'en').map((name) => html`<strong>${name.name}</strong>`),
       meta: {
         id: unitType.id,
         context,
@@ -127,27 +132,87 @@ const Calendar = () => {
     });
   });
 
-  // const bookmarks = {
-  //   now: {
-  //     time: GSTC.api.date().valueOf(),
-  //     color: '#3498DB',
-  //     label: 'Now',
-  //   },
+  const bookmarks = {
+    now: {
+      time: GSTC.api.date().valueOf(),
+      color: '#3498DB',
+      label: 'Now',
+    },
+  };
+
+  const updateBooking = async (values) => {
+    // console.log('144', values);
+    if (values) {
+      const payload = {
+        id: values.items.after[0].id.split(',')[1],
+        time: values.items.after[0].time,
+        bookedUnit: values.items.after[0].rowId.split(',')[1],
+      };
+      const response = await bookingInstance.post('/changeBookingTimeUnit', payload);
+      if (response.data.code === 200) {
+        window.location.reload();
+        getData();
+        toast.success('booking changed successfully', { containerId: 'B' });
+      } else {
+        toast.error('some error occurred!', { containerId: 'B' });
+      }
+    }
+  };
+
+  // const changeUnit = async (values) => {
+  //   console.log('162', values);
+  //   if (values) {
+  //     const payload = {
+  //       id: values.items.after[0].id.split(',')[1],
+  //       time: values.items.after[0].time,
+  //       bookedUnit: values.items.after[0].rowId.split(',')[1],
+  //     };
+  //     const response = await bookingInstance.post('/changeUnit', payload);
+  //     if (response.data.code === 200) {
+  //       window.location.reload();
+  //       getData();
+  //       toast.success('booking changed successfully', { containerId: 'B' });
+  //     } else {
+  //       toast.error('some error occurred!', { containerId: 'B' });
+  //     }
+  //   }
   // };
+
   const config = {
     licenseKey:
-      '====BEGIN LICENSE KEY====\nPSrbPlWbN+L6Q8B4bFCeEDK7VBbGc3TYF3jktFHPhMkV88gAPVJskFHl7pb74RLyOWGaVU+OPmYSObp6YGRMdp2vd5h/xw1DCliYFwvQfjGxAToTFIKZLP2DhtHb1l7M8NBrH5ddx5ObRt+BC6NG7kkkyeHgcYpl8pXDcN/7g4Bkx/ftb9U+FJmQtMabRm/hrwR/816M17Q+7z/1txlUHU1k44+bEdFRrthxUWU1qHfS1SV5mpGln45VTEXUWgFSa5rEd1OOmQlpN+iFRa9ccUx/QhigyPIDnLa67QrqwHg9QK7S0wpVmRCDTwOFUEDlxv5hQ8/B3jc99qti+AaYlw==||U2FsdGVkX1/xP3UKRdywvlLBAtCno8MP87jBvymNPreULM/q7jTnfPPRJOd8WH6MpHdxqtek3Tel3140YqKx9XemBzb3UJg/Gy5JQBQlla3KCq4lQl6Oup4HMFKTFy+n7Vzqex0DDeFEhQ+JDvNe7T4Ujc9YE8d0HdBlVMRKNvRRm3z8SVMzs0C5tXJ4C2dn\nAvm4yWPjVHzPAJgPDQwN3k07gYJ1CL0yj9zkB4+urvvyfBDat3+CM/ZrLrO4ec+ywXqD3fYTSp1RrAoyyXT0x7DXT7hRbN4OyV5u7u8CeTsFP53qXAdm5ficGxDu9ewLEPse/Qzj8LZ3aN8OwtweUpDRw/LbOeWajgeXHaWPpZ0lsEwoHmfTuyyYE7wMKgL23wDjRBVn6tcnkG5+J6KOpJtiXBbPW+o8L0wHVrCgF7qBOwC2LV/KKv+SZysKU0zfWr9fOAuNgTqxR4WRXGIXiBu30zo8qzWwKKE6QTUVV+15duG+H8d8wtkuZ4X8idGWlewE2y9afufPCxxKnQTguQ==\n====END LICENSE KEY====',
-    // plugins: [
-    //   HighlightWeekends(),
-    //   TimelinePointer(),
-    //   // Selection(),
-    //   ItemMovement(),
-    //   ItemResizing(),
-    //   CalendarScroll(),
-    //   TimeBookmarks({
-    //     bookmarks,
-    //   }),
-    // ],
+        '====BEGIN LICENSE KEY====\noddF5NdcBlSfkABvo+pwAz232z2xS7joDn3BeGFpJ3XfrMRM45zs/s520icFTHUdv3nNBI5u6zPiurB4hDDXxAnRSvkCJIeSYq9Ta/+mzLuC0/jqmxPEs4bWavgrS6oYya854uwx9OY11Reevs2EGcNZr+wMezDTYtMCgg4S3YysSzzXcCWhP7hS6tMEQk7/e5tyNV+4ja+Gj83fGp/3p0svtGEvvGCN3RPR423jzhCUY9vChapm747ZqrSKq4CMcMO1W7JRimrLelafp6u0IAulqtvs5Tc8CriBVD7p5onyfsNnfUrlo2kJ7TUGqXmG7OhX1GU6TVAVpSdVj79L7Q==||U2FsdGVkX18e5jL65t6rCn7qJVQcyScpf+pTL+NW9wufZD5VNylnAj2uFj80jSK8eoj5dcshslkzshDkemWkwovgjx7VTLUIWb0nBolCm/PKd9/nqQ4alhyDt5G/MFrSzJNJUY25kIZlraYY3oKlSHkQLS8kv/EaTE5n8E67yw+W9fPSlffrBKh+t4fYmfQ+\ngDJ616Dy5YW3MZWfRD7wnMtjhB9gJJA+omJ7GTf9q6/NIlgGxPAjDH0f9+1Zm0jjcSfrMS7q8Ekq1AmYxrbX6J89o466APwxA6lv+oZdR0IOf/tunEhvyFwf2E1NC9ZNKnuC13xszHACnFKVTqE6K9MagYqqIiMJugAWpSptZQLZohSQZarm019iLqLCy9GvgCwj0Q552fA1iExlzD6wu6Up/PPJcUJwHrGrH96j5mBAzhEIj2Maos32LxD2secJAbVfZuJEQ+wl1OE4zopO5ut+fV7s5Uwsob5V+nFwG2gMC3gGu71J+UZIs2WTQ9Gs4wl77eNYsD5rH5wkUOIwMw==\n====END LICENSE KEY====',
+    plugins: [
+      HighlightWeekends(),
+      TimelinePointer(),
+      Selection({
+        items: true,
+        showOverlay: false,
+        onSelected: (selected) => {
+          setCalendarBookingDate(selected);
+          return selected;
+        },
+      }),
+      ItemResizing({
+        events: {
+          onEnd: (params) => {
+            updateBooking(params);
+            return params.items.before;
+          },
+        },
+      }),
+      ItemMovement({
+        events: {
+          onEnd: (params) => {
+            updateBooking(params);
+            return params.items.before;
+          },
+        },
+      }),
+      CalendarScroll(),
+      TimeBookmarks({
+        bookmarks,
+      }),
+    ],
     list: {
       toggle: {
         display: false,
@@ -170,7 +235,9 @@ const Calendar = () => {
             width: 160,
             minWidth: 120,
             header: {
-              content: 'Select unit types',
+              content: ({ vido: { html } }) => html`<div class="gstc__list-column-header--search">
+                  Select unit types
+                </div>`,
             },
           },
         },
@@ -210,11 +277,25 @@ const Calendar = () => {
 
                 let cellValue = '-';
 
+                if (normalRates[row.parentId]) {
+                  const unitTypeRates = normalRates[row.parentId];
+                  if (unitTypeRates.length > 0) {
+                    switch (row.meta.id) {
+                      default: break;
+                      case 1:
+                        cellValue = unitTypeRates[0].pricePerNight;
+                        break;
+                      case 2:
+                        cellValue = unitTypeRates[0].minStay;
+                        break;
+                    }
+                  }
+                }
+
                 if (rates[row.parentId]) {
                   const unitTypeRates = rates[row.parentId].find(
                     ({ date }) => date >= time.leftGlobal && date <= time.rightGlobal,
                   );
-
                   if (unitTypeRates) {
                     switch (row.meta.id) {
                       default: break;
@@ -237,21 +318,22 @@ const Calendar = () => {
               } if (row && row.meta && row.meta.context === 'type') {
                 // show how many events are in Unit Types
                 let count = 0;
-                for (const itemId in items) {
-                  const item = items[itemId];
-
-                  if (row.$data.children.includes(item.rowId)) {
-                    if (
-                      (item.time.start >= time.leftGlobal
-                        && item.time.start <= time.rightGlobal)
-                      || (item.time.end >= time.leftGlobal
-                        && item.time.end <= time.rightGlobal)
-                      || (item.time.start <= time.leftGlobal
-                        && item.time.end >= time.rightGlobal)
-                    ) {
-                      count = +1;
+                if (items.length > 0) {
+                  items.forEach((itemId) => {
+                    const item = items[itemId];
+                    if (row.$data.children.includes(item.rowId)) {
+                      if (
+                        (item.time.start >= time.leftGlobal
+                          && item.time.start <= time.rightGlobal)
+                        || (item.time.end >= time.leftGlobal
+                          && item.time.end <= time.rightGlobal)
+                        || (item.time.start <= time.leftGlobal
+                          && item.time.end >= time.rightGlobal)
+                      ) {
+                        count = +1;
+                      }
                     }
-                  }
+                  });
                 }
 
                 return html` <div
@@ -276,6 +358,52 @@ const Calendar = () => {
     subs.forEach((unsub) => unsub());
   });
 
+  function onLoad(gstc) {
+    setGSTCobj(gstc);
+    if (JSON.stringify(rows) !== '{}') {
+      subs.push(
+        gstc.state.subscribe('config.chart.items', (items) => {
+          console.log('items changed', items);
+        }),
+      );
+      subs.push(
+        gstc.state.subscribe('config.list.rows', (rows) => {
+          console.log('rows changed', rows);
+        }),
+      );
+    }
+  }
+
+  const previousMonth = () => {
+    if (!GSTCobj.state) return;
+    let date;
+    GSTCobj.state.update('config.chart.time', (time) => {
+      date = GSTC.api.date(time.from).subtract(1, 'month').startOf('day');
+      setCurrenData(date.format('MMMM YYYY'));
+      return {
+        ...time,
+        from: date.valueOf(),
+        to: date.add(12, 'month').endOf('day').valueOf(),
+      };
+    });
+    GSTCobj.api.scrollToTime(date.valueOf());
+  };
+
+  const nextMonth = () => {
+    if (!GSTCobj.state) return;
+    let date;
+    GSTCobj.state.update('config.chart.time', (time) => {
+      date = GSTC.api.date(time.from).add(1, 'month').endOf('day');
+      setCurrenData(date.format('MMMM YYYY'));
+      return {
+        ...time,
+        from: date.valueOf(),
+        to: date.add(12, 'month').endOf('day').valueOf(),
+      };
+    });
+    GSTCobj.api.scrollToTime(date.valueOf());
+  };
+
   const getProperty = useCallback(async () => {
     const response = await userInstance.post('/fetchProperty', {
       affiliateId: userId,
@@ -294,7 +422,9 @@ const Calendar = () => {
   }, [userId, topNavId]);
 
   const getData = useCallback(async () => {
-    const res = await userInstance.get('/getUserSubscriptionStatus');
+    const res = await userInstance.post('/getUserSubscriptionStatus', {
+      affiliateId: userId,
+    });
     if (res.data.code === 200) {
       const [{ days, isOnTrial, isSubscribed }] = res.data.userSubsDetails;
       setDaysLeft(parseInt(days, 10));
@@ -302,7 +432,7 @@ const Calendar = () => {
       setOnTrial(JSON.parse(isOnTrial));
       setLoading(false);
     }
-  }, []);
+  }, [userId]);
 
   const getCalendarData = useCallback(async () => {
     const response = await reservationInstance.post(
@@ -311,6 +441,7 @@ const Calendar = () => {
         affiliateId: userId,
       },
     );
+    console.log('response', response);
     if (response.data.code === 200) {
       if (response.data.data && response.data.data.length > 0) {
         setLoading(false);
@@ -321,8 +452,8 @@ const Calendar = () => {
 
   useEffect(() => {
     getData();
-    getProperty();
     getCalendarData();
+    getProperty();
   }, [getData, getProperty, getCalendarData]);
 
   const show = () => {
@@ -346,26 +477,6 @@ const Calendar = () => {
   const closeCreateProperty = () => {
     setVisibleProperty(false);
   };
-
-  function onState(state) {
-    state.subscribe('config.list.rows', (rows) => {
-      console.log('[DEBUG] rows changed', rows);
-    });
-
-    state.subscribe(
-      'config.chart.items.:id',
-      (bulk, eventInfo) => {
-        if (eventInfo.type === 'update' && eventInfo.params.id) {
-          const itemId = eventInfo.params.id;
-          console.log(
-            `[DEBUG] item ${itemId} changed`,
-            state.get(`config.chart.items.${itemId}`),
-          );
-        }
-      },
-      { bulk: true },
-    );
-  }
 
   const btn = isSubUser && canWrite ? (
     <>
@@ -428,25 +539,8 @@ const Calendar = () => {
     };
     const response = await propertyInstance.post('/getUnittype', values);
     console.log(response.data.unittypeData);
-    // const { unittypeData } = response.data;
     if (response.data.code === 200) {
-      // response.data.unittypeData.forEach((element) => {
-      //   setData(JSON.parse(element.unitsData) || []);
-      // });
       setData(response.data.unittypeData);
-      // unittypeData.forEach((el) => {
-      //   let sum = 0;
-      //   const arr = [];
-      //   units.forEach((ele) => {
-      //     if (el.id === ele.unittypeId) {
-      //       sum += 1;
-      //       arr.push(ele.id);
-      //     }
-      //   });
-      //   el.noOfUnits = sum;
-      //   el.units = arr;
-      // });
-      // setData(JSON.parse(unittypeData[0].unitsData));
     }
   }, [topNavId, userId]);
 
@@ -550,19 +644,51 @@ const Calendar = () => {
               {topNavId ? enableButton : disabledButton}
             </>
           )}
+          <div className="year-select">
+            <Button className="year-btn" onClick={previousMonth}>❮</Button>
+            <span>
+              {currentDate}
+            </span>
+            <Button className="year-btn" onClick={nextMonth}>❯</Button>
+          </div>
         </div>
 
         <div className="calendar-calendar">
-          <GSTCWrapper config={config} onState={onState} />
+          {JSON.stringify(rows) !== '{}' ? (
+            <GSTCWrapper config={config} onLoad={onLoad} />
+          )
+            : (
+              <></>
+            )}
+          {/* <GSTCWrapper config={config} onLoad={onLoad} /> */}
         </div>
 
-        <AddReservation
+        {/* <div className="calendar-calendar">
+            <GSTCWrapperV2 />
+        </div> */}
+
+        {/* <AddReservation
           title={t('addreservation.heading34')}
           visible={visible}
+          setVisible={setVisible}
           onOk={handleOk}
           close={handleCancel}
           wrapClassName="create-booking-modal"
           getData={getData}
+          calendarBookingDate={calendarBookingDate}
+          setCalendarBookingDate={setCalendarBookingDate}
+        /> */}
+
+        <CreateBookingPopup
+          visible={visible}
+          setVisible={setVisible}
+          handleCancel={handleCancel}
+          handleOk={handleOk}
+          close={handleCancel}
+          wrapClassName="create-booking-modal"
+          getData={getData}
+          calendarBookingDate={calendarBookingDate}
+          setCalendarBookingDate={setCalendarBookingDate}
         />
 
         <GroupReservation
@@ -573,6 +699,10 @@ const Calendar = () => {
           userData={userData}
           data={data}
           getData={getData}
+        />
+
+        <Reservation
+          calendarBookingDate={calendarBookingDate}
         />
       </div>
     </Wrapper>

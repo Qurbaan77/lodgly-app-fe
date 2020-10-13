@@ -31,6 +31,7 @@ const GuestPopup = (props) => {
   // const [country, setCountry] = useState(null);
 
   useEffect(() => {
+    const initialValue = moment().subtract(18, 'years');
     if (Object.keys(guestData).length) {
       const m1 = moment(guestData.dob);
       form.setFieldsValue({
@@ -39,7 +40,7 @@ const GuestPopup = (props) => {
         country: guestData.country,
         email: guestData.email,
         phone: guestData.phone,
-        dob: guestData.dob && m1,
+        dob: guestData.dob ? m1 : initialValue,
         // dob: guestData.dob,
         gender: guestData.gender,
         typeOfDoc: guestData.typeOfDoc,
@@ -108,7 +109,7 @@ const GuestPopup = (props) => {
               name="country"
               rules={[{ required: true, message: t('guestpopup.label3') }]}
             >
-              <CountryDropdown />
+              <CountryDropdown className="country-select" />
             </Form.Item>
           </Col>
 

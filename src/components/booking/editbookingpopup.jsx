@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-// import { useHistory } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import './booking.css';
 import { toast } from 'react-toastify';
@@ -19,7 +18,6 @@ import {
 import {
   PlusSquareOutlined,
   PlusOutlined,
-  // EditOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
@@ -28,9 +26,6 @@ import moment from 'moment';
 import { bookingInstance, propertyInstance, userInstance } from '../../axios/axiosconfig';
 
 const { Panel } = Collapse;
-
-// const { Option } = Select;
-
 const { RangePicker } = DatePicker;
 const i = 1;
 
@@ -74,6 +69,7 @@ const Editbookingpopup = (props) => {
   const [deleteServiceId, setDeleteServiceId] = useState(null);
   const [serviceData, setServiceData] = useState([]);
   const [unitData, setUnitData] = useState([]);
+  const [selectDate, setSelectDate] = useState({});
   // const [currentUnit, setCurrentUnit] = useState({});
   // const [unitTypeData, setUnitTypeData] = useState([]);
   const [unitId, setUnitId] = useState(null);
@@ -83,6 +79,7 @@ const Editbookingpopup = (props) => {
   const { nights, perNight } = editBookingValues;
   const updateFields = useCallback(() => {
     if (visible) {
+      console.log(editBookingValues);
       fun1((editBookingValues.unitTypeId));
       const m1 = moment(editBookingValues.startDate);
       const m2 = moment(editBookingValues.endDate);
@@ -97,7 +94,7 @@ const Editbookingpopup = (props) => {
         children1: editBookingValues.children1,
         children2: editBookingValues.children2,
         perNight: editBookingValues.perNight,
-        nights: editBookingValues.nights,
+        nights: editBookingValues.night,
         discount: editBookingValues.discount,
         discountType: editBookingValues.discountType,
         discountTotal: data,
@@ -136,7 +133,7 @@ const Editbookingpopup = (props) => {
       setChildren1(editBookingValues.children1);
       setChildren2(editBookingValues.children2);
       setPrice(editBookingValues.perNight);
-      setNight(editBookingValues.nights);
+      setNight(editBookingValues.night);
       setDiscount(editBookingValues.discount);
       setDiscountType(editBookingValues.discountType);
       setdiscountAmount(editBookingValues.discount);
@@ -205,29 +202,34 @@ const Editbookingpopup = (props) => {
   };
 
   const onFinish = async (values) => {
-    values.id = localStorage.getItem('bookingId');
+    const { pathname } = window.location;
+    if (pathname === '/calendar') {
+      values.id = editBookingValues.id;
+    } else {
+      values.id = localStorage.getItem('bookingId');
+    }
     values.perNight = price;
     values.nights = night;
     values.amt = amt;
     values.discountType = discountType;
     values.discount = discount;
     values.accomodation = accomodation;
-    // values.acknowledge = radio;
     values.totalAmount = accomodation
       + currentService
         .map((service) => service.serviceAmount)
         .reduce((a, b) => a + (b || 0), 0);
-    // values.total = parseInt(total) + parseInt(accomodation);
-    // values.deposit = deposit;
 
     if (editCurrentGuest.length) {
-      editCurrentGuest.forEach((el) => {
+      editCurrentGuest.forEach((el, i) => {
         const f = 'fullName';
         const e = 'email';
         const c = 'country';
         const p = 'phone';
-        // el.id = el.id || null;
-        el.bookingId = el.bookingId || localStorage.getItem('bookingId');
+        if (pathname === '/calendar') {
+          el.bookingId = editBookingValues.id;
+        } else {
+          el.bookingId = localStorage.getItem('bookingId');
+        }
         el.fullname = values[f + i];
         el.email = values[e + i];
         el.country = values[c + i];
@@ -241,23 +243,6 @@ const Editbookingpopup = (props) => {
     } else {
       values.guest = 'No Guest';
     }
-    // if (currentService && currentService.length) {
-    //   currentService.forEach((el) => {
-    //     const n = 'serviceName';
-    //     const p = 'servicePrice';
-    //     const q = 'serviceQuantity';
-    //     const t = 'serviceTax';
-    //     el.id = el.id || null;
-    //     el.bookingId = el.bookingId || localStorage.getItem('bookingId');
-    //     el.serviceName = values[n + i];
-    //     el.servicePrice = values[p + i];
-    //     el.serviceQuantity = values[q + i];
-    //     el.serviceTax = values[t + i];
-    //     el.serviceAmount = el.servicePrice * el.serviceQuantity
-    //       + (el.servicePrice * el.serviceQuantity * el.serviceTax) / 100;
-    //   });
-    // }
-
     values.serviceData = currentService && currentService;
     values.noOfservices = currentService && currentService.length;
     values.propertyName = propertyName;
@@ -271,6 +256,9 @@ const Editbookingpopup = (props) => {
     values.affiliateId = userId;
     const response = await bookingInstance.post('/changeBooking', values);
     if (response.data.code === 200) {
+      if (pathname === '/calendar') {
+        window.location.reload();
+      }
       getData();
       setBooked(true);
       close();
@@ -336,22 +324,14 @@ const Editbookingpopup = (props) => {
     // const data2 = response2.data.unitData;
     // console.log('unit data', data2);
     const response3 = await propertyInstance.post('/getUnittype', payload);
+    console.log('response3', response3);
     if (response.data.code === 200) {
       setServiceData(data);
     }
     if (response3.data.code === 200) {
-      const data3 = response3.data.unittypeData[0];
-      const dataUnit = data3.unitsData;
+      const dataUnit = response3.data.unitData;
       setUnitData(dataUnit);
     }
-
-    // if (response2.data.code === 200) {
-    //   setUnitData(data2);
-    // }
-
-    // if (response3.data.code === 200) {
-    //   setUnitTypeData(data3);
-    // }
   };
   const preventTypeE = (evt) => {
     if (
@@ -407,7 +387,7 @@ const Editbookingpopup = (props) => {
   //   //   .map((filterUnit) => setCurrentUnit(filterUnit));
   // };
 
-  const fun3 = (event) => {
+  const onSelectUnit = (event) => {
     const [data] = unitData
       .filter((el) => el.unitName !== event)
       .map((el) => el.id);
@@ -460,12 +440,15 @@ const Editbookingpopup = (props) => {
     }
   };
 
-  const fun4 = (value) => {
-    const d1 = new Date(value[0]._d);
-    const d2 = new Date(value[1]._d);
-    const diff = Math.abs(d1 - d2);
-    const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
-    setNight(day);
+  const onChangeDate = (value) => {
+    if (value) {
+      setSelectDate(value);
+      const d1 = new Date(value[0]._d);
+      const d2 = new Date(value[1]._d);
+      const diff = Math.abs(d1 - d2);
+      const day = Math.floor(diff / (24 * 60 * 60 * 1000)) + 1;
+      setNight(day);
+    }
   };
 
   const addMore = () => {
@@ -570,6 +553,34 @@ const Editbookingpopup = (props) => {
     update();
   };
 
+  const checkBooking = async (rule, value) => {
+    const payload = {
+      bookedUnit: value,
+    };
+    const response = await bookingInstance.post('/getAllBooking', payload);
+    if (response.data.code === 200) {
+      const data = response.data.allBookingData;
+      if (data.length > 0) {
+        let startDate;
+        let endDate;
+        console.log('selectDate', selectDate);
+        if (JSON.stringify(selectDate) !== '{}') {
+          startDate = new Date(selectDate[0]._d);
+          endDate = new Date(selectDate[1]._d);
+        } else {
+          startDate = new Date(editBookingValues.startDate);
+          endDate = new Date(editBookingValues.endDate);
+        }
+        const filterBooking = data.filter((el) => startDate >= new Date(el.startDate)
+        && endDate <= new Date(el.endDate));
+        if (filterBooking.length > 0) {
+          return Promise.reject(new Error('The Unit is already booked on the dates you selected'));
+        }
+      }
+    }
+    return true;
+  };
+
   return (
     <Modal
       title={t('editbookingpopup.heading1')}
@@ -589,7 +600,7 @@ const Editbookingpopup = (props) => {
               label={t('editbookingpopup.heading16')}
               name="groupname"
               style={{ paddingRight: 20 }}
-              onChange={fun4}
+              onChange={onChangeDate}
               rules={[
                 {
                   required: true,
@@ -597,7 +608,7 @@ const Editbookingpopup = (props) => {
                 },
               ]}
             >
-              <RangePicker onChange={fun4} />
+              <RangePicker onChange={onChangeDate} />
             </Form.Item>
           </Col>
 
@@ -626,7 +637,7 @@ const Editbookingpopup = (props) => {
                 },
               ]}
             >
-              <Input value={propertyName} disabled="true" />
+              <Input value={propertyName} disabled />
             </Form.Item>
           </Col>
 
@@ -640,17 +651,18 @@ const Editbookingpopup = (props) => {
                   required: true,
                   message: t('editbookingpopup.heading3'),
                 },
+                {
+                  validator: checkBooking,
+                },
               ]}
             >
               <Select
                 placeholder={t('strings.select')}
-                onSelect={(value) => fun3(value)}
+                onSelect={(value) => onSelectUnit(value)}
                 value={unitName}
               >
                 {unitData && unitData.map((el) => (
-                  <Select.Option value={el} key={el}>
-                    {el}
-                  </Select.Option>
+                  <Select.Option value={el.id} key={el.id}>{el.unitName}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -1069,7 +1081,7 @@ const Editbookingpopup = (props) => {
                     <div className="service-form">
                       {currentService.length
                         ? currentService.map((el, j) => (
-                          <div className="inline-form">
+                          <div className="inline-form" key={el.id}>
                             <div className="delete-data">
                               <DeleteOutlined
                                 onClick={() => handleRemoveEditServicePanel(el)}
@@ -1312,10 +1324,19 @@ const Editbookingpopup = (props) => {
   );
 };
 Editbookingpopup.propTypes = {
-  editBookingValues: PropTypes.objectOf(PropTypes.object),
-  editCurrentGuest: PropTypes.arrayOf(PropTypes.array),
+  editBookingValues: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.number,
+  ]),
+  editCurrentGuest: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+  ]),
   setEditCurrentGuest: PropTypes.func,
-  currentService: PropTypes.arrayOf(PropTypes.array),
+  currentService: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.array,
+  ]),
   setCurrentService: PropTypes.func,
   close: PropTypes.func,
   visible: PropTypes.bool,
@@ -1323,6 +1344,7 @@ Editbookingpopup.propTypes = {
   handleCancel: PropTypes.func,
   setBooked: PropTypes.func,
   getData: PropTypes.func,
+
 };
 
 Editbookingpopup.defaultProps = {

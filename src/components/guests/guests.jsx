@@ -49,8 +49,13 @@ const GuestList = () => {
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
 
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  const [{ userId }] = userCred || [{}];
+
   const getData = useCallback(async () => {
-    const res = await userInstance.get('/getUserSubscriptionStatus');
+    const res = await userInstance.post('/getUserSubscriptionStatus', {
+      affiliateId: userId,
+    });
     if (res.data.code === 200) {
       const [{ days, isOnTrial, isSubscribed }] = res.data.userSubsDetails;
       setDaysLeft(parseInt(days, 10));
@@ -62,7 +67,7 @@ const GuestList = () => {
       setGuestData(response.data.guestData);
       setLoading(false);
     }
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     getData();
@@ -98,7 +103,6 @@ const GuestList = () => {
             <span>{record.country}</span>
             <p>
               {moment(new Date(record.created_at)).format('DD MMM YYYY')}
-
               {' '}
               <i />
               {' '}
@@ -224,13 +228,13 @@ const GuestList = () => {
 
   if (loading) {
     return (
-      <Wrapper>
-        <div className="loader">
-          <div className="loader-box">
-            <img src={loader} alt="loader" />
-          </div>
+      // <Wrapper>
+      <div className="loader">
+        <div className="loader-box">
+          <img src={loader} alt="loader" />
         </div>
-      </Wrapper>
+      </div>
+      // </Wrapper>
     );
   }
 

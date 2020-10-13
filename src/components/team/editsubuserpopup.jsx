@@ -384,7 +384,7 @@ const EditSubUserPopup = (props) => {
       <Form name="basic" form={form} onFinish={onFinish}>
         <div className="subuser-fields-section">
           <Row style={{ alignItems: 'center' }}>
-            <Col span={10}>
+            <Col sm={18} md={10} xs={18}>
               <Form.Item
                 label={t('strings.email')}
                 name="email"
@@ -404,7 +404,7 @@ const EditSubUserPopup = (props) => {
               </Form.Item>
             </Col>
 
-            <Col span={10}>
+            <Col sm={18} md={10} xs={18}>
               <Form.Item label={t('subuserpopup.label25')} name="role">
                 <Select
                   placeholder={t('subuserpopup.label3')}

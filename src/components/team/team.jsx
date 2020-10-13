@@ -10,6 +10,7 @@ import {
   DeleteOutlined,
   FormOutlined,
   PartitionOutlined,
+  // MoreOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
 import SubUserPopup from './subuserpopup';
@@ -20,6 +21,7 @@ import { userInstance } from '../../axios/axiosconfig';
 import UserLock from '../userlock/userlock';
 import DeletePopup from './deletepopup';
 import loader from '../../assets/images/cliploader.gif';
+import actionicon from '../../assets/images/action-icon.png';
 
 const TeamListing = () => {
   const { t } = useTranslation();
@@ -33,10 +35,11 @@ const TeamListing = () => {
   const [visibleDeletePopup, setVisibleDeletePopup] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [permission, setPermission] = useState([]);
 
   const isSubUser = localStorage.getItem('isSubUser') || false;
   const userCred = JSON.parse(localStorage.getItem('subUserCred'));
-  const [{ teamWrite: canWrite, userId, teamDelete }] = userCred || [{}];
+  const [{ teamWrite: canWrite, userId }] = userCred || [{}];
 
   const show = () => {
     setVisible(true);
@@ -71,6 +74,15 @@ const TeamListing = () => {
   const closeEditSubUser = () => {
     setVisibleSubUser(false);
   };
+  useEffect(() => {
+    const getData = async () => {
+      const res = await userInstance.post('/getFeature', { affiliateId: userId });
+      if (res.data.code === 200) {
+        setPermission(res.data.featureData);
+      }
+    };
+    getData();
+  }, [userId]);
 
   const handleDeleteSubUser = async () => {
     const payload = {
@@ -103,7 +115,7 @@ const TeamListing = () => {
 
   // keep function reference
   const getData = useCallback(async () => {
-    const response0 = await userInstance.get('/getUserSubscriptionStatus');
+    const response0 = await userInstance.post('/getUserSubscriptionStatus', { affiliateId: userId });
     if (response0.data.code === 200) {
       const [
         { days, isOnTrial, isSubscribed },
@@ -155,7 +167,8 @@ const TeamListing = () => {
 
   if (loading) {
     return (
-      <Wrapper>
+    // <Wrapper>
+      <>
         <Helmet>
           <link rel="icon" href={favicon} />
           <title>
@@ -165,14 +178,16 @@ const TeamListing = () => {
             name="description"
             content="Grow your Vacation Rental with Lodgly"
           />
-          <body className="stats-page-view" />
+          <html className="team-page-view" />
+          <body className="team-page-view" />
         </Helmet>
         <div className="loader">
           <div className="loader-box">
             <img src={loader} alt="loader" />
           </div>
         </div>
-      </Wrapper>
+      </>
+    // </Wrapper>
     );
   }
 
@@ -180,8 +195,20 @@ const TeamListing = () => {
     <>
       {subUser.length ? (
         <Wrapper>
+          <Helmet>
+            <link rel="icon" href={favicon} />
+            <title>
+              Lodgly - Comprehensive Vacation Rental Property Management
+            </title>
+            <meta
+              name="description"
+              content="Grow your Vacation Rental with Lodgly"
+            />
+            <html className="team-page-view" />
+            <body className="team-page-view" />
+          </Helmet>
           <div className="team-page">
-            <div className="page-header">
+            <div className="page-header teampage">
               <h1>
                 <PartitionOutlined />
                 {' '}
@@ -215,7 +242,7 @@ const TeamListing = () => {
                         {t('team.status')}
                       </th>
 
-                      <th>Actions</th>
+                      <th className="action">Actions</th>
                     </tr>
                   </thead>
 
@@ -240,23 +267,22 @@ const TeamListing = () => {
                                 {/* Sub User
                                 {i + 1} */}
                                 {/* {el.fullname} */}
-
-                                {el.fullname ? el.fullname : 'Sub User'}
+                                {el.fullname ? el.fullname : '-'}
                               </h5>
                               <span>{t('team.label5')}</span>
                             </div>
                           </div>
                         </td>
 
-                        <td>{el.email}</td>
-                        <td>
+                        <td className="email">{el.email}</td>
+                        <td className="readdata">
                           {el.role === 'fullaccess'
                             ? 'Full Access'
                             : el.role === 'read'
                               ? 'Read'
-                              : 'Write'}
+                              : el.role === 'write' ? 'Write' : 'Custom'}
                         </td>
-                        <td>
+                        <td className="status">
                           {el.status === 0 ? (
                             <Button
                               type="primary"
@@ -280,12 +306,15 @@ const TeamListing = () => {
                           ''
                         )} */}
                         <td>
+                          <div className="action-icon1 ">
+                            <img className="action-icon" src={actionicon} alt="" />
+                          </div>
                           <div className="team-action">
                             <FormOutlined
                               onClick={() => showEditSubUser(el, i)}
                             />
                             <DeleteOutlined
-                              hidden={isSubUser ? !teamDelete : false}
+                              hidden={isSubUser}
                               onClick={() => showDeletePopup(el, i)}
                             />
                           </div>
@@ -296,6 +325,12 @@ const TeamListing = () => {
                 </table>
               </div>
             </div>
+            <div className="page-footer teampage">
+
+              <Button type="primary" icon={<PlusOutlined />} onClick={show}>
+                {t('team.label1')}
+              </Button>
+            </div>
           </div>
           <SubUserPopup
             visible={visible}
@@ -303,6 +338,7 @@ const TeamListing = () => {
             onCancel={handleCancel}
             close={closeSubUser}
             getData={getData}
+            permission={permission}
           />
           <EditSubUserPopup
             visible={visibleSubUser}
@@ -311,6 +347,7 @@ const TeamListing = () => {
             close={closeEditSubUser}
             subUserData={currentSubUser}
             getData={getData}
+            permission={permission}
           />
           <DeletePopup
             visible={visibleDeletePopup}
@@ -320,6 +357,18 @@ const TeamListing = () => {
         </Wrapper>
       ) : (
         <Wrapper>
+          <Helmet>
+            <link rel="icon" href={favicon} />
+            <title>
+              Lodgly - Comprehensive Vacation Rental Property Management
+            </title>
+            <meta
+              name="description"
+              content="Grow your Vacation Rental with Lodgly"
+            />
+            <html className="team-page-view" />
+            <body className="team-page-view" />
+          </Helmet>
           <div className="add-team-page">
             <div className="add-subuser">
               <img src={subuser} alt="subuser" />
@@ -334,6 +383,7 @@ const TeamListing = () => {
             onCancel={handleCancel}
             close={closeSubUser}
             getData={getData}
+            permission={permission}
           />
         </Wrapper>
       )}
@@ -350,6 +400,7 @@ const TeamListing = () => {
           name="description"
           content="Grow your Vacation Rental with Lodgly"
         />
+        <html className="team-page-view" />
         <body className="team-page-view" />
       </Helmet>
       {hasAccess ? (

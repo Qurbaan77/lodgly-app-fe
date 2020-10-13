@@ -11,7 +11,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import { userInstance } from '../../axios/axiosconfig';
 
 const SubUserPopup = ({
-  visible, handleOk, handleCancel, close, getData,
+  visible, handleOk, handleCancel, close, getData, permission,
 }) => {
   const { t } = useTranslation();
   const [form] = Form.useForm();
@@ -401,7 +401,7 @@ const SubUserPopup = ({
                 </tr>
               </thead>
               <thead>
-                <tr>
+                <tr hidden={permission[0].booking !== 1}>
                   <th>{t('subuserpopup.label5')}</th>
                   <th>
                     <Checkbox
@@ -427,7 +427,7 @@ const SubUserPopup = ({
                       onClick={handleCustomCheck}
                     />
                   </th>
-                  <th>{t('subuserpopup.label6')}</th>
+                  <th className="desc">{t('subuserpopup.label6')}</th>
                 </tr>
               </thead>
             </table>
@@ -438,7 +438,7 @@ const SubUserPopup = ({
           <div className="custom-table subuser-table">
             <table>
               <thead>
-                <tr>
+                <tr hidden={permission[0].calendar !== 1}>
                   <th>
                     {' '}
                     {t('subuserpopup.label7')}
@@ -467,7 +467,7 @@ const SubUserPopup = ({
                       onClick={handleCustomCheck}
                     />
                   </th>
-                  <th>
+                  <th className="desc">
                     {' '}
                     {t('subuserpopup.label8')}
                   </th>
@@ -475,7 +475,7 @@ const SubUserPopup = ({
               </thead>
 
               <tbody>
-                <tr>
+                <tr hidden={permission[0].properties !== 1}>
                   <td>
                     {' '}
                     {t('subuserpopup.label9')}
@@ -510,7 +510,7 @@ const SubUserPopup = ({
                   </td>
                 </tr>
 
-                <tr>
+                <tr hidden={permission[0].guests !== 1}>
                   <td>
                     {' '}
                     {t('subuserpopup.label11')}
@@ -542,7 +542,7 @@ const SubUserPopup = ({
                   <td>{t('subuserpopup.label12')}</td>
                 </tr>
 
-                <tr>
+                <tr hidden={permission[0].channelManager !== 1}>
                   <td>
                     {' '}
                     {t('subuserpopup.label26')}
@@ -574,7 +574,7 @@ const SubUserPopup = ({
                   <td>{t('subuserpopup.label27')}</td>
                 </tr>
 
-                <tr>
+                <tr hidden={permission[0].team !== 1}>
                   <td>
                     {' '}
                     {t('subuserpopup.label13')}
@@ -617,7 +617,7 @@ const SubUserPopup = ({
           <div className="custom-table subuser-table">
             <table>
               <thead>
-                <tr>
+                <tr hidden={permission[0].invoice !== 1}>
                   <th>
                     {' '}
                     {t('subuserpopup.label15')}
@@ -646,7 +646,7 @@ const SubUserPopup = ({
                       onClick={handleCustomCheck}
                     />
                   </th>
-                  <th>
+                  <th className="desc">
                     {' '}
                     {t('subuserpopup.label19')}
                   </th>
@@ -660,7 +660,7 @@ const SubUserPopup = ({
           <div className="custom-table subuser-table">
             <table>
               <thead>
-                <tr>
+                <tr hidden={permission[0].stats !== 1}>
                   <th>
                     {' '}
                     {t('subuserpopup.label20')}
@@ -689,7 +689,7 @@ const SubUserPopup = ({
                       onClick={handleCustomCheck}
                     />
                   </th>
-                  <th>
+                  <th className="desc">
                     {' '}
                     {t('subuserpopup.label21')}
                   </th>
@@ -703,7 +703,7 @@ const SubUserPopup = ({
           <div className="custom-table subuser-table">
             <table>
               <thead>
-                <tr>
+                <tr hidden={permission[0].properties !== 1}>
                   <th>
                     {' '}
                     {t('subuserpopup.label22')}
@@ -732,7 +732,7 @@ const SubUserPopup = ({
                       onClick={handleCustomCheck}
                     />
                   </th>
-                  <th>{t('subuserpopup.label23')}</th>
+                  <th className="desc">{t('subuserpopup.label23')}</th>
                 </tr>
               </thead>
             </table>
@@ -742,7 +742,7 @@ const SubUserPopup = ({
           <div className="custom-table subuser-table">
             <table>
               <thead>
-                <tr>
+                <tr hidden={permission[0].owner !== 1}>
                   <th>Owner</th>
                   <th>
                     <Checkbox
@@ -768,7 +768,7 @@ const SubUserPopup = ({
                       onClick={handleCustomCheck}
                     />
                   </th>
-                  <th>
+                  <th className="desc">
                     Property settings, invoice settings and channel manager
                     settings
                   </th>
@@ -808,7 +808,7 @@ const SubUserPopup = ({
                       onClick={handleCustomCheck}
                     />
                   </th>
-                  <th>Billing, Upgrade/downgrade plans</th>
+                  <th className="desc">Billing, Upgrade/downgrade plans</th>
                 </tr>
               </thead>
             </table>
@@ -844,6 +844,7 @@ SubUserPopup.propTypes = {
   handleCancel: PropTypes.func,
   handleOk: PropTypes.func,
   visible: PropTypes.bool,
+  permission: PropTypes.arrayOf(PropTypes.object),
 };
 SubUserPopup.defaultProps = {
   getData: () => {},
@@ -851,5 +852,6 @@ SubUserPopup.defaultProps = {
   handleCancel: () => {},
   handleOk: () => {},
   visible: false,
+  permission: [{}],
 };
 export default SubUserPopup;

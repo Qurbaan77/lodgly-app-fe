@@ -8,7 +8,7 @@ import airbnb from '../../assets/images/channelmanager/airbnb.png';
 import booking from '../../assets/images/channelmanager/booking.png';
 import expedia from '../../assets/images/channelmanager/expedia.png';
 import './channel.css';
-import { userInstance } from '../../axios/axiosconfig';
+import { channelInstance, userInstance } from '../../axios/axiosconfig';
 import loader from '../../assets/images/cliploader.gif';
 
 const Channel = () => {
@@ -16,10 +16,25 @@ const Channel = () => {
   const [onTrial, setOnTrial] = useState(true);
   const [daysLeft, setDaysLeft] = useState();
   const [loading, setLoading] = useState(true);
+  const [airbnbActive, setAirbnb] = useState(false);
+  const [bookingActive, setBooking] = useState(false);
+  const [expediaActive, setExpedia] = useState(false);
+
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  const [{ userId }] = userCred || [{}];
 
   useEffect(() => {
     const getData = async () => {
-      const res = await userInstance.get('/getUserSubscriptionStatus');
+      const response = await channelInstance.get('/channelStatus');
+      if (response.data.code === 200) {
+        const { airbnb, booking, expedia } = response.data;
+        setAirbnb(airbnb);
+        setBooking(booking);
+        setExpedia(expedia);
+      }
+      const res = await userInstance.post('/getUserSubscriptionStatus', {
+        affiliateId: userId,
+      });
       if (res.data.code === 200) {
         const [{ days, isOnTrial, isSubscribed }] = res.data.userSubsDetails;
         setDaysLeft(parseInt(days, 10));
@@ -29,11 +44,12 @@ const Channel = () => {
       }
     };
     getData();
-  }, []);
+  }, [userId]);
 
   if (loading) {
     return (
-      <Wrapper>
+      // <Wrapper>
+      <>
         <Helmet>
           <link rel="icon" href={favicon} />
           <title>
@@ -50,7 +66,8 @@ const Channel = () => {
             <img src={loader} alt="loader" />
           </div>
         </div>
-      </Wrapper>
+      </>
+      // </Wrapper>
     );
   }
   const hasAccess = onTrial && daysLeft !== 0 ? 1 : subscribed;
@@ -63,36 +80,54 @@ const Channel = () => {
   }
   return (
     <Wrapper>
-
       <Helmet>
         <link rel="icon" href={favicon} />
         <title>
           Lodgly - Comprehensive Vacation Rental Property Management
         </title>
-        <meta name="description" content="Grow your Vacation Rental with Lodgly" />
+        <meta
+          name="description"
+          content="Grow your Vacation Rental with Lodgly"
+        />
         <body className="channel-page-view" />
       </Helmet>
 
       <div className="channel-manager">
-
         <div className="channel-manager-content">
-
           <div className="channel-manager-box">
-            <Link to="/channelairbnb"><img src={airbnb} alt="Airbnb" /></Link>
+            <Link to="/channelairbnb">
+              <img src={airbnb} alt="Airbnb" />
+            </Link>
+            {airbnbActive ? (
+              <p className="active">Active</p>
+            ) : (
+              <p className="disabled">Disabled</p>
+            )}
           </div>
 
           <div className="channel-manager-box">
-            <Link to="/channelbooking"><img src={booking} alt="Booking" /></Link>
+            <Link to="/channelbooking">
+              <img src={booking} alt="Booking" />
+            </Link>
+            {bookingActive ? (
+              <p className="active">Active</p>
+            ) : (
+              <p className="disabled">Disabled</p>
+            )}
           </div>
 
           <div className="channel-manager-box">
-            <Link to="/channelexpedia"><img src={expedia} alt="Expedia" /></Link>
+            <Link to="/channelexpedia">
+              <img src={expedia} alt="Expedia" />
+            </Link>
+            {expediaActive ? (
+              <p className="active">Active</p>
+            ) : (
+              <p className="disabled">Disabled</p>
+            )}
           </div>
-
         </div>
-
       </div>
-
     </Wrapper>
   );
 };

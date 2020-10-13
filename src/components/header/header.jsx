@@ -4,13 +4,15 @@ import './header.css';
 import { userInstance } from '../../axios/axiosconfig';
 
 const Header = ({ getFeature }) => {
+  const userCred = JSON.parse(localStorage.getItem('subUserCred'));
+  const [{ userId }] = userCred || [{}];
   useEffect(() => {
     const getData = async () => {
-      const res = await userInstance.post('/getFeature');
+      const res = await userInstance.post('/getFeature', { affiliateId: userId });
       getFeature(res.data.featureData);
     };
     getData();
-  }, [getFeature]);
+  }, [getFeature, userId]);
   return (
     <div className="header" />
   );

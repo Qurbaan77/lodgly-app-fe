@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import {
   Dropdown, Layout, Menu, Button, Input,
 } from 'antd';
@@ -17,6 +18,7 @@ const { Header } = Layout;
 
 const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
   const { t } = useTranslation();
+  const history = useHistory();
 
   // const changeLanguage = useCallback((event) => {
   //   i18n.changeLanguage(event);
@@ -62,7 +64,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
 
   useEffect(() => {
     const { pathname } = window.location;
-    if (pathname === '/propertylist') {
+    if (pathname === '/propertylist' || pathname === '/booking' || pathname === '/calendar') {
       setIsOnProperty(true);
     }
     async function getData() {
@@ -121,22 +123,26 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
       className="site-layout-background header-css"
       style={{ padding: 0 }}
     >
+      <div
+        className="search-box"
+        onClick={() => setSearchToggle(!searchtoggle)}
+        role="presentation"
+      >
+        <Input
+          placeholder={t('header.placeholder1')}
+          allowClear
+          prefix={<SearchOutlined />}
+        />
+      </div>
       <Button className="menu-btn" onClick={() => setMenuToggle(!menutoggle)}>
         <img src={menuicon} alt="menu" />
       </Button>
 
-      <div className="mobile-logo">
+      <div className="mobile-logo" onClick={() => history.push("/booking")}>
         <img src={mbllogo} alt="logo" />
       </div>
 
       <div className="header-property">
-        <div
-          className="search-box"
-          onClick={() => setSearchToggle(!searchtoggle)}
-          role="presentation"
-        >
-          <SearchOutlined />
-        </div>
 
         <Dropdown overlay={menu} trigger={['click']} disabled={isOnProperty}>
           <div
@@ -149,7 +155,12 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
             <VerticalAlignMiddleOutlined />
           </div>
         </Dropdown>
+        <div
+          className={`search-content ${searchtoggle ? 'search-expand' : ''}`}
+        >
+          <SearchOutlined />
 
+        </div>
         <div className="property-mbl">
           <Dropdown overlay={menu} trigger={['click']}>
             <div onClick={(e) => selectProperty(e)} role="presentation">
@@ -158,15 +169,6 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
           </Dropdown>
         </div>
 
-        <div
-          className={`search-content ${searchtoggle ? 'search-expand' : ''}`}
-        >
-          <Input
-            placeholder={t('header.placeholder1')}
-            allowClear
-            prefix={<SearchOutlined />}
-          />
-        </div>
       </div>
 
       {/* <div className="language">

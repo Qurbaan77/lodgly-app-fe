@@ -166,7 +166,7 @@ const Services = () => {
   };
 
   const getData = async () => {
-    const res = await userInstance.get('/getUserSubscriptionStatus');
+    const res = await userInstance.post('/getUserSubscriptionStatus');
     if (res.data.code === 200) {
       const [{
         days, isOnTrial, isSubscribed,
