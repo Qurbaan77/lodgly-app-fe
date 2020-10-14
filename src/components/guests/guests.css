@@ -137,9 +137,9 @@ border-right: 1px solid #efecec;
 }
 
 
-.edit-delete img {
-    margin: 0px 10px;
-    height: 20px;
+.edit-delete .editimg {
+    margin-right:20px;
+   
 }
 
 
@@ -282,3 +282,37 @@ border-right: 1px solid #efecec;
   
     background-color:red ;
 } */
+.guest-modal button.ant-btn.ant-btn-primary {
+    padding: 10px 60px;
+}
+.guest-info{
+    text-transform: uppercase;
+}
+.guest-info img{
+    margin-right: 5px;
+}
+.add-companymodal .clear-btn{
+    display: flex;
+    justify-content: space-between;
+}
+.site-layout .ant-layout-content {
+    margin: 0!important;
+    padding: 0!important;
+}
+.company-list table td {
+    padding: 25px 17px!important;
+}
+.company-list .page-header{
+    padding: 15px 20px 0px 22px!important;
+}
+.company-table .custom-table table td {
+    font-size: 14px;
+    line-height: 24px!important;
+    color: #3E3F42;
+    font-weight: 500;
+}
+.company-table .custom-table table th:last-child {
+    width: 30%;
+    text-align: right;
+    padding: 10px 15px;
+}
