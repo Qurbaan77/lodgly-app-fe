@@ -62,7 +62,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
     setMenu(menu1);
   };
 
-  useEffect(() => { 
+  useEffect(() => {
     const { pathname } = window.location;
     if (pathname === '/propertylist' || pathname === '/booking' || pathname === '/calendar') {
       setIsOnProperty(true);
@@ -138,7 +138,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
         <img src={menuicon} alt="menu" />
       </Button>
 
-      <div className="mobile-logo" onClick={() => history.push("/booking")}>
+      <div className="mobile-logo" onClick={() => history.push('/booking')}>
         <img src={mbllogo} alt="logo" />
       </div>
 

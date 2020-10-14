@@ -7,7 +7,7 @@ import { Layout, Menu } from 'antd';
 import {
   ArrowLeftOutlined,
   ApartmentOutlined,
- // CheckOutlined,
+  // CheckOutlined,
 } from '@ant-design/icons';
 
 import logo from '../../../assets/images/logo.png';

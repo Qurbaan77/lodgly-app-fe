@@ -69,6 +69,7 @@ const Editbookingpopup = (props) => {
   const [deleteServiceId, setDeleteServiceId] = useState(null);
   const [serviceData, setServiceData] = useState([]);
   const [unitData, setUnitData] = useState([]);
+  const [selectDate, setSelectDate] = useState({});
   // const [currentUnit, setCurrentUnit] = useState({});
   // const [unitTypeData, setUnitTypeData] = useState([]);
   const [unitId, setUnitId] = useState(null);
@@ -386,7 +387,7 @@ const Editbookingpopup = (props) => {
   //   //   .map((filterUnit) => setCurrentUnit(filterUnit));
   // };
 
-  const fun3 = (event) => {
+  const onSelectUnit = (event) => {
     const [data] = unitData
       .filter((el) => el.unitName !== event)
       .map((el) => el.id);
@@ -441,6 +442,7 @@ const Editbookingpopup = (props) => {
 
   const onChangeDate = (value) => {
     if (value) {
+      setSelectDate(value);
       const d1 = new Date(value[0]._d);
       const d2 = new Date(value[1]._d);
       const diff = Math.abs(d1 - d2);
@@ -551,6 +553,34 @@ const Editbookingpopup = (props) => {
     update();
   };
 
+  const checkBooking = async (rule, value) => {
+    const payload = {
+      bookedUnit: value,
+    };
+    const response = await bookingInstance.post('/getAllBooking', payload);
+    if (response.data.code === 200) {
+      const data = response.data.allBookingData;
+      if (data.length > 0) {
+        let startDate;
+        let endDate;
+        console.log('selectDate', selectDate);
+        if (JSON.stringify(selectDate) !== '{}') {
+          startDate = new Date(selectDate[0]._d);
+          endDate = new Date(selectDate[1]._d);
+        } else {
+          startDate = new Date(editBookingValues.startDate);
+          endDate = new Date(editBookingValues.endDate);
+        }
+        const filterBooking = data.filter((el) => startDate >= new Date(el.startDate)
+        && endDate <= new Date(el.endDate));
+        if (filterBooking.length > 0) {
+          return Promise.reject(new Error('The Unit is already booked on the dates you selected'));
+        }
+      }
+    }
+    return true;
+  };
+
   return (
     <Modal
       title={t('editbookingpopup.heading1')}
@@ -621,17 +651,18 @@ const Editbookingpopup = (props) => {
                   required: true,
                   message: t('editbookingpopup.heading3'),
                 },
+                {
+                  validator: checkBooking,
+                },
               ]}
             >
               <Select
                 placeholder={t('strings.select')}
-                onSelect={(value) => fun3(value)}
+                onSelect={(value) => onSelectUnit(value)}
                 value={unitName}
               >
                 {unitData && unitData.map((el) => (
-                  <Select.Option value={el} key={el}>
-                    {el}
-                  </Select.Option>
+                  <Select.Option value={el.id} key={el.id}>{el.unitName}</Select.Option>
                 ))}
               </Select>
             </Form.Item>
