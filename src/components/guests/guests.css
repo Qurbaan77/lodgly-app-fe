@@ -295,7 +295,11 @@ border-right: 1px solid #efecec;
     display: flex;
     justify-content: space-between;
 }
-.site-layout .ant-layout-content {
+/* .site-layout .ant-layout-content {
+    margin: 0!important;
+    padding: 0!important;
+} */
+.company-page-view .ant-layout-content {
     margin: 0!important;
     padding: 0!important;
 }
