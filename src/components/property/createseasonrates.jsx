@@ -36,6 +36,7 @@ const CreateSeasonRates = () => {
   const [occupancy, setOccupancy] = useState(false);
   const [shortStay, setshortStay] = useState(false);
   const [restriction, setRestriction] = useState(false);
+  const [currency, setCurrency] = useState('');
 
   const goBack = () => {
     history.push('/seasonrates');
@@ -345,6 +346,10 @@ const CreateSeasonRates = () => {
     fetchData();
   }, [fetchData]);
 
+  const handleCurrencySelect = (e) => {
+    setCurrency(e === 'USD' ? '$' : '€');
+  };
+
   return (
     <Wrapper>
       <Helmet>
@@ -393,6 +398,17 @@ const CreateSeasonRates = () => {
                       </Form.Item>
                     </Col>
                     <Col span={2} />
+                    <Col span={8}>
+                      <Form.Item name="currency">
+                        <Select
+                          placeholder="USD"
+                          onSelect={handleCurrencySelect}
+                        >
+                          <Select.Option value="USD">USD</Select.Option>
+                          <Select.Option value="EUR">EUR</Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
                     <Col span={11}>
                       <Form.Item label="Date Periods" name="groupname">
                         <RangePicker
@@ -424,7 +440,7 @@ const CreateSeasonRates = () => {
                         ]}
                       >
                         <Input
-                          placeholder="$"
+                          placeholder={currency}
                           onChange={(e) => onChangePricePerNight(e.target.value)}
                         />
                       </Form.Item>
@@ -458,13 +474,13 @@ const CreateSeasonRates = () => {
                     <Row>
                       <Col span={6}>
                         <Form.Item name="weeklyPrice" label="Weekly">
-                          <Input placeholder="$" />
+                          <Input placeholder={currency} />
                         </Form.Item>
                       </Col>
                       <Col span={1} />
                       <Col span={6}>
                         <Form.Item name="monthlyPrice" label="Monthly">
-                          <Input placeholder="$" />
+                          <Input placeholder={currency} />
                         </Form.Item>
                       </Col>
                       <Col span={1} />
@@ -474,7 +490,7 @@ const CreateSeasonRates = () => {
                           label={`${nights} Nights`}
                           hidden={!showCustomNights}
                         >
-                          <Input placeholder="$" />
+                          <Input placeholder={currency} />
                         </Form.Item>
                       </Col>
                     </Row>
@@ -544,7 +560,7 @@ const CreateSeasonRates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder={currency} />
                           </Form.Item>
                           <Form.Item
                             label="Tu"
@@ -556,7 +572,7 @@ const CreateSeasonRates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder={currency} />
                           </Form.Item>
                           <Form.Item
                             label="We"
@@ -568,7 +584,7 @@ const CreateSeasonRates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder={currency} />
                           </Form.Item>
                           <Form.Item
                             label="Th"
@@ -580,7 +596,7 @@ const CreateSeasonRates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder={currency} />
                           </Form.Item>
                           <Form.Item
                             label="Fr"
@@ -592,7 +608,7 @@ const CreateSeasonRates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder={currency} />
                           </Form.Item>
                           <Form.Item
                             label="Sa"
@@ -604,7 +620,7 @@ const CreateSeasonRates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder={currency} />
                           </Form.Item>
                           <Form.Item
                             label="Su"
@@ -616,7 +632,7 @@ const CreateSeasonRates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$ 100" />
+                            <Input placeholder={currency} />
                           </Form.Item>
                         </div>
                       </Col>
@@ -719,7 +735,7 @@ const CreateSeasonRates = () => {
                           //   },
                           // ]}
                         >
-                          <Input placeholder="$" />
+                          <Input placeholder={currency} />
                           <span>after</span>
                         </Form.Item>
                       </Col>
@@ -784,7 +800,7 @@ const CreateSeasonRates = () => {
                           // ]}
                         >
                           <span>Extra charge per night</span>
-                          <Input type="number" placeholder="$" />
+                          <Input type="number" placeholder={currency} />
                         </Form.Item>
                       </Col>
                     </Row>
