@@ -578,18 +578,23 @@ const CreateBookingPopup = (props) => {
     [daysArr, form, night],
   );
 
-  const priceSingleNight = useCallback(
-    (value) => {
-      // setPrice(value);
-      // setAccomodation(night * value);
-      daysArr.forEach((el, j) => {
-        form.setFieldsValue({
-          [`everyDayPrice${j}`]: value,
-        });
+  const priceSingleNight = (value, index) => {
+    let sum = 0;
+    Array.from(Array(night).keys()).forEach((i) => {
+      sum += parseInt(form.getFieldValue([`everyDayPrice${i}`]), 10);
+    });
+    const newPricePerNight = sum / night;
+    if (newPricePerNight) {
+      form.setFieldsValue({
+        perNight: newPricePerNight.toFixed(2),
       });
-    },
-    [daysArr, form],
-  );
+    }
+    form.setFieldsValue({
+      [`everyDayPrice${index}`]: value,
+    });
+    setPrice(newPricePerNight);
+    setAccomodation(night * newPricePerNight);
+  };
 
   // const calculatePerNight = (nights, ratesData, numOfAdult) => {
   //   // console.log(nights)
@@ -1508,10 +1513,11 @@ const CreateBookingPopup = (props) => {
                             : `${0 + j} / ${startDateMonth}`
                         }
                         name={`everyDayPrice${j}`}
+                        // name={[j, 'everyDayPrice']}
                       >
                         <Input
                           type="number"
-                        // value={price}
+                          placeholder="0,00"
                           onChange={(e) => priceSingleNight(e.target.value, j)}
                         />
                       </Form.Item>
