@@ -60,6 +60,7 @@ const AdInvoicePopup = (props) => {
   const [total, setTotal] = useState([0]);
   const [discountType, setDiscountType] = useState('%');
   const [logoUrl, setLogoUrl] = useState('');
+  const [currency, setCurrency] = useState('€');
   useEffect(() => {
     const ddate = new Date();
     const ftime = `${ddate.getHours()}:${ddate.getMinutes()}:${ddate.getSeconds()}`;
@@ -73,13 +74,15 @@ const AdInvoicePopup = (props) => {
     const dueDate = moment(formatedDate);
     const time0 = moment(ftime, 'HH:mm:ss');
     setTime(time0);
+    const crc = property && property.length && property[0].currency;
+    setCurrency(crc);
     form.setFieldsValue({
       deliveryDate,
       dueDate,
       date,
       time: time0,
     });
-  }, [form]);
+  }, [form, property]);
 
   const handleFinish = async (values) => {
     setShowLoader(false);
@@ -107,6 +110,7 @@ const AdInvoicePopup = (props) => {
     valuesCopy.propertyAddress = property[0].address;
     valuesCopy.website = property[0].website;
     valuesCopy.propertyId = property[0].id;
+    values.currency = currency;
     if (logoUrl) {
       valuesCopy.logo = logoUrl;
     }
@@ -627,7 +631,7 @@ const AdInvoicePopup = (props) => {
                     onSelect={(value) => handleDiscountType(value, i)}
                   >
                     <Select.Option value="%">%</Select.Option>
-                    <Select.Option value="€">€</Select.Option>
+                    <Select.Option value={currency}>{currency}</Select.Option>
                   </Select>
 
                 </Form.Item>
@@ -687,7 +691,10 @@ const AdInvoicePopup = (props) => {
                 <span>
                   {total.reduce((a, b) => a + (b || 0), 0)}
                   {' '}
-                  €
+                  {/* € */}
+                  {
+                currency
+                }
                 </span>
               </h3>
             </div>

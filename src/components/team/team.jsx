@@ -7,9 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { Button, Tooltip } from 'antd';
 import {
   PlusOutlined,
-  DeleteOutlined,
-  FormOutlined,
-  PartitionOutlined,
+  // DeleteOutlined,
+  // FormOutlined,
+  // PartitionOutlined,
   // MoreOutlined,
 } from '@ant-design/icons';
 import Wrapper from '../wrapper';
@@ -22,6 +22,9 @@ import UserLock from '../userlock/userlock';
 import DeletePopup from './deletepopup';
 import loader from '../../assets/images/cliploader.gif';
 import actionicon from '../../assets/images/action-icon.png';
+import teamIcon from '../../assets/images/menu/team-icon.png';
+import deleteimg from '../../assets/images/delete.svg';
+import editimg from '../../assets/images/edit.svg';
 
 const TeamListing = () => {
   const { t } = useTranslation();
@@ -210,7 +213,7 @@ const TeamListing = () => {
           <div className="team-page">
             <div className="page-header teampage">
               <h1>
-                <PartitionOutlined />
+              <img src={teamIcon} alt="team" />
                 {' '}
                 {t('team.label2')}
               </h1>
@@ -280,7 +283,7 @@ const TeamListing = () => {
                             ? 'Full Access'
                             : el.role === 'read'
                               ? 'Read'
-                              : 'Write'}
+                              : el.role === 'write' ? 'Write' : 'Custom'}
                         </td>
                         <td className="status">
                           {el.status === 0 ? (
@@ -310,13 +313,15 @@ const TeamListing = () => {
                             <img className="action-icon" src={actionicon} alt="" />
                           </div>
                           <div className="team-action">
-                            <FormOutlined
+                          <img className="editimg" src={editimg} alt=""  onClick={() => showEditSubUser(el, i)}/>
+                          <img src={deleteimg} alt=""  onClick={() => showDeletePopup(el, i)}/>
+                            {/* <FormOutlined
                               onClick={() => showEditSubUser(el, i)}
                             />
                             <DeleteOutlined
                               hidden={isSubUser}
                               onClick={() => showDeletePopup(el, i)}
-                            />
+                            /> */}
                           </div>
                         </td>
                       </tr>

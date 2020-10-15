@@ -25,10 +25,10 @@ import night from '../../assets/images/night.png';
 import people from '../../assets/images/people.png';
 import actionicon from '../../assets/images/action-icon.png';
 
-import deleteicon from '../../assets/images/delete-icon.png';
+// import deleteicon from '../../assets/images/delete-icon.png';
 
 import back from '../../assets/images/back.png';
-import editIcon from '../../assets/images/edit-icon.png';
+// import editIcon from '../../assets/images/edit-icon.png';
 // import downloadIcon from '../../assets/images/menu/download-icon.png';
 // import refreshIcon from '../../assets/images/refresh-icon.png';
 // import cancelIcon from '../../assets/images/menu/cancel-icon.png';
@@ -37,6 +37,9 @@ import { userInstance } from '../../axios/axiosconfig';
 import NoGuest from './noguests';
 import UpdateGuestPopup from './updateGuest';
 import DeletePopup from '../property/deletepopup';
+
+import deleteimg from '../../assets/images/delete.svg';
+import editimg from '../../assets/images/edit.svg';
 
 const GuestList = () => {
   const [guestData, setGuestData] = useState([]);
@@ -161,7 +164,7 @@ const GuestList = () => {
         <div className="guest-action">
           <img className="action-icon" src={actionicon} alt="" />
           <div className="edit-delete">
-            <img
+            {/* <img
               className="guest-edit-icon"
               src={editIcon}
               alt=""
@@ -174,7 +177,9 @@ const GuestList = () => {
               alt=""
               onClick={() => delRow(record.id)}
               role="presentation"
-            />
+            /> */}
+            <img className="editimg" src={editimg} alt="" onClick={() => edit(record)}  role="presentation" />
+            <img src={deleteimg} alt="" onClick={() => delRow(record.id)}  role="presentation" />
           </div>
         </div>
       ),
@@ -212,7 +217,7 @@ const GuestList = () => {
 
   const { RangePicker } = DatePicker;
 
-  function onChange() {}
+  function onChange() { }
 
   const [menutoggle, setMenuToggle] = useState(false);
   const handleMenuSide = (e) => {

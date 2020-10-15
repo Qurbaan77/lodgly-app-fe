@@ -228,13 +228,13 @@ const Invoice = () => {
   }, [userId]);
   const handleCheck = (el) => {
     invoiceData.forEach((element) => {
-      if (el.id === element.id && element[Object.keys(el)[21]] === true) {
-        element[Object.keys(el)[21]] = false;
+      if (el.id === element.id && element[Object.keys(el)[22]] === true) {
+        element[Object.keys(el)[22]] = false;
       } else if (
         el.id === element.id
-        && element[Object.keys(el)[21]] === false
+        && element[Object.keys(el)[22]] === false
       ) {
-        element[Object.keys(el)[21]] = true;
+        element[Object.keys(el)[22]] = true;
       }
     });
     setInvoiceData(invoiceData);
@@ -294,7 +294,7 @@ const Invoice = () => {
         .reverse()
         .slice(pagination.minValue, pagination.maxValue)
         .forEach((el) => {
-          el[Object.keys(el)[21]] = false;
+          el[Object.keys(el)[22]] = false;
         });
       setInvoiceData(invoiceData);
       setCheckedInvoice([]);
@@ -305,10 +305,10 @@ const Invoice = () => {
         .reverse()
         .slice(pagination.minValue, pagination.maxValue)
         .forEach((el) => {
-          el[Object.keys(el)[21]] = true;
+          el[Object.keys(el)[22]] = true;
         });
       const data = invoiceData.filter(
-        (el) => el[Object.keys(el)[21]] !== false,
+        (el) => el[Object.keys(el)[22]] !== false,
       );
       setInvoiceData(invoiceData);
       setCheckedInvoice(data);
@@ -324,7 +324,7 @@ const Invoice = () => {
       .reverse()
       .slice(pagination.minValue, pagination.maxValue)
       .forEach((el) => {
-        el[Object.keys(el)[21]] = false;
+        el[Object.keys(el)[22]] = false;
       });
     setInvoiceData(invoiceData);
     setCheckedInvoice([]);
@@ -795,7 +795,7 @@ const Invoice = () => {
                           <tr key={el.id}>
                             <td>
                               <Checkbox
-                                checked={el[Object.keys(el)[21]]}
+                                checked={el[Object.keys(el)[22]]}
                                 onClick={() => handleCheck(el, i)}
                               />
                               {el.date.slice(0, 10)}
@@ -827,7 +827,7 @@ const Invoice = () => {
                             >
                               {el.total}
                               {' '}
-                              EUR
+                              {el.currency}
                             </td>
                             <td
                               onClick={() => showEditInvoice(el, i)}

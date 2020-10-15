@@ -19,6 +19,7 @@ import moment from 'moment';
 // import Toaster from '../toaster/toaster';
 import { CountryDropdown } from 'react-country-region-selector';
 import { userInstance } from '../../axios/axiosconfig';
+import guestimg from '../../assets/images/guest/guestinfo.svg';
 
 const UpdateGuestPopup = (props) => {
   const { t } = useTranslation();
@@ -89,11 +90,13 @@ const UpdateGuestPopup = (props) => {
       onOk={onOk}
       onCancel={handleCancel}
       wrapClassName="guest-modal"
+      className="guest-modal"
     >
       <Helmet>
         <body className={visible ? 'ant-scrolling-effect' : ''} />
       </Helmet>
       <Form form={form} name="basic" onFinish={onFinish}>
+      <h4 className="guest-info"><img src={guestimg} alt="guest-img" />Guest Information</h4>
         <Row style={{ alignItems: 'center' }}>
           <Form.Item name="id">
             <Input hidden />
@@ -173,6 +176,7 @@ const UpdateGuestPopup = (props) => {
             <Form.Item
               name="typeOfDoc"
               label="Type of Document"
+              style={{ paddingRight: 20 }}
               rules={[
                 {
                   required: true,
@@ -214,7 +218,7 @@ const UpdateGuestPopup = (props) => {
           </Col> */}
 
           <Col span={12}>
-            <Form.Item label={t('guestpopup.label8')} name="place">
+            <Form.Item label={t('guestpopup.label8')} name="place"  style={{ paddingRight: 20 }}> 
               <Input />
             </Form.Item>
           </Col>

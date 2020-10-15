@@ -1128,6 +1128,50 @@ ul.ant-menu.main-menu::-webkit-scrollbar-thumb, ul.ant-menu.main-menu-mbl::-webk
         justify-content: space-between;
         display: flex;
     }
+    .weekend-input {
+        display: block!important;
+        align-items: flex-start;
+    }
+    .rates-content .ant-col-6 {
+        display: block;
+        -ms-flex: 0 0 25%;
+        flex: 0 0 100%;
+        max-width: 89%;
+    }
+    .occupancy-input .ant-form-item-control-input-content {
+        display: block;
+        align-items: center;
+    }
+    .occupancy-input .ant-form-item-control-input-content span {
+        margin-left: 0px;
+    }
+    .checkin-box {
+        display: inline-block;
+        align-items: center;
+        margin-left: 30px;
+    }
+    .ant-col .ant-form-item-label label {
+        margin-bottom: -10px;
+    }
+    .checkin-box .ant-row.ant-form-item.check-selectall {
+        max-width: 70px;
+        width: 100%;
+        margin-left: 0px;
+    }
+    .stay-input .ant-form-item-control-input-content {
+        display: block;
+        align-items: center;
+    }
+    .toggle-box-section .ant-col-8 {
+        display: block;
+        -ms-flex: 0 0 33.33333333%;
+        flex: 0 0 33.33333333%;
+        max-width: 88%;
+    }
+    .guest-modal label.ant-form-item-required {
+        margin-bottom: 10px;
+    }
+    
 }
 
 
