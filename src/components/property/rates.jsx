@@ -345,12 +345,6 @@ const Rates = () => {
     }
   };
 
-  const negativeCheck = (e) => {
-    if (e.keyCode === 109) {
-      e.preventDefault();
-    }
-  };
-
   return (
     <Wrapper>
       <Helmet>
