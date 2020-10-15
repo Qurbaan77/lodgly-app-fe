@@ -652,7 +652,7 @@ const Booking = () => {
                       <span>{el.created_time}</span>
                       <span className="green-label">
                         {' '}
-                        {el.currency === 'eur' ? '€' : '$'}
+                        {el.currency}
                         {el.totalAmount}
                       </span>
                     </div>

@@ -369,7 +369,7 @@ const EditSubUserPopup = (props) => {
 
   return (
     <Modal
-      title="Add New Sub-User"
+      title="Edit Sub-User"
       visible={visible}
       onOk={handleOk}
       onCancel={handleCancel}
