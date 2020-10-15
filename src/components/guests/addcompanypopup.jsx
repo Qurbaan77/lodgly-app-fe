@@ -37,6 +37,7 @@ const AddCompany = (props) => {
       onOk={handleOk}
       onCancel={handleCancel}
       wrapClassName="guest-modal add-company-modal"
+      className="add-companymodal"
     >
       <Helmet>
         <body className={visible ? 'ant-scrolling-effect' : ''} />
@@ -119,6 +120,7 @@ const AddCompany = (props) => {
         <Row style={{ alignItems: 'center', textAlign: 'right' }}>
           <Col span={24}>
             <Form.Item>
+              <div className="clear-btn">
               <Button
                 className="border-btn"
                 style={{ marginRight: 10 }}
@@ -131,6 +133,7 @@ const AddCompany = (props) => {
               <Button type="primary" htmlType="submit">
                 Apply
               </Button>
+              </div>
             </Form.Item>
           </Col>
         </Row>

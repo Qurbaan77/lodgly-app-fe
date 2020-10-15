@@ -9,14 +9,17 @@ import Wrapper from '../wrapper';
 import UserLock from '../userlock/userlock';
 import companyicon from '../../assets/images/company-icon.png';
 import actionicon from '../../assets/images/action-icon.png';
-import editicon from '../../assets/images/edit-icon.png';
-import deleteicon from '../../assets/images/delete-icon.png';
+// import editicon from '../../assets/images/edit-icon.png';
+// import deleteicon from '../../assets/images/delete-icon.png';
 import AddCompany from './addcompanypopup';
 import EditCompany from './editcompanypop';
 import { userInstance } from '../../axios/axiosconfig';
 import loader from '../../assets/images/cliploader.gif';
 import DeletePopup from '../property/deletepopup';
 import nocompany from '../../assets/images/company-placeholder.png';
+import deleteimg from '../../assets/images/delete.svg';
+import editimg from '../../assets/images/edit.svg';
+
 
 const CompanyList = () => {
   const [companyData, setCompanyData] = useState([]);
@@ -112,7 +115,7 @@ const CompanyList = () => {
         <div className="guest-action">
           <img className="action-icon" src={actionicon} alt="" />
           <div className="edit-delete">
-            <img
+            {/* <img
               className="guest-edit-icon"
               src={editicon}
               alt=""
@@ -125,7 +128,9 @@ const CompanyList = () => {
               alt=""
               onClick={() => delRow(record.id)}
               role="presentation"
-            />
+            /> */}
+            <img className="editimg" src={editimg} alt="" onClick={() => edit(record)}  role="presentation" />
+            <img src={deleteimg} alt="" onClick={() => delRow(record.id)}  role="presentation" />
           </div>
         </div>
       ),

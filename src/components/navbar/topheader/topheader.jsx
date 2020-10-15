@@ -138,7 +138,7 @@ const TopHeader = ({ fun, setMenuToggle, menutoggle }) => {
         <img src={menuicon} alt="menu" />
       </Button>
 
-      <div className="mobile-logo" onClick={() => history.push("/booking")}>
+      <div className="mobile-logo" onClick={() => history.push('/booking')}>
         <img src={mbllogo} alt="logo" />
       </div>
 
