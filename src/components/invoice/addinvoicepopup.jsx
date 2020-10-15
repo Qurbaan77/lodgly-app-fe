@@ -110,6 +110,7 @@ const AdInvoicePopup = (props) => {
     valuesCopy.propertyAddress = property[0].address;
     valuesCopy.website = property[0].website;
     valuesCopy.propertyId = property[0].id;
+    values.currency = currency;
     if (logoUrl) {
       valuesCopy.logo = logoUrl;
     }
@@ -630,7 +631,7 @@ const AdInvoicePopup = (props) => {
                     onSelect={(value) => handleDiscountType(value, i)}
                   >
                     <Select.Option value="%">%</Select.Option>
-                    <Select.Option value={currency === 'eur' ? '€' : '$'}>{currency === 'eur' ? '€' : '$'}</Select.Option>
+                    <Select.Option value={currency}>{currency}</Select.Option>
                   </Select>
 
                 </Form.Item>
@@ -692,7 +693,7 @@ const AdInvoicePopup = (props) => {
                   {' '}
                   {/* € */}
                   {
-                currency === 'eur' ? '€' : '$'
+                currency
                 }
                 </span>
               </h3>

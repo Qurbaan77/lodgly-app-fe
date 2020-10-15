@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
+import PlacesAutocomplete, {
+  geocodeByAddress,
+} from 'react-places-autocomplete';
 import { CountryDropdown, RegionDropdown } from 'react-country-region-selector';
 import Helmet from 'react-helmet';
 import './property.css';
@@ -89,7 +91,9 @@ const Property = () => {
   // const canWrite = propertiesWrite;
 
   const getData = useCallback(async () => {
-    const res = await userInstance.post('/getUserSubscriptionStatus', { affiliateId: userId });
+    const res = await userInstance.post('/getUserSubscriptionStatus', {
+      affiliateId: userId,
+    });
     if (res.data.code === 200) {
       const [{ days, isOnTrial, isSubscribed }] = res.data.userSubsDetails;
       setDaysLeft(parseInt(days, 10));
@@ -103,7 +107,7 @@ const Property = () => {
     const data = response.data.propertiesData;
     if (response.data.code === 200) {
       const curProperty = data.filter(
-        (el) => el.id === parseInt(localStorage.getItem('propertyId'), 10),
+        (el) => el.id === parseInt(localStorage.getItem('propertyId'), 10)
       );
       setCurrentProperty(curProperty);
       setId(curProperty[0].id);
@@ -175,7 +179,11 @@ const Property = () => {
     const city = addressComponent[3].long_name;
     setCountry(country);
     form.setFieldsValue({
-      address, country, state, zip, city,
+      address,
+      country,
+      state,
+      zip,
+      city,
     });
   };
 
@@ -248,8 +256,7 @@ const Property = () => {
               return (
                 <div className="page-header">
                   <h1>
-                    <img src={propertyDetailIcon} alt="property" />
-                    {' '}
+                    <img src={propertyDetailIcon} alt="property" />{' '}
                     {el.propertyName}
                   </h1>
                 </div>
@@ -366,13 +373,13 @@ const Property = () => {
                                       // inline style for demonstration purpose
                                       const style = suggestion.active
                                         ? {
-                                          backgroundColor: '#fafafa',
-                                          cursor: 'pointer',
-                                        }
+                                            backgroundColor: '#fafafa',
+                                            cursor: 'pointer',
+                                          }
                                         : {
-                                          backgroundColor: '#ffffff',
-                                          cursor: 'pointer',
-                                        };
+                                            backgroundColor: '#ffffff',
+                                            cursor: 'pointer',
+                                          };
                                       return (
                                         <div
                                           {...getSuggestionItemProps(
@@ -380,7 +387,7 @@ const Property = () => {
                                             {
                                               className,
                                               style,
-                                            },
+                                            }
                                           )}
                                         >
                                           <span>{suggestion.description}</span>
@@ -608,10 +615,7 @@ const Property = () => {
                         <Col span={24}>
                           <Form.Item label={t('property.para3')}>
                             <Input />
-                            <p>
-                              {' '}
-                              {t('property.para4')}
-                            </p>
+                            <p> {t('property.para4')}</p>
                           </Form.Item>
                         </Col>
 

@@ -6,12 +6,14 @@ import {
 } from 'antd';
 import ReactQuill from 'react-quill';
 import { toast } from 'react-toastify';
+import getSymbolFromCurrency from 'currency-symbol-map';
 import { useTranslation } from 'react-i18next';
 import { propertyInstance } from '../../axios/axiosconfig';
 import CopyRatePopup from './copyratepopup';
 import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
 import 'react-quill/dist/quill.snow.css';
+import currenciesList from '../../utils';
 
 const Rates = () => {
   const [form] = Form.useForm();
@@ -229,6 +231,7 @@ const Rates = () => {
     values.checkOut_on_friday = checkOutBox.friday;
     values.checkOut_on_saturday = checkOutBox.saturday;
     values.checkOut_on_sunday = checkOutBox.sunday;
+    values.currency = currency;
     const response = await propertyInstance.post('/addRates', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
@@ -330,7 +333,10 @@ const Rates = () => {
   }, [fetchData]);
 
   const handleCurrencySelect = (e) => {
-    setCurrency(e === 'USD' ? '$' : '€');
+    const code = e.split(' ');
+    const currencyCode = code[1];
+    const symbol = getSymbolFromCurrency(currencyCode);
+    setCurrency(symbol);
   };
 
   const negativeCheck = (e) => {
@@ -376,8 +382,15 @@ const Rates = () => {
                           placeholder={t('rates.placeholder2')}
                           onSelect={handleCurrencySelect}
                         >
-                          <Select.Option value="USD">{t('rates.option1')}</Select.Option>
-                          <Select.Option value="EUR">{t('rates.option2')}</Select.Option>
+                          {
+                            currenciesList.map((currency) => (
+                              <Select.Option value={currency} key={currency}>
+                                {currency}
+                              </Select.Option>
+                            ))
+                          }
+                          {/* <Select.Option value="USD">{t('rates.option1')}</Select.Option>
+                          <Select.Option value="EUR">{t('rates.option2')}</Select.Option> */}
                         </Select>
                       </Form.Item>
                     </Col>

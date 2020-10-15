@@ -11,6 +11,7 @@
     "antd": "^4.3.1",
     "apexcharts": "^3.19.3",
     "axios": "^0.19.2",
+    "currency-symbol-map": "^4.0.4",
     "env-cmd": "^10.1.0",
     "gantt-schedule-timeline-calendar": "^3.0.64",
     "i18next": "^19.7.0",

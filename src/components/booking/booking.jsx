@@ -652,7 +652,7 @@ const Booking = () => {
                       <span>{el.created_time}</span>
                       <span className="green-label">
                         {' '}
-                        {el.currency === 'eur' ? '€' : '$'}
+                        {el.currency}
                         {el.totalAmount}
                       </span>
                     </div>
@@ -702,6 +702,7 @@ const Booking = () => {
                     </div>
                   </div>
                 </div>
+                </div>
                 <div className="bookin-footer">
                   {/* <ul>
                       <Tooltip title="Edit Booking" color="gold">
@@ -722,7 +723,7 @@ const Booking = () => {
                     </ul> */}
                   {btn2}
                 </div>
-              </div>
+             
             </Col>
 
             <Col span={14}>

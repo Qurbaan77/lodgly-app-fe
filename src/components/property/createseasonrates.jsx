@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Helmet from 'react-helmet';
 import queryString from 'query-string';
 import { useHistory } from 'react-router-dom';
+import getSymbolFromCurrency from 'currency-symbol-map';
 import './rates.css';
 import {
   Button,
@@ -19,7 +20,7 @@ import { LeftOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
-
+import currenciesList from '../../utils';
 import { propertyInstance } from '../../axios/axiosconfig';
 
 const CreateSeasonRates = () => {
@@ -347,7 +348,10 @@ const CreateSeasonRates = () => {
   }, [fetchData]);
 
   const handleCurrencySelect = (e) => {
-    setCurrency(e === 'USD' ? '$' : '€');
+    const code = e.split(' ');
+    const currencyCode = code[1];
+    const symbol = getSymbolFromCurrency(currencyCode);
+    setCurrency(symbol);
   };
 
   return (
@@ -404,6 +408,13 @@ const CreateSeasonRates = () => {
                           placeholder="USD"
                           onSelect={handleCurrencySelect}
                         >
+                          {
+                            currenciesList.map((currency) => (
+                              <Select.Option value={currency}>
+                                {currency}
+                              </Select.Option>
+                            ))
+                          }
                           <Select.Option value="USD">USD</Select.Option>
                           <Select.Option value="EUR">EUR</Select.Option>
                         </Select>
