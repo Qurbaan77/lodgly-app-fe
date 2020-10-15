@@ -689,14 +689,7 @@ const Rates = () => {
                     <Row>
                       <Col span={6}>
                         <Form.Item
-                          className="occupancy-input"
                           name="extraCharge"
-                          // rules={[
-                          //   {
-                          //     required: true,
-                          //     message: 'Input must be valid number!',
-                          //   },
-                          // ]}
                         >
                           <Input placeholder={currency} />
                           <span>{t('rates.span3')}</span>

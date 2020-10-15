@@ -648,6 +648,7 @@
   .additional-edit {
   text-align: right;
   padding: 0px 20px;
+  cursor: pointer;
   }
   
   .additional-edit a {
@@ -675,6 +676,7 @@
   
   .additional-add {
   padding: 15px 0px;
+  cursor: pointer;
   }
   
   

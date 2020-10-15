@@ -115,6 +115,7 @@ const CreateBookingPopup = (props) => {
   const [unitTypeId, setUnitTypeId] = useState(null);
   const [selectDisable, setSelectDisable] = useState(false);
   const [currency, setCurrency] = useState('eur');
+  // const [standardGuest, setStandardGuest] = useState(0);
   // const [ratesData, setRatesData] = useState({});
   // const history = useHistory();
   // const regName = /^[a-zA-Z]+ [a-zA-Z]+$/;
@@ -340,7 +341,11 @@ const CreateBookingPopup = (props) => {
   const onSelectProperty = async (value, event) => {
     propertyData
       .filter((el) => el.id === value)
-      .map((filter) => setUnitData(filter.unitDataV2));
+      .map((filter) => {
+        setUnitData(filter.unitDataV2);
+        // setStandardGuest(filter.standardGuests);
+        return true;
+      });
     setCurrentPropertyName(event.children);
     setCurrentPropertyId(value);
     const payload = {
