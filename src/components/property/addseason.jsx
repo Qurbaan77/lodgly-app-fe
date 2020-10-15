@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './rates.css';
+import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import {
   Button, Row, Col, Form, Input,
@@ -8,6 +9,7 @@ import {
 import { propertyInstance } from '../../axios/axiosconfig';
 
 const AddSeason = (props) => {
+  const history = useHistory();
   const [form] = Form.useForm();
   const { close, getData } = props;
   const onFinish = async (values) => {
@@ -16,6 +18,7 @@ const AddSeason = (props) => {
     const statusCode = response.data.code;
     if (statusCode === 200) {
       toast.success('Season rate added successfully', { containerId: 'B', toastId: 'B' });
+      history.push(`/createseasonrates?seasonRateId=${response.data.savedId}`);
       close();
       getData();
       form.resetFields();

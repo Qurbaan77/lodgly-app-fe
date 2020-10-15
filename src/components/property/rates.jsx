@@ -6,12 +6,14 @@ import {
 } from 'antd';
 import ReactQuill from 'react-quill';
 import { toast } from 'react-toastify';
+import getSymbolFromCurrency from 'currency-symbol-map';
 import { useTranslation } from 'react-i18next';
 import { propertyInstance } from '../../axios/axiosconfig';
 import CopyRatePopup from './copyratepopup';
 import Wrapper from '../wrapper';
 import favicon from '../../assets/images/logo-mobile.png';
 import 'react-quill/dist/quill.snow.css';
+import currenciesList from '../../utils';
 
 const Rates = () => {
   const [form] = Form.useForm();
@@ -229,6 +231,7 @@ const Rates = () => {
     values.checkOut_on_friday = checkOutBox.friday;
     values.checkOut_on_saturday = checkOutBox.saturday;
     values.checkOut_on_sunday = checkOutBox.sunday;
+    values.currency = currency;
     const response = await propertyInstance.post('/addRates', values);
     const statusCode = response.data.code;
     if (statusCode === 200) {
@@ -330,7 +333,16 @@ const Rates = () => {
   }, [fetchData]);
 
   const handleCurrencySelect = (e) => {
-    setCurrency(e === 'usd' ? '$' : '€');
+    const code = e.split(' ');
+    const currencyCode = code[1];
+    const symbol = getSymbolFromCurrency(currencyCode);
+    setCurrency(symbol);
+  };
+
+  const negativeCheck = (e) => {
+    if (e.keyCode === 109) {
+      e.preventDefault();
+    }
   };
 
   const negativeCheck = (e) => {
@@ -376,8 +388,15 @@ const Rates = () => {
                           placeholder={t('rates.placeholder2')}
                           onSelect={handleCurrencySelect}
                         >
-                          <Select.Option value="USD">{t('rates.option1')}</Select.Option>
-                          <Select.Option value="EUR">{t('rates.option2')}</Select.Option>
+                          {
+                            currenciesList.map((currency) => (
+                              <Select.Option value={currency} key={currency}>
+                                {currency}
+                              </Select.Option>
+                            ))
+                          }
+                          {/* <Select.Option value="USD">{t('rates.option1')}</Select.Option>
+                          <Select.Option value="EUR">{t('rates.option2')}</Select.Option> */}
                         </Select>
                       </Form.Item>
                     </Col>
@@ -437,13 +456,13 @@ const Rates = () => {
                     <Row>
                       <Col span={6}>
                         <Form.Item name="weeklyPrice" label="Weekly">
-                          <Input placeholder={t('rates.placeholder5')} />
+                          <Input placeholder={currency} />
                         </Form.Item>
                       </Col>
                       <Col span={1} />
                       <Col span={6}>
                         <Form.Item name="monthlyPrice" label="Monthly">
-                          <Input placeholder={t('rates.placeholder5')} />
+                          <Input placeholder={currency} />
                         </Form.Item>
                       </Col>
                       <Col span={1} />
@@ -523,7 +542,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder={t('rates.placeholder6')} />
+                            <Input placeholder={currency} />
                           </Form.Item>
                           <Form.Item
                             label={t('rates.label1')}
@@ -535,7 +554,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder={t('rates.placeholder7')} />
+                            <Input placeholder={currency} />
                           </Form.Item>
                           <Form.Item
                             label={t('rates.label2')}
@@ -547,7 +566,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder="$" />
+                            <Input placeholder={currency} />
                           </Form.Item>
                           <Form.Item
                             label={t('rates.label3')}
@@ -559,7 +578,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder={t('rates.placeholder8')} />
+                            <Input placeholder={currency} />
                           </Form.Item>
                           <Form.Item
                             label={t('rates.label4')}
@@ -571,7 +590,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder={t('rates.placeholder9')} />
+                            <Input placeholder={currency} />
                           </Form.Item>
                           <Form.Item
                             label={t('rates.label5')}
@@ -583,7 +602,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder={t('rates.placeholder10')} />
+                            <Input placeholder={currency} />
                           </Form.Item>
                           <Form.Item
                             label={t('rates.label6')}
@@ -595,7 +614,7 @@ const Rates = () => {
                               },
                             ]}
                           >
-                            <Input placeholder={t('rates.placeholder11')} />
+                            <Input placeholder={currency} />
                           </Form.Item>
                         </div>
                       </Col>
@@ -689,14 +708,7 @@ const Rates = () => {
                     <Row>
                       <Col span={6}>
                         <Form.Item
-                          className="occupancy-input"
                           name="extraCharge"
-                          // rules={[
-                          //   {
-                          //     required: true,
-                          //     message: 'Input must be valid number!',
-                          //   },
-                          // ]}
                         >
                           <Input placeholder={currency} />
                           <span>{t('rates.span3')}</span>
@@ -770,7 +782,7 @@ const Rates = () => {
                           // ]}
                         >
                           <span>{t('rates.span5')}</span>
-                          <Input type="number" placeholder={t('rates.placeholder5')} />
+                          <Input type="number" placeholder={currency} />
                         </Form.Item>
 
                       </Col>

@@ -72,6 +72,7 @@ const EditInvoicePopup = (props) => {
   const [issueState, setIssueState] = useState(false);
   const [download, setDownload] = useState(false);
   const [logoUrl, setLogoUrl] = useState('');
+  const [currency, setCurrency] = useState('€');
   // const [total, setTotal] = useState([0]);
   //  const [discountType, setDiscountType] = useState('%');
   const updateValues = useCallback(() => {
@@ -100,6 +101,7 @@ const EditInvoicePopup = (props) => {
       setEmail(invoiceData.email);
       setVatId(invoiceData.vat);
       setAddress(invoiceData.address);
+      setCurrency(invoiceData.currency);
       // setItemState(invoiceItems);
       if (invoiceItems && invoiceItems.length) {
         invoiceItems.forEach((el, i) => {
@@ -249,7 +251,7 @@ const EditInvoicePopup = (props) => {
       });
       invoiceItems.forEach((el, j) => {
         if (i === j) {
-          el.discountType = '€';
+          el.discountType = currency;
           // el.itemDiscount =el.itemDiscount;
           el.itemTotal = el.amount - el.discountPer;
         }
@@ -769,7 +771,9 @@ const EditInvoicePopup = (props) => {
                     >
                       <Select.Option>Select</Select.Option>
                       <Select.Option value="%">%</Select.Option>
-                      <Select.Option value="€">€</Select.Option>
+                      <Select.Option value={currency}>
+                        {currency}
+                      </Select.Option>
                     </Select>
                     {/* <Input
                       type="number"
@@ -829,7 +833,7 @@ const EditInvoicePopup = (props) => {
                     .reduce((a, b) => a + (b || 0), 0)
                     .toFixed(2)}
                   {' '}
-                  €
+                  {currency}
                 </span>
               </h3>
             </div>

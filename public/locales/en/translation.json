@@ -74,7 +74,7 @@
     "guests": "Guests",
     "reservat": "Reservation",
     "guest": "Guest",
-    "bank_note": "BANK NOTES",
+    "bank_note": "Cash",
     "card": "CARD",
     "check": "CHECK",
     "bank_transfer": "BANKTRANSFER",
@@ -269,7 +269,7 @@
   },
   "bookingpop": {
     "heading": "Create Booking",
-    "heading2": "Edit/Additional Data",
+    "heading2": "Edit/Add Additional data",
 
     "label1": "Reservation Date",
     "label2": "Add additional guest",

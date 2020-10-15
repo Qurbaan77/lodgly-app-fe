@@ -398,16 +398,16 @@ const Booking = () => {
     if (e.currentTarget.value === 'true') {
       setSelectAllCheck(false);
       bookingData.forEach((element) => {
-        element[Object.keys(element)[32]] = false;
+        element[Object.keys(element)[33]] = false;
       });
       setBookingData(bookingData);
       setCheckedBooking([]);
     } else {
       setSelectAllCheck(true);
       bookingData.forEach((el) => {
-        el[Object.keys(el)[32]] = true;
+        el[Object.keys(el)[33]] = true;
       });
-      const data = bookingData.filter((el) => el[Object.keys(el)[32]] !== false);
+      const data = bookingData.filter((el) => el[Object.keys(el)[33]] !== false);
       setBookingData(bookingData);
       setCheckedBooking(data);
     }
@@ -415,10 +415,10 @@ const Booking = () => {
 
   const handleCheck = (el) => {
     bookingData.forEach((element) => {
-      if (el.id === element.id && element[Object.keys(el)[32]] === true) {
-        element[Object.keys(el)[32]] = false;
-      } else if (el.id === element.id && element[Object.keys(el)[32]] === false) {
-        element[Object.keys(el)[32]] = true;
+      if (el.id === element.id && element[Object.keys(el)[33]] === true) {
+        element[Object.keys(el)[33]] = false;
+      } else if (el.id === element.id && element[Object.keys(el)[33]] === false) {
+        element[Object.keys(el)[33]] = true;
       }
     });
     setBookingData(bookingData);
@@ -434,7 +434,7 @@ const Booking = () => {
   const handleCancelCheck = () => {
     setSelectAllCheck(false);
     bookingData.forEach((el) => {
-      el[Object.keys(el)[32]] = false;
+      el[Object.keys(el)[33]] = false;
     });
     setBookingData(bookingData);
     setCheckedBooking([]);
@@ -626,7 +626,7 @@ const Booking = () => {
                   >
                     <div className="filter-checkbox">
                       <Checkbox
-                        checked={el[Object.keys(el)[32]]}
+                        checked={el[Object.keys(el)[33]]}
                         onClick={() => handleCheck(el, i)}
                       />
                     </div>
@@ -652,7 +652,7 @@ const Booking = () => {
                       <span>{el.created_time}</span>
                       <span className="green-label">
                         {' '}
-                        €
+                        {el.currency}
                         {el.totalAmount}
                       </span>
                     </div>
@@ -702,6 +702,7 @@ const Booking = () => {
                     </div>
                   </div>
                 </div>
+                </div>
                 <div className="bookin-footer">
                   {/* <ul>
                       <Tooltip title="Edit Booking" color="gold">
@@ -722,7 +723,7 @@ const Booking = () => {
                     </ul> */}
                   {btn2}
                 </div>
-              </div>
+             
             </Col>
 
             <Col span={14}>

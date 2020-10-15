@@ -70,6 +70,7 @@ const Editbookingpopup = (props) => {
   const [serviceData, setServiceData] = useState([]);
   const [unitData, setUnitData] = useState([]);
   const [selectDate, setSelectDate] = useState({});
+  const [currency, setCurrency] = useState('€');
   // const [currentUnit, setCurrentUnit] = useState({});
   // const [unitTypeData, setUnitTypeData] = useState([]);
   const [unitId, setUnitId] = useState(null);
@@ -79,7 +80,6 @@ const Editbookingpopup = (props) => {
   const { nights, perNight } = editBookingValues;
   const updateFields = useCallback(() => {
     if (visible) {
-      console.log(editBookingValues);
       fun1((editBookingValues.unitTypeId));
       const m1 = moment(editBookingValues.startDate);
       const m2 = moment(editBookingValues.endDate);
@@ -141,6 +141,7 @@ const Editbookingpopup = (props) => {
       setDepositType(editBookingValues.depositType);
       setAmt(editBookingValues.nights * editBookingValues.perNight);
       setAccomodation(editBookingValues.accomodation);
+      setCurrency(editBookingValues.currency);
       // setAccomodation(
       //   editBookingValues.nights * editBookingValues.perNight
       //     - (editBookingValues.nights
@@ -324,7 +325,6 @@ const Editbookingpopup = (props) => {
     // const data2 = response2.data.unitData;
     // console.log('unit data', data2);
     const response3 = await propertyInstance.post('/getUnittype', payload);
-    console.log('response3', response3);
     if (response.data.code === 200) {
       setServiceData(data);
     }
@@ -563,7 +563,6 @@ const Editbookingpopup = (props) => {
       if (data.length > 0) {
         let startDate;
         let endDate;
-        console.log('selectDate', selectDate);
         if (JSON.stringify(selectDate) !== '{}') {
           startDate = new Date(selectDate[0]._d);
           endDate = new Date(selectDate[1]._d);
@@ -967,7 +966,7 @@ const Editbookingpopup = (props) => {
                   />
                   <label htmlFor="eur">
                     <input hidden />
-                    EUR
+                    {currency}
                   </label>
                 </div>
 
@@ -984,7 +983,7 @@ const Editbookingpopup = (props) => {
                       onChange={(e) => {
                         setDiscount(e.target.value);
                         setdiscountAmount(e.target.value);
-                        if (discountType === '€') {
+                        if (discountType === currency) {
                           setAccomodation(night * price - e.target.value);
                         } else {
                           setAccomodation(
@@ -1006,7 +1005,7 @@ const Editbookingpopup = (props) => {
                       defaultValue="%"
                       // defaultValue={discountType}
                     >
-                      <Select.Option value="€">€</Select.Option>
+                      <Select.Option value={currency}>{currency}</Select.Option>
                       <Select.Option value="%">%</Select.Option>
                     </Select>
                   </Form.Item>
@@ -1018,7 +1017,7 @@ const Editbookingpopup = (props) => {
                     <Input
                       type="number"
                       value={
-                        discountType === '€'
+                        discountType === currency
                           ? discountAmount
                           : (night * price * discountAmount) / 100
                       }
@@ -1028,7 +1027,7 @@ const Editbookingpopup = (props) => {
 
                   <label htmlFor="dis">
                     <input hidden />
-                    EUR
+                    {currency}
                   </label>
                 </div>
               </Form.Item>
@@ -1049,7 +1048,7 @@ const Editbookingpopup = (props) => {
                 <span className="amnt">
                   {accomodation}
                   {' '}
-                  €
+                  {currency}
                 </span>
               </div>
             </Col>
@@ -1168,7 +1167,7 @@ const Editbookingpopup = (props) => {
                             </Col>
                             <label htmlFor="eur">
                               <input hidden />
-                              EUR
+                              {currency}
                             </label>
                           </div>
                         ))
@@ -1245,9 +1244,9 @@ const Editbookingpopup = (props) => {
                     <Select
                       placeholder={t('editbookingpopup.heading24')}
                       onSelect={(value) => handleDeposit(value)}
-                      defaultValue="€"
+                      defaultValue={currency}
                     >
-                      <Select.Option value="€">€</Select.Option>
+                      <Select.Option value={currency}>{currency}</Select.Option>
                       <Select.Option value="%">%</Select.Option>
                     </Select>
                   </Form.Item>
@@ -1264,8 +1263,8 @@ const Editbookingpopup = (props) => {
                   <span>
                     {/* {deposit}€ (0,00 %) */}
                     {depositType === '%'
-                      ? `${deposit}€ (${depositAmount}%)`
-                      : `${deposit}€`}
+                      ? `${deposit}${currency} (${depositAmount}%)`
+                      : `${deposit}${currency}`}
                   </span>
                 </label>
                 <label htmlFor="amou">
@@ -1283,7 +1282,7 @@ const Editbookingpopup = (props) => {
                     {/* {Math.round(total * 100) / 100
                       + Math.round(accomodation * 100) / 100
                       - deposit} */}
-                    €
+                    {currency}
                   </span>
                 </label>
               </div>

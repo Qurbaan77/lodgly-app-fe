@@ -1,3 +1,6 @@
+.team-list .custom-table {
+    margin-bottom: 55px;
+}
 .custom-table table {
     width: 100%;
 }
@@ -7,14 +10,14 @@
 }
 
 .custom-table table td {
-    padding: 20px 20px;
+    padding: 12px 20px;
     border-top: 1px solid #efecec;
     border-bottom: 1px solid #efecec;
     
     cursor: pointer;
     font-size: 14px;
     color: #3E3F42;
-    line-height: 18px;
+    line-height: 22px;
 }
 
 .custom-table table tr:hover td {
@@ -48,7 +51,7 @@ border-right: 1px solid #efecec;
   width: 23%;
 }
 .custom-table table th:last-child {
-    width: 40%;
+    width: 35%;
   }
 .custom-table table thead {
     background: #fbfbfc;
@@ -235,7 +238,7 @@ border-right: 1px solid #efecec;
     width: 100px;
 }
 .teampage{
-    padding: 15px 20px 10px 10px!important;
+    padding: 15px 20px 0px 0px!important;
 }
 .teampage button span{
     font-size: 14px;
@@ -243,10 +246,11 @@ line-height: 22px;
 }
 .teampage h1 {
       
-       font-weight: 600;
-       font-size: 18px; 
-       color: #3E3F42;
-       line-height: 28px;
+    font-weight: 600;
+    font-size: 18px;
+    color: #3E3F42;
+    line-height: 28px;
+    margin-left: 20px;
 }
 .action{
     text-align: right;
@@ -298,5 +302,8 @@ input#basic_email::placeholder {
 line-height: 18px;
 }
 .subuser-fields-section button.ant-btn.ant-btn-primary {
-    padding: 10px 50px;
+    padding: 10px 60px;
+}
+.editimg{
+margin-right: 20px;
 }
