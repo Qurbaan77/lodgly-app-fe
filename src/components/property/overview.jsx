@@ -1,11 +1,17 @@
-import React, {
-  useState, useEffect, useCallback, useRef,
-} from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Button, Modal, Row, Col, Form, Select, Input,
+  Button,
+  Menu,
+  Dropdown,
+  Modal,
+  Row,
+  Col,
+  Form,
+  Select,
+  Input,
 } from 'antd';
-import { InboxOutlined, CloseOutlined } from '@ant-design/icons';
+import { InboxOutlined, DownOutlined, CloseOutlined } from '@ant-design/icons';
 import Helmet from 'react-helmet';
 import CounterInput from 'react-counter-input';
 import { toast } from 'react-toastify';
@@ -17,6 +23,16 @@ import EditAmenities from './EditAmenities';
 
 import languageAvailable from '../../config/language';
 import translate from '../../config/translation';
+
+const importAll = (require) =>
+  require.keys().reduce((acc, next) => {
+    acc[next.replace('./', '')] = require(next);
+    return acc;
+  }, {});
+
+const images = importAll(
+  require.context('../../assets/images/flags/', false, /\.(png|jpe?g|svg)$/)
+);
 
 const Overview = () => {
   const [form] = Form.useForm();
@@ -38,7 +54,9 @@ const Overview = () => {
   const [languageSelection, setLanguageSelection] = useState({});
   const [languageList, setLanguageList] = useState([]);
   const [languageToFilter, setLanguageToFilter] = useState('');
-  const [languageSelected, setLanguageSelected] = useState('');
+  const [languageSelected, setLanguageSelected] = useState('en');
+  const [languageCount, setLanguageCount] = useState(1);
+  const [displayLang, setDisplayLang] = useState('English');
   const [transateLanguage, setTranslateLanguage] = useState([]);
   const [unitsPanel, setUnitsPanel] = useState([
     {
@@ -48,7 +66,6 @@ const Overview = () => {
 
   const refSelect = useRef(null);
   const [deletedUnitsId, setDeletedUnitsId] = useState([]);
-  // const [unitTypeV2Data, setUnitTypeV2Data] = useState({});
   const { t } = useTranslation();
   const showEditSleeping = () => {
     setVisible(true);
@@ -110,7 +127,6 @@ const Overview = () => {
       }
       setNoOfBedRooms(data.bedRooms);
       setNoOfGuests(data.standardGuests);
-      /// setNoOfUnits(data.units);
       setSelectedAmenities(data.amenities);
     }
   }, [form, form2]);
@@ -125,18 +141,20 @@ const Overview = () => {
     const propertyId = localStorage.getItem('unitTypeV2Id');
     const getPropertyName = async () => {
       const response = await propertyInstance.get(
-        `/fetchTranslated/en/${propertyId}`,
+        `/fetchTranslated/en/${propertyId}`
       );
       if (response.status === 200) {
         const { filteredName, filteredDescription } = response.data;
-        const name = typeof filteredName !== 'undefined' && filteredName.length > 0
-          ? filteredName[0].name
-          : '';
-        const description = typeof filteredDescription !== 'undefined'
-          && filteredDescription.length > 0
-          ? filteredDescription[0].description
-          : '';
-        if (name && description) {
+        const name =
+          typeof filteredName !== 'undefined' && filteredName.length > 0
+            ? filteredName[0].name
+            : '';
+        const description =
+          typeof filteredDescription !== 'undefined' &&
+          filteredDescription.length > 0
+            ? filteredDescription[0].description
+            : '';
+        if (name || description) {
           setPropertyName(name);
           setPropertyDescription(description);
           form.setFieldsValue({
@@ -152,7 +170,11 @@ const Overview = () => {
   }, [form, getData]);
 
   useEffect(() => {
-    getLanguages();
+    async function fetchData() {
+      await getLanguages();
+      // await setTranslate(languageSelected);
+    }
+    fetchData();
   }, []);
 
   const { TextArea } = Input;
@@ -232,6 +254,7 @@ const Overview = () => {
     const propertyId = localStorage.getItem('unitTypeV2Id');
     const res = await propertyInstance.get(`/languages/${propertyId}`);
     if (res.status === 200) {
+      setLanguageCount(res.data.language.length);
       setLanguageList([res.data.language]);
     }
   };
@@ -261,23 +284,25 @@ const Overview = () => {
   };
 
   const setTranslate = async (e) => {
-    setLanguageSelected(e.target.value);
+    // console.log('language', languageList);
+    // console.log('e', e);
     const filteredLang = languageList[0].filter(
-      (el) => Object.keys(el)[0] !== e.target.value,
+      (el) => Object.keys(el)[0] !== e
     );
     setTranslateLanguage(filteredLang);
     const propertyId = localStorage.getItem('unitTypeV2Id');
     const response = await propertyInstance.get(
-      `/fetchTranslated/${e.target.value}/${propertyId}`,
+      `/fetchTranslated/${e}/${propertyId}`
     );
     if (response) {
       const {
         data: { filteredDescription, filteredName },
       } = response;
       const name = filteredName.length > 0 ? filteredName[0].name : '';
-      const description = filteredDescription.length > 0
-        ? filteredDescription[0].description
-        : '';
+      const description =
+        filteredDescription.length > 0
+          ? filteredDescription[0].description
+          : '';
       setPropertyDescription(description);
       setPropertyName(name);
       form.setFieldsValue({
@@ -292,7 +317,7 @@ const Overview = () => {
       const translatedName = await translate(propertyName, languageSelected);
       const translatedDescription = await translate(
         propertyDescription,
-        languageSelected,
+        languageSelected
       );
       const nameObject = { lang: languageSelected, name: translatedName };
       const descriptionObject = {
@@ -392,6 +417,53 @@ const Overview = () => {
     }
   };
 
+  function handleMenuClick(e) {
+    setLanguageSelected(e.key);
+    setDisplayLang(e.item.props['data-value'][0]);
+    setTranslate(e.key);
+  }
+
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      {languageList[0] &&
+        languageList[0].map((el) => (
+          <Menu.Item key={Object.keys(el)[0]} data-value={Object.values(el)}>
+            <img
+              src={`${images[`${Object.keys(el)[0]}.png`]}`}
+              width="20px"
+              height="20px"
+              alt="country"
+            />{' '}
+            {Object.values(el)}
+          </Menu.Item>
+        ))}
+    </Menu>
+  );
+
+  const translateDropDown = (
+    <Menu onClick={handleTranslation}>
+      {transateLanguage &&
+        transateLanguage.map((el) => (
+          <Menu.Item key={Object.keys(el)}>
+            <img
+              src={`${images[`${Object.keys(el)[0]}.png`]}`}
+              width="20px"
+              height="20px"
+              alt="country"
+            />{' '}
+            {`${Object.keys(el)[0].toLocaleUpperCase()}  >`}
+            <img
+              src={`${images[`${languageSelected}.png`]}`}
+              width="20px"
+              height="20px"
+              alt="country"
+            />{' '}
+            {`${languageSelected.toLocaleUpperCase()}`}
+          </Menu.Item>
+        ))}
+    </Menu>
+  );
+
   return (
     <Wrapper>
       <Helmet>
@@ -416,21 +488,24 @@ const Overview = () => {
 
                   <div className="overview-flex">
                     <div className="overview-input">
-                      <select
-                        onChange={(e) => {
-                          setTranslate(e);
-                        }}
-                      >
-                        <option selected disabled>
-                          Select Language
-                        </option>
-                        {languageList[0]
-                          && languageList[0].map((el) => (
-                            <option value={Object.keys(el)[0]}>
-                              {Object.values(el)}
-                            </option>
-                          ))}
-                      </select>
+                      <Dropdown overlay={menu}>
+                        <Button>
+                          {languageSelected !== '' ? (
+                            <>
+                              <img
+                                src={`${images[`${languageSelected}.png`]}`}
+                                width="20px"
+                                height="20px"
+                                alt="country"
+                              />{' '}
+                              {displayLang}
+                            </>
+                          ) : (
+                            'Select Language'
+                          )}{' '}
+                          <DownOutlined />
+                        </Button>
+                      </Dropdown>
                     </div>
 
                     <div className="overview-input">
@@ -454,25 +529,16 @@ const Overview = () => {
                       </select>
                     </div>
 
-                    <div className="overview-input">
-                      <select
-                        onChange={(e) => {
-                          handleTranslation(e);
-                        }}
-                      >
-                        <option value="Traslate" selected disabled>
-                          Translate
-                        </option>
-                        {transateLanguage
-                          && transateLanguage.map((el) => (
-                            <option value={Object.keys(el)}>
-                              {`${Object.keys(
-                                el,
-                              )[0].toLocaleUpperCase()}  >  ${languageSelected.toLocaleUpperCase()}`}
-                            </option>
-                          ))}
-                      </select>
-                    </div>
+                    {languageCount > 1 && (
+                      <div className="overview-input">
+                        <Dropdown overlay={translateDropDown}>
+                          <Button>
+                            Translate
+                            <DownOutlined />
+                          </Button>
+                        </Dropdown>
+                      </div>
+                    )}
                   </div>
 
                   <Row>
@@ -492,7 +558,9 @@ const Overview = () => {
                           value={propertyDescription}
                           placeholder="Description"
                           rows={4}
-                          onChange={(e) => setPropertyDescription(e.target.value)}
+                          onChange={(e) =>
+                            setPropertyDescription(e.target.value)
+                          }
                         />
                       </Form.Item>
                     </Col>
@@ -785,8 +853,8 @@ const Overview = () => {
               });
             }}
           >
-            {languageAvailable
-              && languageAvailable.map((lang) => (
+            {languageAvailable &&
+              languageAvailable.map((lang) => (
                 <option value={lang.langCode}>{lang.name}</option>
               ))}
           </select>
@@ -810,8 +878,8 @@ const Overview = () => {
               setLanguageToFilter(e.target.value);
             }}
           >
-            {languageList[0]
-              && languageList[0].map((el) => (
+            {languageList[0] &&
+              languageList[0].map((el) => (
                 <option value={Object.keys(el)[0]}>{Object.values(el)}</option>
               ))}
           </select>
@@ -873,7 +941,7 @@ const SleepingArrangement = ({ handleCancel }) => {
     values.sleepingArrangement = JSON.stringify(obj);
     const response = await propertyInstance.post(
       '/updateSleepingArrangement',
-      values,
+      values
     );
     if (response.data.code === 200) {
       getData();
